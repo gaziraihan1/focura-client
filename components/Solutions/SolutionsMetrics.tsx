@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, animate } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function SolutionsMetrics() {
   const metrics = [
@@ -33,6 +33,7 @@ export default function SolutionsMetrics() {
 
   function Counter({ value, suffix }: { value: number; suffix: string }) {
     const count = useMotionValue(0);
+    const [display, setDisplay] = useState("0");
 
     useEffect(() => {
       const controls = animate(count, value, {
@@ -40,14 +41,21 @@ export default function SolutionsMetrics() {
         ease: "easeOut",
       });
 
-      return controls.stop;
+      const unsubscribe = count.on("change", (latest) => {
+        setDisplay(latest.toFixed(latest % 1 === 0 ? 0 : 1));
+      });
+
+      return () => {
+        unsubscribe();
+        controls.stop();
+      };
     }, [value, count]);
 
     return (
-      <motion.span className="inline-flex items-baseline">
-        {count.get().toFixed(1)}
+      <span>
+        {display}
         {suffix}
-      </motion.span>
+      </span>
     );
   }
 
@@ -79,7 +87,7 @@ export default function SolutionsMetrics() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               whileHover={{ y: -6 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
               className="
                 p-7 rounded-3xl border border-border
                 bg-background/40 backdrop-blur-xl shadow-sm
