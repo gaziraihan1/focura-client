@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import * as argon2 from "argon2";
+import crypto from "crypto";
+import { sendVerificationEmail } from "@/lib/email";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { name, email, password } = body;
 
-    // Validate required fields
     if (!name || !email || !password) {
       return NextResponse.json(
         { error: "Missing required fields" },
@@ -15,7 +16,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Validate name length
     if (name.length < 4) {
       return NextResponse.json(
         { error: "Name must be at least 4 characters" },
@@ -23,7 +23,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json(
@@ -32,7 +31,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Validate password length
     if (password.length < 6) {
       return NextResponse.json(
         { error: "Password must be at least 6 characters" },
@@ -40,7 +38,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
@@ -52,21 +49,39 @@ export async function POST(req: Request) {
       );
     }
 
-    // Hash password with Argon2
     const hashedPassword = await argon2.hash(password);
 
-    // Create user
     const user = await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
+        emailVerified: null, 
       },
     });
+
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+    const expires = new Date();
+    expires.setHours(expires.getHours() + 24); 
+
+    await prisma.verificationToken.create({
+      data: {
+        identifier: email,
+        token: verificationToken,
+        expires,
+      },
+    });
+
+    try {
+      await sendVerificationEmail(email, verificationToken);
+    } catch (emailError) {
+      console.error("Failed to send verification email:", emailError);
+    }
 
     return NextResponse.json(
       {
         success: true,
+        message: "Registration successful! Please check your email to verify your account.",
         user: {
           id: user.id,
           name: user.name,
@@ -75,32 +90,18 @@ export async function POST(req: Request) {
       },
       { status: 201 }
     );
-  }  catch (error: unknown) {
+  } catch (error: unknown) {
     console.error("Registration error:", error);
-    console.error("Error type:", typeof error);
-    console.error("Error details:", JSON.stringify(error, null, 2));
-    
-    // Handle Prisma errors
-    if (error && typeof error === 'object' && 'code' in error) {
-      if (error.code === 'P2002') {
+
+    if (error && typeof error === "object" && "code" in error) {
+      if (error.code === "P2002") {
         return NextResponse.json(
           { error: "User already exists" },
           { status: 400 }
         );
       }
-      if (error.code === 'P2021') {
-        return NextResponse.json(
-          { error: "Database table does not exist. Please run migrations." },
-          { status: 500 }
-        );
-      }
     }
-    
-    // Log the actual error message
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    console.error("Error message:", errorMessage);
-    
-    // Generic error response
+
     return NextResponse.json(
       { error: "Internal server error. Please try again." },
       { status: 500 }

@@ -13,7 +13,6 @@ interface AuthFormProps {
   mode: "login" | "register";
 }
 
-// Validation Schemas
 const loginSchema = z.object({
   email: z.string().email("Invalid email format"),
   password: z.string().min(6, "Password must be at least 6 characters"),
@@ -57,7 +56,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
           window.location.assign("/dashboard");
         }
       } else {
-        // Registration
         const res = await fetch("/api/auth/register", {
           method: "POST",
           body: JSON.stringify({
@@ -69,17 +67,26 @@ export default function AuthForm({ mode }: AuthFormProps) {
         });
 
         const data = await res.json();
+        if (res.ok) {
+          setError("");
+          alert(
+            "Registration successful! Please check your email to verify your account."
+          );
+          window.location.assign("/authentication/login");
+          return;
+        }
 
         if (!res.ok) {
           if (res.status === 400 && data.error?.includes("already exists")) {
-            setError("An account with this email already exists. Please login instead.");
+            setError(
+              "An account with this email already exists. Please login instead."
+            );
           } else {
             setError(data.error || "Registration failed. Please try again.");
           }
           return;
         }
 
-        // Auto-login after successful registration
         const result = await signIn("credentials", {
           redirect: false,
           email: values.email,
@@ -87,7 +94,9 @@ export default function AuthForm({ mode }: AuthFormProps) {
         });
 
         if (result?.error) {
-          setError("Registration successful, but login failed. Please try logging in manually.");
+          setError(
+            "Registration successful, but login failed. Please try logging in manually."
+          );
           return;
         }
 
@@ -97,14 +106,16 @@ export default function AuthForm({ mode }: AuthFormProps) {
       }
     } catch (err) {
       console.error("Auth error:", err);
-      setError("Something went wrong. Please check your connection and try again.");
+      setError(
+        "Something went wrong. Please check your connection and try again."
+      );
     }
   };
 
   const handleGoogle = async () => {
     setError("");
     setIsGoogleLoading(true);
-    
+
     try {
       await signIn("google", {
         callbackUrl: "/dashboard",
@@ -132,7 +143,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
         {mode === "login" ? "Login to continue" : "Join Focura for free"}
       </p>
 
-      {/* Global Error Message */}
       {error && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -144,7 +154,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
         </motion.div>
       )}
 
-      {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-5">
         {mode === "register" && (
           <div className="relative">
@@ -210,6 +219,17 @@ export default function AuthForm({ mode }: AuthFormProps) {
           )}
         </div>
 
+        {mode === "login" && (
+          <div className="text-right -mt-2">
+            <Link
+              href="/authentication/forgot-password"
+              className="text-sm text-primary hover:underline"
+            >
+              Forgot password?
+            </Link>
+          </div>
+        )}
+
         <button
           type="submit"
           disabled={isLoading}
@@ -244,9 +264,15 @@ export default function AuthForm({ mode }: AuthFormProps) {
       </form>
 
       <p className="text-center text-foreground/60 mt-6 text-sm">
-        {mode === "login" ? "Don't have an account?" : "Already have an account?"}
+        {mode === "login"
+          ? "Don't have an account?"
+          : "Already have an account?"}
         <Link
-          href={mode === "login" ? "/authentication/registration" : "/authentication/login"}
+          href={
+            mode === "login"
+              ? "/authentication/registration"
+              : "/authentication/login"
+          }
           className="text-primary ml-1 font-medium hover:underline"
         >
           {mode === "login" ? "Register" : "Login"}
