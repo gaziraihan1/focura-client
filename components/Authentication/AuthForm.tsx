@@ -34,7 +34,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
   });
 
   const onSubmit = async (values: Record<string, string>) => {
