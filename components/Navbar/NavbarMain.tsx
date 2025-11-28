@@ -2,9 +2,10 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import ThemeSwitcher from "../Themes/ThemeSwitcher";
 import Image from "next/image";
+import { useSession, signOut } from "next-auth/react";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -16,18 +17,18 @@ const navLinks = [
 
 export default function NavbarMain() {
   const [open, setOpen] = useState(false);
+  const { data: session } = useSession();
+
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: "/" });
+  };
 
   return (
     <nav className="w-full border-b border-border/40 bg-background/60 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="text-xl font-semibold flex gap-1">
-          <Image
-          src={'/focura.png'}
-          width={32}
-          height={32}
-          alt="logo"
-          />
+            <Image src={"/focura.png"} width={32} height={32} alt="logo" />
             Focura
           </Link>
 
@@ -42,20 +43,40 @@ export default function NavbarMain() {
               </Link>
             ))}
 
-            <Link
-              href="/login"
-              className="text-sm font-medium text-foreground/80 hover:text-foreground transition"
-            >
-              Login
-            </Link>
-            <ThemeSwitcher />
-
-            <Link
-              href="/get-started"
-              className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition"
-            >
-              Get Started
-            </Link>
+            {session ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  className="text-sm font-medium text-foreground/80 hover:text-foreground transition"
+                >
+                  Dashboard
+                </Link>
+                <ThemeSwitcher />
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition flex items-center gap-2"
+                >
+                  <LogOut size={16} />
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/authentication/login"
+                  className="text-sm font-medium text-foreground/80 hover:text-foreground transition"
+                >
+                  Login
+                </Link>
+                <ThemeSwitcher />
+                <Link
+                  href="/get-started"
+                  className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
 
           <button
@@ -81,25 +102,50 @@ export default function NavbarMain() {
               </Link>
             ))}
 
-            <Link
-              href="/login"
-              className="text-sm py-2 font-medium text-foreground/80 hover:text-foreground transition"
-              onClick={() => setOpen(false)}
-            >
-              Login
-            </Link>
-            <div className="py-4">
-
-            <ThemeSwitcher />
-            </div>
-
-            <Link
-              href="/get-started"
-              className="w-full text-center px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition"
-              onClick={() => setOpen(false)}
-            >
-              Get Started
-            </Link>
+            {session ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  className="text-sm py-2 font-medium text-foreground/80 hover:text-foreground transition"
+                  onClick={() => setOpen(false)}
+                >
+                  Dashboard
+                </Link>
+                <div className="py-4">
+                  <ThemeSwitcher />
+                </div>
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    handleLogout();
+                  }}
+                  className="w-full text-center px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition flex items-center justify-center gap-2"
+                >
+                  <LogOut size={16} />
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/authentication/login"
+                  className="text-sm py-2 font-medium text-foreground/80 hover:text-foreground transition"
+                  onClick={() => setOpen(false)}
+                >
+                  Login
+                </Link>
+                <div className="py-4">
+                  <ThemeSwitcher />
+                </div>
+                <Link
+                  href="/get-started"
+                  className="w-full text-center px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition"
+                  onClick={() => setOpen(false)}
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}
