@@ -3,11 +3,26 @@ import { prisma } from "@/lib/prisma";
 import * as argon2 from "argon2";
 import crypto from "crypto";
 import { sendVerificationEmail } from "@/lib/email";
+import { limiter } from "@/lib/limiter";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { name, email, password } = body;
+    
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers.get("x-real-ip") ||
+      "unknown";
+
+    const { success } = await limiter.limit(ip);
+
+    if (!success) {
+      return NextResponse.json(
+        { error: "Too many attempts. Please try again later." },
+        { status: 429 }
+      );
+    }
 
     if (!name || !email || !password) {
       return NextResponse.json(

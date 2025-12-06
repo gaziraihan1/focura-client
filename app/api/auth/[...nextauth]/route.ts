@@ -1,78 +1,97 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { prisma } from "@/lib/prisma";
-import * as argon2 from "argon2";
+// src/app/api/auth/[...nextauth]/route.ts
+import NextAuth from "next-auth";
+import { getServerSession } from "next-auth/next";
+import { NextResponse } from "next/server";
+import { authOptions } from "@/lib/auth/authOptions";
+import { createBackendToken } from "@/lib/auth/backendToken";
+import { BACKEND_COOKIE_NAME, isProd } from "@/lib/auth/contants";
 
-export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Invalid credentials");
-        }
+const nextAuthHandler = NextAuth(authOptions);
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        });
+function safeBase(req: Request) {
+  // In some environments req.url may be relative; fallback to NEXTAUTH_URL
+  const maybe = req.url || process.env.NEXTAUTH_URL;
+  return maybe!;
+}
 
-        if (!user || !user.password) {
-          throw new Error("Invalid credentials");
-        }
+async function handleSetBackendCookie(req: Request) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user || !session.user.id) {
+      const base = new URL("/authentication/login", safeBase(req)).toString();
+      return NextResponse.redirect(base);
+    }
 
-        const isPasswordValid = await argon2.verify(
-          user.password,
-          credentials.password
-        );
+    const backendToken = createBackendToken({
+      id: (session.user as any).id,
+      email: session.user.email,
+      name: session.user.name,
+      role: (session.user as any).role ?? "USER",
+    });
 
-        if (!isPasswordValid) {
-          throw new Error("Invalid credentials");
-        }
+    const res = NextResponse.redirect(new URL("/authentication/success", safeBase(req)));
+    res.cookies.set({
+      name: BACKEND_COOKIE_NAME,
+      value: backendToken,
+      httpOnly: true,
+      secure: isProd,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60, 
+    });
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          image: user.image,
-        };
-      },
-    }),
-  ],
-  session: {
-    strategy: "jwt",
-  },
-  pages: {
-    signIn: "/authentication/login",  // ← CHANGED THIS
-    error: "/authentication/login",   // ← CHANGED THIS
-  },
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-      }
-      return session;
-    },
-  },
-  secret: process.env.NEXTAUTH_SECRET,
-};
+    return res;
+  } catch (err) {
+    console.error("handleSetBackendCookie error:", err);
+    return NextResponse.redirect(new URL("/authentication/login", safeBase(req)));
+  }
+}
 
-const handler = NextAuth(authOptions);
+async function handleClearBackendCookie(req: Request) {
+  const res = NextResponse.redirect(new URL("/authentication/login", safeBase(req)));
+  res.cookies.set({
+    name: BACKEND_COOKIE_NAME,
+    value: "",
+    httpOnly: true,
+    secure: isProd,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  });
+  return res;
+}
 
-export { handler as GET, handler as POST };
+export async function GET(req: Request, context: { params: { nextauth: string[] } }) {
+  const pathname = new URL(req.url).pathname;
+
+  if (pathname.endsWith("/api/auth/set-backend-cookie")) {
+    return handleSetBackendCookie(req);
+  }
+
+  if (pathname.endsWith("/api/auth/clear-backend-cookie")) {
+    return handleClearBackendCookie(req);
+  }
+
+  // delegate to NextAuth
+  return await (nextAuthHandler as any)(req, { params: context.params });
+}
+
+export async function POST(req: Request, context: { params: { nextauth: string[] } }) {
+  const pathname = new URL(req.url).pathname;
+
+  if (pathname.endsWith("/api/auth/clear-backend-cookie")) {
+    const res = NextResponse.json({ success: true });
+    res.cookies.set({
+      name: BACKEND_COOKIE_NAME,
+      value: "",
+      httpOnly: true,
+      secure: isProd,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
+    });
+    return res;
+  }
+
+  return await (nextAuthHandler as any)(req, { params: context.params });
+}

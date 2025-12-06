@@ -31,8 +31,8 @@ export default function PricingSection() {
       highlighted: true,
     },
     {
-      name: "Business",
-      price: "$49",
+      name: "Enterprise",
+      price: "Custom",
       tagline: "For organizations who need full visibility and power.",
       features: [
         "Unlimited workspaces",
@@ -84,7 +84,7 @@ export default function PricingSection() {
                   {plan.price}
                 </span>
                 {plan.price !== "Free" && (
-                  <span className="text-foreground/60 mb-1">/month</span>
+                  <span className="text-foreground/60 mb-1">{plan.price === "Custom" ? "" : "/month"}</span>
                 )}
               </div>
 

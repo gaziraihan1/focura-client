@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -17,7 +17,7 @@ const resetPasswordSchema = z.object({
   path: ["confirmPassword"],
 });
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get("token");
@@ -202,5 +202,19 @@ export default function ResetPasswordPage() {
         </p>
       </motion.div>
     </section>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <section className="min-h-screen flex items-center justify-center bg-background">
+          <Loader2 className="w-16 h-16 text-primary animate-spin" />
+        </section>
+      }
+    >
+      <ResetPasswordContent />
+    </Suspense>
   );
 }

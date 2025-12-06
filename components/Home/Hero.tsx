@@ -62,7 +62,7 @@ const [totalUser, setTotalUser] = useState<number>(8)
 
           <Link
             href="/demo"
-            className="px-6 py-3 rounded-lg border border-border font-semibold text-foreground hover:bg-muted transition bg-background z-60"
+            className="px-6 py-3 rounded-lg border border-border font-semibold text-foreground hover:bg-muted transition bg-background z-10"
           >
             Get a Demo
           </Link>

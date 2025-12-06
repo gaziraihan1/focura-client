@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { CheckCircle, XCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get("token");
@@ -98,5 +98,19 @@ export default function VerifyEmailPage() {
         )}
       </motion.div>
     </section>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense
+      fallback={
+        <section className="min-h-screen flex items-center justify-center bg-background">
+          <Loader2 className="w-16 h-16 text-primary animate-spin" />
+        </section>
+      }
+    >
+      <VerifyEmailContent />
+    </Suspense>
   );
 }

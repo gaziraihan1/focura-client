@@ -8,6 +8,7 @@ import { Loader2, Mail, Lock, User, Chrome, AlertCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 interface AuthFormProps {
   mode: "login" | "register";
@@ -25,6 +26,7 @@ const registerSchema = loginSchema.extend({
 export default function AuthForm({ mode }: AuthFormProps) {
   const [error, setError] = useState("");
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const router = useRouter();
 
   const schema = mode === "login" ? loginSchema : registerSchema;
 
@@ -53,9 +55,11 @@ export default function AuthForm({ mode }: AuthFormProps) {
         }
 
         if (result?.ok) {
-          window.location.assign("/dashboard");
+          // Middleware will automatically set the backend cookie
+          router.push("/dashboard");
         }
       } else {
+        // Registration
         const res = await fetch("/api/auth/register", {
           method: "POST",
           body: JSON.stringify({
@@ -67,48 +71,32 @@ export default function AuthForm({ mode }: AuthFormProps) {
         });
 
         const data = await res.json();
-        if (res.ok) {
-          setError("");
-          alert(
-            "Registration successful! Please check your email to verify your account."
-          );
-          window.location.assign("/authentication/login");
-          return;
-        }
-
+        
         if (!res.ok) {
           if (res.status === 400 && data.error?.includes("already exists")) {
-            setError(
-              "An account with this email already exists. Please login instead."
-            );
+            setError("An account with this email already exists. Please login instead.");
           } else {
             setError(data.error || "Registration failed. Please try again.");
           }
           return;
         }
 
+        alert("Registration successful! Please check your email to verify your account.");
+        
+        // Auto-login after registration
         const result = await signIn("credentials", {
           redirect: false,
           email: values.email,
           password: values.password,
         });
 
-        if (result?.error) {
-          setError(
-            "Registration successful, but login failed. Please try logging in manually."
-          );
-          return;
-        }
-
         if (result?.ok) {
-          window.location.assign("/dashboard");
+          router.push("/authentication/login");
         }
       }
     } catch (err) {
       console.error("Auth error:", err);
-      setError(
-        "Something went wrong. Please check your connection and try again."
-      );
+      setError("Something went wrong. Please check your connection and try again.");
     }
   };
 
@@ -157,10 +145,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-5">
         {mode === "register" && (
           <div className="relative">
-            <User
-              className="absolute left-3 top-3.5 text-foreground/50"
-              size={18}
-            />
+            <User className="absolute left-3 top-3.5 text-foreground/50" size={18} />
             <input
               {...register("name")}
               placeholder="Full Name"
@@ -178,10 +163,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
         )}
 
         <div className="relative">
-          <Mail
-            className="absolute left-3 top-3.5 text-foreground/50"
-            size={18}
-          />
+          <Mail className="absolute left-3 top-3.5 text-foreground/50" size={18} />
           <input
             {...register("email")}
             type="email"
@@ -199,10 +181,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
         </div>
 
         <div className="relative">
-          <Lock
-            className="absolute left-3 top-3.5 text-foreground/50"
-            size={18}
-          />
+          <Lock className="absolute left-3 top-3.5 text-foreground/50" size={18} />
           <input
             type="password"
             {...register("password")}
@@ -264,15 +243,9 @@ export default function AuthForm({ mode }: AuthFormProps) {
       </form>
 
       <p className="text-center text-foreground/60 mt-6 text-sm">
-        {mode === "login"
-          ? "Don't have an account?"
-          : "Already have an account?"}
+        {mode === "login" ? "Don't have an account?" : "Already have an account?"}
         <Link
-          href={
-            mode === "login"
-              ? "/authentication/registration"
-              : "/authentication/login"
-          }
+          href={mode === "login" ? "/authentication/registration" : "/authentication/login"}
           className="text-primary ml-1 font-medium hover:underline"
         >
           {mode === "login" ? "Register" : "Login"}

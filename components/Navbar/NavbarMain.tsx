@@ -2,10 +2,11 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut, Loader2 } from "lucide-react";
 import ThemeSwitcher from "../Themes/ThemeSwitcher";
 import Image from "next/image";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { logout } from "@/lib/auth/logout";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -17,10 +18,17 @@ const navLinks = [
 
 export default function NavbarMain() {
   const [open, setOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { data: session } = useSession();
 
   const handleLogout = async () => {
-    await signOut({ callbackUrl: "/" });
+    setIsLoggingOut(true);
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+      setIsLoggingOut(false);
+    }
   };
 
   return (
@@ -54,10 +62,15 @@ export default function NavbarMain() {
                 <ThemeSwitcher />
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition flex items-center gap-2"
+                  disabled={isLoggingOut}
+                  className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <LogOut size={16} />
-                  Logout
+                  {isLoggingOut ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <LogOut size={16} />
+                  )}
+                  {isLoggingOut ? 'Logging out...' : 'Logout'}
                 </button>
               </>
             ) : (
@@ -119,10 +132,15 @@ export default function NavbarMain() {
                     setOpen(false);
                     handleLogout();
                   }}
-                  className="w-full text-center px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition flex items-center justify-center gap-2"
+                  disabled={isLoggingOut}
+                  className="w-full text-center px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <LogOut size={16} />
-                  Logout
+                  {isLoggingOut ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <LogOut size={16} />
+                  )}
+                  {isLoggingOut ? 'Logging out...' : 'Logout'}
                 </button>
               </>
             ) : (
@@ -152,3 +170,4 @@ export default function NavbarMain() {
     </nav>
   );
 }
+
