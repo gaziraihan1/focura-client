@@ -1,36 +1,25 @@
+// src/app/api/auth/verify-email/route.ts
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
     const { token } = await req.json();
-
-    if (!token) {
-      return NextResponse.json(
-        { error: "Token is required" },
-        { status: 400 }
-      );
-    }
+    if (!token)
+      return NextResponse.json({ error: "Token is required" }, { status: 400 });
 
     const verificationToken = await prisma.verificationToken.findUnique({
       where: { token },
     });
-
-    if (!verificationToken) {
+    if (!verificationToken)
       return NextResponse.json(
         { error: "Invalid or expired token" },
         { status: 400 }
       );
-    }
 
     if (verificationToken.expires < new Date()) {
-      await prisma.verificationToken.delete({
-        where: { token },
-      });
-      return NextResponse.json(
-        { error: "Token has expired" },
-        { status: 400 }
-      );
+      await prisma.verificationToken.delete({ where: { token } });
+      return NextResponse.json({ error: "Token has expired" }, { status: 400 });
     }
 
     await prisma.user.update({
@@ -38,9 +27,7 @@ export async function POST(req: Request) {
       data: { emailVerified: new Date() },
     });
 
-    await prisma.verificationToken.delete({
-      where: { token },
-    });
+    await prisma.verificationToken.delete({ where: { token } });
 
     return NextResponse.json({
       success: true,

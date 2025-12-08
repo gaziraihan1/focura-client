@@ -1,3 +1,4 @@
+// src/app/api/auth/register/route.ts
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import * as argon2 from "argon2";
@@ -9,14 +10,13 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { name, email, password } = body;
-    
+
     const ip =
       req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
       req.headers.get("x-real-ip") ||
       "unknown";
 
     const { success } = await limiter.limit(ip);
-
     if (!success) {
       return NextResponse.json(
         { error: "Too many attempts. Please try again later." },
@@ -31,38 +31,28 @@ export async function POST(req: Request) {
       );
     }
 
-    if (name.length < 4) {
+    if (name.length < 4)
       return NextResponse.json(
         { error: "Name must be at least 4 characters" },
         { status: 400 }
       );
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
       return NextResponse.json(
         { error: "Invalid email format" },
         { status: 400 }
       );
-    }
-
-    if (password.length < 6) {
+    if (password.length < 6)
       return NextResponse.json(
         { error: "Password must be at least 6 characters" },
         { status: 400 }
       );
-    }
 
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
-    });
-
-    if (existingUser) {
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser)
       return NextResponse.json(
         { error: "User already exists" },
         { status: 400 }
       );
-    }
 
     const hashedPassword = await argon2.hash(password);
 
@@ -71,13 +61,14 @@ export async function POST(req: Request) {
         name,
         email,
         password: hashedPassword,
-        emailVerified: null, 
+        emailVerified: null, // not verified yet
       },
     });
 
+    // Generate verification token
     const verificationToken = crypto.randomBytes(32).toString("hex");
     const expires = new Date();
-    expires.setHours(expires.getHours() + 24); 
+    expires.setHours(expires.getHours() + 24); // expires in 24h
 
     await prisma.verificationToken.create({
       data: {
@@ -87,16 +78,18 @@ export async function POST(req: Request) {
       },
     });
 
+    // Send email
     try {
       await sendVerificationEmail(email, verificationToken);
-    } catch (emailError) {
-      console.error("Failed to send verification email:", emailError);
+    } catch (err) {
+      console.error("Failed to send verification email:", err);
     }
 
     return NextResponse.json(
       {
         success: true,
-        message: "Registration successful! Please check your email to verify your account.",
+        message:
+          "Registration successful! Please verify your email before logging in.",
         user: {
           id: user.id,
           name: user.name,
@@ -105,18 +98,14 @@ export async function POST(req: Request) {
       },
       { status: 201 }
     );
-  } catch (error: unknown) {
+  } catch (error: any) {
     console.error("Registration error:", error);
-
-    if (error && typeof error === "object" && "code" in error) {
-      if (error.code === "P2002") {
-        return NextResponse.json(
-          { error: "User already exists" },
-          { status: 400 }
-        );
-      }
+    if (error.code === "P2002") {
+      return NextResponse.json(
+        { error: "User already exists" },
+        { status: 400 }
+      );
     }
-
     return NextResponse.json(
       { error: "Internal server error. Please try again." },
       { status: 500 }

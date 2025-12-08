@@ -32,10 +32,10 @@ export default function AddTaskPage() {
   const { data: projects = [], isLoading: projectsLoading } = useProjects();
   const { data: users = [], isLoading: usersLoading } = useTeamMembers();
   const { data: labels = [], isLoading: labelsLoading } = useLabels();
-  
+
   const createTaskMutation = useCreateTask();
 
-  const [formData, setFormData] = useState<CreateTaskDto>({
+  const [formData, setFormData] = useState<Omit<CreateTaskDto, 'workspaceId'>>({
     title: "",
     description: "",
     projectId: "",
@@ -53,29 +53,13 @@ export default function AddTaskPage() {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.title.trim()) {
-      newErrors.title = "Task title is required";
+    if (!formData.title.trim()) newErrors.title = "Task title is required";
+    if (formData.title.length > 200) newErrors.title = "Title must be less than 200 characters";
+    if (taskType === "project" && !formData.projectId) newErrors.projectId = "Please select a project";
+    if (formData.startDate && formData.dueDate && new Date(formData.startDate) > new Date(formData.dueDate)) {
+      newErrors.dueDate = "Due date must be after start date";
     }
-
-    if (formData.title.length > 200) {
-      newErrors.title = "Title must be less than 200 characters";
-    }
-
-    if (taskType === "project" && !formData.projectId) {
-      newErrors.projectId = "Please select a project";
-    }
-
-    if (formData.startDate && formData.dueDate) {
-      if (new Date(formData.startDate) > new Date(formData.dueDate)) {
-        newErrors.dueDate = "Due date must be after start date";
-      }
-    }
-
-    if (
-      formData.estimatedHours !== undefined &&
-      (isNaN(Number(formData.estimatedHours)) ||
-        Number(formData.estimatedHours) < 0)
-    ) {
+    if (formData.estimatedHours !== undefined && (isNaN(Number(formData.estimatedHours)) || Number(formData.estimatedHours) < 0)) {
       newErrors.estimatedHours = "Please enter a valid number";
     }
 
@@ -85,43 +69,51 @@ export default function AddTaskPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!validateForm()) {
-      toast.error("Please fix the errors");
-      return;
-    }
+    if (!validateForm()) return toast.error("Please fix the errors");
 
     try {
-      await createTaskMutation.mutateAsync({
+      // Prepare the task data
+      const taskData: CreateTaskDto = {
         ...formData,
         projectId: taskType === "personal" ? null : formData.projectId || null,
-        estimatedHours: formData.estimatedHours
-          ? Number(formData.estimatedHours)
-          : null,
-      });
+        estimatedHours: formData.estimatedHours ?? null,
+        // Don't include workspaceId - backend will determine it
+      };
+
+      // Remove empty string values
+      if (taskData.projectId === "") delete taskData.projectId;
+      if (!taskData.description) delete taskData.description;
+      if (!taskData.startDate) delete taskData.startDate;
+      if (!taskData.dueDate) delete taskData.dueDate;
+      if (!taskData.assigneeIds?.length) delete taskData.assigneeIds;
+      if (!taskData.labelIds?.length) delete taskData.labelIds;
+
+      console.log('Submitting task:', taskData);
+
+      await createTaskMutation.mutateAsync(taskData);
+      toast.success("Task created successfully!");
     } catch (error) {
       console.error("Create task error:", error);
+      toast.error("Failed to create task");
     }
   };
 
-  const handleCancel = () => {
-    router.push("/dashboard/tasks");
-  };
+  const handleCancel = () => router.push("/dashboard/tasks");
 
   const toggleAssignee = (userId: string) => {
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       assigneeIds: prev.assigneeIds?.includes(userId)
-        ? prev.assigneeIds.filter((id) => id !== userId)
+        ? prev.assigneeIds.filter(id => id !== userId)
         : [...(prev.assigneeIds || []), userId],
     }));
   };
 
   const toggleLabel = (labelId: string) => {
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       labelIds: prev.labelIds?.includes(labelId)
-        ? prev.labelIds.filter((id) => id !== labelId)
+        ? prev.labelIds.filter(id => id !== labelId)
         : [...(prev.labelIds || []), labelId],
     }));
   };

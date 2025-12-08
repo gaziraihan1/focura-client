@@ -47,12 +47,16 @@ export interface TaskStats {
   overdue: number;
   dueToday: number;
   byStatus: Record<string, number>;
+  totalTasks?: number;
+  inProgress?: number;
+  completed?: number;
 }
 
 export interface CreateTaskDto {
   title: string;
   description?: string;
   projectId?: string | null;
+  workspaceId?: string | null; // Optional and can be null
   status: Task['status'];
   priority: Task['priority'];
   startDate?: string;
@@ -67,6 +71,10 @@ export interface TaskFilters {
   status?: string;
   priority?: string;
   search?: string;
+  projectId?: string;
+  workspaceId?: string;
+  assigneeId?: string;
+  labelIds?: string[];
 }
 
 export const taskKeys = {
@@ -93,6 +101,20 @@ export function useTasks(filters?: TaskFilters) {
       if (filters?.priority && filters.priority !== 'all') {
         params.append('priority', filters.priority);
       }
+      if (filters?.projectId) {
+        params.append('projectId', filters.projectId);
+      }
+      if (filters?.workspaceId) {
+        params.append('workspaceId', filters.workspaceId);
+      }
+      if (filters?.assigneeId) {
+        params.append('assigneeId', filters.assigneeId);
+      }
+      if (filters?.labelIds?.length) {
+        filters.labelIds.forEach((labelId) => {
+          params.append('labelIds', labelId);
+        });
+      }
       
       const queryString = params.toString();
       const endpoint = `/api/tasks${queryString ? `?${queryString}` : ''}`;
@@ -106,18 +128,23 @@ export function useTasks(filters?: TaskFilters) {
   });
 }
 
-export function useTaskStats() {
+export function useTaskStats(workspaceId?: string) {
   return useQuery({
-    queryKey: taskKeys.stats(),
+    queryKey: [...taskKeys.stats(), workspaceId || 'personal'],
     queryFn: async () => {
-      const response = await api.get<TaskStats>('/api/tasks/stats', {
-        showErrorToast: true,
-      });
+      const params = new URLSearchParams();
+      if (workspaceId) params.append('workspaceId', workspaceId);
+
+      const endpoint = `/api/tasks/stats${params.toString() ? `?${params.toString()}` : ''}`;
+      const response = await api.get<TaskStats>(endpoint, { showErrorToast: true });
       return response.data || null;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    enabled: workspaceId !== undefined || !workspaceId, // fetch personal if no workspace
+    staleTime: 5 * 60 * 1000,
   });
 }
+
+
 
 export function useTask(taskId: string) {
   return useQuery({

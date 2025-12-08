@@ -11,16 +11,21 @@ export interface TeamMember {
 
 export const teamKeys = {
   all: ['team'] as const,
-  members: () => [...teamKeys.all, 'members'] as const,
+  members: (workspaceId?: string) => [...teamKeys.all, 'members', workspaceId] as const,
 };
 
-export function useTeamMembers() {
+export function useTeamMembers(workspaceId?: string) {
   return useQuery({
-    queryKey: teamKeys.members(),
+    queryKey: teamKeys.members(workspaceId),
     queryFn: async () => {
-      const response = await api.get<TeamMember[]>('/api/user/workspace-members');
+      const params = new URLSearchParams();
+      if (workspaceId) params.append('workspaceId', workspaceId);
+
+      const endpoint = `/api/user/workspace-members${params.toString() ? `?${params.toString()}` : ''}`;
+      const response = await api.get<TeamMember[]>(endpoint);
       return response.data || [];
     },
+    enabled: workspaceId !== undefined,
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
 }

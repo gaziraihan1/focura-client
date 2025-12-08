@@ -290,7 +290,7 @@ export default function CreateWorkspacePage() {
                 onClick={() =>
                   setFormData((prev) => ({
                     ...prev,
-                    plan: option.plan as any,
+                    plan: option.plan as "FREE" | "PRO" | "BUSINESS"  | "ENTERPRISE",
                   }))
                 }
                 className={`p-4 rounded-xl border-2 transition text-left ${

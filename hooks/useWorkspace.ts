@@ -2,13 +2,14 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
 
 // Types
 export interface Workspace {
   id: string;
   name: string;
   slug: string;
+  // Keep optional alias for older API responses if any
+  workspaceSlug?: string;
   description?: string;
   logo?: string;
   color?: string;
@@ -90,16 +91,16 @@ export function useWorkspaces() {
 
 // ============================================
 // GET - Fetch single workspace by slug
-export function useWorkspace(slug: string) {
+export function useWorkspace(workspaceSlug: string) {
   return useQuery({
-    queryKey: workspaceKeys.detail(slug),
+    queryKey: workspaceKeys.detail(workspaceSlug),
     queryFn: async () => {
-      const response = await api.get<Workspace>(`/api/workspaces/${slug}`, {
+      const response = await api.get<Workspace>(`/api/workspaces/${workspaceSlug}`, {
         showErrorToast: true,
       });
       return response.data;
     },
-    enabled: !!slug,
+    enabled: typeof workspaceSlug === "string" && workspaceSlug.length > 0,
     staleTime: 3 * 60 * 1000, // 3 minutes
   });
 }
@@ -110,20 +111,21 @@ export function useCreateWorkspace() {
   const queryClient = useQueryClient();
   const router = useRouter();
   
-  return useMutation({
-    mutationFn: async (data: CreateWorkspaceDto) => {
+  return useMutation<Workspace, unknown, CreateWorkspaceDto>({
+    mutationFn: async (data: CreateWorkspaceDto): Promise<Workspace> => {
       const response = await api.post<Workspace>('/api/workspaces', data, {
         showErrorToast: true, // Let axios interceptor handle all errors
         showSuccessToast: true,
       });
-      return response.data;
+      return response.data as Workspace;
     },
     onSuccess: (workspace) => {
-      // Invalidate workspace list
       queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() });
       
-      // Navigate to new workspace
-      router.push(`/dashboard/workspaces/${workspace?.slug}`);
+      const slug = workspace?.workspaceSlug ?? workspace?.slug;
+      if (slug) {
+        router.push(`/dashboard/workspaces/${slug}`);
+      }
     },
   });
 }
@@ -133,17 +135,20 @@ export function useCreateWorkspace() {
 export function useUpdateWorkspace() {
   const queryClient = useQueryClient();
   
-  return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Partial<CreateWorkspaceDto> }) => {
+  return useMutation<Workspace, unknown, { id: string; data: Partial<CreateWorkspaceDto> }>({
+    mutationFn: async ({ id, data }: { id: string; data: Partial<CreateWorkspaceDto> }): Promise<Workspace> => {
       const response = await api.put<Workspace>(`/api/workspaces/${id}`, data, {
         showSuccessToast: true,
         showErrorToast: true,
       });
-      return response.data;
+      return response.data as Workspace;
     },
     onSuccess: (workspace) => {
       // Update cache
-      queryClient.setQueryData(workspaceKeys.detail(workspace.slug), workspace);
+      const slug = workspace.workspaceSlug ?? workspace.slug;
+      if (slug) {
+        queryClient.setQueryData(workspaceKeys.detail(slug), workspace);
+      }
       queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() });
     },
   });
@@ -172,9 +177,10 @@ export function useDeleteWorkspace() {
 
 // ============================================
 // GET - Fetch workspace members
-export function useWorkspaceMembers(workspaceId: string) {
+export function useWorkspaceMembers(workspaceId?: string) {
+  const key = workspaceId ?? '';
   return useQuery({
-    queryKey: workspaceKeys.members(workspaceId),
+    queryKey: workspaceKeys.members(key),
     queryFn: async () => {
       const response = await api.get<WorkspaceMember[]>(
         `/api/workspaces/${workspaceId}/members`,
@@ -304,9 +310,9 @@ export function useAcceptInvitation() {
   const queryClient = useQueryClient();
   const router = useRouter();
   
-  return useMutation({
-    mutationFn: async (token: string) => {
-      const response = await api.post(
+  return useMutation<Workspace, unknown, string>({
+    mutationFn: async (token: string): Promise<Workspace> => {
+      const response = await api.post<Workspace>(
         `/api/workspaces/invitations/${token}/accept`,
         {},
         { 
@@ -314,11 +320,14 @@ export function useAcceptInvitation() {
           showErrorToast: true,
         }
       );
-      return response.data;
+      return response.data as Workspace;
     },
     onSuccess: (workspace) => {
       queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() });
-      router.push(`/dashboard/${workspace.slug}`);
+      const slug = workspace.workspaceSlug ?? workspace.slug;
+      if (slug) {
+        router.push(`/dashboard/${slug}`);
+      }
     },
   });
 }

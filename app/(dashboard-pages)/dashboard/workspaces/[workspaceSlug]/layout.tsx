@@ -271,17 +271,16 @@ export default function WorkspaceLayout({
               />
             </div>
 
-            {/* Workspace List */}
             <div className="overflow-y-auto max-h-64">
               {allWorkspaces.map((ws) => (
                 <button
                   key={ws.id}
                   onClick={() => {
-                    router.push(`/dashboard/${ws.slug}`);
+                    router.push(`/dashboard/${ws.workspaceSlug}`);
                     setSwitcherOpen(false);
                   }}
                   className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition ${
-                    ws.slug === slug ? "bg-accent" : ""
+                    ws.workspaceSlug === slug ? "bg-accent" : ""
                   }`}
                 >
                   <div
@@ -300,7 +299,6 @@ export default function WorkspaceLayout({
                 </button>
               ))}
 
-              {/* Create New */}
               <button
                 onClick={() => {
                   router.push("/dashboard/workspaces/new");

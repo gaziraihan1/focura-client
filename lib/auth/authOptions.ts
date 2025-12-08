@@ -6,10 +6,8 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import * as argon2 from "argon2";
 import { createBackendToken } from "./backendToken";
-// import { cookies } from "next/headers";
 
 const isProd = process.env.NODE_ENV === "production";
-// const BACKEND_COOKIE_NAME = isProd ? "__Secure-focura.backend" : "focura.backend";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -25,6 +23,7 @@ export const authOptions: NextAuthOptions = {
         },
       },
     }),
+
     CredentialsProvider({
       id: "credentials",
       name: "Credentials",
@@ -47,6 +46,7 @@ export const authOptions: NextAuthOptions = {
             password: true,
             role: true,
             image: true,
+            emailVerified: true,
           },
         });
 
@@ -55,9 +55,14 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid credentials.");
         }
 
+        if (!user.emailVerified) {
+          throw new Error("Please verify your email to log in.");
+        }
+
         const isValid = await argon2.verify(user.password, credentials.password);
         if (!isValid) throw new Error("Invalid credentials.");
 
+        // Update last login
         await prisma.user.update({
           where: { id: user.id },
           data: { lastLoginAt: new Date() },
@@ -78,19 +83,17 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, profile }) {
       if (user) {
         token.id = user.id;
         token.role = user.role ?? "USER";
-        
+
         // Create backend token
         token.backendToken = createBackendToken({
           id: user.id,
           email: user.email!,
           role: user.role ?? "USER",
         });
-        
-        console.log("✅ [NextAuth] JWT callback - backend token created");
       }
       return token;
     },
@@ -104,22 +107,28 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
 
-    // This is called after successful sign in
     async signIn({ user, account, profile }) {
-      console.log("✅ [NextAuth] Sign in successful:", user.email);
-      
-      // For OAuth providers, ensure user exists in DB
+      // Update last login for OAuth users
       if (account?.provider === "google") {
         try {
           await prisma.user.update({
             where: { email: user.email! },
-            data: { lastLoginAt: new Date() },
+            data: {
+              lastLoginAt: new Date(),
+              // Auto-verify email for Google if profile says verified
+              emailVerified: profile?.email_verified ? new Date() : undefined,
+            },
           });
-        } catch (error) {
-          console.error("Failed to update last login:", error);
+        } catch (err) {
+          console.error("Failed to update OAuth login:", err);
         }
       }
-      
+
+      // Block unverified email for credentials
+      if (account?.provider === "credentials" && !user.emailVerified) {
+        throw new Error("Please verify your email to log in.");
+      }
+
       return true;
     },
   },
@@ -141,12 +150,14 @@ declare module "next-auth" {
       name?: string | null;
       image?: string | null;
       role: string;
+      emailVerified?: Date | null;
     };
     backendToken?: string;
   }
 
   interface User {
     role?: string;
+    emailVerified?: Date | null;
   }
 }
 

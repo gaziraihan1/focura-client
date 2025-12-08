@@ -1,9 +1,11 @@
 import crypto from "crypto";
 
-export function generateToken(length = 48) {
-  return crypto.randomBytes(length).toString("hex");
+
+export function generateRawToken(size = 48) {
+return crypto.randomBytes(size).toString("hex");
 }
 
-export function tokenExpiry(hours = 1) {
-  return new Date(Date.now() + hours * 60 * 60 * 1000);
+
+export function hashToken(token: string) {
+return crypto.createHash("sha256").update(token).digest("hex");
 }
