@@ -28,7 +28,7 @@ interface SidebarProps {
 
 interface NavItem {
   name: string;
-  href?: string;
+  href?: string ;
   icon: React.ElementType;
   badge?: string;
   children?: { name: string; href: string }[];
@@ -199,7 +199,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                         w-full flex items-center justify-between px-3 py-2.5 rounded-lg
                         text-sm font-medium transition-colors
                         ${
-                          isActive(item.href)
+                          isActive(item.href || "")
                             ? "bg-sidebar-accent text-sidebar-accent-foreground"
                             : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                         }
@@ -239,13 +239,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                   </>
                 ) : (
                   <Link
-                    href={item.href}
+                    href={item.href || ""}
                     onClick={onClose}
                     className={`
                       flex items-center gap-3 px-3 py-2.5 rounded-lg
                       text-sm font-medium transition-colors
                       ${
-                        isActive(item.href)
+                        isActive(item.href || "")
                           ? "bg-sidebar-accent text-sidebar-accent-foreground"
                           : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                       }
@@ -268,13 +268,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             {bottomNavigation.map((item) => (
               <Link
                 key={item.name}
-                href={item.href}
+                href={item.href || ""}
                 onClick={onClose}
                 className={`
                   flex items-center gap-3 px-3 py-2.5 rounded-lg
                   text-sm font-medium transition-colors
                   ${
-                    isActive(item.href)
+                    isActive(item.href || "")
                       ? "bg-sidebar-accent text-sidebar-accent-foreground"
                       : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                   }

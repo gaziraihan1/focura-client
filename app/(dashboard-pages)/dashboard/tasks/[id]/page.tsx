@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -38,6 +38,8 @@ import {
   useTaskAttachments,
   useUploadAttachment,
   useDeleteAttachment,
+  type Task as TaskFromHook,
+  type Comment as CommentFromHook,
 } from "@/hooks/useTask";
 import { useDeleteComment, useUpdateComment } from "@/hooks/useComment";
 
@@ -48,19 +50,6 @@ export interface User {
   image?: string;
 }
 
-export interface Comment {
-  id: string;
-  content: string;
-  edited: boolean;
-  createdAt: string;
-  updatedAt: string;
-  taskId: string;
-  userId: string;
-  parentId?: string | null;
-  user: User;
-  replies?: Comment[];
-}
-
 export interface TimeTracking {
   hoursSinceCreation: number;
   hoursUntilDue: number | null;
@@ -69,20 +58,9 @@ export interface TimeTracking {
   timeProgress: number | null;
 }
 
-export interface Task {
-  id: string;
-  title: string;
-  description?: string | null;
-  priority: "URGENT" | "HIGH" | "MEDIUM" | "LOW";
-  status: "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "BLOCKED" | "COMPLETED" | "CANCELLED";
-  createdAt: string;
-  dueDate?: string | null;
-  estimatedHours?: number | null;
-  createdBy: User;
-  assignees: { user: User }[];
-  project?: { name: string; color: string } | null;
+export type Task = TaskFromHook & {
   timeTracking?: TimeTracking;
-}
+};
 
 // Helper functions
 const formatTimeDuration = (hours: number) => {
@@ -130,7 +108,8 @@ export default function TaskDetailsPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
 
-  const { data: task, isLoading, isError } = useTask(taskId);
+  const { data: taskData, isLoading, isError } = useTask(taskId);
+  const task = taskData as Task | undefined;
   const { data: comments = [] } = useTaskComments(taskId);
   const { data: activities = [] } = useTaskActivity(taskId);
   const { data: attachments = [] } = useTaskAttachments(taskId);
@@ -144,7 +123,7 @@ export default function TaskDetailsPage() {
   const uploadAttachment = useUploadAttachment();
   const deleteAttachment = useDeleteAttachment();
 
-  useState(() => {
+  useEffect(() => {
     if (task) {
       setEditData({
         title: task.title,
@@ -154,9 +133,9 @@ export default function TaskDetailsPage() {
         estimatedHours: task.estimatedHours?.toString() || "",
       });
     }
-  });
+  }, [task]);
 
-  const handleStatusChange = async (status: typeof task.status) => {
+  const handleStatusChange = async (status: Task['status']) => {
     if (!task) return;
     await updateStatus.mutateAsync({ id: task.id, status });
   };
@@ -170,8 +149,8 @@ export default function TaskDetailsPage() {
         data: {
           title: editData.title,
           description: editData.description,
-          priority: editData.priority as any,
-          status: editData.status as any,
+          priority: editData.priority as Task['priority'],
+          status: editData.status as Task['status'],
           estimatedHours: editData.estimatedHours ? parseFloat(editData.estimatedHours) : undefined,
         },
       });
@@ -206,7 +185,7 @@ export default function TaskDetailsPage() {
     }
   };
 
-  const handleEdit = (comment: Comment) => {
+  const handleEdit = (comment: CommentFromHook) => {
     setEditingId(comment.id);
     setEditText(comment.content);
   };
@@ -501,7 +480,7 @@ export default function TaskDetailsPage() {
               ].map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() => setActiveTab(tab.id as "comments" | "activity" | "attachments")}
                   className={`flex-1 px-4 py-3 text-sm font-medium transition flex items-center justify-center gap-2 ${
                     activeTab === tab.id
                       ? "bg-primary/5 text-primary border-b-2 border-primary"
@@ -718,7 +697,7 @@ export default function TaskDetailsPage() {
               <label className="block text-sm font-medium text-foreground mb-2">Status</label>
               <select
                 value={task.status}
-                onChange={(e) => handleStatusChange(e.target.value as any)}
+                onChange={(e) => handleStatusChange(e.target.value as Task['status'])}
                 disabled={updateStatus.isPending}
                 className={`w-full px-4 py-2 rounded-lg border ${getStatusColor(
                   task.status

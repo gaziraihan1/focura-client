@@ -38,6 +38,13 @@ const PREDEFINED_COLORS = [
   "#EC4899",
   "#14B8A6",
 ];
+type WorkspaceForm = {
+  name: string;
+  description: string;
+  color: string;
+  isPublic: boolean;
+  allowInvites: boolean;
+};
 
 export default function WorkspaceSettingsPage() {
   const params = useParams();
@@ -61,7 +68,7 @@ export default function WorkspaceSettingsPage() {
   const updateMemberRole = useUpdateMemberRole();
   const leaveWorkspace = useLeaveWorkspace();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<WorkspaceForm>({
     name: workspace?.name || "",
     description: workspace?.description || "",
     color: workspace?.color || PREDEFINED_COLORS[0],

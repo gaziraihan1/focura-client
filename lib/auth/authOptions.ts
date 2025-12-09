@@ -9,6 +9,12 @@ import { createBackendToken } from "./backendToken";
 
 const isProd = process.env.NODE_ENV === "production";
 
+// Define Google Profile type
+interface GoogleProfile {
+  email_verified?: boolean;
+  [key: string]: any;
+}
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -111,12 +117,13 @@ export const authOptions: NextAuthOptions = {
       // Update last login for OAuth users
       if (account?.provider === "google") {
         try {
+          const googleProfile = profile as GoogleProfile;
           await prisma.user.update({
             where: { email: user.email! },
             data: {
               lastLoginAt: new Date(),
               // Auto-verify email for Google if profile says verified
-              emailVerified: profile?.email_verified ? new Date() : undefined,
+              emailVerified: googleProfile?.email_verified ? new Date() : undefined,
             },
           });
         } catch (err) {
@@ -152,7 +159,7 @@ declare module "next-auth" {
       role: string;
       emailVerified?: Date | null;
     };
-    backendToken?: string;
+    backendToken: string;
   }
 
   interface User {
@@ -163,8 +170,8 @@ declare module "next-auth" {
 
 declare module "next-auth/jwt" {
   interface JWT {
-    id?: string;
-    role?: string;
-    backendToken?: string;
+    id: string;
+    role: string;
+    backendToken: string;
   }
 }

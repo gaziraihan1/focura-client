@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient, InfiniteData } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef } from "react";
@@ -43,7 +43,13 @@ export function useNotifications() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteQuery({
+  } = useInfiniteQuery<
+    NotificationsResponse,
+    Error,
+    InfiniteData<NotificationsResponse>,
+    string[],
+    string | undefined
+  >({
     queryKey: ["notifications"],
     queryFn: async ({ pageParam }) => {
       try {
@@ -64,7 +70,7 @@ export function useNotifications() {
       }
     },
     getNextPageParam: (lastPage) => {
-      return lastPage?.nextCursor ?? null;
+      return lastPage?.nextCursor ?? undefined;
     },
     initialPageParam: undefined,
     enabled: !!session,

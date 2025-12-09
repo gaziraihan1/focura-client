@@ -38,6 +38,7 @@ const priorityColors: Record<string, string> = {
   HIGH: "bg-orange-500/10 text-orange-500 border-orange-500/20",
   MEDIUM: "bg-blue-500/10 text-blue-500 border-blue-500/20",
   LOW: "bg-green-500/10 text-green-500 border-green-500/20",
+  // undefined: "border-border",
 };
 
 const validateHex = (value: string) => /^#[0-9A-F]{6}$/i.test(value);
@@ -246,7 +247,7 @@ export default function WorkspaceNewProjectPage() {
                 >
                   {statusOptions.map((status) => (
                     <option key={status} value={status}>
-                      {status.replace("_", " ")}
+                      {status?.replace("_", " ")}
                     </option>
                   ))}
                 </select>
@@ -280,7 +281,7 @@ export default function WorkspaceNewProjectPage() {
                     onClick={() => setForm((prev) => ({ ...prev, priority }))}
                     className={`px-4 py-2.5 rounded-lg border transition text-sm font-medium ${
                       form.priority === priority
-                        ? priorityColors[priority]
+                        ? priorityColors[priority as string ]
                         : "border-border text-muted-foreground hover:bg-accent"
                     }`}
                   >

@@ -27,7 +27,7 @@ export function useUpdateComment() {
       return response.data;
     },
     onSuccess: (_, { taskId, commentId }) => {
-      queryClient.invalidateQueries({ queryKey: commentKeys.byTask(taskId) });
+      queryClient.invalidateQueries({ queryKey: commentKeys.byTask(taskId || "") });
       queryClient.invalidateQueries({ queryKey: ['comments', commentId] });
     },
   });
