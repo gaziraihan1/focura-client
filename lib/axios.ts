@@ -15,8 +15,8 @@ export interface ApiOptions {
 
 const API_BASE_URL =
   process.env.NODE_ENV === "development"
-    ? process.env.NEXTAUTH_SECRET
-    : "http://localhost:5000";
+    ? "http://localhost:5000"
+    : process.env.NEXTAUTH_SECRET;
 
 
 // Axios instance with credentials support
