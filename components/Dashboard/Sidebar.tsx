@@ -199,7 +199,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                         w-full flex items-center justify-between px-3 py-2.5 rounded-lg
                         text-sm font-medium transition-colors
                         ${
-                          isActive(item.href || "")
+                          item.href && isActive(item.href)
                             ? "bg-sidebar-accent text-sidebar-accent-foreground"
                             : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                         }
@@ -245,7 +245,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                       flex items-center gap-3 px-3 py-2.5 rounded-lg
                       text-sm font-medium transition-colors
                       ${
-                        isActive(item.href || "")
+                        item.href && isActive(item.href )
                           ? "bg-sidebar-accent text-sidebar-accent-foreground"
                           : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                       }
