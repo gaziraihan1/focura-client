@@ -13,7 +13,11 @@ export interface ApiOptions {
   showErrorToast?: boolean;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://focura-backend-production.up.railway.app";
+const API_BASE_URL =
+  process.env.NODE_ENV === "development"
+    ? process.env.NEXTAUTH_SECRET
+    : "http://localhost:5000";
+
 
 // Axios instance with credentials support
 export const axiosInstance = axios.create({
