@@ -95,18 +95,19 @@ async function handleClearBackendCookie(req: Request) {
 
 export async function GET(
   req: Request,
-  context: { params: { nextauth: string[] } }
+  context: { params: Promise<{ nextauth: string[] }> }
 ) {
   const path = new URL(req.url).pathname;
   if (path.endsWith("/set-backend-cookie")) return handleSetBackendCookie(req);
   if (path.endsWith("/clear-backend-cookie"))
     return handleClearBackendCookie(req);
-  return await nextAuthHandler(req, { params: context.params });
+  const params = await context.params;
+  return await nextAuthHandler(req, { params });
 }
 
 export async function POST(
   req: Request,
-  context: { params: { nextauth: string[] } }
+  context: { params: Promise<{ nextauth: string[] }> }
 ) {
   const path = new URL(req.url).pathname;
   if (isLoginPath(path) && isRateLimited(req)) {
@@ -117,5 +118,6 @@ export async function POST(
   }
   if (path.endsWith("/clear-backend-cookie"))
     return handleClearBackendCookie(req);
-  return await nextAuthHandler(req, { params: context.params });
+  const params = await context.params;
+  return await nextAuthHandler(req, { params });
 }
