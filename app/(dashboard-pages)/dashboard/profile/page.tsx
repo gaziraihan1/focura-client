@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import {
   User,
@@ -43,7 +43,7 @@ interface StorageData {
 }
 
 export default function ProfilePage() {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [storage, setStorage] = useState<StorageData | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -59,35 +59,34 @@ export default function ProfilePage() {
     image: "",
   });
 
+  const fetchProfile = async () => {
+    try {
+      const response = await api.get<{
+        user: UserProfile;
+        storage: StorageData;
+      }>('/api/user/profile');
+      
+      if (response.data) {
+        setProfile(response.data.user);
+        setStorage(response.data.storage);
+        setFormData({
+          name: response.data.user.name || "",
+          bio: response.data.user.bio || "",
+          timezone: response.data.user.timezone || "UTC",
+          image: response.data.user.image || "",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to fetch profile:", error);
+      toast.error("Failed to load profile");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchProfile();
   }, []);
-
-
-  console.log(session)
-const fetchProfile = async () => {
-  try {
-    const response = await api.get<{
-      user: UserProfile;
-      storage: StorageData;
-    }>('/api/user/profile');
-    
-    if (response.data) {
-      setProfile(response.data.user);
-      setStorage(response.data.storage);
-      setFormData({
-        name: response.data.user.name || "",
-        bio: response.data.user.bio || "",
-        timezone: response.data.user.timezone || "UTC",
-        image: response.data.user.image || "",
-      });
-    }
-  } catch (error) {
-    console.error("Failed to fetch profile:", error);
-  } finally {
-    setLoading(false);
-  }
-};
 
 const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
   const file = e.target.files?.[0];
@@ -96,16 +95,19 @@ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
   setUploading(true);
 
   try {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("uploadType", "profile");
+    const uploadFormData = new FormData();
+    uploadFormData.append("file", file);
+    uploadFormData.append("uploadType", "profile");
 
-    const response = await api.upload<{ url: string }>('/api/upload', formData);
+    const uploadResponse = await api.upload<{ url: string }>('/api/upload', uploadFormData);
 
-    if (response.data?.url) {
-      const saveResponse = await api.put('/api/user/profile', { image: response.data.url });
-      if (saveResponse.success) {
-        setFormData((prev) => ({ ...prev, image: response.data!.url }));
+    if (uploadResponse.data?.url) {
+      const saveResponse = await api.put<{ user: UserProfile }>('/api/user/profile', { 
+        image: uploadResponse.data.url 
+      });
+      
+      if (saveResponse.data?.user) {
+        setFormData((prev) => ({ ...prev, image: uploadResponse.data!.url }));
         setProfile(saveResponse.data.user);
         toast.success("Profile picture updated successfully");
       }
@@ -127,7 +129,7 @@ const handleSave = async () => {
     if (response.data?.user) {
       setProfile(response.data.user);
       setIsEditing(false);
-      toast.success("Profile updated successul")
+      toast.success("Profile updated successfully");
     }
   } catch (error) {
     console.error("Save error:", error);
