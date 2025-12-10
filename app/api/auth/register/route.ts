@@ -23,6 +23,7 @@ export async function POST(req: Request) {
         { status: 429 }
       );
     }
+    console.log("Client IP:", ip);
 
     if (!name || !email || !password) {
       return NextResponse.json(

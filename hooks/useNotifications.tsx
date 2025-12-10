@@ -100,57 +100,67 @@ export function useNotifications() {
     retry: 1,
   });
 
-  useEffect(() => {
+    useEffect(() => {
     if (!session?.user) return;
 
     const userId = (session.user as any).id;
-    if (!userId) {
-      console.warn('User ID not found in session');
+    const token = (session as any)?.backendToken; // make sure session contains backend token
+
+    if (!userId || !token) {
+      console.warn("Missing userId or backendToken for SSE");
       return;
     }
 
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-    
-    console.log('🔵 Connecting to SSE:', `${backendUrl}/api/notifications/stream/${userId}`);
-    
-    const eventSource = new EventSource(
-      `${backendUrl}/api/notifications/stream/${userId}`,
-      { withCredentials: true } 
-    );
+    const backendUrl =
+      process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+    const sseUrl = `${backendUrl}/api/notifications/stream/${userId}?token=${encodeURIComponent(
+      token
+    )}`;
+
+    console.log("🔵 Connecting to SSE:", sseUrl);
+
+    const eventSource = new EventSource(sseUrl);
 
     eventSource.onopen = () => {
-      console.log('✅ SSE connection opened');
+      console.log("✅ SSE connection opened");
     };
 
     eventSource.onmessage = (event) => {
       try {
         const notification = JSON.parse(event.data);
-        
-        if (notification.type === 'connected') {
-          console.log('✅ SSE connected successfully');
+
+        // When backend sends initial connect data
+        if (notification.connected) {
+          console.log("✅ SSE connected successfully");
           return;
         }
-        
+
+        // Insert the new notification into React Query cache
         queryClient.setQueryData(["notifications"], (old: any) => {
           if (!old) return old;
-          
+
           return {
             ...old,
-            pages: old.pages.map((page: NotificationsResponse, index: number) => {
-              if (index === 0) {
-                return {
-                  ...page,
-                  items: [notification, ...page.items],
-                };
+            pages: old.pages.map(
+              (page: NotificationsResponse, index: number) => {
+                if (index === 0) {
+                  return {
+                    ...page,
+                    items: [notification, ...page.items],
+                  };
+                }
+                return page;
               }
-              return page;
-            }),
+            ),
           };
         });
 
-        queryClient.invalidateQueries({ queryKey: ["notifications", "unread-count"] });
-        
-        console.log('📬 New notification received:', notification.title);
+        queryClient.invalidateQueries({
+          queryKey: ["notifications", "unread-count"],
+        });
+
+        console.log("📬 New notification:", notification.title);
       } catch (error) {
         console.error("Error parsing SSE notification:", error);
       }
@@ -158,21 +168,18 @@ export function useNotifications() {
 
     eventSource.onerror = (error) => {
       console.error("❌ SSE connection error:", error);
-      console.log('SSE readyState:', eventSource.readyState);
-      
+      console.log("SSE readyState:", eventSource.readyState);
       eventSource.close();
-      
     };
 
     eventSourceRef.current = eventSource;
 
     return () => {
-      console.log('🔴 Closing SSE connection');
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
-      }
+      console.log("🔴 Closing SSE connection");
+      eventSourceRef.current?.close();
     };
   }, [session, queryClient]);
+
 
   const markAsReadMutation = useMutation({
     mutationFn: async (notificationId: string) => {

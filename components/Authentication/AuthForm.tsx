@@ -85,19 +85,8 @@ export default function AuthForm({ mode }: AuthFormProps) {
         alert("Registration successful! Please check your email to verify your account.");
         
         // Auto-login after registration
-        const result = await signIn("credentials", {
-          redirect: false,
-          email: values.email,
-          password: values.password,
-        });
+       router.push("/authentication/login?verifyEmail=true");
 
-        if (result?.ok) {
-          
-            router.push("/dashboard");
-          
-        } else {
-          router.push("/authentication/login");
-        }
       }
     } catch (err) {
       console.error("Auth error:", err);
