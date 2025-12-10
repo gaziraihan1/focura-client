@@ -1,6 +1,7 @@
 // lib/axios.ts
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import toast from "react-hot-toast";
+import { getSession, signOut } from "next-auth/react";
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
@@ -18,8 +19,7 @@ const API_BASE_URL =
     ? "http://localhost:5000"
     : process.env.NEXT_PUBLIC_API_URL;
 
-
-// Axios instance with credentials support
+// Axios instance
 export const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
@@ -29,15 +29,29 @@ export const axiosInstance = axios.create({
   withCredentials: true, 
 });
 
-// Request interceptor
+// Request interceptor - ADD AUTHORIZATION HEADER
 axiosInstance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
+    // Get NextAuth session and extract backend token
+    const session = await getSession();
+    
+    if (session?.backendToken) {
+      config.headers.Authorization = `Bearer ${session.backendToken}`;
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ Added Authorization header with backend token');
+      }
+    } else {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('⚠️ No backend token found in session');
+      }
+    }
+
     if (process.env.NODE_ENV === 'development') {
       console.log('🔵 API Request:', {
         url: config.url,
         method: config.method,
-        cookies: document.cookie,
-        withCredentials: config.withCredentials
+        hasAuthHeader: !!config.headers.Authorization,
       });
     }
 
@@ -46,6 +60,7 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Response interceptor
 axiosInstance.interceptors.response.use(
   (response) => {
     if (response.config.headers?.["x-show-success-toast"] === "true") {
@@ -54,7 +69,6 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   async (error: AxiosError<{ message?: string; success?: boolean; code?: string }>) => {
-    // Early return if error object is malformed
     if (!error || !error.config) {
       console.error('🔴 Malformed error object');
       return Promise.reject(error);
@@ -65,29 +79,31 @@ axiosInstance.interceptors.response.use(
     const message = error.response?.data?.message || "Something went wrong";
     const status = error.response?.status;
 
-    // Debug logging
     if (process.env.NODE_ENV === 'development') {
       console.error('🔴 API Error:', {
         url: error.config?.url || 'unknown',
         status: status || 'no status',
         message: message,
         code: errorCode || 'no code',
-        showErrorToast,
-        hasResponse: !!error.response,
       });
     }
 
-    // Show toast for errors with response
+    if (error.response?.data?.code === 'TOKEN_EXPIRED') {
+  toast.error("Session expired. Please login again.");
+  // Clear session and redirect
+  signOut({ callbackUrl: '/authentication/login' });
+} else if (error.response?.data?.code === 'INVALID_TOKEN') {
+  toast.error("Invalid session. Please login again.");
+  signOut({ callbackUrl: '/authentication/login' });
+}
     if (error.response && showErrorToast) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('📢 Showing error toast:', message);
-      }
-      
       switch (status) {
         case 401:
           toast.error(message || "Session expired. Please log in again.");
           if (typeof window !== 'undefined' && !window.location.pathname.includes('/authentication')) {
-            // Handle redirect if needed
+            setTimeout(() => {
+              window.location.href = '/authentication/login';
+            }, 1500);
           }
           break;
         case 403:
@@ -106,19 +122,9 @@ axiosInstance.interceptors.response.use(
           toast.error(message);
       }
     } else if (error.request && showErrorToast) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('📢 Showing network error toast');
-      }
       toast.error("Network error. Check your connection");
     } else if (showErrorToast && !error.response) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('📢 Showing generic error toast');
-      }
       toast.error(error.message || "Unexpected error");
-    } else {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('❌ Toast suppressed (showErrorToast = false)');
-      }
     }
 
     return Promise.reject(error);
@@ -130,13 +136,11 @@ const configureRequest = (options?: ApiOptions) => {
 
   if (options?.showSuccessToast) headers["x-show-success-toast"] = "true";
   
-  // Explicitly set to "false" when showErrorToast is false
   if (options?.showErrorToast === false) {
     headers["x-show-error-toast"] = "false";
   } else if (options?.showErrorToast === true) {
     headers["x-show-error-toast"] = "true";
   }
-  // If undefined, don't set the header (will default to showing toast)
 
   return { headers };
 };

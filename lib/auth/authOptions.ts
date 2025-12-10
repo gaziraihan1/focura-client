@@ -116,20 +116,25 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account, profile }) {
       // Update last login for OAuth users
       if (account?.provider === "google") {
-        try {
-          const googleProfile = profile as GoogleProfile;
-          await prisma.user.update({
-            where: { email: user.email! },
-            data: {
-              lastLoginAt: new Date(),
-              // Auto-verify email for Google if profile says verified
-              emailVerified: googleProfile?.email_verified ? new Date() : undefined,
-            },
-          });
-        } catch (err) {
-          console.error("Failed to update OAuth login:", err);
-        }
-      }
+  try {
+    const googleProfile = profile as GoogleProfile;
+
+    const isVerified =
+      googleProfile?.email_verified === true ||
+      googleProfile?.verified_email === true;
+
+    await prisma.user.update({
+      where: { email: user.email! },
+      data: {
+        lastLoginAt: new Date(),
+        emailVerified: isVerified ? new Date() : undefined,
+      },
+    });
+  } catch (err) {
+    console.error("Failed to update OAuth login:", err);
+  }
+}
+
 
       // Block unverified email for credentials
       if (account?.provider === "credentials" && !user.emailVerified) {

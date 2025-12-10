@@ -67,15 +67,16 @@ async function handleSetBackendCookie(req: Request) {
   const res = NextResponse.redirect(
     new URL("/authentication/success", req.url)
   );
-  res.cookies.set({
-    name: BACKEND_COOKIE_NAME,
-    value: token,
-    httpOnly: true,
-    secure: isProd,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 15 * 60,
-  });
+ res.cookies.set({
+  name: BACKEND_COOKIE_NAME,
+  value: token,
+  httpOnly: true,
+  secure: isProd,        // Must be true for SameSite=None
+  sameSite: "none",    // REQUIRED for cross-domain cookies
+  path: "/",
+  maxAge: 15 * 60,
+});
+
   return res;
 }
 
@@ -86,7 +87,7 @@ async function handleClearBackendCookie(req: Request) {
     value: "",
     httpOnly: true,
     secure: isProd,
-    sameSite: "lax",
+    sameSite: "none",
     path: "/",
     maxAge: 0,
   });

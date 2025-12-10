@@ -42,23 +42,24 @@ export default function AuthForm({ mode }: AuthFormProps) {
     setError("");
 
     try {
-      if (mode === "login") {
-        const result = await signIn("credentials", {
-          redirect: false,
-          email: values.email,
-          password: values.password,
-        });
+     if (mode === "login") {
+      // Just sign in with NextAuth
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: values.email,
+        password: values.password,
+      });
 
-        if (result?.error) {
-          setError("Invalid email or password. Please try again.");
-          return;
-        }
+      if (result?.error) {
+        setError("Invalid email or password. Please try again.");
+        return;
+      }
 
-        if (result?.ok) {
-          // Middleware will automatically set the backend cookie
-          router.push("/dashboard");
-        }
-      } else {
+      if (result?.ok) {
+        console.log("✅ Login successful");
+        router.push("/dashboard");
+      }
+    } else {
         // Registration
         const res = await fetch("/api/auth/register", {
           method: "POST",
@@ -91,6 +92,10 @@ export default function AuthForm({ mode }: AuthFormProps) {
         });
 
         if (result?.ok) {
+          
+            router.push("/dashboard");
+          
+        } else {
           router.push("/authentication/login");
         }
       }
@@ -105,8 +110,10 @@ export default function AuthForm({ mode }: AuthFormProps) {
     setIsGoogleLoading(true);
 
     try {
+      // Google OAuth will redirect to /authentication/success
+      // where setupBackendAuth() will be called
       await signIn("google", {
-        callbackUrl: "/dashboard",
+        callbackUrl: "/authentication/success",
       });
     } catch (err) {
       console.error("Google sign-in error:", err);
