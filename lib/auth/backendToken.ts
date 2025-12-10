@@ -1,7 +1,7 @@
 // src/lib/auth/backendToken.ts
 import jwt from "jsonwebtoken";
 
-export const BACKEND_TOKEN_EXPIRY = "15m"; // short-lived
+export const BACKEND_TOKEN_EXPIRY = "1h"; // short-lived
 
 export function createBackendToken(payload: {
   id: string;
