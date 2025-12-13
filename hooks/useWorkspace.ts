@@ -38,6 +38,7 @@ export interface WorkspaceMember {
   id: string;
   role: 'OWNER' | 'ADMIN' | 'MEMBER' | 'GUEST';
   joinedAt: string;
+  userId: string;
   user: {
     id: string;
     name: string;

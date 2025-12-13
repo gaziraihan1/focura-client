@@ -200,7 +200,7 @@ export default function WorkspaceDetailPage() {
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
           <button
-            onClick={() => router.push(`/dashboard/${slug}/projects/new`)}
+            onClick={() => router.push(`/dashboard/workspaces/${slug}/projects/new-project`)}
             className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2"
           >
             <Plus size={18} />
@@ -208,7 +208,7 @@ export default function WorkspaceDetailPage() {
           </button>
 
           {isAdmin && (
-            <Link href={`/dashboard/${slug}/settings`}>
+            <Link href={`/dashboard/workspaces/${slug}/settings`}>
               <button className="p-2 rounded-lg hover:bg-accent transition">
                 <Settings size={20} className="text-muted-foreground" />
               </button>
@@ -392,7 +392,7 @@ export default function WorkspaceDetailPage() {
               Create your first project to get started
             </p>
             <button
-              onClick={() => router.push(`/dashboard/${slug}/projects/new`)}
+              onClick={() => router.push(`/dashboard/workspaces/${slug}/projects/new-project`)}
               className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
             >
               Create Project

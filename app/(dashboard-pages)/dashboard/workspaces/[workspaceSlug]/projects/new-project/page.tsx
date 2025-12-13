@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useWorkspace } from "@/hooks/useWorkspace";
-import { useCreateProject, CreateProjectDto } from "@/hooks/useProjects";
+import { CreateProjectDto, useCreateProject } from "@/hooks/useProjects";
 
 type ProjectForm = Omit<CreateProjectDto, "workspaceId">;
 

@@ -109,7 +109,7 @@ export default function InvitationPage() {
               Welcome to {invitation.workspace.name}!
             </h1>
             <p className="text-muted-foreground mb-6">
-              You've successfully joined the workspace. Redirecting...
+              You&apos;ve successfully joined the workspace. Redirecting...
             </p>
             <div className="flex items-center justify-center gap-1">
               <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></div>

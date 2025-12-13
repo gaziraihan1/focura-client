@@ -1,3 +1,4 @@
+// app/dashboard/[workspaceSlug]/projects/page.tsx
 "use client";
 
 import { useMemo, useState } from "react";
@@ -17,7 +18,7 @@ import {
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useWorkspace } from "@/hooks/useWorkspace";
-import { useProjects, Project } from "@/hooks/useProjects";
+import { useProjects } from "@/hooks/useProjects";
 
 const statusColors: Record<string, string> = {
   PLANNING: "bg-purple-500/10 text-purple-500",
@@ -46,14 +47,24 @@ export default function WorkspaceProjectsPage() {
   const workspaceSlug = params.workspaceSlug as string;
 
   const { data: workspace, isLoading: workspaceLoading, isError: workspaceError } = useWorkspace(workspaceSlug);
-  const { data: projects = [], isLoading: projectsLoading, isError: projectsError } = useProjects(workspace?.id);
+  const { data: projectsData, isLoading: projectsLoading, isError: projectsError } = useProjects(workspace?.id);
 
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Memoize projects extraction to fix React Hook dependency warning
+  const projects = useMemo(() => {
+    if (!projectsData) return [];
+    // Handle different response formats
+    if (Array.isArray(projectsData)) return projectsData;
+    return (projectsData as any)?.data || [];
+  }, [projectsData]);
+
+  console.log('Projects data:', projects);
 
   const filteredProjects = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
     if (!query) return projects;
-    return projects.filter((project) =>
+    return projects.filter((project: any) =>
       project.name.toLowerCase().includes(query) ||
       project.description?.toLowerCase().includes(query)
     );
@@ -139,27 +150,35 @@ export default function WorkspaceProjectsPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {filteredProjects.map((project: Project) => {
+          {filteredProjects.map((project: any) => {
+            // Get member count from _count or members array
+            const memberCount = project._count?.members || project.members?.length || 0;
+            const taskCount = project._count?.tasks || 0;
+
             const joined =
               project.isMember ||
-              project.members?.some((m) => m.user?.id === session?.user?.id);
+              project.members?.some((m: any) => m.user?.id === session?.user?.id);
 
             return (
               <Link key={project.id} href={`/dashboard/workspaces/${workspaceSlug}/projects/${project.id}`}>
                 <div className="p-5 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-lg transition cursor-pointer h-full flex flex-col gap-4">
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 flex-1">
                       <div
-                        className="w-12 h-12 rounded-lg flex items-center justify-center text-lg font-bold text-foreground"
+                        className="w-12 h-12 rounded-lg flex items-center justify-center text-lg font-bold shrink-0"
                         style={{ backgroundColor: `${project.color || "#667eea"}20` }}
                       >
-                        <FolderKanban
-                          size={20}
-                          style={{ color: project.color || "#667eea" }}
-                        />
+                        {project.icon ? (
+                          <span className="text-2xl">{project.icon}</span>
+                        ) : (
+                          <FolderKanban
+                            size={20}
+                            style={{ color: project.color || "#667eea" }}
+                          />
+                        )}
                       </div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-foreground">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-lg font-semibold text-foreground truncate">
                           {project.name}
                         </h3>
                         {project.description && (
@@ -170,10 +189,10 @@ export default function WorkspaceProjectsPage() {
                       </div>
                     </div>
 
-                    <div className="flex flex-col items-end gap-2">
+                    <div className="flex flex-col items-end gap-2 shrink-0">
                       {project.status && (
                         <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
                             statusColors[project.status] || "bg-muted text-foreground"
                           }`}
                         >
@@ -181,7 +200,7 @@ export default function WorkspaceProjectsPage() {
                         </span>
                       )}
                       {joined && (
-                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20 flex items-center gap-1">
+                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20 flex items-center gap-1 whitespace-nowrap">
                           <CheckCircle2 size={14} />
                           Joined
                         </span>
@@ -189,6 +208,7 @@ export default function WorkspaceProjectsPage() {
                     </div>
                   </div>
 
+                  {/* Priority and Dates */}
                   <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                     {project.priority && (
                       <span className="flex items-center gap-1">
@@ -202,38 +222,40 @@ export default function WorkspaceProjectsPage() {
                         Due {formatDate(project.dueDate)}
                       </span>
                     )}
-                    {project.startDate && (
-                      <span className="flex items-center gap-1">
-                        <Calendar size={14} />
-                        Starts {formatDate(project.startDate)}
+                  </div>
+
+                  {/* Tasks and Members Count */}
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="flex items-center gap-2 text-muted-foreground">
+                      <FolderKanban size={16} />
+                      <span className="font-medium text-foreground">{taskCount}</span>
+                      <span className="text-muted-foreground">
+                        {taskCount === 1 ? 'task' : 'tasks'}
                       </span>
-                    )}
-                  </div>
-
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
-                    <span className="flex items-center gap-2">
-                      <FolderKanban size={16} className="text-muted-foreground" />
-                      {(project._count?.tasks ?? 0)} tasks
                     </span>
-                    <span className="flex items-center gap-2">
-                      <Users size={16} className="text-muted-foreground" />
-                      {(project._count?.members ?? project.members?.length ?? 0)} members
+                    <span className="flex items-center gap-2 text-muted-foreground">
+                      <Users size={16} />
+                      <span className="font-medium text-foreground">{memberCount}</span>
+                      <span className="text-muted-foreground">
+                        {memberCount === 1 ? 'member' : 'members'}
+                      </span>
                     </span>
                   </div>
 
+                  {/* Member Badges */}
                   {project.members && project.members.length > 0 && (
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      {project.members.slice(0, 3).map((member) => (
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {project.members.slice(0, 3).map((member: any) => (
                         <span
-                          key={member.user.id}
-                          className="px-2 py-1 rounded-full bg-muted text-foreground flex items-center gap-1"
+                          key={member.user?.id || member.userId}
+                          className="px-2 py-1 rounded-full bg-muted text-foreground flex items-center gap-1 text-xs"
                         >
                           {member.role === "MANAGER" && <Crown size={12} className="text-yellow-500" />}
-                          {member.user.name}
+                          {member.user?.name || 'Unknown'}
                         </span>
                       ))}
                       {project.members.length > 3 && (
-                        <span className="px-2 py-1 rounded-full bg-muted text-foreground">
+                        <span className="px-2 py-1 rounded-full bg-muted text-foreground text-xs">
                           +{project.members.length - 3} more
                         </span>
                       )}
