@@ -1,4 +1,3 @@
-// app/dashboard/[workspaceSlug]/projects/page.tsx
 "use client";
 
 import { useMemo, useState } from "react";
@@ -51,10 +50,8 @@ export default function WorkspaceProjectsPage() {
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Memoize projects extraction to fix React Hook dependency warning
   const projects = useMemo(() => {
     if (!projectsData) return [];
-    // Handle different response formats
     if (Array.isArray(projectsData)) return projectsData;
     return (projectsData as any)?.data || [];
   }, [projectsData]);
@@ -98,7 +95,6 @@ export default function WorkspaceProjectsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Projects</h1>
@@ -129,7 +125,6 @@ export default function WorkspaceProjectsPage() {
         </div>
       </div>
 
-      {/* Projects */}
       {filteredProjects.length === 0 ? (
         <div className="text-center py-12 rounded-xl bg-card border border-border">
           <FolderKanban className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
@@ -151,7 +146,6 @@ export default function WorkspaceProjectsPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {filteredProjects.map((project: any) => {
-            // Get member count from _count or members array
             const memberCount = project._count?.members || project.members?.length || 0;
             const taskCount = project._count?.tasks || 0;
 
@@ -208,7 +202,6 @@ export default function WorkspaceProjectsPage() {
                     </div>
                   </div>
 
-                  {/* Priority and Dates */}
                   <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                     {project.priority && (
                       <span className="flex items-center gap-1">
@@ -224,7 +217,6 @@ export default function WorkspaceProjectsPage() {
                     )}
                   </div>
 
-                  {/* Tasks and Members Count */}
                   <div className="flex items-center justify-between text-sm">
                     <span className="flex items-center gap-2 text-muted-foreground">
                       <FolderKanban size={16} />
@@ -242,7 +234,6 @@ export default function WorkspaceProjectsPage() {
                     </span>
                   </div>
 
-                  {/* Member Badges */}
                   {project.members && project.members.length > 0 && (
                     <div className="flex items-center gap-2 flex-wrap">
                       {project.members.slice(0, 3).map((member: any) => (

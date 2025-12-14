@@ -1,4 +1,3 @@
-// app/dashboard/[workspaceSlug]/tasks/new/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -16,12 +15,10 @@ import {
   Loader2,
   AlertCircle,
   ArrowLeft,
-//   Paperclip,
   Plus,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
-// Import hooks
 import { useCreateTask, CreateTaskDto } from "@/hooks/useTask";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { useProjects } from "@/hooks/useProjects";
@@ -35,7 +32,6 @@ export default function WorkspaceNewTaskPage() {
   const router = useRouter();
   const workspaceSlug = params.workspaceSlug as string;
 
-  // Fetch workspace and related data
   const { data: workspace, isLoading: workspaceLoading } = useWorkspace(workspaceSlug);
   const { data: projects = [], isLoading: projectsLoading } = useProjects(workspace?.id);
   const { data: members = [], isLoading: membersLoading } = useWorkspaceMembers(workspace?.id);
@@ -173,7 +169,6 @@ export default function WorkspaceNewTaskPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button
@@ -198,7 +193,6 @@ export default function WorkspaceNewTaskPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Basic Information */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -304,7 +298,6 @@ export default function WorkspaceNewTaskPage() {
           </div>
         </motion.div>
 
-        {/* Task Details */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -317,7 +310,6 @@ export default function WorkspaceNewTaskPage() {
             </h3>
           </div>
 
-          {/* Status & Priority */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
@@ -369,7 +361,6 @@ export default function WorkspaceNewTaskPage() {
             </div>
           </div>
 
-          {/* Dates */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
@@ -413,7 +404,6 @@ export default function WorkspaceNewTaskPage() {
             </div>
           </div>
 
-          {/* Estimated Hours */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
               <Clock size={16} className="inline mr-2" />
@@ -444,7 +434,6 @@ export default function WorkspaceNewTaskPage() {
           </div>
         </motion.div>
 
-        {/* Team & Labels */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -457,7 +446,6 @@ export default function WorkspaceNewTaskPage() {
             </h3>
           </div>
 
-          {/* Assignees */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-3">
               <Users size={16} className="inline mr-2" />
@@ -544,7 +532,6 @@ export default function WorkspaceNewTaskPage() {
           </div>
         </motion.div>
 
-        {/* Form Actions */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

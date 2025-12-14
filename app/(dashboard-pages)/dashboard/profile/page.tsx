@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-// import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import {
   User,
@@ -43,7 +42,6 @@ interface StorageData {
 }
 
 export default function ProfilePage() {
-  // const { data: session } = useSession();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [storage, setStorage] = useState<StorageData | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -226,9 +224,7 @@ const handleSave = async () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Profile Info */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Profile Card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -287,7 +283,6 @@ const handleSave = async () => {
                 </div>
               </div>
 
-              {/* Name */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Full Name
@@ -307,7 +302,6 @@ const handleSave = async () => {
                 )}
               </div>
 
-              {/* Email (Read-only) */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Email Address
@@ -321,7 +315,6 @@ const handleSave = async () => {
                 </p>
               </div>
 
-              {/* Bio */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Bio
@@ -343,7 +336,6 @@ const handleSave = async () => {
                 )}
               </div>
 
-              {/* Timezone */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Timezone
@@ -381,9 +373,7 @@ const handleSave = async () => {
           </motion.div>
         </div>
 
-        {/* Right Column - Stats & Info */}
         <div className="space-y-6">
-          {/* Role Card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -417,7 +407,6 @@ const handleSave = async () => {
             </div>
           </motion.div>
 
-          {/* Storage Card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -463,7 +452,6 @@ const handleSave = async () => {
             </div>
           </motion.div>
 
-          {/* Plan Card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

@@ -30,6 +30,7 @@ export default function NavbarMain() {
       setIsLoggingOut(false);
     }
   };
+  
 
   return (
     <nav className="w-full border-b border-border/40 bg-background/60 backdrop-blur-md sticky top-0 z-50">

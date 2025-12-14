@@ -19,9 +19,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+
 import { useTasks, useTaskStats, TaskFilters } from "@/hooks/useTask";
 
-// Helper to format time duration
 const formatTimeDuration = (hours: number) => {
   if (hours < 0) {
     const absHours = Math.abs(hours);
@@ -35,7 +35,6 @@ const formatTimeDuration = (hours: number) => {
   return `${days}d left`;
 };
 
-// Helper to get time status color
 const getTimeStatusColor = (timeTracking: any) => {
   if (!timeTracking) return "text-gray-500";
   
@@ -63,7 +62,6 @@ export default function TasksPage() {
 
   const { data: tasks = [], isLoading, isError } = useTasks(filters);
   const { data: stats } = useTaskStats();
-  // console.log(tasks)
 
   const filteredTasks = useMemo(() => {
     if (!searchQuery.trim()) return tasks;
@@ -352,7 +350,6 @@ export default function TasksPage() {
                           {task.status.replace("_", " ")}
                         </span>
 
-                        {/* 🕐 Time Tracking Information */}
                         {task.timeTracking && (
                           <>
                             {/* Created hours ago */}
@@ -361,7 +358,6 @@ export default function TasksPage() {
                               <span>Created {task.timeTracking.hoursSinceCreation}h ago</span>
                             </div>
 
-                            {/* Time until due / Overdue status */}
                             {task.timeTracking.hoursUntilDue !== null && (
                               <div
                                 className={`flex items-center gap-1 text-xs font-medium ${getTimeStatusColor(
@@ -375,7 +371,6 @@ export default function TasksPage() {
                               </div>
                             )}
 
-                            {/* Progress bar for estimated hours */}
                             {task.timeTracking.timeProgress !== null && task.estimatedHours && (
                               <div className="flex items-center gap-2">
                                 <TrendingUp size={14} className="text-muted-foreground" />
@@ -404,7 +399,6 @@ export default function TasksPage() {
                           </>
                         )}
 
-                        {/* Due date fallback (if no time tracking) */}
                         {task.dueDate && !task.timeTracking && (
                           <div className="flex items-center gap-1 text-xs text-muted-foreground">
                             <Calendar size={14} />

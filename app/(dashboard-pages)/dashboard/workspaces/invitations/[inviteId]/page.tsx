@@ -4,6 +4,7 @@ import {  useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Check, X, Loader2, Mail, Users, Shield, Clock } from "lucide-react";
 import { useInvitation } from "@/hooks/useInvitation";
+import Image from "next/image";
 
 export default function InvitationPage() {
   const params = useParams();
@@ -28,7 +29,6 @@ export default function InvitationPage() {
       const workspace = await acceptInvitation();
       setSuccess(true);
 
-      // Redirect to workspace after 2 seconds
       setTimeout(() => {
         router.push(`/dashboard/workspaces/${workspace.slug}`);
       }, 2000);
@@ -179,7 +179,6 @@ export default function InvitationPage() {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="max-w-2xl w-full">
         <div className="bg-card border border-border rounded-xl shadow-lg overflow-hidden">
-          {/* Header */}
           <div 
             className="px-8 py-12 text-center relative overflow-hidden"
             style={{ 
@@ -194,7 +193,9 @@ export default function InvitationPage() {
             </div>
             <div className="relative">
               {invitation.workspace.logo ? (
-                <img
+                <Image
+                width={80}
+                height={80}
                   src={invitation.workspace.logo}
                   alt={invitation.workspace.name}
                   className="w-20 h-20 rounded-xl mx-auto mb-4 bg-white/10 backdrop-blur-sm border-2 border-white/20"
@@ -205,7 +206,7 @@ export default function InvitationPage() {
                 </div>
               )}
               <h1 className="text-3xl font-bold text-white mb-2">
-                You're Invited!
+                You&apos;re Invited!
               </h1>
               <p className="text-white/90 text-lg">
                 Join <strong>{invitation.workspace.name}</strong> workspace
@@ -213,7 +214,6 @@ export default function InvitationPage() {
             </div>
           </div>
 
-          {/* Content */}
           <div className="p-8">
             {invitation.workspace.description && (
               <div className="mb-6 p-4 bg-muted/50 rounded-lg border border-border">
@@ -223,7 +223,6 @@ export default function InvitationPage() {
               </div>
             )}
 
-            {/* Invitation Details */}
             <div className="space-y-4 mb-8">
               <div className="flex items-start gap-3 p-4 bg-muted/30 rounded-lg border border-border">
                 <Mail className="w-5 h-5 text-muted-foreground mt-0.5 shrink-0" />
@@ -268,7 +267,6 @@ export default function InvitationPage() {
               </div>
             </div>
 
-            {/* Actions */}
             <div className="flex gap-3">
               <button
                 onClick={handleDecline}
@@ -304,7 +302,6 @@ export default function InvitationPage() {
           </div>
         </div>
 
-        {/* Footer Note */}
         <p className="text-center text-sm text-muted-foreground mt-6">
           By accepting, you agree to join this workspace and collaborate with its members.
         </p>

@@ -1,4 +1,3 @@
-// app/dashboard/[workspaceSlug]/layout.tsx
 "use client";
 
 import { useParams, usePathname, useRouter } from "next/navigation";
@@ -15,7 +14,6 @@ import {
   ChevronDown,
   Plus,
   Menu,
-//   X,
   LogOut,
   Search,
   Command,
@@ -38,11 +36,9 @@ export default function WorkspaceLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [switcherOpen, setSwitcherOpen] = useState(false);
 
-  // Fetch current workspace
   const { data: workspace, isLoading } = useWorkspace(slug);
   const { data: allWorkspaces = [] } = useWorkspaces();
 
-  // Keyboard shortcut for workspace switcher (Cmd/Ctrl + K)
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
@@ -123,15 +119,13 @@ export default function WorkspaceLayout({
   );
 
   return (
-    <div className="flex h-screen bg-background">
-      {/* Sidebar */}
+    <div className="flex bg-background">
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border transform transition-transform duration-200 lg:translate-x-0 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border
+  flex flex-col transform transition-transform duration-200
+  lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="flex flex-col h-full">
-          {/* Workspace Switcher */}
           <div className="p-4 border-b border-border">
             <button
               onClick={() => setSwitcherOpen(true)}
@@ -155,7 +149,6 @@ export default function WorkspaceLayout({
             </button>
           </div>
 
-          {/* Navigation */}
           <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
             {navigation.map((item) => {
               const isActive = item.match(pathname);
@@ -177,7 +170,6 @@ export default function WorkspaceLayout({
             })}
           </nav>
 
-          {/* Bottom Actions */}
           <div className="p-4 border-t border-border space-y-2">
             <Link
               href={`/dashboard/${slug}/settings`}
@@ -198,7 +190,6 @@ export default function WorkspaceLayout({
         </div>
       </aside>
 
-      {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
@@ -206,11 +197,8 @@ export default function WorkspaceLayout({
         />
       )}
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col lg:ml-64">
-        {/* Top Bar */}
-        <header className="sticky top-0 z-30 flex items-center gap-4 px-6 py-4 bg-card border-b border-border">
-          {/* Mobile Menu Button */}
+        <header className="sticky top-0 z-30 flex flex-wrap items-center gap-3 px-4 sm:px-6 py-3 bg-card border-b border-border">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden p-2 rounded-lg hover:bg-accent transition"
@@ -218,8 +206,7 @@ export default function WorkspaceLayout({
             <Menu size={20} />
           </button>
 
-          {/* Search Bar */}
-          <div className="flex-1 max-w-md relative">
+          <div className="flex-1 min-w-[200px] max-w-md relative">
             <Search
               className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
               size={16}
@@ -233,7 +220,6 @@ export default function WorkspaceLayout({
             />
           </div>
 
-          {/* User Menu */}
           <div className="flex items-center gap-3">
             <button className="p-2 rounded-lg hover:bg-accent transition">
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-sm font-medium">
@@ -243,21 +229,18 @@ export default function WorkspaceLayout({
           </div>
         </header>
 
-        {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">{children}</main>
       </div>
 
-      {/* Workspace Switcher Modal */}
       {switcherOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center pt-20"
           onClick={() => setSwitcherOpen(false)}
         >
           <div
-            className="bg-card rounded-xl border border-border w-full max-w-md max-h-96 overflow-hidden"
+            className="bg-card rounded-xl border border-border w-full max-w-md max-h-[80vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Search */}
             <div className="p-4 border-b border-border">
               <div className="flex items-center gap-2 text-muted-foreground text-sm mb-2">
                 <Command size={14} />

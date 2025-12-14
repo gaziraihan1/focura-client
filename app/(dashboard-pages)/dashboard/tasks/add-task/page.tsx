@@ -1,4 +1,3 @@
-// app/dashboard/tasks/new/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -17,7 +16,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
-// Import hooks
 import { useCreateTask, CreateTaskDto } from "@/hooks/useTask";
 
 export default function AddTaskPage() {
@@ -59,11 +57,11 @@ export default function AddTaskPage() {
     try {
       await createTaskMutation.mutateAsync({
         ...formData,
-        projectId: null, // Personal task - no project
-        workspaceId: null, // Personal task - no workspace
+        projectId: null, 
+        workspaceId: null,
         estimatedHours: formData.estimatedHours ? Number(formData.estimatedHours) : null,
-        assigneeIds: [], // No assignments for personal tasks
-        labelIds: [], // No labels for personal tasks
+        assigneeIds: [], 
+        labelIds: [],
       });
       toast.success("Task created successfully!");
       router.push("/dashboard/tasks");
@@ -110,7 +108,6 @@ export default function AddTaskPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Basic Information */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -177,7 +174,6 @@ export default function AddTaskPage() {
             Task Details
           </h3>
 
-          {/* Status & Priority */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
@@ -227,7 +223,6 @@ export default function AddTaskPage() {
             </div>
           </div>
 
-          {/* Dates */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
@@ -271,7 +266,6 @@ export default function AddTaskPage() {
             </div>
           </div>
 
-          {/* Estimated Hours */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
               <Clock size={16} className="inline mr-2" />
@@ -302,7 +296,6 @@ export default function AddTaskPage() {
           </div>
         </motion.div>
 
-        {/* Quick Tips */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -314,7 +307,6 @@ export default function AddTaskPage() {
           </p>
         </motion.div>
 
-        {/* Form Actions */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

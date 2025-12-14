@@ -1,4 +1,3 @@
-// app/dashboard/workspaces/new/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -9,21 +8,19 @@ import {
   X,
   AlertCircle,
   Loader2,
-//   Building2,
-//   Users,
   Sparkles,
 } from "lucide-react";
 import { useCreateWorkspace } from "@/hooks/useWorkspace";
 
 const PREDEFINED_COLORS = [
-  "#667eea", // Purple
-  "#3B82F6", // Blue
-  "#10B981", // Green
-  "#F59E0B", // Yellow
-  "#EF4444", // Red
-  "#8B5CF6", // Violet
-  "#EC4899", // Pink
-  "#14B8A6", // Teal
+  "#667eea", 
+  "#3B82F6", 
+  "#10B981", 
+  "#F59E0B",
+  "#EF4444",  
+  "#8B5CF6",
+  "#EC4899", 
+  "#14B8A6", 
 ];
 
 const WORKSPACE_TYPES = [
@@ -88,8 +85,6 @@ export default function CreateWorkspacePage() {
     return;
   }
 
-  // Just call mutate, don't use mutateAsync with try-catch
-  // The mutation will handle success/error automatically
   createWorkspace.mutate(formData);
 };
   const handleCancel = () => {
@@ -98,7 +93,6 @@ export default function CreateWorkspacePage() {
 
   return (
     <div className="max-w-3xl mx-auto">
-      {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-foreground">
@@ -117,7 +111,6 @@ export default function CreateWorkspacePage() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Workspace Type Selection */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -151,14 +144,12 @@ export default function CreateWorkspacePage() {
           </div>
         </motion.div>
 
-        {/* Workspace Details */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           className="rounded-xl bg-card border border-border p-6 space-y-6"
         >
-          {/* Workspace Name */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
               Workspace Name <span className="text-red-500">*</span>
@@ -185,7 +176,6 @@ export default function CreateWorkspacePage() {
             </p>
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
               Description (Optional)
@@ -209,7 +199,6 @@ export default function CreateWorkspacePage() {
             )}
           </div>
 
-          {/* Color Selection */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-3">
               Workspace Color
@@ -233,7 +222,6 @@ export default function CreateWorkspacePage() {
             </div>
           </div>
 
-          {/* Visibility */}
           <div>
             <label className="flex items-center gap-3 cursor-pointer">
               <input
@@ -259,7 +247,6 @@ export default function CreateWorkspacePage() {
           </div>
         </motion.div>
 
-        {/* Plan Selection (Optional) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -313,7 +300,6 @@ export default function CreateWorkspacePage() {
           </div>
         </motion.div>
 
-        {/* Actions */}
         <div className="flex items-center justify-end gap-3">
           <button
             type="button"

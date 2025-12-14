@@ -38,7 +38,6 @@ const priorityColors: Record<string, string> = {
   HIGH: "bg-orange-500/10 text-orange-500 border-orange-500/20",
   MEDIUM: "bg-blue-500/10 text-blue-500 border-blue-500/20",
   LOW: "bg-green-500/10 text-green-500 border-green-500/20",
-  // undefined: "border-border",
 };
 
 const validateHex = (value: string) => /^#[0-9A-F]{6}$/i.test(value);
@@ -133,7 +132,6 @@ export default function WorkspaceNewProjectPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button

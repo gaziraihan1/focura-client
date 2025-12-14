@@ -1,4 +1,3 @@
-// app/dashboard/workspaces/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -21,10 +20,8 @@ export default function WorkspacesPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   
-  // ✅ Fetch all workspaces
   const { data: workspaces = [], isLoading, isError } = useWorkspaces();
 
-  // Filter workspaces by search
   const filteredWorkspaces = workspaces.filter((workspace) =>
     workspace.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -41,7 +38,6 @@ export default function WorkspacesPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Workspaces</h1>
@@ -59,7 +55,6 @@ export default function WorkspacesPage() {
         </button>
       </div>
 
-      {/* Search Bar */}
       <div className="relative">
         <Search
           className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
@@ -74,13 +69,11 @@ export default function WorkspacesPage() {
         />
       </div>
 
-      {/* Loading State */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
       ) : isError ? (
-        // Error State
         <div className="text-center py-12 rounded-xl bg-card border border-border">
           <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
           <p className="text-muted-foreground">Failed to load workspaces</p>
@@ -92,7 +85,6 @@ export default function WorkspacesPage() {
           </button>
         </div>
       ) : filteredWorkspaces.length === 0 ? (
-        // Empty State
         <div className="text-center py-12 rounded-xl bg-card border border-border">
           <FolderKanban className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-foreground mb-2">
@@ -113,7 +105,6 @@ export default function WorkspacesPage() {
           )}
         </div>
       ) : (
-        // Workspace Grid
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredWorkspaces.map((workspace, index) => (
             <motion.div
@@ -124,10 +115,8 @@ export default function WorkspacesPage() {
             >
               <Link href={`/dashboard/workspaces/${workspace.slug}`}>
                 <div className="group p-6 rounded-xl bg-card border border-border hover:shadow-xl hover:border-primary/50 transition-all cursor-pointer">
-                  {/* Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      {/* Logo/Icon */}
                       <div
                         className="w-12 h-12 rounded-lg flex items-center justify-center text-2xl font-bold text-white"
                         style={{ backgroundColor: workspace.color || "#667eea" }}
@@ -145,7 +134,6 @@ export default function WorkspacesPage() {
                       </div>
                     </div>
 
-                    {/* Owner Badge */}
                     {workspace.members.find(
                       (m) => m.role === "OWNER"
                     ) && (
@@ -155,14 +143,12 @@ export default function WorkspacesPage() {
                     )}
                   </div>
 
-                  {/* Description */}
                   {workspace.description && (
                     <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
                       {workspace.description}
                     </p>
                   )}
 
-                  {/* Stats */}
                   <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <FolderKanban size={14} />
@@ -174,9 +160,7 @@ export default function WorkspacesPage() {
                     </div>
                   </div>
 
-                  {/* Footer */}
                   <div className="flex items-center justify-between pt-4 border-t border-border">
-                    {/* Plan Badge */}
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
                         getPlanBadge(workspace.plan).color
@@ -185,7 +169,6 @@ export default function WorkspacesPage() {
                       {getPlanBadge(workspace.plan).label}
                     </span>
 
-                    {/* Settings Button */}
                     <button
                       onClick={(e) => {
                         e.preventDefault();

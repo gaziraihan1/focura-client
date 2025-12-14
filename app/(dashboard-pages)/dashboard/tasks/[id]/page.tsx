@@ -95,7 +95,9 @@ export default function TaskDetailsPage() {
   const router = useRouter();
   const taskId = params.id as string;
 
-  const [activeTab, setActiveTab] = useState<"comments" | "activity" | "attachments">("comments");
+  const [activeTab, setActiveTab] = useState<
+    "comments" | "activity" | "attachments"
+  >("comments");
   const [commentText, setCommentText] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({
@@ -135,7 +137,7 @@ export default function TaskDetailsPage() {
     }
   }, [task]);
 
-  const handleStatusChange = async (status: Task['status']) => {
+  const handleStatusChange = async (status: Task["status"]) => {
     if (!task) return;
     await updateStatus.mutateAsync({ id: task.id, status });
   };
@@ -149,9 +151,11 @@ export default function TaskDetailsPage() {
         data: {
           title: editData.title,
           description: editData.description,
-          priority: editData.priority as Task['priority'],
-          status: editData.status as Task['status'],
-          estimatedHours: editData.estimatedHours ? parseFloat(editData.estimatedHours) : undefined,
+          priority: editData.priority as Task["priority"],
+          status: editData.status as Task["status"],
+          estimatedHours: editData.estimatedHours
+            ? parseFloat(editData.estimatedHours)
+            : undefined,
         },
       });
       setIsEditing(false);
@@ -259,7 +263,9 @@ export default function TaskDetailsPage() {
       <div className="flex flex-col items-center justify-center min-h-screen gap-4">
         <AlertCircle className="w-16 h-16 text-red-500" />
         <h2 className="text-2xl font-bold text-foreground">Task not found</h2>
-        <p className="text-muted-foreground">The task you&apos;re looking for doesn&apos;t exist.</p>
+        <p className="text-muted-foreground">
+          The task you&apos;re looking for doesn&apos;t exist.
+        </p>
         <Link
           href="/dashboard/tasks"
           className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
@@ -305,13 +311,13 @@ export default function TaskDetailsPage() {
           )}
         </div>
       </div>
-
-      {/* 🕐 Time Tracking Banner */}
       {task.timeTracking && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`rounded-xl border-2 p-4 ${getTimeStatusColor(task.timeTracking)}`}
+          className={`rounded-xl border-2 p-4 ${getTimeStatusColor(
+            task.timeTracking
+          )}`}
         >
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-6">
@@ -339,15 +345,18 @@ export default function TaskDetailsPage() {
                 </div>
               )}
 
-              {task.estimatedHours && task.timeTracking.timeProgress !== null && (
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5" />
-                  <div>
-                    <p className="text-xs opacity-75">Progress</p>
-                    <p className="font-bold">{task.timeTracking.timeProgress}%</p>
+              {task.estimatedHours &&
+                task.timeTracking.timeProgress !== null && (
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5" />
+                    <div>
+                      <p className="text-xs opacity-75">Progress</p>
+                      <p className="font-bold">
+                        {task.timeTracking.timeProgress}%
+                      </p>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
 
             {task.estimatedHours && task.timeTracking.timeProgress !== null && (
@@ -362,12 +371,16 @@ export default function TaskDetailsPage() {
                         : "bg-current"
                     }`}
                     style={{
-                      width: `${Math.min(100, task.timeTracking.timeProgress)}%`,
+                      width: `${Math.min(
+                        100,
+                        task.timeTracking.timeProgress
+                      )}%`,
                     }}
                   />
                 </div>
                 <p className="text-xs mt-1 opacity-75">
-                  {task.timeTracking.hoursSinceCreation}h / {task.estimatedHours}h estimated
+                  {task.timeTracking.hoursSinceCreation}h /{" "}
+                  {task.estimatedHours}h estimated
                 </p>
               </div>
             )}
@@ -410,7 +423,10 @@ export default function TaskDetailsPage() {
                 <textarea
                   value={editData.description}
                   onChange={(e) =>
-                    setEditData((prev) => ({ ...prev, description: e.target.value }))
+                    setEditData((prev) => ({
+                      ...prev,
+                      description: e.target.value,
+                    }))
                   }
                   rows={6}
                   className="w-full px-4 py-3 rounded-lg bg-background border border-border text-foreground resize-none focus:ring-2 ring-primary outline-none"
@@ -425,7 +441,10 @@ export default function TaskDetailsPage() {
                     type="number"
                     value={editData.estimatedHours}
                     onChange={(e) =>
-                      setEditData((prev) => ({ ...prev, estimatedHours: e.target.value }))
+                      setEditData((prev) => ({
+                        ...prev,
+                        estimatedHours: e.target.value,
+                      }))
                     }
                     min="0"
                     step="0.5"
@@ -440,7 +459,9 @@ export default function TaskDetailsPage() {
                     disabled={updateTask.isPending}
                     className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition disabled:opacity-50 flex items-center gap-2"
                   >
-                    {updateTask.isPending && <Loader2 size={16} className="animate-spin" />}
+                    {updateTask.isPending && (
+                      <Loader2 size={16} className="animate-spin" />
+                    )}
                     Save Changes
                   </button>
                   <button
@@ -453,14 +474,20 @@ export default function TaskDetailsPage() {
               </div>
             ) : (
               <div>
-                <h1 className="text-3xl font-bold text-foreground mb-4">{task.title}</h1>
+                <h1 className="text-3xl font-bold text-foreground mb-4">
+                  {task.title}
+                </h1>
 
                 {task.description && (
-                  <p className="text-foreground/80 whitespace-pre-wrap">{task.description}</p>
+                  <p className="text-foreground/80 whitespace-pre-wrap">
+                    {task.description}
+                  </p>
                 )}
 
                 {!task.description && (
-                  <p className="text-muted-foreground italic">No description provided</p>
+                  <p className="text-muted-foreground italic">
+                    No description provided
+                  </p>
                 )}
               </div>
             )}
@@ -469,8 +496,18 @@ export default function TaskDetailsPage() {
           <div className="rounded-xl bg-card border border-border overflow-hidden">
             <div className="flex border-b border-border">
               {[
-                { id: "comments", label: "Comments", icon: MessageSquare, count: comments.length },
-                { id: "activity", label: "Activity", icon: Activity, count: activities.length },
+                {
+                  id: "comments",
+                  label: "Comments",
+                  icon: MessageSquare,
+                  count: comments.length,
+                },
+                {
+                  id: "activity",
+                  label: "Activity",
+                  icon: Activity,
+                  count: activities.length,
+                },
                 {
                   id: "attachments",
                   label: "Attachments",
@@ -480,7 +517,11 @@ export default function TaskDetailsPage() {
               ].map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as "comments" | "activity" | "attachments")}
+                  onClick={() =>
+                    setActiveTab(
+                      tab.id as "comments" | "activity" | "attachments"
+                    )
+                  }
                   className={`flex-1 px-4 py-3 text-sm font-medium transition flex items-center justify-center gap-2 ${
                     activeTab === tab.id
                       ? "bg-primary/5 text-primary border-b-2 border-primary"
@@ -558,7 +599,9 @@ export default function TaskDetailsPage() {
                                 <Trash2
                                   className="cursor-pointer text-red-500 hover:text-red-600"
                                   size={16}
-                                  onClick={() => handleCommentDelete(comment.id)}
+                                  onClick={() =>
+                                    handleCommentDelete(comment.id)
+                                  }
                                 />
                               </div>
                             </div>
@@ -582,7 +625,9 @@ export default function TaskDetailsPage() {
                                 />
                               </div>
                             ) : (
-                              <p className="text-foreground/80">{comment.content}</p>
+                              <p className="text-foreground/80">
+                                {comment.content}
+                              </p>
                             )}
                           </div>
                         </div>
@@ -595,7 +640,9 @@ export default function TaskDetailsPage() {
               {activeTab === "activity" && (
                 <div className="space-y-4">
                   {activities.length === 0 ? (
-                    <p className="text-center text-muted-foreground py-8">No activity yet</p>
+                    <p className="text-center text-muted-foreground py-8">
+                      No activity yet
+                    </p>
                   ) : (
                     activities.map((activity) => (
                       <div key={activity.id} className="flex gap-3">
@@ -603,7 +650,9 @@ export default function TaskDetailsPage() {
                           {activity.user.name.charAt(0)}
                         </div>
                         <div className="flex-1">
-                          <p className="text-foreground/80">{activity.description}</p>
+                          <p className="text-foreground/80">
+                            {activity.description}
+                          </p>
                           <p className="text-xs text-muted-foreground mt-1">
                             {new Date(activity.createdAt).toLocaleString()}
                           </p>
@@ -630,7 +679,9 @@ export default function TaskDetailsPage() {
                         ) : (
                           <>
                             <Paperclip className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
-                            <p className="text-sm text-muted-foreground">Click to upload a file</p>
+                            <p className="text-sm text-muted-foreground">
+                              Click to upload a file
+                            </p>
                           </>
                         )}
                       </div>
@@ -638,7 +689,9 @@ export default function TaskDetailsPage() {
                   </div>
 
                   {attachments.length === 0 ? (
-                    <p className="text-center text-muted-foreground py-8">No attachments yet</p>
+                    <p className="text-center text-muted-foreground py-8">
+                      No attachments yet
+                    </p>
                   ) : (
                     <div className="space-y-2">
                       {attachments.map((attachment) => (
@@ -647,13 +700,17 @@ export default function TaskDetailsPage() {
                           className="flex items-center justify-between p-3 rounded-lg bg-background border border-border"
                         >
                           <div className="flex items-center gap-3 flex-1 min-w-0">
-                            <Paperclip size={16} className="text-muted-foreground shrink-0" />
+                            <Paperclip
+                              size={16}
+                              className="text-muted-foreground shrink-0"
+                            />
                             <div className="flex-1 min-w-0">
                               <p className="font-medium text-foreground truncate">
                                 {attachment.fileName}
                               </p>
                               <p className="text-xs text-muted-foreground">
-                                {formatFileSize(attachment.fileSize)} • {attachment.uploadedBy.name}
+                                {formatFileSize(attachment.fileSize)} •{" "}
+                                {attachment.uploadedBy.name}
                               </p>
                             </div>
                           </div>
@@ -694,10 +751,14 @@ export default function TaskDetailsPage() {
             className="rounded-xl bg-card border border-border p-6 space-y-4"
           >
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Status</label>
+              <label className="block text-sm font-medium text-foreground mb-2">
+                Status
+              </label>
               <select
                 value={task.status}
-                onChange={(e) => handleStatusChange(e.target.value as Task['status'])}
+                onChange={(e) =>
+                  handleStatusChange(e.target.value as Task["status"])
+                }
                 disabled={updateStatus.isPending}
                 className={`w-full px-4 py-2 rounded-lg border ${getStatusColor(
                   task.status
@@ -712,7 +773,9 @@ export default function TaskDetailsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Priority</label>
+              <label className="block text-sm font-medium text-foreground mb-2">
+                Priority
+              </label>
               <div
                 className={`px-4 py-2 rounded-lg border ${getPriorityColor(
                   task.priority
@@ -736,68 +799,86 @@ export default function TaskDetailsPage() {
                 <Folder size={16} className="text-muted-foreground" />
                 <div className="flex-1">
                   <p className="text-xs text-muted-foreground">Project</p>
-                  <p className="text-sm font-medium" style={{ color: task.project.color }}>
+                  <p
+                    className="text-sm font-medium"
+                    style={{ color: task.project.color }}
+                  >
                     {task.project.name}
                   </p>
                 </div>
               </div>
             )}
 
-            {task.estimatedHours && ( <div className="flex items-center gap-3">
-<Clock size={16} className="text-muted-foreground" />
-<div className="flex-1">
-<p className="text-xs text-muted-foreground">Estimated Hours</p>
-<p className="text-sm font-medium text-foreground">{task.estimatedHours}h</p>
-</div>
-</div>
-)}
-{task.dueDate && (
-          <div className="flex items-center gap-3">
-            <Calendar size={16} className="text-muted-foreground" />
-            <div className="flex-1">
-              <p className="text-xs text-muted-foreground">Due Date</p>
-              <p className="text-sm font-medium text-foreground">
-                {new Date(task.dueDate).toLocaleDateString()}
-              </p>
-            </div>
-          </div>
-        )}
+            {task.estimatedHours && (
+              <div className="flex items-center gap-3">
+                <Clock size={16} className="text-muted-foreground" />
+                <div className="flex-1">
+                  <p className="text-xs text-muted-foreground">
+                    Estimated Hours
+                  </p>
+                  <p className="text-sm font-medium text-foreground">
+                    {task.estimatedHours}h
+                  </p>
+                </div>
+              </div>
+            )}
+            {task.dueDate && (
+              <div className="flex items-center gap-3">
+                <Calendar size={16} className="text-muted-foreground" />
+                <div className="flex-1">
+                  <p className="text-xs text-muted-foreground">Due Date</p>
+                  <p className="text-sm font-medium text-foreground">
+                    {new Date(task.dueDate).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+            )}
 
-        <div className="flex items-center gap-3">
-          <User size={16} className="text-muted-foreground" />
-          <div className="flex-1">
-            <p className="text-xs text-muted-foreground">Created By</p>
-            <p className="text-sm font-medium text-foreground">{task.createdBy.name}</p>
-          </div>
-        </div>
-
-        {task.assignees.length > 0 && (
-          <div className="flex items-start gap-3">
-            <User size={16} className="text-muted-foreground mt-1" />
-            <div className="flex-1">
-              <p className="text-xs text-muted-foreground mb-2">Assignees</p>
-              <div className="space-y-2">
-                {task.assignees.map((assignee) => (
-                  <div key={assignee.user.id} className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-medium">
-                      {assignee.user.name.charAt(0)}
-                    </div>
-                    <span className="text-sm text-foreground">{assignee.user.name}</span>
-                  </div>
-                ))}
+            <div className="flex items-center gap-3">
+              <User size={16} className="text-muted-foreground" />
+              <div className="flex-1">
+                <p className="text-xs text-muted-foreground">Created By</p>
+                <p className="text-sm font-medium text-foreground">
+                  {task.createdBy.name}
+                </p>
               </div>
             </div>
-          </div>
-        )}
 
-        <div className="pt-4 border-t border-border">
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <Clock size={14} />
-            Created {new Date(task.createdAt).toLocaleDateString()}
-          </div>
+            {task.assignees.length > 0 && (
+              <div className="flex items-start gap-3">
+                <User size={16} className="text-muted-foreground mt-1" />
+                <div className="flex-1">
+                  <p className="text-xs text-muted-foreground mb-2">
+                    Assignees
+                  </p>
+                  <div className="space-y-2">
+                    {task.assignees.map((assignee) => (
+                      <div
+                        key={assignee.user.id}
+                        className="flex items-center gap-2"
+                      >
+                        <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-medium">
+                          {assignee.user.name.charAt(0)}
+                        </div>
+                        <span className="text-sm text-foreground">
+                          {assignee.user.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="pt-4 border-t border-border">
+              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                <Clock size={14} />
+                Created {new Date(task.createdAt).toLocaleDateString()}
+              </div>
+            </div>
+          </motion.div>
         </div>
-      </motion.div>
+      </div>
     </div>
-  </div>
-</div>
-  )}
+  );
+}

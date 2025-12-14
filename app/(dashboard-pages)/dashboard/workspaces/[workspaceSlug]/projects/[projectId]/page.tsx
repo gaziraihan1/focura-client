@@ -31,8 +31,6 @@ export default function ProjectDetailsPage() {
   const { data: response, isLoading, error } = useProjectDetails(projectId);
   const project = response;
   console.log(response)
-
-  // Loading state
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -44,7 +42,6 @@ export default function ProjectDetailsPage() {
     );
   }
 
-  // Error state
   if (error || !project) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
@@ -71,7 +68,6 @@ export default function ProjectDetailsPage() {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
@@ -99,14 +95,12 @@ export default function ProjectDetailsPage() {
           </div>
         </div>
 
-        {/* Description */}
         {project.description && (
           <div className="rounded-xl bg-card border border-border p-4">
             <p className="text-muted-foreground">{project.description}</p>
           </div>
         )}
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <StatCard
             icon={CheckSquare}
@@ -168,7 +162,6 @@ export default function ProjectDetailsPage() {
           )}
         </div>
 
-        {/* Tabs */}
         <div className="border-b border-border">
           <div className="flex gap-6">
             <button
@@ -194,7 +187,6 @@ export default function ProjectDetailsPage() {
           </div>
         </div>
 
-        {/* Content */}
         {activeTab === 'tasks' && (
           <TasksTab
             project={project}

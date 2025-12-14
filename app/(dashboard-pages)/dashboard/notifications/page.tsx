@@ -1,4 +1,3 @@
-// app/dashboard/notifications/page.tsx
 "use client";
 
 import { useNotifications } from "@/hooks/useNotifications";
@@ -46,7 +45,6 @@ export default function NotificationsPage() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
         <div className="flex items-center gap-3">
           <Bell className="w-6 h-6" />
@@ -58,7 +56,6 @@ export default function NotificationsPage() {
           )}
         </div>
 
-        {/* Action Buttons */}
         <div className="flex items-center gap-2">
           {unreadCount > 0 && (
             <button
@@ -92,7 +89,6 @@ export default function NotificationsPage() {
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
           <div className="bg-popover border border-border rounded-xl p-6 max-w-md w-full shadow-lg">
@@ -120,7 +116,6 @@ export default function NotificationsPage() {
         </div>
       )}
 
-      {/* Notifications List */}
       <div className="space-y-3">
         {/* Loading Skeleton */}
         {isLoading && (
@@ -134,7 +129,6 @@ export default function NotificationsPage() {
           </>
         )}
 
-        {/* Empty State */}
         {!isLoading && notifications.length === 0 && (
           <div className="text-center py-16">
             <Bell className="w-16 h-16 mx-auto text-muted-foreground mb-4 opacity-50" />
@@ -147,7 +141,6 @@ export default function NotificationsPage() {
           </div>
         )}
 
-        {/* Notification Items */}
         {!isLoading &&
           notifications.map((notification) => (
             <div
@@ -190,7 +183,6 @@ export default function NotificationsPage() {
                     </div>
                   </div>
 
-                  {/* Delete Button */}
                   <button
                     onClick={(e) => {
                       e.stopPropagation();

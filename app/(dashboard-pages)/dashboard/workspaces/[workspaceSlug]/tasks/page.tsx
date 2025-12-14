@@ -1,4 +1,3 @@
-// app/dashboard/[workspaceSlug]/tasks/page.tsx
 "use client";
 
 import { useState, useMemo } from "react";
@@ -9,7 +8,6 @@ import {
   Search,
   Calendar,
   Flag,
-//   User,
   CheckCircle2,
   Clock,
   AlertCircle,
@@ -19,7 +17,6 @@ import {
   TrendingUp,
   Filter,
   X,
-//   Users,
   Tag,
   ArrowUpDown,
   ListFilter,
@@ -31,7 +28,6 @@ import { useProjects } from "@/hooks/useProjects";
 import { useLabels } from "@/hooks/useLabels";
 import { useTeamMembers } from "@/hooks/useTeam";
 
-// Helper functions
 const formatTimeDuration = (hours: number) => {
   if (hours < 0) {
     const absHours = Math.abs(hours);
@@ -66,7 +62,6 @@ const getTimeStatusColor = (timeTracking?: TimeTracking) => {
   return "text-blue-500";
 };
 
-// type ViewMode = "list" | "kanban" | "calendar";
 type SortBy = "dueDate" | "priority" | "status" | "createdAt" | "title";
 
 export default function WorkspaceTasksPage() {
@@ -74,7 +69,6 @@ export default function WorkspaceTasksPage() {
   const router = useRouter();
   const workspaceSlug = params.workspaceSlug as string;
 
-  // const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [selectedPriority, setSelectedPriority] = useState<string>("all");
@@ -84,7 +78,6 @@ export default function WorkspaceTasksPage() {
   const [sortBy, setSortBy] = useState<SortBy>("dueDate");
   const [showFilters, setShowFilters] = useState(false);
 
-  // Fetch workspace and related data
   const { data: workspace } = useWorkspace(workspaceSlug);
   const { data: projects = [] } = useProjects(workspace?.id);
   const { data: labels = [] } = useLabels(workspace?.id);
@@ -112,11 +105,9 @@ export default function WorkspaceTasksPage() {
 
   console.log(stats, "and", tasks)
 
-  // Filter and sort tasks
   const filteredAndSortedTasks = useMemo<TaskWithTracking[]>(() => {
     let filtered = tasks as TaskWithTracking[];
 
-    // Search filter
     if (searchQuery.trim()) {
       filtered = filtered.filter((task) =>
         task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -205,7 +196,6 @@ export default function WorkspaceTasksPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Tasks</h1>
@@ -222,7 +212,6 @@ export default function WorkspaceTasksPage() {
         </button>
       </div>
 
-      {/* Stats Cards */}
       {stats && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           <motion.div
@@ -321,10 +310,8 @@ export default function WorkspaceTasksPage() {
         </div>
       )}
 
-      {/* Search and Filters */}
       <div className="rounded-xl bg-card border border-border p-4">
         <div className="flex flex-col lg:flex-row gap-4">
-          {/* Search */}
           <div className="flex-1 relative">
             <Search
               className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
@@ -339,7 +326,6 @@ export default function WorkspaceTasksPage() {
             />
           </div>
 
-          {/* Filter Button */}
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={`px-4 py-2 rounded-lg border transition flex items-center gap-2 ${
@@ -357,7 +343,6 @@ export default function WorkspaceTasksPage() {
             )}
           </button>
 
-          {/* Sort */}
           <div className="flex items-center gap-2">
             <ArrowUpDown size={18} className="text-muted-foreground" />
             <select
@@ -374,7 +359,6 @@ export default function WorkspaceTasksPage() {
           </div>
         </div>
 
-        {/* Expanded Filters */}
         {showFilters && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
@@ -383,7 +367,6 @@ export default function WorkspaceTasksPage() {
             className="mt-4 pt-4 border-t border-border space-y-4"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* Status Filter */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Status
@@ -402,7 +385,6 @@ export default function WorkspaceTasksPage() {
                 </select>
               </div>
 
-              {/* Priority Filter */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Priority
@@ -420,7 +402,6 @@ export default function WorkspaceTasksPage() {
                 </select>
               </div>
 
-              {/* Project Filter */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Project
@@ -439,7 +420,6 @@ export default function WorkspaceTasksPage() {
                 </select>
               </div>
 
-              {/* Assignee Filter */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Assignee
@@ -459,7 +439,6 @@ export default function WorkspaceTasksPage() {
               </div>
             </div>
 
-            {/* Labels Filter */}
             {labels.length > 0 && (
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">
@@ -489,7 +468,6 @@ export default function WorkspaceTasksPage() {
               </div>
             )}
 
-            {/* Clear Filters */}
             {activeFiltersCount > 0 && (
               <div className="flex justify-end">
                 <button
@@ -505,7 +483,6 @@ export default function WorkspaceTasksPage() {
         )}
       </div>
 
-      {/* Tasks List */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -612,7 +589,6 @@ export default function WorkspaceTasksPage() {
                           {task.status.replace("_", " ")}
                         </span>
 
-                        {/* Time Tracking Information */}
                         {task.timeTracking && (
                           <>
                             <div className="flex items-center gap-1 text-xs text-muted-foreground">

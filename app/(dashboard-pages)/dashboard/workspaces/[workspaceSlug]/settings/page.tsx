@@ -1,4 +1,3 @@
-// app/dashboard/[workspaceSlug]/settings/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -11,7 +10,6 @@ import {
   AlertCircle,
   Users,
   Mail,
-//   Shield,
   Crown,
   X,
   UserPlus,
@@ -48,7 +46,6 @@ type WorkspaceForm = {
 
 export default function WorkspaceSettingsPage() {
   const params = useParams();
-//   const router = useRouter();
   const { data: session } = useSession();
   const slug = params.workspaceSlug as string;
 
@@ -58,7 +55,6 @@ export default function WorkspaceSettingsPage() {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  // Hooks
   const { data: workspace } = useWorkspace(slug);
   const { data: members = [] } = useWorkspaceMembers(workspace?.id || "");
   const updateWorkspace = useUpdateWorkspace();
@@ -175,7 +171,6 @@ export default function WorkspaceSettingsPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-foreground">Workspace Settings</h1>
         <p className="text-muted-foreground mt-1">
@@ -183,7 +178,6 @@ export default function WorkspaceSettingsPage() {
         </p>
       </div>
 
-      {/* Tabs */}
       <div className="flex gap-2 border-b border-border">
         {[
           { id: "general", label: "General", icon: Save },
@@ -205,7 +199,6 @@ export default function WorkspaceSettingsPage() {
         ))}
       </div>
 
-      {/* General Tab */}
       {activeTab === "general" && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -333,7 +326,6 @@ export default function WorkspaceSettingsPage() {
         </motion.div>
       )}
 
-      {/* Members Tab */}
       {activeTab === "members" && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -416,7 +408,6 @@ export default function WorkspaceSettingsPage() {
         </motion.div>
       )}
 
-      {/* Danger Zone Tab */}
       {activeTab === "danger" && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -476,7 +467,6 @@ export default function WorkspaceSettingsPage() {
         </motion.div>
       )}
 
-      {/* Invite Modal */}
       {showInviteModal && (
         <div
           className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
@@ -544,7 +534,6 @@ export default function WorkspaceSettingsPage() {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div
           className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
