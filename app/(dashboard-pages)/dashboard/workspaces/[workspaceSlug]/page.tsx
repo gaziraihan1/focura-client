@@ -150,10 +150,8 @@ export default function WorkspaceDetailPage() {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto space-y-4 sm:space-y-6 px-3 sm:px-4 lg:px-6 xl:px-0 pb-6">
-      {/* Header Section - Fully Responsive */}
+    <div className="w-full max-w-7xl mx-auto space-y-4 sm:space-y-6 px-2 sm:px-4 lg:px-6 xl:px-0 pb-6">
       <div className="flex flex-col space-y-4">
-        {/* Back Button and Logo Row */}
         <div className="flex items-center gap-3 sm:gap-4">
           <button
             onClick={() => router.push("/dashboard/workspaces")}
@@ -163,7 +161,6 @@ export default function WorkspaceDetailPage() {
             <ArrowLeft size={20} className="text-muted-foreground" />
           </button>
 
-          {/* Workspace Identity */}
           <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
             <div
               className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-lg sm:rounded-xl flex items-center justify-center text-xl sm:text-2xl lg:text-3xl font-bold text-white shadow-lg shrink-0"
@@ -222,7 +219,6 @@ export default function WorkspaceDetailPage() {
         </div>
       </div>
 
-      {/* Stats Grid - Responsive */}
       {stats && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
           <motion.div
@@ -302,7 +298,6 @@ export default function WorkspaceDetailPage() {
         </div>
       )}
 
-      {/* Tabs - Responsive with horizontal scroll */}
       <div className="border-b border-border -mx-3 sm:mx-0">
         <div className="flex gap-2 sm:gap-4 overflow-x-auto scrollbar-hide px-3 sm:px-0">
           {[
@@ -326,11 +321,9 @@ export default function WorkspaceDetailPage() {
         </div>
       </div>
 
-      {/* Tab Content - Responsive */}
       <div className="min-h-96">
         {activeTab === "overview" && (
           <div className="space-y-4 sm:space-y-6">
-            {/* Recent Activity */}
             <div className="p-4 sm:p-6 rounded-lg sm:rounded-xl bg-card border border-border">
               <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">
                 Recent Activity
@@ -352,7 +345,6 @@ export default function WorkspaceDetailPage() {
               </div>
             </div>
 
-            {/* Information Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div className="p-4 sm:p-6 rounded-lg sm:rounded-xl bg-card border border-border">
                 <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">
@@ -429,7 +421,6 @@ export default function WorkspaceDetailPage() {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-4 sm:space-y-6"
           >
-            {/* Invite Button */}
             {isAdmin && (
               <div className="flex justify-end">
                 <button
@@ -443,7 +434,6 @@ export default function WorkspaceDetailPage() {
               </div>
             )}
 
-            {/* Members List */}
             <div className="rounded-lg sm:rounded-xl bg-card border border-border overflow-hidden">
               <div className="p-4 sm:p-6 border-b border-border">
                 <h3 className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2">
@@ -463,7 +453,6 @@ export default function WorkspaceDetailPage() {
                       className="p-3 sm:p-4 lg:p-6"
                     >
                       <div className="flex items-start sm:items-center justify-between gap-3 sm:gap-4">
-                        {/* Member Info */}
                         <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                           {member.user.image ? (
                             <Image
@@ -491,7 +480,6 @@ export default function WorkspaceDetailPage() {
                           </div>
                         </div>
 
-                        {/* Role Controls */}
                         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                           {member.role !== "OWNER" && isAdmin ? (
                             <select

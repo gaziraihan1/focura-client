@@ -66,7 +66,7 @@ export default function ProjectDetailsPage() {
       : 0;
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background px-2 sm:px-4 lg:px-6">
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
