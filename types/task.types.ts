@@ -1,0 +1,110 @@
+// types/task.types.ts
+export interface User {
+  id: string;
+  name: string;
+  email?: string;
+  image?: string;
+}
+
+export interface TimeTracking {
+  hoursSinceCreation: number;
+  hoursUntilDue: number | null;
+  isOverdue: boolean;
+  isDueToday: boolean;
+  timeProgress: number | null;
+}
+
+export interface Project {
+  id: string;
+  name: string;
+  color: string;
+  workspaceId?: string;
+  workspace?: {
+    id: string;
+    name: string;
+  };
+}
+
+export interface TaskAssignee {
+  user: User;
+  userId: string;
+  taskId: string;
+}
+
+export interface Comment {
+  id: string;
+  content: string;
+  createdAt: string;
+  user: User;
+}
+
+export interface Activity {
+  id: string;
+  description: string;
+  createdAt: string;
+  user: User;
+}
+
+export interface Attachment {
+  id: string;
+  fileName: string;
+  fileSize: number;
+  fileUrl: string;
+  uploadedBy: User;
+}
+
+export type TaskStatus = 
+  | "TODO" 
+  | "IN_PROGRESS" 
+  | "IN_REVIEW" 
+  | "BLOCKED" 
+  | "COMPLETED" 
+  | "CANCELLED";
+
+export type TaskPriority = 
+  | "URGENT" 
+  | "HIGH" 
+  | "MEDIUM" 
+  | "LOW";
+
+export type EnergyType = 
+  | "LOW" 
+  | "MEDIUM" 
+  | "HIGH";
+
+export interface Task {
+  id: string;
+  title: string;
+  description: string | null;
+  status: TaskStatus;
+  priority: TaskPriority;
+  dueDate: string | null;
+  startDate: string | null;
+  completedAt: string | null;
+  estimatedHours: number | null;
+  actualHours: number | null;
+  createdAt: string;
+  updatedAt: string;
+  projectId: string | null;
+  
+  // Focus features
+  focusRequired?: boolean;
+  focusLevel?: number;
+  energyType?: EnergyType;
+  distractionCost?: number;
+  
+  // Relations
+  createdBy: User;
+  assignees: TaskAssignee[];
+  project?: Project;
+  
+  // Time tracking
+  timeTracking?: TimeTracking;
+  
+  // Counts
+  _count?: {
+    comments: number;
+    subtasks: number;
+    files: number;
+  };
+}
