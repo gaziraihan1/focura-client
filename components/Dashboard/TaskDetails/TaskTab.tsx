@@ -1,4 +1,3 @@
-// components/TaskDetails/TaskTabs.tsx
 import { useState } from "react";
 import {
   MessageSquare,
@@ -96,50 +95,54 @@ export const TaskTabs = ({
 
   return (
     <div className="rounded-xl bg-card border border-border overflow-hidden">
-      <div className="flex border-b border-border">
-        {[
-          {
-            id: "comments",
-            label: "Comments",
-            icon: MessageSquare,
-            count: comments.length,
-          },
-          {
-            id: "activity",
-            label: "Activity",
-            icon: Activity,
-            count: activities.length,
-          },
-          {
-            id: "attachments",
-            label: "Attachments",
-            icon: Paperclip,
-            count: attachments.length,
-          },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() =>
-              setActiveTab(tab.id as "comments" | "activity" | "attachments")
-            }
-            className={`flex-1 px-4 py-3 text-sm font-medium transition flex items-center justify-center gap-2 ${
-              activeTab === tab.id
-                ? "bg-primary/5 text-primary border-b-2 border-primary"
-                : "text-muted-foreground hover:bg-accent"
-            }`}
-          >
-            <tab.icon size={16} />
-            {tab.label}
-            {tab.count > 0 && (
-              <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs">
-                {tab.count}
-              </span>
-            )}
-          </button>
-        ))}
+      {/* Horizontally scrollable tabs */}
+      <div className="border-b border-border overflow-x-auto scrollbar-hide">
+        <div className="flex min-w-max">
+          {[
+            {
+              id: "comments",
+              label: "Comments",
+              icon: MessageSquare,
+              count: comments.length,
+            },
+            {
+              id: "activity",
+              label: "Activity",
+              icon: Activity,
+              count: activities.length,
+            },
+            {
+              id: "attachments",
+              label: "Attachments",
+              icon: Paperclip,
+              count: attachments.length,
+            },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() =>
+                setActiveTab(tab.id as "comments" | "activity" | "attachments")
+              }
+              className={`flex-1 min-w-[120px] px-4 py-3 text-sm font-medium transition flex items-center justify-center gap-2 whitespace-nowrap ${
+                activeTab === tab.id
+                  ? "bg-primary/5 text-primary border-b-2 border-primary"
+                  : "text-muted-foreground hover:bg-accent"
+              }`}
+            >
+              <tab.icon size={16} />
+              <span className="hidden sm:inline">{tab.label}</span>
+              <span className="sm:hidden">{tab.label}</span>
+              {tab.count > 0 && (
+                <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs">
+                  {tab.count}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         {activeTab === "comments" && (
           <div className="space-y-4">
             <div className="flex gap-3">
@@ -180,17 +183,17 @@ export const TaskTabs = ({
                     <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-sm font-medium shrink-0">
                       {comment.user.name.charAt(0)}
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1 justify-between">
-                        <div>
+                        <div className="min-w-0 flex-1">
                           <span className="font-medium text-foreground">
                             {comment.user.name}
                           </span>
-                          <span className="text-xs text-muted-foreground ml-2">
+                          <span className="text-xs text-muted-foreground ml-2 block sm:inline">
                             {new Date(comment.createdAt).toLocaleString()}
                           </span>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 shrink-0">
                           <Edit2
                             className="cursor-pointer text-muted-foreground hover:text-foreground"
                             size={16}
@@ -212,18 +215,18 @@ export const TaskTabs = ({
                             className="flex-1 border rounded px-2 py-1 text-sm"
                           />
                           <Check
-                            className="cursor-pointer text-green-500 hover:text-green-600"
+                            className="cursor-pointer text-green-500 hover:text-green-600 shrink-0"
                             size={16}
                             onClick={() => handleUpdate(comment.id)}
                           />
                           <X
-                            className="cursor-pointer text-red-500 hover:text-red-600"
+                            className="cursor-pointer text-red-500 hover:text-red-600 shrink-0"
                             size={16}
                             onClick={handleCancel}
                           />
                         </div>
                       ) : (
-                        <p className="text-foreground/80">{comment.content}</p>
+                        <p className="text-foreground/80 wrap-break-word">{comment.content}</p>
                       )}
                     </div>
                   </div>
@@ -245,8 +248,8 @@ export const TaskTabs = ({
                   <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-sm font-medium shrink-0">
                     {activity.user.name.charAt(0)}
                   </div>
-                  <div className="flex-1">
-                    <p className="text-foreground/80">{activity.description}</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-foreground/80 wrap-break-word">{activity.description}</p>
                     <p className="text-xs text-muted-foreground mt-1">
                       {new Date(activity.createdAt).toLocaleString()}
                     </p>
@@ -291,7 +294,7 @@ export const TaskTabs = ({
                 {attachments.map((attachment) => (
                   <div
                     key={attachment.id}
-                    className="flex items-center justify-between p-3 rounded-lg bg-background border border-border"
+                    className="flex items-center justify-between p-3 rounded-lg bg-background border border-border gap-3"
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       <Paperclip
@@ -299,7 +302,7 @@ export const TaskTabs = ({
                         className="text-muted-foreground shrink-0"
                       />
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-foreground truncate">
+                        <p className="font-medium text-foreground truncate text-sm">
                           {attachment.fileName}
                         </p>
                         <p className="text-xs text-muted-foreground">
