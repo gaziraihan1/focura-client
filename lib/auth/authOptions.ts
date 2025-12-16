@@ -5,14 +5,14 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import * as argon2 from "argon2";
-import { createBackendToken } from "./backendToken";
+import { BACKEND_TOKEN_EXPIRY_MS, createBackendToken } from "./backendToken";
 
 const isProd = process.env.NODE_ENV === "production";
 
 // Define Google Profile type
 interface GoogleProfile {
   email_verified?: boolean;
-  [key: string]: any;
+  verified_email?: boolean;
 }
 
 export const authOptions: NextAuthOptions = {
@@ -57,7 +57,12 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!user || !user.password) {
-          try { await argon2.verify("$argon2id$v=19$m=4096,t=3,p=1$invalid", "invalid"); } catch {}
+          try {
+            await argon2.verify(
+              "$argon2id$v=19$m=4096,t=3,p=1$invalid",
+              "invalid"
+            );
+          } catch {}
           throw new Error("Invalid credentials.");
         }
 
@@ -65,7 +70,10 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Please verify your email to log in.");
         }
 
-        const isValid = await argon2.verify(user.password, credentials.password);
+        const isValid = await argon2.verify(
+          user.password,
+          credentials.password
+        );
         if (!isValid) throw new Error("Invalid credentials.");
 
         // Update last login
@@ -100,12 +108,26 @@ export const authOptions: NextAuthOptions = {
           email: user.email!,
           role: user.role ?? "USER",
         });
+        token.backendTokenExpiry = Date.now() + BACKEND_TOKEN_EXPIRY_MS;
       }
+      if (
+        token.backendToken &&
+        token.backendTokenExpiry &&
+        Date.now() > token.backendTokenExpiry
+      ) {
+        token.backendToken = createBackendToken({
+          id: token.id as string,
+          email: token.email as string,
+          role: token.role as string,
+        });
+        token.backendTokenExpiry = Date.now() + 60 * 60 * 1000;
+      }
+
       return token;
     },
 
     async session({ session, token }) {
-      if (token) {
+      if (token?.backendToken) {
         session.user.id = token.id as string;
         session.user.role = token.role as string;
         session.backendToken = token.backendToken as string;
@@ -116,25 +138,24 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account, profile }) {
       // Update last login for OAuth users
       if (account?.provider === "google") {
-  try {
-    const googleProfile = profile as GoogleProfile;
+        try {
+          const googleProfile = profile as GoogleProfile;
 
-    const isVerified =
-      googleProfile?.email_verified === true ||
-      googleProfile?.verified_email === true;
+          const isVerified =
+            googleProfile?.email_verified === true ||
+            googleProfile?.verified_email === true;
 
-    await prisma.user.update({
-      where: { email: user.email! },
-      data: {
-        lastLoginAt: new Date(),
-        emailVerified: isVerified ? new Date() : undefined,
-      },
-    });
-  } catch (err) {
-    console.error("Failed to update OAuth login:", err);
-  }
-}
-
+          await prisma.user.update({
+            where: { email: user.email! },
+            data: {
+              lastLoginAt: new Date(),
+              emailVerified: isVerified ? new Date() : undefined,
+            },
+          });
+        } catch (err) {
+          console.error("Failed to update OAuth login:", err);
+        }
+      }
 
       // Block unverified email for credentials
       if (account?.provider === "credentials" && !user.emailVerified) {
@@ -178,5 +199,6 @@ declare module "next-auth/jwt" {
     id: string;
     role: string;
     backendToken: string;
+    backendTokenExpiry: number;
   }
 }

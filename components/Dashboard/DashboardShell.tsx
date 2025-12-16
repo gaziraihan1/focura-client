@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import Sidebar from "./Sidebar";
 import TopNavbar from "./TopNavbar";
 import { usePathname } from "next/navigation";
@@ -51,30 +50,20 @@ export default function DashboardShell({
     }
   };
 
-  // Remove empty segments and split
   const segments = pathname.split("/").filter(Boolean);
-
-  // Example:
-  // /dashboard/workspaces → ["dashboard", "workspaces"]
-  // /dashboard/workspaces/123 → ["dashboard", "workspaces", "123"]
-  // /dashboard/workspaces/123/settings → ["dashboard", "workspaces", "123", "settings"]
 
   const isWorkspaceRoute =
     segments[0] === "dashboard" &&
     segments[1] === "workspaces" ;
-  const thirdSegment = segments[2]; // can be undefined, "new-workspace", or an id
+  const thirdSegment = segments[2];
 
-  // Hide layout ONLY when:
-  // - it's a workspace route
-  // - third segment exists
-  // - third segment is NOT "new-workspace"
   const hideLayout =
     isWorkspaceRoute &&
-    thirdSegment &&                      // exists
-    thirdSegment !== "new-workspace";    // dynamic id routes
+    thirdSegment &&                     
+    thirdSegment !== "new-workspace";    
 
   if (hideLayout) {
-    return <>{children}</>; // hide layout
+    return <>{children}</>; 
   }
 
 
@@ -92,7 +81,7 @@ export default function DashboardShell({
         />
         
 
-        <main className="flex-1 p-6 lg:p-8">
+        <main className="flex-1 p-5 lg:py-8 lg:px-5">
           {children}
         </main>
       </div>

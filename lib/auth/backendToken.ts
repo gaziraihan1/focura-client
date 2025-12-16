@@ -1,7 +1,7 @@
 // src/lib/auth/backendToken.ts
 import jwt from "jsonwebtoken";
 
-export const BACKEND_TOKEN_EXPIRY = "1h"; // short-lived
+export const BACKEND_TOKEN_EXPIRY_MS = 60 * 60 * 1000;
 
 export function createBackendToken(payload: {
   id: string;
@@ -15,8 +15,9 @@ export function createBackendToken(payload: {
     { sub: payload.id, email: payload.email, role: payload.role ?? "USER" },
     secret,
     {
-      expiresIn: BACKEND_TOKEN_EXPIRY,
+      expiresIn: BACKEND_TOKEN_EXPIRY_MS,
       issuer: "focura-app",
+      audience: "focura-backend",
       algorithm: "HS256",
     }
   );

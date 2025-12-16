@@ -1,4 +1,3 @@
-// components/TaskDetails/TaskSidebar.tsx
 import { motion } from "framer-motion";
 import { Clock, Calendar, User, Folder, Check } from "lucide-react";
 import { Task } from "@/types/task.types";
@@ -19,7 +18,6 @@ export const TaskSidebar = ({
 }: TaskSidebarProps) => {
   return (
     <div className="space-y-6">
-      {/* Status & Priority */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -67,7 +65,6 @@ export const TaskSidebar = ({
         </div>
       </motion.div>
 
-      {/* Details */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
