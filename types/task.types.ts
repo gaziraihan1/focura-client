@@ -72,6 +72,13 @@ export type EnergyType =
   | "MEDIUM" 
   | "HIGH";
 
+  type IntentType = 
+  | "EXECUTION"
+  | "PLANNING"
+  | "REVIEW"
+  | "LEARNING"
+  | "COMMUNICATION"
+
 export interface Task {
   id: string;
   title: string;
@@ -86,6 +93,7 @@ export interface Task {
   createdAt: string;
   updatedAt: string;
   projectId: string | null;
+  intent: IntentType
   
   // Focus features
   focusRequired?: boolean;

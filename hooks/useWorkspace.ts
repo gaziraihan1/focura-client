@@ -2,6 +2,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { useMemo } from 'react';
 
 // Types
 export interface Workspace {
@@ -65,7 +67,36 @@ export interface WorkspaceStats {
   completionRate: number;
 }
 
-// Query Keys
+export type WorkspaceRole = 'OWNER' | 'ADMIN' | 'MEMBER' | 'GUEST';
+
+export interface WorkspaceRoleResult {
+  role: WorkspaceRole | null;
+  isOwner: boolean;
+  isAdmin: boolean;
+  isMember: boolean;
+  isGuest: boolean;
+  
+  // Permission checks
+  canManageWorkspace: boolean;  
+  canManageMembers: boolean;    
+  canCreateProjects: boolean;    
+  
+  canEditProjects: boolean;      
+  
+  canDeleteProjects: boolean;   
+  canInviteMembers: boolean;    
+  canRemoveMembers: boolean;    
+  canEditSettings: boolean;     
+  canDeleteWorkspace: boolean;  
+  canViewContent: boolean;     
+  
+  currentMember: WorkspaceMember | null;
+  userId: string | null;
+  
+  isLoading: boolean;
+  hasAccess: boolean;
+}
+
 export const workspaceKeys = {
   all: ['workspaces'] as const,
   lists: () => [...workspaceKeys.all, 'list'] as const,
@@ -75,8 +106,6 @@ export const workspaceKeys = {
   stats: (id: string) => [...workspaceKeys.all, id, 'stats'] as const,
 };
 
-// ============================================
-// GET - Fetch all user workspaces
 export function useWorkspaces() {
   return useQuery({
     queryKey: workspaceKeys.lists(),
@@ -86,12 +115,10 @@ export function useWorkspaces() {
       });
       return response.data || [];
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000, 
   });
 }
 
-// ============================================
-// GET - Fetch single workspace by slug
 export function useWorkspace(workspaceSlug: string) {
   return useQuery({
     queryKey: workspaceKeys.detail(workspaceSlug),
@@ -102,12 +129,10 @@ export function useWorkspace(workspaceSlug: string) {
       return response.data;
     },
     enabled: typeof workspaceSlug === "string" && workspaceSlug.length > 0,
-    staleTime: 3 * 60 * 1000, // 3 minutes
+    staleTime: 3 * 60 * 1000, 
   });
 }
 
-// ============================================
-// POST - Create workspace
 export function useCreateWorkspace() {
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -115,7 +140,7 @@ export function useCreateWorkspace() {
   return useMutation<Workspace, unknown, CreateWorkspaceDto>({
     mutationFn: async (data: CreateWorkspaceDto): Promise<Workspace> => {
       const response = await api.post<Workspace>('/api/workspaces', data, {
-        showErrorToast: true, // Let axios interceptor handle all errors
+        showErrorToast: true,
         showSuccessToast: true,
       });
       return response.data as Workspace;
@@ -131,8 +156,6 @@ export function useCreateWorkspace() {
   });
 }
 
-// ============================================
-// PUT - Update workspace
 export function useUpdateWorkspace() {
   const queryClient = useQueryClient();
   
@@ -145,7 +168,6 @@ export function useUpdateWorkspace() {
       return response.data as Workspace;
     },
     onSuccess: (workspace) => {
-      // Update cache
       const slug = workspace.workspaceSlug ?? workspace.slug;
       if (slug) {
         queryClient.setQueryData(workspaceKeys.detail(slug), workspace);
@@ -155,8 +177,6 @@ export function useUpdateWorkspace() {
   });
 }
 
-// ============================================
-// DELETE - Delete workspace
 export function useDeleteWorkspace() {
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -176,8 +196,6 @@ export function useDeleteWorkspace() {
   });
 }
 
-// ============================================
-// GET - Fetch workspace members
 export function useWorkspaceMembers(workspaceId?: string) {
   const key = workspaceId ?? '';
   return useQuery({
@@ -196,8 +214,6 @@ export function useWorkspaceMembers(workspaceId?: string) {
   });
 }
 
-// ============================================
-// POST - Invite member
 export function useInviteMember() {
   const queryClient = useQueryClient();
   
@@ -227,8 +243,6 @@ export function useInviteMember() {
   });
 }
 
-// ============================================
-// DELETE - Remove member
 export function useRemoveMember() {
   const queryClient = useQueryClient();
   
@@ -255,8 +269,6 @@ export function useRemoveMember() {
   });
 }
 
-// ============================================
-// PUT - Update member role
 export function useUpdateMemberRole() {
   const queryClient = useQueryClient();
   
@@ -286,8 +298,6 @@ export function useUpdateMemberRole() {
   });
 }
 
-// ============================================
-// GET - Workspace statistics
 export function useWorkspaceStats(workspaceId: string) {
   return useQuery({
     queryKey: workspaceKeys.stats(workspaceId),
@@ -301,12 +311,10 @@ export function useWorkspaceStats(workspaceId: string) {
       return response.data;
     },
     enabled: !!workspaceId,
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: 2 * 60 * 1000, 
   });
 }
 
-// ============================================
-// POST - Accept invitation
 export function useAcceptInvitation() {
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -333,8 +341,6 @@ export function useAcceptInvitation() {
   });
 }
 
-// ============================================
-// POST - Leave workspace
 export function useLeaveWorkspace() {
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -356,4 +362,110 @@ export function useLeaveWorkspace() {
       router.push('/dashboard/workspaces');
     },
   });
+}
+
+
+export function useWorkspaceRole(workspaceId?: string | null): WorkspaceRoleResult {
+  const { data: session } = useSession();
+  const { data: members = [], isLoading: isMembersLoading } = useWorkspaceMembers(
+    workspaceId || undefined
+  );
+
+  const userId = session?.user?.id;
+
+  const result = useMemo(() => {
+    if (!workspaceId || !userId) {
+      return {
+        role: null,
+        isOwner: false,
+        isAdmin: false,
+        isMember: false,
+        isGuest: false,
+        canManageWorkspace: false,
+        canManageMembers: false,
+        canCreateProjects: false,
+        canEditProjects: false,
+        canDeleteProjects: false,
+        canInviteMembers: false,
+        canRemoveMembers: false,
+        canEditSettings: false,
+        canDeleteWorkspace: false,
+        canViewContent: false,
+        currentMember: null,
+        userId: userId || null,
+        isLoading: isMembersLoading,
+        hasAccess: false,
+      };
+    }
+
+    const currentMember = members.find((m) => m.user.id === userId) || null; 
+
+    const role = currentMember?.role as WorkspaceRole | null;
+
+    const isOwner = role === 'OWNER';
+    const isAdmin = role === 'ADMIN';
+    const isMember = role === 'MEMBER';
+    const isGuest = role === 'GUEST';
+
+    const canManageWorkspace = isOwner || isAdmin;
+    const canManageMembers = isOwner || isAdmin;
+    const canCreateProjects = isOwner || isAdmin ;
+    const canEditProjects = isOwner || isAdmin ;
+    const canDeleteProjects = isOwner || isAdmin;
+    const canInviteMembers = isOwner || isAdmin;
+    const canRemoveMembers = isOwner || isAdmin;
+    const canEditSettings = isOwner;
+    const canDeleteWorkspace = isOwner;
+    const canViewContent = isOwner || isAdmin || isMember || isGuest;
+
+    return {
+      role,
+      isOwner,
+      isAdmin,
+      isMember,
+      isGuest,
+      canManageWorkspace,
+      canManageMembers,
+      canCreateProjects,
+      canEditProjects,
+      canDeleteProjects,
+      canInviteMembers,
+      canRemoveMembers,
+      canEditSettings,
+      canDeleteWorkspace,
+      canViewContent,
+      currentMember, 
+      userId: userId,
+      isLoading: isMembersLoading,
+      hasAccess: !!currentMember,
+    };
+  }, [workspaceId, userId, members, isMembersLoading]);
+
+  return result;
+}
+
+export function useWorkspacePermission(
+  workspaceId?: string | null,
+  permission?: keyof Omit<WorkspaceRoleResult, 'role' | 'currentMember' | 'userId' | 'isLoading' | 'hasAccess'>
+): boolean {
+  const roleData = useWorkspaceRole(workspaceId);
+  
+  if (!permission) return false;
+  
+  return roleData[permission] as boolean;
+}
+
+export function useWorkspaceRoleCheck(workspaceId?: string | null) {
+  const { isOwner, isAdmin, isMember, isGuest, role, hasAccess } = useWorkspaceRole(workspaceId);
+  
+  return {
+    isOwner,
+    isAdmin,
+    isMember,
+    isGuest,
+    role,
+    hasAccess,
+    isOwnerOrAdmin: isOwner || isAdmin,
+    canManage: isOwner || isAdmin,
+  };
 }

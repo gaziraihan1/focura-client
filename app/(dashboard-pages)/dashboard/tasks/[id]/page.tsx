@@ -28,6 +28,7 @@ import { FocusRequirementsCard } from "@/components/Dashboard/TaskDetails/FocusR
 import { TaskDetailsForm } from "@/components/Dashboard/TaskDetails/TaskDetailsForm";
 import { TaskSidebar } from "@/components/Dashboard/TaskDetails/TaskSidebar";
 import { TaskTabs } from "@/components/Dashboard/TaskDetails/TaskTab";
+import { IntentBadge } from "@/components/Dashboard/TaskDetails/IntentBadge";
 
 export default function TaskDetailsPage() {
   const params = useParams();
@@ -149,15 +150,18 @@ export default function TaskDetailsPage() {
         isDeleting={deleteTask.isPending}
       />
 
-      {/* Task Type Badge */}
-      {isPersonalTask && (
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 text-purple-500 text-sm font-medium">
-          <User size={14} />
-          Personal Task
-        </div>
-      )}
+      {/* ✅ Compact Badges Row */}
+      <div className="flex items-center gap-2 flex-wrap">
+        {isPersonalTask && (
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-500 text-xs font-medium">
+            <User size={12} />
+            Personal
+          </div>
+        )}
+        
+        <IntentBadge intent={task.intent} size="sm" showLabel={true} />
+      </div>
 
-      {/* Time Tracking Info */}
       {task.timeTracking && (
         <TimeTrackingCard
           timeTracking={task.timeTracking}
@@ -165,7 +169,6 @@ export default function TaskDetailsPage() {
         />
       )}
 
-      {/* Focus Features Card */}
       {task.focusRequired && (
         <FocusRequirementsCard
           focusLevel={task.focusLevel}
@@ -175,9 +178,7 @@ export default function TaskDetailsPage() {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Task Details */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -227,7 +228,7 @@ export default function TaskDetailsPage() {
           />
         </div>
 
-        {/* Sidebar */}
+        {/* Sidebar - This will show intent in detail */}
         <TaskSidebar
           task={task}
           isPersonalTask={isPersonalTask}

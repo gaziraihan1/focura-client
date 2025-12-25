@@ -1,10 +1,8 @@
-// hooks/useProjects.ts
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
+import { useSession } from 'next-auth/react';
+import { useMemo } from 'react';
 
-// ========================================================
-// TYPES
-// ========================================================
 
 export interface ProjectMember {
   id: string;
@@ -72,7 +70,6 @@ export interface ProjectDetails {
   isAdmin: boolean;
 }
 
-// DTO for creating a project
 export interface CreateProjectDto {
   name: string;
   description?: string;
@@ -85,7 +82,6 @@ export interface CreateProjectDto {
   workspaceId: string;
 }
 
-// DTO for updating a project
 export interface UpdateProjectDto {
   name?: string;
   description?: string;
@@ -97,15 +93,44 @@ export interface UpdateProjectDto {
   dueDate?: string;
 }
 
-// DTO for adding a project member
 export interface AddProjectMemberDto {
   userId: string;
   role?: 'MANAGER' | 'COLLABORATOR' | 'VIEWER';
 }
 
-// ========================================================
-// QUERY KEYS
-// ========================================================
+export type ProjectRole = 'MANAGER' | 'COLLABORATOR' | 'VIEWER';
+
+export interface ProjectRoleResult {
+  role: ProjectRole | null;
+  isManager: boolean;
+  isCollaborator: boolean;
+  isViewer: boolean;
+  
+  canManageProject: boolean;     
+  canEditProject: boolean;       
+  canDeleteProject: boolean;     
+  canManageMembers: boolean;     
+  canAddMembers: boolean;        
+  canRemoveMembers: boolean;     
+  canUpdateMemberRoles: boolean; 
+  canCreateTasks: boolean;        
+  canEditTasks: boolean;          
+  canDeleteTasks: boolean;        
+  canCommentOnTasks: boolean;     
+  canViewProject: boolean;        
+  canViewTasks: boolean;          
+  
+  currentMember: ProjectMember | null;
+  userId: string | null;
+  
+  isLoading: boolean;
+  hasAccess: boolean;
+  
+  isWorkspaceAdmin: boolean;
+}
+
+
+
 
 export const projectKeys = {
   all: ['projects'] as const,
@@ -115,11 +140,9 @@ export const projectKeys = {
   detail: (id: string) => [...projectKeys.details(), id] as const,
 };
 
-// ========================================================
-// QUERIES
-// ========================================================
 
-// Get projects by workspace
+
+
 export const useProjects = (workspaceId?: string) => {
   return useQuery({
     queryKey: projectKeys.list(workspaceId || ''),
@@ -131,7 +154,19 @@ export const useProjects = (workspaceId?: string) => {
   });
 };
 
-// Get project details
+export const useAllUserProjects = () => {
+  return useQuery({
+    queryKey: [...projectKeys.all, 'user-projects'],
+    queryFn: async () => {
+      const res = await api.get('/api/projects/user/all', {
+        showErrorToast: true,
+      });
+      return res.data as ProjectDetails[];
+    },
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+};
+
 export const useProjectDetails = (projectId?: string) => {
   return useQuery({
     queryKey: projectKeys.detail(projectId || ''),
@@ -143,11 +178,6 @@ export const useProjectDetails = (projectId?: string) => {
   });
 };
 
-// ========================================================
-// MUTATIONS
-// ========================================================
-
-// Create project
 export const useCreateProject = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -166,7 +196,6 @@ export const useCreateProject = () => {
   });
 };
 
-// Update project
 export const useUpdateProject = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -185,7 +214,6 @@ export const useUpdateProject = () => {
   });
 };
 
-// Delete project
 export const useDeleteProject = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -204,11 +232,6 @@ export const useDeleteProject = () => {
   });
 };
 
-// ========================================================
-// PROJECT MEMBER MUTATIONS
-// ========================================================
-
-// Add project member
 export const useAddProjectMember = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -227,7 +250,6 @@ export const useAddProjectMember = () => {
   });
 };
 
-// Update project member role
 export const useUpdateProjectMemberRole = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -258,7 +280,6 @@ export const useUpdateProjectMemberRole = () => {
   });
 };
 
-// Remove project member
 export const useRemoveProjectMember = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -276,3 +297,141 @@ export const useRemoveProjectMember = () => {
     },
   });
 };
+
+export function useProjectRole(
+  projectId?: string | null,
+  project?: ProjectDetails | null
+): ProjectRoleResult {
+  const { data: session } = useSession();
+  
+  const { data: fetchedProject, isLoading: projectLoading } = useProjectDetails(
+    !project && projectId ? projectId : undefined
+  );
+  
+  const projectData = project || fetchedProject;
+  
+  const userId = session?.user?.id;
+
+  const result = useMemo(() => {
+    if (!projectData || !userId) {
+      return {
+        role: null,
+        isManager: false,
+        isCollaborator: false,
+        isViewer: false,
+        canManageProject: false,
+        canEditProject: false,
+        canDeleteProject: false,
+        canManageMembers: false,
+        canAddMembers: false,
+        canRemoveMembers: false,
+        canUpdateMemberRoles: false,
+        canCreateTasks: false,
+        canEditTasks: false,
+        canDeleteTasks: false,
+        canCommentOnTasks: false,
+        canViewProject: false,
+        canViewTasks: false,
+        currentMember: null,
+        userId: userId || null,
+        isLoading: projectLoading,
+        hasAccess: false,
+        isWorkspaceAdmin: false,
+      };
+    }
+
+    const currentMember = projectData.members.find((m) => m.user.id === userId) || null;
+    const role = currentMember?.role as ProjectRole | null;
+
+    const isWorkspaceAdmin = projectData.workspace
+      ? userId === projectData.workspace.ownerId || projectData.isAdmin
+      : false;
+
+    const isManager = role === 'MANAGER';
+    const isCollaborator = role === 'COLLABORATOR';
+    const isViewer = role === 'VIEWER';
+
+    const hasManagerPerms = isManager || isWorkspaceAdmin;
+    const hasCollaboratorPerms = isManager || isCollaborator || isWorkspaceAdmin;
+
+    const canManageProject = hasManagerPerms;
+    const canEditProject = hasManagerPerms;
+    const canDeleteProject = hasManagerPerms;
+    const canManageMembers = hasManagerPerms;
+    const canAddMembers = hasManagerPerms;
+    const canRemoveMembers = hasManagerPerms;
+    const canUpdateMemberRoles = hasManagerPerms;
+    const canCreateTasks = hasCollaboratorPerms;
+    const canEditTasks = hasCollaboratorPerms;
+    const canDeleteTasks = hasCollaboratorPerms;
+    const canCommentOnTasks = isManager || isCollaborator || isViewer || isWorkspaceAdmin;
+    const canViewProject = isManager || isCollaborator || isViewer || isWorkspaceAdmin;
+    const canViewTasks = isManager || isCollaborator || isViewer || isWorkspaceAdmin;
+
+    return {
+      role,
+      isManager,
+      isCollaborator,
+      isViewer,
+      canManageProject,
+      canEditProject,
+      canDeleteProject,
+      canManageMembers,
+      canAddMembers,
+      canRemoveMembers,
+      canUpdateMemberRoles,
+      canCreateTasks,
+      canEditTasks,
+      canDeleteTasks,
+      canCommentOnTasks,
+      canViewProject,
+      canViewTasks,
+      currentMember,
+      userId: userId,
+      isLoading: projectLoading,
+      hasAccess: !!currentMember || isWorkspaceAdmin,
+      isWorkspaceAdmin,
+    };
+  }, [projectData, userId, projectLoading]);
+
+  return result;
+}
+
+
+export function useProjectPermission(
+  projectId?: string | null,
+  permission?: keyof Omit<ProjectRoleResult, 'role' | 'currentMember' | 'userId' | 'isLoading' | 'hasAccess' | 'isWorkspaceAdmin'>,
+  project?: ProjectDetails | null
+): boolean {
+  const roleData = useProjectRole(projectId, project);
+  
+  if (!permission) return false;
+  
+  return roleData[permission] as boolean;
+}
+
+export function useProjectRoleCheck(
+  projectId?: string | null,
+  project?: ProjectDetails | null
+) {
+  const { 
+    isManager, 
+    isCollaborator, 
+    isViewer, 
+    role, 
+    hasAccess,
+    isWorkspaceAdmin,
+  } = useProjectRole(projectId, project);
+  
+  return {
+    isManager,
+    isCollaborator,
+    isViewer,
+    role,
+    hasAccess,
+    isWorkspaceAdmin,
+    isManagerOrAdmin: isManager || isWorkspaceAdmin,
+    canEdit: isManager || isWorkspaceAdmin,
+    canContribute: isManager || isCollaborator || isWorkspaceAdmin,
+  };
+}

@@ -64,6 +64,9 @@ export interface CreateTaskDto {
   estimatedHours?: number | null;
   assigneeIds?: string[];
   labelIds?: string[];
+  intent?: "EXECUTION" | "PLANNING" | "REVIEW" | "LEARNING" | "COMMUNICATION";
+  energyType?: "LOW" | "MEDIUM" | "HIGH";
+  focusRequired?: boolean;
 }
 
 export interface TaskFilters {

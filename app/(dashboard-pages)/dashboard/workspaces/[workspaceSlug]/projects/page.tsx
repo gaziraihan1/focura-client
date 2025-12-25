@@ -16,7 +16,7 @@ import {
   Crown,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useWorkspace } from "@/hooks/useWorkspace";
+import { useWorkspace, useWorkspaceRole } from "@/hooks/useWorkspace";
 import { useProjects } from "@/hooks/useProjects";
 
 const statusColors: Record<string, string> = {
@@ -47,6 +47,8 @@ export default function WorkspaceProjectsPage() {
 
   const { data: workspace, isLoading: workspaceLoading, isError: workspaceError } = useWorkspace(workspaceSlug);
   const { data: projectsData, isLoading: projectsLoading, isError: projectsError } = useProjects(workspace?.id);
+  
+  const {canCreateProjects} = useWorkspaceRole(workspace?.id)
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -102,6 +104,9 @@ export default function WorkspaceProjectsPage() {
             Browse projects in {workspace.name}
           </p>
         </div>
+        {
+          canCreateProjects && (
+
         <button
           onClick={() => router.push(`/dashboard/workspaces/${workspaceSlug}/projects/new-project`)}
           className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2"
@@ -109,6 +114,8 @@ export default function WorkspaceProjectsPage() {
           <Plus size={18} />
           New Project
         </button>
+          )
+        }
       </div>
 
       {/* Search */}

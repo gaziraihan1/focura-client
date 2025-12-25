@@ -50,6 +50,9 @@ export default function WorkspaceNewTaskPage() {
     estimatedHours: undefined,
     assigneeIds: [],
     labelIds: [],
+    intent: "EXECUTION",
+    energyType: "MEDIUM",
+    focusRequired: false
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -262,7 +265,7 @@ export default function WorkspaceNewTaskPage() {
                 </p>
                 <button
                   type="button"
-                  onClick={() => router.push(`/dashboard/${workspaceSlug}/projects/new`)}
+                  onClick={() => router.push(`/dashboard/workspaces/${workspaceSlug}/projects/new-project`)}
                   className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2 text-sm"
                 >
                   <Plus size={16} />
@@ -330,6 +333,7 @@ export default function WorkspaceNewTaskPage() {
                 <option value="IN_REVIEW">In Review</option>
                 <option value="BLOCKED">Blocked</option>
                 <option value="COMPLETED">Completed</option>
+                {/* <option value="CANCELLED">Cancelled</option> */}
               </select>
             </div>
 
@@ -358,6 +362,60 @@ export default function WorkspaceNewTaskPage() {
                   )
                 )}
               </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">
+                Task Intent
+              </label>
+              <div
+              className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {(
+                  ["EXECUTION", "PLANNING", "REVIEW", "LEARNING", "COMMUNICATION"] as const
+                ).map((intent) => (
+                  <button
+                  key={intent}
+                  type="button"
+                  onClick={() => setFormData((prev) => ({...prev, intent}))}
+                  className={`px-3 py-2 rounded-lg border text-sm font-medium transition ${formData.intent === intent ? "bg-primary/10 border-primary text-primary"
+                    :
+                    "border-border text-muted-foreground hover:bg-accent"
+                  }`}>
+                    {
+                      intent.charAt(0) + intent.slice(1).toLowerCase()
+                    }
+                  </button>
+                ))
+                }
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">
+                Ideal Energy
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {(
+                  ["LOW", "MEDIUM", "HIGH"] as const
+                ).map(energy => (
+                  <button key={energy}
+                  type="button"
+                  onClick={() => setFormData(prev => ({...prev, energyType: energy}))}
+                  className={`px-3 py-2 rounded-lg border text-sm font-medium transition ${formData.energyType === energy ? "bg-primary/10 border-primary text-primary"
+                    :
+                    "border-border text-muted-foreground hover:bg-accent"
+                  }`}>
+                    {energy}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center gap-3 mt-2">
+                <input type="checkbox"checked={formData.focusRequired} 
+                onChange={(e) => setFormData((prev) => ({...prev, focusRequired: e.target.checked,}))}
+                className="rounded border-border"
+                />
+                <span className="text-sm text-foreground">
+                  Requires deep focus (Focus Mode)
+                </span>
             </div>
           </div>
 

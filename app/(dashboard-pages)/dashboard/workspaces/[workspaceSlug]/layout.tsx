@@ -56,37 +56,37 @@ export default function WorkspaceLayout({
       name: "Overview",
       href: `/dashboard/workspaces/${slug}`,
       icon: LayoutDashboard,
-      match: (path: string) => path === `/dashboard/${slug}`,
+      match: (path: string) => path === `/dashboard/workspaces/${slug}`,
     },
     {
       name: "Tasks",
       href: `/dashboard/workspaces/${slug}/tasks`,
       icon: CheckSquare,
-      match: (path: string) => path.includes("/tasks"),
+      match: (path: string) => path.includes(`/${slug}/tasks`),
     },
     {
       name: "Projects",
       href: `/dashboard/workspaces/${slug}/projects`,
       icon: FolderKanban,
-      match: (path: string) => path.includes("/projects"),
+      match: (path: string) => path.includes(`/${slug}/projects`),
     },
     {
       name: "Team",
       href: `/dashboard/workspaces/${slug}/team`,
       icon: Users,
-      match: (path: string) => path.includes("/team"),
+      match: (path: string) => path.includes(`/${slug}/team`),
     },
     {
       name: "Calendar",
       href: `/dashboard/workspaces/${slug}/calendar`,
       icon: Calendar,
-      match: (path: string) => path.includes("/calendar"),
+      match: (path: string) => path.includes(`/${slug}/calender`),
     },
     {
       name: "Analytics",
       href: `/dashboard/workspaces/${slug}/analytics`,
       icon: BarChart3,
-      match: (path: string) => path.includes("/analytics"),
+      match: (path: string) => path.includes(`/${slug}/analytics`),
     },
   ];
 
@@ -284,7 +284,7 @@ export default function WorkspaceLayout({
 
               <button
                 onClick={() => {
-                  router.push("/dashboard/workspaces/new");
+                  router.push("/dashboard/workspaces/new-workspace");
                   setSwitcherOpen(false);
                 }}
                 className="w-full flex items-center gap-3 px-4 py-3 text-primary hover:bg-accent transition border-t border-border"

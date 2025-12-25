@@ -28,6 +28,8 @@ export const authOptions: NextAuthOptions = {
           response_type: "code",
         },
       },
+      // ✅ Allow account linking
+      allowDangerousEmailAccountLinking: true,
     }),
 
     CredentialsProvider({
@@ -110,6 +112,8 @@ export const authOptions: NextAuthOptions = {
         });
         token.backendTokenExpiry = Date.now() + BACKEND_TOKEN_EXPIRY_MS;
       }
+      
+      // Refresh backend token if expired
       if (
         token.backendToken &&
         token.backendTokenExpiry &&
@@ -120,7 +124,7 @@ export const authOptions: NextAuthOptions = {
           email: token.email as string,
           role: token.role as string,
         });
-        token.backendTokenExpiry = Date.now() + 60 * 60 * 1000;
+        token.backendTokenExpiry = Date.now() + BACKEND_TOKEN_EXPIRY_MS;
       }
 
       return token;
@@ -136,28 +140,51 @@ export const authOptions: NextAuthOptions = {
     },
 
     async signIn({ user, account, profile }) {
-      // Update last login for OAuth users
+      // ✅ Handle Google OAuth
       if (account?.provider === "google") {
         try {
           const googleProfile = profile as GoogleProfile;
-
           const isVerified =
             googleProfile?.email_verified === true ||
             googleProfile?.verified_email === true;
 
-          await prisma.user.update({
+          // ✅ Find existing user by email
+          const existingUser = await prisma.user.findUnique({
             where: { email: user.email! },
-            data: {
-              lastLoginAt: new Date(),
-              emailVerified: isVerified ? new Date() : undefined,
-            },
           });
+
+          if (existingUser) {
+            // ✅ User exists - update and link account
+            await prisma.user.update({
+              where: { email: user.email! },
+              data: {
+                lastLoginAt: new Date(),
+                // Auto-verify email if Google says it's verified
+                emailVerified: isVerified && !existingUser.emailVerified 
+                  ? new Date() 
+                  : existingUser.emailVerified,
+                // Update profile from Google if not set
+                name: existingUser.name || user.name,
+                image: existingUser.image || user.image,
+              },
+            });
+
+            console.log(`✅ Google login (existing user): ${user.email} - Email ${isVerified ? 'verified' : 'not verified'}`);
+          } else {
+            // ✅ New user - will be created by adapter
+            console.log(`✅ Google login (new user): ${user.email} - Email ${isVerified ? 'verified' : 'not verified'}`);
+          }
+
+          // ✅ Always allow Google sign-in (adapter will handle account linking)
+          return true;
         } catch (err) {
-          console.error("Failed to update OAuth login:", err);
+          console.error("Failed to process Google login:", err);
+          // ✅ Allow login even if update fails
+          return true;
         }
       }
 
-      // Block unverified email for credentials
+      // ✅ Block unverified email ONLY for credentials provider
       if (account?.provider === "credentials" && !user.emailVerified) {
         throw new Error("Please verify your email to log in.");
       }

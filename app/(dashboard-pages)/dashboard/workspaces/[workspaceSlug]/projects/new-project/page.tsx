@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -11,9 +11,10 @@ import {
   Calendar,
   Flag,
   Palette,
+  ShieldAlert,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { useWorkspace } from "@/hooks/useWorkspace";
+import { useWorkspace, useWorkspaceRole } from "@/hooks/useWorkspace";
 import { CreateProjectDto, useCreateProject } from "@/hooks/useProjects";
 
 type ProjectForm = Omit<CreateProjectDto, "workspaceId">;
@@ -46,9 +47,15 @@ export default function WorkspaceNewProjectPage() {
   const params = useParams();
   const router = useRouter();
   const workspaceSlug = params.workspaceSlug as string;
-
+  
   const { data: workspace, isLoading: workspaceLoading } = useWorkspace(workspaceSlug);
   const createProject = useCreateProject();
+  
+  const { 
+    canCreateProjects, 
+    isLoading: roleLoading,
+    hasAccess 
+  } = useWorkspaceRole(workspace?.id);
 
   const [form, setForm] = useState<ProjectForm>({
     name: "",
@@ -63,7 +70,24 @@ export default function WorkspaceNewProjectPage() {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const isSubmitting = createProject.isPending || workspaceLoading;
+  const isSubmitting = createProject.isPending;
+  const isLoading = workspaceLoading || roleLoading;
+
+  useEffect(() => {
+    if (!isLoading && workspace) {
+      if (!hasAccess) {
+        toast.error("You don't have access to this workspace");
+        router.push("/dashboard/workspaces");
+        return;
+      }
+
+      if (!canCreateProjects) {
+        toast.error("You don't have permission to create projects");
+        router.push(`/dashboard/workspaces/${workspaceSlug}/projects`);
+        return;
+      }
+    }
+  }, [isLoading, workspace, hasAccess, canCreateProjects, router, workspaceSlug]);
 
   const validate = () => {
     const next: Record<string, string> = {};
@@ -104,7 +128,7 @@ export default function WorkspaceNewProjectPage() {
     router.push(`/dashboard/workspaces/${workspaceSlug}/projects`);
   };
 
-  if (workspaceLoading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -112,6 +136,7 @@ export default function WorkspaceNewProjectPage() {
     );
   }
 
+  // ✅ Workspace not found
   if (!workspace) {
     return (
       <div className="max-w-4xl mx-auto text-center py-12">
@@ -125,6 +150,42 @@ export default function WorkspaceNewProjectPage() {
           className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
         >
           Back to Workspaces
+        </button>
+      </div>
+    );
+  }
+
+  if (!hasAccess) {
+    return (
+      <div className="max-w-4xl mx-auto text-center py-12">
+        <ShieldAlert className="w-12 h-12 text-amber-500 mx-auto mb-4" />
+        <h2 className="text-2xl font-bold text-foreground mb-2">Access Denied</h2>
+        <p className="text-muted-foreground mb-6">
+          You are not a member of this workspace
+        </p>
+        <button
+          onClick={() => router.push("/dashboard/workspaces")}
+          className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
+        >
+          Back to Workspaces
+        </button>
+      </div>
+    );
+  }
+
+  if (!canCreateProjects) {
+    return (
+      <div className="max-w-4xl mx-auto text-center py-12">
+        <ShieldAlert className="w-12 h-12 text-amber-500 mx-auto mb-4" />
+        <h2 className="text-2xl font-bold text-foreground mb-2">Permission Denied</h2>
+        <p className="text-muted-foreground mb-6">
+          You don&apos;t have permission to create projects in this workspace
+        </p>
+        <button
+          onClick={() => router.push(`/dashboard/workspaces/${workspaceSlug}/projects`)}
+          className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
+        >
+          Back to Projects
         </button>
       </div>
     );
@@ -279,7 +340,7 @@ export default function WorkspaceNewProjectPage() {
                     onClick={() => setForm((prev) => ({ ...prev, priority }))}
                     className={`px-4 py-2.5 rounded-lg border transition text-sm font-medium ${
                       form.priority === priority
-                        ? priorityColors[priority as string ]
+                        ? priorityColors[priority as string]
                         : "border-border text-muted-foreground hover:bg-accent"
                     }`}
                   >

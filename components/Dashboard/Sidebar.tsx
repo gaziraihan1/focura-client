@@ -72,12 +72,6 @@ const navigation: NavItem[] = [
     name: "Projects",
     href: "/dashboard/projects",
     icon: FolderOpen,
-    children: [
-      { name: "All Projects", href: "/dashboard/projects" },
-      // { name: "Create Project", href: "/dashboard/projects/create-project" },
-      { name: "Active", href: "/dashboard/projects/active" },
-      { name: "Archived", href: "/dashboard/projects/archived" },
-    ],
   },
   {
     name: "Workspace",

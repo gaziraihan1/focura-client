@@ -27,19 +27,19 @@ import Link from "next/link";
 import {
   useWorkspace,
   useWorkspaceStats,
-  useWorkspaceMembers,
+  // useWorkspaceMembers,
   useInviteMember,
   useRemoveMember,
   useUpdateMemberRole,
+  useWorkspaceRole,
+  useWorkspaceMembers,
 } from "@/hooks/useWorkspace";
 import { format } from "date-fns";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
 
 export default function WorkspaceDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const { data: session } = useSession();
   const slug = params.workspaceSlug as string;
 
   const [activeTab, setActiveTab] = useState<"overview" | "projects" | "members">("overview");
@@ -55,10 +55,7 @@ export default function WorkspaceDetailPage() {
   const removeMember = useRemoveMember();
   const updateMemberRole = useUpdateMemberRole();
 
-  const currentMember = members.find((m) => m.user.id === session?.user?.id);
-  const currentUserRole = currentMember?.role;
-  const isOwner = currentUserRole === "OWNER";
-  const isAdmin = currentUserRole === "ADMIN" || isOwner;
+  const {isAdmin, isOwner, canCreateProjects} = useWorkspaceRole(workspace?.id)
 
   const getRoleBadge = (role: string) => {
     const badges: Record<string, { icon: LucideIcon; color: string; label: string }> = {
@@ -197,6 +194,9 @@ export default function WorkspaceDetailPage() {
         )}
 
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          {
+            canCreateProjects && (
+
           <button
             onClick={() => router.push(`/dashboard/workspaces/${slug}/projects/new-project`)}
             className="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center justify-center gap-2 text-sm sm:text-base"
@@ -205,8 +205,10 @@ export default function WorkspaceDetailPage() {
             <span className="hidden xs:inline">New Project</span>
             <span className="xs:hidden">New Project</span>
           </button>
+            )
+         }
 
-          {isAdmin && (
+          {isAdmin || isOwner && (
             <Link href={`/dashboard/workspaces/${slug}/settings`} className="shrink-0">
               <button 
                 className="p-2 rounded-lg hover:bg-accent transition"
@@ -403,6 +405,10 @@ export default function WorkspaceDetailPage() {
             <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2">
               No projects yet
             </h3>
+            {
+              canCreateProjects && (
+                <>
+                
             <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 px-4">
               Create your first project to get started
             </p>
@@ -412,6 +418,9 @@ export default function WorkspaceDetailPage() {
             >
               Create Project
             </button>
+                </>
+              )
+            }
           </div>
         )}
 
@@ -421,7 +430,7 @@ export default function WorkspaceDetailPage() {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-4 sm:space-y-6"
           >
-            {isAdmin && (
+            {isAdmin || isOwner && (
               <div className="flex justify-end">
                 <button
                   onClick={() => setShowInviteModal(true)}

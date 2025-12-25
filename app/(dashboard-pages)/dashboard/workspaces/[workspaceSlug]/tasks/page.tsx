@@ -529,7 +529,7 @@ export default function WorkspaceTasksPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.02 }}
             >
-              <Link href={`/dashboard/${workspaceSlug}/tasks/${task.id}`}>
+              <Link href={`/dashboard/workspaces/${workspaceSlug}/tasks/${task.id}`}>
                 <div className="p-4 rounded-xl bg-card border border-border hover:shadow-lg hover:border-primary/50 transition-all cursor-pointer group">
                   <div className="flex items-start gap-4">
                     <div className="shrink-0 mt-1">
