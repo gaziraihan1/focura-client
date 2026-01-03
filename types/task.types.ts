@@ -116,3 +116,28 @@ export interface Task {
     files: number;
   };
 }
+
+
+
+export interface TaskAssignee {
+  user: User;
+}
+
+export interface TaskTimeTracking {
+  isOverdue?: boolean;
+  isDueToday?: boolean;
+}
+
+export interface TeamTask {
+  id: string;
+  title: string;
+  status: TaskStatus;
+  priority: TaskPriority;
+  assignees: TaskAssignee[];
+  createdBy: User;
+  dueDate?: string;
+  intent?: string;
+  energyType?: string;
+  focusRequired?: boolean;
+  timeTracking?: TaskTimeTracking;
+}

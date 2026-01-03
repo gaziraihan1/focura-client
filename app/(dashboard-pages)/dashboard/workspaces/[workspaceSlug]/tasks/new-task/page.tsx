@@ -16,6 +16,8 @@ import {
   AlertCircle,
   ArrowLeft,
   Plus,
+  Brain,
+  Zap,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -54,6 +56,64 @@ export default function WorkspaceNewTaskPage() {
     energyType: "MEDIUM",
     focusRequired: false
   });
+
+  const INTENT_OPTIONS = [
+  {
+    value: "EXECUTION",
+    label: "Execution",
+    icon: Zap,
+    description: "Build, implement, or do hands-on work",
+    activeClass: "border-blue-500 bg-blue-500/10 text-blue-500",
+  },
+  {
+    value: "PLANNING",
+    label: "Planning",
+    icon: Brain,
+    description: "Think, design, or organize",
+    activeClass: "border-purple-500 bg-purple-500/10 text-purple-500",
+  },
+  {
+    value: "REVIEW",
+    label: "Review",
+    icon: AlertCircle,
+    description: "Validate, QA, or inspect work",
+    activeClass: "border-green-500 bg-green-500/10 text-green-500",
+  },
+  {
+    value: "LEARNING",
+    label: "Learning",
+    icon: Clock,
+    description: "Study or research",
+    activeClass: "border-amber-500 bg-amber-500/10 text-amber-500",
+  },
+  {
+    value: "COMMUNICATION",
+    label: "Communication",
+    icon: Users,
+    description: "Meetings or discussions",
+    activeClass: "border-pink-500 bg-pink-500/10 text-pink-500",
+  },
+] as const;
+
+const ENERGY_OPTIONS = [
+  {
+    value: "LOW",
+    label: "Low",
+    className: "border-green-500 bg-green-500/10 text-green-500",
+  },
+  {
+    value: "MEDIUM",
+    label: "Medium",
+    className: "border-blue-500 bg-blue-500/10 text-blue-500",
+  },
+  {
+    value: "HIGH",
+    label: "High",
+    className: "border-red-500 bg-red-500/10 text-red-500",
+  },
+] as const;
+
+
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -107,7 +167,7 @@ export default function WorkspaceNewTaskPage() {
           ? Number(formData.estimatedHours)
           : null,
       });
-      router.push(`/dashboard/${workspaceSlug}/tasks`);
+      router.push(`/dashboard/workspaces/${workspaceSlug}/tasks`);
     } catch (error) {
       console.error("Create task error:", error);
     }
@@ -333,7 +393,6 @@ export default function WorkspaceNewTaskPage() {
                 <option value="IN_REVIEW">In Review</option>
                 <option value="BLOCKED">Blocked</option>
                 <option value="COMPLETED">Completed</option>
-                {/* <option value="CANCELLED">Cancelled</option> */}
               </select>
             </div>
 
@@ -364,50 +423,75 @@ export default function WorkspaceNewTaskPage() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                Task Intent
-              </label>
-              <div
-              className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                {(
-                  ["EXECUTION", "PLANNING", "REVIEW", "LEARNING", "COMMUNICATION"] as const
-                ).map((intent) => (
-                  <button
-                  key={intent}
-                  type="button"
-                  onClick={() => setFormData((prev) => ({...prev, intent}))}
-                  className={`px-3 py-2 rounded-lg border text-sm font-medium transition ${formData.intent === intent ? "bg-primary/10 border-primary text-primary"
-                    :
-                    "border-border text-muted-foreground hover:bg-accent"
-                  }`}>
-                    {
-                      intent.charAt(0) + intent.slice(1).toLowerCase()
-                    }
-                  </button>
-                ))
-                }
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                Ideal Energy
-              </label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                {(
-                  ["LOW", "MEDIUM", "HIGH"] as const
-                ).map(energy => (
-                  <button key={energy}
-                  type="button"
-                  onClick={() => setFormData(prev => ({...prev, energyType: energy}))}
-                  className={`px-3 py-2 rounded-lg border text-sm font-medium transition ${formData.energyType === energy ? "bg-primary/10 border-primary text-primary"
-                    :
-                    "border-border text-muted-foreground hover:bg-accent"
-                  }`}>
-                    {energy}
-                  </button>
-                ))}
-              </div>
-            </div>
+  <label className="block text-sm font-medium text-foreground mb-2">
+    Task Intent
+  </label>
+
+  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+    {INTENT_OPTIONS.map((intent) => {
+      const Icon = intent.icon;
+      const selected = formData.intent === intent.value;
+
+      return (
+        <button
+          key={intent.value}
+          type="button"
+          onClick={() =>
+            setFormData((prev) => ({ ...prev, intent: intent.value }))
+          }
+          className={`p-3 rounded-lg border text-left transition ${
+            selected
+              ? intent.activeClass
+              : "border-border hover:bg-accent"
+          }`}
+        >
+          <div className="flex items-center gap-2 mb-1">
+            <Icon size={16} />
+            <span className="font-medium text-sm">
+              {intent.label}
+            </span>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            {intent.description}
+          </p>
+        </button>
+      );
+    })}
+  </div>
+</div>
+
+           <div>
+  <label className="block text-sm font-medium text-foreground mb-2">
+    Ideal Energy
+  </label>
+
+  <div className="grid grid-cols-3 gap-3">
+    {ENERGY_OPTIONS.map((energy) => {
+      const selected = formData.energyType === energy.value;
+
+      return (
+        <button
+          key={energy.value}
+          type="button"
+          onClick={() =>
+            setFormData((prev) => ({
+              ...prev,
+              energyType: energy.value,
+            }))
+          }
+          className={`px-3 py-2 rounded-lg border text-sm font-medium transition ${
+            selected
+              ? energy.className
+              : "border-border text-muted-foreground hover:bg-accent"
+          }`}
+        >
+          {energy.label}
+        </button>
+      );
+    })}
+  </div>
+</div>
+
             <div className="flex items-center gap-3 mt-2">
                 <input type="checkbox"checked={formData.focusRequired} 
                 onChange={(e) => setFormData((prev) => ({...prev, focusRequired: e.target.checked,}))}

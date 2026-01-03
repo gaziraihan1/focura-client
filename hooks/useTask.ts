@@ -44,6 +44,7 @@ export interface Task {
 export interface TaskStats {
   personal: number;
   assigned: number;
+  created: number;
   overdue: number;
   dueToday: number;
   byStatus: Record<string, number>;
@@ -56,7 +57,7 @@ export interface CreateTaskDto {
   title: string;
   description?: string;
   projectId?: string | null;
-  workspaceId?: string | null; // Optional and can be null
+  workspaceId?: string | null;
   status: Task['status'];
   priority: Task['priority'];
   startDate?: string;
@@ -70,7 +71,7 @@ export interface CreateTaskDto {
 }
 
 export interface TaskFilters {
-  type?: 'all' | 'personal' | 'assigned';
+  type?: 'all' | 'personal' | 'assigned' | 'created';
   status?: string;
   priority?: string;
   search?: string;
@@ -87,6 +88,7 @@ export const taskKeys = {
   details: () => [...taskKeys.all, 'detail'] as const,
   detail: (id: string) => [...taskKeys.details(), id] as const,
   stats: () => [...taskKeys.all, 'stats'] as const,
+  stat: (workspaceId?: string, type?: string) => [...taskKeys.stats(), workspaceId || 'personal', type || 'all'] as const,
 };
 
 export function useTasks(filters?: TaskFilters) {
@@ -131,23 +133,21 @@ export function useTasks(filters?: TaskFilters) {
   });
 }
 
-export function useTaskStats(workspaceId?: string) {
+export function useTaskStats(workspaceId?: string, type?: 'all' | 'personal' | 'assigned' | 'created') {
   return useQuery({
-    queryKey: [...taskKeys.stats(), workspaceId || 'personal'],
+    queryKey: taskKeys.stat(workspaceId, type),
     queryFn: async () => {
       const params = new URLSearchParams();
       if (workspaceId) params.append('workspaceId', workspaceId);
+      if (type && type !== 'all') params.append('type', type);
 
       const endpoint = `/api/tasks/stats${params.toString() ? `?${params.toString()}` : ''}`;
       const response = await api.get<TaskStats>(endpoint, { showErrorToast: true });
       return response.data || null;
     },
-    enabled: workspaceId !== undefined || !workspaceId, // fetch personal if no workspace
     staleTime: 5 * 60 * 1000,
   });
 }
-
-
 
 export function useTask(taskId: string) {
   return useQuery({
@@ -221,7 +221,7 @@ export function useDeleteTask() {
     },
   });
 }
-// ============================================
+
 export function useUpdateTaskStatus() {
   const queryClient = useQueryClient();
   
@@ -258,7 +258,6 @@ export function useUpdateTaskStatus() {
     },
   });
 }
-
 
 export interface Comment {
   id: string;

@@ -60,7 +60,7 @@ const navigation: NavItem[] = [
       },
       {
         name: 'Calender View',
-        href: '/dashoard/tasks/calender-view'
+        href: '/dashboard/tasks/calender-view'
       },
       {
         name: 'Kanban Board',
