@@ -1,10 +1,8 @@
-// import { TeamTask } from types/task.types";
-// import { Task } from "@/types/task.types";
-import { Task } from "@/hooks/useTask";
+import { TaskWithDetails } from "@/types";
 import { TaskCardTeam } from "./TaskCardTeam";
 
 interface TaskListProps {
-  tasks: Task[];
+  tasks: TaskWithDetails[];
   isLoading?: boolean;
 }
 
@@ -33,7 +31,7 @@ export function TaskList({ tasks, isLoading }: TaskListProps) {
   }
 
   return (
-    <div className="space-y-2">
+    <div className="flex flex-col gap-2">
       {tasks.map((task) => (
         <TaskCardTeam key={task.id} task={task} />
       ))}

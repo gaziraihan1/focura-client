@@ -23,9 +23,10 @@ import toast from "react-hot-toast";
 
 import { useCreateTask, CreateTaskDto } from "@/hooks/useTask";
 import { useWorkspace } from "@/hooks/useWorkspace";
-import { useProjects } from "@/hooks/useProjects";
+import { useProjects, useProjectRole } from "@/hooks/useProjects";
 import { useWorkspaceMembers } from "@/hooks/useWorkspace";
 import { useLabels } from "@/hooks/useLabels";
+import { useSession } from "next-auth/react";
 
 type TaskFormData = Omit<CreateTaskDto, "workspaceId">;
 
@@ -34,6 +35,7 @@ export default function WorkspaceNewTaskPage() {
   const router = useRouter();
   const workspaceSlug = params.workspaceSlug as string;
 
+  const { data: session } = useSession();
   const { data: workspace, isLoading: workspaceLoading } = useWorkspace(workspaceSlug);
   const { data: projects = [], isLoading: projectsLoading } = useProjects(workspace?.id);
   const { data: members = [], isLoading: membersLoading } = useWorkspaceMembers(workspace?.id);
@@ -56,6 +58,20 @@ export default function WorkspaceNewTaskPage() {
     energyType: "MEDIUM",
     focusRequired: false
   });
+
+  // Get role information for the selected project
+  const selectedProject = projects.find(p => p.id === formData.projectId);
+  const { 
+    // isManager, 
+    isWorkspaceAdmin,
+    canManageProject 
+  } = useProjectRole(formData.projectId, selectedProject);
+
+  // Check if user is workspace owner
+  const isWorkspaceOwner = workspace?.ownerId === session?.user?.id;
+
+  // User can assign to others if they are: manager of project, workspace admin, or workspace owner
+  const canAssignToOthers = canManageProject || isWorkspaceAdmin || isWorkspaceOwner;
 
   const INTENT_OPTIONS = [
   {
@@ -178,6 +194,12 @@ const ENERGY_OPTIONS = [
   };
 
   const toggleAssignee = (userId: string) => {
+    // Only allow toggling if user has permission
+    if (!canAssignToOthers && userId !== session?.user?.id) {
+      toast.error("You don't have permission to assign tasks to others");
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       assigneeIds: prev.assigneeIds?.includes(userId)
@@ -592,6 +614,11 @@ const ENERGY_OPTIONS = [
             <label className="block text-sm font-medium text-foreground mb-3">
               <Users size={16} className="inline mr-2" />
               Assignees
+              {!canAssignToOthers && (
+                <span className="ml-2 text-xs text-muted-foreground">
+                  (You can only assign to yourself)
+                </span>
+              )}
             </label>
             {membersLoading ? (
               <div className="flex items-center gap-2 text-muted-foreground">
@@ -600,26 +627,46 @@ const ENERGY_OPTIONS = [
               </div>
             ) : members.length > 0 ? (
               <div className="flex flex-wrap gap-2">
-                {members.map((member) => (
-                  <button
-                    key={member.user.id}
-                    type="button"
-                    onClick={() => toggleAssignee(member.user.id)}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition ${
-                      formData.assigneeIds?.includes(member.user.id)
-                        ? "bg-primary/10 border-primary text-primary"
-                        : "border-border text-foreground hover:bg-accent"
-                    }`}
-                  >
-                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-medium">
-                      {member.user.name?.charAt(0) || "U"}
-                    </div>
-                    <span className="text-sm">{member.user.name}</span>
-                  </button>
-                ))}
+                {members.map((member) => {
+                  const isCurrentUser = member.user.id === session?.user?.id;
+                  const canSelect = canAssignToOthers || isCurrentUser;
+                  
+                  return (
+                    <button
+                      key={member.user.id}
+                      type="button"
+                      onClick={() => toggleAssignee(member.user.id)}
+                      disabled={!canSelect}
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition ${
+                        formData.assigneeIds?.includes(member.user.id)
+                          ? "bg-primary/10 border-primary text-primary"
+                          : canSelect
+                          ? "border-border text-foreground hover:bg-accent"
+                          : "border-border text-muted-foreground opacity-50 cursor-not-allowed"
+                      }`}
+                    >
+                      <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-medium">
+                        {member.user.name?.charAt(0) || "U"}
+                      </div>
+                      <span className="text-sm">
+                        {member.user.name}
+                        {isCurrentUser && " (You)"}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             ) : (
               <p className="text-muted-foreground text-sm">No team members available</p>
+            )}
+            
+            {!canAssignToOthers && formData.projectId && (
+              <div className="mt-3 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                <p className="text-sm text-amber-600 dark:text-amber-400">
+                  <AlertCircle size={14} className="inline mr-1" />
+                  You need to be a project manager or workspace admin to assign tasks to others.
+                </p>
+              </div>
             )}
           </div>
 

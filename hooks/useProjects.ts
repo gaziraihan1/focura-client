@@ -340,7 +340,7 @@ export function useProjectRole(
       };
     }
 
-    const currentMember = projectData.members.find((m) => m.user.id === userId) || null;
+    const currentMember = projectData.members?.find((m) => m.user.id === userId) || null;
     const role = currentMember?.role as ProjectRole | null;
 
     const isWorkspaceAdmin = projectData.workspace
