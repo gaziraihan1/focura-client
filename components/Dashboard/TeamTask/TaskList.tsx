@@ -1,8 +1,8 @@
-import { TaskWithDetails } from "@/types";
+import { Task } from "@/hooks/useTask";
 import { TaskCardTeam } from "./TaskCardTeam";
 
 interface TaskListProps {
-  tasks: TaskWithDetails[];
+  tasks: Task[];
   isLoading?: boolean;
 }
 
@@ -32,8 +32,8 @@ export function TaskList({ tasks, isLoading }: TaskListProps) {
 
   return (
     <div className="flex flex-col gap-2">
-      {tasks.map((task) => (
-        <TaskCardTeam key={task.id} task={task} />
+      {tasks.map((task, index: number) => (
+        <TaskCardTeam key={task.id} task={task} index={index}/>
       ))}
     </div>
   );

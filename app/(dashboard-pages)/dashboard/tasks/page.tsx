@@ -8,7 +8,7 @@ import { TaskFiltersBar } from "@/components/Dashboard/AllTasks/TaskFiltersBar";
 import { TaskList } from "@/components/Dashboard/AllTasks/TaskList";
 import { Pagination } from "@/components/Dashboard/AllTasks/Pagination";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 15; // Changed from 10 to 15
 
 export default function TasksPage() {
   const router = useRouter();
@@ -33,10 +33,6 @@ export default function TasksPage() {
   
   // Pass the same type to stats hook to get filtered stats
   const { data: stats } = useTaskStats(undefined, activeTab);
-  
-  console.log("Current tab:", activeTab);
-  console.log("Stats:", stats);
-  console.log("Tasks:", tasks);
 
   const filteredTasks = useMemo(() => {
     if (!searchQuery.trim()) return tasks;
@@ -70,6 +66,12 @@ export default function TasksPage() {
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
     setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Smooth scroll to top when changing pages
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -112,11 +114,16 @@ export default function TasksPage() {
         onCreateTask={() => router.push("/dashboard/tasks/add-task")}
       />
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+      {/* Enhanced Pagination with item count info */}
+      {!isLoading && totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          // itemsPerPage={PAGE_SIZE}
+          // totalItems={filteredTasks.length}
+        />
+      )}
     </div>
   );
 }
