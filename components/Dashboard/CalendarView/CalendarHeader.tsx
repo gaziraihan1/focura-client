@@ -31,7 +31,6 @@ export function CalendarHeader({
   return (
     <header className="border-b border-border bg-card px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
-        {/* Left Section - Date Display */}
         <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
           <button
             onClick={onToday}
@@ -80,9 +79,7 @@ export function CalendarHeader({
           </div>
         </div>
 
-        {/* Right Section - View Controls & Filters */}
         <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-between sm:justify-end">
-          {/* Time-bound Filter */}
           <button
             onClick={() => onToggleTimeBound(!showOnlyTimeBound)}
             className={`flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all ${
@@ -96,7 +93,6 @@ export function CalendarHeader({
             <span className="md:hidden">Time</span>
           </button>
 
-          {/* View Selector */}
           <div className="flex items-center gap-0.5 sm:gap-1 bg-muted rounded-lg p-0.5 sm:p-1">
             {(['month', 'week', 'day'] as const).map((v) => (
               <button
@@ -114,7 +110,6 @@ export function CalendarHeader({
             ))}
           </div>
 
-          {/* Calendar Icon - Hidden on mobile */}
           <div className="p-2 hidden lg:block">
             <Calendar className="w-5 h-5 text-muted-foreground" />
           </div>

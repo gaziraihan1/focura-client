@@ -10,10 +10,6 @@ import { Task } from '@/hooks/useTask';
 import { CalendarWeekView } from './CalendarWeekView';
 import { CalendarDayView } from './CalendarDayView';
 import { CalendarDay } from './CalendarDay';
-// import { Task } from '@/hooks/use-tasks';
-// import { CalendarDay } from './calendar-day';
-// import { CalendarWeekView } from './calendar-week-view';
-// import { CalendarDayView } from './calendar-day-view';
 
 interface CalendarGridProps {
   currentDate: Date;
@@ -32,8 +28,6 @@ export function CalendarGrid({
   onTaskClick,
   isLoading,
 }: CalendarGridProps) {
-  // Month view calculations (always run, even if not used)
-  // This prevents conditional hook calls which violate React rules
   const calendarDays = useMemo(() => {
     return eachDayOfInterval({
       start: dateRange.start,
@@ -41,7 +35,6 @@ export function CalendarGrid({
     });
   }, [dateRange]);
 
-  // Group tasks by date
   const tasksByDate = useMemo(() => {
     const grouped = new Map<string, Task[]>();
 
@@ -59,7 +52,6 @@ export function CalendarGrid({
     return grouped;
   }, [tasks]);
 
-  // Calculate density for each day
   const densityByDate = useMemo(() => {
     const density = new Map<string, number>();
 
@@ -72,7 +64,6 @@ export function CalendarGrid({
     return density;
   }, [calendarDays, tasksByDate]);
 
-  // Render based on view type
   if (view === 'week') {
     return (
       <CalendarWeekView
@@ -95,7 +86,6 @@ export function CalendarGrid({
     );
   }
 
-  // Month view (default)
   if (isLoading) {
     return (
       <div className="h-full flex items-center justify-center">
@@ -106,21 +96,18 @@ export function CalendarGrid({
 
   return (
     <div className="h-full bg-background p-2 sm:p-3 lg:p-4">
-      {/* Weekday Headers */}
       <div className="grid grid-cols-7 gap-px mb-px">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
           <div
             key={day}
             className="bg-muted py-2 sm:py-3 text-center text-[10px] sm:text-xs font-semibold text-muted-foreground tracking-wider uppercase"
           >
-            {/* Show single letter on very small screens */}
             <span className="hidden xs:inline">{day}</span>
             <span className="xs:hidden">{day.charAt(0)}</span>
           </div>
         ))}
       </div>
 
-      {/* Calendar Grid */}
       <div className="grid grid-cols-7 gap-px bg-border" style={{ height: 'calc(100% - 40px)' }}>
         {calendarDays.map((day) => {
           const dateKey = format(day, 'yyyy-MM-dd');

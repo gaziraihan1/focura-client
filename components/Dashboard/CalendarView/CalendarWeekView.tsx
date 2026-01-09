@@ -4,7 +4,6 @@ import {
   endOfWeek, 
   eachDayOfInterval,
   format,
-  // isSameDay,
   isToday,
   isPast
 } from 'date-fns';
@@ -24,14 +23,12 @@ export function CalendarWeekView({
   onTaskClick,
   isLoading,
 }: CalendarWeekViewProps) {
-  // Generate week days
   const weekDays = useMemo(() => {
     const start = startOfWeek(currentDate, { weekStartsOn: 0 });
     const end = endOfWeek(currentDate, { weekStartsOn: 0 });
     return eachDayOfInterval({ start, end });
   }, [currentDate]);
 
-  // Group tasks by date
   const tasksByDate = useMemo(() => {
     const grouped = new Map<string, Task[]>();
 
@@ -49,7 +46,6 @@ export function CalendarWeekView({
     return grouped;
   }, [tasks]);
 
-  // Calculate density for each day
   const densityByDate = useMemo(() => {
     const density = new Map<string, number>();
 
@@ -72,7 +68,6 @@ export function CalendarWeekView({
 
   return (
     <div className="h-full bg-background p-2 sm:p-3 lg:p-4">
-      {/* Week Header - Shows full date for each day */}
       <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2 sm:mb-4">
         {weekDays.map((day) => (
           <div
@@ -92,7 +87,6 @@ export function CalendarWeekView({
         ))}
       </div>
 
-      {/* Week Grid - Larger day cells */}
       <div className="grid grid-cols-7 gap-1 sm:gap-2" style={{ height: 'calc(100% - 80px)' }}>
         {weekDays.map((day) => {
           const dateKey = format(day, 'yyyy-MM-dd');

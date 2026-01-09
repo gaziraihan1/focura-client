@@ -27,16 +27,13 @@ export default function CalendarPage() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [showOnlyTimeBound, setShowOnlyTimeBound] = useState(true);
 
-  // Fetch tasks
   const { data: tasks = [], isLoading } = useTasks();
 
-  // Filter tasks to only show time-bound ones if enabled
   const filteredTasks = useMemo(() => {
     if (!showOnlyTimeBound) return tasks;
     return tasks.filter(task => task.dueDate || task.startDate);
   }, [tasks, showOnlyTimeBound]);
 
-  // Calculate date range based on view
   const dateRange = useMemo(() => {
     const start = startOfWeek(startOfMonth(currentDate), { weekStartsOn: 0 });
     const end = endOfWeek(endOfMonth(currentDate), { weekStartsOn: 0 });
@@ -69,7 +66,6 @@ export default function CalendarPage() {
 
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden">
-      {/* Header */}
       <CalendarHeader
         currentDate={currentDate}
         view={view}
@@ -81,9 +77,7 @@ export default function CalendarPage() {
         onToggleTimeBound={setShowOnlyTimeBound}
       />
 
-      {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Calendar Grid */}
         <div className="flex-1 overflow-auto scrollbar-hide">
           <CalendarGrid
             currentDate={currentDate}
@@ -95,7 +89,6 @@ export default function CalendarPage() {
           />
         </div>
 
-        {/* Responsive Sidebar */}
         <ResponsiveSidebar
           currentDate={currentDate}
           tasks={filteredTasks}
@@ -103,7 +96,6 @@ export default function CalendarPage() {
         />
       </div>
 
-      {/* Task Details Modal */}
       {selectedTask && (
         <TaskDetailsModal
           task={selectedTask}

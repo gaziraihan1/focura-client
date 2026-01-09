@@ -1,8 +1,9 @@
 import React, { useMemo } from 'react';
 import { format, isPast } from 'date-fns';
 import { Task } from '@/hooks/useTask';
-import { AlertCircle, Clock, Users } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import TaskPill from './TaskPill';
 
 interface CalendarDayProps {
   date: Date;
@@ -20,10 +21,8 @@ export function CalendarDay({
   density,
   isCurrentMonth,
   isToday: isTodayDate,
-//   isPast: isPastDate,
   onTaskClick,
 }: CalendarDayProps) {
-  // Calculate overload status
   const overloadStatus = useMemo(() => {
     if (density === 0) return 'none';
     if (density <= 3) return 'normal';
@@ -53,7 +52,6 @@ export function CalendarDay({
     return { personalTasks: personal, assignedTasks: assigned, overdueTasks: overdue };
   }, [tasks]);
 
-  // Get background color based on density
   const getBgColor = () => {
     if (!isCurrentMonth) return 'bg-muted/30';
     
@@ -69,7 +67,6 @@ export function CalendarDay({
     }
   };
 
-  // Visible tasks (max 4)
   const visibleTasks = tasks.slice(0, 4);
   const hasMoreTasks = tasks.length > 4;
 
@@ -81,7 +78,6 @@ export function CalendarDay({
         !isCurrentMonth && 'opacity-40'
       )}
     >
-      {/* Date Header */}
       <div className="flex items-start justify-between mb-1 sm:mb-2">
         <div className="flex items-center gap-1 sm:gap-2">
           <span
@@ -95,7 +91,6 @@ export function CalendarDay({
             {format(date, 'd')}
           </span>
 
-          {/* Density Badge */}
           {density > 0 && (
             <span
               className={cn(
@@ -110,13 +105,11 @@ export function CalendarDay({
           )}
         </div>
 
-        {/* Warning Indicator - Hidden on very small screens */}
         {overloadStatus === 'critical' && (
           <AlertCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 lg:w-4 lg:h-4 text-destructive animate-pulse hidden xs:block" />
         )}
       </div>
 
-      {/* Tasks List */}
       <div className="space-y-0.5 sm:space-y-1">
         {visibleTasks.map((task) => (
           <TaskPill
@@ -128,7 +121,6 @@ export function CalendarDay({
           />
         ))}
 
-        {/* More Tasks Indicator */}
         {hasMoreTasks && (
           <div className="text-[9px] sm:text-[10px] text-muted-foreground font-medium px-1 sm:px-2 py-0.5 sm:py-1">
             +{tasks.length - 4} more
@@ -136,75 +128,11 @@ export function CalendarDay({
         )}
       </div>
 
-      {/* No Tasks State - Hidden on mobile */}
       {tasks.length === 0 && isCurrentMonth && (
         <div className="absolute inset-0 hidden sm:flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
           <span className="text-[10px] sm:text-xs text-muted-foreground">Free time</span>
         </div>
       )}
     </div>
-  );
-}
-
-interface TaskPillProps {
-  task: Task;
-  isPersonal: boolean;
-  isOverdue: boolean;
-  onClick: () => void;
-}
-
-function TaskPill({ task, isPersonal, isOverdue, onClick }: TaskPillProps) {
-  const getPriorityColor = () => {
-    switch (task.priority) {
-      case 'URGENT':
-        return 'border-l-2 sm:border-l-4 border-l-red-500 bg-red-500/10';
-      case 'HIGH':
-        return 'border-l-2 sm:border-l-4 border-l-orange-500 bg-orange-500/10';
-      case 'MEDIUM':
-        return 'border-l-2 sm:border-l-4 border-l-blue-500 bg-blue-500/10';
-      case 'LOW':
-        return 'border-l-2 sm:border-l-4 border-l-gray-400 bg-gray-400/10';
-    }
-  };
-
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        'w-full text-left px-1 sm:px-1.5 lg:px-2 py-0.5 sm:py-1 lg:py-1.5 rounded text-[9px] sm:text-[10px] lg:text-xs transition-all hover:shadow-md group',
-        getPriorityColor(),
-        isOverdue && 'bg-destructive/20 border-l-destructive animate-pulse',
-        'relative overflow-hidden'
-      )}
-    >
-      <div className="flex items-center gap-1 sm:gap-1.5 justify-between">
-        <span className="font-medium truncate flex-1 group-hover:font-semibold">
-          {task.title}
-        </span>
-        
-        <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
-          {/* Personal vs Assigned Indicator - Hidden on very small screens */}
-          {!isPersonal && (
-            <Users className="w-2 h-2 sm:w-2.5 sm:h-2.5 lg:w-3 lg:h-3 text-muted-foreground hidden xs:block" />
-          )}
-          
-          {/* Time Indicator - Hidden on mobile */}
-          {task.estimatedHours && (
-            <span className="text-[8px] sm:text-[9px] lg:text-[10px] text-muted-foreground hidden sm:flex items-center gap-0.5">
-              <Clock className="w-2 h-2 lg:w-2.5 lg:h-2.5" />
-              {task.estimatedHours}h
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Project Color Indicator */}
-      {task.project && (
-        <div
-          className="absolute top-0 right-0 w-0.5 sm:w-1 h-full"
-          style={{ backgroundColor: task.project.color }}
-        />
-      )}
-    </button>
   );
 }

@@ -9,7 +9,8 @@ import {
   Users,
   User
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import StatCard from './StatCard';
+import TaskSection from './TaskSection';
 
 interface CalendarSidebarProps {
   currentDate: Date;
@@ -18,7 +19,6 @@ interface CalendarSidebarProps {
 }
 
 export function CalendarSidebar({ currentDate, tasks, onTaskClick }: CalendarSidebarProps) {
-  // Analyze tasks
   const analysis = useMemo(() => {
     const now = new Date();
     const overdue: Task[] = [];
@@ -27,7 +27,6 @@ export function CalendarSidebar({ currentDate, tasks, onTaskClick }: CalendarSid
     const upcoming: Task[] = [];
     const conflicts: Array<{ date: string; tasks: Task[] }> = [];
 
-    // Categorize tasks
     tasks.forEach((task) => {
       const dueDate = task.dueDate ? parseISO(task.dueDate) : null;
       
@@ -44,7 +43,6 @@ export function CalendarSidebar({ currentDate, tasks, onTaskClick }: CalendarSid
       }
     });
 
-    // Detect conflicts (multiple tasks on same day)
     const tasksByDate = new Map<string, Task[]>();
     tasks.forEach((task) => {
       if (!task.dueDate) return;
@@ -75,7 +73,6 @@ export function CalendarSidebar({ currentDate, tasks, onTaskClick }: CalendarSid
   return (
     <aside className="w-80 border-l border-border bg-card overflow-y-auto scrollbar-hide">
       <div className="p-4 space-y-6">
-        {/* Header */}
         <div>
           <h2 className="text-lg font-bold text-foreground mb-1">Time Overview</h2>
           <p className="text-sm text-muted-foreground">
@@ -83,7 +80,6 @@ export function CalendarSidebar({ currentDate, tasks, onTaskClick }: CalendarSid
           </p>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-2 gap-3">
           <StatCard
             icon={<User className="w-4 h-4" />}
@@ -99,7 +95,6 @@ export function CalendarSidebar({ currentDate, tasks, onTaskClick }: CalendarSid
           />
         </div>
 
-        {/* Conflicts Warning */}
         {analysis.conflicts.length > 0 && (
           <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3">
             <div className="flex items-center gap-2 mb-2">
@@ -126,7 +121,6 @@ export function CalendarSidebar({ currentDate, tasks, onTaskClick }: CalendarSid
           </div>
         )}
 
-        {/* Overdue Tasks */}
         {analysis.overdue.length > 0 && (
           <TaskSection
             title="Overdue"
@@ -138,7 +132,6 @@ export function CalendarSidebar({ currentDate, tasks, onTaskClick }: CalendarSid
           />
         )}
 
-        {/* Today's Tasks */}
         {analysis.today.length > 0 && (
           <TaskSection
             title="Today"
@@ -150,7 +143,6 @@ export function CalendarSidebar({ currentDate, tasks, onTaskClick }: CalendarSid
           />
         )}
 
-        {/* Tomorrow's Tasks */}
         {analysis.tomorrow.length > 0 && (
           <TaskSection
             title="Tomorrow"
@@ -162,7 +154,6 @@ export function CalendarSidebar({ currentDate, tasks, onTaskClick }: CalendarSid
           />
         )}
 
-        {/* Upcoming This Week */}
         {analysis.upcoming.length > 0 && (
           <TaskSection
             title="This Week"
@@ -174,7 +165,6 @@ export function CalendarSidebar({ currentDate, tasks, onTaskClick }: CalendarSid
           />
         )}
 
-        {/* Empty State */}
         {tasks.length === 0 && (
           <div className="text-center py-8">
             <Calendar className="w-12 h-12 mx-auto text-muted-foreground/50 mb-3" />
@@ -185,98 +175,5 @@ export function CalendarSidebar({ currentDate, tasks, onTaskClick }: CalendarSid
         )}
       </div>
     </aside>
-  );
-}
-
-interface StatCardProps {
-  icon: React.ReactNode;
-  label: string;
-  value: number;
-  color: string;
-}
-
-function StatCard({ icon, label, value, color }: StatCardProps) {
-  return (
-    <div className="bg-muted rounded-lg p-3">
-      <div className={cn('flex items-center gap-2 mb-1', color)}>
-        {icon}
-        <span className="text-xs font-medium text-muted-foreground">{label}</span>
-      </div>
-      <div className="text-2xl font-bold text-foreground">{value}</div>
-    </div>
-  );
-}
-
-interface TaskSectionProps {
-  title: string;
-  icon: React.ReactNode;
-  count: number;
-  tasks: Task[];
-  onTaskClick: (task: Task) => void;
-  variant: 'destructive' | 'primary' | 'default' | 'muted';
-}
-
-function TaskSection({ title, icon, count, tasks, onTaskClick, variant }: TaskSectionProps) {
-  const getVariantStyles = () => {
-    switch (variant) {
-      case 'destructive':
-        return 'text-destructive';
-      case 'primary':
-        return 'text-primary';
-      case 'default':
-        return 'text-foreground';
-      case 'muted':
-        return 'text-muted-foreground';
-    }
-  };
-
-  return (
-    <div>
-      <div className={cn('flex items-center gap-2 mb-3', getVariantStyles())}>
-        {icon}
-        <h3 className="text-sm font-semibold">
-          {title} <span className="text-muted-foreground">({count})</span>
-        </h3>
-      </div>
-      <div className="space-y-2">
-        {tasks.slice(0, 5).map((task) => (
-          <button
-            key={task.id}
-            onClick={() => onTaskClick(task)}
-            className="w-full text-left p-3 rounded-lg bg-muted hover:bg-accent transition-colors group"
-          >
-            <div className="flex items-start gap-2">
-              {task.project && (
-                <div
-                  className="w-1 h-full rounded-full mt-1"
-                  style={{ backgroundColor: task.project.color }}
-                />
-              )}
-              <div className="flex-1 min-w-0">
-                <div className="font-medium text-sm text-foreground truncate group-hover:text-primary">
-                  {task.title}
-                </div>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-xs text-muted-foreground">
-                    {task.priority}
-                  </span>
-                  {task.assignees.length > 0 && (
-                    <span className="text-xs text-muted-foreground flex items-center gap-1">
-                      <Users className="w-3 h-3" />
-                      {task.assignees.length}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-          </button>
-        ))}
-        {tasks.length > 5 && (
-          <div className="text-xs text-muted-foreground text-center py-2">
-            +{tasks.length - 5} more
-          </div>
-        )}
-      </div>
-    </div>
   );
 }
