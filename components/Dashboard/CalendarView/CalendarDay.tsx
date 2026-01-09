@@ -1,0 +1,210 @@
+import React, { useMemo } from 'react';
+import { format, isPast } from 'date-fns';
+import { Task } from '@/hooks/useTask';
+import { AlertCircle, Clock, Users } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+interface CalendarDayProps {
+  date: Date;
+  tasks: Task[];
+  density: number;
+  isCurrentMonth: boolean;
+  isToday: boolean;
+  isPast: boolean;
+  onTaskClick: (task: Task) => void;
+}
+
+export function CalendarDay({
+  date,
+  tasks,
+  density,
+  isCurrentMonth,
+  isToday: isTodayDate,
+//   isPast: isPastDate,
+  onTaskClick,
+}: CalendarDayProps) {
+  // Calculate overload status
+  const overloadStatus = useMemo(() => {
+    if (density === 0) return 'none';
+    if (density <= 3) return 'normal';
+    if (density <= 6) return 'warning';
+    return 'critical';
+  }, [density]);
+
+  // Separate personal and assigned tasks
+  //personalTasks, assignedTasks
+  const { overdueTasks } = useMemo(() => {
+    const personal: Task[] = [];
+    const assigned: Task[] = [];
+    const overdue: Task[] = [];
+
+    tasks.forEach((task) => {
+      if (task.dueDate && isPast(new Date(task.dueDate)) && task.status !== 'COMPLETED') {
+        overdue.push(task);
+      }
+
+      if (task.assignees.length === 0) {
+        personal.push(task);
+      } else {
+        assigned.push(task);
+      }
+    });
+
+    return { personalTasks: personal, assignedTasks: assigned, overdueTasks: overdue };
+  }, [tasks]);
+
+  // Get background color based on density
+  const getBgColor = () => {
+    if (!isCurrentMonth) return 'bg-muted/30';
+    
+    switch (overloadStatus) {
+      case 'critical':
+        return 'bg-destructive/10 hover:bg-destructive/20';
+      case 'warning':
+        return 'bg-amber-500/10 hover:bg-amber-500/20';
+      case 'normal':
+        return 'bg-primary/5 hover:bg-primary/10';
+      default:
+        return 'bg-card hover:bg-accent/50';
+    }
+  };
+
+  // Visible tasks (max 4)
+  const visibleTasks = tasks.slice(0, 4);
+  const hasMoreTasks = tasks.length > 4;
+
+  return (
+    <div
+      className={cn(
+        'relative min-h-20 sm:min-h-[100px] lg:min-h-[120px] p-1 sm:p-1.5 lg:p-2 transition-all border-none',
+        getBgColor(),
+        !isCurrentMonth && 'opacity-40'
+      )}
+    >
+      {/* Date Header */}
+      <div className="flex items-start justify-between mb-1 sm:mb-2">
+        <div className="flex items-center gap-1 sm:gap-2">
+          <span
+            className={cn(
+              'text-[11px] sm:text-xs lg:text-sm font-semibold',
+              isTodayDate && 'flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 bg-primary text-primary-foreground rounded-full text-[10px] sm:text-xs',
+              !isTodayDate && isCurrentMonth && 'text-foreground',
+              !isTodayDate && !isCurrentMonth && 'text-muted-foreground'
+            )}
+          >
+            {format(date, 'd')}
+          </span>
+
+          {/* Density Badge */}
+          {density > 0 && (
+            <span
+              className={cn(
+                'text-[9px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded-full',
+                overloadStatus === 'critical' && 'bg-destructive text-destructive-foreground',
+                overloadStatus === 'warning' && 'bg-amber-500 text-white',
+                overloadStatus === 'normal' && 'bg-primary/20 text-primary'
+              )}
+            >
+              {density}
+            </span>
+          )}
+        </div>
+
+        {/* Warning Indicator - Hidden on very small screens */}
+        {overloadStatus === 'critical' && (
+          <AlertCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 lg:w-4 lg:h-4 text-destructive animate-pulse hidden xs:block" />
+        )}
+      </div>
+
+      {/* Tasks List */}
+      <div className="space-y-0.5 sm:space-y-1">
+        {visibleTasks.map((task) => (
+          <TaskPill
+            key={task.id}
+            task={task}
+            isPersonal={task.assignees.length === 0}
+            isOverdue={overdueTasks.includes(task)}
+            onClick={() => onTaskClick(task)}
+          />
+        ))}
+
+        {/* More Tasks Indicator */}
+        {hasMoreTasks && (
+          <div className="text-[9px] sm:text-[10px] text-muted-foreground font-medium px-1 sm:px-2 py-0.5 sm:py-1">
+            +{tasks.length - 4} more
+          </div>
+        )}
+      </div>
+
+      {/* No Tasks State - Hidden on mobile */}
+      {tasks.length === 0 && isCurrentMonth && (
+        <div className="absolute inset-0 hidden sm:flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+          <span className="text-[10px] sm:text-xs text-muted-foreground">Free time</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface TaskPillProps {
+  task: Task;
+  isPersonal: boolean;
+  isOverdue: boolean;
+  onClick: () => void;
+}
+
+function TaskPill({ task, isPersonal, isOverdue, onClick }: TaskPillProps) {
+  const getPriorityColor = () => {
+    switch (task.priority) {
+      case 'URGENT':
+        return 'border-l-2 sm:border-l-4 border-l-red-500 bg-red-500/10';
+      case 'HIGH':
+        return 'border-l-2 sm:border-l-4 border-l-orange-500 bg-orange-500/10';
+      case 'MEDIUM':
+        return 'border-l-2 sm:border-l-4 border-l-blue-500 bg-blue-500/10';
+      case 'LOW':
+        return 'border-l-2 sm:border-l-4 border-l-gray-400 bg-gray-400/10';
+    }
+  };
+
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        'w-full text-left px-1 sm:px-1.5 lg:px-2 py-0.5 sm:py-1 lg:py-1.5 rounded text-[9px] sm:text-[10px] lg:text-xs transition-all hover:shadow-md group',
+        getPriorityColor(),
+        isOverdue && 'bg-destructive/20 border-l-destructive animate-pulse',
+        'relative overflow-hidden'
+      )}
+    >
+      <div className="flex items-center gap-1 sm:gap-1.5 justify-between">
+        <span className="font-medium truncate flex-1 group-hover:font-semibold">
+          {task.title}
+        </span>
+        
+        <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
+          {/* Personal vs Assigned Indicator - Hidden on very small screens */}
+          {!isPersonal && (
+            <Users className="w-2 h-2 sm:w-2.5 sm:h-2.5 lg:w-3 lg:h-3 text-muted-foreground hidden xs:block" />
+          )}
+          
+          {/* Time Indicator - Hidden on mobile */}
+          {task.estimatedHours && (
+            <span className="text-[8px] sm:text-[9px] lg:text-[10px] text-muted-foreground hidden sm:flex items-center gap-0.5">
+              <Clock className="w-2 h-2 lg:w-2.5 lg:h-2.5" />
+              {task.estimatedHours}h
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Project Color Indicator */}
+      {task.project && (
+        <div
+          className="absolute top-0 right-0 w-0.5 sm:w-1 h-full"
+          style={{ backgroundColor: task.project.color }}
+        />
+      )}
+    </button>
+  );
+}

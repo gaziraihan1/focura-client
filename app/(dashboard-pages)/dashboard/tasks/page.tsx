@@ -8,7 +8,7 @@ import { TaskFiltersBar } from "@/components/Dashboard/AllTasks/TaskFiltersBar";
 import { TaskList } from "@/components/Dashboard/AllTasks/TaskList";
 import { Pagination } from "@/components/Dashboard/AllTasks/Pagination";
 
-const PAGE_SIZE = 15; // Changed from 10 to 15
+const PAGE_SIZE = 10; // Changed from 10 to 15
 
 export default function TasksPage() {
   const router = useRouter();
@@ -120,8 +120,8 @@ export default function TasksPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}
-          // itemsPerPage={PAGE_SIZE}
-          // totalItems={filteredTasks.length}
+          itemsPerPage={PAGE_SIZE}
+          totalItems={filteredTasks.length}
         />
       )}
     </div>
