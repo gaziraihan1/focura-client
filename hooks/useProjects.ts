@@ -1,3 +1,4 @@
+import { Workspace } from './../types/types';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { useSession } from 'next-auth/react';
@@ -68,6 +69,7 @@ export interface ProjectDetails {
     };
   };
   isAdmin: boolean;
+  workspaceId: string
 }
 
 export interface CreateProjectDto {

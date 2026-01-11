@@ -164,7 +164,7 @@ export default function ProjectsPage() {
               <FolderKanban className="lg:w-8 lg:h-8 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-3xl lg:text-5xl font-bold text-foreground tracking-tight">
+              <h1 className="text-xl md:text-3xl lg:text-5xl font-bold text-foreground tracking-tight">
                 My Projects
               </h1>
               <p className="text-muted-foreground mt-2 lg:text-lg">
@@ -177,7 +177,7 @@ export default function ProjectsPage() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => router.push("/dashboard/workspaces")}
-            className="px-6 py-3 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2 shadow-lg shadow-primary/20 font-medium"
+            className="lg:px-6 lg:py-3 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2 shadow-lg shadow-primary/20 font-medium px-4 py-2"
           >
             <Plus size={20} />
             New Project

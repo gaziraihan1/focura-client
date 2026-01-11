@@ -11,9 +11,11 @@ import {
 import { CreateTaskDto, useCreateTask } from "@/hooks/useTask";
 import Image from "next/image";
 import { useProjectRoleCheck } from "@/hooks/useProjects";
+import { LabelPicker } from "@/components/Labels/LabelPicker";
 
 interface CreateTaskModalProps {
   projectId: string;
+  workspaceId: string; // Add workspaceId prop
   projectMembers: Array<{
     id: string;
     userId: string;
@@ -38,10 +40,12 @@ type CreateTaskFormData = Required<
     | "intent"
     | "energyType"
     | "focusRequired"
+    | "labelIds" // Add labelIds
   >;
 
 export default function CreateTaskModal({
   projectId,
+  workspaceId,
   projectMembers,
   onClose,
 }: CreateTaskModalProps) {
@@ -56,6 +60,7 @@ export default function CreateTaskModal({
     dueDate: "",
     estimatedHours: undefined,
     assigneeIds: [],
+    labelIds: [], // Initialize labelIds
     intent: "EXECUTION",
     energyType: "MEDIUM",
     focusRequired: false,
@@ -207,7 +212,7 @@ export default function CreateTaskModal({
               placeholder="Optional context for this task"
             />
           </div>
-          {/* Intent */}
+
           {/* Intent */}
           <div>
             <label className="text-sm font-medium mb-2 block">
@@ -340,11 +345,12 @@ export default function CreateTaskModal({
               ))}
             </div>
           </div>
+
+          {/* Due Date */}
           <div>
-            {" "}
             <label className="block text-sm font-medium text-foreground mb-1">
               Due Date
-            </label>{" "}
+            </label>
             <input
               type="date"
               value={formData.dueDate}
@@ -352,7 +358,19 @@ export default function CreateTaskModal({
                 setFormData({ ...formData, dueDate: e.target.value })
               }
               className="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
-            />{" "}
+            />
+          </div>
+
+          {/* Labels */}
+          <div>
+            <LabelPicker
+              workspaceId={workspaceId}
+              selectedLabelIds={formData.labelIds || []}
+              onChange={(labelIds) =>
+                setFormData({ ...formData, labelIds })
+              }
+              maxLabels={10}
+            />
           </div>
 
           {/* Assignees */}

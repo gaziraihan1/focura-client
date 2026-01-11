@@ -162,7 +162,7 @@ export default function AddTaskPage() {
             <ArrowLeft size={20} />
           </button>
           <div>
-            <h1 className="text-3xl font-bold">Create Personal Task</h1>
+            <h1 className="text-xl lg:text-3xl font-bold">Create Personal Task</h1>
             <p className="text-muted-foreground">
               Capture tasks with focus and energy awareness
             </p>

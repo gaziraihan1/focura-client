@@ -34,12 +34,20 @@ interface ProjectMember {
   };
 }
 
+// interface WorkspaceDetails {
+//   id: string;
+//   name: string;
+//   ownerId: string;
+// }
+
 interface TasksTabProps {
   project: {
     id: string;
     tasks: Task[];
     members: ProjectMember[];
     isAdmin: boolean;
+    // workspace: WorkspaceDetails;
+    workspaceId: string
   };
   showCreateTask: boolean;
   setShowCreateTask: (show: boolean) => void;
@@ -52,6 +60,7 @@ export default function TasksTab({ project, showCreateTask, setShowCreateTask }:
     IN_REVIEW: project.tasks.filter(t => t.status === 'IN_REVIEW'),
     COMPLETED: project.tasks.filter(t => t.status === 'COMPLETED'),
   };
+  console.log(project)
 
   return (
     <div className="space-y-6">
@@ -89,6 +98,7 @@ export default function TasksTab({ project, showCreateTask, setShowCreateTask }:
 
       {showCreateTask && (
         <CreateTaskModal 
+        workspaceId={project.workspaceId}
           projectId={project.id} 
           projectMembers={project.members}
           onClose={() => setShowCreateTask(false)} 

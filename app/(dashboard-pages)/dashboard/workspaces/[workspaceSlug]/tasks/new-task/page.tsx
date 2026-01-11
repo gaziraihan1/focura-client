@@ -25,8 +25,10 @@ import { useCreateTask, CreateTaskDto } from "@/hooks/useTask";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { useProjects, useProjectRole } from "@/hooks/useProjects";
 import { useWorkspaceMembers } from "@/hooks/useWorkspace";
-import { useLabels } from "@/hooks/useLabels";
+// import { useLabels } from "@/hooks/useLabels";
 import { useSession } from "next-auth/react";
+import { LabelPicker } from "@/components/Labels/LabelPicker";
+import { LabelManager } from "@/components/Labels/LabelManager";
 
 type TaskFormData = Omit<CreateTaskDto, "workspaceId">;
 
@@ -34,12 +36,13 @@ export default function WorkspaceNewTaskPage() {
   const params = useParams();
   const router = useRouter();
   const workspaceSlug = params.workspaceSlug as string;
+  const [showLabelManager, setShowLabelManager] = useState(false);
 
   const { data: session } = useSession();
   const { data: workspace, isLoading: workspaceLoading } = useWorkspace(workspaceSlug);
   const { data: projects = [], isLoading: projectsLoading } = useProjects(workspace?.id);
   const { data: members = [], isLoading: membersLoading } = useWorkspaceMembers(workspace?.id);
-  const { data: labels = [], isLoading: labelsLoading } = useLabels(workspace?.id);
+  // const { data: labels = [], isLoading: labelsLoading } = useLabels(workspace?.id);
   
   const createTaskMutation = useCreateTask();
 
@@ -208,14 +211,6 @@ const ENERGY_OPTIONS = [
     }));
   };
 
-  const toggleLabel = (labelId: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      labelIds: prev.labelIds?.includes(labelId)
-        ? prev.labelIds.filter((id) => id !== labelId)
-        : [...(prev.labelIds || []), labelId],
-    }));
-  };
 
   const priorityColors = {
     URGENT: "bg-red-500/10 text-red-500 border-red-500/20",
@@ -672,53 +667,30 @@ const ENERGY_OPTIONS = [
 
           {/* Labels */}
           <div>
-            <label className="block text-sm font-medium text-foreground mb-3">
-              <Tag size={16} className="inline mr-2" />
-              Labels
-            </label>
-            {labelsLoading ? (
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Loader2 className="animate-spin" size={16} />
-                Loading labels...
-              </div>
-            ) : labels.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {labels.map((label) => (
-                  <button
-                    key={label.id}
-                    type="button"
-                    onClick={() => toggleLabel(label.id)}
-                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition ${
-                      formData.labelIds?.includes(label.id)
-                        ? "opacity-100 ring-2 ring-offset-2"
-                        : "opacity-60 hover:opacity-100"
-                    }`}
-                    style={{
-                      backgroundColor: `${label.color}20`,
-                      color: label.color,
-                      border: `1px solid ${label.color}40`,
-                    }}
-                  >
-                    {label.name}
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div className="p-4 rounded-lg bg-muted/50 border border-border">
-                <p className="text-sm text-muted-foreground mb-3">
-                  No labels available. Create labels in workspace settings.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => router.push(`/dashboard/${workspaceSlug}/settings`)}
-                  className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2 text-sm"
-                >
-                  <Plus size={16} />
-                  Manage Labels
-                </button>
-              </div>
-            )}
-          </div>
+  <div className="flex items-center justify-between mb-3">
+    <label className="block text-sm font-medium text-foreground">
+      <Tag size={16} className="inline mr-2" />
+      Labels
+    </label>
+    <button
+      type="button"
+      onClick={() => setShowLabelManager(true)}
+      className="text-xs text-primary hover:text-primary/80 transition flex items-center gap-1"
+    >
+      <Plus size={14} />
+      Manage Labels
+    </button>
+  </div>
+
+  <LabelPicker
+    workspaceId={workspace?.id}
+    selectedLabelIds={formData.labelIds || []}
+    onChange={(labelIds) =>
+      setFormData((prev) => ({ ...prev, labelIds }))
+    }
+    maxLabels={10}
+  />
+</div>
         </motion.div>
 
         <motion.div
@@ -754,6 +726,21 @@ const ENERGY_OPTIONS = [
           </button>
         </motion.div>
       </form>
+      {showLabelManager && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      className="bg-card rounded-xl border border-border shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-auto"
+    >
+      <LabelManager
+        workspaceId={workspace?.id}
+        onClose={() => setShowLabelManager(false)}
+      />
+    </motion.div>
+  </div>
+)}
     </div>
   );
 }
