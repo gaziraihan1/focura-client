@@ -176,7 +176,8 @@ before submitting pull requests.
 
 ## 📄 License
 
-This project is licensed under the **MIT License**.
+This project is licensed under the **Source-Available License**.  
+See the [LICENSE](./LICENSE) file for details.
 
 ---
 
