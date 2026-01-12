@@ -7,7 +7,7 @@ import { useState } from "react";
 interface LabelFormProps {
   label?: Label;
   workspaceId?: string;
-  onSave: (data: { name: string; color: string; description?: string; workspaceId?: string }) => void;
+  onSave: (data: { name: string; color: string; description?: string; workspaceId?: string; createdAt: Date }) => void;
   onCancel: () => void;
   isSaving: boolean;
 }
@@ -54,6 +54,7 @@ export default function LabelForm({ label, workspaceId, onSave, onCancel, isSavi
       name: name.trim(),
       color,
       description: description.trim() || undefined,
+      createdAt: new Date('2024-01-01'),
       workspaceId,
     });
   };

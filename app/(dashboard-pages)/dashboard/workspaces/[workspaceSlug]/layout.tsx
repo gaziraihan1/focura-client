@@ -17,8 +17,9 @@ import {
   LogOut,
   Search,
   Command,
+  Tags,
 } from "lucide-react";
-import { useWorkspace, useWorkspaces } from "@/hooks/useWorkspace";
+import { useWorkspace, useWorkspaceRole, useWorkspaces } from "@/hooks/useWorkspace";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 
@@ -38,6 +39,13 @@ export default function WorkspaceLayout({
 
   const { data: workspace, isLoading } = useWorkspace(slug);
   const { data: allWorkspaces = [] } = useWorkspaces();
+  const {canManageWorkspace} = useWorkspaceRole(workspace?.id);
+  const label = {
+    name: "Labels",
+    href: `/dashboard/workspaces/${slug}/label`,
+    icon: Tags,
+    match: (path:string) => path === `/dashboard/workspaces/${slug}/label`
+  }
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -88,6 +96,8 @@ export default function WorkspaceLayout({
       icon: BarChart3,
       match: (path: string) => path.includes(`/${slug}/analytics`),
     },
+     ...(canManageWorkspace ? [label] : []),
+    
   ];
 
   if (isLoading) {

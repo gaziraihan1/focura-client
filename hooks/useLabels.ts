@@ -21,6 +21,7 @@ export interface Label {
     name: string | null;
     image: string | null;
   };
+  createdAt: Date;
   _count?: {
     tasks: number;
   };
@@ -30,6 +31,7 @@ export interface CreateLabelDto {
   name: string;
   color: string;
   description?: string;
+  createdAt: Date;
   workspaceId?: string;
 }
 
