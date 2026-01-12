@@ -106,7 +106,6 @@ src/
  ├── components/         # UI components
  ├── hooks/              # Custom React hooks
  ├── lib/                # Axios, utilities, constants
- ├── server/             # Backend logic
  ├── prisma/             # Prisma schema
 ```
 
