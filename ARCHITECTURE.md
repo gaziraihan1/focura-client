@@ -33,6 +33,7 @@ Client (Next.js + React) ↓ HTTPS + JWT API Server (Node.js + Express) ↓ Pris
 - **NextAuth**
 
 ### Frontend Structure
+```
 src/ 
 ├─ app/ │   
 ├─ (auth)/ │   
@@ -41,7 +42,8 @@ src/
 ├─ components/ 
 ├─ hooks/ 
 ├─ lib/ 
-├─ types/ 
+├─ types/
+```
 
 ### Principles
 - Server Components for data fetching
@@ -84,6 +86,7 @@ src/
 - PostgreSQL
 
 ### Folder Structure
+```
 src/ 
 ├─ controllers/ 
 ├─ services/ 
@@ -92,6 +95,7 @@ src/
 ├─ prisma/ 
 ├─ utils/ 
 └─ index.ts
+```
 
 ### Pattern
 - Controllers handle HTTP
@@ -160,11 +164,13 @@ src/
 ## 📈 Task Statistics
 
 ### Flow
+```
 Client → 
 useTaskStats → 
 /api/tasks/stats → 
 Task Service → 
 Prisma Aggregation
+```
 
 ### Stats
 - Assigned
