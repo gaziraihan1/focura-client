@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Clock, Calendar, User, Folder, Check } from "lucide-react";
+import { Clock, Calendar, User, Folder, Check, Lock } from "lucide-react";
 import { Task } from "@/types/task.types";
 import { getStatusColor, getPriorityColor } from "@/utils/task.utils";
 
@@ -8,6 +8,7 @@ interface TaskSidebarProps {
   isPersonalTask: boolean;
   isUpdatingStatus: boolean;
   onStatusChange: (status: Task["status"]) => void;
+  canChangeStatus?: boolean; // NEW: Permission prop
 }
 
 export const TaskSidebar = ({
@@ -15,6 +16,7 @@ export const TaskSidebar = ({
   isPersonalTask,
   isUpdatingStatus,
   onStatusChange,
+  canChangeStatus = true, // NEW: Default to true for backwards compatibility
 }: TaskSidebarProps) => {
   return (
     <div className="space-y-6">
@@ -27,27 +29,53 @@ export const TaskSidebar = ({
           <label className="block text-sm font-medium text-foreground mb-2">
             Status
           </label>
-          <select
-            value={task.status}
-            onChange={(e) =>
-              onStatusChange(e.target.value as Task["status"])
-            }
-            disabled={isUpdatingStatus}
-            className={`w-full px-4 py-2 rounded-lg border ${getStatusColor(
-              task.status
-            )} font-medium focus:ring-2 ring-primary outline-none disabled:opacity-50`}
-          >
-            <option value="TODO">To Do</option>
-            <option value="IN_PROGRESS">In Progress</option>
-            {!isPersonalTask && <option value="IN_REVIEW">In Review</option>}
-            {!isPersonalTask && <option value="BLOCKED">Blocked</option>}
-            <option value="COMPLETED">Completed</option>
-            {!isPersonalTask && <option value="CANCELLED">Cancelled</option>}
-          </select>
-          {isPersonalTask && (
-            <p className="text-xs text-muted-foreground mt-2">
-              Personal tasks support: To Do, In Progress, Completed
-            </p>
+          
+          {/* NEW: Show read-only status if no permission */}
+          {!canChangeStatus ? (
+            <div>
+              <div
+                className={`w-full px-4 py-2 rounded-lg border ${getStatusColor(
+                  task.status
+                )} font-medium text-center opacity-60 cursor-not-allowed`}
+              >
+                {task.status === "TODO" && "To Do"}
+                {task.status === "IN_PROGRESS" && "In Progress"}
+                {task.status === "IN_REVIEW" && "In Review"}
+                {task.status === "BLOCKED" && "Blocked"}
+                {task.status === "COMPLETED" && "Completed"}
+                {task.status === "CANCELLED" && "Cancelled"}
+              </div>
+              <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+                <Lock size={12} />
+                <span>You don&apos;t have permission to change the status</span>
+              </div>
+            </div>
+          ) : (
+            // NEW: Show editable dropdown if permission granted
+            <div>
+              <select
+                value={task.status}
+                onChange={(e) =>
+                  onStatusChange(e.target.value as Task["status"])
+                }
+                disabled={isUpdatingStatus}
+                className={`w-full px-4 py-2 rounded-lg border ${getStatusColor(
+                  task.status
+                )} font-medium focus:ring-2 ring-primary outline-none disabled:opacity-50`}
+              >
+                <option value="TODO">To Do</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                {!isPersonalTask && <option value="IN_REVIEW">In Review</option>}
+                {!isPersonalTask && <option value="BLOCKED">Blocked</option>}
+                <option value="COMPLETED">Completed</option>
+                {!isPersonalTask && <option value="CANCELLED">Cancelled</option>}
+              </select>
+              {isPersonalTask && (
+                <p className="text-xs text-muted-foreground mt-2">
+                  Personal tasks support: To Do, In Progress, Completed
+                </p>
+              )}
+            </div>
           )}
         </div>
 

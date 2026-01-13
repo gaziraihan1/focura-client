@@ -79,7 +79,7 @@ export default function LabelManagementMain({
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="bg-card rounded border-border sticky top-0 z-10">
+      <header className="bg-card rounded-2xl border-border sticky top-0 z-10">
         <div className="mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-3">

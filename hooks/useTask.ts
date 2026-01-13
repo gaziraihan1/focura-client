@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { useRouter } from 'next/navigation';
+import { useState, useMemo } from "react";
 
 export interface Task {
   id: string;
@@ -400,4 +401,76 @@ export function useDeleteAttachment() {
       queryClient.invalidateQueries({ queryKey: taskKeys.detail(taskId) });
     },
   });
+}
+
+
+
+export function useTaskFilters() {
+  const [selectedStatus, setSelectedStatus] = useState<string>("all");
+  const [selectedPriority, setSelectedPriority] = useState<string>("all");
+  const [selectedProject, setSelectedProject] = useState<string>("all");
+  const [selectedAssignee, setSelectedAssignee] = useState<string>("all");
+  const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
+
+  const toggleLabel = (labelId: string) => {
+    setSelectedLabels((prev) =>
+      prev.includes(labelId)
+        ? prev.filter((id) => id !== labelId)
+        : [...prev, labelId]
+    );
+  };
+
+  const clearFilters = () => {
+    setSelectedStatus("all");
+    setSelectedPriority("all");
+    setSelectedProject("all");
+    setSelectedAssignee("all");
+    setSelectedLabels([]);
+  };
+
+  const activeFiltersCount = useMemo(
+    () =>
+      [
+        selectedStatus !== "all",
+        selectedPriority !== "all",
+        selectedProject !== "all",
+        selectedAssignee !== "all",
+        selectedLabels.length > 0,
+      ].filter(Boolean).length,
+    [
+      selectedStatus,
+      selectedPriority,
+      selectedProject,
+      selectedAssignee,
+      selectedLabels,
+    ]
+  );
+
+  return {
+    selectedStatus,
+    setSelectedStatus,
+    selectedPriority,
+    setSelectedPriority,
+    selectedProject,
+    setSelectedProject,
+    selectedAssignee,
+    setSelectedAssignee,
+    selectedLabels,
+    setSelectedLabels,
+    toggleLabel,
+    clearFilters,
+    activeFiltersCount,
+  };
+}
+
+
+export type SortBy = "dueDate" | "priority" | "status" | "createdAt" | "title";
+
+export function useTaskSorting(initialSort: SortBy = "dueDate") {
+  const [sortBy, setSortBy] = useState<SortBy>(initialSort);
+
+  return {
+    sortBy,
+    setSortBy,
+  };
 }

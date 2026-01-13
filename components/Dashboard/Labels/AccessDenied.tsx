@@ -1,5 +1,6 @@
 import { AlertCircle, ArrowLeft } from "lucide-react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+// import { useRouter } from "next/router";
 import React from 'react'
 interface AccessDeniedProps {
     title: string;

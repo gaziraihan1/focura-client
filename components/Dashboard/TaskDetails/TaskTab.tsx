@@ -10,9 +10,11 @@ import {
   Edit2,
   Trash2,
   Check,
+  Lock,
 } from "lucide-react";
 import { Task, Comment, Activity as ActivityType, Attachment } from "@/types/task.types";
 import { formatFileSize } from "@/utils/task.utils";
+import { useSession } from "next-auth/react";
 
 interface TaskTabsProps {
   taskId: string;
@@ -25,6 +27,7 @@ interface TaskTabsProps {
   deleteComment: any;
   uploadAttachment: any;
   deleteAttachment: any;
+  canComment?: boolean; // NEW: Permission prop
 }
 
 export const TaskTabs = ({
@@ -38,7 +41,11 @@ export const TaskTabs = ({
   deleteComment,
   uploadAttachment,
   deleteAttachment,
+  canComment = true, // NEW: Default to true for backwards compatibility
 }: TaskTabsProps) => {
+  const { data: session } = useSession();
+  const currentUserId = session?.user?.id;
+
   const [activeTab, setActiveTab] = useState<
     "comments" | "activity" | "attachments"
   >("comments");
@@ -47,7 +54,7 @@ export const TaskTabs = ({
   const [editText, setEditText] = useState("");
 
   const handleAddComment = async () => {
-    if (!commentText.trim()) return;
+    if (!commentText.trim() || !canComment) return;
 
     try {
       await addComment.mutateAsync({
@@ -61,6 +68,8 @@ export const TaskTabs = ({
   };
 
   const handleEdit = (comment: Comment) => {
+    // NEW: Only allow editing own comments
+    if (comment.user.id !== currentUserId) return;
     setEditingId(comment.id);
     setEditText(comment.content);
   };
@@ -83,6 +92,8 @@ export const TaskTabs = ({
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!canComment) return; // NEW: Check permission before upload
+    
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -145,32 +156,43 @@ export const TaskTabs = ({
       <div className="p-4 sm:p-6">
         {activeTab === "comments" && (
           <div className="space-y-4">
-            <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-sm font-medium shrink-0">
-                {task.createdBy.name.charAt(0)}
+            {/* NEW: Show comment input only if user has permission */}
+            {canComment ? (
+              <div className="flex gap-3">
+                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-sm font-medium shrink-0">
+                  {task.createdBy.name.charAt(0)}
+                </div>
+                <div className="flex-1">
+                  <textarea
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    placeholder="Add a comment..."
+                    rows={3}
+                    className="w-full px-4 py-3 rounded-lg bg-background border border-border text-foreground resize-none focus:ring-2 ring-primary outline-none"
+                  />
+                  <button
+                    onClick={handleAddComment}
+                    disabled={!commentText.trim() || addComment.isPending}
+                    className="mt-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition disabled:opacity-50 flex items-center gap-2"
+                  >
+                    {addComment.isPending ? (
+                      <Loader2 size={16} className="animate-spin" />
+                    ) : (
+                      <Send size={16} />
+                    )}
+                    Comment
+                  </button>
+                </div>
               </div>
-              <div className="flex-1">
-                <textarea
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  placeholder="Add a comment..."
-                  rows={3}
-                  className="w-full px-4 py-3 rounded-lg bg-background border border-border text-foreground resize-none focus:ring-2 ring-primary outline-none"
-                />
-                <button
-                  onClick={handleAddComment}
-                  disabled={!commentText.trim() || addComment.isPending}
-                  className="mt-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition disabled:opacity-50 flex items-center gap-2"
-                >
-                  {addComment.isPending ? (
-                    <Loader2 size={16} className="animate-spin" />
-                  ) : (
-                    <Send size={16} />
-                  )}
-                  Comment
-                </button>
+            ) : (
+              // NEW: Show locked message if no permission
+              <div className="rounded-lg bg-muted/50 border border-border p-4 flex items-center gap-3">
+                <Lock size={16} className="text-muted-foreground" />
+                <p className="text-sm text-muted-foreground">
+                  You don&apos;t have permission to comment on this task
+                </p>
               </div>
-            </div>
+            )}
 
             <div className="space-y-4 mt-6">
               {comments.length === 0 ? (
@@ -178,59 +200,69 @@ export const TaskTabs = ({
                   No comments yet. Be the first to comment!
                 </p>
               ) : (
-                comments.map((comment) => (
-                  <div key={comment.id} className="flex gap-3">
-                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-sm font-medium shrink-0">
-                      {comment.user.name.charAt(0)}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1 justify-between">
-                        <div className="min-w-0 flex-1">
-                          <span className="font-medium text-foreground">
-                            {comment.user.name}
-                          </span>
-                          <span className="text-xs text-muted-foreground ml-2 block sm:inline">
-                            {new Date(comment.createdAt).toLocaleString()}
-                          </span>
-                        </div>
-                        <div className="flex gap-2 shrink-0">
-                          <Edit2
-                            className="cursor-pointer text-muted-foreground hover:text-foreground"
-                            size={16}
-                            onClick={() => handleEdit(comment)}
-                          />
-                          <Trash2
-                            className="cursor-pointer text-red-500 hover:text-red-600"
-                            size={16}
-                            onClick={() => handleCommentDelete(comment.id)}
-                          />
-                        </div>
+                comments.map((comment) => {
+                  // NEW: Check if current user owns this comment
+                  const isOwnComment = comment.user.id === currentUserId;
+                  
+                  return (
+                    <div key={comment.id} className="flex gap-3">
+                      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-sm font-medium shrink-0">
+                        {comment.user.name.charAt(0)}
                       </div>
-                      {editingId === comment.id ? (
-                        <div className="flex gap-2 items-center mt-1">
-                          <input
-                            type="text"
-                            value={editText}
-                            onChange={(e) => setEditText(e.target.value)}
-                            className="flex-1 border rounded px-2 py-1 text-sm"
-                          />
-                          <Check
-                            className="cursor-pointer text-green-500 hover:text-green-600 shrink-0"
-                            size={16}
-                            onClick={() => handleUpdate(comment.id)}
-                          />
-                          <X
-                            className="cursor-pointer text-red-500 hover:text-red-600 shrink-0"
-                            size={16}
-                            onClick={handleCancel}
-                          />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1 justify-between">
+                          <div className="min-w-0 flex-1">
+                            <span className="font-medium text-foreground">
+                              {comment.user.name}
+                            </span>
+                            <span className="text-xs text-muted-foreground ml-2 block sm:inline">
+                              {new Date(comment.createdAt).toLocaleString()}
+                            </span>
+                          </div>
+                          {/* NEW: Only show edit/delete for own comments */}
+                          {isOwnComment && (
+                            <div className="flex gap-2 shrink-0">
+                              <Edit2
+                                className="cursor-pointer text-muted-foreground hover:text-foreground"
+                                size={16}
+                                onClick={() => handleEdit(comment)}
+                              />
+                              <Trash2
+                                className="cursor-pointer text-red-500 hover:text-red-600"
+                                size={16}
+                                onClick={() => handleCommentDelete(comment.id)}
+                              />
+                            </div>
+                          )}
                         </div>
-                      ) : (
-                        <p className="text-foreground/80 wrap-break-word">{comment.content}</p>
-                      )}
+                        {editingId === comment.id ? (
+                          <div className="flex gap-2 items-center mt-1">
+                            <input
+                              type="text"
+                              value={editText}
+                              onChange={(e) => setEditText(e.target.value)}
+                              className="flex-1 border rounded px-2 py-1 text-sm"
+                            />
+                            <Check
+                              className="cursor-pointer text-green-500 hover:text-green-600 shrink-0"
+                              size={16}
+                              onClick={() => handleUpdate(comment.id)}
+                            />
+                            <X
+                              className="cursor-pointer text-red-500 hover:text-red-600 shrink-0"
+                              size={16}
+                              onClick={handleCancel}
+                            />
+                          </div>
+                        ) : (
+                          <p className="text-foreground/80 wrap-break-word">
+                            {comment.content}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           </div>
@@ -249,7 +281,9 @@ export const TaskTabs = ({
                     {activity.user.name.charAt(0)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-foreground/80 wrap-break-word">{activity.description}</p>
+                    <p className="text-foreground/80 wrap-break-word">
+                      {activity.description}
+                    </p>
                     <p className="text-xs text-muted-foreground mt-1">
                       {new Date(activity.createdAt).toLocaleString()}
                     </p>
@@ -262,28 +296,39 @@ export const TaskTabs = ({
 
         {activeTab === "attachments" && (
           <div className="space-y-4">
-            <div>
-              <label className="block">
-                <input
-                  type="file"
-                  onChange={handleFileUpload}
-                  disabled={uploadAttachment.isPending}
-                  className="hidden"
-                />
-                <div className="px-4 py-3 rounded-lg border-2 border-dashed border-border hover:border-primary transition cursor-pointer text-center">
-                  {uploadAttachment.isPending ? (
-                    <Loader2 className="w-6 h-6 animate-spin text-primary mx-auto" />
-                  ) : (
-                    <>
-                      <Paperclip className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
-                      <p className="text-sm text-muted-foreground">
-                        Click to upload a file
-                      </p>
-                    </>
-                  )}
-                </div>
-              </label>
-            </div>
+            {/* NEW: Only show upload if user has permission */}
+            {canComment ? (
+              <div>
+                <label className="block">
+                  <input
+                    type="file"
+                    onChange={handleFileUpload}
+                    disabled={uploadAttachment.isPending}
+                    className="hidden"
+                  />
+                  <div className="px-4 py-3 rounded-lg border-2 border-dashed border-border hover:border-primary transition cursor-pointer text-center">
+                    {uploadAttachment.isPending ? (
+                      <Loader2 className="w-6 h-6 animate-spin text-primary mx-auto" />
+                    ) : (
+                      <>
+                        <Paperclip className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
+                        <p className="text-sm text-muted-foreground">
+                          Click to upload a file
+                        </p>
+                      </>
+                    )}
+                  </div>
+                </label>
+              </div>
+            ) : (
+              // NEW: Show locked message if no permission
+              <div className="rounded-lg bg-muted/50 border border-border p-4 flex items-center gap-3">
+                <Lock size={16} className="text-muted-foreground" />
+                <p className="text-sm text-muted-foreground">
+                  You don&apos;t have permission to upload attachments
+                </p>
+              </div>
+            )}
 
             {attachments.length === 0 ? (
               <p className="text-center text-muted-foreground py-8">
@@ -291,48 +336,56 @@ export const TaskTabs = ({
               </p>
             ) : (
               <div className="space-y-2">
-                {attachments.map((attachment) => (
-                  <div
-                    key={attachment.id}
-                    className="flex items-center justify-between p-3 rounded-lg bg-background border border-border gap-3"
-                  >
-                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <Paperclip
-                        size={16}
-                        className="text-muted-foreground shrink-0"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-foreground truncate text-sm">
-                          {attachment.fileName}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {formatFileSize(attachment.fileSize)} •{" "}
-                          {attachment.uploadedBy.name}
-                        </p>
+                {attachments.map((attachment) => {
+                  // NEW: Check if current user uploaded this attachment
+                  const isOwnAttachment = attachment.uploadedBy.id === currentUserId;
+                  
+                  return (
+                    <div
+                      key={attachment.id}
+                      className="flex items-center justify-between p-3 rounded-lg bg-background border border-border gap-3"
+                    >
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <Paperclip
+                          size={16}
+                          className="text-muted-foreground shrink-0"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-foreground truncate text-sm">
+                            {attachment.fileName}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {formatFileSize(attachment.fileSize)} •{" "}
+                            {attachment.uploadedBy.name}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <a
+                          href={attachment.fileUrl}
+                          download
+                          className="p-2 rounded-lg hover:bg-accent transition"
+                        >
+                          <Download size={16} className="text-foreground" />
+                        </a>
+                        {/* NEW: Only show delete button for own attachments */}
+                        {isOwnAttachment && (
+                          <button
+                            onClick={() =>
+                              deleteAttachment.mutate({
+                                taskId,
+                                attachmentId: attachment.id,
+                              })
+                            }
+                            className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition"
+                          >
+                            <X size={16} className="text-red-500" />
+                          </button>
+                        )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <a
-                        href={attachment.fileUrl}
-                        download
-                        className="p-2 rounded-lg hover:bg-accent transition"
-                      >
-                        <Download size={16} className="text-foreground" />
-                      </a>
-                      <button
-                        onClick={() =>
-                          deleteAttachment.mutate({
-                            taskId,
-                            attachmentId: attachment.id,
-                          })
-                        }
-                        className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition"
-                      >
-                        <X size={16} className="text-red-500" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

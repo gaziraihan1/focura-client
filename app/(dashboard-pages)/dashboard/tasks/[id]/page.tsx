@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { User, AlertCircle, Loader2 } from "lucide-react";
+import { User, AlertCircle, Loader2, Lock } from "lucide-react";
 import Link from "next/link";
 
 import {
@@ -19,6 +19,7 @@ import {
   useDeleteAttachment,
 } from "@/hooks/useTask";
 import { useDeleteComment, useUpdateComment } from "@/hooks/useComment";
+import { useTaskPermissions } from "@/hooks/useTaskPermissions"; // NEW IMPORT
 import { Task } from "@/types/task.types";
 
 // Import components
@@ -46,6 +47,10 @@ export default function TaskDetailsPage() {
 
   const { data: taskData, isLoading, isError } = useTask(taskId);
   const task = taskData as Task | undefined;
+  
+  // NEW: Get task permissions
+  const permissions = useTaskPermissions(task);
+  
   const { data: comments = [] } = useTaskComments(taskId);
   const { data: activities = [] } = useTaskActivity(taskId);
   const { data: attachments = [] } = useTaskAttachments(taskId);
@@ -61,27 +66,29 @@ export default function TaskDetailsPage() {
 
   const isPersonalTask = !task?.projectId;
 
-  // Update editData when task ID changes
-  useEffect(() => {
-    if (task) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setEditData({
-        title: task.title,
-        description: task.description || "",
-        priority: task.priority,
-        status: task.status,
-        estimatedHours: task.estimatedHours?.toString() || "",
-      });
-    }
-  }, [task, task?.id]);
 
+  // NEW: Updated handler with permission check
   const handleStatusChange = async (status: Task["status"]) => {
     if (!task) return;
+    
+    // Check permission before allowing status change
+    if (!permissions.canChangeStatus) {
+      alert(permissions.reason || "You don't have permission to change the status of this task");
+      return;
+    }
+    
     await updateStatus.mutateAsync({ id: task.id, status });
   };
 
+  // NEW: Updated handler with permission check
   const handleSaveEdit = async () => {
     if (!task) return;
+    
+    // Check permission before allowing edit
+    if (!permissions.canEdit) {
+      alert(permissions.reason || "You don't have permission to edit this task");
+      return;
+    }
 
     try {
       await updateTask.mutateAsync({
@@ -102,8 +109,17 @@ export default function TaskDetailsPage() {
     }
   };
 
+  // NEW: Updated handler with permission check
   const handleDelete = async () => {
-    if (!task || !confirm("Are you sure you want to delete this task?")) return;
+    if (!task) return;
+    
+    // Check permission before allowing delete
+    if (!permissions.canDelete) {
+      alert(permissions.reason || "You don't have permission to delete this task");
+      return;
+    }
+    
+    if (!confirm("Are you sure you want to delete this task?")) return;
 
     try {
       await deleteTask.mutateAsync(task.id);
@@ -113,7 +129,27 @@ export default function TaskDetailsPage() {
     }
   };
 
-  if (isLoading) {
+  const handleEditClick = () => {
+  if (!permissions.canEdit) {
+    alert(permissions.reason || "You don't have permission to edit this task");
+    return;
+  }
+
+  if (task) {
+    setEditData({
+      title: task.title,
+      description: task.description || "",
+      priority: task.priority,
+      status: task.status,
+      estimatedHours: task.estimatedHours?.toString() || "",
+    });
+  }
+
+  setIsEditing(true);
+};
+
+
+  if (isLoading || permissions.isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -139,18 +175,49 @@ export default function TaskDetailsPage() {
     );
   }
 
+  // NEW: Check view permission
+  if (!permissions.canView) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen gap-4">
+        <Lock className="w-16 h-16 text-red-500" />
+        <h2 className="text-2xl font-bold text-foreground">Access Denied</h2>
+        <p className="text-muted-foreground">
+          You don&apos;t have permission to view this task.
+        </p>
+        <Link
+          href="/dashboard/tasks"
+          className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
+        >
+          Back to Tasks
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      {/* Header */}
+      {/* Header - NOW WITH PERMISSION PROPS */}
       <TaskHeader
         isEditing={isEditing}
         onBack={() => router.back()}
-        onEdit={() => setIsEditing(true)}
+        onEdit={handleEditClick}
         onDelete={handleDelete}
         isDeleting={deleteTask.isPending}
+        canEdit={permissions.canEdit}
+        canDelete={permissions.canDelete}
       />
 
-      {/* ✅ Compact Badges Row */}
+      {/* NEW: Permission Warning */}
+      {!permissions.canEdit && (
+        <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 p-3 flex items-start gap-2">
+          <Lock className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+          <p className="text-sm text-amber-500">
+            {permissions.reason || "You have read-only access to this task"}
+          </p>
+        </div>
+      )}
+
+      {/* Compact Badges Row */}
       <div className="flex items-center gap-2 flex-wrap">
         {isPersonalTask && (
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-500 text-xs font-medium">
@@ -213,7 +280,7 @@ export default function TaskDetailsPage() {
             )}
           </motion.div>
 
-          {/* Tabs */}
+          {/* Tabs - NOW WITH PERMISSION PROP */}
           <TaskTabs
             taskId={taskId}
             comments={comments}
@@ -225,15 +292,17 @@ export default function TaskDetailsPage() {
             deleteComment={deleteComment}
             uploadAttachment={uploadAttachment}
             deleteAttachment={deleteAttachment}
+            canComment={permissions.canComment}
           />
         </div>
 
-        {/* Sidebar - This will show intent in detail */}
+        {/* Sidebar - NOW WITH PERMISSION PROP */}
         <TaskSidebar
           task={task}
           isPersonalTask={isPersonalTask}
           isUpdatingStatus={updateStatus.isPending}
           onStatusChange={handleStatusChange}
+          canChangeStatus={permissions.canChangeStatus}
         />
       </div>
     </div>

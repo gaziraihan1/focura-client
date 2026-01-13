@@ -2,33 +2,20 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-import {
-  Save,
-  X,
-  Calendar,
-  Flag,
-  Users,
-  Tag,
-  FileText,
-  Clock,
-  Loader2,
-  AlertCircle,
-  ArrowLeft,
-  Plus,
-  Brain,
-  Zap,
-} from "lucide-react";
 import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
+import { Loader2, AlertCircle } from "lucide-react";
 
 import { useCreateTask, CreateTaskDto } from "@/hooks/useTask";
-import { useWorkspace } from "@/hooks/useWorkspace";
+import { useWorkspace, useWorkspaceMembers } from "@/hooks/useWorkspace";
 import { useProjects, useProjectRole } from "@/hooks/useProjects";
-import { useWorkspaceMembers } from "@/hooks/useWorkspace";
-// import { useLabels } from "@/hooks/useLabels";
-import { useSession } from "next-auth/react";
-import { LabelPicker } from "@/components/Labels/LabelPicker";
-import { LabelManager } from "@/components/Labels/LabelManager";
+import { WorkspaceTaskFormHeader } from "@/components/Dashboard/WorkspaceNewTask/WorkspaceTaskFormHeader";
+import { BasicInformationSection } from "@/components/Dashboard/WorkspaceNewTask/BasicInformationSection";
+import { TaskDetailsSection } from "@/components/Dashboard/WorkspaceNewTask/TaskDetailsSection";
+import { TeamLabelsSection } from "@/components/Dashboard/WorkspaceNewTask/TeamLabelsSection";
+import { FormActions } from "@/components/Dashboard/WorkspaceNewTask/FormActions";
+import { LabelManagerModal } from "@/components/Dashboard/WorkspaceNewTask/LabelManagerModal";
+
 
 type TaskFormData = Omit<CreateTaskDto, "workspaceId">;
 
@@ -36,16 +23,15 @@ export default function WorkspaceNewTaskPage() {
   const params = useParams();
   const router = useRouter();
   const workspaceSlug = params.workspaceSlug as string;
-  const [showLabelManager, setShowLabelManager] = useState(false);
 
   const { data: session } = useSession();
   const { data: workspace, isLoading: workspaceLoading } = useWorkspace(workspaceSlug);
   const { data: projects = [], isLoading: projectsLoading } = useProjects(workspace?.id);
   const { data: members = [], isLoading: membersLoading } = useWorkspaceMembers(workspace?.id);
-  // const { data: labels = [], isLoading: labelsLoading } = useLabels(workspace?.id);
   
   const createTaskMutation = useCreateTask();
 
+  const [showLabelManager, setShowLabelManager] = useState(false);
   const [formData, setFormData] = useState<TaskFormData>({
     title: "",
     description: "",
@@ -62,79 +48,20 @@ export default function WorkspaceNewTaskPage() {
     focusRequired: false
   });
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   // Get role information for the selected project
   const selectedProject = projects.find(p => p.id === formData.projectId);
-  const { 
-    // isManager, 
-    isWorkspaceAdmin,
-    canManageProject 
-  } = useProjectRole(formData.projectId, selectedProject);
+  const { isWorkspaceAdmin, canManageProject } = useProjectRole(
+    formData.projectId,
+    selectedProject
+  );
 
   // Check if user is workspace owner
   const isWorkspaceOwner = workspace?.ownerId === session?.user?.id;
 
   // User can assign to others if they are: manager of project, workspace admin, or workspace owner
   const canAssignToOthers = canManageProject || isWorkspaceAdmin || isWorkspaceOwner;
-
-  const INTENT_OPTIONS = [
-  {
-    value: "EXECUTION",
-    label: "Execution",
-    icon: Zap,
-    description: "Build, implement, or do hands-on work",
-    activeClass: "border-blue-500 bg-blue-500/10 text-blue-500",
-  },
-  {
-    value: "PLANNING",
-    label: "Planning",
-    icon: Brain,
-    description: "Think, design, or organize",
-    activeClass: "border-purple-500 bg-purple-500/10 text-purple-500",
-  },
-  {
-    value: "REVIEW",
-    label: "Review",
-    icon: AlertCircle,
-    description: "Validate, QA, or inspect work",
-    activeClass: "border-green-500 bg-green-500/10 text-green-500",
-  },
-  {
-    value: "LEARNING",
-    label: "Learning",
-    icon: Clock,
-    description: "Study or research",
-    activeClass: "border-amber-500 bg-amber-500/10 text-amber-500",
-  },
-  {
-    value: "COMMUNICATION",
-    label: "Communication",
-    icon: Users,
-    description: "Meetings or discussions",
-    activeClass: "border-pink-500 bg-pink-500/10 text-pink-500",
-  },
-] as const;
-
-const ENERGY_OPTIONS = [
-  {
-    value: "LOW",
-    label: "Low",
-    className: "border-green-500 bg-green-500/10 text-green-500",
-  },
-  {
-    value: "MEDIUM",
-    label: "Medium",
-    className: "border-blue-500 bg-blue-500/10 text-blue-500",
-  },
-  {
-    value: "HIGH",
-    label: "High",
-    className: "border-red-500 bg-red-500/10 text-red-500",
-  },
-] as const;
-
-
-
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -211,14 +138,6 @@ const ENERGY_OPTIONS = [
     }));
   };
 
-
-  const priorityColors = {
-    URGENT: "bg-red-500/10 text-red-500 border-red-500/20",
-    HIGH: "bg-orange-500/10 text-orange-500 border-orange-500/20",
-    MEDIUM: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-    LOW: "bg-green-500/10 text-green-500 border-green-500/20",
-  };
-
   const isLoading = createTaskMutation.isPending || workspaceLoading;
 
   if (workspaceLoading) {
@@ -249,498 +168,84 @@ const ENERGY_OPTIONS = [
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={handleCancel}
-            className="p-2 rounded-lg hover:bg-accent transition"
-          >
-            <ArrowLeft size={20} className="text-muted-foreground" />
-          </button>
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">Create New Task</h1>
-            <p className="text-muted-foreground mt-1">
-              Add a task to {workspace.name}
-            </p>
-          </div>
-        </div>
-        <button
-          onClick={handleCancel}
-          className="p-2 rounded-lg hover:bg-accent transition"
-        >
-          <X size={24} className="text-foreground" />
-        </button>
-      </div>
+      <WorkspaceTaskFormHeader
+        workspaceName={workspace.name}
+        onCancel={handleCancel}
+      />
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="rounded-xl bg-card border border-border p-6 space-y-6"
-        >
-          <div>
-            <h3 className="text-lg font-semibold text-foreground mb-4">
-              Basic Information
-            </h3>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Task Title <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              value={formData.title}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, title: e.target.value }))
-              }
-              className={`w-full px-4 py-3 rounded-lg bg-background border text-foreground placeholder:text-muted-foreground focus:ring-2 ring-primary outline-none transition ${
-                errors.title ? "border-red-500" : "border-border"
-              }`}
-              placeholder="Enter task title..."
-            />
-            {errors.title && (
-              <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                <AlertCircle size={14} />
-                {errors.title}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Description
-            </label>
-            <textarea
-              value={formData.description}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  description: e.target.value,
-                }))
-              }
-              rows={6}
-              className="w-full px-4 py-3 rounded-lg bg-background border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 ring-primary outline-none resize-none transition"
-              placeholder="Add a detailed description..."
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              <FileText size={16} className="inline mr-2" />
-              Project <span className="text-red-500">*</span>
-            </label>
-            {projectsLoading ? (
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Loader2 className="animate-spin" size={16} />
-                Loading projects...
-              </div>
-            ) : projects.length === 0 ? (
-              <div className="p-4 rounded-lg bg-muted/50 border border-border">
-                <p className="text-sm text-muted-foreground mb-3">
-                  No projects available. Create a project first.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => router.push(`/dashboard/workspaces/${workspaceSlug}/projects/new-project`)}
-                  className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2 text-sm"
-                >
-                  <Plus size={16} />
-                  Create Project
-                </button>
-              </div>
-            ) : (
-              <>
-                <select
-                  value={formData.projectId || ""}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, projectId: e.target.value }))
-                  }
-                  className={`w-full px-4 py-3 rounded-lg bg-background border text-foreground focus:ring-2 ring-primary outline-none ${
-                    errors.projectId ? "border-red-500" : "border-border"
-                  }`}
-                >
-                  <option value="">Select a project</option>
-                  {projects.map((project) => (
-                    <option key={project.id} value={project.id}>
-                      {project.name}
-                    </option>
-                  ))}
-                </select>
-                {errors.projectId && (
-                  <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle size={14} />
-                    {errors.projectId}
-                  </p>
-                )}
-              </>
-            )}
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="rounded-xl bg-card border border-border p-6 space-y-6"
-        >
-          <div>
-            <h3 className="text-lg font-semibold text-foreground mb-4">
-              Task Details
-            </h3>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                Status
-              </label>
-              <select
-                value={formData.status}
-                onChange={(e) =>
-                  setFormData((prev) => ({ 
-                    ...prev, 
-                    status: e.target.value as CreateTaskDto['status'] 
-                  }))
-                }
-                className="w-full px-4 py-3 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
-              >
-                <option value="TODO">To Do</option>
-                <option value="IN_PROGRESS">In Progress</option>
-                <option value="IN_REVIEW">In Review</option>
-                <option value="BLOCKED">Blocked</option>
-                <option value="COMPLETED">Completed</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                <Flag size={16} className="inline mr-2" />
-                Priority
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                {(["URGENT", "HIGH", "MEDIUM", "LOW"] as const).map(
-                  (priority) => (
-                    <button
-                      key={priority}
-                      type="button"
-                      onClick={() =>
-                        setFormData((prev) => ({ ...prev, priority }))
-                      }
-                      className={`px-4 py-2.5 rounded-lg border transition text-sm font-medium ${
-                        formData.priority === priority
-                          ? priorityColors[priority]
-                          : "border-border text-muted-foreground hover:bg-accent"
-                      }`}
-                    >
-                      {priority}
-                    </button>
-                  )
-                )}
-              </div>
-            </div>
-            <div>
-  <label className="block text-sm font-medium text-foreground mb-2">
-    Task Intent
-  </label>
-
-  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-    {INTENT_OPTIONS.map((intent) => {
-      const Icon = intent.icon;
-      const selected = formData.intent === intent.value;
-
-      return (
-        <button
-          key={intent.value}
-          type="button"
-          onClick={() =>
-            setFormData((prev) => ({ ...prev, intent: intent.value }))
+        <BasicInformationSection
+          title={formData.title}
+          description={formData.description}
+          projectId={formData.projectId}
+          projects={projects}
+          projectsLoading={projectsLoading}
+          errors={errors}
+          workspaceSlug={workspaceSlug}
+          onTitleChange={(title) => setFormData((prev) => ({ ...prev, title }))}
+          onDescriptionChange={(description) =>
+            setFormData((prev) => ({ ...prev, description }))
           }
-          className={`p-3 rounded-lg border text-left transition ${
-            selected
-              ? intent.activeClass
-              : "border-border hover:bg-accent"
-          }`}
-        >
-          <div className="flex items-center gap-2 mb-1">
-            <Icon size={16} />
-            <span className="font-medium text-sm">
-              {intent.label}
-            </span>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            {intent.description}
-          </p>
-        </button>
-      );
-    })}
-  </div>
-</div>
-
-           <div>
-  <label className="block text-sm font-medium text-foreground mb-2">
-    Ideal Energy
-  </label>
-
-  <div className="grid grid-cols-3 gap-3">
-    {ENERGY_OPTIONS.map((energy) => {
-      const selected = formData.energyType === energy.value;
-
-      return (
-        <button
-          key={energy.value}
-          type="button"
-          onClick={() =>
-            setFormData((prev) => ({
-              ...prev,
-              energyType: energy.value,
-            }))
+          onProjectChange={(projectId) =>
+            setFormData((prev) => ({ ...prev, projectId }))
           }
-          className={`px-3 py-2 rounded-lg border text-sm font-medium transition ${
-            selected
-              ? energy.className
-              : "border-border text-muted-foreground hover:bg-accent"
-          }`}
-        >
-          {energy.label}
-        </button>
-      );
-    })}
-  </div>
-</div>
+        />
 
-            <div className="flex items-center gap-3 mt-2">
-                <input type="checkbox"checked={formData.focusRequired} 
-                onChange={(e) => setFormData((prev) => ({...prev, focusRequired: e.target.checked,}))}
-                className="rounded border-border"
-                />
-                <span className="text-sm text-foreground">
-                  Requires deep focus (Focus Mode)
-                </span>
-            </div>
-          </div>
+        <TaskDetailsSection
+          status={formData.status}
+          priority={formData.priority}
+          intent={formData.intent}
+          energyType={formData.energyType}
+          focusRequired={formData.focusRequired}
+          startDate={formData.startDate}
+          dueDate={formData.dueDate}
+          estimatedHours={formData.estimatedHours}
+          errors={errors}
+          onStatusChange={(status) => setFormData((prev) => ({ ...prev, status }))}
+          onPriorityChange={(priority) => setFormData((prev) => ({ ...prev, priority }))}
+          onIntentChange={(intent) => setFormData((prev) => ({ ...prev, intent }))}
+          onEnergyTypeChange={(energyType) =>
+            setFormData((prev) => ({ ...prev, energyType }))
+          }
+          onFocusRequiredChange={(focusRequired) =>
+            setFormData((prev) => ({ ...prev, focusRequired }))
+          }
+          onStartDateChange={(startDate) =>
+            setFormData((prev) => ({ ...prev, startDate }))
+          }
+          onDueDateChange={(dueDate) => setFormData((prev) => ({ ...prev, dueDate }))}
+          onEstimatedHoursChange={(estimatedHours) =>
+            setFormData((prev) => ({ ...prev, estimatedHours }))
+          }
+        />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                <Calendar size={16} className="inline mr-2" />
-                Start Date
-              </label>
-              <input
-                type="date"
-                value={formData.startDate}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    startDate: e.target.value,
-                  }))
-                }
-                className="w-full px-4 py-3 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
-              />
-            </div>
+        <TeamLabelsSection
+          members={members}
+          membersLoading={membersLoading}
+          assigneeIds={formData.assigneeIds || []}
+          labelIds={formData.labelIds || []}
+          workspaceId={workspace.id}
+          projectId={formData.projectId}
+          canAssignToOthers={canAssignToOthers}
+          currentUserId={session?.user?.id}
+          onToggleAssignee={toggleAssignee}
+          onLabelChange={(labelIds) => setFormData((prev) => ({ ...prev, labelIds }))}
+          onOpenLabelManager={() => setShowLabelManager(true)}
+        />
 
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                <Calendar size={16} className="inline mr-2" />
-                Due Date
-              </label>
-              <input
-                type="date"
-                value={formData.dueDate}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, dueDate: e.target.value }))
-                }
-                className={`w-full px-4 py-3 rounded-lg bg-background border text-foreground focus:ring-2 ring-primary outline-none ${
-                  errors.dueDate ? "border-red-500" : "border-border"
-                }`}
-              />
-              {errors.dueDate && (
-                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                  <AlertCircle size={14} />
-                  {errors.dueDate}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              <Clock size={16} className="inline mr-2" />
-              Estimated Hours
-            </label>
-            <input
-              type="number"
-              min="0"
-              step="0.5"
-              value={formData.estimatedHours || ''}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  estimatedHours: e.target.value ? Number(e.target.value) : undefined,
-                }))
-              }
-              className={`w-full px-4 py-3 rounded-lg bg-background border text-foreground placeholder:text-muted-foreground focus:ring-2 ring-primary outline-none ${
-                errors.estimatedHours ? "border-red-500" : "border-border"
-              }`}
-              placeholder="e.g., 8"
-            />
-            {errors.estimatedHours && (
-              <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                <AlertCircle size={14} />
-                {errors.estimatedHours}
-              </p>
-            )}
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="rounded-xl bg-card border border-border p-6 space-y-6"
-        >
-          <div>
-            <h3 className="text-lg font-semibold text-foreground mb-4">
-              Team & Labels
-            </h3>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-3">
-              <Users size={16} className="inline mr-2" />
-              Assignees
-              {!canAssignToOthers && (
-                <span className="ml-2 text-xs text-muted-foreground">
-                  (You can only assign to yourself)
-                </span>
-              )}
-            </label>
-            {membersLoading ? (
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Loader2 className="animate-spin" size={16} />
-                Loading team members...
-              </div>
-            ) : members.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {members.map((member) => {
-                  const isCurrentUser = member.user.id === session?.user?.id;
-                  const canSelect = canAssignToOthers || isCurrentUser;
-                  
-                  return (
-                    <button
-                      key={member.user.id}
-                      type="button"
-                      onClick={() => toggleAssignee(member.user.id)}
-                      disabled={!canSelect}
-                      className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition ${
-                        formData.assigneeIds?.includes(member.user.id)
-                          ? "bg-primary/10 border-primary text-primary"
-                          : canSelect
-                          ? "border-border text-foreground hover:bg-accent"
-                          : "border-border text-muted-foreground opacity-50 cursor-not-allowed"
-                      }`}
-                    >
-                      <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-medium">
-                        {member.user.name?.charAt(0) || "U"}
-                      </div>
-                      <span className="text-sm">
-                        {member.user.name}
-                        {isCurrentUser && " (You)"}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            ) : (
-              <p className="text-muted-foreground text-sm">No team members available</p>
-            )}
-            
-            {!canAssignToOthers && formData.projectId && (
-              <div className="mt-3 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                <p className="text-sm text-amber-600 dark:text-amber-400">
-                  <AlertCircle size={14} className="inline mr-1" />
-                  You need to be a project manager or workspace admin to assign tasks to others.
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Labels */}
-          <div>
-  <div className="flex items-center justify-between mb-3">
-    <label className="block text-sm font-medium text-foreground">
-      <Tag size={16} className="inline mr-2" />
-      Labels
-    </label>
-    <button
-      type="button"
-      onClick={() => setShowLabelManager(true)}
-      className="text-xs text-primary hover:text-primary/80 transition flex items-center gap-1"
-    >
-      <Plus size={14} />
-      Manage Labels
-    </button>
-  </div>
-
-  <LabelPicker
-    workspaceId={workspace?.id}
-    selectedLabelIds={formData.labelIds || []}
-    onChange={(labelIds) =>
-      setFormData((prev) => ({ ...prev, labelIds }))
-    }
-    maxLabels={10}
-  />
-</div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="flex items-center justify-end gap-3 pb-6"
-        >
-          <button
-            type="button"
-            onClick={handleCancel}
-            disabled={isLoading}
-            className="px-6 py-3 rounded-lg border border-border text-foreground hover:bg-accent transition disabled:opacity-50"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={isLoading || projects.length === 0}
-            className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition flex items-center gap-2 disabled:opacity-50"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="animate-spin" size={18} />
-                Creating...
-              </>
-            ) : (
-              <>
-                <Save size={18} />
-                Create Task
-              </>
-            )}
-          </button>
-        </motion.div>
+        <FormActions
+          isLoading={isLoading}
+          canSubmit={projects.length > 0}
+          onCancel={handleCancel}
+        />
       </form>
+
       {showLabelManager && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      className="bg-card rounded-xl border border-border shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-auto"
-    >
-      <LabelManager
-        workspaceId={workspace?.id}
-        onClose={() => setShowLabelManager(false)}
-      />
-    </motion.div>
-  </div>
-)}
+        <LabelManagerModal
+          workspaceId={workspace.id}
+          onClose={() => setShowLabelManager(false)}
+        />
+      )}
     </div>
   );
 }
