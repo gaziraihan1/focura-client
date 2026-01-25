@@ -104,9 +104,13 @@ PostgreSQL
 src/
  ├── app/                # Next.js App Router
  ├── components/         # UI components
+ ├── constant/            # Intent
+ ├── context/             # For context
  ├── hooks/              # Custom React hooks
  ├── lib/                # Axios, utilities, constants
  ├── prisma/             # Prisma schema
+ ├── types/              # Types seperation
+ ├── utils/              # Utility function
 ```
 
 ---
@@ -116,11 +120,27 @@ src/
 Create a `.env` file and configure:
 
 ```
-DATABASE_URL=
-NEXTAUTH_SECRET=
-NEXTAUTH_URL=
-JWT_SECRET=
+DATABASE_URL=""
+NODE_ENV="development"
+BACKEND_JWT_SECRET=""
+
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET=""
 NEXT_PUBLIC_API_URL=
+
+GOOGLE_CLIENT_ID=""
+GOOGLE_CLIENT_SECRET=""
+
+EMAIL_SERVER_HOST=""
+EMAIL_SERVER_PORT=
+EMAIL_SERVER_USER=""   
+EMAIL_SERVER_PASSWORD=""
+EMAIL_FROM=""
+
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=""
+CLOUDINARY_API_KEY=""
+CLOUDINARY_API_SECRET=""
+
 ```
 
 ---
@@ -129,8 +149,8 @@ NEXT_PUBLIC_API_URL=
 
 ### 1. Clone the repository
 ```
-git clone https://github.com/your-username/focura.git
-cd focura
+git clone https://github.com/gaziraihan1/focura-client.git
+cd focura-client
 ```
 
 ### 2. Install dependencies
