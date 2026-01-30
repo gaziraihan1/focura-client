@@ -30,8 +30,6 @@ export function CalendarDay({
     return 'critical';
   }, [density]);
 
-  // Separate personal and assigned tasks
-  //personalTasks, assignedTasks
   const { overdueTasks } = useMemo(() => {
     const personal: Task[] = [];
     const assigned: Task[] = [];

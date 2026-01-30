@@ -37,7 +37,6 @@ export default function PricingFAQ() {
   return (
     <section className="py-20 bg-background" id="pricing-faq">
       <div className="container mx-auto px-4">
-        {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">
             Pricing FAQ
@@ -46,8 +45,6 @@ export default function PricingFAQ() {
             Quick answers to the most common questions about Focura’s pricing.
           </p>
         </div>
-
-        {/* FAQ List */}
         <div className="max-w-3xl mx-auto space-y-4">
           {faqs.map((item, i) => (
             <div
@@ -62,7 +59,6 @@ export default function PricingFAQ() {
                 <span className="text-base md:text-lg font-medium text-foreground">
                   {item.q}
                 </span>
-
                 <motion.div
                   animate={{ rotate: open === i ? 180 : 0 }}
                   transition={{ duration: 0.25 }}
@@ -70,7 +66,6 @@ export default function PricingFAQ() {
                   <ChevronDown className="w-5 h-5 text-muted-foreground" />
                 </motion.div>
               </button>
-
               <AnimatePresence>
                 {open === i && (
                   <motion.div

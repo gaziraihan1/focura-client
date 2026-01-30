@@ -1,5 +1,5 @@
-"use client"
-import {AnimatePresence, motion} from 'framer-motion';
+"use client";
+import { AnimatePresence, motion } from "framer-motion";
 import { Label } from "@/hooks/useLabels";
 import { Edit2, MoreVertical, Tag, Trash2 } from "lucide-react";
 
@@ -29,16 +29,13 @@ export default function LabelCard({
       transition={{ duration: 0.2 }}
       className="bg-card rounded-lg border border-border p-4 hover:shadow-md transition-all relative group"
     >
-      {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <div
             className="w-3 h-3 rounded-full shrink-0 ring-2 ring-background"
             style={{ backgroundColor: label.color }}
           />
-          <h3 className="font-medium text-foreground truncate">
-            {label.name}
-          </h3>
+          <h3 className="font-medium text-foreground truncate">{label.name}</h3>
         </div>
         <div className="relative">
           <button
@@ -51,14 +48,12 @@ export default function LabelCard({
           <AnimatePresence>
             {isDropdownActive && (
               <>
-                {/* Backdrop */}
                 <div
                   className="fixed inset-0 z-10"
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
                 />
-                {/* Dropdown */}
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, y: -10 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -92,24 +87,22 @@ export default function LabelCard({
           </AnimatePresence>
         </div>
       </div>
-
-      {/* Description */}
       {label.description && (
         <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
           {label.description}
         </p>
       )}
-
-      {/* Footer */}
       <div className="flex items-center justify-between text-xs text-muted-foreground pt-3 border-t border-border">
         <div className="flex items-center gap-1">
           <Tag className="w-3 h-3" />
-          <span>{taskCount} task{taskCount !== 1 ? 's' : ''}</span>
+          <span>
+            {taskCount} task{taskCount !== 1 ? "s" : ""}
+          </span>
         </div>
         <span>
-          {new Date(label.createdAt).toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
+          {new Date(label.createdAt).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
           })}
         </span>
       </div>

@@ -21,7 +21,7 @@ export function ResponsiveSidebar({
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="lg:hidden fixed bottom-6 right-6 z-40 bg-primary text-primary-foreground p-4 rounded-full shadow-lg hover:shadow-xl transition-all active:scale-95"
+        className="lg:hidden fixed bottom-6 right-6 z-0 bg-primary text-primary-foreground p-4 rounded-full shadow-lg hover:shadow-xl transition-all active:scale-95"
         aria-label="Open sidebar"
       >
         <Menu className="w-6 h-6" />

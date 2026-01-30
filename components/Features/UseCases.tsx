@@ -28,7 +28,8 @@ export default function UseCases() {
           Use Cases <span className="text-brand">For Any Team</span>
         </h2>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Focura adapts to your workflow — whether you&apos;re a founder, agency, or a remote team.
+          Focura adapts to your workflow — whether you&apos;re a founder,
+          agency, or a remote team.
         </p>
       </div>
 

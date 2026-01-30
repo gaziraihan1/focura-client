@@ -6,7 +6,6 @@ import { Check } from "lucide-react";
 export default function PricingHero() {
   return (
     <section className="relative overflow-hidden py-28 bg-background">
-
       <div className="absolute inset-0 pointer-events-none bg-linear-to-b from-primary/5 via-transparent to-transparent" />
 
       <div className="relative max-w-4xl mx-auto px-6 text-center">
@@ -15,7 +14,8 @@ export default function PricingHero() {
         </h1>
 
         <p className="mt-4 text-lg md:text-xl text-foreground/70 max-w-2xl mx-auto">
-          Choose a plan that scales with your team. No hidden fees, no contracts — just clarity.
+          Choose a plan that scales with your team. No hidden fees, no contracts
+          — just clarity.
         </p>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-sm text-foreground/70">

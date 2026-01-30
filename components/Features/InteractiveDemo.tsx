@@ -12,7 +12,6 @@ export default function InteractiveDemo() {
       <div className="absolute bottom-0 right-1/4 w-[300px] h-[300px] bg-secondary/20 blur-[140px] rounded-full pointer-events-none"></div>
 
       <div className="relative max-w-6xl mx-auto px-6">
-        
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold text-foreground">
             Experience how <span className="text-primary">Focura</span> works
@@ -53,7 +52,7 @@ export default function InteractiveDemo() {
           <div className="absolute inset-0 bg-linear-to-b from-black/20 to-black/30 z-10"></div>
 
           <Image
-            src="/demo-preview.png" 
+            src="/demo-preview.png"
             alt="Focura Demo"
             width={1600}
             height={900}

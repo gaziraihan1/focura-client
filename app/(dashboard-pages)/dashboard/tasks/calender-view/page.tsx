@@ -1,68 +1,27 @@
 "use client";
 
-import React, { useState, useMemo } from 'react';
-import { 
-  startOfMonth, 
-  endOfMonth, 
-  startOfWeek, 
-  endOfWeek,
-  addMonths,
-  subMonths,
-  addWeeks,
-  subWeeks,
-  addDays,
-  subDays
-} from 'date-fns';
-import { Task, useTasks } from '@/hooks/useTask';
-import { CalendarHeader } from '@/components/Dashboard/CalendarView/CalendarHeader';
-import { CalendarGrid } from '@/components/Dashboard/CalendarView/CalendarGrid';
-import { ResponsiveSidebar } from '@/components/Dashboard/CalendarView/ResponsiveSidebar';
-import { TaskDetailsModal } from '@/components/Dashboard/CalendarView/TaskDetailsModal';
-
-type CalendarView = 'month' | 'week' | 'day';
+import { CalendarHeader } from "@/components/Dashboard/CalendarView/CalendarHeader";
+import { CalendarContent } from "@/components/Dashboard/CalendarView/CalendarContent";
+import { TaskDetailsModal } from "@/components/Dashboard/CalendarView/TaskDetailsModal";
+import { useCalendarPage } from "@/hooks/useCalendarPage";
 
 export default function CalendarPage() {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [view, setView] = useState<CalendarView>('month');
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [showOnlyTimeBound, setShowOnlyTimeBound] = useState(true);
-
-  const { data: tasks = [], isLoading } = useTasks();
-
-  const filteredTasks = useMemo(() => {
-    if (!showOnlyTimeBound) return tasks;
-    return tasks.filter(task => task.dueDate || task.startDate);
-  }, [tasks, showOnlyTimeBound]);
-
-  const dateRange = useMemo(() => {
-    const start = startOfWeek(startOfMonth(currentDate), { weekStartsOn: 0 });
-    const end = endOfWeek(endOfMonth(currentDate), { weekStartsOn: 0 });
-    return { start, end };
-  }, [currentDate]);
-
-  const handlePrevious = () => {
-    if (view === 'month') {
-      setCurrentDate(subMonths(currentDate, 1));
-    } else if (view === 'week') {
-      setCurrentDate(subWeeks(currentDate, 1));
-    } else if (view === 'day') {
-      setCurrentDate(subDays(currentDate, 1));
-    }
-  };
-
-  const handleNext = () => {
-    if (view === 'month') {
-      setCurrentDate(addMonths(currentDate, 1));
-    } else if (view === 'week') {
-      setCurrentDate(addWeeks(currentDate, 1));
-    } else if (view === 'day') {
-      setCurrentDate(addDays(currentDate, 1));
-    }
-  };
-
-  const handleToday = () => {
-    setCurrentDate(new Date());
-  };
+  const {
+    currentDate,
+    view,
+    setView,
+    selectedTask,
+    showOnlyTimeBound,
+    setShowOnlyTimeBound,
+    filteredTasks,
+    dateRange,
+    isLoading,
+    handlePrevious,
+    handleNext,
+    handleToday,
+    handleTaskClick,
+    handleCloseTaskModal,
+  } = useCalendarPage();
 
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden">
@@ -77,29 +36,19 @@ export default function CalendarPage() {
         onToggleTimeBound={setShowOnlyTimeBound}
       />
 
-      <div className="flex-1 flex overflow-hidden">
-        <div className="flex-1 overflow-auto scrollbar-hide">
-          <CalendarGrid
-            currentDate={currentDate}
-            view={view}
-            tasks={filteredTasks}
-            dateRange={dateRange}
-            onTaskClick={setSelectedTask}
-            isLoading={isLoading}
-          />
-        </div>
-
-        <ResponsiveSidebar
-          currentDate={currentDate}
-          tasks={filteredTasks}
-          onTaskClick={setSelectedTask}
-        />
-      </div>
+      <CalendarContent
+        currentDate={currentDate}
+        view={view}
+        tasks={filteredTasks}
+        dateRange={dateRange}
+        isLoading={isLoading}
+        onTaskClick={handleTaskClick}
+      />
 
       {selectedTask && (
         <TaskDetailsModal
           task={selectedTask}
-          onClose={() => setSelectedTask(null)}
+          onClose={handleCloseTaskModal}
         />
       )}
     </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import React from "react";
 
 type Props = {
   billing: "monthly" | "yearly";
@@ -15,7 +14,6 @@ export default function BillingToggle({ billing, setBilling }: Props) {
         className="relative flex items-center bg-card/40 backdrop-blur-xl border border-border 
         px-2 py-1 rounded-full gap-1"
       >
-        {/* Toggle Background */}
         <motion.div
           layout
           transition={{ type: "spring", stiffness: 300, damping: 25 }}
@@ -24,8 +22,6 @@ export default function BillingToggle({ billing, setBilling }: Props) {
             left: billing === "monthly" ? "4px" : "calc(50% + -4px)",
           }}
         />
-
-        {/* Buttons */}
         <button
           onClick={() => setBilling("monthly")}
           className={`relative z-10 px-4 py-1 text-sm font-medium transition ${
@@ -36,7 +32,6 @@ export default function BillingToggle({ billing, setBilling }: Props) {
         >
           Monthly
         </button>
-
         <button
           onClick={() => setBilling("yearly")}
           className={`relative z-10 px-4 py-1 text-sm font-medium transition ${

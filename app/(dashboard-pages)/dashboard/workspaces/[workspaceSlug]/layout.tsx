@@ -1,27 +1,12 @@
 "use client";
 
-import { useParams, usePathname, useRouter } from "next/navigation";
-import Link from "next/link";
-import { useState, useEffect } from "react";
-import {
-  LayoutDashboard,
-  CheckSquare,
-  FolderKanban,
-  Users,
-  Calendar,
-  BarChart3,
-  Settings,
-  ChevronDown,
-  Plus,
-  Menu,
-  LogOut,
-  Search,
-  Command,
-  Tags,
-} from "lucide-react";
-import { useWorkspace, useWorkspaceRole, useWorkspaces } from "@/hooks/useWorkspace";
-import { Loader2 } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { useParams, usePathname } from "next/navigation";
+import { LoadingState } from "@/components/Dashboard/Projects/NewProject/LoadingState";
+import EmptyState from "@/components/Dashboard/Workspaces/EmptyState";
+import { useWorkspaceLayout } from "@/hooks/useWorkspaceLayout";
+import { WorkspaceSidebar } from "@/components/Dashboard/Workspaces/WorkspaceSidebar";
+import { WorkspaceLayoutHeader } from "@/components/Dashboard/Workspaces/WorkspaceLayoutHeader";
+import { WorkspaceSwitcherModal } from "@/components/Dashboard/Workspaces/WorkspaceSwitcherModal";
 
 export default function WorkspaceLayout({
   children,
@@ -30,284 +15,64 @@ export default function WorkspaceLayout({
 }) {
   const params = useParams();
   const pathname = usePathname();
-  const router = useRouter();
-  const { data: session } = useSession();
   const slug = params.workspaceSlug as string;
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [switcherOpen, setSwitcherOpen] = useState(false);
-
-  const { data: workspace, isLoading } = useWorkspace(slug);
-  const { data: allWorkspaces = [] } = useWorkspaces();
-  const {canManageWorkspace} = useWorkspaceRole(workspace?.id);
-  const label = {
-    name: "Labels",
-    href: `/dashboard/workspaces/${slug}/label`,
-    icon: Tags,
-    match: (path:string) => path === `/dashboard/workspaces/${slug}/label`
-  }
-
-  useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setSwitcherOpen((open) => !open);
-      }
-    };
-
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
-  }, []);
-
-  const navigation = [
-    {
-      name: "Overview",
-      href: `/dashboard/workspaces/${slug}`,
-      icon: LayoutDashboard,
-      match: (path: string) => path === `/dashboard/workspaces/${slug}`,
-    },
-    {
-      name: "Tasks",
-      href: `/dashboard/workspaces/${slug}/tasks`,
-      icon: CheckSquare,
-      match: (path: string) => path.includes(`/${slug}/tasks`),
-    },
-    {
-      name: "Projects",
-      href: `/dashboard/workspaces/${slug}/projects`,
-      icon: FolderKanban,
-      match: (path: string) => path.includes(`/${slug}/projects`),
-    },
-    {
-      name: "Team",
-      href: `/dashboard/workspaces/${slug}/team`,
-      icon: Users,
-      match: (path: string) => path.includes(`/${slug}/team`),
-    },
-    {
-      name: "Calendar",
-      href: `/dashboard/workspaces/${slug}/calendar`,
-      icon: Calendar,
-      match: (path: string) => path.includes(`/${slug}/calender`),
-    },
-    {
-      name: "Analytics",
-      href: `/dashboard/workspaces/${slug}/analytics`,
-      icon: BarChart3,
-      match: (path: string) => path.includes(`/${slug}/analytics`),
-    },
-     ...(canManageWorkspace ? [label] : []),
-    
-  ];
+  const {
+    workspace,
+    allWorkspaces,
+    navigation,
+    currentMember,
+    sidebarOpen,
+    setSidebarOpen,
+    switcherOpen,
+    setSwitcherOpen,
+    isLoading,
+    session,
+    handleWorkspaceSwitch,
+    handleCreateWorkspace,
+  } = useWorkspaceLayout({ slug, pathname });
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LoadingState />;
   }
 
   if (!workspace) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen gap-4">
-        <h2 className="text-2xl font-bold text-foreground">
-          Workspace not found
-        </h2>
-        <Link
-          href="/dashboard/workspaces"
-          className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
-        >
-          Back to Workspaces
-        </Link>
-      </div>
-    );
+    return <EmptyState />;
   }
-
-  const currentMember = workspace.members.find(
-    (m) => m.user.id === session?.user?.id
-  );
 
   return (
     <div className="flex bg-background">
-      <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border
-  flex flex-col transform transition-transform duration-200
-  lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
-      >
-        <div className="flex flex-col h-full">
-          <div className="p-4 border-b border-border">
-            <button
-              onClick={() => setSwitcherOpen(true)}
-              className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition group"
-            >
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold"
-                style={{ backgroundColor: workspace.color || "#667eea" }}
-              >
-                {workspace.logo || workspace.name.charAt(0).toUpperCase()}
-              </div>
-              <div className="flex-1 text-left">
-                <p className="font-semibold text-foreground truncate">
-                  {workspace.name}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {currentMember?.role || "Member"}
-                </p>
-              </div>
-              <ChevronDown size={16} className="text-muted-foreground" />
-            </button>
-          </div>
-
-          <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-            {navigation.map((item) => {
-              const isActive = item.match(pathname);
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setSidebarOpen(false)}
-                  className={`flex items-center gap-3 px-3 py-2 rounded-lg transition ${
-                    isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "text-foreground hover:bg-accent"
-                  }`}
-                >
-                  <item.icon size={18} />
-                  <span>{item.name}</span>
-                </Link>
-              );
-            })}
-          </nav>
-
-          <div className="p-4 border-t border-border space-y-2">
-            <Link
-              href={`/dashboard/${slug}/settings`}
-              className="flex items-center gap-3 px-3 py-2 rounded-lg text-foreground hover:bg-accent transition"
-            >
-              <Settings size={18} />
-              <span>Settings</span>
-            </Link>
-
-            <Link
-              href="/dashboard/workspaces"
-              className="flex items-center gap-3 px-3 py-2 rounded-lg text-foreground hover:bg-accent transition"
-            >
-              <LogOut size={18} />
-              <span>All Workspaces</span>
-            </Link>
-          </div>
-        </div>
-      </aside>
-
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+      <WorkspaceSidebar
+        workspace={workspace}
+        currentMember={currentMember}
+        navigation={navigation}
+        pathname={pathname}
+        slug={slug}
+        sidebarOpen={sidebarOpen}
+        onSidebarClose={() => setSidebarOpen(false)}
+        onSwitcherOpen={() => setSwitcherOpen(true)}
+      />
 
       <div className="flex-1 flex flex-col lg:ml-64">
-        <header className="sticky top-0 z-30 flex flex-wrap items-center gap-3 px-4 sm:px-6 py-3 bg-card border-b border-border">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="lg:hidden p-2 rounded-lg hover:bg-accent transition"
-          >
-            <Menu size={20} />
-          </button>
+        <WorkspaceLayoutHeader
+          session={session}
+          onSidebarOpen={() => setSidebarOpen(true)}
+          onSwitcherOpen={() => setSwitcherOpen(true)}
+        />
 
-          <div className="flex-1 min-w-[200px] max-w-md relative">
-            <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-              size={16}
-            />
-            <input
-              type="text"
-              placeholder="Search or press Cmd+K"
-              onClick={() => setSwitcherOpen(true)}
-              readOnly
-              className="w-full pl-9 pr-4 py-2 rounded-lg bg-background border border-border text-sm text-foreground placeholder:text-muted-foreground cursor-pointer hover:bg-accent transition"
-            />
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button className="p-2 rounded-lg hover:bg-accent transition">
-              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-sm font-medium">
-                {session?.user?.name?.charAt(0) || "U"}
-              </div>
-            </button>
-          </div>
-        </header>
-
-        <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+        <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
+          {children}
+        </main>
       </div>
 
-      {switcherOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center pt-20"
-          onClick={() => setSwitcherOpen(false)}
-        >
-          <div
-            className="bg-card rounded-xl border border-border w-full max-w-md max-h-[80vh] overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-4 border-b border-border">
-              <div className="flex items-center gap-2 text-muted-foreground text-sm mb-2">
-                <Command size={14} />
-                <span>Quick switch workspace</span>
-              </div>
-              <input
-                type="text"
-                placeholder="Search workspaces..."
-                autoFocus
-                className="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground outline-none focus:ring-2 ring-primary"
-              />
-            </div>
-
-            <div className="overflow-y-auto max-h-64">
-              {allWorkspaces.map((ws) => (
-                <button
-                  key={ws.id}
-                  onClick={() => {
-                    router.push(`/dashboard/workspaces/${ws.slug}`);
-                    setSwitcherOpen(false);
-                  }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition ${
-                    ws.workspaceSlug === slug ? "bg-accent" : ""
-                  }`}
-                >
-                  <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold"
-                    style={{ backgroundColor: ws.color || "#667eea" }}
-                  >
-                    {ws.logo || ws.name.charAt(0).toUpperCase()}
-                  </div>
-                  <div className="flex-1 text-left">
-                    <p className="font-medium text-foreground">{ws.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {ws._count.members} members · {ws._count.projects}{" "}
-                      projects
-                    </p>
-                  </div>
-                </button>
-              ))}
-
-              <button
-                onClick={() => {
-                  router.push("/dashboard/workspaces/new-workspace");
-                  setSwitcherOpen(false);
-                }}
-                className="w-full flex items-center gap-3 px-4 py-3 text-primary hover:bg-accent transition border-t border-border"
-              >
-                <div className="w-10 h-10 rounded-lg border-2 border-dashed border-primary flex items-center justify-center">
-                  <Plus size={20} />
-                </div>
-                <span className="font-medium">Create new workspace</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <WorkspaceSwitcherModal
+        isOpen={switcherOpen}
+        allWorkspaces={allWorkspaces}
+        currentSlug={slug}
+        onClose={() => setSwitcherOpen(false)}
+        onWorkspaceSwitch={handleWorkspaceSwitch}
+        onCreateWorkspace={handleCreateWorkspace}
+      />
     </div>
   );
 }

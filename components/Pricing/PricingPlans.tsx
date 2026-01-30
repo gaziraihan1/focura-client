@@ -58,8 +58,6 @@ export default function PricingPlans() {
   return (
     <section className="relative py-28 bg-background px-6">
       <div className="max-w-6xl mx-auto">
-
-        {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto mb-20">
           <h2 className="text-3xl md:text-5xl font-bold text-foreground">
             Pricing that grows with your team
@@ -68,14 +66,14 @@ export default function PricingPlans() {
             Transparent, scalable, and built for teams of all sizes.
           </p>
         </div>
-
-        {/* Pricing Grid */}
-        <div className="
+        <div
+          className="
           grid grid-cols-1 
           sm:grid-cols-2 
           lg:grid-cols-3 
           gap-8 
-        ">
+        "
+        >
           {plans.map((plan, i) => (
             <div
               key={i}
@@ -90,7 +88,6 @@ export default function PricingPlans() {
                 hover:shadow-xl hover:-translate-y-1
               `}
             >
-              {/* Highlight Badge */}
               {plan.highlighted && (
                 <span className="absolute top-4 right-4 text-xs font-medium bg-primary text-primary-foreground px-3 py-1 rounded-full">
                   Most Popular
@@ -113,7 +110,10 @@ export default function PricingPlans() {
 
               <ul className="mt-8 space-y-3 text-sm flex-1">
                 {plan.features.map((f, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-foreground/80">
+                  <li
+                    key={idx}
+                    className="flex items-start gap-2 text-foreground/80"
+                  >
                     <Check className="w-4 h-4 text-primary mt-0.5" />
                     {f}
                   </li>
@@ -135,7 +135,6 @@ export default function PricingPlans() {
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Task } from '@/hooks/useTask';
-import { ColumnConfig } from './KanbanBoard';
 import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { KanbanCard } from './KanbanCard';
+import { ColumnConfig } from '@/hooks/useKanbanBoard';
 
 interface KanbanColumnProps {
   column: ColumnConfig;

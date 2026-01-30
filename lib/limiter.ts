@@ -1,76 +1,93 @@
-// lib/limiter.ts
-interface RateLimitStore {
-  [key: string]: {
-    count: number;
-    resetTime: number;
-  };
+
+export interface RateLimitResult {
+  success: boolean;
+  reset?: number;
+  remaining?: number;
 }
 
-class InMemoryRateLimiter {
-  private store: RateLimitStore = {};
-  private maxRequests: number;
-  private windowMs: number;
+export interface RateLimiter {
+  limit(key: string): Promise<RateLimitResult>;
+}
 
-  constructor(maxRequests: number = 5, windowMinutes: number = 1) {
-    this.maxRequests = maxRequests;
-    this.windowMs = windowMinutes * 60 * 1000;
+class DevRateLimiter implements RateLimiter {
+  private store = new Map<
+    string,
+    { count: number; resetAt: number }
+  >();
 
-    // Clean up old entries every minute
-    setInterval(() => this.cleanup(), 60000);
-  }
+  constructor(
+    private max = 5,
+    private windowMs = 60_000
+  ) {}
 
-  async limit(identifier: string): Promise<{ success: boolean }> {
+  async limit(key: string): Promise<RateLimitResult> {
     const now = Date.now();
-    const entry = this.store[identifier];
+    const entry = this.store.get(key);
 
-    // If no entry or expired, create new
-    if (!entry || now > entry.resetTime) {
-      this.store[identifier] = {
+    if (!entry || now > entry.resetAt) {
+      this.store.set(key, {
         count: 1,
-        resetTime: now + this.windowMs,
+        resetAt: now + this.windowMs,
+      });
+
+      return {
+        success: true,
+        remaining: this.max - 1,
+        reset: now + this.windowMs,
       };
-      return { success: true };
     }
 
-    // Check if limit exceeded
-    if (entry.count >= this.maxRequests) {
-      return { success: false };
+    if (entry.count >= this.max) {
+      return {
+        success: false,
+        remaining: 0,
+        reset: entry.resetAt,
+      };
     }
 
-    // Increment count
-    entry.count++;
-    return { success: true };
+    entry.count += 1;
+    this.store.set(key, entry);
+
+    return {
+      success: true,
+      remaining: this.max - entry.count,
+      reset: entry.resetAt,
+    };
   }
+}
 
-  private cleanup() {
-    const now = Date.now();
-    Object.keys(this.store).forEach((key) => {
-      if (now > this.store[key].resetTime) {
-        delete this.store[key];
-      }
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+class UpstashRateLimiter implements RateLimiter {
+  private ratelimit: Ratelimit;
+
+  constructor() {
+    const redis = new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL!,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+    });
+
+    this.ratelimit = new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(5, "1 m"),
+      prefix: "focura:rl",
+      analytics: true,
     });
   }
+
+  async limit(key: string): Promise<RateLimitResult> {
+    const result = await this.ratelimit.limit(key);
+
+    return {
+      success: result.success,
+      remaining: result.remaining,
+      reset: result.reset,
+    };
+  }
 }
 
-// Export based on environment
-export const limiter =
-  process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
-    ? await createUpstashLimiter()
-    : new InMemoryRateLimiter(5, 1);
-
-async function createUpstashLimiter() {
-  const { Ratelimit } = await import("@upstash/ratelimit");
-  const { Redis } = await import("@upstash/redis");
-
-  const redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL!,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-  });
-
-  return new Ratelimit({
-    redis,
-    limiter: Ratelimit.slidingWindow(5, "1 m"),
-    analytics: true,
-    prefix: "@upstash/ratelimit",
-  });
-}
+export const limiter: RateLimiter =
+  process.env.NODE_ENV === "production"
+    ? new UpstashRateLimiter()
+    : new DevRateLimiter(5, 60_000);

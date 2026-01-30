@@ -17,7 +17,8 @@ export default function PricingSupportCTA() {
           </h3>
 
           <p className="text-muted-foreground mt-3 md:text-lg">
-            Our support team is here 24/7 to help you find the right plan for your workflow.
+            Our support team is here 24/7 to help you find the right plan for
+            your workflow.
           </p>
 
           <Link

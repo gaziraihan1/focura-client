@@ -31,7 +31,7 @@ export interface TaskAssignee {
   taskId: string;
 }
 
-export interface Comment {
+export interface TaskComment {
   id: string;
   content: string;
   createdAt: string;

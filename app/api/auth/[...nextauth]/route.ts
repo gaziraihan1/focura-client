@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth/authOptions";
+import { limiter } from "@/lib/limiter";
 
 
 type NextAuthHandler = (
@@ -10,43 +11,22 @@ type NextAuthHandler = (
 
 const nextAuthHandler = NextAuth(authOptions) as unknown as NextAuthHandler;
 
-const LOGIN_MAX_ATTEMPTS = 10;
-const LOGIN_WINDOW_MS = 5 * 60 * 1000; 
-const loginAttempts = new Map<string, { count: number; first: number }>();
-
-function getClientIp(req: Request) {
+function getClientIp(req: Request): string {
   const header =
-    req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "";
+    req.headers.get("x-forwarded-for") ||
+    req.headers.get("x-real-ip") ||
+    "";
+
   return header.split(",")[0]?.trim() || "unknown";
 }
 
-function isLoginPath(path: string) {
+
+function isLoginPath(path: string): boolean {
   return (
-    path.includes("/callback") ||
-    path.includes("/signin") ||
+    path.includes("/callback/credentials") ||
+    path.endsWith("/signin") ||
     path.endsWith("/login")
   );
-}
-
-function isRateLimited(req: Request) {
-  const ip = getClientIp(req);
-  const now = Date.now();
-  const entry = loginAttempts.get(ip);
-
-  if (!entry) {
-    loginAttempts.set(ip, { count: 1, first: now });
-    return false;
-  }
-
-  if (now - entry.first > LOGIN_WINDOW_MS) {
-    loginAttempts.set(ip, { count: 1, first: now });
-    return false;
-  }
-
-  entry.count += 1;
-  loginAttempts.set(ip, entry);
-
-  return entry.count > LOGIN_MAX_ATTEMPTS;
 }
 
 
@@ -54,22 +34,52 @@ export async function GET(
   req: Request,
   context: { params: Promise<{ nextauth: string[] }> }
 ) {
-  
   const params = await context.params;
-  return await nextAuthHandler(req, { params });
+  return nextAuthHandler(req, { params });
 }
 
 export async function POST(
   req: Request,
   context: { params: Promise<{ nextauth: string[] }> }
 ) {
-  const path = new URL(req.url).pathname;
-  if (isLoginPath(path) && isRateLimited(req)) {
-    return NextResponse.json(
-      { message: "Too many login attempts. Please try again later." },
-      { status: 429 }
-    );
+  const url = new URL(req.url);
+  const path = url.pathname;
+
+  if (isLoginPath(path)) {
+    const ip = getClientIp(req);
+
+    // Optional: scope by email + IP (stronger protection)
+    let email: string | null = null;
+    try {
+      const body = await req.clone().formData();
+      email = body.get("email")?.toString().toLowerCase() || null;
+    } catch {}
+
+    const key = email
+      ? `login:${ip}:${email}`
+      : `login:${ip}`;
+
+    const result = await limiter.limit(key);
+
+    if (!result.success) {
+      return NextResponse.json(
+        {
+          message: "Too many login attempts. Please try again later.",
+        },
+        {
+          status: 429,
+          headers: result.reset
+            ? {
+                "Retry-After": Math.ceil(
+                  (result.reset - Date.now()) / 1000
+                ).toString(),
+              }
+            : {},
+        }
+      );
+    }
   }
+
   const params = await context.params;
-  return await nextAuthHandler(req, { params });
+  return nextAuthHandler(req, { params });
 }

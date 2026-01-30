@@ -3,14 +3,14 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 type Items = {
-    title: string;
-    desc: string;
-    category: string;
-    image: string;
-}
+  title: string;
+  desc: string;
+  category: string;
+  image: string;
+};
 
 export default function ResourcesPopular() {
-  const items:Items[] = [
+  const items: Items[] = [
     {
       title: "Getting Started with Focura",
       desc: "A simple guide to help new teams onboard quickly and understand the workflow structure.",
@@ -34,8 +34,6 @@ export default function ResourcesPopular() {
   return (
     <section className="py-24 bg-background">
       <div className="max-w-6xl mx-auto px-6">
-
-        {/* Section Heading */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -50,8 +48,6 @@ export default function ResourcesPopular() {
             Hand-picked resources that help you get the most out of Focura.
           </p>
         </motion.div>
-
-        {/* Resource Cards */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {items.map((item, i) => (
             <motion.div
@@ -67,7 +63,6 @@ export default function ResourcesPopular() {
                 transition-all cursor-pointer
               "
             >
-              {/* Image */}
               <div className="relative w-full h-44 rounded-xl overflow-hidden mb-4">
                 <Image
                   src={item.image}
@@ -76,18 +71,12 @@ export default function ResourcesPopular() {
                   className="object-cover"
                 />
               </div>
-
-              {/* Category */}
               <span className="text-xs font-medium text-primary bg-primary/10 px-3 py-1 rounded-full">
                 {item.category}
               </span>
-
-              {/* Title */}
               <h3 className="mt-3 text-lg font-semibold text-foreground">
                 {item.title}
               </h3>
-
-              {/* Description */}
               <p className="text-sm text-foreground/60 mt-1 leading-relaxed">
                 {item.desc}
               </p>

@@ -40,7 +40,6 @@ export default function FeaturesDetails() {
 
   return (
     <section className="relative py-28 bg-background">
-      
       <div className="absolute -top-12 right-0 w-80 h-80 bg-primary/10 rounded-full blur-[120px] opacity-40" />
       <div className="absolute -bottom-12 left-0 w-80 h-80 bg-primary/10 rounded-full blur-[120px] opacity-40" />
 
@@ -79,10 +78,12 @@ export default function FeaturesDetails() {
                 </ul>
               </div>
 
-              <div className="
+              <div
+                className="
                 flex-1 rounded-2xl overflow-hidden 
                 bg-background/40 backdrop-blur-xl border border-border shadow-xl
-              ">
+              "
+              >
                 <Image
                   src={f.img}
                   alt={f.title}

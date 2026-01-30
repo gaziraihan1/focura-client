@@ -3,14 +3,14 @@
 import React from "react";
 import { Check, Minus } from "lucide-react";
 type Plans = {
-    name: string;
-    price: string;
-    highlighted?: boolean;
-    features: Record<string, boolean>
-}
+  name: string;
+  price: string;
+  highlighted?: boolean;
+  features: Record<string, boolean>;
+};
 
 export default function FeatureComparison() {
-  const plans:Plans[] = [
+  const plans: Plans[] = [
     {
       name: "Free",
       price: "$0",
@@ -58,25 +58,26 @@ export default function FeatureComparison() {
   return (
     <section className="py-28">
       <div className="max-w-7xl mx-auto px-6">
-        
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold text-foreground">
             Compare Features Across Plans
           </h2>
           <p className="text-foreground/60 mt-3 max-w-2xl mx-auto">
-            Choose the plan that fits your workflow best. Every tier includes essential tools to stay productive.
+            Choose the plan that fits your workflow best. Every tier includes
+            essential tools to stay productive.
           </p>
         </div>
 
         <div className="overflow-x-auto">
           <div className="min-w-[800px] grid grid-cols-4 bg-background/50 backdrop-blur-sm rounded-2xl border border-border">
-            
             <div></div>
             {plans.map((plan, i) => (
               <div
                 key={i}
                 className={`p-6 text-center border-l border-border relative ${
-                  plan.highlighted ? "bg-primary/5 shadow-lg shadow-primary/10" : ""
+                  plan.highlighted
+                    ? "bg-primary/5 shadow-lg shadow-primary/10"
+                    : ""
                 }`}
               >
                 <h3 className="text-xl font-semibold">{plan.name}</h3>

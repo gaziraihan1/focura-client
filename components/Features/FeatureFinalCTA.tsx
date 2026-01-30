@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import Link from "next/link";
-import {motion} from "framer-motion"
+import { motion } from "framer-motion";
 
 export default function FeatureFinalCTA() {
   return (
@@ -11,7 +11,8 @@ export default function FeatureFinalCTA() {
           <span className="text-brand">Focura?</span>
         </h2>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Start building a faster, more organized, and more collaborative workflow today.
+          Start building a faster, more organized, and more collaborative
+          workflow today.
         </p>
 
         <motion.div

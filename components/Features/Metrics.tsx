@@ -13,8 +13,8 @@ export default function Metrics() {
           Proven <span className="text-brand">Productivity Gains</span>
         </h2>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Teams switching to Focura experience immediate improvements in clarity,
-          execution, and collaboration.
+          Teams switching to Focura experience immediate improvements in
+          clarity, execution, and collaboration.
         </p>
       </div>
 

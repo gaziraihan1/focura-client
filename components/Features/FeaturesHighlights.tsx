@@ -1,7 +1,14 @@
 "use client";
 
 import React from "react";
-import { Layers, Sparkles, ShieldCheck, Workflow, Clock, Users } from "lucide-react";
+import {
+  Layers,
+  Sparkles,
+  ShieldCheck,
+  Workflow,
+  Clock,
+  Users,
+} from "lucide-react";
 
 export default function FeaturesHighlights() {
   const highlights = [
@@ -39,18 +46,17 @@ export default function FeaturesHighlights() {
 
   return (
     <section className="relative py-28 bg-background">
-
       <div className="absolute -top-10 right-0 w-72 h-72 bg-primary/10 rounded-full blur-[120px] opacity-50 pointer-events-none" />
       <div className="absolute -bottom-10 left-0 w-72 h-72 bg-primary/10 rounded-full blur-[120px] opacity-40 pointer-events-none" />
 
       <div className="relative max-w-6xl mx-auto px-6">
-
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold text-foreground">
             Everything you need in one powerful platform
           </h2>
           <p className="mt-4 text-lg text-foreground/70 max-w-2xl mx-auto">
-            Focura enhances your productivity with tools that adapt to your workflow and scale with your team.
+            Focura enhances your productivity with tools that adapt to your
+            workflow and scale with your team.
           </p>
         </div>
 
@@ -67,8 +73,12 @@ export default function FeaturesHighlights() {
                 {item.icon}
               </div>
 
-              <h3 className="text-xl font-semibold text-foreground">{item.title}</h3>
-              <p className="mt-2 text-foreground/60 leading-relaxed">{item.desc}</p>
+              <h3 className="text-xl font-semibold text-foreground">
+                {item.title}
+              </h3>
+              <p className="mt-2 text-foreground/60 leading-relaxed">
+                {item.desc}
+              </p>
             </div>
           ))}
         </div>

@@ -10,14 +10,9 @@ export default function LabelsPage() {
   const params = useParams();
   const workspaceSlug = params.workspaceSlug as string;
 
-  // Fetch workspace data
   const { data: workspace, isLoading: isWorkspaceLoading } = useWorkspace(workspaceSlug);
 
-  // Redirect if not authenticated
-  
-
-  // Loading state
-  if (isWorkspaceLoading) {
+    if (isWorkspaceLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-primary animate-spin" />
@@ -25,7 +20,6 @@ export default function LabelsPage() {
     );
   }
 
-  // No workspace found
   if (!workspace) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
