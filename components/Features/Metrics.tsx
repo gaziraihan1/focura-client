@@ -1,10 +1,7 @@
+import { metrics } from "@/constant/features.costant";
+
 export default function Metrics() {
-  const metrics = [
-    { value: "3×", label: "Faster Task Completion" },
-    { value: "40%", label: "Less Context Switching" },
-    { value: "2.5h", label: "Daily Time Saved" },
-    { value: "95%", label: "Team Satisfaction Score" },
-  ];
+  
 
   return (
     <section className="py-24 bg-muted/30 dark:bg-muted/10">

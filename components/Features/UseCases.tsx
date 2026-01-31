@@ -1,25 +1,10 @@
 "use client";
 
+import { cases } from "@/constant/features.costant";
 import Image from "next/image";
 
 export default function UseCases() {
-  const cases = [
-    {
-      title: "Solo Founders",
-      desc: "Manage ideas, roadmap, tasks, and documentation — all in one focused workspace.",
-      img: "/images/usecase-founder.jpg",
-    },
-    {
-      title: "Agencies",
-      desc: "Track client projects, approvals, communication, and deliverables with clarity.",
-      img: "/images/usecase-agency.jpg",
-    },
-    {
-      title: "Remote Teams",
-      desc: "Collaborate effortlessly with async docs, real-time comments, and structured workflows.",
-      img: "/images/usecase-remote.jpg",
-    },
-  ];
+  
 
   return (
     <section className="py-24">

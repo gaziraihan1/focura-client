@@ -4,34 +4,10 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star } from "lucide-react";
 import Image from "next/image";
+import { testimonials } from "@/constant/home.constant";
 
 export default function TestimonialSection() {
-  const testimonials = [
-    {
-      name: "Sarah Johnson",
-      role: "Product Designer",
-      quote:
-        "Focura completely streamlined our team’s workflow. The clarity and speed it brings is unmatched.",
-      avatar: "/mnt/data/bea22d29-b167-4c3d-a1db-37e2282056e6.png",
-      rating: 5,
-    },
-    {
-      name: "Michael Lee",
-      role: "Team Manager",
-      quote:
-        "We reduced project delivery time by 40% after switching to Focura. It keeps everyone aligned.",
-      avatar: "/mnt/data/bea22d29-b167-4c3d-a1db-37e2282056e6.png",
-      rating: 5,
-    },
-    {
-      name: "Alicia Gomez",
-      role: "Operations Lead",
-      quote:
-        "Beautiful UI, smart features, and frictionless collaboration. Focura is built for modern teams.",
-      avatar: "/mnt/data/bea22d29-b167-4c3d-a1db-37e2282056e6.png",
-      rating: 5,
-    },
-  ];
+ 
 
   const [index, setIndex] = useState(0);
 
@@ -40,7 +16,7 @@ export default function TestimonialSection() {
       setIndex((i) => (i + 1) % testimonials.length);
     }, 4000); 
     return () => clearInterval(timer);
-  }, [testimonials.length]);
+  }, []);
 
   return (
     <section className="relative py-28 overflow-hidden">

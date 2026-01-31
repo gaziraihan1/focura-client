@@ -2,51 +2,9 @@
 
 import React from "react";
 import { Check, Minus } from "lucide-react";
+import { features } from "@/constant/pricing.constant";
 
-const features = [
-  {
-    name: "Unlimited Projects",
-    free: false,
-    pro: true,
-    business: true,
-  },
-  {
-    name: "Real-time Collaboration",
-    free: false,
-    pro: true,
-    business: true,
-  },
-  {
-    name: "Advanced Analytics",
-    free: false,
-    pro: false,
-    business: true,
-  },
-  {
-    name: "AI-Powered Suggestions",
-    free: false,
-    pro: true,
-    business: true,
-  },
-  {
-    name: "Priority Support",
-    free: false,
-    pro: false,
-    business: true,
-  },
-  {
-    name: "Team Workspace",
-    free: false,
-    pro: true,
-    business: true,
-  },
-  {
-    name: "Custom Branding",
-    free: false,
-    pro: false,
-    business: true,
-  },
-];
+
 
 export default function FeatureComparison() {
   return (

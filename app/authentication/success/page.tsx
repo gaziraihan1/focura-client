@@ -1,4 +1,3 @@
-// app/authentication/success/page.tsx
 "use client";
 
 import { useEffect } from "react";

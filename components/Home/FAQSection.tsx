@@ -3,31 +3,10 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { faqs } from "@/constant/home.constant";
 
 export default function FAQSection() {
-  const faqs = [
-    {
-      q: "What is Focura?",
-      a: "Focura is a modern workflow and productivity platform designed to help teams plan, collaborate, and execute with total clarity."
-    },
-    {
-      q: "Is my data secure?",
-      a: "Yes. Focura uses enterprise-grade encryption, secure cloud hosting, and strict access controls to protect your data."
-    },
-    {
-      q: "Do I need a credit card to start?",
-      a: "No. You can get started with Focura for free — no credit card required."
-    },
-    {
-      q: "Can I invite my team members?",
-      a: "Absolutely. You can add team members, assign roles, and collaborate in real time."
-    },
-    {
-      q: "Does Focura offer customer support?",
-      a: "Yes. We provide 24/7 support via email and chat, along with detailed documentation."
-    },
-  ];
-
+  
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFAQ = (i: number) => {

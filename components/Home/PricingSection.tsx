@@ -2,48 +2,10 @@
 
 import React from "react";
 import { Check } from "lucide-react";
+import { plans } from "@/constant/home.constant";
 
 export default function PricingSection() {
-  const plans = [
-    {
-      name: "Starter",
-      price: "Free",
-      tagline: "Perfect for individuals and early-stage projects.",
-      features: [
-        "Up to 3 projects",
-        "Basic task management",
-        "Single workspace",
-        "Community support",
-      ],
-      highlighted: false,
-    },
-    {
-      name: "Pro",
-      price: "$19",
-      tagline: "Best for fast-moving teams who need more control.",
-      features: [
-        "Unlimited projects",
-        "Team collaboration tools",
-        "Real-time updates",
-        "Advanced analytics",
-        "Priority support",
-      ],
-      highlighted: true,
-    },
-    {
-      name: "Enterprise",
-      price: "Custom",
-      tagline: "For organizations who need full visibility and power.",
-      features: [
-        "Unlimited workspaces",
-        "Custom roles and permissions",
-        "Automation workflows",
-        "Audit logs",
-        "Dedicated manager",
-      ],
-      highlighted: false,
-    },
-  ];
+  
 
   return (
     <section className="py-28 bg-background">

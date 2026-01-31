@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
 import Link from "next/link";
-// import Image from "next/image";
 
 export default function Hero() {
-const [totalUser, setTotalUser] = useState<number>(8)
+const totalUser = 8
 
   return (
     <section className="relative w-full bg-background pt-32 pb-28 overflow-hidden">

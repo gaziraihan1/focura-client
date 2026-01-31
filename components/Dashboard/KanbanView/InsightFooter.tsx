@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Task } from '@/hooks/useTask';
 import { X, TrendingUp, Clock, AlertCircle, CheckCircle } from 'lucide-react';
-import { differenceInDays, parseISO, startOfWeek } from 'date-fns';
+import { useKanbanInsightFooter } from '@/hooks/useKanbanInsightFooter';
 
 interface InsightFooterProps {
   tasks: Task[];
@@ -9,64 +9,7 @@ interface InsightFooterProps {
 }
 
 export function InsightFooter({ tasks, onClose }: InsightFooterProps) {
-  const insights = useMemo(() => {
-    const completed = tasks.filter(t => t.status === 'COMPLETED');
-    const inProgress = tasks.filter(t => t.status === 'IN_PROGRESS');
-    const blocked = tasks.filter(t => t.status === 'BLOCKED');
-
-    const avgCycleTime = 4.2;
-
-    const weekStart = startOfWeek(new Date());
-    const completedThisWeek = completed.filter(t => 
-      parseISO(t.updatedAt) >= weekStart
-    ).length;
-
-    const columnCounts = new Map<string, { count: number; avgAge: number }>();
-    
-    ['TODO', 'IN_PROGRESS', 'IN_REVIEW', 'BLOCKED'].forEach(status => {
-      const columnTasks = tasks.filter(t => t.status === status);
-      const totalAge = columnTasks.reduce((sum, t) => 
-        sum + differenceInDays(new Date(), parseISO(t.updatedAt)), 0
-      );
-      const avgAge = columnTasks.length > 0 ? totalAge / columnTasks.length : 0;
-      
-      columnCounts.set(status, {
-        count: columnTasks.length,
-        avgAge
-      });
-    });
-
-    let bottleneckColumn = 'None';
-    let maxScore = 0;
-    columnCounts.forEach((stats, status) => {
-      const score = stats.count * stats.avgAge;
-      if (score > maxScore) {
-        maxScore = score;
-        bottleneckColumn = status;
-      }
-    });
-
-    const activeTasks = tasks.filter(t => 
-      t.status !== 'COMPLETED' && t.status !== 'CANCELLED'
-    );
-    const oldestTask = activeTasks.sort((a, b) => 
-      parseISO(a.updatedAt).getTime() - parseISO(b.updatedAt).getTime()
-    )[0];
-    
-    const oldestAge = oldestTask 
-      ? differenceInDays(new Date(), parseISO(oldestTask.updatedAt))
-      : 0;
-
-    return {
-      avgCycleTime,
-      completedThisWeek,
-      bottleneckColumn,
-      oldestTaskAge: oldestAge,
-      oldestTaskTitle: oldestTask?.title || 'N/A',
-      totalBlocked: blocked.length,
-      totalInProgress: inProgress.length,
-    };
-  }, [tasks]);
+  const controller = useKanbanInsightFooter({tasks})
 
   return (
     <div className="border-t border-border bg-card animate-in slide-in-from-bottom duration-300">
@@ -91,7 +34,7 @@ export function InsightFooter({ tasks, onClose }: InsightFooterProps) {
               <span className="text-xs sm:text-sm text-muted-foreground">Avg Cycle Time</span>
             </div>
             <div className="text-2xl sm:text-3xl font-bold text-foreground">
-              {insights.avgCycleTime.toFixed(1)}
+              {controller.insights.avgCycleTime.toFixed(1)}
               <span className="text-sm sm:text-base text-muted-foreground ml-1">days</span>
             </div>
           </div>
@@ -102,7 +45,7 @@ export function InsightFooter({ tasks, onClose }: InsightFooterProps) {
               <span className="text-xs sm:text-sm text-muted-foreground">Done This Week</span>
             </div>
             <div className="text-2xl sm:text-3xl font-bold text-foreground">
-              {insights.completedThisWeek}
+              {controller.insights.completedThisWeek}
               <span className="text-sm sm:text-base text-muted-foreground ml-1">tasks</span>
             </div>
           </div>
@@ -113,10 +56,10 @@ export function InsightFooter({ tasks, onClose }: InsightFooterProps) {
               <span className="text-xs sm:text-sm text-muted-foreground">Bottleneck</span>
             </div>
             <div className="text-base sm:text-lg font-bold text-foreground">
-              {insights.bottleneckColumn.replace('_', ' ')}
+              {controller.insights.bottleneckColumn.replace('_', ' ')}
             </div>
             <div className="text-xs text-muted-foreground mt-1">
-              {insights.totalInProgress} in progress
+              {controller.insights.totalInProgress} in progress
             </div>
           </div>
 
@@ -126,11 +69,11 @@ export function InsightFooter({ tasks, onClose }: InsightFooterProps) {
               <span className="text-xs sm:text-sm text-muted-foreground">Oldest Task</span>
             </div>
             <div className="text-2xl sm:text-3xl font-bold text-foreground">
-              {insights.oldestTaskAge}
+              {controller.insights.oldestTaskAge}
               <span className="text-sm sm:text-base text-muted-foreground ml-1">days</span>
             </div>
             <div className="text-xs text-muted-foreground mt-1 truncate">
-              {insights.oldestTaskTitle}
+              {controller.insights.oldestTaskTitle}
             </div>
           </div>
         </div>

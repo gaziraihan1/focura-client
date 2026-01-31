@@ -3,28 +3,10 @@
 import React from "react";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import { features } from "@/constant/home.constant";
 
 export default function FeatureShowcase() {
-  const features = [
-    {
-      title: "Organize your workspace effortlessly",
-      desc: "Create structured roadmaps, assign tasks, and visualize your team’s workload with clarity. Focura makes planning intuitive and powerful.",
-      image: "/showcase/workspace.png",
-      reverse: false,
-    },
-    {
-      title: "Collaborate in real time",
-      desc: "Keep everyone aligned with live updates, instant notifications, and seamless communication — all inside one unified workspace.",
-      image: "/showcase/collaboration.png",
-      reverse: true,
-    },
-    {
-      title: "Automate your routine work",
-      desc: "Save time by automating repetitive tasks. Set triggers, create workflows, and let Focura handle the busywork for your team.",
-      image: "/showcase/automation.png",
-      reverse: false,
-    },
-  ];
+  
 
   return (
     <section className="py-28 bg-background">

@@ -2,16 +2,10 @@
 
 import React from "react";
 import Image from "next/image";
+import { integrations } from "@/constant/home.constant";
 
 export default function IntegrationsSection() {
-  const integrations = [
-    { name: "Slack", logo: "/integrations/slack.png" },
-    { name: "Notion", logo: "/integrations/notion.png" },
-    { name: "Google Drive", logo: "/integrations/drive.png" },
-    { name: "Figma", logo: "/integrations/figma.png" },
-    { name: "Asana", logo: "/integrations/asana.png" },
-    { name: "Trello", logo: "/integrations/trello.png" },
-  ];
+  
 
   return (
     <section className="py-24 bg-background">
