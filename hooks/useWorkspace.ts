@@ -225,7 +225,7 @@ export function useInviteMember() {
     }: { 
       workspaceId: string; 
       email: string; 
-      role: 'ADMIN' | 'MEMBER' | 'GUEST' 
+      role:'OWNER' | 'ADMIN' | 'MEMBER' | 'GUEST' 
     }) => {
       const response = await api.post(
         `/api/workspaces/${workspaceId}/invite`,
@@ -280,7 +280,7 @@ export function useUpdateMemberRole() {
     }: { 
       workspaceId: string; 
       memberId: string; 
-      role: 'ADMIN' | 'MEMBER' | 'GUEST' 
+      role:'OWNER' | 'ADMIN' | 'MEMBER' | 'GUEST' 
     }) => {
       const response = await api.put(
         `/api/workspaces/${workspaceId}/members/${memberId}/role`,
