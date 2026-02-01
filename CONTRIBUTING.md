@@ -55,7 +55,7 @@ Please avoid:
 1. Fork the repository
 2. Clone your fork
 ```bash
-   git clone https://github.com/your-username/focura.git
+   git clone https://github.com/gaziraihan1/focura-client.git
 ```
 3. Install dependencies
 ```bash
