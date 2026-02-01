@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 
 interface WorkspaceHeaderProps {
   workspaceName: string;
-  workspaceSlug: string | undefined;
+  workspaceSlug: string ;
   workspaceLogo?: string;
   workspaceColor?: string;
   workspacePlan: string;

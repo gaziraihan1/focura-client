@@ -5,10 +5,41 @@ import * as argon2 from "argon2";
 import crypto from "crypto";
 import { sendVerificationEmail } from "@/lib/email";
 import { limiter } from "@/lib/limiter";
+import { Prisma } from "@prisma/client";
+
+// Define a type for the request body
+interface RegisterRequestBody {
+  name: string;
+  email: string;
+  password: string;
+}
+
+// Type guard to validate the request body
+function isValidRegisterBody(body: unknown): body is RegisterRequestBody {
+  return (
+    typeof body === "object" &&
+    body !== null &&
+    "name" in body &&
+    "email" in body &&
+    "password" in body &&
+    typeof (body as RegisterRequestBody).name === "string" &&
+    typeof (body as RegisterRequestBody).email === "string" &&
+    typeof (body as RegisterRequestBody).password === "string"
+  );
+}
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const body: unknown = await req.json();
+    
+    // Validate the body
+    if (!isValidRegisterBody(body)) {
+      return NextResponse.json(
+        { error: "Invalid request body" },
+        { status: 400 }
+      );
+    }
+
     const { name, email, password } = body;
 
     const ip =
@@ -99,14 +130,19 @@ export async function POST(req: Request) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error("Registration error:", error);
-    if (error.code === "P2002") {
-      return NextResponse.json(
-        { error: "User already exists" },
-        { status: 400 }
-      );
+    
+    // Type guard for Prisma errors
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        return NextResponse.json(
+          { error: "User already exists" },
+          { status: 400 }
+        );
+      }
     }
+    
     return NextResponse.json(
       { error: "Internal server error. Please try again." },
       { status: 500 }

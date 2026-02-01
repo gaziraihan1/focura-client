@@ -42,7 +42,7 @@ export default function WorkspaceDetailPage() {
     <div className="w-full max-w-7xl mx-auto space-y-4 sm:space-y-6 px-2 sm:px-4 lg:px-6 xl:px-0 pb-6">
       <WorkspaceHeader
         workspaceName={workspace.name}
-        workspaceSlug={workspace.workspaceSlug}
+        workspaceSlug={workspace.slug}
         workspaceLogo={workspace.logo}
         workspaceColor={workspace.color}
         workspacePlan={workspace.plan}
@@ -64,6 +64,7 @@ export default function WorkspaceDetailPage() {
       <WorkspaceDetailContent
         activeTab={activeTab}
         workspace={workspace}
+        workspaceSlug={slug}
         members={members}
         isAdmin={isAdmin}
         isOwner={isOwner}

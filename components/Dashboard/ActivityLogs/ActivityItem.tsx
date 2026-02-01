@@ -28,7 +28,7 @@ interface ActivityItemProps {
 
 export function ActivityItem({ 
   activity, 
-  showWorkspace = true,
+  // showWorkspace = true,
   compact = false,
 }: ActivityItemProps) {
   const getActivityIcon = () => {

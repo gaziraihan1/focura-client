@@ -35,7 +35,7 @@ interface ProjectCardProps {
     };
     members?: ProjectMember[];
   };
-  workspaceSlug: string | undefined;
+  workspaceSlug: string ;
   index: number;
 }
 

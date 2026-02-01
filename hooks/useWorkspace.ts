@@ -148,7 +148,7 @@ export function useCreateWorkspace() {
     onSuccess: (workspace) => {
       queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() });
       
-      const slug = workspace?.workspaceSlug ?? workspace?.slug;
+      const slug = workspace?.slug;
       if (slug) {
         router.push(`/dashboard/workspaces/${slug}`);
       }
@@ -168,7 +168,7 @@ export function useUpdateWorkspace() {
       return response.data as Workspace;
     },
     onSuccess: (workspace) => {
-      const slug = workspace.workspaceSlug ?? workspace.slug;
+      const slug =  workspace.slug;
       if (slug) {
         queryClient.setQueryData(workspaceKeys.detail(slug), workspace);
       }
@@ -333,7 +333,7 @@ export function useAcceptInvitation() {
     },
     onSuccess: (workspace) => {
       queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() });
-      const slug = workspace.workspaceSlug ?? workspace.slug;
+      const slug =  workspace.slug;
       if (slug) {
         router.push(`/dashboard/${slug}`);
       }

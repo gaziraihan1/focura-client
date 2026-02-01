@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import { useWorkspace, useWorkspaceRole } from "@/hooks/useWorkspace";
-import { CreateProjectDto, useCreateProject } from "@/hooks/useProjects";
+import { CreateProjectDto, ProjectDetails, useCreateProject } from "@/hooks/useProjects";
 import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -318,6 +318,7 @@ export function useWorkspaceProjectsPage({
     isLoading: projectsLoading,
     isError: projectsError,
   } = useProjects(workspace?.id);
+  console.log(projectsData)
 
   const { canCreateProjects } = useWorkspaceRole(workspace?.id);
 
@@ -327,7 +328,7 @@ export function useWorkspaceProjectsPage({
   const projects = useMemo(() => {
     if (!projectsData) return [];
     if (Array.isArray(projectsData)) return projectsData;
-    return (projectsData as { data?: unknown[] }).data || [];
+    return (projectsData as { data?: ProjectDetails[] }).data || [];
   }, [projectsData]);
 
   // Filter projects by search query

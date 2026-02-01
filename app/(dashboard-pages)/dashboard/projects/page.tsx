@@ -31,6 +31,7 @@ export default function ProjectsPage() {
     handleBrowseWorkspaces,
     handleRetry,
   } = useProjectsPage();
+  console.log(filteredProjects)
 
   if (isLoading) {
     return <ProjectsLoadingState />;

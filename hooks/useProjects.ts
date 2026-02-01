@@ -149,7 +149,7 @@ export const useProjects = (workspaceId?: string) => {
     queryKey: projectKeys.list(workspaceId || ''),
     queryFn: async () => {
       const res = await api.get(`/api/projects/workspace/${workspaceId}`);
-      return res.data as any[];
+      return res.data as ProjectDetails[];
     },
     enabled: !!workspaceId,
   });

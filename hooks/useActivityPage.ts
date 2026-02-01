@@ -5,10 +5,11 @@ import {
   useClearActivities,
   activityKeys,
 } from "@/hooks/useActivity";
+import { ActivityAction, EntityType } from "@/types/activityFilter.types";
 
 export interface ActivityFilterValues {
-  entityType?: string;
-  action?: string;
+  entityType?: EntityType;
+  action?: ActivityAction;
   startDate?: string;
   endDate?: string;
 }

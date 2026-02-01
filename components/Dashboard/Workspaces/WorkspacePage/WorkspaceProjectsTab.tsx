@@ -5,7 +5,7 @@ import { ProjectCard } from "@/components/Dashboard/Workspaces/WorkspacePage/Pro
 
 interface WorkspaceProjectsTabProps {
   workspaceId: string;
-  workspaceSlug: string | undefined;
+  workspaceSlug: string ;
   canCreateProjects: boolean;
 }
 
