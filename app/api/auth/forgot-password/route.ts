@@ -29,19 +29,19 @@ export async function POST(req: Request) {
       where: { email },
     });
 
-    const resetToken = crypto.randomBytes(32).toString("hex");
+    const token = crypto.randomBytes(32).toString("hex");
     const expires = new Date();
     expires.setHours(expires.getHours() + 1); 
 
     await prisma.passwordResetToken.create({
       data: {
         email,
-        token: resetToken,
+        token,
         expires,
       },
     });
 
-    await sendPasswordResetEmail(email, resetToken);
+    await sendPasswordResetEmail(email, token);
 
     return NextResponse.json({
       success: true,

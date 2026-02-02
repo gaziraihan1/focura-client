@@ -89,6 +89,17 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  events: {
+  async linkAccount({ user, account }) {
+    // This fires AFTER the account is linked, so we know it's OAuth
+    if (account.provider === "google") {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { emailVerified: new Date() },
+      });
+    }
+  },
+},
 
   session: {
     strategy: "jwt",

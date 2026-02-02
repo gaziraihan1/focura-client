@@ -318,7 +318,6 @@ export function useWorkspaceProjectsPage({
     isLoading: projectsLoading,
     isError: projectsError,
   } = useProjects(workspace?.id);
-  console.log(projectsData)
 
   const { canCreateProjects } = useWorkspaceRole(workspace?.id);
 
@@ -355,5 +354,6 @@ export function useWorkspaceProjectsPage({
     hasError,
     workspaceSlug,
     currentUserId: session?.user?.id,
+    projectsData
   };
 }

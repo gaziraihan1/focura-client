@@ -68,7 +68,11 @@ export interface ProjectDetails {
     };
   };
   isAdmin: boolean;
-  workspaceId: string
+  workspaceId: string;
+  _count?: {
+    tasks: number;
+    members: number;
+  }
 }
 
 export interface CreateProjectDto {

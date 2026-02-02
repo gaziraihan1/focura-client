@@ -25,7 +25,7 @@ export async function sendVerificationEmail(email: string, token: string) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Verify Your Email</title>
       </head>
-      <body style="margin: 0; padding: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+      <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
         <table width="100%" cellpadding="0" cellspacing="0" style="min-height: 100vh; padding: 40px 20px;">
           <tr>
             <td align="center">
@@ -131,7 +131,7 @@ export async function sendPasswordResetEmail(email: string, token: string) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Reset Your Password</title>
       </head>
-      <body style="margin: 0; padding: 0; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+      <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
         <table width="100%" cellpadding="0" cellspacing="0" style="min-height: 100vh; padding: 40px 20px;">
           <tr>
             <td align="center">
