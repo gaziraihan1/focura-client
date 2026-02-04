@@ -1,4 +1,6 @@
-import { motion } from "framer-motion";
+'use client';
+
+import React from 'react';
 import { 
   User, 
   CheckCircle2, 
@@ -7,7 +9,8 @@ import {
   ListTodo, 
   TrendingUp,
   Users
-} from "lucide-react";
+} from 'lucide-react';
+import StatCard from '@/components/Shared/StatCard';
 
 interface TaskStats {
   personal: number;
@@ -23,142 +26,135 @@ interface TaskStats {
 
 interface TaskStatsCardsProps {
   stats: TaskStats;
-  activeTab?: "all" | "personal" | "assigned";
+  activeTab?: 'all' | 'personal' | 'assigned';
 }
 
-export function TaskStatsCards({ stats, activeTab = "all" }: TaskStatsCardsProps) {
-  const getStatCards = () => {
+interface CardDef {
+  label: string;
+  value: number;
+  icon: React.ReactNode;
+  accentBg: string;
+  accentText: string;
+}
+
+export function TaskStatsCards({ stats, activeTab = 'all' }: TaskStatsCardsProps) {
+  const getStatCards = (): CardDef[] => {
     switch (activeTab) {
-      case "personal":
+      case 'personal':
         return [
           {
-            label: "Personal Tasks",
+            label: 'Personal Tasks',
             value: stats.personal,
-            icon: User,
-            color: "blue",
-            bgClass: "bg-blue-500/10",
-            iconClass: "text-blue-500",
+            icon: <User className="w-5 h-5 text-blue-600 dark:text-blue-400" strokeWidth={2} />,
+            accentBg: 'bg-blue-50 dark:bg-blue-950',
+            accentText: 'text-blue-600 dark:text-blue-400',
           },
           {
-            label: "In Progress",
+            label: 'In Progress',
             value: stats.inProgress ?? 0,
-            icon: TrendingUp,
-            color: "yellow",
-            bgClass: "bg-yellow-500/10",
-            iconClass: "text-yellow-500",
+            icon: <TrendingUp className="w-5 h-5 text-yellow-600 dark:text-yellow-400" strokeWidth={2} />,
+            accentBg: 'bg-yellow-50 dark:bg-yellow-950',
+            accentText: 'text-yellow-600 dark:text-yellow-400',
           },
           {
-            label: "Completed",
+            label: 'Completed',
             value: stats.completed ?? 0,
-            icon: CheckCircle2,
-            color: "green",
-            bgClass: "bg-green-500/10",
-            iconClass: "text-green-500",
+            icon: <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" strokeWidth={2} />,
+            accentBg: 'bg-green-50 dark:bg-green-950',
+            accentText: 'text-green-600 dark:text-green-400',
           },
           {
-            label: "Overdue",
+            label: 'Overdue',
             value: stats.overdue,
-            icon: AlertCircle,
-            color: "red",
-            bgClass: "bg-red-500/10",
-            iconClass: "text-red-500",
+            icon: <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" strokeWidth={2} />,
+            accentBg: 'bg-red-50 dark:bg-red-950',
+            accentText: 'text-red-600 dark:text-red-400',
           },
         ];
 
-      case "assigned":
+      case 'assigned':
         return [
           {
-            label: "Assigned to Me",
+            label: 'Assigned to Me',
             value: stats.assigned,
-            icon: Users,
-            color: "purple",
-            bgClass: "bg-purple-500/10",
-            iconClass: "text-purple-500",
+            icon: <Users className="w-5 h-5 text-purple-600 dark:text-purple-400" strokeWidth={2} />,
+            accentBg: 'bg-purple-50 dark:bg-purple-950',
+            accentText: 'text-purple-600 dark:text-purple-400',
           },
           {
-            label: "In Progress",
+            label: 'In Progress',
             value: stats.inProgress ?? 0,
-            icon: TrendingUp,
-            color: "yellow",
-            bgClass: "bg-yellow-500/10",
-            iconClass: "text-yellow-500",
+            icon: <TrendingUp className="w-5 h-5 text-yellow-600 dark:text-yellow-400" strokeWidth={2} />,
+            accentBg: 'bg-yellow-50 dark:bg-yellow-950',
+            accentText: 'text-yellow-600 dark:text-yellow-400',
           },
           {
-            label: "Completed",
+            label: 'Completed',
             value: stats.completed ?? 0,
-            icon: CheckCircle2,
-            color: "green",
-            bgClass: "bg-green-500/10",
-            iconClass: "text-green-500",
+            icon: <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" strokeWidth={2} />,
+            accentBg: 'bg-green-50 dark:bg-green-950',
+            accentText: 'text-green-600 dark:text-green-400',
           },
           {
-            label: "Overdue",
+            label: 'Overdue',
             value: stats.overdue,
-            icon: AlertCircle,
-            color: "red",
-            bgClass: "bg-red-500/10",
-            iconClass: "text-red-500",
+            icon: <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" strokeWidth={2} />,
+            accentBg: 'bg-red-50 dark:bg-red-950',
+            accentText: 'text-red-600 dark:text-red-400',
           },
         ];
 
-      case "all":
+      case 'all':
       default:
         return [
           {
-            label: "Total Tasks",
+            label: 'Total Tasks',
             value: stats.totalTasks ?? 0,
-            icon: ListTodo,
-            color: "indigo",
-            bgClass: "bg-indigo-500/10",
-            iconClass: "text-indigo-500",
+            icon: <ListTodo className="w-5 h-5 text-indigo-600 dark:text-indigo-400" strokeWidth={2} />,
+            accentBg: 'bg-indigo-50 dark:bg-indigo-950',
+            accentText: 'text-indigo-600 dark:text-indigo-400',
           },
           {
-            label: "Personal",
+            label: 'Personal',
             value: stats.personal,
-            icon: User,
-            color: "blue",
-            bgClass: "bg-blue-500/10",
-            iconClass: "text-blue-500",
+            icon: <User className="w-5 h-5 text-blue-600 dark:text-blue-400" strokeWidth={2} />,
+            accentBg: 'bg-blue-50 dark:bg-blue-950',
+            accentText: 'text-blue-600 dark:text-blue-400',
           },
           {
-            label: "Assigned",
+            label: 'Assigned',
             value: stats.assigned,
-            icon: Users,
-            color: "purple",
-            bgClass: "bg-purple-500/10",
-            iconClass: "text-purple-500",
+            icon: <Users className="w-5 h-5 text-purple-600 dark:text-purple-400" strokeWidth={2} />,
+            accentBg: 'bg-purple-50 dark:bg-purple-950',
+            accentText: 'text-purple-600 dark:text-purple-400',
           },
           {
-            label: "Due Today",
+            label: 'Due Today',
             value: stats.dueToday,
-            icon: Clock,
-            color: "orange",
-            bgClass: "bg-orange-500/10",
-            iconClass: "text-orange-500",
+            icon: <Clock className="w-5 h-5 text-orange-600 dark:text-orange-400" strokeWidth={2} />,
+            accentBg: 'bg-orange-50 dark:bg-orange-950',
+            accentText: 'text-orange-600 dark:text-orange-400',
           },
           {
-            label: "Overdue",
+            label: 'Overdue',
             value: stats.overdue,
-            icon: AlertCircle,
-            color: "red",
-            bgClass: "bg-red-500/10",
-            iconClass: "text-red-500",
+            icon: <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" strokeWidth={2} />,
+            accentBg: 'bg-red-50 dark:bg-red-950',
+            accentText: 'text-red-600 dark:text-red-400',
           },
           {
-            label: "In Progress",
+            label: 'In Progress',
             value: stats.inProgress ?? 0,
-            icon: TrendingUp,
-            color: "yellow",
-            bgClass: "bg-yellow-500/10",
-            iconClass: "text-yellow-500",
+            icon: <TrendingUp className="w-5 h-5 text-yellow-600 dark:text-yellow-400" strokeWidth={2} />,
+            accentBg: 'bg-yellow-50 dark:bg-yellow-950',
+            accentText: 'text-yellow-600 dark:text-yellow-400',
           },
           {
-            label: "Completed",
+            label: 'Completed',
             value: stats.completed ?? 0,
-            icon: CheckCircle2,
-            color: "green",
-            bgClass: "bg-green-500/10",
-            iconClass: "text-green-500",
+            icon: <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" strokeWidth={2} />,
+            accentBg: 'bg-green-50 dark:bg-green-950',
+            accentText: 'text-green-600 dark:text-green-400',
           },
         ];
     }
@@ -168,28 +164,17 @@ export function TaskStatsCards({ stats, activeTab = "all" }: TaskStatsCardsProps
 
   return (
     <div className={`grid grid-cols-1 sm:grid-cols-2 ${
-      activeTab === "all" ? "lg:grid-cols-4 xl:grid-cols-7" : "lg:grid-cols-4"
+      activeTab === 'all' ? 'lg:grid-cols-4 xl:grid-cols-7' : 'lg:grid-cols-4'
     } gap-4`}>
-      {statCards.map((stat, index) => (
-        <motion.div
-          key={stat.label}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.05 }}
-          className="p-4 rounded-xl bg-card border border-border hover:shadow-lg transition-shadow"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">{stat.label}</p>
-              <p className="text-2xl font-bold text-foreground mt-1">
-                {stat.value}
-              </p>
-            </div>
-            <div className={`p-3 rounded-lg ${stat.bgClass}`}>
-              <stat.icon size={20} className={stat.iconClass} />
-            </div>
-          </div>
-        </motion.div>
+      {statCards.map((card) => (
+        <StatCard
+          key={card.label}
+          label={card.label}
+          value={card.value}
+          icon={card.icon}
+          accentBg={card.accentBg}
+          accentText={card.accentText}
+        />
       ))}
     </div>
   );

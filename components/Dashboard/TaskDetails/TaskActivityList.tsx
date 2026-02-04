@@ -39,6 +39,7 @@ interface TaskActivityListProps {
 }
 
 export function TaskActivityList({ activities }: TaskActivityListProps) {
+  console.log(activities)
   const getActivityIcon = (action: string) => {
     const iconClass = "h-4 w-4";
     
@@ -86,13 +87,13 @@ export function TaskActivityList({ activities }: TaskActivityListProps) {
     
     switch (activity.action) {
       case "CREATED":
-        return "created this task";
+        return "created this";
       case "UPDATED":
         return activity.metadata?.changes 
           ? `updated ${Object.keys(activity.metadata.changes).join(", ")}`
-          : "updated this task";
+          : "updated this";
       case "COMPLETED":
-        return "completed this task";
+        return "completed this";
       case "STATUS_CHANGED":
         return activity.metadata?.newStatus
           ? `changed status to ${activity.metadata.newStatus}`
@@ -197,7 +198,7 @@ export function TaskActivityList({ activities }: TaskActivityListProps) {
                           </span>
                           {" "}
                           <span className="text-gray-600 dark:text-gray-400">
-                            {getActivityDescription(activity)}
+                            {getActivityDescription(activity)} {activity.entityType.toLowerCase()}
                           </span>
                         </p>
                         

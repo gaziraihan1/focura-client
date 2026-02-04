@@ -47,7 +47,6 @@ export function WorkspaceDetailContent({
   canCreateProjects,
   onInviteClick,
 }: WorkspaceDetailContentProps) {
-  console.log(workspace)
   return (
     <div className="min-h-96">
       {activeTab === "overview" && (

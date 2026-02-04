@@ -54,7 +54,6 @@ export function useAuthForm({ mode }: UseAuthFormProps) {
         }
 
         if (result?.ok) {
-          console.log("✅ Login successful");
           router.push("/dashboard");
         }
       } else {

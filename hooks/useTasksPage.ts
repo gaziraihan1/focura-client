@@ -116,7 +116,7 @@ export function useWorkspaceTasksPage({
 
   const { data: workspace } = useWorkspace(workspaceSlug);
   const { data: projects = [] } = useProjects(workspace?.id);
-  const { data: labels = [] } = useLabels(workspace?.id);
+  const { data: labels = [] } = useLabels();
   const { data: members = [] } = useTeamMembers(workspace?.id);
 
   const {

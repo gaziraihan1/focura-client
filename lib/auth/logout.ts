@@ -7,7 +7,6 @@ export async function logout() {
       method: 'POST',
       credentials: 'include',
     });
-    console.log('✅ Backend cookie cleared');
   } catch (error) {
     console.error('⚠️ Failed to clear backend cookie:', error);
   }

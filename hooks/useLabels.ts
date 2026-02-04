@@ -1,9 +1,10 @@
-import { api, axiosInstance } from '@/lib/axios';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+'use client';
 
-// ============================================
-// TYPES
-// ============================================
+import { useParams } from 'next/navigation';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { api } from '@/lib/axios';
+import { useWorkspace } from '@/hooks/useWorkspace';
+
 
 export interface Label {
   id: string;
@@ -52,9 +53,6 @@ export interface LabelWithTasks extends Label {
   }[];
 }
 
-// ============================================
-// QUERY KEYS
-// ============================================
 
 export const labelKeys = {
   all: ['labels'] as const,
@@ -65,14 +63,14 @@ export const labelKeys = {
   popular: (workspaceId?: string) => [...labelKeys.all, 'popular', workspaceId] as const,
 };
 
-// ============================================
-// QUERIES
-// ============================================
 
-/**
- * Get all labels for workspace or user
- */
-export function useLabels(workspaceId?: string) {
+export function useLabels() {
+  const params = useParams<{ workspaceSlug: string }>();
+  const workspaceSlug = params?.workspaceSlug;
+
+  const { data: workspace } = useWorkspace(workspaceSlug || '');
+  const workspaceId = workspace?.id;
+
   return useQuery({
     queryKey: labelKeys.list({ workspaceId }),
     queryFn: async () => {
@@ -81,40 +79,34 @@ export function useLabels(workspaceId?: string) {
         if (workspaceId) {
           params.append('workspaceId', workspaceId);
         }
-        
+
         const endpoint = `/api/labels${params.toString() ? `?${params.toString()}` : ''}`;
         
-        // Using axiosInstance directly to get raw response
-        const response = await axiosInstance.get(endpoint);
+        const response = await api.get<Label[]>(endpoint);
         
-        console.log('📥 Labels response:', response.data);
-        
-        // Backend returns array directly, not wrapped in ApiResponse
-        const labels = response.data;
-        
+        const labels = response?.data;
+
         if (!labels) {
           console.warn('No data in labels response');
           return [];
         }
-        
+
         if (!Array.isArray(labels)) {
           console.warn('Labels is not an array:', labels);
           return [];
         }
-        
+
         return labels;
       } catch (error) {
         console.error('Error fetching labels:', error);
         return [];
       }
     },
+    enabled: !!workspaceId, // don't fire until workspace is resolved
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
-/**
- * Get single label by ID with tasks
- */
 export function useLabel(id: string) {
   return useQuery({
     queryKey: labelKeys.detail(id),
@@ -127,47 +119,54 @@ export function useLabel(id: string) {
   });
 }
 
-/**
- * Get most used labels
- */
-export function usePopularLabels(workspaceId?: string, limit: number = 10) {
+export function usePopularLabels(limit: number = 10) {
+  const params = useParams<{ workspaceSlug: string }>();
+  const workspaceSlug = params?.workspaceSlug;
+
+  const { data: workspace } = useWorkspace(workspaceSlug || '');
+  const workspaceId = workspace?.id;
+
   return useQuery({
     queryKey: labelKeys.popular(workspaceId),
     queryFn: async () => {
       const params = new URLSearchParams();
       if (workspaceId) params.append('workspaceId', workspaceId);
       params.append('limit', limit.toString());
-      
+
       const response = await api.get<Label[]>(`/api/labels/popular?${params.toString()}`);
       return response.data || [];
     },
+    enabled: !!workspaceId,
     staleTime: 15 * 60 * 1000, // 15 minutes
   });
 }
 
-// ============================================
-// MUTATIONS
-// ============================================
-
-/**
- * Create a new label
- */
 export function useCreateLabel() {
   const queryClient = useQueryClient();
+  const params = useParams<{ workspaceSlug: string }>();
+  const workspaceSlug = params?.workspaceSlug;
+  const { data: workspace } = useWorkspace(workspaceSlug || '');
+  const workspaceId = workspace?.id;
 
   return useMutation({
     mutationFn: async (data: CreateLabelDto) => {
-      const response = await api.post<Label>('/api/labels', data);
+      // If workspaceId isn't in the DTO, inject it from the current workspace
+      const payload = { ...data };
+      if (!payload.workspaceId && workspaceId) {
+        payload.workspaceId = workspaceId;
+      }
+      const response = await api.post<Label>('/api/labels', payload, {
+        showSuccessToast: true,
+        showErrorToast: true,
+      });
       return response.data;
     },
     onSuccess: (data, variables) => {
-      // Invalidate all label queries to refetch
       queryClient.invalidateQueries({ queryKey: labelKeys.all });
-      
-      // Also invalidate specific workspace labels
+
       if (data?.workspaceId || variables.workspaceId) {
-        queryClient.invalidateQueries({ 
-          queryKey: labelKeys.list({ workspaceId: data?.workspaceId || variables.workspaceId }) 
+        queryClient.invalidateQueries({
+          queryKey: labelKeys.list({ workspaceId: data?.workspaceId || variables.workspaceId }),
         });
       }
     },
@@ -177,24 +176,21 @@ export function useCreateLabel() {
   });
 }
 
-/**
- * Update a label
- */
 export function useUpdateLabel() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: UpdateLabelDto }) => {
-      const response = await api.patch<Label>(`/api/labels/${id}`, data);
+      const response = await api.patch<Label>(`/api/labels/${id}`, data, {
+        showSuccessToast: true,
+        showErrorToast: true,
+      });
       return response.data;
     },
     onSuccess: (data) => {
-      // Update cache for this specific label if data exists
       if (data) {
         queryClient.setQueryData(labelKeys.detail(data.id), data);
       }
-      
-      // Invalidate all label lists to refetch
       queryClient.invalidateQueries({ queryKey: labelKeys.all });
     },
     onError: (error) => {
@@ -203,22 +199,23 @@ export function useUpdateLabel() {
   });
 }
 
-/**
- * Delete a label
- */
 export function useDeleteLabel() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await api.delete<{ message: string; tasksAffected: number }>(`/api/labels/${id}`);
-      return { ...response.data, id }; // Include the ID in the response
+      const response = await api.delete<{ message: string; tasksAffected: number }>(
+        `/api/labels/${id}`,
+        {
+          showSuccessToast: true,
+          showErrorToast: true,
+        }
+      );
+      return { ...response.data, id };
     },
     onSuccess: (data, deletedId) => {
       queryClient.removeQueries({ queryKey: labelKeys.detail(deletedId) });
-      
       queryClient.invalidateQueries({ queryKey: labelKeys.all });
-      
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
     onError: (error) => {
@@ -227,9 +224,6 @@ export function useDeleteLabel() {
   });
 }
 
-/**
- * Add label to task
- */
 export function useAddLabelToTask() {
   const queryClient = useQueryClient();
 
@@ -239,19 +233,13 @@ export function useAddLabelToTask() {
       return response.data;
     },
     onSuccess: (_, { labelId, taskId }) => {
-      // Invalidate label detail (task count changed)
       queryClient.invalidateQueries({ queryKey: labelKeys.detail(labelId) });
-      
-      // Invalidate task (it now has this label)
       queryClient.invalidateQueries({ queryKey: ['tasks', taskId] });
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
 }
 
-/**
- * Remove label from task
- */
 export function useRemoveLabelFromTask() {
   const queryClient = useQueryClient();
 
@@ -261,25 +249,15 @@ export function useRemoveLabelFromTask() {
       return response.data;
     },
     onSuccess: (_, { labelId, taskId }) => {
-      // Invalidate label detail (task count changed)
       queryClient.invalidateQueries({ queryKey: labelKeys.detail(labelId) });
-      
-      // Invalidate task (label removed)
       queryClient.invalidateQueries({ queryKey: ['tasks', taskId] });
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
 }
 
-// ============================================
-// HELPER HOOKS
-// ============================================
-
-/**
- * Get labels as select options
- */
-export function useLabelOptions(workspaceId?: string) {
-  const { data: labels = [], isLoading } = useLabels(workspaceId);
+export function useLabelOptions() {
+  const { data: labels = [], isLoading } = useLabels();
 
   const options = labels.map((label) => ({
     value: label.id,
@@ -290,17 +268,12 @@ export function useLabelOptions(workspaceId?: string) {
   return { options, isLoading };
 }
 
-/**
- * Check if label name exists
- */
-export function useLabelNameExists(workspaceId?: string) {
-  const { data: labels = [] } = useLabels(workspaceId);
+export function useLabelNameExists() {
+  const { data: labels = [] } = useLabels();
 
   return (name: string, excludeId?: string) => {
     return labels.some(
-      (label) => 
-        label.name.toLowerCase() === name.toLowerCase() && 
-        label.id !== excludeId
+      (label) => label.name.toLowerCase() === name.toLowerCase() && label.id !== excludeId
     );
   };
 }

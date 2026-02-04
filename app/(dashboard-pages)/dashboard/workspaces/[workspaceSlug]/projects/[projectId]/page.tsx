@@ -24,7 +24,6 @@ export default function ProjectDetailsPage() {
 
   const { data: response, isLoading, error } = useProjectDetails(projectId);
   const project = response;
-  console.log(response)
   if (isLoading) {
     return (
       <LoadingState />

@@ -11,13 +11,13 @@ interface LabelPickerProps {
 }
 
 export function LabelPicker({
-  workspaceId,
+  // workspaceId,
   selectedLabelIds,
   onChange,
   maxLabels = 10,
 }: LabelPickerProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: allLabels = [], isLoading } = useLabels(workspaceId);
+  const { data: allLabels = [], isLoading } = useLabels();
 
   const selectedLabels = allLabels.filter((label) =>
     selectedLabelIds.includes(label.id)

@@ -20,7 +20,7 @@ export const useLabelPage = (workspaceId: string) => {
   const [deletingLabel, setDeletingLabel] = useState<Label | null>(null);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
-  const { data: labels = [], isLoading } = useLabels(workspaceId);
+  const { data: labels = [], isLoading } = useLabels();
   const { canManageWorkspace, isLoading: isRoleLoading } =
     useWorkspaceRole(workspaceId);
 
@@ -111,7 +111,7 @@ export function useLabelFormModal({
 
   const createMutation = useCreateLabel();
   const updateMutation = useUpdateLabel();
-  const checkNameExists = useLabelNameExists(workspaceId);
+  const checkNameExists = useLabelNameExists();
 
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
 

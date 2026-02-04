@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Clock, Calendar, User, Folder, Check, Lock } from "lucide-react";
 import { Task } from "@/types/task.types";
 import { getStatusColor, getPriorityColor } from "@/utils/task.utils";
+import { Avatar } from "@/components/Shared/Avatar";
 
 interface TaskSidebarProps {
   task: Task;
@@ -173,9 +174,7 @@ export const TaskSidebar = ({
                     key={assignee.user.id}
                     className="flex items-center gap-2"
                   >
-                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-medium">
-                      {assignee.user.name.charAt(0)}
-                    </div>
+                    <Avatar name={assignee.user.name} image={assignee.user.image} size="sm" />
                     <span className="text-sm text-foreground">
                       {assignee.user.name}
                     </span>

@@ -35,7 +35,7 @@ export default function LabelForm({ label, workspaceId, onSave, onCancel, isSavi
   const [name, setName] = useState(label?.name || '');
   const [color, setColor] = useState(label?.color || PRESET_COLORS[0]);
   const [description, setDescription] = useState(label?.description || '');
-  const checkNameExists = useLabelNameExists(workspaceId);
+  const checkNameExists = useLabelNameExists();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

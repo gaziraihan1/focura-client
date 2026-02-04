@@ -10,6 +10,7 @@ import {
   TrendingUp,
   Calendar,
 } from "lucide-react";
+import { Avatar } from "@/components/Shared/Avatar";
 
 interface TaskCardProps {
   task: any;
@@ -200,13 +201,7 @@ export function TaskCard({ task, index }: TaskCardProps) {
                 {task.assignees.length > 0 && (
                   <div className="flex -space-x-2">
                     {task.assignees.slice(0, 3).map((assignee: any) => (
-                      <div
-                        key={assignee.user.id}
-                        className="w-6 h-6 rounded-full bg-primary/20 border-2 border-card flex items-center justify-center text-xs font-medium"
-                        title={assignee.user.name}
-                      >
-                        {assignee.user.name.charAt(0)}
-                      </div>
+                      <Avatar key={assignee.user.id} name={assignee.user.name} image={assignee.user.image} size="sm" />
                     ))}
                     {task.assignees.length > 3 && (
                       <div className="w-6 h-6 rounded-full bg-muted border-2 border-card flex items-center justify-center text-xs font-medium">

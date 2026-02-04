@@ -102,7 +102,6 @@ export function useNotifications() {
 
   useEffect(() => {
     if (!session?.user) {
-      console.log("⚠️ No session, skipping SSE connection");
       return;
     }
 
@@ -122,7 +121,6 @@ export function useNotifications() {
     const eventSource = new EventSource(sseUrl);
 
     eventSource.onopen = () => {
-      console.log("✅ SSE connection opened");
     };
 
     eventSource.onmessage = (event) => {
@@ -130,11 +128,9 @@ export function useNotifications() {
         const notification = JSON.parse(event.data);
 
         if (notification.connected) {
-          console.log("✅ SSE connected successfully:", notification);
           return;
         }
 
-        console.log("📬 New notification received:", notification);
 
         queryClient.setQueryData(["notifications"], (old: any) => {
           if (!old) {
@@ -162,7 +158,6 @@ export function useNotifications() {
           queryKey: ["notifications", "unread-count"],
         });
 
-        console.log("📬 Notification added to cache:", notification.title);
       } catch (error) {
         console.error("❌ Error parsing SSE notification:", error);
       }
@@ -172,7 +167,6 @@ export function useNotifications() {
       console.error("❌ SSE connection error:", error);
       
       if (eventSource.readyState === 2) {
-        console.log("SSE connection closed, will retry automatically");
       }
       
     };
@@ -180,7 +174,6 @@ export function useNotifications() {
     eventSourceRef.current = eventSource;
 
     return () => {
-      console.log("🔴 Closing SSE connection");
       eventSourceRef.current?.close();
       eventSourceRef.current = null;
     };

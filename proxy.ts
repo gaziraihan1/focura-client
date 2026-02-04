@@ -6,7 +6,6 @@ export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
   
   if (process.env.NODE_ENV === 'development') {
-    console.log('🔍 [Proxy] Request:', path);
   }
   
   // Get NextAuth token
@@ -16,7 +15,6 @@ export async function proxy(request: NextRequest) {
   });
 
   if (process.env.NODE_ENV === 'development' && token) {
-    console.log('✅ [Proxy] Authenticated user:', token.email);
   }
 
   const isAuthPage = path.startsWith("/authentication");
@@ -27,13 +25,11 @@ export async function proxy(request: NextRequest) {
 
   // Redirect authenticated users away from auth pages
   if (isAuthPage && token) {
-    console.log('🔄 [Proxy] Redirecting authenticated user to dashboard');
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   // Redirect unauthenticated users to login
   if (isProtectedRoute && !token) {
-    console.log('🔄 [Proxy] Redirecting unauthenticated user to login');
     const loginUrl = new URL("/authentication/login", request.url);
     // Store the original URL to redirect back after login
     loginUrl.searchParams.set("callbackUrl", path);

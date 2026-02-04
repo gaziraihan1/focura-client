@@ -1,100 +1,71 @@
-import { TaskStats } from "@/hooks/useTask";
-import { motion } from "framer-motion";
+'use client';
+
+import React from 'react';
 import {
   ListFilter,
   Clock,
   CheckCircle2,
   Calendar,
   AlertCircle,
-} from "lucide-react";
-
-// interface TaskStats {
-//   totalTasks: number;
-//   inProgress: number;
-//   completed: number;
-//   dueToday: number;
-//   overdue: number;
-// }
+} from 'lucide-react';
+import StatCard from '@/components/Shared/StatCard';
+import { TaskStats } from '@/hooks/useTask';
 
 interface TaskStatsGridProps {
   stats: TaskStats;
 }
 
 export function TaskStatsGrid({ stats }: TaskStatsGridProps) {
-  const statCards = [
+  const cards = [
     {
-      label: "Total",
+      label: 'Total',
       value: stats.totalTasks || 0,
-      icon: ListFilter,
-      color: "blue",
+      icon: <ListFilter className="w-5 h-5 text-blue-600 dark:text-blue-400" strokeWidth={2} />,
+      accentBg: 'bg-blue-50 dark:bg-blue-950',
+      accentText: 'text-blue-600 dark:text-blue-400',
     },
     {
-      label: "In Progress",
+      label: 'In Progress',
       value: stats.inProgress || 0,
-      icon: Clock,
-      color: "purple",
+      icon: <Clock className="w-5 h-5 text-purple-600 dark:text-purple-400" strokeWidth={2} />,
+      accentBg: 'bg-purple-50 dark:bg-purple-950',
+      accentText: 'text-purple-600 dark:text-purple-400',
     },
     {
-      label: "Completed",
+      label: 'Completed',
       value: stats.completed || 0,
-      icon: CheckCircle2,
-      color: "green",
+      icon: <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" strokeWidth={2} />,
+      accentBg: 'bg-green-50 dark:bg-green-950',
+      accentText: 'text-green-600 dark:text-green-400',
     },
     {
-      label: "Due Today",
+      label: 'Due Today',
       value: stats.dueToday || 0,
-      icon: Calendar,
-      color: "orange",
+      icon: <Calendar className="w-5 h-5 text-orange-600 dark:text-orange-400" strokeWidth={2} />,
+      accentBg: 'bg-orange-50 dark:bg-orange-950',
+      accentText: 'text-orange-600 dark:text-orange-400',
     },
     {
-      label: "Overdue",
+      label: 'Overdue',
       value: stats.overdue || 0,
-      icon: AlertCircle,
-      color: "red",
+      icon: <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" strokeWidth={2} />,
+      accentBg: 'bg-red-50 dark:bg-red-950',
+      accentText: 'text-red-600 dark:text-red-400',
     },
   ];
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-      {statCards.map((stat, index) => (
+      {cards.map((card) => (
         <StatCard
-          key={stat.label}
-          label={stat.label}
-          value={stat.value}
-          icon={stat.icon}
-          color={stat.color}
-          delay={index * 0.05}
+          key={card.label}
+          label={card.label}
+          value={card.value}
+          icon={card.icon}
+          accentBg={card.accentBg}
+          accentText={card.accentText}
         />
       ))}
     </div>
-  );
-}
-
-interface StatCardProps {
-  label: string;
-  value: number;
-  icon: React.ElementType;
-  color: string;
-  delay: number;
-}
-
-function StatCard({ label, value, icon: Icon, color, delay }: StatCardProps) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay }}
-      className="p-4 rounded-xl bg-card border border-border"
-    >
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm text-muted-foreground">{label}</p>
-          <p className="text-2xl font-bold text-foreground mt-1">{value}</p>
-        </div>
-        <div className={`p-3 rounded-lg bg-${color}-500/10`}>
-          <Icon size={20} className={`text-${color}-500`} />
-        </div>
-      </div>
-    </motion.div>
   );
 }

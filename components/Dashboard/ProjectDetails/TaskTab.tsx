@@ -60,7 +60,6 @@ export default function TasksTab({ project, showCreateTask, setShowCreateTask }:
     IN_REVIEW: project.tasks.filter(t => t.status === 'IN_REVIEW'),
     COMPLETED: project.tasks.filter(t => t.status === 'COMPLETED'),
   };
-  console.log(project)
 
   return (
     <div className="space-y-6">
