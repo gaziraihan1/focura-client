@@ -3,14 +3,17 @@
 import { motion } from "framer-motion";
 import { Calendar, CheckCircle2, ChevronRight, Building2 } from "lucide-react";
 import { ProjectData } from "@/types/project.types";
+import { AccessDeniedModal } from "../Projects/WorkspaceProjects/AceessDeniedModal";
 
 interface ProjectListItemProps {
   project: ProjectData;
   index: number;
   onNavigate: () => void;
+  showModal: boolean;
+  onCloseModal: () => void;
 }
 
-export function ProjectListItem({ project, index, onNavigate }: ProjectListItemProps) {
+export function ProjectListItem({ project, index, onNavigate, showModal, onCloseModal }: ProjectListItemProps) {
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
       PLANNING: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
@@ -33,6 +36,7 @@ export function ProjectListItem({ project, index, onNavigate }: ProjectListItemP
   };
 
   return (
+    <> 
     <motion.div
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
@@ -111,5 +115,8 @@ export function ProjectListItem({ project, index, onNavigate }: ProjectListItemP
         <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all shrink-0" />
       </div>
     </motion.div>
+        {showModal && <AccessDeniedModal isOpen={showModal} onClose={onCloseModal} />}
+      
+    </>
   );
 }

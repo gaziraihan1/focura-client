@@ -4,10 +4,12 @@ import React, { useState, useMemo } from 'react';
 import { Search, FolderOpen } from 'lucide-react';
 import { ProjectCard }          from './ProjectCard';
 import { ProjectMembersPanel }  from './ProjectMembersPanel';
-import { EmptyState }           from './EmptyState';
-import { ProjectRoleOption }    from './RoleDropdown';
-import { ProjectSummary }       from '@/hooks/useTeamPage';
-import { ProjectDetails }       from '@/hooks/useProjects'; // adjust path
+import { ProjectSummary } from '@/hooks/useTeamPage';
+import { EmptyState } from './EmptyState';
+import { ProjectRoleOption } from './RoleDropdown';
+// import { EmptyState }           from '../Shared/EmptyState';
+// import { ProjectRoleOption }    from '../Shared/RoleDropdown';
+// import { ProjectSummary }       from '../hooks/useTeamPage';
 
 // ─── filter chip options ─────────────────────────────────────────────────────
 const STATUS_CHIPS: { label: string; value: string | null }[] = [
@@ -21,7 +23,6 @@ const STATUS_CHIPS: { label: string; value: string | null }[] = [
 
 interface ProjectsTabProps {
   projects: ProjectSummary[];
-  projectDetails: Record<string, ProjectDetails>;
   currentUserId: string | null;
   canManage: boolean;
   onProjectMemberRoleChange: (projectId: string, memberId: string, role: ProjectRoleOption) => void;
@@ -29,7 +30,6 @@ interface ProjectsTabProps {
 
 export function ProjectsTab({
   projects,
-  projectDetails,
   currentUserId,
   canManage,
   onProjectMemberRoleChange,
@@ -100,7 +100,6 @@ export function ProjectsTab({
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           {filtered.map((project) => {
-            const detail = projectDetails[project.id];
             const isExpanded = expandedId === project.id;
 
             return (
@@ -110,11 +109,10 @@ export function ProjectsTab({
                 isExpanded={isExpanded}
                 onToggle={() => setExpandedId(isExpanded ? null : project.id)}
               >
-                {/* members panel — only render when expanded and detail available */}
-                {detail && (
+                {/* members panel — only render when expanded */}
+                {isExpanded && (
                   <ProjectMembersPanel
                     projectId={project.id}
-                    members={detail.members || []}
                     currentUserId={currentUserId}
                     canManage={canManage}
                     onRoleChange={onProjectMemberRoleChange}

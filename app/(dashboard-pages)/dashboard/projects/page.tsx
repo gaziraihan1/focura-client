@@ -30,7 +30,11 @@ export default function ProjectsPage() {
     handleNewProject,
     handleBrowseWorkspaces,
     handleRetry,
+    handleCloseAccessDeniedModal,
+    showAccessDeniedModal,
+    projects
   } = useProjectsPage();
+  console.log(projects, showAccessDeniedModal)
 
   if (isLoading) {
     return <ProjectsLoadingState />;
@@ -81,6 +85,8 @@ export default function ProjectsPage() {
           hasSearchOrFilters={hasSearchOrFilters}
           onProjectClick={handleProjectClick}
           onBrowseWorkspaces={handleBrowseWorkspaces}
+          onCloseModal={handleCloseAccessDeniedModal}
+          showModal={showAccessDeniedModal}
         />
       </div>
     </div>

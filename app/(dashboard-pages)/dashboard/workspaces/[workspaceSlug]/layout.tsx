@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, usePathname } from "next/navigation";
-import { LoadingState } from "@/components/Dashboard/Projects/NewProject/LoadingState";
+import { LoadingState } from "@/components/Shared/LoadingState";
 import EmptyState from "@/components/Dashboard/Workspaces/EmptyState";
 import { useWorkspaceLayout } from "@/hooks/useWorkspaceLayout";
 import { WorkspaceSidebar } from "@/components/Dashboard/Workspaces/WorkspaceSidebar";

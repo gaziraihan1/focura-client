@@ -51,6 +51,7 @@ export interface ProjectDetails {
   workspace?: {
     id: string;
     name: string;
+    slug: string
     ownerId: string;
   };
   members: ProjectMember[];
@@ -69,7 +70,7 @@ export interface ProjectDetails {
   };
   isAdmin: boolean;
   workspaceId: string;
-  _count?: {
+  _count: {
     tasks: number;
     members: number;
   }

@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useProjects } from "@/hooks/useProjects";
 import { useAllUserProjects } from "@/hooks/useProjects";
-import { slugify } from "@/utils/slugify";
 import {
   ViewMode,
   ProjectFilters,
@@ -14,11 +13,14 @@ import {
   WorkspaceData,
 } from "@/types/project.types";
 
+// In useProjectsPage hook
 export function useProjectsPage() {
   const router = useRouter();
+  const { data: session } = useSession();
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  const [showAccessDeniedModal, setShowAccessDeniedModal] = useState(false);
   const [filters, setFilters] = useState<ProjectFilters>({
     status: "all",
     priority: "all",
@@ -27,17 +29,15 @@ export function useProjectsPage() {
 
   const { data: projects = [], isLoading, isError } = useAllUserProjects();
 
-  // Extract unique workspaces from projects
+  // Extract unique workspaces from projects - Use workspace.slug directly
   const workspaces = useMemo<WorkspaceData[]>(() => {
     const uniqueWorkspaces = new Map<string, WorkspaceData>();
     projects.forEach((project: ProjectData) => {
       if (project.workspace) {
-        const slug = project.workspace.slug || slugify(project.workspace.name);
-
         uniqueWorkspaces.set(project.workspace.id, {
           id: project.workspace.id,
           name: project.workspace.name,
-          slug: slug,
+          slug: project.workspace.slug,
         });
       }
     });
@@ -106,19 +106,46 @@ export function useProjectsPage() {
   const hasSearchOrFilters =
     searchQuery.trim() !== "" || activeFiltersCount > 0;
 
-  const handleProjectClick = (project: ProjectData) => {
-    if (project.workspace) {
-      const workspaceSlug =
-        project.workspace.slug ||
-        slugify(project.workspace.name) ||
-        project.workspace.id;
-      router.push(
-        `/dashboard/workspaces/${workspaceSlug}/projects/${project.id}`
-      );
-    } else {
-      router.push(`/dashboard/projects/${project.id}`);
+  // Check if user is a member of the project
+  const checkProjectAccess = (project: ProjectData): boolean => {
+    const currentUserId = session?.user?.id;
+    
+    if (!currentUserId) return false;
+    
+    // Check if user is workspace owner (they have access to all projects)
+    if (project.workspace?.ownerId === currentUserId) {
+      return true;
     }
+    
+    // Check if user is a member of the project
+    const isProjectMember = project.members?.some(
+      (member) => member.userId === currentUserId
+    );
+    
+    // Check if user is admin of the project (from isAdmin flag)
+    const isProjectAdmin = project.isAdmin;
+    
+    return isProjectMember || isProjectAdmin || false;
   };
+
+  const handleProjectClick = (project: ProjectData) => {
+  // Check if user has access to the project
+  const hasAccess = checkProjectAccess(project);
+  
+  if (!hasAccess) {
+    setShowAccessDeniedModal(true);
+    return;
+  }
+
+  if (project.workspace?.slug) {
+    router.push(
+      `/dashboard/workspaces/${project.workspace.slug}/projects/${project.id}`
+    );
+  } else {
+    // Fallback to projects without workspace
+    router.push(`/dashboard/projects/${project.id}`);
+  }
+};
 
   const handleNewProject = () => {
     router.push("/dashboard/workspaces");
@@ -130,6 +157,10 @@ export function useProjectsPage() {
 
   const handleRetry = () => {
     window.location.reload();
+  };
+
+  const handleCloseAccessDeniedModal = () => {
+    setShowAccessDeniedModal(false);
   };
 
   return {
@@ -149,10 +180,13 @@ export function useProjectsPage() {
     stats,
     activeFiltersCount,
     hasSearchOrFilters,
+    showAccessDeniedModal,
     handleProjectClick,
     handleNewProject,
     handleBrowseWorkspaces,
     handleRetry,
+    handleCloseAccessDeniedModal,
+    checkProjectAccess,
   };
 }
 
@@ -177,6 +211,7 @@ export function useWorkspaceNewProjectPage({
     canCreateProjects,
     isLoading: roleLoading,
     hasAccess,
+    canManageWorkspace
   } = useWorkspaceRole(workspace?.id);
 
   const [form, setForm] = useState<ProjectForm>({
@@ -215,6 +250,7 @@ export function useWorkspaceNewProjectPage({
     workspace,
     hasAccess,
     canCreateProjects,
+    canManageWorkspace,
     router,
     workspaceSlug,
   ]);
@@ -274,7 +310,6 @@ export function useWorkspaceNewProjectPage({
     value: ProjectForm[K]
   ) => {
     setForm((prev) => ({ ...prev, [field]: value }));
-    // Clear error when field changes
     if (errors[field]) {
       const newErrors = { ...errors };
       delete newErrors[field];
@@ -294,6 +329,7 @@ export function useWorkspaceNewProjectPage({
     handleSubmit,
     handleCancel,
     updateField,
+    canManageWorkspace
   };
 }
 
@@ -319,18 +355,16 @@ export function useWorkspaceProjectsPage({
     isError: projectsError,
   } = useProjects(workspace?.id);
 
-  const { canCreateProjects } = useWorkspaceRole(workspace?.id);
+  const { canCreateProjects, canManageWorkspace } = useWorkspaceRole(workspace?.id);
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Normalize projects data (handle different response formats)
   const projects = useMemo(() => {
     if (!projectsData) return [];
     if (Array.isArray(projectsData)) return projectsData;
     return (projectsData as { data?: ProjectDetails[] }).data || [];
   }, [projectsData]);
 
-  // Filter projects by search query
   const filteredProjects = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
     if (!query) return projects;
@@ -354,6 +388,7 @@ export function useWorkspaceProjectsPage({
     hasError,
     workspaceSlug,
     currentUserId: session?.user?.id,
-    projectsData
+    projectsData,
+    canManageWorkspace
   };
 }

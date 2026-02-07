@@ -1,3 +1,4 @@
+import { ProjectMember } from "@/hooks/useProjects";
 
 export type ViewMode = "grid" | "list";
 
@@ -19,10 +20,11 @@ export interface ProjectData {
   createdAt: string;
   updatedAt?: string;
   workspaceId?: string;
+  members: ProjectMember[]
   workspace?: {
     id: string;
     name: string;
-    slug?: string;
+    slug: string;
     ownerId: string;
   };
   _count?: {
@@ -38,5 +40,5 @@ export interface ProjectData {
 export interface WorkspaceData {
   id: string;
   name: string;
-  slug?: string;
+  slug: string;
 }

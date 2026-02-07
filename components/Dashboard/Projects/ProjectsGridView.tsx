@@ -5,12 +5,17 @@ import { ProjectData } from "@/types/project.types";
 interface ProjectsGridViewProps {
   projects: ProjectData[];
   onProjectClick: (project: ProjectData) => void;
+  onCloseModal: () => void;
+  showModal: boolean
 }
 
 export function ProjectsGridView({
   projects,
   onProjectClick,
+  showModal,
+  onCloseModal
 }: ProjectsGridViewProps) {
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -24,6 +29,8 @@ export function ProjectsGridView({
           project={project}
           index={index}
           onNavigate={() => onProjectClick(project)}
+          showModal={showModal}
+          onCloseModal={onCloseModal}
         />
       ))}
     </motion.div>

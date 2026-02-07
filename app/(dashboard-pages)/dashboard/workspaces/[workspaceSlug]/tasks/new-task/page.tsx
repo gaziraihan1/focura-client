@@ -10,7 +10,7 @@ import { TaskDetailsSection } from "@/components/Dashboard/WorkspaceNewTask/Task
 import { TeamLabelsSection } from "@/components/Dashboard/WorkspaceNewTask/TeamLabelsSection";
 import { FormActions } from "@/components/Dashboard/WorkspaceNewTask/FormActions";
 import { LabelManagerModal } from "@/components/Dashboard/WorkspaceNewTask/LabelManagerModal";
-import { LoadingState } from "@/components/Dashboard/Projects/NewProject/LoadingState";
+import { LoadingState } from "@/components/Shared/LoadingState";
 import { useWorkspaceNewTaskPage } from "@/hooks/useWorkspaceNewTaskPage";
 
 export default function WorkspaceNewTaskPage() {

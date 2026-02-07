@@ -1,10 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import {
-  AlertCircle,
-} from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { useProjectDetails } from '@/hooks/useProjects';
 import TasksTab from '@/components/Dashboard/ProjectDetails/TaskTab';
 import MembersTab from '@/components/Dashboard/ProjectDetails/MembersTab';
@@ -12,6 +10,8 @@ import LoadingState from '@/components/Dashboard/ProjectDetails/LoadingState';
 import ProjectDetailsHeader from '@/components/Dashboard/ProjectDetails/ProjectDetailsHeader';
 import ProjectStats from '@/components/Dashboard/ProjectDetails/ProjectStats';
 import AllStats from '@/components/Dashboard/ProjectDetails/AllStats';
+import { useUserProfile } from '@/hooks/useUser';
+import { AccessDeniedProject } from '@/components/Dashboard/ProjectDetails/AccessDeniedProject';
 
 export default function ProjectDetailsPage() {
   const params = useParams();
@@ -24,10 +24,19 @@ export default function ProjectDetailsPage() {
 
   const { data: response, isLoading, error } = useProjectDetails(projectId);
   const project = response;
-  if (isLoading) {
-    return (
-      <LoadingState />
+
+  const { userId } = useUserProfile();
+
+  const isMember = useMemo(() => {
+    if (!project?.members || !userId) return false;
+    
+    return project.members.some(m => 
+      m.userId === userId || m.user?.id === userId
     );
+  }, [project?.members, userId]);
+
+  if (isLoading) {
+    return <LoadingState />;
   }
 
   if (error || !project) {
@@ -48,6 +57,16 @@ export default function ProjectDetailsPage() {
     );
   }
 
+  // Check access
+  if (!isMember && !project.isAdmin) {
+    return (
+      <AccessDeniedProject
+        projectName={project.name}
+        workspaceName={project.workspace?.name}
+      />
+    );
+  }
+
   const completionRate =
     project.stats.totalTasks > 0
       ? Math.round((project.stats.completedTasks / project.stats.totalTasks) * 100)
@@ -64,7 +83,7 @@ export default function ProjectDetailsPage() {
           </div>
         )}
 
-       <AllStats completionRate={completionRate} project={project} />
+        <AllStats completionRate={completionRate} project={project} />
 
         <ProjectStats activeTab={activeTab} setActiveTab={setActiveTab} project={project} />
 

@@ -5,11 +5,15 @@ import { ProjectData } from "@/types/project.types";
 interface ProjectsListViewProps {
   projects: ProjectData[];
   onProjectClick: (project: ProjectData) => void;
+  showModal: boolean;
+  onCloseModal: () => void;
 }
 
 export function ProjectsListView({
   projects,
   onProjectClick,
+  showModal,
+  onCloseModal
 }: ProjectsListViewProps) {
   return (
     <motion.div
@@ -24,6 +28,8 @@ export function ProjectsListView({
           project={project}
           index={index}
           onNavigate={() => onProjectClick(project)}
+          showModal={showModal}
+          onCloseModal={onCloseModal}
         />
       ))}
     </motion.div>

@@ -22,5 +22,5 @@ export default function TaskDetailsPage() {
   if (!controller.task) return <TaskEmpty />;
   if (!controller.permissions.canView) return <TaskDetailsPermission />;
 
-  return <TaskDetailsView {...controller} task={controller.task} />;
+  return <TaskDetailsView {...controller} task={controller.task} id={id as string} />;
 }

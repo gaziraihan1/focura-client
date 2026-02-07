@@ -2,15 +2,14 @@
 
 import React from 'react';
 import { Users } from 'lucide-react';
-import { Avatar }      from '@/components/Shared/Avatar';
-import { RoleBadge }   from './RoleBadge';
-import { RoleDropdown, ProjectRoleOption } from './RoleDropdown';
-import { EmptyState }  from './EmptyState';
-import { ProjectMember } from '@/hooks/useProjects'; // adjust path
+import { ProjectRoleOption, RoleDropdown } from './RoleDropdown';
+import { useProjectDetails } from '@/hooks/useProjects';
+import { EmptyState } from './EmptyState';
+import { Avatar } from '@/components/Shared/Avatar';
+import { RoleBadge } from './RoleBadge';
 
 interface ProjectMembersPanelProps {
   projectId: string;
-  members: ProjectMember[];
   currentUserId: string | null;
   /** Owner / Admin of the workspace may manage project member roles */
   canManage: boolean;
@@ -19,11 +18,31 @@ interface ProjectMembersPanelProps {
 
 export function ProjectMembersPanel({
   projectId,
-  members,
   currentUserId,
   canManage,
   onRoleChange,
 }: ProjectMembersPanelProps) {
+  // Fetch the full project details (including members[]) when this panel is rendered
+  const { data: project, isLoading } = useProjectDetails(projectId);
+  const members = project?.members ?? [];
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="p-4 flex flex-col gap-2">
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+          Project Members
+        </p>
+        <div className="flex flex-col gap-1.5">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="h-12 rounded-lg bg-muted animate-pulse" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Empty state
   if (members.length === 0) {
     return (
       <div className="px-4">

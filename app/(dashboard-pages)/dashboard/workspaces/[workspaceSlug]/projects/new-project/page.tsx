@@ -1,7 +1,7 @@
 "use client";
 
 import { ErrorState } from "@/components/Dashboard/Projects/NewProject/ErrorState";
-import { LoadingState } from "@/components/Dashboard/Projects/NewProject/LoadingState";
+import { LoadingState } from "@/components/Shared/LoadingState";
 import { NewProjectPageHeader } from "@/components/Dashboard/Projects/NewProject/NewProjectPageHeader";
 import { ProjectBasicInfoSection } from "@/components/Dashboard/Projects/NewProject/ProjectBasicInfoSection";
 import { ProjectFormActions } from "@/components/Dashboard/Projects/NewProject/ProjectFormActions";

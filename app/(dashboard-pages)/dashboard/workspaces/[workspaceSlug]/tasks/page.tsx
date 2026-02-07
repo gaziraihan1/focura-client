@@ -5,7 +5,7 @@ import { TasksPageHeader } from "@/components/Dashboard/AllTasks/WorkspaceTasks/
 import { TaskStatsGrid } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskStatsGrid";
 import { TaskSearchAndFilters } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskSearchAndFilters";
 import { TasksContentArea } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TasksContentArea";
-import { LoadingState } from "@/components/Dashboard/Projects/NewProject/LoadingState";
+import { LoadingState } from "@/components/Shared/LoadingState";
 import { useWorkspaceTasksPage } from "@/hooks/useTasksPage";
 
 export default function WorkspaceTasksPage() {

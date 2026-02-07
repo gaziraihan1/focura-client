@@ -44,7 +44,7 @@ export default function LabelsPage() {
   return (
     <LabelManagementMain
       workspaceId={workspace.id} 
-      workspaceSlug={workspace.slug || workspace.workspaceSlug || workspaceSlug} 
+      workspaceSlug={workspace.slug || workspaceSlug} 
     />
   );
 }

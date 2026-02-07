@@ -11,7 +11,7 @@ export interface Workspace {
   name: string;
   slug: string;
   // Keep optional alias for older API responses if any
-  workspaceSlug?: string;
+  // workspaceSlug?: string;
   description?: string;
   logo?: string;
   color?: string;
@@ -119,16 +119,17 @@ export function useWorkspaces() {
   });
 }
 
-export function useWorkspace(workspaceSlug: string) {
+// In hooks/use-workspaces.ts
+export function useWorkspace(workspaceSlugOrId: string) {
   return useQuery({
-    queryKey: workspaceKeys.detail(workspaceSlug),
+    queryKey: workspaceKeys.detail(workspaceSlugOrId),
     queryFn: async () => {
-      const response = await api.get<Workspace>(`/api/workspaces/${workspaceSlug}`, {
+      const response = await api.get<Workspace>(`/api/workspaces/${workspaceSlugOrId}`, {
         showErrorToast: true,
       });
       return response.data;
     },
-    enabled: typeof workspaceSlug === "string" && workspaceSlug.length > 0,
+    enabled: typeof workspaceSlugOrId === "string" && workspaceSlugOrId.length > 0,
     staleTime: 3 * 60 * 1000, 
   });
 }

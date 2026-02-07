@@ -1,13 +1,14 @@
 "use client";
 
-import { LoadingState } from "@/components/Dashboard/Projects/NewProject/LoadingState";
 import { ProjectsEmptyState } from "@/components/Dashboard/Projects/WorkspaceProjects/ProjectsEmptyState";
 import { ProjectsSearchBar } from "@/components/Dashboard/Projects/WorkspaceProjects/ProjectsSearchBar";
 import { WorkspaceProjectCard } from "@/components/Dashboard/Projects/WorkspaceProjects/WorkspaceProjectCard";
 import { WorkspaceProjectsErrorState } from "@/components/Dashboard/Projects/WorkspaceProjects/WorkspaceProjectsErrorState";
 import { WorkspaceProjectsPageHeader } from "@/components/Dashboard/Projects/WorkspaceProjects/WorkspaceProjectsPageHeader";
+import { useProjects } from "@/hooks/useProjects";
 import { useWorkspaceProjectsPage } from "@/hooks/useProjectsPage";
 import { useParams } from "next/navigation";
+import { LoadingState } from "@/components/Shared/LoadingState";
 
 export default function WorkspaceProjectsPage() {
   const params = useParams();
@@ -15,7 +16,6 @@ export default function WorkspaceProjectsPage() {
 
   const {
     workspace,
-    projects,
     searchQuery,
     setSearchQuery,
     canCreateProjects,
@@ -24,7 +24,9 @@ export default function WorkspaceProjectsPage() {
     currentUserId,
   } = useWorkspaceProjectsPage({ workspaceSlug });
 
-  if (isLoading) {
+  const {data: projects, isLoading: projectLoading} = useProjects(workspace?.id)
+
+  if (isLoading || projectLoading) {
     return <LoadingState />;
   }
 
@@ -45,17 +47,17 @@ export default function WorkspaceProjectsPage() {
         onSearchChange={setSearchQuery}
       />
 
-      {projects.length === 0 ? (
+      {projects?.length === 0 ? (
         <ProjectsEmptyState
           hasSearchQuery={!!searchQuery}
           workspaceSlug={workspaceSlug}
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {projects.map((project) => (
+          {projects?.map((project) => (
             <WorkspaceProjectCard
               key={project.id}
-              project={project}
+              projectId={project.id}
               workspaceSlug={workspaceSlug}
               currentUserId={currentUserId}
             />

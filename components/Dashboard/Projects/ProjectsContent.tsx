@@ -9,6 +9,8 @@ interface ProjectsContentProps {
   hasSearchOrFilters: boolean;
   onProjectClick: (project: ProjectData) => void;
   onBrowseWorkspaces: () => void;
+  onCloseModal: () => void;
+  showModal: boolean;
 }
 
 export function ProjectsContent({
@@ -17,6 +19,8 @@ export function ProjectsContent({
   hasSearchOrFilters,
   onProjectClick,
   onBrowseWorkspaces,
+  showModal,
+  onCloseModal
 }: ProjectsContentProps) {
   if (projects.length === 0) {
     return (
@@ -29,11 +33,11 @@ export function ProjectsContent({
 
   if (viewMode === "grid") {
     return (
-      <ProjectsGridView projects={projects} onProjectClick={onProjectClick} />
+      <ProjectsGridView projects={projects} onProjectClick={onProjectClick} showModal={showModal} onCloseModal={onCloseModal} />
     );
   }
 
   return (
-    <ProjectsListView projects={projects} onProjectClick={onProjectClick} />
+    <ProjectsListView projects={projects} onProjectClick={onProjectClick} showModal={showModal} onCloseModal={onCloseModal} />
   );
 }

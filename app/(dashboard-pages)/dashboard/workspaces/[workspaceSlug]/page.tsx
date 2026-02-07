@@ -5,7 +5,7 @@ import { WorkspaceHeader } from "@/components/Dashboard/Workspaces/WorkspacePage
 import { WorkspaceStats } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceStats";
 import { WorkspaceTabNavigation } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceTabNavigation";
 import { InviteMemberModal } from "@/components/Dashboard/Workspaces/WorkspacePage/InviteMemberModal";
-import { LoadingState } from "@/components/Dashboard/Projects/NewProject/LoadingState";
+import { LoadingState } from "@/components/Shared/LoadingState";
 import { useWorkspaceDetailPage } from "@/hooks/useWorkspaceLayout";
 import { WorkspaceDetailErrorState } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceDetailErrorState";
 import { WorkspaceDetailContent } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceDetailsContent";
