@@ -1,18 +1,22 @@
 import type { NextConfig } from "next";
+import createMDX from '@next/mdx';
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  // next.config.js
+  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+  
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**", // ALLOWS ALL DOMAINS
+        hostname: "**",
       },
     ],
-  
-}
-
+  },
 };
 
-export default nextConfig;
+const withMDX = createMDX({
+  // Leave options empty or use only serializable options
+  options: {},
+});
+
+export default withMDX(nextConfig);

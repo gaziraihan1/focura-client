@@ -82,7 +82,7 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
       name: "Calendar",
       href: `/dashboard/workspaces/${slug}/calendar`,
       icon: Calendar,
-      match: (path: string) => path.includes(`/${slug}/calender`),
+      match: (path: string) => path.includes(`/${slug}/calendar`),
     },
     {
       name: "Analytics",
