@@ -34,7 +34,7 @@ export default function NavbarMain() {
   
 
   return (
-    <nav className="w-full border-b border-border/40 bg-background/60 backdrop-blur-md sticky top-0 z-50">
+    <nav className="w-full border-b border-border/40 bg-background/60 backdrop-blur-md sticky top-0 z-9999">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="text-xl font-semibold flex gap-1">
