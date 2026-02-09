@@ -8,19 +8,91 @@ import {
   AlertCircle,
   TrendingUp,
   Calendar,
+  Plus,
 } from "lucide-react";
 import { Task } from "@/hooks/useTask";
-import { formatTimeDuration, getPriorityColor, getStatusColor, getTimeStatusColor } from "@/utils/task.utils";
+import {
+  formatTimeDuration,
+  getPriorityColor,
+  getStatusColor,
+  getTimeStatusColor,
+} from "@/utils/task.utils";
 
-interface TaskCardProps {
-  task: Task & { timeTracking?: any };
-  workspaceSlug: string;
+interface TimeTracking {
+  hoursSinceCreation: number;
+  hoursUntilDue: number;
+  isDueToday: boolean;
+  isOverdue: boolean;
+  timeProgress: number;
 }
 
-export function TaskCard({ task, workspaceSlug }: TaskCardProps) {
+
+interface TaskCardProps {
+  task: Task & { timeTracking?: TimeTracking };
+  workspaceSlug: string;
+  onAddToPrimary?: (taskId: string) => void;
+  onAddToSecondary?: (taskId: string) => void;
+  isPrimaryDisabled?: boolean;
+  showAddButtons?: boolean;
+}
+
+export function TaskCard({
+  task,
+  workspaceSlug,
+  onAddToPrimary,
+  onAddToSecondary,
+  isPrimaryDisabled = false,
+  showAddButtons = false,
+}: TaskCardProps) {
+  const isCompleted = task.status === "COMPLETED";
+  const showButtons = showAddButtons && !isCompleted;
+
+  const handlePrimaryClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onAddToPrimary && !isPrimaryDisabled) {
+      onAddToPrimary(task.id);
+    }
+  };
+
+  const handleSecondaryClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onAddToSecondary) {
+      onAddToSecondary(task.id);
+    }
+  };
+
   return (
     <Link href={`/dashboard/workspaces/${workspaceSlug}/tasks/${task.id}`}>
-      <div className="p-4 rounded-xl bg-card border border-border hover:shadow-lg hover:border-primary/50 transition-all cursor-pointer group">
+      <div className="p-4 rounded-xl bg-card border border-border hover:shadow-lg hover:border-primary/50 transition-all cursor-pointer group relative">
+        {/* Add to Primary/Secondary Buttons */}
+        {showButtons && (
+          <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+            {/* Primary Button */}
+            <button
+              onClick={handlePrimaryClick}
+              disabled={isPrimaryDisabled}
+              className={`p-2 rounded-lg transition-all ${
+                isPrimaryDisabled
+                  ? "bg-muted text-muted-foreground cursor-not-allowed opacity-50"
+                  : "bg-purple-500 hover:bg-purple-600 text-white shadow-md hover:shadow-lg"
+              }`}
+              title={isPrimaryDisabled ? "Primary task already set" : "Add to Primary"}
+            >
+              <Plus size={16} />
+            </button>
+            {/* Secondary Button */}
+            <button
+              onClick={handleSecondaryClick}
+              className="p-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-white shadow-md hover:shadow-lg transition-all"
+              title="Add to Secondary"
+            >
+              <Plus size={16} />
+            </button>
+          </div>
+        )}
+
         <div className="flex items-start gap-4">
           {/* Status Icon */}
           <div className="shrink-0 mt-1">
@@ -144,17 +216,17 @@ export function TaskCard({ task, workspaceSlug }: TaskCardProps) {
               {/* Assignees */}
               {task.assignees.length > 0 && (
                 <div className="flex -space-x-2">
-                  {task.assignees.slice(0, 3).map((assignee: any) => (
+                  {task.assignees.slice(0, 3).map((assignee) => (
                     <div
                       key={assignee.user.id}
-                      className="w-6 h-6 rounded-full bg-primary/20 border-2 border-card flex items-center justify-center text-xs font-medium"
+                      className="w-6 h-6 rounded-full bg-primary/20 border-2 border-card flex items-center justify-center text-xs font-medium text-primary-foreground"
                       title={assignee.user.name}
                     >
                       {assignee.user.name.charAt(0)}
                     </div>
                   ))}
                   {task.assignees.length > 3 && (
-                    <div className="w-6 h-6 rounded-full bg-muted border-2 border-card flex items-center justify-center text-xs font-medium">
+                    <div className="w-6 h-6 rounded-full bg-muted border-2 border-card flex items-center justify-center text-xs font-medium text-muted-foreground">
                       +{task.assignees.length - 3}
                     </div>
                   )}

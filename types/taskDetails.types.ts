@@ -1,4 +1,5 @@
 import {
+  CreateTaskDto,
   useAddComment,
   useDeleteAttachment,
   useDeleteTask,
@@ -42,4 +43,28 @@ export interface TaskMutations {
   updateTask: ReturnType<typeof useUpdateTask>;
   deleteTask: ReturnType<typeof useDeleteTask>;
   updateStatus: ReturnType<typeof useUpdateTaskStatus>;
+}
+
+export interface TaskDetailsSectionProps {
+  status: CreateTaskDto["status"];
+  priority: "URGENT" | "HIGH" | "MEDIUM" | "LOW";
+  intent?: "EXECUTION" | "PLANNING" | "REVIEW" | "LEARNING" | "COMMUNICATION";
+  energyType?: "LOW" | "MEDIUM" | "HIGH";
+  focusRequired?: boolean;
+  focusLevel: number;
+  distractionCost: number;
+  startDate?: string;
+  dueDate?: string;
+  estimatedHours?: number | null;
+  errors: Record<string, string>;
+  onStatusChange: (status: CreateTaskDto["status"]) => void;
+  onPriorityChange: (priority: "URGENT" | "HIGH" | "MEDIUM" | "LOW") => void;
+  onIntentChange: (intent: "EXECUTION" | "PLANNING" | "REVIEW" | "LEARNING" | "COMMUNICATION") => void;
+  onEnergyTypeChange: (energyType: "LOW" | "MEDIUM" | "HIGH") => void;
+  onFocusRequiredChange: (focusRequired: boolean) => void;
+  onFocusLevelChange: (focusLevel: number) => void;
+  onDistractionCostChange: (distractionCost: number) => void;
+  onStartDateChange: (startDate: string) => void;
+  onDueDateChange: (dueDate: string) => void;
+  onEstimatedHoursChange: (estimatedHours: number | undefined) => void;
 }

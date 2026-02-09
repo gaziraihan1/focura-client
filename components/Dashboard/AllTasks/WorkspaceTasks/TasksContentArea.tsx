@@ -11,6 +11,9 @@ interface TasksContentAreaProps {
   activeFiltersCount: number;
   workspaceSlug: string;
   onCreateTask: () => void;
+  onAddToPrimary?: (taskId: string) => void;
+  onAddToSecondary?: (taskId: string) => void;
+  isPrimaryDisabled?: boolean;
 }
 
 export function TasksContentArea({
@@ -21,6 +24,9 @@ export function TasksContentArea({
   activeFiltersCount,
   workspaceSlug,
   onCreateTask,
+  onAddToPrimary,
+  onAddToSecondary,
+  isPrimaryDisabled = false,
 }: TasksContentAreaProps) {
   if (isLoading) {
     return (
@@ -34,10 +40,10 @@ export function TasksContentArea({
     return (
       <div className="text-center py-12 rounded-xl bg-card border border-border">
         <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-        <p className="text-muted-foreground">Failed to load tasks</p>
+        <p className="text-muted-foreground mb-4">Failed to load tasks</p>
         <button
           onClick={() => window.location.reload()}
-          className="mt-4 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
+          className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
         >
           Retry
         </button>
@@ -55,5 +61,14 @@ export function TasksContentArea({
     );
   }
 
-  return <TaskList tasks={tasks} workspaceSlug={workspaceSlug} />;
+  return (
+    <TaskList
+      tasks={tasks}
+      workspaceSlug={workspaceSlug}
+      onAddToPrimary={onAddToPrimary}
+      onAddToSecondary={onAddToSecondary}
+      isPrimaryDisabled={isPrimaryDisabled}
+      showAddButtons={true}
+    />
+  );
 }

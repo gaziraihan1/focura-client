@@ -19,6 +19,7 @@ export default function WorkspaceNewTaskPage() {
   const controller = useWorkspaceNewTaskPage({
     workspaceSlug,
   });
+  console.log(controller)
 
   if (controller.workspaceLoading) {
     return <LoadingState />;
@@ -73,57 +74,69 @@ export default function WorkspaceNewTaskPage() {
         />
 
         <TaskDetailsSection
-          {...controller.formData}
-          errors={controller.errors}
-          onStatusChange={(status) =>
-            controller.setFormData((p) => ({
-              ...p,
-              status,
-            }))
-          }
-          onPriorityChange={(priority) =>
-            controller.setFormData((p) => ({
-              ...p,
-              priority,
-            }))
-          }
-          onIntentChange={(intent) =>
-            controller.setFormData((p) => ({
-              ...p,
-              intent,
-            }))
-          }
-          onEnergyTypeChange={(energyType) =>
-            controller.setFormData((p) => ({
-              ...p,
-              energyType,
-            }))
-          }
-          onFocusRequiredChange={(focusRequired) =>
-            controller.setFormData((p) => ({
-              ...p,
-              focusRequired,
-            }))
-          }
-          onStartDateChange={(startDate) =>
-            controller.setFormData((p) => ({
-              ...p,
-              startDate,
-            }))
-          }
-          onDueDateChange={(dueDate) =>
-            controller.setFormData((p) => ({
-              ...p,
-              dueDate,
-            }))
-          }
-          onEstimatedHoursChange={(estimatedHours) =>
-            controller.setFormData((p) => ({
-              ...p,
-              estimatedHours,
-            }))
-          }
-        />
+  {...controller.formData}
+  errors={controller.errors}
+  onStatusChange={(status) =>
+    controller.setFormData((p) => ({
+      ...p,
+      status,
+    }))
+  }
+  onPriorityChange={(priority) =>
+    controller.setFormData((p) => ({
+      ...p,
+      priority,
+    }))
+  }
+  onIntentChange={(intent) =>
+    controller.setFormData((p) => ({
+      ...p,
+      intent,
+    }))
+  }
+  onEnergyTypeChange={(energyType) =>
+    controller.setFormData((p) => ({
+      ...p,
+      energyType,
+    }))
+  }
+  onFocusRequiredChange={(focusRequired) =>
+    controller.setFormData((p) => ({
+      ...p,
+      focusRequired,
+    }))
+  }
+  onFocusLevelChange={(focusLevel) =>
+    controller.setFormData((p) => ({
+      ...p,
+      focusLevel,
+    }))
+  }
+  onDistractionCostChange={(distractionCost) =>
+    controller.setFormData((p) => ({
+      ...p,
+      distractionCost,
+    }))
+  }
+  onStartDateChange={(startDate) =>
+    controller.setFormData((p) => ({
+      ...p,
+      startDate,
+    }))
+  }
+  onDueDateChange={(dueDate) =>
+    controller.setFormData((p) => ({
+      ...p,
+      dueDate,
+    }))
+  }
+  onEstimatedHoursChange={(estimatedHours) =>
+    controller.setFormData((p) => ({
+      ...p,
+      estimatedHours,
+    }))
+  }
+/>
 
         <TeamLabelsSection
           members={controller.members}

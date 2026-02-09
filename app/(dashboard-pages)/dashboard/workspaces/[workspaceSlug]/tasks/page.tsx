@@ -1,12 +1,15 @@
 "use client";
-
 import { useParams, useRouter } from "next/navigation";
 import { TasksPageHeader } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskPageHeader";
 import { TaskStatsGrid } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskStatsGrid";
 import { TaskSearchAndFilters } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskSearchAndFilters";
 import { TasksContentArea } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TasksContentArea";
 import { LoadingState } from "@/components/Shared/LoadingState";
+import { TaskTabs } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskTabs";
 import { useWorkspaceTasksPage } from "@/hooks/useTasksPage";
+import { useDailyTasks } from "@/hooks/useDailyTasks";
+import toast from "react-hot-toast";
+import { PrimaryTasksView } from "@/components/Dashboard/AllTasks/WorkspaceTasks/PrimaryTaskView";
 
 export default function WorkspaceTasksPage() {
   const params = useParams();
@@ -42,8 +45,42 @@ export default function WorkspaceTasksPage() {
     members,
   } = useWorkspaceTasksPage({ workspaceSlug });
 
+  const {
+    primaryTask,
+    secondaryTasks,
+    hasPrimaryTask,
+    isLoading: dailyTasksLoading,
+    addToPrimary,
+    addToSecondary,
+  } = useDailyTasks(workspaceSlug);
+
   const handleCreateTask = () => {
     router.push(`/dashboard/workspaces/${workspaceSlug}/tasks/new-task`);
+  };
+
+  const handleAddToPrimary = async (taskId: string) => {
+    if (hasPrimaryTask) {
+      toast.error("You already have a primary task set for today");
+      return;
+    }
+
+    const result = await addToPrimary(taskId);
+    
+    if (result.success) {
+      toast.success(result.message || "Task added to Primary");
+    } else {
+      toast.error(result.message || "Failed to add task to Primary");
+    }
+  };
+
+  const handleAddToSecondary = async (taskId: string) => {
+    const result = await addToSecondary(taskId);
+    
+    if (result.success) {
+      toast.success(result.message || "Task added to Secondary");
+    } else {
+      toast.error(result.message || "Failed to add task to Secondary");
+    }
   };
 
   if (!workspace) {
@@ -83,14 +120,34 @@ export default function WorkspaceTasksPage() {
         members={members}
       />
 
-      <TasksContentArea
-        tasks={tasks}
-        isLoading={isLoading}
-        isError={isError}
-        searchQuery={searchQuery}
-        activeFiltersCount={activeFiltersCount}
-        workspaceSlug={workspaceSlug}
-        onCreateTask={handleCreateTask}
+      <TaskTabs
+        allTasksContent={
+          <TasksContentArea
+            tasks={tasks}
+            isLoading={isLoading}
+            isError={isError}
+            searchQuery={searchQuery}
+            activeFiltersCount={activeFiltersCount}
+            workspaceSlug={workspaceSlug}
+            onCreateTask={handleCreateTask}
+            onAddToPrimary={handleAddToPrimary}
+            onAddToSecondary={handleAddToSecondary}
+            isPrimaryDisabled={hasPrimaryTask}
+          />
+        }
+        primaryTasksContent={
+          dailyTasksLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="w-8 h-8 animate-spin rounded-full border-4 border-muted border-t-primary" />
+            </div>
+          ) : (
+            <PrimaryTasksView
+              primaryTask={primaryTask}
+              secondaryTasks={secondaryTasks}
+              workspaceSlug={workspaceSlug}
+            />
+          )
+        }
       />
     </div>
   );

@@ -12,6 +12,8 @@ import { useProjects, useProjectRole } from "@/hooks/useProjects";
 type TaskFormData = Omit<CreateTaskDto, "workspaceId"> & {
   assigneeIds: string[];
   labelIds: string[];
+  focusLevel: number; // Add this
+  distractionCost: number; // Add this
 };
 
 
@@ -39,20 +41,22 @@ export const useWorkspaceNewTaskPage = ({
   const [showLabelManager, setShowLabelManager] = useState(false);
 
   const [formData, setFormData] = useState<TaskFormData>({
-    title: "",
-    description: "",
-    projectId: "",
-    status: "TODO",
-    priority: "MEDIUM",
-    startDate: "",
-    dueDate: "",
-    estimatedHours: undefined,
-    assigneeIds: [],
-    labelIds: [],
-    intent: "EXECUTION",
-    energyType: "MEDIUM",
-    focusRequired: false,
-  });
+  title: "",
+  description: "",
+  projectId: "",
+  status: "TODO",
+  priority: "MEDIUM",
+  startDate: "",
+  dueDate: "",
+  estimatedHours: undefined,
+  assigneeIds: [],
+  labelIds: [],
+  intent: "EXECUTION",
+  energyType: "MEDIUM",
+  focusRequired: false,
+  focusLevel: 3, // Add this
+  distractionCost: 1, // Add this
+});
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
