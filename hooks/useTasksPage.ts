@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { useProjects } from "@/hooks/useProjects";
 import { useLabels } from "@/hooks/useLabels";
@@ -6,6 +6,7 @@ import { useTeamMembers } from "@/hooks/useTeam";
 import { useRouter } from "next/navigation";
 import { useTasks, useTaskStats, TaskFilters, TaskSort } from "@/hooks/useTask";
 import { useUserProfile } from "./useUser";
+import { useFocusSession } from "./useFocusSession";
 
 export const DEFAULT_PAGE_SIZE = 10;
 
@@ -95,6 +96,56 @@ export function useTasksPage() {
     router.push("/dashboard/tasks/add-task");
   };
 
+  const {
+    activeSession,
+    completeSession,
+  } = useFocusSession();
+
+  // Calculate initial time remaining
+  const calculateTimeRemaining = () => {
+    if (!activeSession || !activeSession.taskId) {
+      return 0;
+    }
+
+    const startTime = new Date(activeSession.startedAt).getTime();
+    const now = Date.now();
+    const elapsed = Math.floor((now - startTime) / 1000); // seconds
+    const remaining = Math.max(0, activeSession.duration * 60 - elapsed);
+    return remaining;
+  };
+
+  const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining);
+
+  // Update timer for active session
+  useEffect(() => {
+    if (!activeSession || !activeSession.taskId) {
+      return;
+    }
+
+    const updateTimer = () => {
+      const startTime = new Date(activeSession.startedAt).getTime();
+      const now = Date.now();
+      const elapsed = Math.floor((now - startTime) / 1000); // seconds
+      const remaining = Math.max(0, activeSession.duration * 60 - elapsed);
+      setTimeRemaining(remaining);
+
+      // Auto-complete when time runs out
+      if (remaining === 0 && !activeSession.completed) {
+        completeSession();
+      }
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+
+    return () => clearInterval(interval);
+  }, [activeSession, completeSession]);
+
+  // Find the focused task in current task list
+  const focusedTask = activeSession?.taskId 
+    ? tasks.find(t => t.id === activeSession.taskId)
+    : null;
+
   return {
     activeTab,
     searchQuery,
@@ -116,7 +167,11 @@ export function useTasksPage() {
     handleSortChange,
     handlePageChange,
     handleCreateTask,
-    tasksResponse
+    tasksResponse,
+    focusedTask,
+    timeRemaining,
+    activeSession,
+    completeSession
   };
 }
 

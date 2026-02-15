@@ -1,9 +1,13 @@
+// components/Dashboard/AllTasks/TaskList.tsx
 import { Loader2, AlertCircle } from "lucide-react";
 import { TaskCard } from "./TaskCard";
+import { FocusTaskCard } from "./FocusTaskCard";
 import { Task } from "@/hooks/useTask";
 
 interface TaskListProps {
   tasks: Task[];
+  focusedTaskId?: string | null;
+  focusTimeRemaining?: number;
   isLoading: boolean;
   isError: boolean;
   searchQuery: string;
@@ -12,6 +16,8 @@ interface TaskListProps {
 
 export function TaskList({
   tasks,
+  focusedTaskId,
+  focusTimeRemaining = 0,
   isLoading,
   isError,
   searchQuery,
@@ -58,9 +64,21 @@ export function TaskList({
     );
   }
 
+  const focusedTask = focusedTaskId ? tasks.find(t => t.id === focusedTaskId) : null;
+  const otherTasks = focusedTaskId ? tasks.filter(t => t.id !== focusedTaskId) : tasks;
+
   return (
     <div className="space-y-3">
-      {tasks.map((task: Task, index: number) => (
+      {/* Focused Task - Always shown first */}
+      {focusedTask && (
+        <FocusTaskCard 
+          task={focusedTask} 
+          timeRemaining={focusTimeRemaining}
+        />
+      )}
+
+      {/* Regular Tasks */}
+      {otherTasks.map((task: Task, index: number) => (
         <TaskCard key={task.id} task={task} index={index} />
       ))}
     </div>

@@ -1,8 +1,10 @@
 "use client";
+
 import { TaskStatsCards } from "@/components/Dashboard/AllTasks/TaskStatsCards";
 import { TaskFiltersBar } from "@/components/Dashboard/AllTasks/TaskFiltersBar";
 import { TasksPageHeader } from "@/components/Dashboard/AllTasks/TasksPageHeader";
 import { TasksContent } from "@/components/Dashboard/AllTasks/TasksContent";
+import { FocusModeBanner } from "@/components/Dashboard/AllTasks/FocusModeBanner";
 import { useTasksPage } from "@/hooks/useTasksPage";
 
 export default function TasksPage() {
@@ -27,13 +29,25 @@ export default function TasksPage() {
     handleSortChange,
     handlePageChange,
     handleCreateTask,
-    tasksResponse
+    focusedTask,
+    timeRemaining,
+    activeSession,
+    completeSession
   } = useTasksPage();
-  console.log(tasksResponse, tasks, pagination)
+
+  
 
   return (
     <div className="space-y-6">
       <TasksPageHeader onCreateTask={handleCreateTask} />
+      
+      {focusedTask && activeSession && (
+        <FocusModeBanner
+          task={focusedTask}
+          timeRemaining={timeRemaining}
+          onEndFocus={completeSession}
+        />
+      )}
       
       {stats && <TaskStatsCards stats={stats} activeTab={activeTab} />}
       
@@ -53,6 +67,8 @@ export default function TasksPage() {
       
       <TasksContent
         tasks={tasks}
+        focusedTaskId={activeSession?.taskId}
+        focusTimeRemaining={timeRemaining}
         isLoading={isLoading}
         isError={isError}
         searchQuery={searchQuery}
@@ -60,8 +76,6 @@ export default function TasksPage() {
         totalPages={pagination?.totalPages || 0}
         totalItems={pagination?.totalCount || 0}
         itemsPerPage={pageSize}
-        // hasNext={pagination?.hasNext || false}
-        // hasPrev={pagination?.hasPrev || false}
         onCreateTask={handleCreateTask}
         onPageChange={handlePageChange}
       />
