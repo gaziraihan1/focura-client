@@ -1,7 +1,8 @@
 import { Loader2, AlertCircle } from "lucide-react";
-import { Task } from "@/hooks/useTask";
+import { Task, TaskPagination } from "@/hooks/useTask";
 import { EmptyState } from "@/components/Dashboard/AllTasks/WorkspaceTasks/EmptyState";
 import { TaskList } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskList";
+import { Pagination } from "@/components/Shared/Pagination";
 
 interface TasksContentAreaProps {
   tasks: Task[];
@@ -14,6 +15,9 @@ interface TasksContentAreaProps {
   onAddToPrimary?: (taskId: string) => void;
   onAddToSecondary?: (taskId: string) => void;
   isPrimaryDisabled?: boolean;
+  pagination?: TaskPagination;
+  currentPage: number;
+  onPageChange: (v: number) => void;
 }
 
 export function TasksContentArea({
@@ -27,6 +31,9 @@ export function TasksContentArea({
   onAddToPrimary,
   onAddToSecondary,
   isPrimaryDisabled = false,
+  pagination,
+  currentPage,
+  onPageChange
 }: TasksContentAreaProps) {
   if (isLoading) {
     return (
@@ -62,13 +69,26 @@ export function TasksContentArea({
   }
 
   return (
-    <TaskList
-      tasks={tasks}
-      workspaceSlug={workspaceSlug}
-      onAddToPrimary={onAddToPrimary}
-      onAddToSecondary={onAddToSecondary}
-      isPrimaryDisabled={isPrimaryDisabled}
-      showAddButtons={true}
-    />
+    <div className="space-y-4">
+      <TaskList
+        tasks={tasks}
+        workspaceSlug={workspaceSlug}
+        onAddToPrimary={onAddToPrimary}
+        onAddToSecondary={onAddToSecondary}
+        isPrimaryDisabled={isPrimaryDisabled}
+        showAddButtons={true}
+      />
+
+      {/* Pagination */}
+      {pagination && pagination.totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={pagination.totalPages}
+          onPageChange={onPageChange}
+          itemsPerPage={pagination.pageSize}
+          totalItems={pagination.totalCount}
+        />
+      )}
+    </div>
   );
 }

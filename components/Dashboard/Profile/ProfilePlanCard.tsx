@@ -8,7 +8,7 @@ interface Workspace {
 }
 
 interface ProfilePlanCardProps {
-  ownedWorkspaces: Workspace[];
+  ownedWorkspaces?: Workspace[];
 }
 
 const getPlanBadgeColor = (plan: string) => {
@@ -27,7 +27,7 @@ const getPlanBadgeColor = (plan: string) => {
 };
 
 export function ProfilePlanCard({ ownedWorkspaces }: ProfilePlanCardProps) {
-  const workspace = ownedWorkspaces[0];
+  const workspace = ownedWorkspaces?.[0];
 
   return (
     <motion.div

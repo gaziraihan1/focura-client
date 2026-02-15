@@ -18,7 +18,7 @@ interface ProfileSidebarProps {
   role: string;
   createdAt: string;
   storage: StorageData | null;
-  ownedWorkspaces: Workspace[];
+  ownedWorkspaces?: Workspace[];
 }
 
 export function ProfileSidebar({

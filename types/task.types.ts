@@ -22,6 +22,7 @@ export interface Project {
   workspace?: {
     id: string;
     name: string;
+    slug: string
   };
 }
 

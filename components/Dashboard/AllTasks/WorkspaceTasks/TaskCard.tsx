@@ -18,17 +18,17 @@ import {
   getTimeStatusColor,
 } from "@/utils/task.utils";
 
-interface TimeTracking {
-  hoursSinceCreation: number;
-  hoursUntilDue: number;
-  isDueToday: boolean;
-  isOverdue: boolean;
-  timeProgress: number;
-}
+// interface TimeTracking {
+//   hoursSinceCreation: number;
+//   hoursUntilDue: number;
+//   isDueToday: boolean;
+//   isOverdue: boolean;
+//   timeProgress: number;
+// }
 
 
 interface TaskCardProps {
-  task: Task & { timeTracking?: TimeTracking };
+  task: Task ;
   workspaceSlug: string;
   onAddToPrimary?: (taskId: string) => void;
   onAddToSecondary?: (taskId: string) => void;

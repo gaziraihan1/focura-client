@@ -20,6 +20,9 @@ export default function WorkspaceTasksPage() {
     workspace,
     stats,
     tasks,
+    pagination,
+    currentPage,
+    // pageSize,
     isLoading,
     isError,
     searchQuery,
@@ -28,6 +31,7 @@ export default function WorkspaceTasksPage() {
     toggleFilters,
     activeFiltersCount,
     sortBy,
+    sortOrder,
     setSortBy,
     selectedStatus,
     setSelectedStatus,
@@ -40,10 +44,12 @@ export default function WorkspaceTasksPage() {
     selectedLabels,
     toggleLabel,
     clearFilters,
+    handlePageChange,
     projects,
     labels,
     members,
   } = useWorkspaceTasksPage({ workspaceSlug });
+  console.log(tasks,"..")
 
   const {
     primaryTask,
@@ -53,6 +59,7 @@ export default function WorkspaceTasksPage() {
     addToPrimary,
     addToSecondary,
   } = useDailyTasks(workspaceSlug);
+  console.log(tasks)
 
   const handleCreateTask = () => {
     router.push(`/dashboard/workspaces/${workspaceSlug}/tasks/new-task`);
@@ -103,6 +110,7 @@ export default function WorkspaceTasksPage() {
         onToggleFilters={toggleFilters}
         activeFiltersCount={activeFiltersCount}
         sortBy={sortBy}
+        sortOrder={sortOrder}
         onSortChange={setSortBy}
         selectedStatus={selectedStatus}
         onStatusChange={setSelectedStatus}
@@ -124,6 +132,9 @@ export default function WorkspaceTasksPage() {
         allTasksContent={
           <TasksContentArea
             tasks={tasks}
+            pagination={pagination}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
             isLoading={isLoading}
             isError={isError}
             searchQuery={searchQuery}

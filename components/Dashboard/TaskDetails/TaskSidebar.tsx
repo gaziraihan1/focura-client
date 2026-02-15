@@ -3,6 +3,7 @@ import { Clock, Calendar, User, Folder, Check, Lock } from "lucide-react";
 import { Task } from "@/types/task.types";
 import { getStatusColor, getPriorityColor } from "@/utils/task.utils";
 import { Avatar } from "@/components/Shared/Avatar";
+import Link from "next/link";
 
 interface TaskSidebarProps {
   task: Task;
@@ -107,12 +108,9 @@ export const TaskSidebar = ({
             <Folder size={16} className="text-muted-foreground" />
             <div className="flex-1">
               <p className="text-xs text-muted-foreground">Project</p>
-              <p
-                className="text-sm font-medium"
-                style={{ color: task.project.color }}
-              >
-                {task.project.name}
-              </p>
+              <Link className="font-medium" style={{color: task.project.color}} href={`/dashboard/workspaces/${task.project.workspace?.slug}/projects/${task.projectId}`}>
+              {task.project.name}
+              </Link>
             </div>
           </div>
         )}

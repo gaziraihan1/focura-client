@@ -1,4 +1,6 @@
-import { Search } from "lucide-react";
+import { Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+
+type Sorting = "title" | "status" | "priority" | "dueDate" | "createdAt" | undefined;
 
 interface TaskFiltersBarProps {
   activeTab: "all" | "personal" | "assigned";
@@ -12,10 +14,14 @@ interface TaskFiltersBarProps {
 
   selectedPriority: string;
   onPriorityChange: (priority: string) => void;
+
+  sortBy: Sorting;
+  sortOrder?: "asc" | "desc";
+  onSortChange: (v: Sorting) => void;
 }
 
 export function TaskFiltersBar({
- activeTab,
+  activeTab,
   onTabChange,
   searchQuery,
   onSearchChange,
@@ -23,16 +29,24 @@ export function TaskFiltersBar({
   onStatusChange,
   selectedPriority,
   onPriorityChange,
+  sortBy,
+  sortOrder,
+  onSortChange,
 }: TaskFiltersBarProps) {
-   const tabs = [
+  const tabs = [
     { value: "all", label: "All Tasks" },
     { value: "personal", label: "Personal" },
     { value: "assigned", label: "Assigned" },
   ] as const;
 
+  const getSortIcon = () => {
+    if (!sortOrder) return <ArrowUpDown size={18} />;
+    return sortOrder === 'asc' ? <ArrowUp size={18} /> : <ArrowDown size={18} />;
+  };
+
   return (
     <div className="rounded-xl bg-card border border-border p-4">
-      <div className="flex flex-col lg:flex-row gap-4">
+      <div className="flex flex-col lg:flex-row gap-4 flex-wrap">
         {/* Tabs */}
         <div className="flex gap-2">
           {tabs.map((tab) => (
@@ -91,6 +105,24 @@ export function TaskFiltersBar({
           <option value="MEDIUM">Medium</option>
           <option value="LOW">Low</option>
         </select>
+
+        {/* Sort Dropdown */}
+        <div className="flex items-center gap-2">
+          <div className="text-muted-foreground">
+            {getSortIcon()}
+          </div>
+          <select
+            value={sortBy}
+            onChange={(e) => onSortChange(e.target.value as Sorting)}
+            className="px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
+          >
+            <option value="createdAt">Created Date</option>
+            <option value="dueDate">Due Date</option>
+            <option value="priority">Priority</option>
+            <option value="status">Status</option>
+            <option value="title">Title</option>
+          </select>
+        </div>
       </div>
     </div>
   );

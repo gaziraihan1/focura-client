@@ -34,7 +34,7 @@ export function WorkspaceCard({ workspace }: WorkspaceCardProps) {
           </div>
 
           {isOwner && (
-            <div className="p-1.5 rounded-lg bg-yellow-500/10">
+            <div className="p-1.5 rounded-lg bg-yellow-500/10 flex items-center">
               <Crown size={14} className="text-yellow-500" />
             </div>
           )}

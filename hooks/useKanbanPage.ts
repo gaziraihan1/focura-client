@@ -23,7 +23,11 @@ export function useKanbanPage() {
   const [showInsights, setShowInsights] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  const { data: allTasks = [], isLoading } = useTasks();
+  const { data, isLoading } = useTasks();
+  
+  const allTasks = useMemo(() => {
+    return data?.data || [];
+  }, [data]);
 
   const scopedTasks = useMemo(() => {
     switch (scope) {

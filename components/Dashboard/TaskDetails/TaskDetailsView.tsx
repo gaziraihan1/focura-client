@@ -1,13 +1,12 @@
 "use client";
-
 import { User, Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Task } from "@/types/task.types";
 import { TaskHeader } from "@/components/Dashboard/TaskDetails/TaskHeader";
 import { TimeTrackingCard } from "@/components/Dashboard/TaskDetails/TimeTrackingCard";
 import { FocusRequirementsCard } from "@/components/Dashboard/TaskDetails/FocusRequirementsCard";
+import { FocusSessionCard } from "@/components/Dashboard/TaskDetails/FocusSessionCard"; // ✅ NEW
 import { IntentBadge } from "@/components/Dashboard/TaskDetails/IntentBadge";
-
 import {
   useUpdateTask,
   useDeleteTask,
@@ -50,7 +49,9 @@ export default function TaskDetailsView({
 }: TaskDetailsViewProps) {
   const router = useRouter();
   const isPersonalTask = !task.projectId;
-
+  
+  console.log(task);
+  
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       <TaskHeader
@@ -62,7 +63,7 @@ export default function TaskDetailsView({
         canEdit={permissions.canEdit}
         canDelete={permissions.canDelete}
       />
-
+      
       {!permissions.canEdit && (
         <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 p-3 flex items-start gap-2">
           <Lock className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
@@ -71,7 +72,7 @@ export default function TaskDetailsView({
           </p>
         </div>
       )}
-
+      
       <div className="flex items-center gap-2 flex-wrap">
         {isPersonalTask && (
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-500 text-xs font-medium">
@@ -79,17 +80,19 @@ export default function TaskDetailsView({
             Personal
           </div>
         )}
-
         <IntentBadge intent={task.intent} size="sm" showLabel />
       </div>
 
+      {/* ✅ NEW: Focus Session Card - Shows before time tracking */}
+      <FocusSessionCard taskId={task.id} />
+      
       {task.timeTracking && (
         <TimeTrackingCard
           timeTracking={task.timeTracking}
           estimatedHours={task.estimatedHours}
         />
       )}
-
+      
       {task.focusRequired && (
         <FocusRequirementsCard
           focusLevel={task.focusLevel}
@@ -97,7 +100,7 @@ export default function TaskDetailsView({
           distractionCost={task.distractionCost}
         />
       )}
-
+      
       <TaskDetailsMainLayout
         id={id}
         task={task}

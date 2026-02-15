@@ -1,8 +1,9 @@
 import { Loader2, AlertCircle } from "lucide-react";
 import { TaskCard } from "./TaskCard";
+import { Task } from "@/hooks/useTask";
 
 interface TaskListProps {
-  tasks: any[];
+  tasks: Task[];
   isLoading: boolean;
   isError: boolean;
   searchQuery: string;
@@ -59,7 +60,7 @@ export function TaskList({
 
   return (
     <div className="space-y-3">
-      {tasks.map((task: any, index: number) => (
+      {tasks.map((task: Task, index: number) => (
         <TaskCard key={task.id} task={task} index={index} />
       ))}
     </div>

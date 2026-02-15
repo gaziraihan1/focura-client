@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { useRouter } from 'next/navigation';
-import { useState, useMemo } from "react";
 
 export interface Task {
   id: string;
@@ -40,6 +39,13 @@ export interface Task {
   };
   createdAt: string;
   updatedAt: string;
+  timeTracking?: {
+    hoursSinceCreation: number;
+    hoursUntilDue: number | null;
+    isOverdue: boolean;
+    isDueToday: boolean;
+    timeProgress: number | null;
+  };
 }
 
 export interface TaskStats {
@@ -80,24 +86,55 @@ export interface TaskFilters {
   workspaceId?: string;
   assigneeId?: string;
   labelIds?: string[];
+  userId?: string;
+}
+
+export interface TaskPagination {
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
+export interface TaskSort {
+  sortBy?: 'dueDate' | 'priority' | 'status' | 'createdAt' | 'title';
+  sortOrder?: 'asc' | 'desc';
+}
+
+export interface TasksResponse {
+  data: Task[];
+  pagination: TaskPagination;
 }
 
 export const taskKeys = {
   all: ['tasks'] as const,
   lists: () => [...taskKeys.all, 'list'] as const,
-  list: (filters?: TaskFilters) => [...taskKeys.lists(), filters] as const,
+  list: (filters?: TaskFilters, page?: number, pageSize?: number, sort?: TaskSort) => 
+    [...taskKeys.lists(), filters, page, pageSize, sort] as const,
   details: () => [...taskKeys.all, 'detail'] as const,
   detail: (id: string) => [...taskKeys.details(), id] as const,
   stats: () => [...taskKeys.all, 'stats'] as const,
-  stat: (workspaceId?: string, type?: string) => [...taskKeys.stats(), workspaceId || 'personal', type || 'all'] as const,
+  stat: (workspaceId?: string, type?: string) => 
+    [...taskKeys.stats(), workspaceId || 'personal', type || 'all'] as const,
 };
 
-export function useTasks(filters?: TaskFilters) {
+/**
+ * Hook to fetch tasks with backend pagination, sorting, and filtering
+ */
+export function useTasks(
+  filters?: TaskFilters,
+  page: number = 1,
+  pageSize: number = 10,
+  sort?: TaskSort
+) {
   return useQuery({
-    queryKey: taskKeys.list(filters),
-    queryFn: async () => {
+    queryKey: taskKeys.list(filters, page, pageSize, sort),
+    queryFn: async (): Promise<TasksResponse> => {
       const params = new URLSearchParams();
       
+      // Filters
       if (filters?.type && filters.type !== 'all') {
         params.append('type', filters.type);
       }
@@ -116,21 +153,94 @@ export function useTasks(filters?: TaskFilters) {
       if (filters?.assigneeId) {
         params.append('assigneeId', filters.assigneeId);
       }
+      if (filters?.search) {
+        params.append('search', filters.search);
+      }
       if (filters?.labelIds?.length) {
-        filters.labelIds.forEach((labelId) => {
-          params.append('labelIds', labelId);
-        });
+        params.append('labelIds', filters.labelIds.join(','));
+      }
+      if (filters?.userId) {
+        params.append('userId', filters.userId)
       }
       
-      const queryString = params.toString();
-      const endpoint = `/api/tasks${queryString ? `?${queryString}` : ''}`;
+      // Pagination
+      params.append('page', page.toString());
+      params.append('pageSize', pageSize.toString());
       
-      const response = await api.get<Task[]>(endpoint, {
+      // Sorting
+      if (sort?.sortBy) {
+        params.append('sortBy', sort.sortBy);
+      }
+      if (sort?.sortOrder) {
+        params.append('sortOrder', sort.sortOrder);
+      }
+      
+      const endpoint = `/api/tasks?${params.toString()}`;
+      
+      const response = await api.get<TasksResponse | Task[]>(endpoint, {
         showErrorToast: true,
       });
-      return response.data || [];
+      
+      console.log('🔍 [useTasks] Raw API response:', response);
+      console.log('🔍 [useTasks] response.data:', response?.data);
+      console.log('🔍 [useTasks] response.data type:', typeof response?.data);
+      console.log('🔍 [useTasks] response.data is array?:', Array.isArray(response?.data));
+      
+      if (!response) {
+        console.log('⚠️ [useTasks] No data in response');
+        return {
+          data: [],
+          pagination: { page: 1, pageSize: 10, totalCount: 0, totalPages: 0, hasNext: false, hasPrev: false }
+        };
+      }
+      
+      const responseData = response;
+      
+      // Type guard to check if it's TasksResponse
+      const hasDataProp = 'data' in responseData;
+      const hasPaginationProp = 'pagination' in responseData;
+      
+      console.log('🔍 [useTasks] Has data property?:', hasDataProp);
+      console.log('🔍 [useTasks] Has pagination property?:', hasPaginationProp);
+      
+      if (hasDataProp && hasPaginationProp) {
+        const typedResponse = responseData as TasksResponse;
+        console.log('✅ [useTasks] USING STRUCTURED RESPONSE');
+        console.log('📊 [useTasks] Backend pagination:', typedResponse.pagination);
+        console.log('📊 [useTasks] Tasks count:', typedResponse.data.length);
+        
+        return {
+          data: typedResponse.data,
+          pagination: typedResponse.pagination,
+        };
+      }
+      
+      // Fallback for array response
+      if (Array.isArray(responseData)) {
+        console.log('⚠️ [useTasks] CREATING FAKE PAGINATION (array response)');
+        console.log('📊 [useTasks] Array length:', responseData.length);
+        
+        return {
+          data: responseData as Task[],
+          pagination: {
+            page,
+            pageSize,
+            totalCount: responseData.length,
+            totalPages: Math.ceil(responseData.length / pageSize),
+            hasNext: page < Math.ceil(responseData.length / pageSize),
+            hasPrev: page > 1,
+          }
+        };
+      }
+      
+      console.log('⚠️ [useTasks] UNEXPECTED FORMAT - returning empty');
+      return {
+        data: [],
+        pagination: { page: 1, pageSize: 10, totalCount: 0, totalPages: 0, hasNext: false, hasPrev: false }
+      };
     },
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: 2 * 60 * 1000,
+    placeholderData: (previousData) => previousData,
   });
 }
 
@@ -144,7 +254,7 @@ export function useTaskStats(workspaceId?: string, type?: 'all' | 'personal' | '
 
       const endpoint = `/api/tasks/stats${params.toString() ? `?${params.toString()}` : ''}`;
       const response = await api.get<TaskStats>(endpoint, { showErrorToast: true });
-      return response.data || null;
+      return response?.data || null;
     },
     staleTime: 5 * 60 * 1000,
   });
@@ -157,10 +267,10 @@ export function useTask(taskId: string) {
       const response = await api.get<Task>(`/api/tasks/${taskId}`, {
         showErrorToast: true,
       });
-      return response.data;
+      return response?.data;
     },
     enabled: !!taskId,
-    staleTime: 3 * 60 * 1000, // 3 minutes
+    staleTime: 3 * 60 * 1000,
   });
 }
 
@@ -173,7 +283,7 @@ export function useCreateTask() {
       const response = await api.post<Task>('/api/tasks', newTask, {
         showSuccessToast: true,
       });
-      return response.data;
+      return response?.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: taskKeys.lists() });
@@ -191,12 +301,11 @@ export function useUpdateTask() {
       const response = await api.put<Task>(`/api/tasks/${id}`, data, {
         showSuccessToast: true,
       });
-      return response.data;
+      return response?.data;
     },
     onSuccess: (data) => {
       if (data) {
         queryClient.setQueryData(taskKeys.detail(data.id), data);
-        
         queryClient.invalidateQueries({ queryKey: taskKeys.lists() });
         queryClient.invalidateQueries({ queryKey: taskKeys.stats() });
       }
@@ -212,11 +321,10 @@ export function useDeleteTask() {
       const response = await api.delete(`/api/tasks/${taskId}`, {
         showSuccessToast: true,
       });
-      return response.data;
+      return response?.data;
     },
     onSuccess: (_, taskId) => {
       queryClient.removeQueries({ queryKey: taskKeys.detail(taskId) });
-      
       queryClient.invalidateQueries({ queryKey: taskKeys.lists() });
       queryClient.invalidateQueries({ queryKey: taskKeys.stats() });
     },
@@ -231,20 +339,17 @@ export function useUpdateTaskStatus() {
       const response = await api.patch<Task>(`/api/tasks/${id}/status`, { status }, {
         showSuccessToast: false, 
       });
-      return response.data;
+      return response?.data;
     },
     onMutate: async ({ id, status }) => {
       await queryClient.cancelQueries({ queryKey: taskKeys.detail(id) });
-      
       const previousTask = queryClient.getQueryData<Task>(taskKeys.detail(id));
-      
       if (previousTask) {
         queryClient.setQueryData<Task>(taskKeys.detail(id), {
           ...previousTask,
           status,
         });
       }
-      
       return { previousTask };
     },
     onError: (err, { id }, context) => {
@@ -281,7 +386,7 @@ export function useTaskComments(taskId: string) {
     queryKey: commentKeys.byTask(taskId),
     queryFn: async () => {
       const response = await api.get<Comment[]>(`/api/tasks/${taskId}/comments`);
-      return response.data || [];
+      return response?.data || [];
     },
     enabled: !!taskId,
   });
@@ -297,7 +402,7 @@ export function useAddComment() {
         { content },
         { showSuccessToast: false }
       );
-      return response.data;
+      return response?.data;
     },
     onSuccess: (_, { taskId }) => {
       queryClient.invalidateQueries({ queryKey: commentKeys.byTask(taskId) });
@@ -328,7 +433,7 @@ export function useTaskActivity(taskId: string) {
     queryKey: activityKeys.byTask(taskId),
     queryFn: async () => {
       const response = await api.get<Activity[]>(`/api/tasks/${taskId}/activity`);
-      return response.data || [];
+      return response?.data || [];
     },
     enabled: !!taskId,
   });
@@ -357,7 +462,7 @@ export function useTaskAttachments(taskId: string) {
     queryKey: attachmentKeys.byTask(taskId),
     queryFn: async () => {
       const response = await api.get<Attachment[]>(`/api/tasks/${taskId}/attachments`);
-      return response.data || [];
+      return response?.data || [];
     },
     enabled: !!taskId,
   });
@@ -376,7 +481,7 @@ export function useUploadAttachment() {
         formData,
         { showSuccessToast: true }
       );
-      return response.data;
+      return response?.data;
     },
     onSuccess: (_, { taskId }) => {
       queryClient.invalidateQueries({ queryKey: attachmentKeys.byTask(taskId) });
@@ -394,83 +499,11 @@ export function useDeleteAttachment() {
         `/api/tasks/${taskId}/attachments/${attachmentId}`,
         { showSuccessToast: true }
       );
-      return response.data;
+      return response?.data;
     },
     onSuccess: (_, { taskId }) => {
       queryClient.invalidateQueries({ queryKey: attachmentKeys.byTask(taskId) });
       queryClient.invalidateQueries({ queryKey: taskKeys.detail(taskId) });
     },
   });
-}
-
-
-
-export function useTaskFilters() {
-  const [selectedStatus, setSelectedStatus] = useState<string>("all");
-  const [selectedPriority, setSelectedPriority] = useState<string>("all");
-  const [selectedProject, setSelectedProject] = useState<string>("all");
-  const [selectedAssignee, setSelectedAssignee] = useState<string>("all");
-  const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
-
-  const toggleLabel = (labelId: string) => {
-    setSelectedLabels((prev) =>
-      prev.includes(labelId)
-        ? prev.filter((id) => id !== labelId)
-        : [...prev, labelId]
-    );
-  };
-
-  const clearFilters = () => {
-    setSelectedStatus("all");
-    setSelectedPriority("all");
-    setSelectedProject("all");
-    setSelectedAssignee("all");
-    setSelectedLabels([]);
-  };
-
-  const activeFiltersCount = useMemo(
-    () =>
-      [
-        selectedStatus !== "all",
-        selectedPriority !== "all",
-        selectedProject !== "all",
-        selectedAssignee !== "all",
-        selectedLabels.length > 0,
-      ].filter(Boolean).length,
-    [
-      selectedStatus,
-      selectedPriority,
-      selectedProject,
-      selectedAssignee,
-      selectedLabels,
-    ]
-  );
-
-  return {
-    selectedStatus,
-    setSelectedStatus,
-    selectedPriority,
-    setSelectedPriority,
-    selectedProject,
-    setSelectedProject,
-    selectedAssignee,
-    setSelectedAssignee,
-    selectedLabels,
-    setSelectedLabels,
-    toggleLabel,
-    clearFilters,
-    activeFiltersCount,
-  };
-}
-
-
-export type SortBy = "dueDate" | "priority" | "status" | "createdAt" | "title";
-
-export function useTaskSorting(initialSort: SortBy = "dueDate") {
-  const [sortBy, setSortBy] = useState<SortBy>(initialSort);
-
-  return {
-    sortBy,
-    setSortBy,
-  };
 }

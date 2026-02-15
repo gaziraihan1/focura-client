@@ -1,6 +1,6 @@
 import { Task } from "@/hooks/useTask";
 import { TaskList } from "@/components/Dashboard/AllTasks/TaskList";
-import { Pagination } from "@/components/Dashboard/AllTasks/Pagination";
+import { Pagination } from "@/components/Shared/Pagination";
 
 interface TasksContentProps {
   tasks: Task[];
@@ -27,6 +27,8 @@ export function TasksContent({
   onCreateTask,
   onPageChange,
 }: TasksContentProps) {
+  
+
   return (
     <>
       <TaskList
@@ -37,6 +39,8 @@ export function TasksContent({
         onCreateTask={onCreateTask}
       />
 
+
+      {/* Pagination */}
       {!isLoading && totalPages > 1 && (
         <Pagination
           currentPage={currentPage}

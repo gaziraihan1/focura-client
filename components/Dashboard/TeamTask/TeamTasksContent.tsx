@@ -1,7 +1,7 @@
 import { Task } from "@/hooks/useTask";
 import { Section } from "@/components/Dashboard/TeamTask/Section";
 import { TaskList } from "@/components/Dashboard/TeamTask/TaskList";
-import { Pagination } from "@/components/Dashboard/AllTasks/Pagination";
+import { Pagination } from "@/components/Shared/Pagination";
 
 interface TeamTasksContentProps {
   sectionTitle: string;

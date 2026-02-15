@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Users, UserPlus, Crown, X } from "lucide-react";
 import { WorkspaceRole } from "@/hooks/useWorkspaceSettings";
+import { Avatar } from "@/components/Shared/Avatar";
 
 interface Member {
   id: string;
@@ -9,6 +10,7 @@ interface Member {
     id: string;
     name: string;
     email: string;
+    image?: string
   };
 }
 
@@ -63,7 +65,7 @@ export function MembersSettingsTab({
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-medium">
-                  {member.user.name?.charAt(0) || "U"}
+                <Avatar name={member.user.name} image={member.user.image} size="md" />
                 </div>
                 <div>
                   <p className="font-medium text-foreground flex items-center gap-2">
@@ -76,6 +78,7 @@ export function MembersSettingsTab({
                     {member.user.email}
                   </p>
                 </div>
+                
               </div>
 
               <div className="flex items-center gap-3">

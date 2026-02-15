@@ -98,7 +98,7 @@ export function WorkspaceSidebar({
 
           <div className="p-4 border-t border-border space-y-2">
             <Link
-              href={`/dashboard/${slug}/settings`}
+              href={`/dashboard/workspaces/${slug}/settings`}
               className="flex items-center gap-3 px-3 py-2 rounded-lg text-foreground hover:bg-accent transition"
             >
               <Settings size={18} />

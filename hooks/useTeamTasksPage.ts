@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
-import { useTasks, useTaskStats } from "@/hooks/useTask";
+import { useTasks, useTaskStats, TaskFilters, TaskSort } from "@/hooks/useTask";
 import { useUserId } from "@/hooks/useUser";
-import { usePagination } from "@/hooks/usePagination";
 import { getTaskTimeInfo } from "@/lib/task/time";
 import { TeamTaskScope } from "@/components/Dashboard/TeamTask/TeamTaskFiltersBar";
 
@@ -15,29 +14,53 @@ export function useTeamTasksPage({ workspaceId }: UseTeamTasksPageProps) {
   // Get current user ID
   const userId = useUserId();
 
-  // Fetch team/assigned tasks
-  const { data: tasks = [], isLoading } = useTasks({
-    type: "assigned",
-    workspaceId,
-  });
-
-  // Get stats for assigned tasks only
-  const { data: stats } = useTaskStats(workspaceId, "assigned");
-
   // Filter states
   const [scope, setScope] = useState<TeamTaskScope>("all");
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
   const [priority, setPriority] = useState("all");
   const [attentionOnly, setAttentionOnly] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState<TaskSort['sortBy']>('dueDate');
+  const [sortOrder, setSortOrder] = useState<TaskSort['sortOrder']>('asc');
 
-  // Filter tasks
+  // Build backend filters
+  const backendFilters: TaskFilters = useMemo(() => ({
+    type: "assigned",
+    workspaceId,
+    status: status !== "all" ? status : undefined,
+    priority: priority !== "all" ? priority : undefined,
+    search: search.trim() || undefined,
+  }), [workspaceId, status, priority, search]);
+
+  // Build sort params
+  const sort: TaskSort = useMemo(() => ({
+    sortBy,
+    sortOrder,
+  }), [sortBy, sortOrder]);
+
+  // Fetch team/assigned tasks with backend pagination
+  const { data: tasksResponse, isLoading } = useTasks(
+    backendFilters,
+    currentPage,
+    ITEMS_PER_PAGE,
+    sort
+  );
+
+  const tasks = useMemo(() => tasksResponse?.data || [], [tasksResponse?.data]);
+  const pagination = tasksResponse?.pagination;
+
+  // Get stats for assigned tasks only
+  const { data: stats } = useTaskStats(workspaceId, "assigned");
+
+  // Apply ONLY client-side filters that can't be done on backend
+  // (scope filtering and attention filtering)
   const filteredTasks = useMemo(() => {
     // If user not loaded yet, return all tasks
     if (!userId) return tasks;
 
     return tasks.filter((task) => {
-      // Scope filtering
+      // Scope filtering (client-side only since it's complex)
       if (scope === "assigned_to_me") {
         if (!task.assignees.some((a) => a.user.id === userId)) return false;
       }
@@ -50,25 +73,7 @@ export function useTeamTasksPage({ workspaceId }: UseTeamTasksPageProps) {
         if (task.assignees.length <= 1) return false;
       }
 
-      // Search filter
-      if (
-        search &&
-        !task.title.toLowerCase().includes(search.toLowerCase())
-      ) {
-        return false;
-      }
-
-      // Status filter
-      if (status !== "all" && task.status !== status) {
-        return false;
-      }
-
-      // Priority filter
-      if (priority !== "all" && task.priority !== priority) {
-        return false;
-      }
-
-      // Needs Attention filter
+      // Needs Attention filter (client-side only)
       if (attentionOnly) {
         const { isOverdue, isDueToday } = getTaskTimeInfo(task);
         if (!(task.status === "BLOCKED" || isOverdue || isDueToday)) {
@@ -78,27 +83,42 @@ export function useTeamTasksPage({ workspaceId }: UseTeamTasksPageProps) {
 
       return true;
     });
-  }, [tasks, scope, search, status, priority, attentionOnly, userId]);
-
-  // Use pagination hook
-  const {
-    currentPage,
-    totalPages,
-    totalItems,
-    paginatedItems,
-    setCurrentPage,
-    resetPage,
-  } = usePagination({
-    items: filteredTasks,
-    itemsPerPage: ITEMS_PER_PAGE,
-  });
+  }, [tasks, scope, attentionOnly, userId]);
 
   // Reset to page 1 when filters change
-  const handleFilterChange = <T,>(filterSetter: (value: T) => void) => {
-    return (value: T) => {
-      filterSetter(value);
-      resetPage();
-    };
+  const handleScopeChange = (newScope: TeamTaskScope) => {
+    setScope(newScope);
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setCurrentPage(1);
+  };
+
+  const handleStatusChange = (value: string) => {
+    setStatus(value);
+    setCurrentPage(1);
+  };
+
+  const handlePriorityChange = (value: string) => {
+    setPriority(value);
+    setCurrentPage(1);
+  };
+
+  const handleAttentionToggle = () => {
+    setAttentionOnly((v) => !v);
+    setCurrentPage(1);
+  };
+
+  const handleSortChange = (newSortBy: TaskSort['sortBy']) => {
+    if (newSortBy === sortBy) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(newSortBy);
+      setSortOrder('desc');
+    }
+    setCurrentPage(1);
   };
 
   // Handle page change with smooth scroll
@@ -121,34 +141,30 @@ export function useTeamTasksPage({ workspaceId }: UseTeamTasksPageProps) {
     }
   };
 
-  // Handle attention toggle separately (doesn't take a value)
-  const handleAttentionToggle = () => {
-    setAttentionOnly((v) => !v);
-    resetPage();
-  };
-
   return {
     userId,
     stats,
     scope,
-    setScope,
+    setScope: handleScopeChange,
     search,
-    setSearch,
+    setSearch: handleSearchChange,
     status,
-    setStatus,
+    setStatus: handleStatusChange,
     priority,
-    setPriority,
+    setPriority: handlePriorityChange,
     attentionOnly,
-    setAttentionOnly,
+    setAttentionOnly: handleAttentionToggle,
+    sortBy,
+    sortOrder,
+    setSortBy: handleSortChange,
     filteredTasks,
-    paginatedTasks: paginatedItems,
+    paginatedTasks: filteredTasks, // Already paginated by backend
     currentPage,
-    totalPages,
-    totalItems,
+    totalPages: pagination?.totalPages || 0,
+    totalItems: pagination?.totalCount || 0,
+    pagination,
     isLoading,
-    handleFilterChange,
     handlePageChange,
-    handleAttentionToggle,
     getSectionTitle,
   };
 }

@@ -31,10 +31,10 @@ export default function TeamTasksPage({
     totalPages,
     totalItems,
     isLoading,
-    handleFilterChange,
     handlePageChange,
-    handleAttentionToggle,
     getSectionTitle,
+    setAttentionOnly
+    
   } = useTeamTasksPage({ workspaceId });
 
   const hasNoResults = filteredTasks.length === 0 && !!userId;
@@ -47,15 +47,15 @@ export default function TeamTasksPage({
 
       <TeamTaskFiltersBar
         scope={scope}
-        onScopeChange={handleFilterChange(setScope)}
+        onScopeChange={setScope}
         search={search}
-        onSearchChange={handleFilterChange(setSearch)}
+        onSearchChange={setSearch}
         status={status}
-        onStatusChange={handleFilterChange(setStatus)}
+        onStatusChange={setStatus}
         priority={priority}
-        onPriorityChange={handleFilterChange(setPriority)}
+        onPriorityChange={setPriority}
         attentionOnly={attentionOnly}
-        onAttentionToggle={handleAttentionToggle}
+        onAttentionToggle={setAttentionOnly}
       />
 
       <TeamTasksContent

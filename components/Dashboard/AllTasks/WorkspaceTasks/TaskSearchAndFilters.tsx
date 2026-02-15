@@ -1,6 +1,5 @@
-import { Search, Filter, ArrowUpDown, X } from "lucide-react";
+import { Search, Filter, ArrowUpDown, ArrowUp, ArrowDown, X } from "lucide-react";
 import { motion } from "framer-motion";
-import { SortBy } from "@/hooks/useTask";
 import { FilterPanel } from "./FilterPanel";
 
 interface Project {
@@ -19,14 +18,16 @@ interface Member {
   name: string;
 }
 
+type Sorting = "title" | "status" | "priority" | "dueDate" | "createdAt" | undefined;
+
 interface TaskSearchAndFiltersProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   showFilters: boolean;
   onToggleFilters: () => void;
   activeFiltersCount: number;
-  sortBy: SortBy;
-  onSortChange: (sortBy: SortBy) => void;
+  sortBy: Sorting;
+  onSortChange: (sortBy: Sorting) => void;
   selectedStatus: string;
   onStatusChange: (status: string) => void;
   selectedPriority: string;
@@ -41,6 +42,7 @@ interface TaskSearchAndFiltersProps {
   projects: Project[];
   labels: Label[];
   members: Member[];
+  sortOrder?: "asc" | "desc";
 }
 
 export function TaskSearchAndFilters({
@@ -65,7 +67,13 @@ export function TaskSearchAndFilters({
   projects,
   labels,
   members,
+  sortOrder,
 }: TaskSearchAndFiltersProps) {
+  const getSortIcon = () => {
+    if (!sortOrder) return <ArrowUpDown size={18} />;
+    return sortOrder === 'asc' ? <ArrowUp size={18} /> : <ArrowDown size={18} />;
+  };
+
   return (
     <div className="rounded-xl bg-card border border-border p-4">
       <div className="flex flex-col lg:flex-row gap-4">
@@ -87,7 +95,7 @@ export function TaskSearchAndFilters({
         {/* Filter Button */}
         <button
           onClick={onToggleFilters}
-          className={`px-4 py-2 rounded-lg border transition flex items-center gap-2 ${
+          className={`px-4 py-2 rounded-lg border transition flex items-center gap-2 whitespace-nowrap ${
             showFilters || activeFiltersCount > 0
               ? "bg-primary text-primary-foreground border-primary"
               : "border-border text-foreground hover:bg-accent"
@@ -104,10 +112,12 @@ export function TaskSearchAndFilters({
 
         {/* Sort Dropdown */}
         <div className="flex items-center gap-2">
-          <ArrowUpDown size={18} className="text-muted-foreground" />
+          <div className="text-muted-foreground">
+            {getSortIcon()}
+          </div>
           <select
             value={sortBy}
-            onChange={(e) => onSortChange(e.target.value as SortBy)}
+            onChange={(e) => onSortChange(e.target.value as Sorting)}
             className="px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
           >
             <option value="dueDate">Due Date</option>
@@ -116,6 +126,11 @@ export function TaskSearchAndFilters({
             <option value="createdAt">Created Date</option>
             <option value="title">Title</option>
           </select>
+          {sortOrder && (
+            <span className="text-xs text-muted-foreground hidden sm:inline">
+              ({sortOrder === 'asc' ? 'Ascending' : 'Descending'})
+            </span>
+          )}
         </div>
       </div>
 

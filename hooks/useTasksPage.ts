@@ -4,20 +4,25 @@ import { useProjects } from "@/hooks/useProjects";
 import { useLabels } from "@/hooks/useLabels";
 import { useTeamMembers } from "@/hooks/useTeam";
 import { useRouter } from "next/navigation";
-import { useTasks, useTaskStats, TaskFilters, useTaskFilters,
-  useTaskSorting } from "@/hooks/useTask";
+import { useTasks, useTaskStats, TaskFilters, TaskSort } from "@/hooks/useTask";
+import { useUserProfile } from "./useUser";
 
-export const PAGE_SIZE = 10;
+export const DEFAULT_PAGE_SIZE = 10;
 
+/**
+ * Hook for personal tasks page with backend pagination
+ */
 export function useTasksPage() {
+  const { userId } = useUserProfile();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"all" | "personal" | "assigned">(
-    "all"
-  );
+  const [activeTab, setActiveTab] = useState<"all" | "personal" | "assigned">("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedPriority, setSelectedPriority] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(DEFAULT_PAGE_SIZE);
+  const [sortBy, setSortBy] = useState<TaskSort['sortBy']>('createdAt');
+  const [sortOrder, setSortOrder] = useState<TaskSort['sortOrder']>('desc');
 
   // Build filters for API
   const filters: TaskFilters = useMemo(
@@ -25,31 +30,28 @@ export function useTasksPage() {
       type: activeTab,
       status: selectedStatus !== "all" ? selectedStatus : undefined,
       priority: selectedPriority !== "all" ? selectedPriority : undefined,
+      search: searchQuery.trim() || undefined,
+      userId: userId
     }),
-    [activeTab, selectedStatus, selectedPriority]
+    [activeTab, selectedStatus, selectedPriority, searchQuery, userId]
   );
 
-  // Fetch tasks with filters
-  const { data: tasks = [], isLoading, isError } = useTasks(filters);
+  // Build sort params
+  const sort: TaskSort = useMemo(
+    () => ({
+      sortBy,
+      sortOrder,
+    }),
+    [sortBy, sortOrder]
+  );
+
+  // Fetch tasks with backend pagination
+  const { data: tasksResponse, isLoading, isError } = useTasks(filters, currentPage, pageSize, sort);
+  const tasks = tasksResponse?.data || [];
+  const pagination = tasksResponse?.pagination;
 
   // Get stats for current tab
   const { data: stats } = useTaskStats(undefined, activeTab);
-
-  // Apply search filter
-  const filteredTasks = useMemo(() => {
-    if (!searchQuery.trim()) return tasks;
-    return tasks.filter((task) =>
-      task.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [tasks, searchQuery]);
-
-  // Calculate pagination
-  const totalPages = Math.ceil(filteredTasks.length / PAGE_SIZE);
-
-  const paginatedTasks = useMemo(() => {
-    const start = (currentPage - 1) * PAGE_SIZE;
-    return filteredTasks.slice(start, start + PAGE_SIZE);
-  }, [filteredTasks, currentPage]);
 
   // Handler functions that reset pagination
   const handleTabChange = (tab: "all" | "personal" | "assigned") => {
@@ -72,6 +74,17 @@ export function useTasksPage() {
     setCurrentPage(1);
   };
 
+  const handleSortChange = (newSortBy: TaskSort['sortBy']) => {
+    if (newSortBy === sortBy) {
+      // Toggle sort order
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(newSortBy);
+      setSortOrder('desc');
+    }
+    setCurrentPage(1);
+  };
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     // Smooth scroll to top when changing pages
@@ -88,53 +101,89 @@ export function useTasksPage() {
     selectedStatus,
     selectedPriority,
     currentPage,
-    totalPages,
+    pageSize,
+    sortBy,
+    sortOrder,
     stats,
-    paginatedTasks,
-    totalItems: filteredTasks.length,
+    tasks,
+    pagination,
     isLoading,
     isError,
     handleTabChange,
     handleSearchChange,
     handleStatusChange,
     handlePriorityChange,
+    handleSortChange,
     handlePageChange,
     handleCreateTask,
+    tasksResponse
   };
 }
-
 
 interface UseWorkspaceTasksPageProps {
   workspaceSlug: string;
 }
 
+/**
+ * Hook for workspace tasks page with backend pagination
+ */
 export function useWorkspaceTasksPage({
   workspaceSlug,
 }: UseWorkspaceTasksPageProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(DEFAULT_PAGE_SIZE);
 
   const { data: workspace } = useWorkspace(workspaceSlug);
   const { data: projects = [] } = useProjects(workspace?.id);
   const { data: labels = [] } = useLabels();
   const { data: members = [] } = useTeamMembers(workspace?.id);
 
-  const {
-    selectedStatus,
-    setSelectedStatus,
-    selectedPriority,
-    setSelectedPriority,
-    selectedProject,
-    setSelectedProject,
-    selectedAssignee,
-    setSelectedAssignee,
-    selectedLabels,
-    toggleLabel,
-    clearFilters,
-    activeFiltersCount,
-  } = useTaskFilters();
+  const [selectedStatus, setSelectedStatus] = useState<string>("all");
+  const [selectedPriority, setSelectedPriority] = useState<string>("all");
+  const [selectedProject, setSelectedProject] = useState<string>("all");
+  const [selectedAssignee, setSelectedAssignee] = useState<string>("all");
+  const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
 
-  const { sortBy, setSortBy } = useTaskSorting();
+  const [sortBy, setSortBy] = useState<TaskSort['sortBy']>('dueDate');
+  const [sortOrder, setSortOrder] = useState<TaskSort['sortOrder']>('asc');
+
+  const toggleLabel = (labelId: string) => {
+    setSelectedLabels((prev) =>
+      prev.includes(labelId)
+        ? prev.filter((id) => id !== labelId)
+        : [...prev, labelId]
+    );
+    setCurrentPage(1);
+  };
+
+  const clearFilters = () => {
+    setSelectedStatus("all");
+    setSelectedPriority("all");
+    setSelectedProject("all");
+    setSelectedAssignee("all");
+    setSelectedLabels([]);
+    setCurrentPage(1);
+  };
+
+  const activeFiltersCount = useMemo(
+    () =>
+      [
+        selectedStatus !== "all",
+        selectedPriority !== "all",
+        selectedProject !== "all",
+        selectedAssignee !== "all",
+        selectedLabels.length > 0,
+      ].filter(Boolean).length,
+    [
+      selectedStatus,
+      selectedPriority,
+      selectedProject,
+      selectedAssignee,
+      selectedLabels,
+    ]
+  );
 
   const filters: TaskFilters = useMemo(
     () => ({
@@ -144,6 +193,7 @@ export function useWorkspaceTasksPage({
       projectId: selectedProject !== "all" ? selectedProject : undefined,
       assigneeId: selectedAssignee !== "all" ? selectedAssignee : undefined,
       labelIds: selectedLabels.length > 0 ? selectedLabels : undefined,
+      search: searchQuery.trim() || undefined,
     }),
     [
       workspace?.id,
@@ -152,83 +202,96 @@ export function useWorkspaceTasksPage({
       selectedProject,
       selectedAssignee,
       selectedLabels,
+      searchQuery,
     ]
   );
 
-  const { data: tasks = [], isLoading, isError } = useTasks(filters);
+  const sort: TaskSort = useMemo(
+    () => ({
+      sortBy,
+      sortOrder,
+    }),
+    [sortBy, sortOrder]
+  );
+
+  const { data: tasksResponse, isLoading, isError } = useTasks(filters, currentPage, pageSize, sort);
+  const tasks = tasksResponse?.data || [];
+  const pagination = tasksResponse?.pagination;
+
   const { data: stats } = useTaskStats(workspace?.id);
 
-  const filteredAndSortedTasks = useMemo(() => {
-    let filtered = tasks;
-
-    // Search filter
-    if (searchQuery.trim()) {
-      filtered = filtered.filter(
-        (task) =>
-          task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          task.description?.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Sort tasks
-    filtered = [...filtered].sort((a, b) => {
-      switch (sortBy) {
-        case "dueDate":
-          if (!a.dueDate) return 1;
-          if (!b.dueDate) return -1;
-          return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
-        case "priority": {
-          const priorityOrder: Record<string, number> = {
-            URGENT: 0,
-            HIGH: 1,
-            MEDIUM: 2,
-            LOW: 3,
-          };
-          return priorityOrder[a.priority] - priorityOrder[b.priority];
-        }
-        case "status":
-          return a.status.localeCompare(b.status);
-        case "createdAt":
-          return (
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
-        case "title":
-          return a.title.localeCompare(b.title);
-        default:
-          return 0;
-      }
-    });
-
-    return filtered;
-  }, [tasks, searchQuery, sortBy]);
-
   const toggleFilters = () => setShowFilters(!showFilters);
+
+  const handleSortChange = (newSortBy: TaskSort['sortBy']) => {
+    if (newSortBy === sortBy) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(newSortBy);
+      setSortOrder(newSortBy === 'dueDate' || newSortBy === 'createdAt' ? 'asc' : 'desc');
+    }
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleStatusChange = (status: string) => {
+    setSelectedStatus(status);
+    setCurrentPage(1);
+  };
+
+  const handlePriorityChange = (priority: string) => {
+    setSelectedPriority(priority);
+    setCurrentPage(1);
+  };
+
+  const handleProjectChange = (projectId: string) => {
+    setSelectedProject(projectId);
+    setCurrentPage(1);
+  };
+
+  const handleAssigneeChange = (assigneeId: string) => {
+    setSelectedAssignee(assigneeId);
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    setCurrentPage(1);
+  };
 
   return {
     workspace,
     workspaceSlug,
     stats,
-    tasks: filteredAndSortedTasks,
+    tasks,
+    pagination,
+    currentPage,
+    pageSize,
     isLoading,
     isError,
     searchQuery,
-    setSearchQuery,
+    setSearchQuery: handleSearchChange,
     showFilters,
     toggleFilters,
     activeFiltersCount,
     sortBy,
-    setSortBy,
+    sortOrder,
+    setSortBy: handleSortChange,
     selectedStatus,
-    setSelectedStatus,
+    setSelectedStatus: handleStatusChange,
     selectedPriority,
-    setSelectedPriority,
+    setSelectedPriority: handlePriorityChange,
     selectedProject,
-    setSelectedProject,
+    setSelectedProject: handleProjectChange,
     selectedAssignee,
-    setSelectedAssignee,
+    setSelectedAssignee: handleAssigneeChange,
     selectedLabels,
     toggleLabel,
     clearFilters,
+    handlePageChange,
     projects,
     labels,
     members,
