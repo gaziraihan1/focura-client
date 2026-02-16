@@ -11,70 +11,14 @@ import {
   Calendar,
 } from "lucide-react";
 import { Avatar } from "@/components/Shared/Avatar";
+import { getStatusColor, getPriorityColor, getTimeStatusColor, formatTimeDuration } from "@/utils/task.utils";
+import { Task } from "@/hooks/useTask";
+import { formatHoursSinceCreation } from "@/utils/taskcard.utils";
 
 interface TaskCardProps {
-  task: any;
+  task: Task;
   index: number;
 }
-
-const getStatusColor = (status: string) => {
-  const colors: Record<string, string> = {
-    TODO: "bg-gray-500/10 text-gray-500",
-    IN_PROGRESS: "bg-blue-500/10 text-blue-500",
-    IN_REVIEW: "bg-purple-500/10 text-purple-500",
-    BLOCKED: "bg-red-500/10 text-red-500",
-    COMPLETED: "bg-green-500/10 text-green-500",
-    CANCELLED: "bg-gray-500/10 text-gray-500",
-  };
-  return colors[status] || "bg-gray-500/10 text-gray-500";
-};
-
-const getPriorityColor = (priority: string) => {
-  const colors: Record<string, string> = {
-    URGENT: "text-red-500",
-    HIGH: "text-orange-500",
-    MEDIUM: "text-blue-500",
-    LOW: "text-green-500",
-  };
-  return colors[priority] || "text-gray-500";
-};
-
-const formatTimeDuration = (hours: number) => {
-  if (hours < 0) {
-    const absHours = Math.abs(hours);
-    if (absHours < 24) return `${absHours}h overdue`;
-    const days = Math.floor(absHours / 24);
-    return `${days}d overdue`;
-  }
-  
-  if (hours < 24) return `${hours}h left`;
-  const days = Math.floor(hours / 24);
-  return `${days}d left`;
-};
-
-const formatHoursSinceCreation = (totalHours: number) => {
-  if (totalHours < 24) {
-    return `${Math.floor(totalHours)}h`;
-  }
-
-  const days = Math.floor(totalHours / 24);
-  const hours = Math.floor(totalHours % 24);
-
-  return `${days}d ${hours}h`;
-};
-
-
-
-const getTimeStatusColor = (timeTracking: any) => {
-  if (!timeTracking) return "text-gray-500";
-  
-  if (timeTracking.isOverdue) return "text-red-500";
-  if (timeTracking.isDueToday) return "text-orange-500";
-  if (timeTracking.hoursUntilDue !== null && timeTracking.hoursUntilDue < 24) {
-    return "text-orange-500";
-  }
-  return "text-blue-500";
-};
 
 export function TaskCard({ task, index }: TaskCardProps) {
   return (
@@ -200,7 +144,7 @@ export function TaskCard({ task, index }: TaskCardProps) {
 
                 {task.assignees.length > 0 && (
                   <div className="flex -space-x-2">
-                    {task.assignees.slice(0, 3).map((assignee: any) => (
+                    {task.assignees.slice(0, 3).map((assignee) => (
                       <Avatar key={assignee.user.id} name={assignee.user.name} image={assignee.user.image} size="sm" />
                     ))}
                     {task.assignees.length > 3 && (

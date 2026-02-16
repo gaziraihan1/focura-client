@@ -1,4 +1,3 @@
-// utils/task.utils.ts
 import { TimeTracking, TaskStatus, TaskPriority } from "@/types/task.types";
 
 export const formatTimeDuration = (hours: number): string => {
@@ -20,13 +19,14 @@ export const formatTimeDuration = (hours: number): string => {
 export const getTimeStatusColor = (timeTracking: TimeTracking | undefined): string => {
   if (!timeTracking) return "text-gray-500";
 
-  if (timeTracking.isOverdue) return "text-red-500 bg-red-500/10";
-  if (timeTracking.isDueToday) return "text-orange-500 bg-orange-500/10";
+  if (timeTracking.isOverdue) return "text-red-500";
+  if (timeTracking.isDueToday) return "text-orange-500";
   if (timeTracking.hoursUntilDue !== null && timeTracking.hoursUntilDue < 24) {
-    return "text-orange-500 bg-orange-500/10";
+    return "text-orange-500 ";
   }
-  return "text-blue-500 bg-blue-500/10";
+  return "text-blue-500";
 };
+
 
 export const getFocusLevelColor = (level: number): string => {
   if (level >= 4) return "text-red-500";
@@ -69,4 +69,20 @@ export const formatFileSize = (bytes: number): string => {
   if (bytes < 1024) return bytes + " B";
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
   return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+};
+
+export const formatHoursSinceCreation = (createdAt: string): string => {
+  const now = new Date();
+  const created = new Date(createdAt);
+  const diffMs = now.getTime() - created.getTime();
+  const totalHours = Math.floor(diffMs / (1000 * 60 * 60));
+  
+  if (totalHours < 24) {
+    return `${totalHours}h`;
+  }
+
+  const days = Math.floor(totalHours / 24);
+  const hours = totalHours % 24;
+
+  return `${days}d ${hours}h`;
 };

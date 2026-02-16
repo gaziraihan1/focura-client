@@ -18,14 +18,6 @@ import {
   getTimeStatusColor,
 } from "@/utils/task.utils";
 
-// interface TimeTracking {
-//   hoursSinceCreation: number;
-//   hoursUntilDue: number;
-//   isDueToday: boolean;
-//   isOverdue: boolean;
-//   timeProgress: number;
-// }
-
 
 interface TaskCardProps {
   task: Task ;

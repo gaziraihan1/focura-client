@@ -10,7 +10,7 @@ interface TaskSidebarProps {
   isPersonalTask: boolean;
   isUpdatingStatus: boolean;
   onStatusChange: (status: Task["status"]) => void;
-  canChangeStatus?: boolean; // NEW: Permission prop
+  canChangeStatus?: boolean; 
 }
 
 export const TaskSidebar = ({
@@ -18,7 +18,7 @@ export const TaskSidebar = ({
   isPersonalTask,
   isUpdatingStatus,
   onStatusChange,
-  canChangeStatus = true, // NEW: Default to true for backwards compatibility
+  canChangeStatus = true, 
 }: TaskSidebarProps) => {
   return (
     <div className="space-y-6">
@@ -32,7 +32,6 @@ export const TaskSidebar = ({
             Status
           </label>
           
-          {/* NEW: Show read-only status if no permission */}
           {!canChangeStatus ? (
             <div>
               <div
@@ -53,7 +52,6 @@ export const TaskSidebar = ({
               </div>
             </div>
           ) : (
-            // NEW: Show editable dropdown if permission granted
             <div>
               <select
                 value={task.status}

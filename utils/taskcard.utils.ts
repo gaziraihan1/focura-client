@@ -1,16 +1,6 @@
-import { TimeTracking, TaskPriority, TaskStatus } from '@/types/task.types';
+import {  TaskPriority } from '@/types/task.types';
 
-export function getStatusColor(status: TaskStatus): string {
-  const colors: Record<TaskStatus, string> = {
-    TODO: 'bg-gray-500/10 text-gray-500',
-    IN_PROGRESS: 'bg-blue-500/10 text-blue-500',
-    IN_REVIEW: 'bg-purple-500/10 text-purple-500',
-    BLOCKED: 'bg-red-500/10 text-red-500',
-    COMPLETED: 'bg-green-500/10 text-green-500',
-    CANCELLED: 'bg-gray-500/10 text-gray-500',
-  };
-  return colors[status] || 'bg-gray-500/10 text-gray-500';
-}
+
 
 export function getPriorityColor(priority: TaskPriority): string {
   const colors: Record<TaskPriority, string> = {
@@ -20,19 +10,6 @@ export function getPriorityColor(priority: TaskPriority): string {
     LOW: 'text-green-500',
   };
   return colors[priority] || 'text-gray-500';
-}
-
-export function formatTimeDuration(hours: number): string {
-  if (hours < 0) {
-    const absHours = Math.abs(hours);
-    if (absHours < 24) return `${absHours}h overdue`;
-    const days = Math.floor(absHours / 24);
-    return `${days}d overdue`;
-  }
-
-  if (hours < 24) return `${hours}h left`;
-  const days = Math.floor(hours / 24);
-  return `${days}d left`;
 }
 
 export function formatHoursSinceCreation(totalHours: number): string {
@@ -46,19 +23,7 @@ export function formatHoursSinceCreation(totalHours: number): string {
   return `${days}d ${hours}h`;
 }
 
-export function getTimeStatusColor(timeTracking: TimeTracking | null): string {
-  if (!timeTracking) return 'text-gray-500';
 
-  if (timeTracking.isOverdue) return 'text-red-500';
-  if (timeTracking.isDueToday) return 'text-orange-500';
-  if (
-    timeTracking.hoursUntilDue !== null &&
-    timeTracking.hoursUntilDue < 24
-  ) {
-    return 'text-orange-500';
-  }
-  return 'text-blue-500';
-}
 
 export function formatTime(seconds: number): string {
   const mins = Math.floor(seconds / 60);
@@ -75,3 +40,22 @@ export function getProgressBarColor(timeProgress: number): string {
   if (timeProgress > 80) return 'bg-orange-500';
   return 'bg-purple-500';
 }
+
+export const calculateTimeProgress = (
+  startDate: string | undefined,
+  dueDate: string | null,
+  estimatedHours: number | undefined
+): number | null => {
+  if (!startDate || !dueDate || !estimatedHours) return null;
+  
+  const now = new Date();
+  const start = new Date(startDate);
+  const due = new Date(dueDate);
+  
+  const totalTime = due.getTime() - start.getTime();
+  const elapsed = now.getTime() - start.getTime();
+  
+  if (totalTime <= 0) return null;
+  
+  return Math.round((elapsed / totalTime) * 100);
+};

@@ -8,12 +8,10 @@ import {
 import { Task } from '@/hooks/useTask';
 import { Avatar } from '@/components/Shared/Avatar';
 import {
-  getStatusColor,
-  getTimeStatusColor,
   formatHoursSinceCreation,
-  formatTimeDuration,
   getProgressBarColor,
 } from '@/utils/taskcard.utils';
+import { getStatusColor, getTimeStatusColor, formatTimeDuration } from '@/utils/task.utils';
 
 interface TaskMetadataProps {
   task: Task;

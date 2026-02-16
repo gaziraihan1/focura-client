@@ -1,6 +1,6 @@
 import { CheckCircle2, Clock } from 'lucide-react';
-import { getStatusColor } from '@/utils/taskcard.utils';
 import { TaskStatus } from '@/types/task.types';
+import { getStatusColor } from '@/utils/task.utils';
 
 interface TaskStatusIconProps {
   status: TaskStatus;

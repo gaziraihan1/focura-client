@@ -96,21 +96,17 @@ export interface Task {
   projectId: string | null;
   intent: IntentType
   
-  // Focus features
   focusRequired?: boolean;
   focusLevel?: number;
   energyType?: EnergyType;
   distractionCost?: number;
   
-  // Relations
   createdBy: User;
   assignees: TaskAssignee[];
   project?: Project;
   
-  // Time tracking
   timeTracking?: TimeTracking;
   
-  // Counts
   _count?: {
     comments: number;
     subtasks: number;
@@ -141,4 +137,19 @@ export interface TeamTask {
   energyType?: string;
   focusRequired?: boolean;
   timeTracking?: TaskTimeTracking;
+}
+
+
+export interface TaskSidebarProps {
+  task: Task;
+  isPersonalTask: boolean;
+  isUpdatingStatus: boolean;
+  onStatusChange: (status: Task['status']) => void;
+  canChangeStatus?: boolean;
+}
+
+
+export interface StatusOption {
+  value: TaskStatus;
+  label: string;
 }

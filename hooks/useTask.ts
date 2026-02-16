@@ -120,9 +120,6 @@ export const taskKeys = {
     [...taskKeys.stats(), workspaceId || 'personal', type || 'all'] as const,
 };
 
-/**
- * Hook to fetch tasks with backend pagination, sorting, and filtering
- */
 export function useTasks(
   filters?: TaskFilters,
   page: number = 1,
@@ -134,7 +131,6 @@ export function useTasks(
     queryFn: async (): Promise<TasksResponse> => {
       const params = new URLSearchParams();
       
-      // Filters
       if (filters?.type && filters.type !== 'all') {
         params.append('type', filters.type);
       }
@@ -163,11 +159,9 @@ export function useTasks(
         params.append('userId', filters.userId)
       }
       
-      // Pagination
       params.append('page', page.toString());
       params.append('pageSize', pageSize.toString());
       
-      // Sorting
       if (sort?.sortBy) {
         params.append('sortBy', sort.sortBy);
       }
@@ -196,7 +190,6 @@ export function useTasks(
       
       const responseData = response;
       
-      // Type guard to check if it's TasksResponse
       const hasDataProp = 'data' in responseData;
       const hasPaginationProp = 'pagination' in responseData;
       
@@ -215,7 +208,6 @@ export function useTasks(
         };
       }
       
-      // Fallback for array response
       if (Array.isArray(responseData)) {
         console.log('⚠️ [useTasks] CREATING FAKE PAGINATION (array response)');
         console.log('📊 [useTasks] Array length:', responseData.length);
