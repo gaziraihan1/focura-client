@@ -3,6 +3,7 @@ import { Paperclip, Download, X, Loader2, Lock } from "lucide-react";
 import { Attachment } from "@/types/task.types";
 import { formatFileSize } from "@/utils/task.utils";
 import { useDeleteAttachment, useUploadAttachment } from "@/hooks/useTask";
+import Link from "next/link";
 
 interface AttachmentsTabProps {
   taskId: string;
@@ -10,7 +11,7 @@ interface AttachmentsTabProps {
   currentUserId?: string;
   canComment?: boolean;
   uploadAttachment: ReturnType<typeof useUploadAttachment>;
-    deleteAttachment: ReturnType<typeof useDeleteAttachment>;
+  deleteAttachment: ReturnType<typeof useDeleteAttachment>;
 }
 
 export const AttachmentsTab = ({
@@ -89,22 +90,24 @@ export const AttachmentsTab = ({
                   />
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-foreground truncate text-sm">
-                      {attachment.fileName}
+                      {attachment.originalName} {/* ✅ Changed from fileName */}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {formatFileSize(attachment.fileSize)} •{" "}
+                      {formatFileSize(attachment.size)} • {/* ✅ Changed from fileSize */}
                       {attachment.uploadedBy.name}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  <a
-                    href={attachment.fileUrl}
-                    download
+                  <Link
+                    href={attachment.url} 
+                    download={attachment.originalName}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="p-2 rounded-lg hover:bg-accent transition"
                   >
                     <Download size={16} className="text-foreground" />
-                  </a>
+                  </Link>
                   {isOwnAttachment && (
                     <button
                       onClick={() =>
@@ -113,7 +116,8 @@ export const AttachmentsTab = ({
                           attachmentId: attachment.id,
                         })
                       }
-                      className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition"
+                      disabled={deleteAttachment.isPending}
+                      className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <X size={16} className="text-red-500" />
                     </button>

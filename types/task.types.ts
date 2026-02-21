@@ -46,12 +46,28 @@ export interface Activity {
   user: User;
 }
 
+// types/task.types.ts
+
 export interface Attachment {
   id: string;
-  fileName: string;
-  fileSize: number;
-  fileUrl: string;
-  uploadedBy: User;
+  name: string;              // Cloudinary public_id
+  originalName: string;      // Original filename
+  size: number;              // Bytes
+  mimeType: string;          // e.g., "image/png"
+  url: string;               // Download URL
+  thumbnail?: string;
+  uploadedAt: string;
+  uploadedBy: {
+    id: string;
+    name: string | null;
+    image?: string | null;
+  };
+  
+  // ❌ REMOVE these old fields:
+  // fileName: string;
+  // fileSize: number;
+  // fileUrl: string;
+  // fileType: string;
 }
 
 export type TaskStatus = 

@@ -67,18 +67,23 @@ export default function TaskDetailsMainLayout({
           )}
         </motion.div>
 
-        <TaskTabs
-          taskId={task.id}
-          task={task}
-          comments={comments}
-          attachments={attachments}
-          addComment={mutations.addComment}
-          updateComment={mutations.updateComment}
-          deleteComment={mutations.deleteComment}
-          uploadAttachment={mutations.uploadAttachment}
-          deleteAttachment={mutations.deleteAttachment}
-          canComment={permissions.canComment}
-        />
+{
+  !isPersonalTask && (
+
+    <TaskTabs
+      taskId={task.id}
+      task={task}
+      comments={comments}
+      attachments={attachments}
+      addComment={mutations.addComment}
+      updateComment={mutations.updateComment}
+      deleteComment={mutations.deleteComment}
+      uploadAttachment={mutations.uploadAttachment}
+      deleteAttachment={mutations.deleteAttachment}
+      canComment={permissions.canComment}
+    />
+  )
+}
       </div>
 
       <TaskSidebar

@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { useRouter } from 'next/navigation';
+import { Attachment } from '@/types/task.types';
 
 export interface Task {
   id: string;
@@ -429,19 +430,6 @@ export function useTaskActivity(taskId: string) {
     },
     enabled: !!taskId,
   });
-}
-
-export interface Attachment {
-  id: string;
-  fileName: string;
-  fileUrl: string;
-  fileSize: number;
-  fileType: string;
-  uploadedAt: string;
-  uploadedBy: {
-    id: string;
-    name: string;
-  };
 }
 
 export const attachmentKeys = {

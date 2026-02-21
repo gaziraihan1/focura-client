@@ -208,7 +208,7 @@ const currentWorkspaceId = selectedWorkspaceId || firstWorkspaceId || '';
       {/* Largest Files */}
       <LargestFilesTable
         files={data.largestFiles}
-        workspaceId={selectedWorkspaceId}
+        workspaceId={currentWorkspaceId}
         isAdmin={data.isAdmin}
       />
 

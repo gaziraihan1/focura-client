@@ -38,6 +38,7 @@ export function LargestFilesTable({ files, workspaceId, isAdmin }: LargestFilesT
     setFilterType,
     canDeleteFile,
   } = useStoragePage(files, currentUserId);
+  console.log(workspaceId)
 
   const bulkDelete = useBulkDeleteFiles(workspaceId);
   const deleteFile = useDeleteFile(workspaceId);

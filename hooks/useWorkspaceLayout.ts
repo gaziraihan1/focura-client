@@ -52,6 +52,12 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
     icon: Tags,
     match: (path: string) => path === `/dashboard/workspaces/${slug}/label`,
   };
+  const analytics = {
+      name: "Analytics",
+      href: `/dashboard/workspaces/${slug}/analytics`,
+      icon: BarChart3,
+      match: (path: string) => path.includes(`/${slug}/analytics`),
+    }
 
   const navigation = [
     {
@@ -84,13 +90,7 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
       icon: Calendar,
       match: (path: string) => path.includes(`/${slug}/calendar`),
     },
-    {
-      name: "Analytics",
-      href: `/dashboard/workspaces/${slug}/analytics`,
-      icon: BarChart3,
-      match: (path: string) => path.includes(`/${slug}/analytics`),
-    },
-    ...(canManageWorkspace ? [label] : []),
+    ...(canManageWorkspace ? [analytics, label] : []),
   ];
 
   const currentMember = workspace?.members.find(

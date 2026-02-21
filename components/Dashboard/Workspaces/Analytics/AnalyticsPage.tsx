@@ -1,41 +1,45 @@
-"use client";
+'use client';
 
-import { BarChart3, Loader2, AlertTriangle } from "lucide-react";
-import { useWorkspace } from "@/hooks/useWorkspace";
-import { KPICards } from "@/components/Dashboard/Workspaces/Analytics/KPICards";
-import { TaskStatusChart } from "@/components/Dashboard/Workspaces/Analytics/TaskStatusChart";
-import { TaskCompletionTrend } from "@/components/Dashboard/Workspaces/Analytics/TaskCompletionTrend";
-import { PriorityDistribution } from "@/components/Dashboard/Workspaces/Analytics/PriorityDistribution";
-import { ProjectHealthCards } from "@/components/Dashboard/Workspaces/Analytics/ProjectHealthCards";
-import { MemberLeaderboard } from "@/components/Dashboard/Workspaces/Analytics/MemberLeaderboard";
-import { ActivityTrendChart } from "@/components/Dashboard/Workspaces/Analytics/ActivityTrendChart";
-import { WorkloadChart } from "@/components/Dashboard/Workspaces/Analytics/WorkloadChart";
-import { TimeSummaryCard } from "@/components/Dashboard/Workspaces/Analytics/TimeSummaryCard";
-import { MostActiveDay } from "@/components/Dashboard/Workspaces/Analytics/MostActiveDay";
-import { DeadlineRiskPanel } from "@/components/Dashboard/Workspaces/Analytics/DeadlineRiskPanel";
-import { useParams } from "next/navigation";
-import { useAnalyticsPage } from "@/hooks/useAnalyticsPage";
+import { BarChart3, Loader2, AlertTriangle } from 'lucide-react';
+import { KPICards } from './KPICards';
+import { TaskStatusChart } from './TaskStatusChart';
+import { TaskCompletionTrend } from './TaskCompletionTrend';
+import { MemberLeaderboard } from './MemberLeaderboard';
+import { DeadlineRiskPanel } from './DeadlineRiskPanel';
+import { ProjectHealthCards } from './ProjectHealthCards';
+import { ActivityTrendChart } from './ActivityTrendChart';
+import { WorkloadChart } from './WorkloadChart';
+import { MostActiveDay } from './MostActiveDay';
+import { TimeSummaryCard } from './TimeSummaryCard';
+import { PriorityDistribution } from './PriorityDistribution';
+import { WorkspaceSwitcher } from '../../Storage/WorkspaceSwitcher';
+import { useState } from 'react';
+import { useAnalyticsPage } from '@/hooks/useAnalyticsPage';
+import { useWorkspacesSummary } from '@/hooks/useStorage';
 
-export default function AnalyticsPage() {
-  const params = useParams();
-  const workspaceSlug = params.workspaceSlug as string;
-  const { data: workspace } = useWorkspace(workspaceSlug);
-  const workspaceId = workspace?.id || "";
+export function AnalyticsPage() {
+  const { data: workspaces } = useWorkspacesSummary();
+  const firstWorkspaceId = workspaces?.[0]?.workspaceId;
+
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>('');
+  const workspaceId = selectedWorkspaceId || firstWorkspaceId || '';
+
   const {
     overview,
-    overviewLoading,
     overviewError,
+    overviewLoading,
     taskTrends,
     projectHealth,
-    memberContribution,
-    activityTrends,
     workload,
+    activityTrends,
+    memberContribution,
     timeSummary,
     isLoading,
     isAccessDenied,
-    errorMessage,
+    errorMessage
   } = useAnalyticsPage({ workspaceId });
 
+  // Loading state
   if (overviewLoading && !overview) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -47,20 +51,21 @@ export default function AnalyticsPage() {
     );
   }
 
-  if (overviewError || !overview) {
+  // Error state - check for 403 access denied
+  if (overviewError) {
+    
+
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-4 text-center max-w-md">
           <AlertTriangle
             className={`w-12 h-12 ${
-              isAccessDenied ? "text-amber-500" : "text-destructive"
+              isAccessDenied ? 'text-amber-500' : 'text-destructive'
             }`}
           />
           <div>
             <h3 className="text-lg font-semibold">
-              {isAccessDenied
-                ? "Access Restricted"
-                : "Failed to load analytics"}
+              {isAccessDenied ? 'Access Restricted' : 'Failed to load analytics'}
             </h3>
             <p className="text-sm text-muted-foreground mt-2">{errorMessage}</p>
             {isAccessDenied && (
@@ -68,6 +73,23 @@ export default function AnalyticsPage() {
                 Contact your workspace admin to request analytics access.
               </p>
             )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // No data state
+  if (!overview) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="flex flex-col items-center gap-4 text-center max-w-md">
+          <BarChart3 className="w-12 h-12 text-muted-foreground" />
+          <div>
+            <h3 className="text-lg font-semibold">No Analytics Data</h3>
+            <p className="text-sm text-muted-foreground mt-2">
+              Analytics data is not available for this workspace.
+            </p>
           </div>
         </div>
       </div>
@@ -84,9 +106,7 @@ export default function AnalyticsPage() {
               <BarChart3 className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <h1 className="text-3xl font-semibold tracking-tight">
-                Analytics
-              </h1>
+              <h1 className="text-3xl font-semibold tracking-tight">Analytics</h1>
               <p className="text-muted-foreground mt-1">
                 Comprehensive workspace insights and metrics
               </p>
@@ -95,6 +115,10 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Workspace Switcher */}
+        <WorkspaceSwitcher
+          currentWorkspaceId={selectedWorkspaceId}
+          onWorkspaceChange={setSelectedWorkspaceId}
+        />
       </div>
 
       {/* Executive KPIs */}
@@ -103,9 +127,7 @@ export default function AnalyticsPage() {
       {/* Task Analytics Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <TaskStatusChart data={overview.taskStatus} />
-        {taskTrends && (
-          <TaskCompletionTrend data={taskTrends.completionTrend} />
-        )}
+        {taskTrends && <TaskCompletionTrend data={taskTrends.completionTrend} />}
       </div>
 
       {/* Priority & Project Health Row */}
@@ -123,9 +145,7 @@ export default function AnalyticsPage() {
 
       {/* Activity & Workload Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {activityTrends && (
-          <ActivityTrendChart data={activityTrends.volumeTrend} />
-        )}
+        {activityTrends && <ActivityTrendChart data={activityTrends.volumeTrend} />}
         {workload && workload.length > 0 && <WorkloadChart data={workload} />}
       </div>
 

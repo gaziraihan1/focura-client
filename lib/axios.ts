@@ -74,34 +74,46 @@ const handleAxiosError = async (
   const status = error.response?.status;
   const message =
     error.response?.data?.message || error.message || "Unknown error";
+  const url = error.config?.url || "";
 
   const code = error.response?.data?.code;
+  
+  // Handle token expiration
   if (code === "TOKEN_EXPIRED" || code === "INVALID_TOKEN") {
     toast.error("Session expired. Please login again.");
     signOut({ callbackUrl: "/authentication/login" });
     return Promise.reject(error);
   }
 
-  if (showErrorToast) {
-    switch (status) {
-      case 401:
-        toast.error(message || "Session expired. Please login again.");
-        break;
-      case 403:
-        toast.error(message || "You do not have permission.");
-        break;
-      case 404:
-        toast.error(message || "Resource not found.");
-        break;
-      case 429:
-        toast.error(message || "Too many requests. Try later.");
-        break;
-      case 500:
-        toast.error(message || "Server error. Try later.");
-        break;
-      default:
+  // ✅ Don't show toast for these cases (handled by UI):
+  const suppressToast =
+    !showErrorToast ||
+    status === 404 || // Not found - handle in UI
+    status === 403 || // Forbidden/Access denied - handle in UI
+    url.includes("/analytics/"); // Analytics errors - handle in UI
+
+  if (suppressToast) {
+    return Promise.reject(error);
+  }
+
+  // Show toast for other errors
+  switch (status) {
+    case 401:
+      toast.error(message || "Session expired. Please login again.");
+      break;
+    case 429:
+      toast.error(message || "Too many requests. Try later.");
+      break;
+    case 500:
+      toast.error(message || "Server error. Try later.");
+      break;
+    default:
+      // Only show toast for 400-level errors that aren't 401/403/404
+      if (status && status >= 400 && status < 500) {
         toast.error(message);
-    }
+      } else if (status && status >= 500) {
+        toast.error("Server error. Please try again later.");
+      }
   }
 
   return Promise.reject(error);

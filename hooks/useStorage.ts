@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { api } from '@/lib/axios';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 
 // Types
 export interface StorageInfo {
@@ -97,17 +97,20 @@ export interface WorkspaceStorageOverview {
 
 // Query keys
 export const storageKeys = {
-  all: ['storage'] as const,
-  workspaces: () => [...storageKeys.all, 'workspaces'] as const,
-  workspace: (workspaceId: string) => [...storageKeys.all, 'workspace', workspaceId] as const,
-  overview: (workspaceId: string) => [...storageKeys.workspace(workspaceId), 'overview'] as const,
-  info: (workspaceId: string) => [...storageKeys.workspace(workspaceId), 'info'] as const,
+  all: ["storage"] as const,
+  workspaces: () => [...storageKeys.all, "workspaces"] as const,
+  workspace: (workspaceId: string) =>
+    [...storageKeys.all, "workspace", workspaceId] as const,
+  overview: (workspaceId: string) =>
+    [...storageKeys.workspace(workspaceId), "overview"] as const,
+  info: (workspaceId: string) =>
+    [...storageKeys.workspace(workspaceId), "info"] as const,
   myContribution: (workspaceId: string) =>
-    [...storageKeys.workspace(workspaceId), 'my-contribution'] as const,
+    [...storageKeys.workspace(workspaceId), "my-contribution"] as const,
   userContributions: (workspaceId: string) =>
-    [...storageKeys.workspace(workspaceId), 'user-contributions'] as const,
+    [...storageKeys.workspace(workspaceId), "user-contributions"] as const,
   largestFiles: (workspaceId: string, limit?: number) =>
-    [...storageKeys.workspace(workspaceId), 'largest', limit] as const,
+    [...storageKeys.workspace(workspaceId), "largest", limit] as const,
 };
 
 // Hooks
@@ -117,7 +120,9 @@ export function useWorkspacesSummary() {
   return useQuery({
     queryKey: storageKeys.workspaces(),
     queryFn: async () => {
-      const response = await api.get<WorkspaceSummary[]>('/api/storage/workspaces');
+      const response = await api.get<WorkspaceSummary[]>(
+        "/api/storage/workspaces",
+      );
       return response?.data as WorkspaceSummary[];
     },
     staleTime: 5 * 60 * 1000,
@@ -130,7 +135,7 @@ export function useWorkspaceStorageOverview(workspaceId: string) {
     queryKey: storageKeys.overview(workspaceId),
     queryFn: async () => {
       const response = await api.get<WorkspaceStorageOverview>(
-        `/api/storage/${workspaceId}/overview`
+        `/api/storage/${workspaceId}/overview`,
       );
       return response?.data as WorkspaceStorageOverview;
     },
@@ -144,7 +149,9 @@ export function useWorkspaceStorageInfo(workspaceId: string) {
   return useQuery({
     queryKey: storageKeys.info(workspaceId),
     queryFn: async () => {
-      const response = await api.get<StorageInfo>(`/api/storage/${workspaceId}/info`);
+      const response = await api.get<StorageInfo>(
+        `/api/storage/${workspaceId}/info`,
+      );
       return response?.data as StorageInfo;
     },
     enabled: !!workspaceId,
@@ -158,7 +165,7 @@ export function useMyContribution(workspaceId: string) {
     queryKey: storageKeys.myContribution(workspaceId),
     queryFn: async () => {
       const response = await api.get<MyContribution>(
-        `/api/storage/${workspaceId}/my-contribution`
+        `/api/storage/${workspaceId}/my-contribution`,
       );
       return response?.data as MyContribution;
     },
@@ -168,12 +175,15 @@ export function useMyContribution(workspaceId: string) {
 }
 
 // Get user contributions (admin only)
-export function useUserContributions(workspaceId: string, enabled: boolean = true) {
+export function useUserContributions(
+  workspaceId: string,
+  enabled: boolean = true,
+) {
   return useQuery({
     queryKey: storageKeys.userContributions(workspaceId),
     queryFn: async () => {
       const response = await api.get<UserContribution[]>(
-        `/api/storage/${workspaceId}/user-contributions`
+        `/api/storage/${workspaceId}/user-contributions`,
       );
       return response?.data as UserContribution[];
     },
@@ -188,7 +198,7 @@ export function useLargestFiles(workspaceId: string, limit: number = 10) {
     queryKey: storageKeys.largestFiles(workspaceId, limit),
     queryFn: async () => {
       const response = await api.get<LargestFile[]>(
-        `/api/storage/${workspaceId}/largest-files?limit=${limit}`
+        `/api/storage/${workspaceId}/largest-files?limit=${limit}`,
       );
       return response?.data as LargestFile[];
     },
@@ -205,20 +215,25 @@ export function useBulkDeleteFiles(workspaceId: string) {
 
   return useMutation({
     mutationFn: async (fileIds: string[]) => {
-      const response = await api.post<{ deletedCount: number; freedMB: number }>(
+      const response = await api.post<{
+        deletedCount: number;
+        freedMB: number;
+      }>(
         `/api/storage/${workspaceId}/bulk-delete`,
         { fileIds },
         {
           showSuccessToast: true,
           showErrorToast: true,
-        }
+        },
       );
       return response?.data as { deletedCount: number; freedMB: number };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: storageKeys.workspace(workspaceId) });
+      queryClient.invalidateQueries({
+        queryKey: storageKeys.workspace(workspaceId),
+      });
       queryClient.invalidateQueries({ queryKey: storageKeys.workspaces() });
-      queryClient.invalidateQueries({ queryKey: ['files'] });
+      queryClient.invalidateQueries({ queryKey: ["files"] });
     },
   });
 }
@@ -229,16 +244,21 @@ export function useDeleteFile(workspaceId: string) {
 
   return useMutation({
     mutationFn: async (fileId: string) => {
-      const response = await api.delete<{ freedMB: number }>(`/api/files/${fileId}`, {
-        showSuccessToast: true,
-        showErrorToast: true,
-      });
+      const response = await api.delete<{ freedMB: number }>(
+              `/api/storage/files/${fileId}`,
+        {
+          showSuccessToast: true,
+          showErrorToast: true,
+        },
+      );
       return response?.data as { freedMB: number };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: storageKeys.workspace(workspaceId) });
+      queryClient.invalidateQueries({
+        queryKey: storageKeys.workspace(workspaceId),
+      });
       queryClient.invalidateQueries({ queryKey: storageKeys.workspaces() });
-      queryClient.invalidateQueries({ queryKey: ['files'] });
+      queryClient.invalidateQueries({ queryKey: ["files"] });
     },
   });
 }
@@ -250,7 +270,7 @@ export function useCheckUpload(workspaceId: string) {
       const response = await api.post<{ allowed: boolean; reason?: string }>(
         `/api/storage/${workspaceId}/check-upload`,
         { fileSize },
-        { showErrorToast: true }
+        { showErrorToast: true },
       );
       return response?.data as { allowed: boolean; reason?: string };
     },

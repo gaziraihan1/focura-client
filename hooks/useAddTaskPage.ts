@@ -11,6 +11,7 @@ interface FormData {
   startDate: string;
   dueDate: string;
   estimatedHours: number | undefined;
+  projectId?: string
   focusRequired: boolean;
   focusLevel: number;
   energyType: "LOW" | "MEDIUM" | "HIGH";
@@ -80,7 +81,7 @@ export function useAddTaskPage() {
     try {
       await createTaskMutation.mutateAsync({
         ...formData,
-        projectId: null,
+        projectId: undefined,
         workspaceId: null,
         assigneeIds: [],
         labelIds: [],
