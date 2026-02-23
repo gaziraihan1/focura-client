@@ -78,25 +78,22 @@ const handleAxiosError = async (
 
   const code = error.response?.data?.code;
   
-  // Handle token expiration
   if (code === "TOKEN_EXPIRED" || code === "INVALID_TOKEN") {
     toast.error("Session expired. Please login again.");
     signOut({ callbackUrl: "/authentication/login" });
     return Promise.reject(error);
   }
 
-  // ✅ Don't show toast for these cases (handled by UI):
   const suppressToast =
     !showErrorToast ||
-    status === 404 || // Not found - handle in UI
-    status === 403 || // Forbidden/Access denied - handle in UI
-    url.includes("/analytics/"); // Analytics errors - handle in UI
+    status === 404 ||
+    status === 403 || 
+    url.includes("/analytics/"); 
 
   if (suppressToast) {
     return Promise.reject(error);
   }
 
-  // Show toast for other errors
   switch (status) {
     case 401:
       toast.error(message || "Session expired. Please login again.");
@@ -108,7 +105,6 @@ const handleAxiosError = async (
       toast.error(message || "Server error. Try later.");
       break;
     default:
-      // Only show toast for 400-level errors that aren't 401/403/404
       if (status && status >= 400 && status < 500) {
         toast.error(message);
       } else if (status && status >= 500) {

@@ -3,7 +3,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 
-// ==================== TYPES ====================
 
 export interface ExecutiveKPIs {
   totalProjects: number;
@@ -135,7 +134,6 @@ export interface WorkloadMember {
   status: 'normal' | 'high' | 'overloaded';
 }
 
-// ==================== QUERY KEYS ====================
 
 export const analyticsKeys = {
   all: (workspaceId: string) => ['analytics', workspaceId] as const,
@@ -154,7 +152,6 @@ export const analyticsKeys = {
     [...analyticsKeys.all(workspaceId), 'workload'] as const,
 };
 
-// ==================== HOOKS ====================
 
 export function useAnalyticsOverview(workspaceId: string) {
   return useQuery({
@@ -166,8 +163,8 @@ export function useAnalyticsOverview(workspaceId: string) {
       return response?.data as AnalyticsOverview;
     },
     enabled: !!workspaceId,
-    retry: false, // ✅ Don't retry on 403 errors
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    retry: false, 
+    staleTime: 2 * 60 * 1000, 
   });
 }
 
@@ -181,8 +178,8 @@ export function useTaskTrends(workspaceId: string, days: number = 30) {
       return response?.data as TaskTrends;
     },
     enabled: !!workspaceId,
-    retry: false, // ✅ Don't retry on 403 errors
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: false, 
+    staleTime: 5 * 60 * 1000, 
   });
 }
 
@@ -196,7 +193,7 @@ export function useProjectHealth(workspaceId: string) {
       return response?.data as ProjectHealth[];
     },
     enabled: !!workspaceId,
-    retry: false, // ✅ Don't retry on 403 errors
+    retry: false, 
     staleTime: 3 * 60 * 1000,
   });
 }
@@ -211,7 +208,7 @@ export function useMemberContribution(workspaceId: string) {
       return response?.data as MemberContribution[];
     },
     enabled: !!workspaceId,
-    retry: false, // ✅ Don't retry on 403 errors
+    retry: false, 
     staleTime: 5 * 60 * 1000,
   });
 }
@@ -226,7 +223,7 @@ export function useTimeSummary(workspaceId: string, days: number = 7) {
       return response?.data as TimeSummary;
     },
     enabled: !!workspaceId,
-    retry: false, // ✅ Don't retry on 403 errors
+    retry: false, 
     staleTime: 5 * 60 * 1000,
   });
 }
@@ -241,7 +238,7 @@ export function useActivityTrends(workspaceId: string, days: number = 30) {
       return response?.data as ActivityTrends;
     },
     enabled: !!workspaceId,
-    retry: false, // ✅ Don't retry on 403 errors
+    retry: false,
     staleTime: 5 * 60 * 1000,
   });
 }
@@ -256,7 +253,7 @@ export function useWorkload(workspaceId: string) {
       return response?.data as WorkloadMember[];
     },
     enabled: !!workspaceId,
-    retry: false, // ✅ Don't retry on 403 errors
+    retry: false, 
     staleTime: 2 * 60 * 1000,
   });
 }

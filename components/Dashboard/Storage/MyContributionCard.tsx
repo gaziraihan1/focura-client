@@ -41,7 +41,6 @@ export function MyContributionCard({ contribution, workspaceName }: MyContributi
         </div>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
           <div className="p-2 bg-primary/10 rounded-lg">
@@ -64,7 +63,6 @@ export function MyContributionCard({ contribution, workspaceName }: MyContributi
         </div>
       </div>
 
-      {/* Progress Bar */}
       <div>
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-medium text-muted-foreground">
@@ -82,7 +80,6 @@ export function MyContributionCard({ contribution, workspaceName }: MyContributi
         </div>
       </div>
 
-      {/* Info Text */}
       {percentage >= 30 && (
         <p className="text-xs text-amber-600 dark:text-amber-500 mt-3">
           You&apos;re using a significant portion of workspace storage. Consider cleaning up old files.

@@ -43,7 +43,6 @@ export function WorkspaceSwitcher({ currentWorkspaceId, onWorkspaceChange }: Wor
 
   return (
     <div className="relative w-full max-w-xs">
-      {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center justify-between px-4 py-2.5 bg-card border rounded-lg hover:bg-muted/50 transition-colors"
@@ -70,18 +69,14 @@ export function WorkspaceSwitcher({ currentWorkspaceId, onWorkspaceChange }: Wor
           }`}
         />
       </button>
-
-      {/* Dropdown */}
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Backdrop */}
             <div
               className="fixed inset-0 z-40"
               onClick={() => setIsOpen(false)}
             />
 
-            {/* Menu */}
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -129,7 +124,6 @@ export function WorkspaceSwitcher({ currentWorkspaceId, onWorkspaceChange }: Wor
                             {workspace.percentage}%
                           </span>
                         </div>
-                        {/* Mini progress bar */}
                         <div className="w-full bg-muted rounded-full h-1 mt-2">
                           <div
                             className={`h-full rounded-full transition-all ${getStorageColor(

@@ -1,8 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, Zap, Crown, Building2 } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { getPlanLimits } from '@/hooks/useStoragePage';
+import { plans } from '@/constant/storage.constant';
 
 interface PlanComparisonProps {
   currentPlan: string;
@@ -10,29 +11,7 @@ interface PlanComparisonProps {
 }
 
 export function PlanComparison({ currentPlan, workspaceName }: PlanComparisonProps) {
-  const plans = [
-    {
-      name: 'FREE',
-      icon: Building2,
-      description: 'For small teams getting started',
-    },
-    {
-      name: 'PRO',
-      icon: Zap,
-      description: 'For growing teams and projects',
-      popular: true,
-    },
-    {
-      name: 'BUSINESS',
-      icon: Crown,
-      description: 'For established organizations',
-    },
-    {
-      name: 'ENTERPRISE',
-      icon: Crown,
-      description: 'For large-scale operations',
-    },
-  ];
+  
 
   return (
     <motion.div
@@ -66,7 +45,6 @@ export function PlanComparison({ currentPlan, workspaceName }: PlanComparisonPro
                   : 'bg-card'
               }`}
             >
-              {/* Current Plan Badge */}
               {isCurrent && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                   <span className="px-3 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-full">
@@ -75,7 +53,6 @@ export function PlanComparison({ currentPlan, workspaceName }: PlanComparisonPro
                 </div>
               )}
 
-              {/* Popular Badge */}
               {plan.popular && !isCurrent && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                   <span className="px-3 py-1 text-xs font-medium bg-blue-500 text-white rounded-full">
@@ -84,7 +61,6 @@ export function PlanComparison({ currentPlan, workspaceName }: PlanComparisonPro
                 </div>
               )}
 
-              {/* Header */}
               <div className="flex items-center gap-2 mb-4">
                 <plan.icon className="w-5 h-5 text-primary" />
                 <h3 className="text-lg font-semibold">{plan.name}</h3>
@@ -92,7 +68,6 @@ export function PlanComparison({ currentPlan, workspaceName }: PlanComparisonPro
 
               <p className="text-sm text-muted-foreground mb-6">{plan.description}</p>
 
-              {/* Storage */}
               <div className="mb-6">
                 <p className="text-3xl font-bold">
                   {limits.storage >= 1048576
@@ -114,7 +89,6 @@ export function PlanComparison({ currentPlan, workspaceName }: PlanComparisonPro
                 ))}
               </ul>
 
-              {/* CTA Button */}
               {!isCurrent && (
                 <button
                   className={`w-full py-2.5 text-sm font-medium rounded-lg transition-colors ${
@@ -137,7 +111,6 @@ export function PlanComparison({ currentPlan, workspaceName }: PlanComparisonPro
         })}
       </div>
 
-      {/* Additional Info */}
       <div className="mt-8 p-4 bg-muted/50 rounded-lg">
         <p className="text-sm text-muted-foreground text-center">
           Need a custom plan for {workspaceName}?{' '}

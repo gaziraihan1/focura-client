@@ -1,43 +1,18 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { FileText, Folder, FolderOpen } from 'lucide-react';
 import { StorageBreakdown } from '@/hooks/useStorage';
 import { formatStorageSize } from '@/hooks/useStoragePage';
+import { storageBreakdown } from '@/constant/storage.constant';
 
 interface StorageBreakdownChartProps {
   breakdown: StorageBreakdown;
 }
 
 export function StorageBreakdownChart({ breakdown }: StorageBreakdownChartProps) {
-  const { attachments, workspaceFiles, projectFiles, total } = breakdown;
+  const { total } = breakdown;
 
-  const data = [
-    {
-      label: 'Task Attachments',
-      value: attachments,
-      percentage: total > 0 ? Math.round((attachments / total) * 100) : 0,
-      color: 'bg-blue-500',
-      icon: FileText,
-      description: 'Files attached to tasks',
-    },
-    {
-      label: 'Project Files',
-      value: projectFiles,
-      percentage: total > 0 ? Math.round((projectFiles / total) * 100) : 0,
-      color: 'bg-purple-500',
-      icon: FolderOpen,
-      description: 'Files in projects',
-    },
-    {
-      label: 'Workspace Files',
-      value: workspaceFiles,
-      percentage: total > 0 ? Math.round((workspaceFiles / total) * 100) : 0,
-      color: 'bg-green-500',
-      icon: Folder,
-      description: 'General workspace files',
-    },
-  ];
+  const { data } = storageBreakdown({breakdown})
 
   return (
     <motion.div
@@ -48,7 +23,6 @@ export function StorageBreakdownChart({ breakdown }: StorageBreakdownChartProps)
       <h2 className="text-lg font-semibold mb-6">Storage Breakdown</h2>
 
       <div className="space-y-6">
-        {/* Stacked Progress Bar */}
         <div className="w-full h-4 bg-muted rounded-full overflow-hidden flex">
           {data.map((item, index) => (
             <motion.div
@@ -62,7 +36,6 @@ export function StorageBreakdownChart({ breakdown }: StorageBreakdownChartProps)
           ))}
         </div>
 
-        {/* Breakdown Items */}
         <div className="space-y-4">
           {data.map((item, index) => (
             <motion.div
@@ -88,7 +61,6 @@ export function StorageBreakdownChart({ breakdown }: StorageBreakdownChartProps)
                 </div>
               </div>
               
-              {/* Individual Progress Bar */}
               <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
@@ -101,7 +73,6 @@ export function StorageBreakdownChart({ breakdown }: StorageBreakdownChartProps)
           ))}
         </div>
 
-        {/* Total */}
         <div className="pt-4 border-t">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-muted-foreground">Total Storage</span>

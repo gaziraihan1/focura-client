@@ -3,7 +3,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 
-// Types
 export interface StorageInfo {
   usedMB: number;
   totalMB: number;
@@ -95,7 +94,6 @@ export interface WorkspaceStorageOverview {
   isAdmin: boolean;
 }
 
-// Query keys
 export const storageKeys = {
   all: ["storage"] as const,
   workspaces: () => [...storageKeys.all, "workspaces"] as const,
@@ -113,9 +111,7 @@ export const storageKeys = {
     [...storageKeys.workspace(workspaceId), "largest", limit] as const,
 };
 
-// Hooks
 
-// Get all workspaces summary for user
 export function useWorkspacesSummary() {
   return useQuery({
     queryKey: storageKeys.workspaces(),
@@ -129,7 +125,6 @@ export function useWorkspacesSummary() {
   });
 }
 
-// Get complete workspace storage overview
 export function useWorkspaceStorageOverview(workspaceId: string) {
   return useQuery({
     queryKey: storageKeys.overview(workspaceId),
@@ -144,7 +139,6 @@ export function useWorkspaceStorageOverview(workspaceId: string) {
   });
 }
 
-// Get workspace storage info
 export function useWorkspaceStorageInfo(workspaceId: string) {
   return useQuery({
     queryKey: storageKeys.info(workspaceId),
@@ -159,7 +153,6 @@ export function useWorkspaceStorageInfo(workspaceId: string) {
   });
 }
 
-// Get my contribution to workspace
 export function useMyContribution(workspaceId: string) {
   return useQuery({
     queryKey: storageKeys.myContribution(workspaceId),
@@ -174,7 +167,6 @@ export function useMyContribution(workspaceId: string) {
   });
 }
 
-// Get user contributions (admin only)
 export function useUserContributions(
   workspaceId: string,
   enabled: boolean = true,
@@ -192,7 +184,6 @@ export function useUserContributions(
   });
 }
 
-// Get largest files
 export function useLargestFiles(workspaceId: string, limit: number = 10) {
   return useQuery({
     queryKey: storageKeys.largestFiles(workspaceId, limit),
@@ -207,9 +198,7 @@ export function useLargestFiles(workspaceId: string, limit: number = 10) {
   });
 }
 
-// Mutations
 
-// Bulk delete files
 export function useBulkDeleteFiles(workspaceId: string) {
   const queryClient = useQueryClient();
 
@@ -238,7 +227,6 @@ export function useBulkDeleteFiles(workspaceId: string) {
   });
 }
 
-// Delete single file
 export function useDeleteFile(workspaceId: string) {
   const queryClient = useQueryClient();
 
@@ -263,7 +251,6 @@ export function useDeleteFile(workspaceId: string) {
   });
 }
 
-// Check if file can be uploaded
 export function useCheckUpload(workspaceId: string) {
   return useMutation({
     mutationFn: async (fileSize: number) => {

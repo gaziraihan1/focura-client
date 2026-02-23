@@ -1,4 +1,3 @@
-// components/TaskDetail/TaskSidebar/TaskDetailsSection.tsx
 import { motion } from 'framer-motion';
 import { Clock, Calendar, User, Folder } from 'lucide-react';
 import Link from 'next/link';
@@ -21,7 +20,6 @@ export function TaskDetailsSection({ task }: TaskDetailsSectionProps) {
     >
       <h3 className="font-semibold text-foreground mb-4">Details</h3>
 
-      {/* Project */}
       {task.project && (
         <div className="flex items-center gap-3">
           <Folder size={16} className="text-muted-foreground" />
@@ -38,7 +36,6 @@ export function TaskDetailsSection({ task }: TaskDetailsSectionProps) {
         </div>
       )}
 
-      {/* Estimated Hours */}
       {task.estimatedHours && (
         <TaskDetailItem
           icon={Clock}
@@ -47,7 +44,6 @@ export function TaskDetailsSection({ task }: TaskDetailsSectionProps) {
         />
       )}
 
-      {/* Start Date */}
       {task.startDate && (
         <TaskDetailItem
           icon={Calendar}
@@ -56,7 +52,6 @@ export function TaskDetailsSection({ task }: TaskDetailsSectionProps) {
         />
       )}
 
-      {/* Due Date */}
       {task.dueDate && (
         <TaskDetailItem
           icon={Calendar}
@@ -65,17 +60,14 @@ export function TaskDetailsSection({ task }: TaskDetailsSectionProps) {
         />
       )}
 
-      {/* Created By */}
       <TaskDetailItem
         icon={User}
         label="Created By"
         value={task.createdBy.name}
       />
 
-      {/* Assignees */}
       <TaskAssigneesList assignees={task.assignees || []} />
 
-      {/* Timestamps */}
       <TaskTimestamps
         createdAt={task.createdAt}
         completedAt={task.completedAt}

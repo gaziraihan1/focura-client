@@ -1,57 +1,105 @@
-import { useActivityTrends, useAnalyticsOverview, useMemberContribution, useProjectHealth, useTaskTrends, useTimeSummary, useWorkload } from "./useAnalytics";
+'use client';
 
-interface UseAnalyticsPageProps {
-    workspaceId: string;
+import { useMemo } from 'react';
+import {
+  useAnalyticsOverview,
+  useTaskTrends,
+  useProjectHealth,
+  useMemberContribution,
+  useTimeSummary,
+  useActivityTrends,
+  useWorkload,
+} from './useAnalytics';
+
+interface UseAnalyticsPageParams {
+  workspaceId: string;
 }
-export function useAnalyticsPage({workspaceId}: UseAnalyticsPageProps) {
-    
-  // Fetch all analytics data
-  const { data: overview, isLoading: overviewLoading, error: overviewError } = 
-    useAnalyticsOverview(workspaceId);
-  
-  const { data: taskTrends, isLoading: trendsLoading } = 
-    useTaskTrends(workspaceId, 30);
-  
-  const { data: projectHealth, isLoading: projectsLoading } = 
+
+export function useAnalyticsPage({ workspaceId }: UseAnalyticsPageParams) {
+  const {
+    data: overview,
+    isLoading: overviewLoading,
+    error: overviewError,
+  } = useAnalyticsOverview(workspaceId);
+
+  const { data: taskTrends, isLoading: trendsLoading } = useTaskTrends(
+    workspaceId,
+    30
+  );
+
+  const { data: projectHealth, isLoading: projectsLoading } =
     useProjectHealth(workspaceId);
-  
-  const { data: memberContribution, isLoading: membersLoading } = 
+
+  const { data: memberContribution, isLoading: membersLoading } =
     useMemberContribution(workspaceId);
-  
-  const { data: timeSummary, isLoading: timeLoading } = 
-    useTimeSummary(workspaceId, 7);
-  
-  const { data: activityTrends, isLoading: activityLoading } = 
+
+  const { data: timeSummary, isLoading: timeLoading } = useTimeSummary(
+    workspaceId,
+    7
+  );
+
+  const { data: activityTrends, isLoading: activityLoading } =
     useActivityTrends(workspaceId, 30);
-  
-  const { data: workload, isLoading: workloadLoading } = 
+
+  const { data: workload, isLoading: workloadLoading } =
     useWorkload(workspaceId);
 
-  const isLoading = overviewLoading || trendsLoading || projectsLoading || 
-    membersLoading || timeLoading || activityLoading || workloadLoading;
+  const isLoading =
+    overviewLoading ||
+    trendsLoading ||
+    projectsLoading ||
+    membersLoading ||
+    timeLoading ||
+    activityLoading ||
+    workloadLoading;
 
-    const errorMessage =
-      (overviewError as any)?.response?.data?.message ||
-      (overviewError as any)?.message ||
-      'Failed to load analytics';
+  const isAccessDenied = useMemo(() => {
+    if (!overviewError) return false;
+    
+    const error = overviewError as any;
+    return (
+      error?.response?.status === 403 ||
+      error?.message?.toLowerCase().includes('access') ||
+      error?.message?.toLowerCase().includes('permission')
+    );
+  }, [overviewError]);
 
-    const isAccessDenied =
-      errorMessage.includes('restricted') ||
-      errorMessage.includes('access') ||
-      (overviewError as any)?.response?.status === 403;
+  const errorMessage = useMemo(() => {
+    if (!overviewError) return '';
 
-    return {
-        overview,
-        overviewError,
-        taskTrends,
-        projectHealth,
-        memberContribution,
-        timeSummary,
-        activityTrends,
-        workload,
-        isLoading,
-        overviewLoading,
-        isAccessDenied,
-        errorMessage
+    const error = overviewError as any;
+
+    if (isAccessDenied) {
+      return 'You do not have permission to view analytics for this workspace.';
     }
+
+    return (
+      error?.response?.data?.message ||
+      error?.message ||
+      'An unexpected error occurred while loading analytics.'
+    );
+  }, [overviewError, isAccessDenied]);
+
+  return {
+    overview,
+    taskTrends,
+    projectHealth,
+    memberContribution,
+    timeSummary,
+    activityTrends,
+    workload,
+
+    overviewLoading,
+    trendsLoading,
+    projectsLoading,
+    membersLoading,
+    timeLoading,
+    activityLoading,
+    workloadLoading,
+    isLoading,
+
+    overviewError,
+    isAccessDenied,
+    errorMessage,
+  };
 }

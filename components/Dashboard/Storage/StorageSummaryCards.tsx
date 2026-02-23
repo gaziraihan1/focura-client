@@ -26,7 +26,6 @@ export function StorageSummaryCards({ storageInfo }: StorageSummaryCardsProps) {
 
   return (
     <>
-      {/* Workspace Name Card */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -52,9 +51,7 @@ export function StorageSummaryCards({ storageInfo }: StorageSummaryCardsProps) {
         </div>
       </motion.div>
 
-      {/* Storage Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Used Storage */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -70,7 +67,6 @@ export function StorageSummaryCards({ storageInfo }: StorageSummaryCardsProps) {
           <p className="text-sm text-muted-foreground">Storage Used</p>
         </motion.div>
 
-        {/* Total Storage */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -86,7 +82,6 @@ export function StorageSummaryCards({ storageInfo }: StorageSummaryCardsProps) {
           <p className="text-sm text-muted-foreground">Total Limit</p>
         </motion.div>
 
-        {/* Remaining Storage */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -102,7 +97,6 @@ export function StorageSummaryCards({ storageInfo }: StorageSummaryCardsProps) {
           <p className="text-sm text-muted-foreground">Remaining</p>
         </motion.div>
 
-        {/* Usage Percentage */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -115,7 +109,6 @@ export function StorageSummaryCards({ storageInfo }: StorageSummaryCardsProps) {
           </div>
           <p className="text-sm text-muted-foreground mb-3">Usage</p>
 
-          {/* Progress Bar */}
           <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
             <motion.div
               initial={{ width: 0 }}

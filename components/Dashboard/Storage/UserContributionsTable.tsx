@@ -26,7 +26,6 @@ export function UserContributionsTable({
       animate={{ opacity: 1, y: 0 }}
       className="bg-card border rounded-lg p-6"
     >
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-500/10 rounded-lg">
@@ -46,7 +45,6 @@ export function UserContributionsTable({
         </div>
       </div>
 
-      {/* Table */}
       <div className="space-y-3">
         {contributions.map((user, index) => (
           <motion.div
@@ -58,12 +56,10 @@ export function UserContributionsTable({
           >
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-3 min-w-0 flex-1">
-                {/* Avatar */}
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                   <UserIcon className="w-5 h-5 text-primary" />
                 </div>
 
-                {/* User Info */}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <p className="text-sm font-medium truncate">
@@ -77,14 +73,12 @@ export function UserContributionsTable({
                 </div>
               </div>
 
-              {/* Stats */}
               <div className="text-right shrink-0 ml-4">
                 <p className="text-sm font-semibold">{formatStorageSize(user.usageMB)}</p>
                 <p className="text-xs text-muted-foreground">{user.fileCount} files</p>
               </div>
             </div>
 
-            {/* Progress Bar */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <span className="text-xs text-muted-foreground">Contribution</span>
@@ -110,7 +104,6 @@ export function UserContributionsTable({
         )}
       </div>
 
-      {/* Summary */}
       <div className="mt-6 pt-6 border-t">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

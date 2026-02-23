@@ -10,10 +10,8 @@ interface StorageTrendChartProps {
 }
 
 export function StorageTrendChart({ trend }: StorageTrendChartProps) {
-  // Calculate max value for scaling
   const maxValue = Math.max(...trend.map((t) => t.usageMB), 1);
 
-  // Get trend direction
   const firstValue = trend[0]?.usageMB || 0;
   const lastValue = trend[trend.length - 1]?.usageMB || 0;
   const trendDirection = lastValue > firstValue ? 'up' : lastValue < firstValue ? 'down' : 'stable';
@@ -55,7 +53,6 @@ export function StorageTrendChart({ trend }: StorageTrendChartProps) {
         </div>
       </div>
 
-      {/* Chart */}
       <div className="relative h-48 flex items-end gap-1">
         {trend.map((point, index) => {
           const height = (point.usageMB / maxValue) * 100;
@@ -75,7 +72,6 @@ export function StorageTrendChart({ trend }: StorageTrendChartProps) {
                 } hover:bg-primary`}
               />
 
-              {/* Tooltip */}
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                 <div className="bg-popover border rounded-lg shadow-lg p-3 whitespace-nowrap">
                   <p className="text-xs text-muted-foreground">
@@ -92,7 +88,6 @@ export function StorageTrendChart({ trend }: StorageTrendChartProps) {
         })}
       </div>
 
-      {/* X-axis labels */}
       <div className="flex justify-between mt-4 text-xs text-muted-foreground">
         <span>
           {new Date(trend[0]?.date).toLocaleDateString('en-US', {
@@ -114,7 +109,6 @@ export function StorageTrendChart({ trend }: StorageTrendChartProps) {
         </span>
       </div>
 
-      {/* Summary */}
       <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t">
         <div>
           <p className="text-xs text-muted-foreground">Current</p>

@@ -12,18 +12,20 @@ import { WorkloadChart } from './WorkloadChart';
 import { MostActiveDay } from './MostActiveDay';
 import { TimeSummaryCard } from './TimeSummaryCard';
 import { PriorityDistribution } from './PriorityDistribution';
-import { WorkspaceSwitcher } from '../../Storage/WorkspaceSwitcher';
-import { useState } from 'react';
+import { AnalyticsWorkspaceSwitcher } from './AnalyticsWorkspaceSwitcher';
 import { useAnalyticsPage } from '@/hooks/useAnalyticsPage';
-import { useWorkspacesSummary } from '@/hooks/useStorage';
 
-export function AnalyticsPage() {
-  const { data: workspaces } = useWorkspacesSummary();
-  const firstWorkspaceId = workspaces?.[0]?.workspaceId;
+interface AnalyticsPageProps {
+  workspaceId: string;
+  selectedWorkspaceId?: string;
+  setSelectedWorkspaceId?: (id: string) => void;
+}
 
-  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>('');
-  const workspaceId = selectedWorkspaceId || firstWorkspaceId || '';
-
+export function AnalyticsPage({
+  workspaceId,
+  selectedWorkspaceId,
+  setSelectedWorkspaceId,
+}: AnalyticsPageProps) {
   const {
     overview,
     overviewError,
@@ -36,7 +38,7 @@ export function AnalyticsPage() {
     timeSummary,
     isLoading,
     isAccessDenied,
-    errorMessage
+    errorMessage,
   } = useAnalyticsPage({ workspaceId });
 
   // Loading state
@@ -53,8 +55,6 @@ export function AnalyticsPage() {
 
   // Error state - check for 403 access denied
   if (overviewError) {
-    
-
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-4 text-center max-w-md">
@@ -114,11 +114,13 @@ export function AnalyticsPage() {
           </div>
         </div>
 
-        {/* Workspace Switcher */}
-        <WorkspaceSwitcher
-          currentWorkspaceId={selectedWorkspaceId}
-          onWorkspaceChange={setSelectedWorkspaceId}
-        />
+        {/* Workspace Switcher - only show if props provided */}
+        {selectedWorkspaceId && setSelectedWorkspaceId && (
+          <AnalyticsWorkspaceSwitcher
+            currentWorkspaceId={selectedWorkspaceId}
+            onWorkspaceChange={setSelectedWorkspaceId}
+          />
+        )}
       </div>
 
       {/* Executive KPIs */}
