@@ -10,6 +10,8 @@ import {
   Calendar,
   BarChart3,
   Tags,
+  Files,
+  Store,
 } from "lucide-react";
 
 type TabType = "overview" | "projects" | "members";
@@ -59,6 +61,20 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
       match: (path: string) => path.includes(`/${slug}/analytics`),
     }
 
+    const storage = {
+      name: "Storage",
+      href:  `/dashboard/workspaces/${slug}/storage`,
+      icon: Store,
+      match: (path: string) => path.includes(`/${slug}/storage`)
+    }
+
+    const files = {
+      name: "Files",
+      href: `/dashboard/workspaces/${slug}/files`,
+      icon: Files,
+      match: (path: string) => path.includes(`/${slug}/files`)
+    }
+
   const navigation = [
     {
       name: "Overview",
@@ -90,7 +106,7 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
       icon: Calendar,
       match: (path: string) => path.includes(`/${slug}/calendar`),
     },
-    ...(canManageWorkspace ? [analytics, label] : []),
+    ...(canManageWorkspace ? [analytics, label, storage, files] : []),
   ];
 
   const currentMember = workspace?.members.find(

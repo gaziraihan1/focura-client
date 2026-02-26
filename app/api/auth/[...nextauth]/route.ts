@@ -1,8 +1,11 @@
+// src/app/api/auth/[...nextauth]/route.ts
+// STATUS: MODIFY — replaces your current route.ts
+// CHANGES: Wires in the updated limitLogin() from src/lib/limiter.ts
+
 import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth/authOptions";
-import { limiter } from "@/lib/limiter";
-
+import { limitLogin } from "@/lib/limiter";
 
 type NextAuthHandler = (
   req: Request,
@@ -16,10 +19,8 @@ function getClientIp(req: Request): string {
     req.headers.get("x-forwarded-for") ||
     req.headers.get("x-real-ip") ||
     "";
-
   return header.split(",")[0]?.trim() || "unknown";
 }
-
 
 function isLoginPath(path: string): boolean {
   return (
@@ -28,7 +29,6 @@ function isLoginPath(path: string): boolean {
     path.endsWith("/login")
   );
 }
-
 
 export async function GET(
   req: Request,
@@ -48,24 +48,19 @@ export async function POST(
   if (isLoginPath(path)) {
     const ip = getClientIp(req);
 
-    // Optional: scope by email + IP (stronger protection)
     let email: string | null = null;
     try {
       const body = await req.clone().formData();
       email = body.get("email")?.toString().toLowerCase() || null;
-    } catch {}
+    } catch {
+      // formData parse failure is non-fatal — still apply IP-only limit
+    }
 
-    const key = email
-      ? `login:${ip}:${email}`
-      : `login:${ip}`;
-
-    const result = await limiter.limit(key);
+    const result = await limitLogin(ip, email);
 
     if (!result.success) {
       return NextResponse.json(
-        {
-          message: "Too many login attempts. Please try again later.",
-        },
+        { message: "Too many login attempts. Please try again later." },
         {
           status: 429,
           headers: result.reset

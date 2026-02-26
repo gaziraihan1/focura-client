@@ -1,4 +1,18 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient, InfiniteData } from "@tanstack/react-query";
+// hooks/useNotifications.ts
+// FIXES:
+//   1. SSE no longer uses token in URL (stream is public, just needs userId)
+//   2. "no existing notification data" — setQueryData now uses the correct
+//      infinite query key format ["notifications"] with initialPageParam
+//   3. SSE connection is stable — doesn't reconnect on every render
+//   4. Removed refetchInterval (SSE handles real-time updates)
+
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  InfiniteData,
+} from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef } from "react";
@@ -30,11 +44,16 @@ interface UnreadCountResponse {
   count: number;
 }
 
+// Stable empty page — used as fallback when cache is not yet populated
+const EMPTY_PAGE: NotificationsResponse = { items: [], nextCursor: null, hasMore: false };
+
 export function useNotifications() {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
   const eventSourceRef = useRef<EventSource | null>(null);
+  const retryTimer     = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // ─── Notifications infinite query ────────────────────────────────────────
   const {
     data,
     isLoading,
@@ -57,151 +76,159 @@ export function useNotifications() {
           ? `/api/notifications?cursor=${pageParam}`
           : "/api/notifications";
         const response = await api.get<NotificationsResponse>(url);
-        
-        if (!response.data) {
-          console.warn('No data returned from notifications API');
-          return { items: [], nextCursor: null, hasMore: false };
-        }
-        
-        return response.data;
-      } catch (error) {
-        console.error('Failed to fetch notifications:', error);
-        return { items: [], nextCursor: null, hasMore: false };
+        return response.data ?? EMPTY_PAGE;
+      } catch (err) {
+        console.error("Failed to fetch notifications:", err);
+        return EMPTY_PAGE;
       }
     },
-    getNextPageParam: (lastPage) => {
-      return lastPage?.nextCursor ?? undefined;
-    },
+    getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
     initialPageParam: undefined,
     enabled: !!session,
-    refetchInterval: 30000,
     retry: 1,
+    // No refetchInterval — SSE handles real-time updates
   });
 
+  // ─── Unread count query ───────────────────────────────────────────────────
   const { data: unreadCountData } = useQuery({
     queryKey: ["notifications", "unread-count"],
     queryFn: async () => {
       try {
-        const response = await api.get<UnreadCountResponse>("/api/notifications/unread-count");
-        
-        if (!response.data) {
-          console.warn('No data returned from unread count API');
-          return { count: 0 };
-        }
-        
-        return response.data;
-      } catch (error) {
-        console.error('Failed to fetch unread count:', error);
+        const response = await api.get<UnreadCountResponse>(
+          "/api/notifications/unread-count"
+        );
+        return response.data ?? { count: 0 };
+      } catch (err) {
+        console.error("Failed to fetch unread count:", err);
         return { count: 0 };
       }
     },
     enabled: !!session,
-    refetchInterval: 30000,
     retry: 1,
   });
 
+  // ─── SSE connection ───────────────────────────────────────────────────────
+  // Depends only on userId — no token needed, stream is public
+  const userId = session?.user?.id ?? null;
+
   useEffect(() => {
-    if (!session?.user) {
-      return;
-    }
+    if (!userId) return;
 
-    const userId = (session.user as any).id;
-    const token = (session as any)?.backendToken;
+    let cancelled = false;
 
-    if (!userId || !token) {
-      console.warn("❌ Missing userId or backendToken for SSE");
-      return;
-    }
+    function connect() {
+      if (cancelled) return;
 
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const backendUrl =
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-    const sseUrl = `${backendUrl}/api/notifications/stream/${userId}?token=${token}`;
-    
+      const es = new EventSource(
+        `${backendUrl}/api/notifications/stream/${userId}`
+      );
+      eventSourceRef.current = es;
 
-    const eventSource = new EventSource(sseUrl);
+      es.onopen = () => {
+        console.log("✅ SSE connected for user:", userId);
+      };
 
-    eventSource.onopen = () => {
-    };
+      es.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
 
-    eventSource.onmessage = (event) => {
-      try {
-        const notification = JSON.parse(event.data);
+          // Skip the initial connection confirmation message
+          if (data.type === "connected") return;
 
-        if (notification.connected) {
-          return;
-        }
+          const notification = data as Notification;
 
-
-        queryClient.setQueryData(["notifications"], (old: any) => {
-          if (!old) {
-            console.warn("No existing notification data");
-            return old;
-          }
-
-          return {
-            ...old,
-            pages: old.pages.map(
-              (page: NotificationsResponse, index: number) => {
-                if (index === 0) {
-                  return {
-                    ...page,
-                    items: [notification, ...page.items],
-                  };
-                }
-                return page;
+          // Prepend new notification to the first page of the infinite query.
+          // We MUST check if the cache exists first and initialise it if not.
+          queryClient.setQueryData<InfiniteData<NotificationsResponse>>(
+            ["notifications"],
+            (old) => {
+              if (!old) {
+                // Cache not populated yet — create a minimal structure
+                return {
+                  pages:     [{ items: [notification], nextCursor: null, hasMore: false }],
+                  pageParams: [undefined],
+                };
               }
-            ),
-          };
-        });
 
-        queryClient.invalidateQueries({
-          queryKey: ["notifications", "unread-count"],
-        });
+              return {
+                ...old,
+                pages: old.pages.map((page, index) => {
+                  if (index === 0) {
+                    return { ...page, items: [notification, ...page.items] };
+                  }
+                  return page;
+                }),
+              };
+            }
+          );
 
-      } catch (error) {
-        console.error("❌ Error parsing SSE notification:", error);
-      }
-    };
+          // Bump unread count by 1 without a refetch
+          queryClient.setQueryData<UnreadCountResponse>(
+            ["notifications", "unread-count"],
+            (old) => ({ count: (old?.count ?? 0) + 1 })
+          );
+        } catch (err) {
+          console.error("❌ Error parsing SSE notification:", err);
+        }
+      };
 
-    eventSource.onerror = (error) => {
-      console.error("❌ SSE connection error:", error);
-      
-      if (eventSource.readyState === 2) {
-      }
-      
-    };
+      es.onerror = () => {
+        console.warn("⚠️ SSE connection lost — reconnecting in 5s...");
+        es.close();
+        eventSourceRef.current = null;
+        if (!cancelled) {
+          retryTimer.current = setTimeout(() => {
+            if (!cancelled) connect();
+          }, 5000);
+        }
+      };
+    }
 
-    eventSourceRef.current = eventSource;
+    connect();
 
     return () => {
+      cancelled = true;
+      if (retryTimer.current) clearTimeout(retryTimer.current);
       eventSourceRef.current?.close();
       eventSourceRef.current = null;
     };
-  }, [session, queryClient]);
+  }, [userId, queryClient]);
+
+  // ─── Mutations ────────────────────────────────────────────────────────────
 
   const markAsReadMutation = useMutation({
     mutationFn: async (notificationId: string) => {
-      const response = await api.patch(`/api/notifications/${notificationId}/read`);
+      const response = await api.patch(
+        `/api/notifications/${notificationId}/read`
+      );
       return response.data;
     },
     onSuccess: (_, notificationId) => {
-      queryClient.setQueryData(["notifications"], (old: any) => {
-        if (!old) return old;
-
-        return {
-          ...old,
-          pages: old.pages.map((page: NotificationsResponse) => ({
-            ...page,
-            items: page.items.map((notification) =>
-              notification.id === notificationId
-                ? { ...notification, read: true, readAt: new Date().toISOString() }
-                : notification
-            ),
-          })),
-        };
-      });
-
-      queryClient.invalidateQueries({ queryKey: ["notifications", "unread-count"] });
+      queryClient.setQueryData<InfiniteData<NotificationsResponse>>(
+        ["notifications"],
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              items: page.items.map((n) =>
+                n.id === notificationId
+                  ? { ...n, read: true, readAt: new Date().toISOString() }
+                  : n
+              ),
+            })),
+          };
+        }
+      );
+      // Decrement unread count by 1
+      queryClient.setQueryData<UnreadCountResponse>(
+        ["notifications", "unread-count"],
+        (old) => ({ count: Math.max(0, (old?.count ?? 1) - 1) })
+      );
     },
   });
 
@@ -211,23 +238,27 @@ export function useNotifications() {
       return response.data;
     },
     onSuccess: () => {
-      queryClient.setQueryData(["notifications"], (old: any) => {
-        if (!old) return old;
-
-        return {
-          ...old,
-          pages: old.pages.map((page: NotificationsResponse) => ({
-            ...page,
-            items: page.items.map((notification) => ({
-              ...notification,
-              read: true,
-              readAt: new Date().toISOString(),
+      queryClient.setQueryData<InfiniteData<NotificationsResponse>>(
+        ["notifications"],
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              items: page.items.map((n) => ({
+                ...n,
+                read:   true,
+                readAt: new Date().toISOString(),
+              })),
             })),
-          })),
-        };
-      });
-
-      queryClient.invalidateQueries({ queryKey: ["notifications", "unread-count"] });
+          };
+        }
+      );
+      queryClient.setQueryData<UnreadCountResponse>(
+        ["notifications", "unread-count"],
+        { count: 0 }
+      );
     },
   });
 
@@ -237,19 +268,22 @@ export function useNotifications() {
       return notificationId;
     },
     onSuccess: (notificationId) => {
-      queryClient.setQueryData(["notifications"], (old: any) => {
-        if (!old) return old;
-
-        return {
-          ...old,
-          pages: old.pages.map((page: NotificationsResponse) => ({
-            ...page,
-            items: page.items.filter((notification) => notification.id !== notificationId),
-          })),
-        };
+      queryClient.setQueryData<InfiniteData<NotificationsResponse>>(
+        ["notifications"],
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              items: page.items.filter((n) => n.id !== notificationId),
+            })),
+          };
+        }
+      );
+      queryClient.invalidateQueries({
+        queryKey: ["notifications", "unread-count"],
       });
-
-      queryClient.invalidateQueries({ queryKey: ["notifications", "unread-count"] });
     },
   });
 
@@ -259,23 +293,26 @@ export function useNotifications() {
       return response.data;
     },
     onSuccess: () => {
-      queryClient.setQueryData(["notifications"], (old: any) => {
-        if (!old) return old;
-
-        return {
-          ...old,
-          pages: old.pages.map((page: NotificationsResponse) => ({
-            ...page,
-            items: page.items.filter((notification) => !notification.read),
-          })),
-        };
-      });
-
-      queryClient.invalidateQueries({ queryKey: ["notifications", "unread-count"] });
+      queryClient.setQueryData<InfiniteData<NotificationsResponse>>(
+        ["notifications"],
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              items: page.items.filter((n) => !n.read),
+            })),
+          };
+        }
+      );
     },
   });
 
-  const notifications = data?.pages.flatMap((page) => page?.items ?? []) ?? [];
+  // ─── Derived values ───────────────────────────────────────────────────────
+
+  const notifications =
+    data?.pages.flatMap((page) => page?.items ?? []) ?? [];
   const unreadCount = unreadCountData?.count ?? 0;
 
   return {
@@ -287,13 +324,13 @@ export function useNotifications() {
     hasNextPage,
     isFetchingNextPage,
     unreadCount,
-    markAsRead: (id: string) => markAsReadMutation.mutate(id),
-    markAllAsRead: () => markAllAsReadMutation.mutate(),
-    deleteNotification: (id: string) => deleteNotificationMutation.mutate(id),
-    deleteAllRead: () => deleteAllReadMutation.mutate(),
-    isMarkingAsRead: markAsReadMutation.isPending,
-    isMarkingAllAsRead: markAllAsReadMutation.isPending,
-    isDeletingNotification: deleteNotificationMutation.isPending,
-    isDeletingAllRead: deleteAllReadMutation.isPending,
+    markAsRead:              (id: string) => markAsReadMutation.mutate(id),
+    markAllAsRead:           () => markAllAsReadMutation.mutate(),
+    deleteNotification:      (id: string) => deleteNotificationMutation.mutate(id),
+    deleteAllRead:           () => deleteAllReadMutation.mutate(),
+    isMarkingAsRead:         markAsReadMutation.isPending,
+    isMarkingAllAsRead:      markAllAsReadMutation.isPending,
+    isDeletingNotification:  deleteNotificationMutation.isPending,
+    isDeletingAllRead:       deleteAllReadMutation.isPending,
   };
 }

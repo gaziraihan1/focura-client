@@ -4,8 +4,8 @@ import { prisma } from "@/lib/prisma";
 import * as argon2 from "argon2";
 import crypto from "crypto";
 import { sendVerificationEmail } from "@/lib/email";
-import { limiter } from "@/lib/limiter";
 import { Prisma } from "@prisma/client";
+import { limitLogin } from "@/lib/limiter";
 
 // Define a type for the request body
 interface RegisterRequestBody {
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
       req.headers.get("x-real-ip") ||
       "unknown";
 
-    const { success } = await limiter.limit(ip);
+    const { success } = await limitLogin(ip);
     if (!success) {
       return NextResponse.json(
         { error: "Too many attempts. Please try again later." },

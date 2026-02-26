@@ -26,51 +26,53 @@ export function NotificationItem({
 }: NotificationItemProps) {
   return (
     <div
-      className={`group relative p-4 rounded-xl border transition-all ${
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onClick(); }}
+      className={`group relative p-4 rounded-xl border transition-all cursor-pointer ${
         !notification.read
           ? "bg-accent/30 border-accent hover:bg-accent/40"
           : "bg-card border-border hover:bg-accent/20"
       }`}
     >
-      <button onClick={onClick} className="w-full text-left">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <p className="font-medium line-clamp-1">{notification.title}</p>
-              {!notification.read && (
-                <span className="w-2 h-2 bg-primary rounded-full shrink-0" />
-              )}
-            </div>
-            <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
-              {notification.message}
-            </p>
-            <div className="flex items-center gap-3 text-xs text-muted-foreground">
-              <span>
-                {formatDistanceToNow(new Date(notification.createdAt), {
-                  addSuffix: true,
-                })}
-              </span>
-              {notification.sender && (
-                <>
-                  <span>•</span>
-                  <span>from {notification.sender.name}</span>
-                </>
-              )}
-            </div>
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <p className="font-medium line-clamp-1">{notification.title}</p>
+            {!notification.read && (
+              <span className="w-2 h-2 bg-primary rounded-full shrink-0" />
+            )}
           </div>
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
-            }}
-            className="opacity-0 group-hover:opacity-100 p-2 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-all"
-            title="Delete notification"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
+          <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+            {notification.message}
+          </p>
+          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+            <span>
+              {formatDistanceToNow(new Date(notification.createdAt), {
+                addSuffix: true,
+              })}
+            </span>
+            {notification.sender && (
+              <>
+                <span>•</span>
+                <span>from {notification.sender.name}</span>
+              </>
+            )}
+          </div>
         </div>
-      </button>
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
+          className="opacity-0 group-hover:opacity-100 p-2 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-all"
+          title="Delete notification"
+        >
+          <Trash2 className="w-4 h-4" />
+        </button>
+      </div>
     </div>
   );
 }
