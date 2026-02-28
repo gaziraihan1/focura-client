@@ -41,7 +41,7 @@ export default function WorkspaceLayout({
   }
 
   return (
-    <div className="flex bg-background">
+    <div className="flex h-screen overflow-hidden bg-background">
       <WorkspaceSidebar
         workspace={workspace}
         currentMember={currentMember}
@@ -53,14 +53,14 @@ export default function WorkspaceLayout({
         onSwitcherOpen={() => setSwitcherOpen(true)}
       />
 
-      <div className="flex-1 flex flex-col lg:ml-64">
+      <div className="flex-1 flex flex-col min-h-0 lg:ml-64">
         <WorkspaceLayoutHeader
           session={session}
           onSidebarOpen={() => setSidebarOpen(true)}
           onSwitcherOpen={() => setSwitcherOpen(true)}
         />
 
-        <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
+        <main className="flex-1 overflow-y-auto min-h-0 px-4 py-6 sm:px-6 lg:px-8">
           {children}
         </main>
       </div>

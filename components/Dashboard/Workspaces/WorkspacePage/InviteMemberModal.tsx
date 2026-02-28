@@ -96,7 +96,7 @@ export function InviteMemberModal({
               {inviteMember.isPending ? (
                 <Loader2 className="animate-spin" size={16} />
               ) : (
-                <Mail size={16} className="sm:w-[18px] sm:h-[18px]" />
+                <Mail size={16} className="sm:w-4.5 sm:h-4.5" />
               )}
               Send Invitation
             </button>

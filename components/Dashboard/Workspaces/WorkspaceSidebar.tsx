@@ -58,7 +58,7 @@ export function WorkspaceSidebar({
               className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition group"
             >
               <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold"
+                className="w-10 p-2 h-10 rounded-lg flex items-center justify-center text-white font-bold"
                 style={{ backgroundColor: workspace.color || "#667eea" }}
               >
                 {workspace.logo || workspace.name.charAt(0).toUpperCase()}

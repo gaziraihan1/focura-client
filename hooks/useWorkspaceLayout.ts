@@ -12,6 +12,7 @@ import {
   Tags,
   Files,
   Store,
+  UserLock,
 } from "lucide-react";
 
 type TabType = "overview" | "projects" | "members";
@@ -74,6 +75,12 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
       icon: Files,
       match: (path: string) => path.includes(`/${slug}/files`)
     }
+    const workspaceUsage = {
+      name: "Workspace Usage",
+      href: `/dashboard/workspaces/${slug}/workspace-usage`,
+      icon: UserLock,
+      match: (path: string) => path.includes(`/${slug}/workspace-usage`)
+    }
 
   const navigation = [
     {
@@ -106,7 +113,7 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
       icon: Calendar,
       match: (path: string) => path.includes(`/${slug}/calendar`),
     },
-    ...(canManageWorkspace ? [analytics, label, storage, files] : []),
+    ...(canManageWorkspace ? [label, analytics, workspaceUsage, storage, files] : []),
   ];
 
   const currentMember = workspace?.members.find(

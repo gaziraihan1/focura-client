@@ -104,12 +104,8 @@ const navigation: NavItem[] = [
   },
   {
     name: "Analytics",
-    // href: "",
+    href: "/dashboard/analytics",
     icon: BarChart3,
-    children: [
-      {name: "Analytics", href: "/dashboard/analytics"},
-      {name: "Workspace Usage", href: "/dashboard/analytics/workspace-usage"}
-    ]
   },
   {
     name: "Activity Logs",

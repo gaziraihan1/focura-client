@@ -1,10 +1,8 @@
-// hooks/useNotifications.ts
-// FIXES:
-//   1. SSE no longer uses token in URL (stream is public, just needs userId)
-//   2. "no existing notification data" — setQueryData now uses the correct
-//      infinite query key format ["notifications"] with initialPageParam
-//   3. SSE connection is stable — doesn't reconnect on every render
-//   4. Removed refetchInterval (SSE handles real-time updates)
+// frontend/src/hooks/useNotifications.ts
+//
+// SSE connects to /api/notifications/stream?token=<accessToken>
+// Backend verifies the token and extracts userId server-side.
+// The client never decides which userId's notifications it receives.
 
 import {
   useInfiniteQuery,
@@ -44,16 +42,14 @@ interface UnreadCountResponse {
   count: number;
 }
 
-// Stable empty page — used as fallback when cache is not yet populated
+
 const EMPTY_PAGE: NotificationsResponse = { items: [], nextCursor: null, hasMore: false };
 
 export function useNotifications() {
-  const queryClient = useQueryClient();
+  const queryClient       = useQueryClient();
   const { data: session } = useSession();
-  const eventSourceRef = useRef<EventSource | null>(null);
-  const retryTimer     = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const eventSourceRef    = useRef<EventSource | null>(null);
 
-  // ─── Notifications infinite query ────────────────────────────────────────
   const {
     data,
     isLoading,
@@ -76,7 +72,7 @@ export function useNotifications() {
           ? `/api/notifications?cursor=${pageParam}`
           : "/api/notifications";
         const response = await api.get<NotificationsResponse>(url);
-        return response.data ?? EMPTY_PAGE;
+        return response?.data ?? EMPTY_PAGE;
       } catch (err) {
         console.error("Failed to fetch notifications:", err);
         return EMPTY_PAGE;
@@ -84,12 +80,10 @@ export function useNotifications() {
     },
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
     initialPageParam: undefined,
-    enabled: !!session,
-    retry: 1,
-    // No refetchInterval — SSE handles real-time updates
+    enabled:          !!session,
+    retry:            1,
   });
 
-  // ─── Unread count query ───────────────────────────────────────────────────
   const { data: unreadCountData } = useQuery({
     queryKey: ["notifications", "unread-count"],
     queryFn: async () => {
@@ -97,75 +91,60 @@ export function useNotifications() {
         const response = await api.get<UnreadCountResponse>(
           "/api/notifications/unread-count"
         );
-        return response.data ?? { count: 0 };
+        return response?.data ?? { count: 0 };
       } catch (err) {
         console.error("Failed to fetch unread count:", err);
         return { count: 0 };
       }
     },
     enabled: !!session,
-    retry: 1,
+    retry:   1,
   });
 
-  // ─── SSE connection ───────────────────────────────────────────────────────
-  // Depends only on userId — no token needed, stream is public
-  const userId = session?.user?.id ?? null;
+  const backendToken = session?.backendToken ?? null;
 
   useEffect(() => {
-    if (!userId) return;
-
+    if (!backendToken) return;
     let cancelled = false;
 
     function connect() {
-      if (cancelled) return;
-
-      const backendUrl =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
       const es = new EventSource(
-        `${backendUrl}/api/notifications/stream/${userId}`
+        `${backendUrl}/api/notifications/stream?token=${backendToken}`
       );
       eventSourceRef.current = es;
 
       es.onopen = () => {
-        console.log("✅ SSE connected for user:", userId);
+        console.log("✅ SSE connected");
       };
 
       es.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-
-          // Skip the initial connection confirmation message
           if (data.type === "connected") return;
 
           const notification = data as Notification;
 
-          // Prepend new notification to the first page of the infinite query.
-          // We MUST check if the cache exists first and initialise it if not.
           queryClient.setQueryData<InfiniteData<NotificationsResponse>>(
             ["notifications"],
             (old) => {
               if (!old) {
-                // Cache not populated yet — create a minimal structure
                 return {
-                  pages:     [{ items: [notification], nextCursor: null, hasMore: false }],
+                  pages:      [{ items: [notification], nextCursor: null, hasMore: false }],
                   pageParams: [undefined],
                 };
               }
-
               return {
                 ...old,
-                pages: old.pages.map((page, index) => {
-                  if (index === 0) {
-                    return { ...page, items: [notification, ...page.items] };
-                  }
-                  return page;
-                }),
+                pages: old.pages.map((page, index) =>
+                  index === 0
+                    ? { ...page, items: [notification, ...page.items] }
+                    : page
+                ),
               };
             }
           );
 
-          // Bump unread count by 1 without a refetch
           queryClient.setQueryData<UnreadCountResponse>(
             ["notifications", "unread-count"],
             (old) => ({ count: (old?.count ?? 0) + 1 })
@@ -176,13 +155,10 @@ export function useNotifications() {
       };
 
       es.onerror = () => {
-        console.warn("⚠️ SSE connection lost — reconnecting in 5s...");
         es.close();
         eventSourceRef.current = null;
         if (!cancelled) {
-          retryTimer.current = setTimeout(() => {
-            if (!cancelled) connect();
-          }, 5000);
+          setTimeout(() => { if (!cancelled) connect(); }, 5000);
         }
       };
     }
@@ -191,19 +167,15 @@ export function useNotifications() {
 
     return () => {
       cancelled = true;
-      if (retryTimer.current) clearTimeout(retryTimer.current);
       eventSourceRef.current?.close();
       eventSourceRef.current = null;
     };
-  }, [userId, queryClient]);
+  }, [backendToken, queryClient]);
 
-  // ─── Mutations ────────────────────────────────────────────────────────────
 
   const markAsReadMutation = useMutation({
     mutationFn: async (notificationId: string) => {
-      const response = await api.patch(
-        `/api/notifications/${notificationId}/read`
-      );
+      const response = await api.patch(`/api/notifications/${notificationId}/read`);
       return response.data;
     },
     onSuccess: (_, notificationId) => {
@@ -224,7 +196,6 @@ export function useNotifications() {
           };
         }
       );
-      // Decrement unread count by 1
       queryClient.setQueryData<UnreadCountResponse>(
         ["notifications", "unread-count"],
         (old) => ({ count: Math.max(0, (old?.count ?? 1) - 1) })
@@ -281,9 +252,7 @@ export function useNotifications() {
           };
         }
       );
-      queryClient.invalidateQueries({
-        queryKey: ["notifications", "unread-count"],
-      });
+      queryClient.invalidateQueries({ queryKey: ["notifications", "unread-count"] });
     },
   });
 
@@ -309,11 +278,9 @@ export function useNotifications() {
     },
   });
 
-  // ─── Derived values ───────────────────────────────────────────────────────
 
-  const notifications =
-    data?.pages.flatMap((page) => page?.items ?? []) ?? [];
-  const unreadCount = unreadCountData?.count ?? 0;
+  const notifications = data?.pages.flatMap((page) => page?.items ?? []) ?? [];
+  const unreadCount   = unreadCountData?.count ?? 0;
 
   return {
     notifications,
@@ -324,13 +291,13 @@ export function useNotifications() {
     hasNextPage,
     isFetchingNextPage,
     unreadCount,
-    markAsRead:              (id: string) => markAsReadMutation.mutate(id),
-    markAllAsRead:           () => markAllAsReadMutation.mutate(),
-    deleteNotification:      (id: string) => deleteNotificationMutation.mutate(id),
-    deleteAllRead:           () => deleteAllReadMutation.mutate(),
-    isMarkingAsRead:         markAsReadMutation.isPending,
-    isMarkingAllAsRead:      markAllAsReadMutation.isPending,
-    isDeletingNotification:  deleteNotificationMutation.isPending,
-    isDeletingAllRead:       deleteAllReadMutation.isPending,
+    markAsRead:             (id: string) => markAsReadMutation.mutate(id),
+    markAllAsRead:          () => markAllAsReadMutation.mutate(),
+    deleteNotification:     (id: string) => deleteNotificationMutation.mutate(id),
+    deleteAllRead:          () => deleteAllReadMutation.mutate(),
+    isMarkingAsRead:        markAsReadMutation.isPending,
+    isMarkingAllAsRead:     markAllAsReadMutation.isPending,
+    isDeletingNotification: deleteNotificationMutation.isPending,
+    isDeletingAllRead:      deleteAllReadMutation.isPending,
   };
 }

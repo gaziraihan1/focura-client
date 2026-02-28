@@ -66,7 +66,7 @@ const handleLogout = async () => {
             <Menu size={24} className="text-foreground" />
           </button>
 
-          <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-muted/50 border border-border min-w-[300px] lg:min-w-[400px]">
+          <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-muted/50 border border-border min-w-75 lg:min-w-100">
             <Search size={18} className="text-muted-foreground" />
             <input
               type="text"
