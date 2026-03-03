@@ -1,12 +1,47 @@
-export type DateRangeFilter = '7d' | '30d' | '90d' | 'custom';
+export type DateRangeFilter = "7d" | "30d" | "90d" | "custom";
 
 export interface WorkspaceUsageData {
+  snapshot: UsageSnapshot;
   projectActivity: ProjectActivityMetrics;
   userEngagement: UserEngagementMetrics;
   resourceUsage: ResourceUsageMetrics;
   workspaceLoad: WorkspaceLoadMetrics;
   workspaceGrowth: WorkspaceGrowthMetrics;
+  featureUsage: FeatureUsageMetrics;
+  planLimits: PlanLimitsMetrics;
   isAdmin: boolean;
+}
+
+export interface UsageSnapshot {
+  totalMembers: number;
+  activeMembers: number;
+  totalTasks: number;
+  totalProjects: number;
+  storageUsedMB: number;
+  activityEvents: number;
+  avgDailyUsers: number;
+  engagementScore: number;
+}
+
+export interface FeatureUsageMetrics {
+  tasksCreated: number;
+  commentsAdded: number;
+  timeEntriesLogged: number;
+  filesUploaded: number;
+  mentionsUsed: number;
+  notificationsTriggered: number;
+}
+
+export interface PlanLimitsMetrics {
+  currentPlan: string;
+  memberCount: number;
+  memberLimit: number;
+  storageUsedMB: number;
+  storageLimitMB: number;
+  projectCount: number;
+  projectLimit: number;
+  automationCount: number;
+  automationLimit: number;
 }
 
 export interface ProjectActivityMetrics {
@@ -21,7 +56,7 @@ export interface ProjectActivityMetrics {
   }>;
   lowActivity: Array<{
     id: string;
-    name: string;
+    name: string | null;
     color: string | null;
     taskCount: number;
     daysSinceLastActivity: number;
@@ -57,6 +92,10 @@ export interface UserEngagementMetrics {
     tasksAssigned: number;
     collaborationScore: number;
   }>;
+  dailyActiveUsers: Array<{
+    date: string;   
+    count: number;  
+  }>;
 }
 
 export interface ResourceUsageMetrics {
@@ -89,7 +128,7 @@ export interface WorkspaceLoadMetrics {
     userImage: string | null;
     activeTasks: number;
     overdueTasks: number;
-    capacityLevel: 'UNDERUTILIZED' | 'OPTIMAL' | 'NEAR_CAPACITY' | 'OVERLOADED';
+    capacityLevel: "UNDERUTILIZED" | "OPTIMAL" | "NEAR_CAPACITY" | "OVERLOADED";
   }>;
   projectsNearingDeadlines: Array<{
     projectId: string;

@@ -1,4 +1,3 @@
-// components/Analytics/WorkspaceUsage/EngagementSection.tsx
 "use client";
 
 import { useState, useMemo } from "react";
@@ -16,63 +15,11 @@ import type {
   UserEngagementMetrics,
   ProjectActivityMetrics,
 } from "@/types/workspace-usage.types";
-import Image from "next/image";
+import { UserAvatar } from "./UserAvatar";
 
 interface EngagementSectionProps {
   userEngagement: UserEngagementMetrics;
   projectActivity: ProjectActivityMetrics;
-}
-
-type TimeRange = "DAU" | "WAU" | "MAU";
-
-function UserAvatar({
-  name,
-  image,
-  size = "sm",
-}: {
-  name: string;
-  image?: string | null;
-  size?: "sm" | "md";
-}) {
-  const initials = name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
-
-  const sizeClass = size === "sm" ? "w-8 h-8 text-xs" : "w-10 h-10 text-sm";
-
-  if (image) {
-    return (
-      <Image
-      width={20}
-      height={20}
-        src={image}
-        alt={name}
-        className={`${sizeClass} rounded-full object-cover shrink-0`}
-      />
-    );
-  }
-
-  const colors = [
-    "bg-blue-500",
-    "bg-green-500",
-    "bg-purple-500",
-    "bg-orange-500",
-    "bg-pink-500",
-    "bg-indigo-500",
-  ];
-  const colorIndex =
-    name.charCodeAt(0) % colors.length;
-
-  return (
-    <div
-      className={`${sizeClass} ${colors[colorIndex]} rounded-full flex items-center justify-center text-white font-semibold shrink-0`}
-    >
-      {initials}
-    </div>
-  );
 }
 
 const medalColors: Record<number, string> = {
@@ -81,31 +28,29 @@ const medalColors: Record<number, string> = {
   2: "text-amber-700",
 };
 
+const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const hoursReduced = [0, 3, 6, 9, 12, 15, 18, 21];
+
 export function EngagementSection({
   userEngagement,
-  projectActivity,
+  // projectActivity,
 }: EngagementSectionProps) {
-  const [timeRange, setTimeRange] = useState<TimeRange>("MAU");
   const [searchQuery, setSearchQuery] = useState("");
 
+  // ✅ REAL DATA — dailyActiveUsers from Activity table (getDailyActiveUsers)
+  // Previously: used random math based on tasksPerProjectTrend index — completely wrong.
+  // Now: uses actual distinct-user counts per calendar day from the backend.
   const chartData = useMemo(() => {
-    const trend = projectActivity.tasksPerProjectTrend[0]?.trend ?? [];
-    return trend.map((t, i) => ({
-      date: new Date(t.date).toLocaleDateString("en-US", {
+    if (!userEngagement.dailyActiveUsers?.length) return [];
+
+    return userEngagement.dailyActiveUsers.map((day) => ({
+      date: new Date(day.date).toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
       }),
-      users:
-        timeRange === "DAU"
-          ? ((i * 7 + 3) % 15) + 5
-          : timeRange === "WAU"
-          ? ((i * 11 + 5) % 25) + 10
-          : ((i * 13 + 7) % 40) + 15,
+      users: day.count,
     }));
-  }, [projectActivity.tasksPerProjectTrend, timeRange]);
-
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const hoursReduced = [0, 3, 6, 9, 12, 15, 18, 21];
+  }, [userEngagement.dailyActiveUsers]);
 
   const filteredLeaderboard = useMemo(
     () =>
@@ -118,60 +63,68 @@ export function EngagementSection({
   );
 
   const activeStats = [
-    { label: "Online Now", value: userEngagement.activeUsers.online, color: "text-green-500" },
-    { label: "This Week", value: userEngagement.activeUsers.thisWeek, color: "text-blue-500" },
-    { label: "This Month", value: userEngagement.activeUsers.thisMonth, color: "text-purple-500" },
+    {
+      label: "Online Now",
+      value: userEngagement.activeUsers.online,
+      color: "text-green-500",
+    },
+    {
+      label: "This Week",
+      value: userEngagement.activeUsers.thisWeek,
+      color: "text-blue-500",
+    },
+    {
+      label: "This Month",
+      value: userEngagement.activeUsers.thisMonth,
+      color: "text-purple-500",
+    },
   ];
 
   return (
     <section className="space-y-3 sm:space-y-4">
       <div className="flex items-center gap-2">
         <Users className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
-        <h2 className="text-base sm:text-lg font-semibold text-foreground">User Engagement</h2>
+        <h2 className="text-base sm:text-lg font-semibold text-foreground">
+          User Engagement
+        </h2>
         <span className="text-[10px] sm:text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
           Admin view
         </span>
       </div>
 
+      {/* Active user summary cards */}
       <div className="grid grid-cols-3 gap-2 sm:gap-3">
         {activeStats.map((stat) => (
           <div
             key={stat.label}
             className="bg-card border border-border rounded-lg sm:rounded-xl p-2.5 sm:p-4 text-center"
           >
-            <p className={`text-lg sm:text-2xl font-bold ${stat.color}`}>{stat.value}</p>
-            <p className="text-xs text-muted-foreground mt-0.5 sm:mt-1">{stat.label}</p>
+            <p className={`text-lg sm:text-2xl font-bold ${stat.color}`}>
+              {stat.value}
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5 sm:mt-1">
+              {stat.label}
+            </p>
           </div>
         ))}
       </div>
 
+      {/* DAU chart + Peak Hours heatmap */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
+        {/* ✅ Daily Active Users — real data from Activity table */}
         <div className="lg:col-span-2 bg-card border border-border rounded-xl sm:rounded-2xl p-3.5 sm:p-5">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-4 sm:mb-5">
             <div>
               <h3 className="text-sm font-semibold text-foreground">
-                Active Users Trend
+                Daily Active Users
               </h3>
-              <p className="text-xs text-muted-foreground mt-0.5">Last 7 days</p>
-            </div>
-            <div className="flex items-center gap-0.5 p-1 rounded-lg bg-muted w-fit">
-              {(["DAU", "WAU", "MAU"] as TimeRange[]).map((range) => (
-                <button
-                  key={range}
-                  onClick={() => setTimeRange(range)}
-                  className={`px-2 sm:px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${
-                    timeRange === range
-                      ? "bg-background text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {range}
-                </button>
-              ))}
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Distinct users with activity — last 7 days
+              </p>
             </div>
           </div>
 
-          <div className="h-40 sm:h-50">
+          <div className="h-40 sm:h-48">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
                 <CartesianGrid
@@ -181,16 +134,23 @@ export function EngagementSection({
                 />
                 <XAxis
                   dataKey="date"
-                  tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+                  tick={{
+                    fontSize: 12,
+                    fill: "hsl(var(--muted-foreground))",
+                  }}
                   stroke="hsl(var(--border))"
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+                  tick={{
+                    fontSize: 13,
+                    fill: "hsl(var(--muted-foreground))",
+                  }}
                   stroke="hsl(var(--border))"
                   tickLine={false}
                   axisLine={false}
-                  width={30}
+                  allowDecimals={false}
+                  width={28}
                 />
                 <Tooltip
                   contentStyle={{
@@ -200,13 +160,18 @@ export function EngagementSection({
                     color: "hsl(var(--foreground))",
                     fontSize: "12px",
                   }}
+                  formatter={(value) => [Math.round(Number(value)), "Active users"]}
                 />
                 <Line
                   type="monotone"
                   dataKey="users"
-                  stroke="#3b82f6"
+                  stroke="hsl(var(--primary))"
                   strokeWidth={2}
-                  dot={{ fill: "#3b82f6", r: 3, strokeWidth: 0 }}
+                  dot={{
+                    fill: "hsl(var(--primary))",
+                    r: 3,
+                    strokeWidth: 0,
+                  }}
                   activeDot={{ r: 5, strokeWidth: 0 }}
                 />
               </LineChart>
@@ -214,31 +179,31 @@ export function EngagementSection({
           </div>
         </div>
 
+        {/* Peak hours heatmap — decorative, based on activity shape */}
         <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-3.5 sm:p-5">
           <h3 className="text-sm font-semibold text-foreground mb-1">
             Peak Hours
           </h3>
           <p className="text-xs text-muted-foreground mb-3 sm:mb-4">
-            Activity by hour & day
+            Activity by hour &amp; day
           </p>
 
           <div className="space-y-1 sm:space-y-1.5">
-            {days.map((day) => (
+            {days.map((day, di) => (
               <div key={day} className="flex items-center gap-2 sm:gap-1.5">
                 <span className="text-xs font-medium text-muted-foreground w-7 shrink-0">
                   {day}
                 </span>
                 <div className="flex gap-1 flex-1">
                   {hoursReduced.map((hour, hi) => {
-                    const di = days.indexOf(day);
-                    const activity = ((di * 31 + hi * 17 + 13) % 100);
+                    const activity = (di * 31 + hi * 17 + 13) % 100;
                     return (
                       <div
                         key={hour}
-                        className="flex-1 h-3 sm:h-3.5 rounded-sm cursor-pointer hover:opacity-100 transition-opacity"
+                        className="flex-1 h-3 sm:h-3.5 rounded-sm transition-opacity hover:opacity-100"
                         style={{
                           backgroundColor: `rgba(59, 130, 246, ${
-                            activity / 100 * 0.85 + 0.05
+                            (activity / 100) * 0.85 + 0.05
                           })`,
                         }}
                         title={`${day} ${hour}:00 — ${activity}%`}
@@ -266,6 +231,7 @@ export function EngagementSection({
         </div>
       </div>
 
+      {/* Inactive members */}
       {userEngagement.inactiveUsers.length > 0 && (
         <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-3.5 sm:p-5">
           <div className="flex items-center gap-2 mb-3 sm:mb-4">
@@ -300,6 +266,7 @@ export function EngagementSection({
         </div>
       )}
 
+      {/* Collaboration leaderboard */}
       <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-3.5 sm:p-5">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 mb-4 sm:mb-5">
           <div className="flex items-center gap-2">
@@ -315,20 +282,20 @@ export function EngagementSection({
               placeholder="Search members..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8 pr-3 py-1.5 text-xs bg-muted border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 text-foreground placeholder:text-muted-foreground w-full sm:w-48"
+              className="pl-8 pr-3 py-1.5 text-xs bg-muted border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground placeholder:text-muted-foreground w-full sm:w-48"
             />
           </div>
         </div>
 
         <div className="overflow-x-auto -mx-3.5 sm:-mx-5 px-3.5 sm:px-5 pb-1">
-          <table className="w-full min-w-105">
+          <table className="w-full min-w-96">
             <thead>
               <tr className="border-b border-border">
                 {["Member", "Tasks", "Comments", "Assigned", "Score"].map(
                   (h, i) => (
                     <th
                       key={h}
-                      className={`py-2 pb-2.5 sm:pb-3 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider ${
+                      className={`py-2 pb-2.5 sm:pb-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider ${
                         i === 0 ? "text-left" : "text-right"
                       }`}
                     >
@@ -347,7 +314,7 @@ export function EngagementSection({
                   <td className="py-2.5 sm:py-3">
                     <div className="flex items-center gap-2 sm:gap-2.5">
                       <span
-                        className={`text-xs font-bold w-5 text-center ${
+                        className={`text-sm font-bold w-5 text-center ${
                           medalColors[index] ?? "text-muted-foreground"
                         }`}
                       >
@@ -362,10 +329,10 @@ export function EngagementSection({
                         image={user.userImage}
                       />
                       <div className="min-w-0">
-                        <p className="text-xs font-semibold text-foreground truncate max-w-25 sm:max-w-none">
+                        <p className="text-sm font-semibold text-foreground truncate max-w-24 sm:max-w-none">
                           {user.userName || "Unknown"}
                         </p>
-                        <p className="text-[10px] text-muted-foreground truncate max-w-25 sm:max-w-none hidden sm:block">
+                        <p className="text-xs text-muted-foreground truncate max-w-24 sm:max-w-none hidden sm:block">
                           {user.userEmail}
                         </p>
                       </div>

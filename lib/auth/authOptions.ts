@@ -1,11 +1,3 @@
-// frontend/src/lib/auth/authOptions.ts
-// FIXES:
-//   1. Exchange failure on initial sign-in no longer throws into NextAuth
-//      (throwing in jwt callback = NextAuth calls signOut() automatically)
-//   2. Silent refresh failure no longer keeps stale expired token in a loop
-//   3. Refresh lock keyed by sessionId (more precise than userId)
-//   4. Neither exchange nor refresh ever throw — they return null and degrade
-
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -20,9 +12,6 @@ const DUMMY_HASH  = "$argon2id$v=19$m=65536,t=3,p=4$c29tZXNhbHQ$ZHVtbXloYXNo";
 
 interface GoogleProfile { email_verified?: boolean; verified_email?: boolean; }
 
-// ─── Refresh lock ─────────────────────────────────────────────────────────────
-// Prevents concurrent jwt() callbacks from rotating the same refresh token,
-// which would trigger TOKEN_REPLAY_DETECTED on the second call.
 const refreshLocks = new Map<string, Promise<any>>();
 
 // ─── HMAC exchange proof ──────────────────────────────────────────────────────
@@ -38,8 +27,6 @@ function createExchangeProof(
   return { timestamp, signature };
 }
 
-// ─── Exchange — NEVER throws ──────────────────────────────────────────────────
-// If this threw, NextAuth would catch it in the jwt callback and call signOut().
 async function exchangeForTokens(
   user: { id: string; email: string; role: string },
   sessionId: string
@@ -70,7 +57,6 @@ async function exchangeForTokens(
   }
 }
 
-// ─── Silent refresh — NEVER throws ───────────────────────────────────────────
 async function silentRefresh(
   sessionId: string,
   refreshToken: string
@@ -78,31 +64,41 @@ async function silentRefresh(
   accessToken: string; refreshToken: string;
   accessTokenExpiry: number; refreshTokenExpiry: number;
 } | null> {
-  // Reuse in-flight promise for this session to prevent duplicate rotation
+  // If a refresh is already in-flight for this session, wait for it
   const existing = refreshLocks.get(sessionId);
   if (existing) return existing.catch(() => null);
 
-  const promise = (async () => {
+  // Create the promise handles BEFORE starting async work
+  // so the lock is in place synchronously
+  let resolve!: (value: any) => void;
+  let reject!:  (reason: any) => void;
+  const promise = new Promise<any>((res, rej) => {
+    resolve = res;
+    reject  = rej;
+  });
+
+  // Lock is set synchronously — any concurrent callback arriving now
+  // will find this promise and wait on it instead of firing a second refresh
+  refreshLocks.set(sessionId, promise);
+
+  try {
     const res = await fetch(`${BACKEND_URL}/api/auth/refresh`, {
       method:  "POST",
       headers: { "Content-Type": "application/json" },
       body:    JSON.stringify({ refreshToken }),
     });
-    if (!res.ok) return null;
-    return res.json();
-  })();
 
-  refreshLocks.set(sessionId, promise);
-  try {
-    return await promise;
-  } catch {
+    const result = res.ok ? await res.json() : null;
+    resolve(result);
+    return result;
+  } catch (err) {
+    resolve(null); // resolve (not reject) so waiting callbacks get null, not an unhandled rejection
     return null;
   } finally {
     refreshLocks.delete(sessionId);
   }
 }
 
-// ─── authOptions ──────────────────────────────────────────────────────────────
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -145,7 +141,7 @@ export const authOptions: NextAuthOptions = {
         if (!isValid) throw new Error("Invalid credentials.");
         await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
         const { password: _pw, ...safeUser } = user;
-        return safeUser;
+        return safeUser ;
       },
     }),
   ],
@@ -164,15 +160,12 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
 
-      // ─── Initial sign-in ────────────────────────────────────────────────
       if (user) {
         const sessionId = crypto.randomUUID();
         token.id        = user.id;
         token.role      = user.role ?? "USER";
         token.sessionId = sessionId;
 
-        // IMPORTANT: we do NOT throw here even if exchange fails.
-        // Any throw in the jwt callback causes NextAuth to call signOut() automatically.
         const tokens = await exchangeForTokens(
           { id: user.id, email: user.email!, role: user.role ?? "USER" },
           sessionId
@@ -184,8 +177,6 @@ export const authOptions: NextAuthOptions = {
           token.refreshToken       = tokens.refreshToken;
           token.refreshTokenExpiry = tokens.refreshTokenExpiry;
         } else {
-          // Degrade gracefully — session is alive, API calls will 401
-          // until the backend recovers and refresh succeeds
           token.backendToken       = "";
           token.backendTokenExpiry = 0;
           token.refreshToken       = "";
@@ -208,18 +199,22 @@ export const authOptions: NextAuthOptions = {
         );
 
         if (tokens) {
-          token.backendToken       = tokens.accessToken;
-          token.backendTokenExpiry = tokens.accessTokenExpiry;
-          token.refreshToken       = tokens.refreshToken;
-          token.refreshTokenExpiry = tokens.refreshTokenExpiry;
-        } else {
-          // Refresh failed transiently — clear the expired access token
-          // so the client gets a clean 401 rather than sending a bad token.
-          // Keep refreshToken so we retry next time. Do NOT throw.
-          token.backendToken       = "";
-          token.backendTokenExpiry = 0;
-          console.warn("⚠️  Silent refresh failed — will retry on next request");
-        }
+  token.backendToken = tokens.accessToken;
+  token.backendTokenExpiry = tokens.accessTokenExpiry;
+  token.refreshToken = tokens.refreshToken;
+  token.refreshTokenExpiry = tokens.refreshTokenExpiry;
+} else {
+  const refreshExpired =
+    !token.refreshTokenExpiry ||
+    Date.now() > (token.refreshTokenExpiry as number);
+
+  if (refreshExpired) {
+    throw new Error("SESSION_EXPIRED");
+  }
+
+  token.backendToken = "";
+  token.backendTokenExpiry = 0;
+}
       }
 
       return token;
@@ -244,11 +239,19 @@ export const authOptions: NextAuthOptions = {
               where: { email: user.email! },
               data: {
                 lastLoginAt:   new Date(),
-                emailVerified: isVerified && !existing.emailVerified ? new Date() : existing.emailVerified,
+                emailVerified: isVerified ? (existing.emailVerified ?? new Date()) : existing.emailVerified,
                 name:          existing.name  || user.name,
                 image:         existing.image || user.image,
               },
             });
+          } else {
+            if (isVerified) {
+              await prisma.user.update({
+                where: { email: user.email! },
+                data:  { emailVerified: new Date() },
+              }).catch(() => {
+              });
+            }
           }
           return true;
         } catch (err) {

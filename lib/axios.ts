@@ -19,6 +19,17 @@ interface ApiErrorResponse {
   code?: string;
 }
 
+let sessionPromise: Promise<any> | null = null;
+
+async function getFreshSession() {
+  if (!sessionPromise) {
+    sessionPromise = getSession().finally(() => {
+      sessionPromise = null;
+    });
+  }
+  return sessionPromise;
+}
+
 const API_BASE_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:5000"
@@ -37,17 +48,23 @@ export const axiosInstance = axios.create({
   withCredentials: true,
 });
 
+const TOKEN_CACHE_TTL = 12 * 60 * 1000;
+
 let cachedBackendToken: string | null = null;
 let cachedTokenExpiry = 0;
+
+function invalidateTokenCache() {
+  cachedBackendToken = null;
+  cachedTokenExpiry = 0;
+}
 
 axiosInstance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     const now = Date.now();
-
     if (!cachedBackendToken || now > cachedTokenExpiry) {
-      const session = await getSession();
+      const session = await getFreshSession();
       cachedBackendToken = session?.backendToken ?? null;
-      cachedTokenExpiry = session ? now + 60 * 60 * 1000 : now;
+      cachedTokenExpiry = cachedBackendToken ? now + TOKEN_CACHE_TTL : 0;
     }
 
     if (cachedBackendToken) {
@@ -64,21 +81,64 @@ axiosInstance.interceptors.request.use(
 
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
+);
+
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  async (error: AxiosError<ApiErrorResponse>) => {
+    const code = error.response?.data?.code;
+    const originalConfig = error.config as InternalAxiosRequestConfig & {
+      _retried?: boolean;
+    };
+
+    if (
+      code === "TOKEN_EXPIRED" &&
+      originalConfig &&
+      !originalConfig._retried
+    ) {
+      originalConfig._retried = true;
+      invalidateTokenCache();
+
+      const session = await getFreshSession();
+      cachedBackendToken = session?.backendToken ?? null;
+      cachedTokenExpiry = cachedBackendToken ? Date.now() + TOKEN_CACHE_TTL : 0;
+
+      if (cachedBackendToken) {
+        originalConfig.headers.Authorization = `Bearer ${cachedBackendToken}`;
+        return axiosInstance(originalConfig);
+      }
+    }
+    if (code === "TOKEN_REPLAY_DETECTED") {
+      invalidateTokenCache();
+      const session = await getFreshSession();
+
+      if (session?.backendToken) {
+        return axiosInstance(originalConfig);
+      }
+
+      signOut({ callbackUrl: "/authentication/login" });
+    }
+
+    return Promise.reject(error);
+  },
 );
 
 const handleAxiosError = async (
   error: AxiosError<ApiErrorResponse>,
-  showErrorToast = true
+  showErrorToast = true,
 ) => {
   const status = error.response?.status;
   const message =
     error.response?.data?.message || error.message || "Unknown error";
   const url = error.config?.url || "";
-
   const code = error.response?.data?.code;
-  
+  if (status === 401 && code !== "TOKEN_EXPIRED" && code !== "INVALID_TOKEN") {
+  return Promise.reject(error);
+}
+
   if (code === "TOKEN_EXPIRED" || code === "INVALID_TOKEN") {
+    invalidateTokenCache();
     toast.error("Session expired. Please login again.");
     signOut({ callbackUrl: "/authentication/login" });
     return Promise.reject(error);
@@ -87,8 +147,8 @@ const handleAxiosError = async (
   const suppressToast =
     !showErrorToast ||
     status === 404 ||
-    status === 403 || 
-    url.includes("/analytics/"); 
+    status === 403 ||
+    url.includes("/analytics/");
 
   if (suppressToast) {
     return Promise.reject(error);
@@ -117,7 +177,7 @@ const handleAxiosError = async (
 
 const mergeHeaders = (
   options?: ApiOptions,
-  extra?: Record<string, string>
+  extra?: Record<string, string>,
 ) => ({
   ...extra,
 });
@@ -137,7 +197,7 @@ export const api = {
   post: async <T = unknown>(
     endpoint: string,
     data?: unknown,
-    options?: ApiOptions
+    options?: ApiOptions,
   ) => {
     const res = await axiosInstance
       .post<ApiResponse<T>>(endpoint, data, {
@@ -152,7 +212,7 @@ export const api = {
   put: async <T = unknown>(
     endpoint: string,
     data?: unknown,
-    options?: ApiOptions
+    options?: ApiOptions,
   ) => {
     const res = await axiosInstance
       .put<ApiResponse<T>>(endpoint, data, {
@@ -167,7 +227,7 @@ export const api = {
   patch: async <T = unknown>(
     endpoint: string,
     data?: unknown,
-    options?: ApiOptions
+    options?: ApiOptions,
   ) => {
     const res = await axiosInstance
       .patch<ApiResponse<T>>(endpoint, data, {
@@ -193,7 +253,7 @@ export const api = {
   upload: async <T = unknown>(
     endpoint: string,
     formData: FormData,
-    options?: ApiOptions
+    options?: ApiOptions,
   ) => {
     const res = await axiosInstance
       .post<ApiResponse<T>>(endpoint, formData, {

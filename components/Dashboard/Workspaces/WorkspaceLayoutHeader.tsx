@@ -1,10 +1,9 @@
+import ThemeSwitcher from "@/components/Themes/ThemeSwitcher";
 import { Menu, Search } from "lucide-react";
+import { Session } from "next-auth";
+import Image from "next/image";
 
-interface Session {
-  user?: {
-    name?: string | null;
-  };
-}
+
 
 interface WorkspaceLayoutHeaderProps {
   session: Session | null;
@@ -28,7 +27,7 @@ export function WorkspaceLayoutHeader({
       </button>
 
       {/* Search Bar */}
-      <div className="flex-1 min-w-[200px] max-w-md relative">
+      <div className="flex-1 min-w-50 max-w-md relative">
         <Search
           className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
           size={16}
@@ -44,12 +43,19 @@ export function WorkspaceLayoutHeader({
 
       {/* User Avatar */}
       <div className="flex items-center gap-3">
-        <button className="p-2 rounded-lg hover:bg-accent transition">
-          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-sm font-medium">
+          {
+            session?.user.image ? 
+            (
+              <Image src={session.user.image} alt="User" width={32}
+               height={32} />
+            )
+            :
+            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-sm font-medium">
             {session?.user?.name?.charAt(0) || "U"}
           </div>
-        </button>
+          }
       </div>
+      <ThemeSwitcher />
     </header>
   );
 }

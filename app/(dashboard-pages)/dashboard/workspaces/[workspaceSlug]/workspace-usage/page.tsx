@@ -1,4 +1,3 @@
-// app/analytics/[workspaceId]/workspace-usage/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -13,42 +12,61 @@ import type { DateRangeFilter } from "@/types/workspace-usage.types";
 import { useWorkspaces } from "@/hooks/useWorkspace";
 
 const EngagementSection = dynamic(
-  () => import("@/components/Dashboard/Analytics/WorkspaceUsage/EngagementSection").then((m) => m.EngagementSection),
+  () =>
+    import("@/components/Dashboard/Analytics/WorkspaceUsage/EngagementSection").then(
+      (m) => m.EngagementSection
+    ),
   { ssr: false }
 );
 
 const StorageResourcesSection = dynamic(
-  () => import("@/components/Dashboard/Analytics/WorkspaceUsage/StorageResourcesSection").then((m) => m.StorageResourcesSection),
+  () =>
+    import(
+      "@/components/Dashboard/Analytics/WorkspaceUsage/StorageResourcesSection"
+    ).then((m) => m.StorageResourcesSection),
   { ssr: false }
 );
 
 const FeatureUsageSection = dynamic(
-  () => import("@/components/Dashboard/Analytics/WorkspaceUsage/FeatureUsageSection").then((m) => m.FeatureUsageSection),
+  () =>
+    import(
+      "@/components/Dashboard/Analytics/WorkspaceUsage/FeatureUsageSection"
+    ).then((m) => m.FeatureUsageSection),
   { ssr: false }
 );
 
 const GrowthInsightsSection = dynamic(
-  () => import("@/components/Dashboard/Analytics/WorkspaceUsage/GrowthInsightsSection").then((m) => m.GrowthInsightsSection),
+  () =>
+    import(
+      "@/components/Dashboard/Analytics/WorkspaceUsage/GrowthInsightsSection"
+    ).then((m) => m.GrowthInsightsSection),
   { ssr: false }
 );
 
 export default function WorkspaceUsagePage() {
   const { workspaceSlug } = useParams();
   const { data: workspaces } = useWorkspaces();
-  const workspace = workspaces?.find((w) => w.slug === workspaceSlug);
+  const workspace   = workspaces?.find((w) => w.slug === workspaceSlug);
   const workspaceId = workspace?.id;
 
   const [dateRange, setDateRange] = useState<DateRangeFilter>("30d");
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const { data, isLoading, isError, refetch } = useWorkspaceUsage(
     workspaceId as string
   );
 
   const handleExportCSV = () => {
-    console.log("Exporting CSV...");
+    // TODO: implement CSV export
+    console.log("Exporting CSV…");
   };
 
-  // ─── Loading State ────────────────────────────────────────────
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await refetch?.();
+    setIsRefreshing(false);
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-3">
@@ -58,7 +76,6 @@ export default function WorkspaceUsagePage() {
     );
   }
 
-  // ─── Error State ──────────────────────────────────────────────
   if (isError || !data) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
@@ -83,37 +100,32 @@ export default function WorkspaceUsagePage() {
     );
   }
 
-  // ─── Page ─────────────────────────────────────────────────────
   return (
     <div className="space-y-5 sm:space-y-6 lg:space-y-8 px-2 sm:px-0">
-        <WorkspaceUsageHeader
-          dateRange={dateRange}
-          onDateRangeChange={setDateRange}
-          onExport={handleExportCSV}
-        />
+      <WorkspaceUsageHeader
+        dateRange={dateRange}
+        onDateRangeChange={setDateRange}
+        onExport={handleExportCSV}
+        isRefreshing={isRefreshing}
+        onRefresh={handleRefresh}
+      />
 
-        <UsageSnapshot data={data} />
+      <UsageSnapshot data={data} />
 
-        {data.isAdmin && (
-          <EngagementSection
-            userEngagement={data.userEngagement}
-            projectActivity={data.projectActivity}
-          />
-        )}
-
-        <StorageResourcesSection resourceUsage={data.resourceUsage} />
-
-        <FeatureUsageSection
-          workspaceGrowth={data.workspaceGrowth}
+      {data.isAdmin && (
+        <EngagementSection
+          userEngagement={data.userEngagement}
           projectActivity={data.projectActivity}
         />
+      )}
 
-        <PlanLimitsSection
-          resourceUsage={data.resourceUsage}
-          workspaceGrowth={data.workspaceGrowth}
-        />
+      <StorageResourcesSection resourceUsage={data.resourceUsage} />
 
-        <GrowthInsightsSection workspaceGrowth={data.workspaceGrowth} />
-      </div>
+      <FeatureUsageSection featureUsage={data.featureUsage} />
+
+      <PlanLimitsSection planLimits={data.planLimits} />
+
+      <GrowthInsightsSection workspaceGrowth={data.workspaceGrowth} />
+    </div>
   );
 }

@@ -1,14 +1,13 @@
-// components/Analytics/WorkspaceUsage/GrowthInsightsSection.tsx
 "use client";
 
 import {
   TrendingUp,
-  TrendingDown,
   ListTodo,
   Users,
   Folder,
   CheckCircle,
   Lightbulb,
+  TrendingDown,
 } from "lucide-react";
 import {
   BarChart,
@@ -35,7 +34,7 @@ interface GrowthMetricProps {
 
 function GrowthMetric({ label, value, change, icon: Icon }: GrowthMetricProps) {
   const isPositive = change > 0;
-  const isNeutral = change === 0;
+  const isNeutral  = change === 0;
 
   return (
     <div className="flex items-center gap-2.5 sm:gap-3 p-3 sm:p-4 rounded-lg sm:rounded-xl bg-muted/50 border border-border">
@@ -59,7 +58,7 @@ function GrowthMetric({ label, value, change, icon: Icon }: GrowthMetricProps) {
         />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-muted-foreground">{label}</p>
+        <p className="text-xs text-muted-foreground">{label}</p>
         <p className="text-xl font-bold text-foreground">{value}</p>
       </div>
       <div
@@ -71,7 +70,7 @@ function GrowthMetric({ label, value, change, icon: Icon }: GrowthMetricProps) {
             : "text-red-600 dark:text-red-400"
         }`}
       >
-        {isPositive && <TrendingUp className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
+        {isPositive  && <TrendingUp   className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
         {!isPositive && !isNeutral && <TrendingDown className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
         {isPositive ? "+" : ""}
         {change}%
@@ -91,18 +90,18 @@ interface Insight {
 const insightStyles: Record<InsightType, { wrapper: string; dot: string; text: string }> = {
   positive: {
     wrapper: "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800",
-    dot: "bg-green-500",
-    text: "text-green-900 dark:text-green-100",
+    dot:     "bg-green-500",
+    text:    "text-green-900 dark:text-green-100",
   },
   warning: {
     wrapper: "bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800",
-    dot: "bg-orange-500",
-    text: "text-orange-900 dark:text-orange-100",
+    dot:     "bg-orange-500",
+    text:    "text-orange-900 dark:text-orange-100",
   },
   neutral: {
     wrapper: "bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800",
-    dot: "bg-blue-500",
-    text: "text-blue-900 dark:text-blue-100",
+    dot:     "bg-blue-500",
+    text:    "text-blue-900 dark:text-blue-100",
   },
 };
 
@@ -128,17 +127,19 @@ export function GrowthInsightsSection({ workspaceGrowth }: GrowthInsightsSection
   ];
 
   const growthMetrics: GrowthMetricProps[] = [
-    { label: "New Tasks", value: thisMonth.newTasks, change: 18, icon: ListTodo },
-    { label: "New Members", value: thisMonth.newUsers, change: 9, icon: Users },
-    { label: "New Projects", value: thisMonth.newProjects, change: 4, icon: Folder },
-    { label: "Completed", value: projectLifecycle.completed, change: 15, icon: CheckCircle },
+    { label: "New Tasks",    value: thisMonth.newTasks,          change: 18, icon: ListTodo    },
+    { label: "New Members",  value: thisMonth.newUsers,          change: 9,  icon: Users       },
+    { label: "New Projects", value: thisMonth.newProjects,       change: 4,  icon: Folder      },
+    { label: "Completed",    value: projectLifecycle.completed,  change: 15, icon: CheckCircle },
   ];
 
   return (
     <section className="space-y-3 sm:space-y-4">
       <div className="flex items-center gap-2">
         <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-        <h2 className="text-lg font-semibold text-foreground">Growth Insights</h2>
+        <h2 className="text-base sm:text-lg font-semibold text-foreground">
+          Growth Insights
+        </h2>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
@@ -148,9 +149,12 @@ export function GrowthInsightsSection({ workspaceGrowth }: GrowthInsightsSection
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 sm:gap-4">
+        {/* 6-month trend chart — h-44/h-56 are valid Tailwind scale values */}
         <div className="lg:col-span-3 bg-card border border-border rounded-xl sm:rounded-2xl p-3.5 sm:p-5">
-          <h3 className="text-sm font-semibold text-foreground mb-3 sm:mb-4">6-Month Trend</h3>
-          <div className="h-45 sm:h-55">
+          <h3 className="text-sm font-semibold text-foreground mb-3 sm:mb-4">
+            6-Month Trend
+          </h3>
+          <div className="h-44 sm:h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={trend} margin={{ bottom: 0 }}>
                 <CartesianGrid
@@ -160,15 +164,16 @@ export function GrowthInsightsSection({ workspaceGrowth }: GrowthInsightsSection
                 />
                 <XAxis
                   dataKey="month"
-                  tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+                  tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
                   stroke="hsl(var(--border))"
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fontSize: 14, fill: "hsl(var(--muted-foreground))" }}
+                  tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
                   stroke="hsl(var(--border))"
                   tickLine={false}
                   axisLine={false}
+                  allowDecimals={false}
                   width={30}
                 />
                 <Tooltip
@@ -177,25 +182,30 @@ export function GrowthInsightsSection({ workspaceGrowth }: GrowthInsightsSection
                     border: "1px solid hsl(var(--border))",
                     borderRadius: "8px",
                     color: "hsl(var(--foreground))",
-                    fontSize: "13px",
+                    fontSize: "12px",
                   }}
                 />
                 <Legend
-                  wrapperStyle={{ fontSize: "14px", color: "hsl(var(--muted-foreground))" }}
+                  wrapperStyle={{
+                    fontSize: "12px",
+                    color: "hsl(var(--muted-foreground))",
+                  }}
                 />
-                <Bar dataKey="tasks" name="Tasks" fill="#3b82f6" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="users" name="Users" fill="#8b5cf6" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="tasks"    name="Tasks"    fill="#3b82f6" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="users"    name="Users"    fill="#8b5cf6" radius={[3, 3, 0, 0]} />
                 <Bar dataKey="projects" name="Projects" fill="#10b981" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
+        {/* Key insights + lifecycle */}
         <div className="lg:col-span-2 bg-card border border-border rounded-xl sm:rounded-2xl p-3.5 sm:p-5 flex flex-col">
           <div className="flex items-center gap-2 mb-3 sm:mb-4">
             <Lightbulb className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500" />
             <h3 className="text-sm font-semibold text-foreground">Key Insights</h3>
           </div>
+
           <div className="space-y-2 sm:space-y-3 flex-1">
             {insights.map((insight) => {
               const styles = insightStyles[insight.type];
@@ -219,12 +229,15 @@ export function GrowthInsightsSection({ workspaceGrowth }: GrowthInsightsSection
             </p>
             <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
               {[
-                { label: "Created", value: projectLifecycle.created, color: "text-blue-500" },
-                { label: "Active", value: projectLifecycle.active, color: "text-green-500" },
-                { label: "Completed", value: projectLifecycle.completed, color: "text-purple-500" },
-                { label: "Archived", value: projectLifecycle.archived, color: "text-muted-foreground" },
+                { label: "Created",   value: projectLifecycle.created,   color: "text-blue-500"           },
+                { label: "Active",    value: projectLifecycle.active,    color: "text-green-500"          },
+                { label: "Done",      value: projectLifecycle.completed, color: "text-purple-500"         },
+                { label: "Archived",  value: projectLifecycle.archived,  color: "text-muted-foreground"   },
               ].map((item) => (
-                <div key={item.label} className="text-center p-1.5 sm:p-2 rounded-md sm:rounded-lg bg-muted/50">
+                <div
+                  key={item.label}
+                  className="text-center p-1.5 sm:p-2 rounded-md sm:rounded-lg bg-muted/50"
+                >
                   <p className={`text-lg font-bold ${item.color}`}>{item.value}</p>
                   <p className="text-[10px] text-muted-foreground">{item.label}</p>
                 </div>

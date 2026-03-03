@@ -102,16 +102,16 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
       match: (path: string) => path.includes(`/${slug}/projects`),
     },
     {
+      name: "Meeting",
+      href: `/dashboard/workspaces/${slug}/meeting`,
+      icon: Calendar,
+      match: (path: string) => path.includes(`/${slug}/meeting`),
+    },
+    {
       name: "Team",
       href: `/dashboard/workspaces/${slug}/team`,
       icon: Users,
       match: (path: string) => path.includes(`/${slug}/team`),
-    },
-    {
-      name: "Calendar",
-      href: `/dashboard/workspaces/${slug}/calendar`,
-      icon: Calendar,
-      match: (path: string) => path.includes(`/${slug}/calendar`),
     },
     ...(canManageWorkspace ? [label, analytics, workspaceUsage, storage, files] : []),
   ];

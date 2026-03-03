@@ -5,6 +5,7 @@ import Sidebar from "./Sidebar";
 import TopNavbar from "./TopNavbar";
 import { usePathname, useRouter } from "next/navigation";
 import { api } from "@/lib/axios";
+import { useSession } from "next-auth/react";
 
 interface UserProfile {
   id: string;
@@ -33,6 +34,7 @@ export default function DashboardShell({
   const pathname = usePathname();
   const router = useRouter();
 
+  const {status} = useSession();
   
 const fetchProfile = useCallback(async () => {
   try {
@@ -46,23 +48,29 @@ const fetchProfile = useCallback(async () => {
       router.replace("/authentication/login");
     } else {
       console.error("Failed to fetch profile:", error);
-      router.replace("/authentication/login");
     }
   } finally {
     setIsLoading(false);
   }
 }, [router]);
 
+
 useEffect(() => {
+  if (status === "loading") return;
+
+  if (status === "unauthenticated") {
+    router.replace("/authentication/login");
+    return;
+  }
+
   fetchProfile();
-}, [fetchProfile]);
+}, [status, fetchProfile, router]);
 
   const segments = pathname.split("/").filter(Boolean);
   const isWorkspaceRoute = segments[0] === "dashboard" && segments[1] === "workspaces";
   const thirdSegment = segments[2];
   const hideLayout = isWorkspaceRoute && thirdSegment && thirdSegment !== "new-workspace";
 
-  // Show nothing while checking auth to prevent flash of protected content
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
