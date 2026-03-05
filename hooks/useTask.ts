@@ -61,6 +61,42 @@ export interface TaskStats {
   completed?: number;
 }
 
+
+export type UserPlan      = 'FREE' | 'PRO';
+export type WorkspacePlan = 'FREE' | 'PRO' | 'BUSINESS' | 'ENTERPRISE';
+
+export interface PersonalQuotaInfo {
+  plan:           UserPlan;
+  dailyLimit:     number;
+  usedToday:      number;
+  remaining:      number;
+  resetAt:        string;   // ISO date string
+  perMinuteLimit: number | null;
+}
+
+export interface MemberQuotaInfo {
+  userId:      string;
+  name:        string | null;
+  email:       string;
+  image:       string | null
+  usedToday:   number;
+  memberLimit: number | null;
+  remaining:   number | null;
+}
+
+export interface WorkspaceQuotaInfo {
+  plan:                WorkspacePlan;
+  dailyWorkspaceLimit: number | null;
+  dailyPerMemberLimit: number | null;
+  workspaceUsedToday:  number;
+  workspaceRemaining:  number | null;
+  perMinuteLimit:      number | null;
+  isUnlimited:         boolean;
+  resetAt:             string;   
+  members:             MemberQuotaInfo[];  
+}
+
+
 export interface CreateTaskDto {
   title: string;
   description?: string;
@@ -109,135 +145,102 @@ export interface TasksResponse {
   pagination: TaskPagination;
 }
 
+
 export const taskKeys = {
-  all: ['tasks'] as const,
-  lists: () => [...taskKeys.all, 'list'] as const,
-  list: (filters?: TaskFilters, page?: number, pageSize?: number, sort?: TaskSort) => 
-    [...taskKeys.lists(), filters, page, pageSize, sort] as const,
+  all:     ['tasks'] as const,
+  lists:   () => [...taskKeys.all, 'list'] as const,
+  list:    (filters?: TaskFilters, page?: number, pageSize?: number, sort?: TaskSort) =>
+             [...taskKeys.lists(), filters, page, pageSize, sort] as const,
   details: () => [...taskKeys.all, 'detail'] as const,
-  detail: (id: string) => [...taskKeys.details(), id] as const,
-  stats: () => [...taskKeys.all, 'stats'] as const,
-  stat: (workspaceId?: string, type?: string) => 
-    [...taskKeys.stats(), workspaceId || 'personal', type || 'all'] as const,
+  detail:  (id: string) => [...taskKeys.details(), id] as const,
+  stats:   () => [...taskKeys.all, 'stats'] as const,
+  stat:    (workspaceId?: string, type?: string) =>
+             [...taskKeys.stats(), workspaceId || 'personal', type || 'all'] as const,
+  quotas:  () => [...taskKeys.all, 'quota'] as const,
+  personalQuota: () => [...taskKeys.quotas(), 'personal'] as const,
+  workspaceQuota: (workspaceId: string) => [...taskKeys.quotas(), 'workspace', workspaceId] as const,
 };
+
+function msUntilMidnight(): number {
+  const now       = new Date();
+  const midnight  = new Date();
+  midnight.setDate(midnight.getDate() + 1);
+  midnight.setHours(0, 0, 0, 0);
+  return midnight.getTime() - now.getTime();
+}
+
 
 export function useTasks(
   filters?: TaskFilters,
   page: number = 1,
   pageSize: number = 10,
-  sort?: TaskSort
+  sort?: TaskSort,
 ) {
   return useQuery({
     queryKey: taskKeys.list(filters, page, pageSize, sort),
     queryFn: async (): Promise<TasksResponse> => {
       const params = new URLSearchParams();
-      
-      if (filters?.type && filters.type !== 'all') {
-        params.append('type', filters.type);
-      }
-      if (filters?.status && filters.status !== 'all') {
-        params.append('status', filters.status);
-      }
-      if (filters?.priority && filters.priority !== 'all') {
-        params.append('priority', filters.priority);
-      }
-      if (filters?.projectId) {
-        params.append('projectId', filters.projectId);
-      }
-      if (filters?.workspaceId) {
-        params.append('workspaceId', filters.workspaceId);
-      }
-      if (filters?.assigneeId) {
-        params.append('assigneeId', filters.assigneeId);
-      }
-      if (filters?.search) {
-        params.append('search', filters.search);
-      }
-      if (filters?.labelIds?.length) {
-        params.append('labelIds', filters.labelIds.join(','));
-      }
-      if (filters?.userId) {
-        params.append('userId', filters.userId)
-      }
-      
-      params.append('page', page.toString());
+
+      if (filters?.type && filters.type !== 'all') params.append('type', filters.type);
+      if (filters?.status   && filters.status   !== 'all') params.append('status',   filters.status);
+      if (filters?.priority && filters.priority !== 'all') params.append('priority', filters.priority);
+      if (filters?.projectId)   params.append('projectId',   filters.projectId);
+      if (filters?.workspaceId) params.append('workspaceId', filters.workspaceId);
+      if (filters?.assigneeId)  params.append('assigneeId',  filters.assigneeId);
+      if (filters?.search)      params.append('search',      filters.search);
+      if (filters?.labelIds?.length) params.append('labelIds', filters.labelIds.join(','));
+      if (filters?.userId) params.append('userId', filters.userId);
+
+      params.append('page',     page.toString());
       params.append('pageSize', pageSize.toString());
-      
-      if (sort?.sortBy) {
-        params.append('sortBy', sort.sortBy);
-      }
-      if (sort?.sortOrder) {
-        params.append('sortOrder', sort.sortOrder);
-      }
-      
-      const endpoint = `/api/tasks?${params.toString()}`;
-      
-      const response = await api.get<TasksResponse | Task[]>(endpoint, {
-        showErrorToast: true,
-      });
-      
-      console.log('🔍 [useTasks] Raw API response:', response);
-      console.log('🔍 [useTasks] response.data:', response?.data);
-      console.log('🔍 [useTasks] response.data type:', typeof response?.data);
-      console.log('🔍 [useTasks] response.data is array?:', Array.isArray(response?.data));
-      
+
+      if (sort?.sortBy)    params.append('sortBy',    sort.sortBy);
+      if (sort?.sortOrder) params.append('sortOrder', sort.sortOrder);
+
+      const response = await api.get<TasksResponse | Task[]>(
+        `/api/tasks?${params.toString()}`,
+        { showErrorToast: true },
+      );
+
       if (!response) {
-        console.log('⚠️ [useTasks] No data in response');
         return {
           data: [],
-          pagination: { page: 1, pageSize: 10, totalCount: 0, totalPages: 0, hasNext: false, hasPrev: false }
+          pagination: { page: 1, pageSize: 10, totalCount: 0, totalPages: 0, hasNext: false, hasPrev: false },
         };
       }
-      
-      const responseData = response;
-      
-      const hasDataProp = 'data' in responseData;
-      const hasPaginationProp = 'pagination' in responseData;
-      
-      console.log('🔍 [useTasks] Has data property?:', hasDataProp);
-      console.log('🔍 [useTasks] Has pagination property?:', hasPaginationProp);
-      
-      if (hasDataProp && hasPaginationProp) {
-        const typedResponse = responseData as TasksResponse;
-        console.log('✅ [useTasks] USING STRUCTURED RESPONSE');
-        console.log('📊 [useTasks] Backend pagination:', typedResponse.pagination);
-        console.log('📊 [useTasks] Tasks count:', typedResponse.data.length);
-        
-        return {
-          data: typedResponse.data,
-          pagination: typedResponse.pagination,
-        };
+
+      if ('data' in response && 'pagination' in response) {
+        return response as TasksResponse;
       }
-      
-      if (Array.isArray(responseData)) {
-        console.log('⚠️ [useTasks] CREATING FAKE PAGINATION (array response)');
-        console.log('📊 [useTasks] Array length:', responseData.length);
-        
+
+      if (Array.isArray(response)) {
         return {
-          data: responseData as Task[],
+          data: response as Task[],
           pagination: {
             page,
             pageSize,
-            totalCount: responseData.length,
-            totalPages: Math.ceil(responseData.length / pageSize),
-            hasNext: page < Math.ceil(responseData.length / pageSize),
-            hasPrev: page > 1,
-          }
+            totalCount: response.length,
+            totalPages: Math.ceil(response.length / pageSize),
+            hasNext:    page < Math.ceil(response.length / pageSize),
+            hasPrev:    page > 1,
+          },
         };
       }
-      
-      console.log('⚠️ [useTasks] UNEXPECTED FORMAT - returning empty');
+
       return {
         data: [],
-        pagination: { page: 1, pageSize: 10, totalCount: 0, totalPages: 0, hasNext: false, hasPrev: false }
+        pagination: { page: 1, pageSize: 10, totalCount: 0, totalPages: 0, hasNext: false, hasPrev: false },
       };
     },
-    staleTime: 2 * 60 * 1000,
+    staleTime:       2 * 60 * 1000,
     placeholderData: (previousData) => previousData,
   });
 }
 
-export function useTaskStats(workspaceId?: string, type?: 'all' | 'personal' | 'assigned' | 'created') {
+export function useTaskStats(
+  workspaceId?: string,
+  type?: 'all' | 'personal' | 'assigned' | 'created',
+) {
   return useQuery({
     queryKey: taskKeys.stat(workspaceId, type),
     queryFn: async () => {
@@ -262,15 +265,84 @@ export function useTask(taskId: string) {
       });
       return response?.data;
     },
-    enabled: !!taskId,
+    enabled:   !!taskId,
     staleTime: 3 * 60 * 1000,
   });
 }
 
+export function usePersonalQuota() {
+  const queryClient = useQueryClient();
+
+  useQuery({
+    queryKey: [...taskKeys.personalQuota(), '__midnight_reset__'],
+    queryFn:  () => null,
+    staleTime: Infinity,
+    gcTime:    Infinity,
+    refetchInterval: () => {
+      const ms = msUntilMidnight();
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: taskKeys.personalQuota() });
+      }, ms);
+      return false; 
+    },
+  });
+
+  return useQuery({
+    queryKey: taskKeys.personalQuota(),
+    queryFn: async (): Promise<PersonalQuotaInfo> => {
+      const response = await api.get<PersonalQuotaInfo>('/api/tasks/quota/personal', {
+        showErrorToast: true,
+      });
+      return response?.data as PersonalQuotaInfo;
+    },
+    staleTime:       0,           
+    refetchInterval: 30 * 1000,   
+    refetchIntervalInBackground: false,
+  });
+}
+
+export function useWorkspaceQuota(workspaceId: string | undefined) {
+  const queryClient = useQueryClient();
+
+  useQuery({
+    queryKey: workspaceId
+      ? [...taskKeys.workspaceQuota(workspaceId), '__midnight_reset__']
+      : ['__noop__'],
+    queryFn:  () => null,
+    enabled:  !!workspaceId,
+    staleTime: Infinity,
+    gcTime:    Infinity,
+    refetchInterval: () => {
+      if (!workspaceId) return false;
+      const ms = msUntilMidnight();
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: taskKeys.workspaceQuota(workspaceId!) });
+      }, ms);
+      return false;
+    },
+  });
+
+  return useQuery({
+    queryKey: workspaceId ? taskKeys.workspaceQuota(workspaceId) : ['__disabled__'],
+    queryFn: async (): Promise<WorkspaceQuotaInfo> => {
+      const response = await api.get<WorkspaceQuotaInfo>(
+        `/api/tasks/quota/workspace/${workspaceId}`,
+        { showErrorToast: true },
+      );
+      return response?.data as WorkspaceQuotaInfo;
+    },
+    enabled:         !!workspaceId,
+    staleTime:       0,
+    refetchInterval: 20 * 1000,
+    refetchIntervalInBackground: false,
+  });
+}
+
+
 export function useCreateTask() {
   const queryClient = useQueryClient();
-  const router = useRouter();
-  
+  const router      = useRouter();
+
   return useMutation({
     mutationFn: async (newTask: CreateTaskDto) => {
       const response = await api.post<Task>('/api/tasks', newTask, {
@@ -278,9 +350,18 @@ export function useCreateTask() {
       });
       return response?.data;
     },
-    onSuccess: () => {
+    onSuccess: (task) => {
       queryClient.invalidateQueries({ queryKey: taskKeys.lists() });
       queryClient.invalidateQueries({ queryKey: taskKeys.stats() });
+
+      if (task?.project?.workspace?.id) {
+        queryClient.invalidateQueries({
+          queryKey: taskKeys.workspaceQuota(task.project.workspace.id),
+        });
+      } else {
+        queryClient.invalidateQueries({ queryKey: taskKeys.personalQuota() });
+      }
+
       router.push('/dashboard/tasks');
     },
   });
@@ -288,7 +369,7 @@ export function useCreateTask() {
 
 export function useUpdateTask() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<Task> }) => {
       const response = await api.put<Task>(`/api/tasks/${id}`, data, {
@@ -308,7 +389,7 @@ export function useUpdateTask() {
 
 export function useDeleteTask() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (taskId: string) => {
       const response = await api.delete(`/api/tasks/${taskId}`, {
@@ -326,26 +407,25 @@ export function useDeleteTask() {
 
 export function useUpdateTaskStatus() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({ id, status }: { id: string; status: Task['status'] }) => {
-      const response = await api.patch<Task>(`/api/tasks/${id}/status`, { status }, {
-        showSuccessToast: false, 
-      });
+      const response = await api.patch<Task>(
+        `/api/tasks/${id}/status`,
+        { status },
+        { showSuccessToast: false },
+      );
       return response?.data;
     },
     onMutate: async ({ id, status }) => {
       await queryClient.cancelQueries({ queryKey: taskKeys.detail(id) });
       const previousTask = queryClient.getQueryData<Task>(taskKeys.detail(id));
       if (previousTask) {
-        queryClient.setQueryData<Task>(taskKeys.detail(id), {
-          ...previousTask,
-          status,
-        });
+        queryClient.setQueryData<Task>(taskKeys.detail(id), { ...previousTask, status });
       }
       return { previousTask };
     },
-    onError: (err, { id }, context) => {
+    onError: (_, { id }, context) => {
       if (context?.previousTask) {
         queryClient.setQueryData(taskKeys.detail(id), context.previousTask);
       }
@@ -370,7 +450,7 @@ export interface Comment {
 }
 
 export const commentKeys = {
-  all: ['comments'] as const,
+  all:    ['comments'] as const,
   byTask: (taskId: string) => [...commentKeys.all, taskId] as const,
 };
 
@@ -387,13 +467,13 @@ export function useTaskComments(taskId: string) {
 
 export function useAddComment() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({ taskId, content }: { taskId: string; content: string }) => {
       const response = await api.post<Comment>(
         `/api/tasks/${taskId}/comments`,
         { content },
-        { showSuccessToast: false }
+        { showSuccessToast: false },
       );
       return response?.data;
     },
@@ -417,7 +497,7 @@ export interface Activity {
 }
 
 export const activityKeys = {
-  all: ['activities'] as const,
+  all:    ['activities'] as const,
   byTask: (taskId: string) => [...activityKeys.all, taskId] as const,
 };
 
@@ -432,8 +512,9 @@ export function useTaskActivity(taskId: string) {
   });
 }
 
+
 export const attachmentKeys = {
-  all: ['attachments'] as const,
+  all:    ['attachments'] as const,
   byTask: (taskId: string) => [...attachmentKeys.all, taskId] as const,
 };
 
@@ -450,16 +531,16 @@ export function useTaskAttachments(taskId: string) {
 
 export function useUploadAttachment() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({ taskId, file }: { taskId: string; file: File }) => {
       const formData = new FormData();
       formData.append('file', file);
-      
+
       const response = await api.upload<Attachment>(
         `/api/tasks/${taskId}/attachments`,
         formData,
-        { showSuccessToast: true }
+        { showSuccessToast: true },
       );
       return response?.data;
     },
@@ -472,12 +553,12 @@ export function useUploadAttachment() {
 
 export function useDeleteAttachment() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({ taskId, attachmentId }: { taskId: string; attachmentId: string }) => {
       const response = await api.delete(
         `/api/tasks/${taskId}/attachments/${attachmentId}`,
-        { showSuccessToast: true }
+        { showSuccessToast: true },
       );
       return response?.data;
     },

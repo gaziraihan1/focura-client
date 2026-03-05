@@ -6,6 +6,7 @@ import { TasksPageHeader } from "@/components/Dashboard/AllTasks/TasksPageHeader
 import { TasksContent } from "@/components/Dashboard/AllTasks/TasksContent";
 import { FocusModeBanner } from "@/components/Dashboard/AllTasks/FocusModeBanner";
 import { useTasksPage } from "@/hooks/useTasksPage";
+import TaskQoutaDetails from "@/components/Dashboard/AllTasks/TaskQoutaDetails";
 
 export default function TasksPage() {
   const {
@@ -32,15 +33,16 @@ export default function TasksPage() {
     focusedTask,
     timeRemaining,
     activeSession,
-    completeSession
+    completeSession,
+    qouta
   } = useTasksPage();
 
-  
+  console.log(qouta)
 
   return (
     <div className="space-y-6">
       <TasksPageHeader onCreateTask={handleCreateTask} />
-      
+      <TaskQoutaDetails qouta={qouta} />
       {focusedTask && activeSession && (
         <FocusModeBanner
           task={focusedTask}

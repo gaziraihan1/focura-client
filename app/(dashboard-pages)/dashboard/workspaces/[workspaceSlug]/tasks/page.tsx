@@ -10,6 +10,7 @@ import { useWorkspaceTasksPage } from "@/hooks/useTasksPage";
 import { useDailyTasks } from "@/hooks/useDailyTasks";
 import toast from "react-hot-toast";
 import { PrimaryTasksView } from "@/components/Dashboard/AllTasks/WorkspaceTasks/PrimaryTaskView";
+import TaskQuotaDetails from "@/components/Dashboard/AllTasks/TaskQoutaDetails";
 
 export default function WorkspaceTasksPage() {
   const params = useParams();
@@ -48,8 +49,8 @@ export default function WorkspaceTasksPage() {
     projects,
     labels,
     members,
+    qouta
   } = useWorkspaceTasksPage({ workspaceSlug });
-  console.log(tasks,"..")
 
   const {
     primaryTask,
@@ -100,6 +101,7 @@ export default function WorkspaceTasksPage() {
         workspaceName={workspace.name}
         onCreateTask={handleCreateTask}
       />
+      <TaskQuotaDetails qouta={qouta} />
 
       {stats && <TaskStatsGrid stats={stats} />}
 

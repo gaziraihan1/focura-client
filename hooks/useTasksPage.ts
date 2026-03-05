@@ -4,7 +4,7 @@ import { useProjects } from "@/hooks/useProjects";
 import { useLabels } from "@/hooks/useLabels";
 import { useTeamMembers } from "@/hooks/useTeam";
 import { useRouter } from "next/navigation";
-import { useTasks, useTaskStats, TaskFilters, TaskSort } from "@/hooks/useTask";
+import { useTasks, useTaskStats, TaskFilters, TaskSort, usePersonalQuota, useWorkspaceQuota } from "@/hooks/useTask";
 import { useUserProfile } from "./useUser";
 import { useFocusSession } from "./useFocusSession";
 
@@ -50,6 +50,9 @@ export function useTasksPage() {
   const { data: tasksResponse, isLoading, isError } = useTasks(filters, currentPage, pageSize, sort);
   const tasks = tasksResponse?.data || [];
   const pagination = tasksResponse?.pagination;
+
+  const {data: qouta} = usePersonalQuota();
+  
 
   // Get stats for current tab
   const { data: stats } = useTaskStats(undefined, activeTab);
@@ -171,7 +174,8 @@ export function useTasksPage() {
     focusedTask,
     timeRemaining,
     activeSession,
-    completeSession
+    completeSession,
+    qouta
   };
 }
 
@@ -276,6 +280,7 @@ export function useWorkspaceTasksPage({
   const { data: stats } = useTaskStats(workspace?.id);
 
   const toggleFilters = () => setShowFilters(!showFilters);
+  const {data: qouta} = useWorkspaceQuota(workspace?.id)
 
   const handleSortChange = (newSortBy: TaskSort['sortBy']) => {
     if (newSortBy === sortBy) {
@@ -350,5 +355,6 @@ export function useWorkspaceTasksPage({
     projects,
     labels,
     members,
+    qouta
   };
 }
