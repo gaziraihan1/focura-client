@@ -89,7 +89,6 @@ const navigation: NavItem[] = [
     children: [
       {name: "Overview", href: "/dashboard/storage"},
       {name: "Files", href: "/dashboard/storage/files"},
-      {name: "Shared Files", href: "/dashboard/storage/shared-files"}
     ]
   },
   {

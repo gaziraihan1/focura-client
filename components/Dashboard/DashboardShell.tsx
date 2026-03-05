@@ -79,7 +79,6 @@ useEffect(() => {
     );
   }
 
-  if (!profile) return null;
 
   if (hideLayout) {
     return <>{children}</>;

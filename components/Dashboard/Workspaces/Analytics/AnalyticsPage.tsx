@@ -41,7 +41,6 @@ export function AnalyticsPage({
     errorMessage,
   } = useAnalyticsPage({ workspaceId });
 
-  // Loading state
   if (overviewLoading ) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -53,7 +52,6 @@ export function AnalyticsPage({
     );
   }
 
-  // Error state - check for 403 access denied
   if (overviewError) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -79,7 +77,6 @@ export function AnalyticsPage({
     );
   }
 
-  // No data state
   if (!overview) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -98,7 +95,6 @@ export function AnalyticsPage({
 
   return (
     <div className="space-y-8 pb-8">
-      {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
         <div className="flex-1">
           <div className="flex items-center gap-3">
@@ -114,7 +110,6 @@ export function AnalyticsPage({
           </div>
         </div>
 
-        {/* Workspace Switcher - only show if props provided */}
         {selectedWorkspaceId && setSelectedWorkspaceId && (
           <AnalyticsWorkspaceSwitcher
             currentWorkspaceId={selectedWorkspaceId}
@@ -123,16 +118,13 @@ export function AnalyticsPage({
         )}
       </div>
 
-      {/* Executive KPIs */}
       <KPICards kpis={overview.kpis} />
 
-      {/* Task Analytics Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <TaskStatusChart data={overview.taskStatus} />
         {taskTrends && <TaskCompletionTrend data={taskTrends.completionTrend} />}
       </div>
 
-      {/* Priority & Project Health Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <PriorityDistribution data={overview.tasksByPriority} />
         {projectHealth && projectHealth.length > 0 && (
@@ -140,18 +132,15 @@ export function AnalyticsPage({
         )}
       </div>
 
-      {/* Member Leaderboard */}
       {memberContribution && memberContribution.length > 0 && (
         <MemberLeaderboard data={memberContribution} />
       )}
 
-      {/* Activity & Workload Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {activityTrends && <ActivityTrendChart data={activityTrends.volumeTrend} />}
         {workload && workload.length > 0 && <WorkloadChart data={workload} />}
       </div>
 
-      {/* Time Summary & Most Active Day Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {timeSummary && (
           <div className="lg:col-span-2">
@@ -165,10 +154,8 @@ export function AnalyticsPage({
         )}
       </div>
 
-      {/* Deadline Risk Panel */}
       <DeadlineRiskPanel data={overview.deadlineRisk} />
 
-      {/* Loading Overlay */}
       {isLoading && (
         <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="flex items-center gap-3 px-6 py-4 bg-card border rounded-lg shadow-lg">

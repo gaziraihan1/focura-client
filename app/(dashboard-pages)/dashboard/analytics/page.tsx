@@ -1,22 +1,24 @@
-"use client"
-import { AnalyticsPage } from '@/components/Dashboard/Workspaces/Analytics/AnalyticsPage';
-import { useWorkspaces } from '@/hooks/useWorkspace';
+'use client';
+
 import { useState } from 'react';
+import { useWorkspaces } from '@/hooks/useWorkspace';
+import { AnalyticsPage } from '@/components/Dashboard/Workspaces/Analytics/AnalyticsPage';
+import LoadingAnalytics from '@/components/Dashboard/Workspaces/Analytics/LoadingAnalytics';
 
 export default function Analytics() {
-  const { data: workspaces } = useWorkspaces();
-  const firstWorkspaceId = workspaces?.[0]?.id;
-  
-  // Initialize with undefined, then use firstWorkspaceId as fallback
+  const { data: workspaces, isLoading: workspacesLoading } = useWorkspaces();
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string | undefined>(undefined);
-  
-  // Use the selected workspace or fall back to the first one
-  const workspaceId = selectedWorkspaceId || firstWorkspaceId || '';
-  
+
+  const workspaceId = selectedWorkspaceId || workspaces?.[0]?.id;
+
+  if (workspacesLoading || !workspaceId) {
+    <LoadingAnalytics />
+  }
+
   return (
-    <AnalyticsPage 
-      workspaceId={workspaceId} 
-      selectedWorkspaceId={workspaceId} 
+    <AnalyticsPage
+      workspaceId={workspaceId!}
+      selectedWorkspaceId={workspaceId}
       setSelectedWorkspaceId={setSelectedWorkspaceId}
     />
   );
