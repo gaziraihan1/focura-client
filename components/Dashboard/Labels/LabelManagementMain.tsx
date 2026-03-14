@@ -1,7 +1,6 @@
 "use client";
 
 import { AnimatePresence } from "framer-motion";
-import { Loader2 } from "lucide-react";
 import LabelCard from "./LabelCard";
 import LabelFormModal from "./LabelFormModal";
 import DeleteConfirmModal from "./DeleteConfirmModal";
@@ -9,6 +8,10 @@ import AccessDenied from "./AccessDenied";
 import { useLabelPage } from "@/hooks/useLabelPage";
 import { LabelManagementHeader } from "./LabelManagementMain/LabelManagementHeader";
 import { LabelsEmptyState } from "./LabelManagementMain/LabelsEmptyState";
+import {
+  LabelManagementSkeleton,
+  LabelGridSkeleton,
+} from "./LabelManagementSkeleton";
 
 export interface LabelManagementPageProps {
   workspaceId: string;
@@ -44,11 +47,7 @@ export default function LabelManagementMain({
   } = useLabelPage(workspaceId);
 
   if (isRoleLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-primary animate-spin" />
-      </div>
-    );
+    return <LabelManagementSkeleton />;
   }
 
   if (!canManageLabels) {
@@ -73,11 +72,7 @@ export default function LabelManagementMain({
       />
 
       <main className="mx-auto py-8">
-        {isLoading && (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-8 h-8 text-primary animate-spin" />
-          </div>
-        )}
+        {isLoading && <LabelGridSkeleton />}
 
         {!isLoading && filteredLabels.length === 0 && (
           <LabelsEmptyState

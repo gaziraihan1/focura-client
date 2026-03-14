@@ -14,7 +14,7 @@ export function ActionButtons({
   planName,
   visible,
 }: ActionButtonsProps) {
-  const canUpgrade = planName === 'FREE' || planName === 'PRO';
+  const canUpgrade = planName === 'FREE' || planName === 'PRO' || planName !== "BUSINESS";
   const canDowngrade = planName === 'PRO' || planName === 'BUSINESS';
 
   return (
@@ -34,7 +34,7 @@ export function ActionButtons({
 
       {/* Secondary row */}
       <div className="grid grid-cols-2 gap-3">
-        {canUpgrade && planName !== 'BUSINESS' && (
+        {canUpgrade && (
           <Link
             href={`/dashboard/workspaces/${workspaceSlug}/billing/upgrade`}
             className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-border bg-card text-sm font-medium text-foreground hover:bg-muted transition-colors"
