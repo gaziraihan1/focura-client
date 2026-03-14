@@ -123,7 +123,7 @@ export default function WorkspaceUsagePage() {
 
       <FeatureUsageSection featureUsage={data.featureUsage} />
 
-      <PlanLimitsSection planLimits={data.planLimits} />
+      <PlanLimitsSection planLimits={data.planLimits} workspaceSlug={workspaceSlug as string} />
 
       <GrowthInsightsSection workspaceGrowth={data.workspaceGrowth} />
     </div>

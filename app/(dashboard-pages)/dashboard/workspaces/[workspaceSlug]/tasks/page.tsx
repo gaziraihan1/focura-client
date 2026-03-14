@@ -60,7 +60,6 @@ export default function WorkspaceTasksPage() {
     addToPrimary,
     addToSecondary,
   } = useDailyTasks(workspaceSlug);
-  console.log(tasks)
 
   const handleCreateTask = () => {
     router.push(`/dashboard/workspaces/${workspaceSlug}/tasks/new-task`);

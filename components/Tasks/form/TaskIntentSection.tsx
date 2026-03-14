@@ -1,13 +1,10 @@
-import { INTENT_OPTIONS } from "@/constant/intent.constant";
+import { INTENT_OPTIONS } from "@/constants/intent.constants";
 import { motion } from "framer-motion";
-import {
-  CheckCircle2,
-} from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 // Intent options with icons and descriptions
 
-
-type IntentType = typeof INTENT_OPTIONS[number]["value"];
+type IntentType = (typeof INTENT_OPTIONS)[number]["value"];
 
 interface TaskIntentSectionProps {
   selectedIntent: IntentType;
@@ -19,9 +16,9 @@ export function TaskIntentSection({
   onIntentChange,
 }: TaskIntentSectionProps) {
   const selectedIntentOption = INTENT_OPTIONS.find(
-    (opt) => opt.value === selectedIntent
+    (opt) => opt.value === selectedIntent,
   );
-  const textStyle = selectedIntentOption?.activeClass.split(" ")[2]
+  const textStyle = selectedIntentOption?.activeClass.split(" ")[2];
 
   return (
     <motion.div className="rounded-xl bg-card border border-border p-6 space-y-4">
@@ -65,9 +62,7 @@ export function TaskIntentSection({
                   "text-muted-foreground"
                   `}
                 />
-                <span
-                  className='text-sm font-medium text-foreground'
-                >
+                <span className="text-sm font-medium text-foreground">
                   {option.label}
                 </span>
               </div>

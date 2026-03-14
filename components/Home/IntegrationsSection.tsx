@@ -2,11 +2,9 @@
 
 import React from "react";
 import Image from "next/image";
-import { integrations } from "@/constant/home.constant";
+import { integrations } from "@/constants/home.constants";
 
 export default function IntegrationsSection() {
-  
-
   return (
     <section className="py-24 bg-background">
       <div className="max-w-6xl mx-auto px-6 text-center">

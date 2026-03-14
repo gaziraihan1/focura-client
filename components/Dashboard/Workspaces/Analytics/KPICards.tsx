@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { ExecutiveKPIs } from '@/hooks/useAnalytics';
-import { kpisCard } from '@/constant/analytics.constant';
+import { ExecutiveKPIs } from "@/hooks/useAnalytics";
+import { kpisCard } from "@/constants/analytics.constants";
 
 interface KPICardsProps {
   kpis: ExecutiveKPIs;
 }
 
 export function KPICards({ kpis }: KPICardsProps) {
-  const {cards} = kpisCard({kpis})
+  const { cards } = kpisCard({ kpis });
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -25,7 +25,9 @@ export function KPICards({ kpis }: KPICardsProps) {
           </div>
           <p className="text-sm text-muted-foreground">{card.label}</p>
           {card.subtitle && (
-            <p className="text-xs text-muted-foreground mt-1">{card.subtitle}</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              {card.subtitle}
+            </p>
           )}
         </div>
       ))}

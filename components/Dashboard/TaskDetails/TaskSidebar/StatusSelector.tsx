@@ -1,18 +1,18 @@
-import { Lock } from 'lucide-react';
-import { Task } from '@/types/task.types';
-import { getStatusColor } from '@/utils/task.utils';
+import { Lock } from "lucide-react";
+import { Task } from "@/types/task.types";
+import { getStatusColor } from "@/utils/task.utils";
 import {
   STATUS_OPTIONS,
   PERSONAL_TASK_STATUS_OPTIONS,
   STATUS_LABELS,
-} from '@/constant/task.constant';
+} from "@/constants/task.constants";
 
 interface StatusSelectorProps {
-  status: Task['status'];
+  status: Task["status"];
   isPersonalTask: boolean;
   isUpdatingStatus: boolean;
   canChangeStatus: boolean;
-  onStatusChange: (status: Task['status']) => void;
+  onStatusChange: (status: Task["status"]) => void;
 }
 
 export function StatusSelector({
@@ -29,7 +29,7 @@ export function StatusSelector({
       <div>
         <div
           className={`w-full px-4 py-2 rounded-lg border ${getStatusColor(
-            status
+            status,
           )} font-medium text-center opacity-60 cursor-not-allowed`}
         >
           {statusLabel}
@@ -50,10 +50,10 @@ export function StatusSelector({
     <div>
       <select
         value={status}
-        onChange={(e) => onStatusChange(e.target.value as Task['status'])}
+        onChange={(e) => onStatusChange(e.target.value as Task["status"])}
         disabled={isUpdatingStatus}
         className={`w-full px-4 py-2 rounded-lg border ${getStatusColor(
-          status
+          status,
         )} font-medium focus:ring-2 ring-primary outline-none disabled:opacity-50 disabled:cursor-not-allowed`}
       >
         {availableStatuses.map((option) => (

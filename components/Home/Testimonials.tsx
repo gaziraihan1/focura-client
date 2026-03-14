@@ -4,23 +4,20 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star } from "lucide-react";
 import Image from "next/image";
-import { testimonials } from "@/constant/home.constant";
+import { testimonials } from "@/constants/home.constants";
 
 export default function TestimonialSection() {
- 
-
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((i) => (i + 1) % testimonials.length);
-    }, 4000); 
+    }, 4000);
     return () => clearInterval(timer);
   }, []);
 
   return (
     <section className="relative py-28 overflow-hidden">
-
       <div className="relative max-w-5xl mx-auto px-6 text-center">
         <h2 className="text-3xl md:text-5xl font-bold text-foreground">
           Loved by teams everywhere
@@ -47,8 +44,8 @@ export default function TestimonialSection() {
               "
               >
                 <Image
-                width={80}
-                height={80}
+                  width={80}
+                  height={80}
                   src={testimonials[index].avatar}
                   alt={testimonials[index].name}
                   className="w-20 h-20 rounded-full object-cover border border-white/30 shadow-md"
@@ -69,7 +66,11 @@ export default function TestimonialSection() {
 
                 <div className="mt-4 flex justify-center gap-1">
                   {[...Array(testimonials[index].rating)].map((_, i) => (
-                    <Star key={i} size={18} className="fill-yellow-400 text-yellow-400" />
+                    <Star
+                      key={i}
+                      size={18}
+                      className="fill-yellow-400 text-yellow-400"
+                    />
                   ))}
                 </div>
               </motion.div>

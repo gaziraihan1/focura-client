@@ -9,6 +9,7 @@ import { LoadingState } from "@/components/Shared/LoadingState";
 import { useWorkspaceDetailPage } from "@/hooks/useWorkspaceLayout";
 import { WorkspaceDetailErrorState } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceDetailErrorState";
 import { WorkspaceDetailContent } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceDetailsContent";
+import { useWorkspaceStorage } from "@/hooks/useWorkspace";
 
 export default function WorkspaceDetailPage() {
   const params = useParams();
@@ -30,6 +31,8 @@ export default function WorkspaceDetailPage() {
     canCreateProjects,
   } = useWorkspaceDetailPage({ slug });
 
+  const {data: storageOverview} = useWorkspaceStorage(workspace?.id);
+  console.log(storageOverview)
   if (isLoading) {
     return <LoadingState />;
   }
@@ -37,6 +40,7 @@ export default function WorkspaceDetailPage() {
   if (isError || !workspace) {
     return <WorkspaceDetailErrorState />;
   }
+
 
   return (
     <div className="w-full max-w-7xl mx-auto space-y-4 sm:space-y-6 px-2 sm:px-4 lg:px-6 xl:px-0 pb-6">

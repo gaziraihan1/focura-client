@@ -47,7 +47,7 @@ export function WorkspaceLayoutHeader({
             session?.user.image ? 
             (
               <Image src={session.user.image} alt="User" width={32}
-               height={32} />
+               height={32} className="rounded-full"/>
             )
             :
             <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-sm font-medium">

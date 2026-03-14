@@ -8,6 +8,10 @@ export default function WorkspaceStorage() {
   const workspaceSlug = params.workspaceSlug as string;
   const { data: workspace } = useWorkspace(workspaceSlug);
   const workspaceId = workspace?.id || "";
+
   
-  return <WorkspaceStorageOverviewPage workspaceId={workspaceId} />;
+  return <div className='space-y-6 min-w-0'>
+    
+    <WorkspaceStorageOverviewPage workspaceId={workspaceId} />;
+  </div>
 }

@@ -21,7 +21,6 @@ export default function NavbarMain() {
   const [open, setOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { data: session, status } = useSession();
-  console.log(session)
 
 const isAuthenticated =
   status === "authenticated" &&

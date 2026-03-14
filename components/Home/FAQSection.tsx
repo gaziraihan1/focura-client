@@ -3,10 +3,9 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-import { faqs } from "@/constant/home.constant";
+import { faqs } from "@/constants/home.constants";
 
 export default function FAQSection() {
-  
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFAQ = (i: number) => {

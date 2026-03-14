@@ -1,16 +1,16 @@
 // components/ActivityFilters/ActivityFilters.tsx (BEST SOLUTION)
-import { X } from 'lucide-react';
-import { ActivityFilterValues } from '@/types/activityFilter.types';
+import { X } from "lucide-react";
+import { ActivityFilterValues } from "@/types/activityFilter.types";
 import {
   ACTION_OPTIONS,
   ENTITY_OPTIONS,
   DATE_PRESETS,
-} from '@/constant/activityFilter.constant';
-import { useActivityFilters } from '@/hooks/useActivityFilters';
-import { FilterSelect } from './ActivityFilters/FilterSelect';
-import { DatePresetSelect } from './ActivityFilters/DatePresetSelect';
-import { DateRangeFilter } from './ActivityFilters/DateRangeFilter';
-import { ActiveFiltersDisplay } from './ActivityFilters/ActiveFiltersDisplay';
+} from "@/constants/activityFilter.constants";
+import { useActivityFilters } from "@/hooks/useActivityFilters";
+import { FilterSelect } from "./ActivityFilters/FilterSelect";
+import { DatePresetSelect } from "./ActivityFilters/DatePresetSelect";
+import { DateRangeFilter } from "./ActivityFilters/DateRangeFilter";
+import { ActiveFiltersDisplay } from "./ActivityFilters/ActiveFiltersDisplay";
 
 interface ActivityFiltersProps {
   filters: ActivityFilterValues;

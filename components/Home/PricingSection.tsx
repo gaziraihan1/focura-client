@@ -2,11 +2,9 @@
 
 import React from "react";
 import { Check } from "lucide-react";
-import { plans } from "@/constant/home.constant";
+import { plans } from "@/constants/home.constants";
 
 export default function PricingSection() {
-  
-
   return (
     <section className="py-28 bg-background">
       <div className="max-w-6xl mx-auto px-6 text-center">
@@ -30,36 +28,41 @@ export default function PricingSection() {
                 transition-all`}
             >
               <div>
-
-              {plan.highlighted && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-xs font-medium shadow ">
-                  Most Popular
-                </div>
-              )}
-
-              <h3 className="text-xl font-semibold text-foreground">
-                {plan.name}
-              </h3>
-
-              <div className="mt-4 flex items-end justify-center gap-1">
-                <span className="text-4xl font-bold text-foreground">
-                  {plan.price}
-                </span>
-                {plan.price !== "Free" && (
-                  <span className="text-foreground/60 mb-1">{plan.price === "Custom" ? "" : "/month"}</span>
+                {plan.highlighted && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-xs font-medium shadow ">
+                    Most Popular
+                  </div>
                 )}
-              </div>
 
-              <p className="mt-2 text-foreground/70 text-sm">{plan.tagline}</p>
+                <h3 className="text-xl font-semibold text-foreground">
+                  {plan.name}
+                </h3>
 
-              <ul className="mt-8 space-y-3 text-left">
-                {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <Check size={18} className="text-primary mt-1" />
-                    <span className="text-foreground/80 text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
+                <div className="mt-4 flex items-end justify-center gap-1">
+                  <span className="text-4xl font-bold text-foreground">
+                    {plan.price}
+                  </span>
+                  {plan.price !== "Free" && (
+                    <span className="text-foreground/60 mb-1">
+                      {plan.price === "Custom" ? "" : "/month"}
+                    </span>
+                  )}
+                </div>
+
+                <p className="mt-2 text-foreground/70 text-sm">
+                  {plan.tagline}
+                </p>
+
+                <ul className="mt-8 space-y-3 text-left">
+                  {plan.features.map((feature, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <Check size={18} className="text-primary mt-1" />
+                      <span className="text-foreground/80 text-sm">
+                        {feature}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
               <button

@@ -16,6 +16,8 @@ import Link from "next/link";
 interface PlanLimitsSectionProps {
   // ✅ Correct prop — page.tsx passes data.planLimits, not resourceUsage+workspaceGrowth
   planLimits: PlanLimitsMetrics;
+  workspaceSlug: string;             // ← add this
+
 }
 
 interface LimitCardProps {
@@ -144,7 +146,7 @@ function LimitCard({ icon: Icon, label, current, max, unit, percentage }: LimitC
   );
 }
 
-export function PlanLimitsSection({ planLimits }: PlanLimitsSectionProps) {
+export function PlanLimitsSection({ planLimits, workspaceSlug }: PlanLimitsSectionProps) {
   // ✅ All percentages computed from real planLimits data
   const pct = (used: number, limit: number) =>
     limit === -1 ? 0 : Math.round((used / limit) * 100);
@@ -276,9 +278,10 @@ export function PlanLimitsSection({ planLimits }: PlanLimitsSectionProps) {
                 )}
               </div>
             </div>
-            <Link href={'/pricing'} className="shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors w-full sm:w-auto text-center">
-              Learn More
-            </Link>
+            <Link href={`/dashboard/workspaces/${workspaceSlug}/billing/upgrade`} className="... flex items-center gap-1.5 ...">
+  <ArrowUpRight className="w-3.5 h-3.5" />
+  Upgrade
+</Link>
           </div>
         </div>
       )}

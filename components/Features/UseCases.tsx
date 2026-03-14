@@ -1,11 +1,9 @@
 "use client";
 
-import { cases } from "@/constant/features.costant";
+import { cases } from "@/constants/features.costants";
 import Image from "next/image";
 
 export default function UseCases() {
-  
-
   return (
     <section className="py-24">
       <div className="max-w-7xl mx-auto text-center space-y-4">

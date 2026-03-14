@@ -13,6 +13,7 @@ import {
   Files,
   Store,
   UserLock,
+  CreditCard,
 } from "lucide-react";
 
 type TabType = "overview" | "projects" | "members";
@@ -81,6 +82,12 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
       icon: UserLock,
       match: (path: string) => path.includes(`/${slug}/workspace-usage`)
     }
+    const billing = {
+      name: "Billing Page",
+      href: `/dashboard/workspaces/${slug}/billing`,
+      icon: CreditCard,
+      match: (path: string) => path.includes(`/${slug}/billing`)
+    }
 
   const navigation = [
     {
@@ -102,10 +109,10 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
       match: (path: string) => path.includes(`/${slug}/projects`),
     },
     {
-      name: "Meeting",
-      href: `/dashboard/workspaces/${slug}/meeting`,
+      name: "Meetings",
+      href: `/dashboard/workspaces/${slug}/meetings`,
       icon: Calendar,
-      match: (path: string) => path.includes(`/${slug}/meeting`),
+      match: (path: string) => path.includes(`/${slug}/meetings`),
     },
     {
       name: "Team",
@@ -113,7 +120,7 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
       icon: Users,
       match: (path: string) => path.includes(`/${slug}/team`),
     },
-    ...(canManageWorkspace ? [label, analytics, workspaceUsage, storage, files] : []),
+    ...(canManageWorkspace ? [label, analytics, workspaceUsage, storage, files, billing] : []),
   ];
 
   const currentMember = workspace?.members.find(

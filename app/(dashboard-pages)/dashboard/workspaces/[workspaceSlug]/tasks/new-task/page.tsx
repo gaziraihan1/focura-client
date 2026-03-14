@@ -19,7 +19,6 @@ export default function WorkspaceNewTaskPage() {
   const controller = useWorkspaceNewTaskPage({
     workspaceSlug,
   });
-  console.log(controller)
 
   if (controller.workspaceLoading) {
     return <LoadingState />;

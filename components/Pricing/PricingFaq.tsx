@@ -3,9 +3,7 @@
 import React, { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { faqs } from "@/constant/pricing.constant";
-
-
+import { faqs } from "@/constants/pricing.constants";
 
 export default function PricingFAQ() {
   const [open, setOpen] = useState<number | null>(null);

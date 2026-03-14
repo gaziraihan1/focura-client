@@ -1,18 +1,20 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { StorageBreakdown } from '@/hooks/useStorage';
-import { formatStorageSize } from '@/hooks/useStoragePage';
-import { storageBreakdown } from '@/constant/storage.constant';
+import { motion } from "framer-motion";
+import { StorageBreakdown } from "@/hooks/useStorage";
+import { formatStorageSize } from "@/hooks/useStoragePage";
+import { storageBreakdown } from "@/constants/storage.constants";
 
 interface StorageBreakdownChartProps {
   breakdown: StorageBreakdown;
 }
 
-export function StorageBreakdownChart({ breakdown }: StorageBreakdownChartProps) {
+export function StorageBreakdownChart({
+  breakdown,
+}: StorageBreakdownChartProps) {
   const { total } = breakdown;
 
-  const { data } = storageBreakdown({breakdown})
+  const { data } = storageBreakdown({ breakdown });
 
   return (
     <motion.div
@@ -47,20 +49,30 @@ export function StorageBreakdownChart({ breakdown }: StorageBreakdownChartProps)
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 ${item.color} bg-opacity-10 rounded-lg group-hover:bg-opacity-20 transition-colors`}>
-                    <item.icon className={`w-4 h-4 ${item.color.replace('bg-', 'text-')}`} />
+                  <div
+                    className={`p-2 ${item.color} bg-opacity-10 rounded-lg group-hover:bg-opacity-20 transition-colors`}
+                  >
+                    <item.icon
+                      className={`w-4 h-4 ${item.color.replace("bg-", "text-")}`}
+                    />
                   </div>
                   <div>
                     <p className="text-sm font-medium">{item.label}</p>
-                    <p className="text-xs text-muted-foreground">{item.description}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {item.description}
+                    </p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-semibold">{formatStorageSize(item.value)}</p>
-                  <p className="text-xs text-muted-foreground">{item.percentage}%</p>
+                  <p className="text-sm font-semibold">
+                    {formatStorageSize(item.value)}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {item.percentage}%
+                  </p>
                 </div>
               </div>
-              
+
               <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
@@ -75,8 +87,12 @@ export function StorageBreakdownChart({ breakdown }: StorageBreakdownChartProps)
 
         <div className="pt-4 border-t">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-muted-foreground">Total Storage</span>
-            <span className="text-lg font-semibold">{formatStorageSize(total)}</span>
+            <span className="text-sm font-medium text-muted-foreground">
+              Total Storage
+            </span>
+            <span className="text-lg font-semibold">
+              {formatStorageSize(total)}
+            </span>
           </div>
         </div>
       </div>

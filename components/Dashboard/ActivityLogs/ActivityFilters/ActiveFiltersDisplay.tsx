@@ -1,8 +1,11 @@
 // components/ActivityFilters/ActiveFiltersDisplay.tsx
-import { Filter } from 'lucide-react';
-import { ActivityFilterValues } from '@/types/activityFilter.types';
-import { ACTION_OPTIONS, ENTITY_OPTIONS } from '@/constant/activityFilter.constant';
-import { ActiveFiltersBadge } from './ActiveFiltersBadge';
+import { Filter } from "lucide-react";
+import { ActivityFilterValues } from "@/types/activityFilter.types";
+import {
+  ACTION_OPTIONS,
+  ENTITY_OPTIONS,
+} from "@/constants/activityFilter.constants";
+import { ActiveFiltersBadge } from "./ActiveFiltersBadge";
 
 interface ActiveFiltersDisplayProps {
   filters: ActivityFilterValues;
@@ -18,7 +21,10 @@ export function ActiveFiltersDisplay({
   onClearDateRange,
 }: ActiveFiltersDisplayProps) {
   const hasActiveFilters =
-    filters.action || filters.entityType || filters.startDate || filters.endDate;
+    filters.action ||
+    filters.entityType ||
+    filters.startDate ||
+    filters.endDate;
 
   if (!hasActiveFilters) return null;
 
@@ -33,7 +39,7 @@ export function ActiveFiltersDisplay({
         <ActiveFiltersBadge
           label="Action"
           value={
-            ACTION_OPTIONS.find((o) => o.value === filters.action)?.label || ''
+            ACTION_OPTIONS.find((o) => o.value === filters.action)?.label || ""
           }
           onClear={onClearAction}
         />
@@ -44,7 +50,7 @@ export function ActiveFiltersDisplay({
           label="Type"
           value={
             ENTITY_OPTIONS.find((o) => o.value === filters.entityType)?.label ||
-            ''
+            ""
           }
           onClear={onClearEntityType}
         />

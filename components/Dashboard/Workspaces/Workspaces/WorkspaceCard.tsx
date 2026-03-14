@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Crown, FolderKanban, Users, Settings } from "lucide-react";
 import { useWorkspacesPage } from "@/hooks/useWorkspacePage";
 import { Workspace } from "@/hooks/useWorkspace";
+import { useSession } from "next-auth/react";
 
 interface WorkspaceCardProps {
   workspace: Workspace;
@@ -10,8 +11,9 @@ interface WorkspaceCardProps {
 export function WorkspaceCard({ workspace }: WorkspaceCardProps) {
   const { getPlanBadge, navigateToSettings } = useWorkspacesPage();
   const badge = getPlanBadge(workspace.plan);
+  const {data: session} = useSession();
 
-  const isOwner = workspace.members.some((m) => m.role === "OWNER");
+  const isOwner = workspace.ownerId === session?.user.id
 
   return (
     <Link href={`/dashboard/workspaces/${workspace.slug}`}>

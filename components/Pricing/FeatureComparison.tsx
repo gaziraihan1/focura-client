@@ -2,9 +2,7 @@
 
 import React from "react";
 import { Check, Minus } from "lucide-react";
-import { features } from "@/constant/pricing.constant";
-
-
+import { features } from "@/constants/pricing.constants";
 
 export default function FeatureComparison() {
   return (

@@ -3,10 +3,9 @@
 import React from "react";
 import Image from "next/image";
 import { CheckCircle } from "lucide-react";
-import { features } from "@/constant/features.costant";
+import { features } from "@/constants/features.costants";
 
 export default function FeaturesDetails() {
- 
   return (
     <section className="relative py-28 bg-background">
       <div className="absolute -top-12 right-0 w-80 h-80 bg-primary/10 rounded-full blur-[120px] opacity-40" />

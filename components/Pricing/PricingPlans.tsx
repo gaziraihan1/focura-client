@@ -2,10 +2,9 @@
 
 import React from "react";
 import { Check } from "lucide-react";
-import { plans } from "@/constant/pricing.constant";
+import { plans } from "@/constants/pricing.constants";
 
 export default function PricingPlans() {
-  
   return (
     <section className="relative py-28 bg-background px-6">
       <div className="max-w-6xl mx-auto">

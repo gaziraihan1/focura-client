@@ -29,7 +29,6 @@ export function StorageOverviewPage() {
 
   const { data, isLoading, error } =
     useWorkspaceStorageOverview(currentWorkspaceId);
-  console.log(data);
   const warning = useStorageWarning(data?.storageInfo);
 
   if (loadingWorkspaces) {

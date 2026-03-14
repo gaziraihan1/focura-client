@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { statusChartData } from '@/constant/analytics.constant';
-import { TaskStatusItem } from '@/hooks/useAnalytics';
+import { statusChartData } from "@/constants/analytics.constants";
+import { TaskStatusItem } from "@/hooks/useAnalytics";
 
 interface TaskStatusChartProps {
   data: TaskStatusItem[];
 }
 
 export function TaskStatusChart({ data }: TaskStatusChartProps) {
-  const {conicGradient, colors, total} = statusChartData({data})
+  const { conicGradient, colors, total } = statusChartData({ data });
 
   return (
     <div className="bg-card border rounded-lg p-6">
@@ -42,7 +42,7 @@ export function TaskStatusChart({ data }: TaskStatusChartProps) {
                 style={{ backgroundColor: colors[index % colors.length] }}
               />
               <span className="text-sm capitalize">
-                {item.status.toLowerCase().replace('_', ' ')}
+                {item.status.toLowerCase().replace("_", " ")}
               </span>
             </div>
             <div className="flex items-center gap-2">

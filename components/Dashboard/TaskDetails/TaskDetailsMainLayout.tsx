@@ -29,8 +29,6 @@ export default function TaskDetailsMainLayout({
     attachments,
     permissions,
   } = useTaskDetailsController(id as string);
-  const controller = useTaskDetailsController(id as string);
-  console.log(controller)
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

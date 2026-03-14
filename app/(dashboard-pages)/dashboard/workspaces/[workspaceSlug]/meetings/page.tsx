@@ -17,7 +17,7 @@ export default function MeetingsPage() {
   const workspaceSlug = params.workspaceSlug as string;
 
   const controller = useMeetingPage({workspaceSlug})
-
+console.log(controller)
 
   if (controller.roleLoading || !controller.workspaceId) return <PageSkeleton />;
 

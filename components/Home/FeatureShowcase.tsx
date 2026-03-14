@@ -3,11 +3,9 @@
 import React from "react";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { features } from "@/constant/home.constant";
+import { features } from "@/constants/home.constants";
 
 export default function FeatureShowcase() {
-  
-
   return (
     <section className="py-28 bg-background">
       <div className="max-w-6xl mx-auto px-6">
@@ -24,12 +22,11 @@ export default function FeatureShowcase() {
             <div
               key={index}
               className={`flex flex-col items-center gap-16 md:gap-24 ${
-                f.reverse
-                  ? "md:flex-row-reverse"
-                  : "md:flex-row"
+                f.reverse ? "md:flex-row-reverse" : "md:flex-row"
               }`}
             >
-              <div className="flex-1 relative rounded-3xl overflow-hidden 
+              <div
+                className="flex-1 relative rounded-3xl overflow-hidden 
                 bg-white/30 dark:bg-white/5 backdrop-blur-xl 
                 border border-border shadow-xl h-[300px] md:h-[360px]"
               >

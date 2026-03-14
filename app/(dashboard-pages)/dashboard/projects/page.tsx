@@ -32,9 +32,7 @@ export default function ProjectsPage() {
     handleRetry,
     handleCloseAccessDeniedModal,
     showAccessDeniedModal,
-    projects
   } = useProjectsPage();
-  console.log(projects, showAccessDeniedModal)
 
   if (isLoading) {
     return <ProjectsLoadingState />;

@@ -1,6 +1,6 @@
 // components/Tasks/CreateTaskModal/TaskIntentPicker.tsx
 import { Brain } from "lucide-react";
-import { INTENT_OPTIONS } from "@/constant/intent.constant";
+import { INTENT_OPTIONS } from "@/constants/intent.constants";
 import { TaskIntent } from "@/types/taskForm.types";
 
 interface TaskIntentPickerProps {
@@ -27,9 +27,7 @@ export function TaskIntentPicker({ value, onChange }: TaskIntentPickerProps) {
               type="button"
               onClick={() => onChange(intent.value)}
               className={`p-3 rounded-lg border text-left transition ${
-                selected
-                  ? intent.activeClass
-                  : "border-border hover:bg-accent"
+                selected ? intent.activeClass : "border-border hover:bg-accent"
               }`}
             >
               <div className="flex items-center gap-2 mb-1">

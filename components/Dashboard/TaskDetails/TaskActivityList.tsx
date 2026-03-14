@@ -39,7 +39,6 @@ interface TaskActivityListProps {
 }
 
 export function TaskActivityList({ activities }: TaskActivityListProps) {
-  console.log(activities)
   const getActivityIcon = (action: string) => {
     const iconClass = "h-4 w-4";
     

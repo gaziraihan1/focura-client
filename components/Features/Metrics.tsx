@@ -1,8 +1,6 @@
-import { metrics } from "@/constant/features.costant";
+import { metrics } from "@/constants/features.costants";
 
 export default function Metrics() {
-  
-
   return (
     <section className="py-24 bg-muted/30 dark:bg-muted/10">
       <div className="max-w-7xl mx-auto text-center space-y-5">

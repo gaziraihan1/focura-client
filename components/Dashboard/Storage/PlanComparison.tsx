@@ -1,18 +1,19 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
-import { getPlanLimits } from '@/hooks/useStoragePage';
-import { plans } from '@/constant/storage.constant';
+import { motion } from "framer-motion";
+import { Check } from "lucide-react";
+import { getPlanLimits } from "@/hooks/useStoragePage";
+import { plans } from "@/constants/storage.constants";
 
 interface PlanComparisonProps {
   currentPlan: string;
   workspaceName: string;
 }
 
-export function PlanComparison({ currentPlan, workspaceName }: PlanComparisonProps) {
-  
-
+export function PlanComparison({
+  currentPlan,
+  workspaceName,
+}: PlanComparisonProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -39,10 +40,10 @@ export function PlanComparison({ currentPlan, workspaceName }: PlanComparisonPro
               transition={{ delay: index * 0.1 }}
               className={`relative border rounded-lg p-6 ${
                 isCurrent
-                  ? 'border-primary bg-primary/5'
+                  ? "border-primary bg-primary/5"
                   : plan.popular
-                  ? 'border-blue-500/50 bg-blue-500/5'
-                  : 'bg-card'
+                    ? "border-blue-500/50 bg-blue-500/5"
+                    : "bg-card"
               }`}
             >
               {isCurrent && (
@@ -66,15 +67,17 @@ export function PlanComparison({ currentPlan, workspaceName }: PlanComparisonPro
                 <h3 className="text-lg font-semibold">{plan.name}</h3>
               </div>
 
-              <p className="text-sm text-muted-foreground mb-6">{plan.description}</p>
+              <p className="text-sm text-muted-foreground mb-6">
+                {plan.description}
+              </p>
 
               <div className="mb-6">
                 <p className="text-3xl font-bold">
                   {limits.storage >= 1048576
                     ? `${(limits.storage / 1048576).toFixed(0)} TB`
                     : limits.storage >= 1024
-                    ? `${(limits.storage / 1024).toFixed(0)} GB`
-                    : `${limits.storage} MB`}
+                      ? `${(limits.storage / 1024).toFixed(0)} GB`
+                      : `${limits.storage} MB`}
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">Storage</p>
               </div>
@@ -93,8 +96,8 @@ export function PlanComparison({ currentPlan, workspaceName }: PlanComparisonPro
                 <button
                   className={`w-full py-2.5 text-sm font-medium rounded-lg transition-colors ${
                     plan.popular
-                      ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                      : 'bg-muted hover:bg-muted/80'
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                      : "bg-muted hover:bg-muted/80"
                   }`}
                 >
                   Upgrade to {plan.name}
@@ -113,8 +116,10 @@ export function PlanComparison({ currentPlan, workspaceName }: PlanComparisonPro
 
       <div className="mt-8 p-4 bg-muted/50 rounded-lg">
         <p className="text-sm text-muted-foreground text-center">
-          Need a custom plan for {workspaceName}?{' '}
-          <button className="text-primary hover:underline font-medium">Contact Sales</button>
+          Need a custom plan for {workspaceName}?{" "}
+          <button className="text-primary hover:underline font-medium">
+            Contact Sales
+          </button>
         </p>
       </div>
     </motion.div>

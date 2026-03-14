@@ -50,7 +50,6 @@ export default function TaskDetailsView({
   const router = useRouter();
   const isPersonalTask = !task.projectId;
   
-  console.log(task);
   
   return (
     <div className="max-w-6xl mx-auto space-y-6">

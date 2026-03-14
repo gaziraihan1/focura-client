@@ -1,26 +1,33 @@
-'use client';
+"use client";
 
 import { useState, useCallback } from "react";
 import { useCreateTask } from "@/hooks/useTask";
 import { CreateTaskFormData } from "@/types/taskForm.types";
-import { INITIAL_FORM_DATA } from "@/constant/taskForm";
+import { INITIAL_FORM_DATA } from "@/constants/taskForm.constants";
 
 interface UseCreateTaskFormProps {
   projectId: string;
   onSuccess: () => void;
 }
 
-export function useCreateTaskForm({ projectId, onSuccess }: UseCreateTaskFormProps) {
+export function useCreateTaskForm({
+  projectId,
+  onSuccess,
+}: UseCreateTaskFormProps) {
   const createTask = useCreateTask();
-  const [formData, setFormData] = useState<CreateTaskFormData>(INITIAL_FORM_DATA);
+  const [formData, setFormData] =
+    useState<CreateTaskFormData>(INITIAL_FORM_DATA);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const updateField = useCallback(<K extends keyof CreateTaskFormData>(
-    field: K,
-    value: CreateTaskFormData[K]
-  ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  }, []);
+  const updateField = useCallback(
+    <K extends keyof CreateTaskFormData>(
+      field: K,
+      value: CreateTaskFormData[K],
+    ) => {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+    },
+    [],
+  );
 
   const toggleAssignee = useCallback((userId: string) => {
     setFormData((prev) => ({
@@ -50,7 +57,7 @@ export function useCreateTaskForm({ projectId, onSuccess }: UseCreateTaskFormPro
       },
       {
         onSuccess,
-      }
+      },
     );
   }, [validate, createTask, formData, projectId, onSuccess]);
 

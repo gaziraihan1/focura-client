@@ -1,4 +1,4 @@
-import { ENERGY_OPTIONS } from "@/constant/intent.constant";
+import { ENERGY_OPTIONS } from "@/constants/intent.constants";
 
 interface EnergySelectorProps {
   selectedEnergy?: "LOW" | "MEDIUM" | "HIGH";

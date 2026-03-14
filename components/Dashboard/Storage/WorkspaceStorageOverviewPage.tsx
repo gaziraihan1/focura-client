@@ -22,7 +22,7 @@ export function WorkspaceStorageOverviewPage({ workspaceId }: WorkspaceStoragePa
   // Show loading for workspace data
   if (isLoading) {
     return (
-      <div className="space-y-8 pb-8">
+      <div className="space-y-8">
         {/* Header */}
         <div className="flex-1">
           <h1 className="text-3xl font-semibold tracking-tight">Storage Overview</h1>
@@ -69,7 +69,8 @@ export function WorkspaceStorageOverviewPage({ workspaceId }: WorkspaceStoragePa
   }
 
   return (
-    <div className="space-y-8 pb-8">
+      <div className="space-y-6 min-w-0 w-full overflow-hidden">
+
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
         <div className="flex-1">

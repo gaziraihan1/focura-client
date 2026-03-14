@@ -1,5 +1,4 @@
-
-import { FILTER_OPTIONS } from "@/constant/storage.constant";
+import { FILTER_OPTIONS } from "@/constants/storage.constants";
 import { FilterType } from "@/types/storage.types";
 
 interface TableHeaderProps {
@@ -24,8 +23,8 @@ export function TableHeader({ filterType, setFilterType }: TableHeaderProps) {
             onClick={() => setFilterType(filter.value)}
             className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
               filterType === filter.value
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-muted hover:bg-muted/80'
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted hover:bg-muted/80"
             }`}
           >
             {filter.label}

@@ -1,8 +1,15 @@
-import { INTENT_OPTIONS } from "@/constant/intent.constant";
+import { INTENT_OPTIONS } from "@/constants/intent.constants";
 
 interface IntentSelectorProps {
-  selectedIntent?: "EXECUTION" | "PLANNING" | "REVIEW" | "LEARNING" | "COMMUNICATION";
-  onIntentChange: (intent: "EXECUTION" | "PLANNING" | "REVIEW" | "LEARNING" | "COMMUNICATION") => void;
+  selectedIntent?:
+    | "EXECUTION"
+    | "PLANNING"
+    | "REVIEW"
+    | "LEARNING"
+    | "COMMUNICATION";
+  onIntentChange: (
+    intent: "EXECUTION" | "PLANNING" | "REVIEW" | "LEARNING" | "COMMUNICATION",
+  ) => void;
 }
 
 export function IntentSelector({
