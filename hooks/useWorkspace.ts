@@ -452,3 +452,49 @@ export function useWorkspaceRoleCheck(workspaceId?: string | null) {
     canManage:      isOwner || isAdmin,
   };
 }
+export function useWorkspaceRoleFromWorkspace(workspaceSlug: string): WorkspaceRoleResult {
+  const { data: session } = useSession();
+  const { data: workspace, isLoading } = useWorkspace(workspaceSlug); // already cached
+
+  const userId = session?.user?.id;
+
+  return useMemo(() => {
+    const empty = {
+      role: null, isOwner: false, isAdmin: false, isMember: false, isGuest: false,
+      canManageWorkspace: false, canManageMembers: false, canCreateProjects: false,
+      canEditProjects: false, canDeleteProjects: false, canInviteMembers: false,
+      canRemoveMembers: false, canEditSettings: false, canDeleteWorkspace: false,
+      canViewContent: false, currentMember: null, userId: userId || null,
+      isLoading, hasAccess: false,
+    };
+
+    if (!workspace || !userId) return empty;
+
+    // ✅ uses already-fetched workspace.members — no second network call
+    const currentMember = workspace.members.find((m) => m.user.id === userId) || null;
+    const role = currentMember?.role as WorkspaceRole | null;
+
+    const isOwner  = role === 'OWNER';
+    const isAdmin  = role === 'ADMIN';
+    const isMember = role === 'MEMBER';
+    const isGuest  = role === 'GUEST';
+
+    return {
+      role, isOwner, isAdmin, isMember, isGuest,
+      canManageWorkspace:  isOwner || isAdmin,
+      canManageMembers:    isOwner || isAdmin,
+      canCreateProjects:   isOwner || isAdmin,
+      canEditProjects:     isOwner || isAdmin,
+      canDeleteProjects:   isOwner || isAdmin,
+      canInviteMembers:    isOwner || isAdmin,
+      canRemoveMembers:    isOwner || isAdmin,
+      canEditSettings:     isOwner,
+      canDeleteWorkspace:  isOwner,
+      canViewContent:      isOwner || isAdmin || isMember || isGuest,
+      currentMember,
+      userId,
+      isLoading,
+      hasAccess: !!currentMember,
+    };
+  }, [workspace, userId, isLoading]);
+}

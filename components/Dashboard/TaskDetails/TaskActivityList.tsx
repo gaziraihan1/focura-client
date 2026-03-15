@@ -19,6 +19,7 @@ interface ActivityMetadata {
   newStatus?: string;
   newPriority?: string;
   [key: string]: unknown;
+  taskTitle?: string
 }
 
 interface Activity {
@@ -86,7 +87,7 @@ export function TaskActivityList({ activities }: TaskActivityListProps) {
     
     switch (activity.action) {
       case "CREATED":
-        return "created this";
+        return "created";
       case "UPDATED":
         return activity.metadata?.changes 
           ? `updated ${Object.keys(activity.metadata.changes).join(", ")}`
@@ -106,7 +107,7 @@ export function TaskActivityList({ activities }: TaskActivityListProps) {
       case "UNASSIGNED":
         return "was unassigned from this task";
       case "COMMENTED":
-        return "added a comment";
+        return "added a";
       default:
         return action;
     }
@@ -198,6 +199,10 @@ export function TaskActivityList({ activities }: TaskActivityListProps) {
                           {" "}
                           <span className="text-gray-600 dark:text-gray-400">
                             {getActivityDescription(activity)} {activity.entityType.toLowerCase()}
+                          </span>
+                          {" "}
+                          <span>
+                            {activity.metadata?.taskTitle}
                           </span>
                         </p>
                         

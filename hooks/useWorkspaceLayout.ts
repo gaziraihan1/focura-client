@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useWorkspace, useWorkspaceRole, useWorkspaces, useWorkspaceStats, useWorkspaceMembers } from "@/hooks/useWorkspace";
+import { useWorkspace, useWorkspaceRole, useWorkspaces, useWorkspaceStats, useWorkspaceMembers, useWorkspaceRoleFromWorkspace } from "@/hooks/useWorkspace";
 import {
   LayoutDashboard,
   CheckSquare,
@@ -35,7 +35,7 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
 
   const { data: workspace, isLoading } = useWorkspace(slug);
   const { data: allWorkspaces = [] } = useWorkspaces();
-  const { canManageWorkspace } = useWorkspaceRole(workspace?.id);
+  const { canManageWorkspace } = useWorkspaceRoleFromWorkspace(slug);
 
   // Keyboard shortcut for workspace switcher
   useEffect(() => {

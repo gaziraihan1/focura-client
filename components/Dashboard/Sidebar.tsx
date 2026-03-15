@@ -16,7 +16,6 @@ import {
   ChevronDown,
   ChevronRight,
   X,
-  MessageCircle ,
   Box ,
   Activity 
 } from "lucide-react";
@@ -90,11 +89,6 @@ const navigation: NavItem[] = [
       {name: "Overview", href: "/dashboard/storage"},
       {name: "Files", href: "/dashboard/storage/files"},
     ]
-  },
-  {
-    name: "Messages",
-    href: "/dashboard/messages",
-    icon: MessageCircle
   },
   {
     name: "Calendar",

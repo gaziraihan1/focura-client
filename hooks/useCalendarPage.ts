@@ -1,82 +1,73 @@
+// hooks/useCalendarPage.ts
 import { useState, useMemo, useCallback } from "react";
 import {
-  startOfMonth,
-  endOfMonth,
-  startOfWeek,
-  endOfWeek,
-  addMonths,
-  subMonths,
-  addWeeks,
-  subWeeks,
-  addDays,
-  subDays,
+  startOfMonth, endOfMonth, startOfWeek, endOfWeek,
+  addMonths, subMonths, addWeeks, subWeeks, addDays, subDays,
 } from "date-fns";
+import { useParams } from "next/navigation";
 import { Task, useTasks } from "@/hooks/useTask";
+import {  Workspace, workspaceKeys } from "@/hooks/useWorkspace";
 
 type CalendarView = "month" | "week" | "day";
 
 export function useCalendarPage() {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [view, setView] = useState<CalendarView>("month");
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [showOnlyTimeBound, setShowOnlyTimeBound] = useState(true);
+  const params    = useParams();
+  const slug      = params?.workspaceSlug as string | undefined;
+  const queryClient = useQueryClient();
+  const workspace   = queryClient.getQueryData<Workspace>(
+    workspaceKeys.detail(slug ?? "")
+  );
+  const workspaceId = workspace?.id;
 
-  // Fetch all tasks without pagination for calendar view
-  // Using a large page size to get all tasks at once
-  const { data: tasksResponse, isLoading } = useTasks(
-    {}, // No filters
-    1, // Page 1
-    1000 // Large page size to get all tasks
+  const { data: tasksResponse, isLoading: tasksLoading } = useTasks(
+    workspaceId ? { workspaceId } : undefined,
+    1,
+    100,
+    { sortBy: "dueDate", sortOrder: "asc" },
   );
 
-  // Extract tasks array from response
-  const tasks = useMemo(() => tasksResponse?.data || [], [tasksResponse?.data]);
+  // Resolve workspaceId from slug
 
-  // Filter tasks based on time-bound toggle
+  const [currentDate,       setCurrentDate]       = useState(new Date());
+  const [view,              setView]              = useState<CalendarView>("month");
+  const [selectedTask,      setSelectedTask]      = useState<Task | null>(null);
+  const [showOnlyTimeBound, setShowOnlyTimeBound] = useState(true);
+
+
+  const tasks = useMemo(
+    () => tasksResponse?.data ?? [],
+    [tasksResponse?.data],
+  );
+
   const filteredTasks = useMemo(() => {
     if (!showOnlyTimeBound) return tasks;
-    return tasks.filter((task) => task.dueDate || task.startDate);
+    return tasks.filter((t) => t.dueDate || t.startDate);
   }, [tasks, showOnlyTimeBound]);
 
-  // Calculate date range for the calendar view
-  const dateRange = useMemo(() => {
-    const start = startOfWeek(startOfMonth(currentDate), { weekStartsOn: 0 });
-    const end = endOfWeek(endOfMonth(currentDate), { weekStartsOn: 0 });
-    return { start, end };
-  }, [currentDate]);
+  const dateRange = useMemo(() => ({
+    start: startOfWeek(startOfMonth(currentDate), { weekStartsOn: 0 }),
+    end:   endOfWeek(endOfMonth(currentDate),     { weekStartsOn: 0 }),
+  }), [currentDate]);
 
-  // Navigation handlers
-  const handlePrevious = () => {
-    if (view === "month") {
-      setCurrentDate(subMonths(currentDate, 1));
-    } else if (view === "week") {
-      setCurrentDate(subWeeks(currentDate, 1));
-    } else if (view === "day") {
-      setCurrentDate(subDays(currentDate, 1));
-    }
-  };
+  const handlePrevious = useCallback(() => {
+    setCurrentDate((prev) =>
+      view === "month" ? subMonths(prev, 1)
+      : view === "week" ? subWeeks(prev, 1)
+      : subDays(prev, 1)
+    );
+  }, [view]);
 
-  const handleNext = () => {
-    if (view === "month") {
-      setCurrentDate(addMonths(currentDate, 1));
-    } else if (view === "week") {
-      setCurrentDate(addWeeks(currentDate, 1));
-    } else if (view === "day") {
-      setCurrentDate(addDays(currentDate, 1));
-    }
-  };
+  const handleNext = useCallback(() => {
+    setCurrentDate((prev) =>
+      view === "month" ? addMonths(prev, 1)
+      : view === "week" ? addWeeks(prev, 1)
+      : addDays(prev, 1)
+    );
+  }, [view]);
 
-  const handleToday = () => {
-    setCurrentDate(new Date());
-  };
-
-  const handleTaskClick = (task: Task) => {
-    setSelectedTask(task);
-  };
-
-  const handleCloseTaskModal = () => {
-    setSelectedTask(null);
-  };
+  const handleToday        = useCallback(() => setCurrentDate(new Date()), []);
+  const handleTaskClick    = useCallback((task: Task) => setSelectedTask(task), []);
+  const handleCloseTaskModal = useCallback(() => setSelectedTask(null), []);
 
   return {
     currentDate,
@@ -87,7 +78,7 @@ export function useCalendarPage() {
     setShowOnlyTimeBound,
     filteredTasks,
     dateRange,
-    isLoading,
+    isLoading: tasksLoading, // show loading until workspace resolves
     handlePrevious,
     handleNext,
     handleToday,
@@ -109,6 +100,7 @@ import type {
   SystemCalendarEvent 
 } from '@/types/calendar.types';
 import type { CalendarFilters } from '@/types/calendar.types';
+import { useQueryClient } from "@tanstack/react-query";
 
 // ✅ Local date formatting (no UTC conversion)
 function formatLocalDateKey(date: Date): string {

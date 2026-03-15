@@ -178,6 +178,7 @@ export function useTasks(
 ) {
   return useQuery({
     queryKey: taskKeys.list(filters, page, pageSize, sort),
+    // enabled: filters !== undefined,
     queryFn: async (): Promise<TasksResponse> => {
       const params = new URLSearchParams();
 

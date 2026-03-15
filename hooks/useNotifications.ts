@@ -48,6 +48,8 @@ const EMPTY_PAGE: NotificationsResponse = { items: [], nextCursor: null, hasMore
 export function useNotifications() {
   const queryClient       = useQueryClient();
   const { data: session } = useSession();
+  const backendToken = session?.backendToken ?? null;
+  
   const eventSourceRef    = useRef<EventSource | null>(null);
 
   const {
@@ -80,7 +82,7 @@ export function useNotifications() {
     },
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
     initialPageParam: undefined,
-    enabled:          !!session,
+    enabled:          !!backendToken,
     retry:            1,
   });
 
@@ -97,11 +99,10 @@ export function useNotifications() {
         return { count: 0 };
       }
     },
-    enabled: !!session,
+    enabled: !!backendToken,
     retry:   1,
   });
 
-  const backendToken = session?.backendToken ?? null;
 
   useEffect(() => {
     if (!backendToken) return;
