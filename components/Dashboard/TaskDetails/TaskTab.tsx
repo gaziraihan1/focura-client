@@ -39,7 +39,6 @@ export const TaskTabs = ({
   attachments,
   task,
   addComment,
-  updateComment,
   deleteComment,
   uploadAttachment,
   deleteAttachment,
@@ -55,16 +54,15 @@ export const TaskTabs = ({
     "comments" | "activity" | "attachments"
   >("comments");
   const [commentText, setCommentText] = useState("");
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editText, setEditText] = useState("");
 
-  const handleAddComment = async () => {
+  const handleAddComment = async (parentId: string | null) => {
     if (!commentText.trim() || !canComment) return;
 
     try {
       await addComment.mutateAsync({
         taskId,
         content: commentText,
+        parentId
       });
       setCommentText("");
     } catch (error) {
@@ -78,22 +76,8 @@ export const TaskTabs = ({
     attachments: attachments.length,
   };
 
-  const handleEdit = (comment: TaskComment) => {
-    if (comment.user.id !== currentUserId) return;
-    setEditingId(comment.id);
-    setEditText(comment.content);
-  };
 
-  const handleUpdate = async (commentId: string) => {
-    if (!editText.trim()) return;
-    await updateComment.mutateAsync({ commentId, content: editText, taskId });
-    setEditingId(null);
-  };
 
-  const handleCancel = () => {
-    setEditingId(null);
-    setEditText("");
-  };
 
   const handleCommentDelete = async (commentId: string) => {
     if (confirm("Are you sure you want to delete this comment?")) {
@@ -110,24 +94,27 @@ export const TaskTabs = ({
       />
       <div className="p-4 sm:p-6">
         {activeTab === "comments" && (
-          <CommentsTab
-            taskId={taskId}
-            comments={comments}
-            task={task}
-            canComment={canComment}
-            currentUserId={currentUserId}
-            commentText={commentText}
-            setCommentText={setCommentText}
-            editingId={editingId}
-            editText={editText}
-            onAddComment={handleAddComment}
-            onEdit={handleEdit}
-            onUpdate={handleUpdate}
-            onEditTextChange={setEditText}
-            onCancelEdit={handleCancel}
-            onDelete={handleCommentDelete}
-            addCommentLoading={addComment.isPending}
-          />
+          // TaskTabs.tsx — fixed CommentsTab call
+  <CommentsTab
+    taskId={taskId}
+    comments={comments}
+    task={task}
+    canComment={canComment}
+    currentUserId={currentUserId}
+    currentUserName={session?.user?.name ?? undefined}
+    currentUserImage={session?.user?.image ?? undefined}
+    mentionableUsers={task.assignees?.map((a) => ({
+      id: a.user.id,
+      name: a.user.name,
+      image: a.user.image ?? null,
+      role: a.role,
+    })) ?? []}
+    commentText={commentText}
+    setCommentText={setCommentText}
+    onAddComment={handleAddComment}
+    onDelete={handleCommentDelete}
+    addCommentLoading={addComment.isPending}
+  />
         )}
         {activeTab === "activity" && (
           <div>

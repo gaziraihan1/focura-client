@@ -30,6 +30,7 @@ export interface TaskAssignee {
   user: User;
   userId: string;
   taskId: string;
+  role: "OWNER" | "ADMIN" | "MEMBER"
 }
 
 export interface TaskComment {
@@ -37,6 +38,8 @@ export interface TaskComment {
   content: string;
   createdAt: string;
   user: User;
+  parentId: string | null;
+  edited: boolean
 }
 
 export interface Activity {

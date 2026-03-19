@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { useRouter } from 'next/navigation';
-import { Attachment } from '@/types/task.types';
+import { Attachment, TaskComment } from '@/types/task.types';
 
 export interface Task {
   id: string;
@@ -439,16 +439,6 @@ export function useUpdateTaskStatus() {
   });
 }
 
-export interface Comment {
-  id: string;
-  content: string;
-  createdAt: string;
-  user: {
-    id: string;
-    name: string;
-    image?: string;
-  };
-}
 
 export const commentKeys = {
   all:    ['comments'] as const,
@@ -459,7 +449,7 @@ export function useTaskComments(taskId: string) {
   return useQuery({
     queryKey: commentKeys.byTask(taskId),
     queryFn: async () => {
-      const response = await api.get<Comment[]>(`/api/tasks/${taskId}/comments`);
+      const response = await api.get<TaskComment[]>(`/api/tasks/${taskId}/comments`);
       return response?.data || [];
     },
     enabled: !!taskId,
@@ -470,15 +460,34 @@ export function useAddComment() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ taskId, content }: { taskId: string; content: string }) => {
-      const response = await api.post<Comment>(
+    mutationFn: async ({
+      taskId,
+      content,
+      parentId,
+    }: {
+      taskId: string;
+      content: string;
+      parentId?: string | null;
+    }) => {
+      const response = await api.post<TaskComment>(
         `/api/tasks/${taskId}/comments`,
-        { content },
+        { content, parentId: parentId ?? null },
         { showSuccessToast: false },
       );
       return response?.data;
     },
-    onSuccess: (_, { taskId }) => {
+    onSuccess: (newComment, { taskId }) => {
+      // Optimistically append into cache instead of waiting for refetch
+      queryClient.setQueryData<TaskComment[]>(
+        commentKeys.byTask(taskId),
+        (old) => {
+          if (!old) return [newComment!];
+          // Avoid duplicate if already in cache
+          if (old.some((c) => c.id === newComment!.id)) return old;
+          return [...old, newComment!];
+        }
+      );
+      // Still invalidate to sync with server (picks up any other changes)
       queryClient.invalidateQueries({ queryKey: commentKeys.byTask(taskId) });
       queryClient.invalidateQueries({ queryKey: taskKeys.detail(taskId) });
     },

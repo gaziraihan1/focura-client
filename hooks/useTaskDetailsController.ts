@@ -17,7 +17,7 @@ import { useTaskPermissions } from "@/hooks/useTaskPermissions";
 
 import { Task } from "@/types/task.types";
 
-export function useTaskDetailsController(taskId: string) {
+export function useTaskDetailsController(taskId: string, workspaceSlug: string) {
   const router = useRouter();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -87,7 +87,7 @@ export function useTaskDetailsController(taskId: string) {
     if (!confirm("Are you sure you want to delete this task?")) return;
 
     await deleteTask.mutateAsync(task.id);
-    router.push("/dashboard/tasks");
+    router.push(workspaceSlug ? `/dashboard/workspaces/${workspaceSlug}/tasks` : "/dashboard/tasks");
   };
 
   return {

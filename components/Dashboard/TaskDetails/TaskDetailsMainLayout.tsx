@@ -1,23 +1,30 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
+import { useSession } from "next-auth/react";
 import { TaskDetailsForm } from "./TaskDetailsForm";
 import { TaskTabs } from "./TaskTab";
 import { TaskSidebar } from "./TaskSidebar";
 import { useTaskDetailsController } from "@/hooks/useTaskDetailsController";
 import { Task } from "@/types/task.types";
+import { SubtaskSection } from "./SubtasksSection/SubtaskSection";
 
 interface TaskDetailsMainLayoutProps {
-  id: string;
+  id:             string;
   isPersonalTask: boolean;
-  task: Task;
+  task:           Task;
+  workspaceSlug:  string;
 }
 
 export default function TaskDetailsMainLayout({
   id,
   isPersonalTask,
   task,
+  workspaceSlug,
 }: TaskDetailsMainLayoutProps) {
+  const { data: session } = useSession();
+  const currentUserId = session?.user?.id ?? "";
+
   const {
     isEditing,
     editData,
@@ -28,10 +35,11 @@ export default function TaskDetailsMainLayout({
     comments,
     attachments,
     permissions,
-  } = useTaskDetailsController(id as string);
+  } = useTaskDetailsController(id, workspaceSlug);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* ── Left column — main content ── */}
       <div className="lg:col-span-2 space-y-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -51,7 +59,6 @@ export default function TaskDetailsMainLayout({
               <h1 className="text-3xl font-bold text-foreground mb-4">
                 {task.title}
               </h1>
-
               {task.description ? (
                 <p className="text-foreground/80 whitespace-pre-wrap">
                   {task.description}
@@ -65,25 +72,32 @@ export default function TaskDetailsMainLayout({
           )}
         </motion.div>
 
-{
-  !isPersonalTask && (
+        {/* Subtasks — shown for all tasks including personal */}
+        {currentUserId && (
+          <SubtaskSection
+            parentTaskId={task.id}
+            currentUserId={currentUserId}
+            isAssignee={permissions.isAssignee || permissions.isOwner}
+          />
+        )}
 
-    <TaskTabs
-      taskId={task.id}
-      task={task}
-      comments={comments}
-      attachments={attachments}
-      addComment={mutations.addComment}
-      updateComment={mutations.updateComment}
-      deleteComment={mutations.deleteComment}
-      uploadAttachment={mutations.uploadAttachment}
-      deleteAttachment={mutations.deleteAttachment}
-      canComment={permissions.canComment}
-    />
-  )
-}
+        {!isPersonalTask && (
+          <TaskTabs
+            taskId={task.id}
+            task={task}
+            comments={comments}
+            attachments={attachments}
+            addComment={mutations.addComment}
+            updateComment={mutations.updateComment}
+            deleteComment={mutations.deleteComment}
+            uploadAttachment={mutations.uploadAttachment}
+            deleteAttachment={mutations.deleteAttachment}
+            canComment={permissions.canComment}
+          />
+        )}
       </div>
 
+      {/* ── Right column — sidebar ── */}
       <TaskSidebar
         task={task}
         isPersonalTask={isPersonalTask}

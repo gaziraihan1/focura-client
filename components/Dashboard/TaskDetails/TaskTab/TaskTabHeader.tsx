@@ -44,7 +44,7 @@ export default function TaskTabHeader({
               onClick={() =>
                 setActiveTab(tab.id as "comments" | "activity" | "attachments")
               }
-              className={`flex-1 min-w-[120px] px-4 py-3 text-sm font-medium transition flex items-center justify-center gap-2 whitespace-nowrap ${
+              className={`flex-1 min-w-30 px-4 py-3 text-sm font-medium transition flex items-center justify-center gap-2 whitespace-nowrap ${
                 activeTab === tab.id
                   ? "bg-primary/5 text-primary border-b-2 border-primary"
                   : "text-muted-foreground hover:bg-accent"

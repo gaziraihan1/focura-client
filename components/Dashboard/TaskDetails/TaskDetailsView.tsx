@@ -37,6 +37,7 @@ interface TaskDetailsViewProps {
   handlers: TaskHandlers;
   mutations: TaskMutations;
   id: string;
+  workspaceSlug: string;
 }
 
 export default function TaskDetailsView({
@@ -46,6 +47,7 @@ export default function TaskDetailsView({
   handlers,
   mutations,
   id,
+  workspaceSlug
 }: TaskDetailsViewProps) {
   const router = useRouter();
   const isPersonalTask = !task.projectId;
@@ -104,6 +106,7 @@ export default function TaskDetailsView({
         id={id}
         task={task}
         isPersonalTask={isPersonalTask}
+        workspaceSlug={workspaceSlug}
       />
     </div>
   );

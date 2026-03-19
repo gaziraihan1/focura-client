@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Task } from '@/types/task.types';
 import { useProjectRole } from './useProjects';
 import { useWorkspaceRole } from './useWorkspace';
-import { useUserId } from './useUser'; // UPDATED: Use custom hook
+import { useUserId } from './useUser';
 
 export interface TaskPermissions {
   canEdit: boolean;
@@ -11,27 +11,18 @@ export interface TaskPermissions {
   canComment: boolean;
   canView: boolean;
   isOwner: boolean;
+  isAssignee: boolean;
   isLoading: boolean;
   reason?: string;
 }
 
-
 export function useTaskPermissions(task?: Task | null): TaskPermissions {
-  const userId = useUserId(); // UPDATED: Use custom hook
+  const userId = useUserId();
 
-  // Get project permissions if task belongs to a project
-  const projectRole = useProjectRole(
-    task?.project?.id || null,
-    null
-  );
-  
-  // Get workspace permissions if task belongs to a workspace
-  const workspaceRole = useWorkspaceRole(
-    task?.project?.workspace?.id || null
-  );
+  const projectRole = useProjectRole(task?.project?.id || null, null);
+  const workspaceRole = useWorkspaceRole(task?.project?.workspace?.id || null);
 
   return useMemo(() => {
-    // Not authenticated
     if (!task || !userId) {
       return {
         canEdit: false,
@@ -40,15 +31,16 @@ export function useTaskPermissions(task?: Task | null): TaskPermissions {
         canComment: false,
         canView: false,
         isOwner: false,
+        isAssignee: false,
         isLoading: projectRole.isLoading || workspaceRole.isLoading,
         reason: 'Not authenticated',
       };
     }
 
-    const isOwner = task.createdBy.id === userId;
+    const isOwner    = task.createdBy.id === userId;
+    const isAssignee = task.assignees?.some((a) => a.user.id === userId) ?? false;
     const isPersonalTask = !task.projectId;
 
-    // Still loading permissions
     if (projectRole.isLoading || workspaceRole.isLoading) {
       return {
         canEdit: false,
@@ -57,50 +49,50 @@ export function useTaskPermissions(task?: Task | null): TaskPermissions {
         canComment: false,
         canView: false,
         isOwner,
+        isAssignee,
         isLoading: true,
         reason: 'Loading permissions...',
       };
     }
 
-    // Personal task permissions - only owner can do everything
+    // ── Personal task — owner only
     if (isPersonalTask) {
       return {
-        canEdit: isOwner,
-        canDelete: isOwner,
+        canEdit:         isOwner,
+        canDelete:       isOwner,
         canChangeStatus: isOwner,
-        canComment: isOwner,
-        canView: isOwner,
+        canComment:      isOwner,
+        canView:         isOwner,
         isOwner,
+        isAssignee,
         isLoading: false,
         reason: isOwner ? undefined : 'Only task owner can access personal tasks',
       };
     }
 
-    // Project task permissions
-    const isProjectManager = projectRole.isManager;
-    const isWorkspaceOwner = workspaceRole.isOwner;
-    const isWorkspaceAdmin = workspaceRole.isAdmin;
-    
-    // IMPORTANT: Only task creator can edit/delete
-    const canEdit = isOwner;
+    // ── Project task
+    const isProjectManager  = projectRole.isManager;
+    const isWorkspaceOwner  = workspaceRole.isOwner;
+    const isWorkspaceAdmin  = workspaceRole.isAdmin;
+
+    // Anyone with a stake in the task can view and comment
+    const hasTaskStake = isOwner || isAssignee || isProjectManager || isWorkspaceOwner || isWorkspaceAdmin;
+
+    const canView    = hasTaskStake || projectRole.canViewTasks;
+    const canComment = hasTaskStake || projectRole.canCommentOnTasks;
+
+    // Only creator can edit/delete
+    const canEdit   = isOwner;
     const canDelete = isOwner;
-    
-    // Task creator OR Project Manager OR Workspace Admin/Owner can change status
-    const canChangeStatus = isOwner || isProjectManager || isWorkspaceOwner || isWorkspaceAdmin;
-    
-    // Anyone with project access can comment
-    const canComment = projectRole.canCommentOnTasks;
-    
-    // Anyone with project access can view
-    const canView = projectRole.canViewTasks;
+
+    // Creator, assignees, managers, admins/owners can change status
+    const canChangeStatus = isOwner || isAssignee || isProjectManager || isWorkspaceOwner || isWorkspaceAdmin;
 
     let reason: string | undefined;
-    if (!canEdit) {
-      if (!projectRole.hasAccess) {
-        reason = "You don't have access to this project";
-      } else {
-        reason = 'Only the task creator can edit or delete this task';
-      }
+    if (!canView) {
+      reason = "You don't have access to this task";
+    } else if (!canEdit) {
+      reason = 'Only the task creator can edit or delete this task';
     }
 
     return {
@@ -110,6 +102,7 @@ export function useTaskPermissions(task?: Task | null): TaskPermissions {
       canComment,
       canView,
       isOwner,
+      isAssignee,
       isLoading: false,
       reason,
     };
