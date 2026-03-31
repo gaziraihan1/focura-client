@@ -17,6 +17,7 @@ import {
   getStatusColor,
   getTimeStatusColor,
 } from "@/utils/task.utils";
+import { formatHoursSinceCreation } from "@/utils/taskcard.utils";
 
 
 interface TaskCardProps {
@@ -56,34 +57,31 @@ export function TaskCard({
   };
 
   return (
-    <Link href={`/dashboard/workspaces/${workspaceSlug}/tasks/${task.id}`}>
+    <Link href={`/dashboard/workspaces/${workspaceSlug}/projects/${task.project?.slug}/tasks/${task.id}`}>
       <div className="p-4 rounded-xl bg-card border border-border hover:shadow-lg hover:border-primary/50 transition-all cursor-pointer group relative">
-        {/* Add to Primary/Secondary Buttons */}
-        {showButtons && (
-          <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-            {/* Primary Button */}
-            <button
-              onClick={handlePrimaryClick}
-              disabled={isPrimaryDisabled}
-              className={`p-2 rounded-lg transition-all ${
-                isPrimaryDisabled
-                  ? "bg-muted text-muted-foreground cursor-not-allowed opacity-50"
-                  : "bg-purple-500 hover:bg-purple-600 text-white shadow-md hover:shadow-lg"
-              }`}
-              title={isPrimaryDisabled ? "Primary task already set" : "Add to Primary"}
-            >
-              <Plus size={16} />
-            </button>
-            {/* Secondary Button */}
-            <button
-              onClick={handleSecondaryClick}
-              className="p-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-white shadow-md hover:shadow-lg transition-all"
-              title="Add to Secondary"
-            >
-              <Plus size={16} />
-            </button>
-          </div>
-        )}
+       {showButtons && (
+  <div className="absolute top-3 right-3 flex gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity z-10">
+    <button
+      onClick={handlePrimaryClick}
+      disabled={isPrimaryDisabled}
+      className={`p-2 rounded-lg transition-all ${
+        isPrimaryDisabled
+          ? "bg-muted text-muted-foreground cursor-not-allowed opacity-50"
+          : "bg-purple-500 hover:bg-purple-600 text-white shadow-md hover:shadow-lg"
+      }`}
+      title={isPrimaryDisabled ? "Primary task already set" : "Add to Primary"}
+    >
+      <Plus size={16} />
+    </button>
+    <button
+      onClick={handleSecondaryClick}
+      className="p-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-white shadow-md hover:shadow-lg transition-all"
+      title="Add to Secondary"
+    >
+      <Plus size={16} />
+    </button>
+  </div>
+)}
 
         <div className="flex items-start gap-4">
           {/* Status Icon */}
@@ -136,7 +134,6 @@ export function TaskCard({
                 </div>
               )}
 
-              {/* Status Badge */}
               <span
                 className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
                   task.status
@@ -145,13 +142,12 @@ export function TaskCard({
                 {task.status.replace("_", " ")}
               </span>
 
-              {/* Time Tracking Info */}
               {task.timeTracking && (
                 <>
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
                     <Timer size={14} />
                     <span>
-                      Created {task.timeTracking.hoursSinceCreation}h ago
+                      {formatHoursSinceCreation(task.timeTracking.hoursSinceCreation)} ago
                     </span>
                   </div>
 
@@ -227,13 +223,13 @@ export function TaskCard({
 
               {/* Counts */}
               <div className="flex items-center gap-3 text-xs text-muted-foreground ml-auto">
-                {task._count?.comments > 0 && (
+                {task._count.comments > 0 && (
                   <span>{task._count.comments} 💬</span>
                 )}
-                {task._count?.subtasks > 0 && (
+                {task._count.subtasks > 0 && (
                   <span>{task._count.subtasks} ✓</span>
                 )}
-                {task._count?.files > 0 && (
+                {task._count.files > 0 && (
                   <span>{task._count.files} 📎</span>
                 )}
               </div>

@@ -12,32 +12,30 @@ interface AddDailyTaskPayload {
   type: "PRIMARY" | "SECONDARY";
 }
 
-// Query key factory
 const dailyTasksKeys = {
   all: ["daily-tasks"] as const,
-  byWorkspace: (workspaceSlug?: string) => 
+  byWorkspace: (workspaceSlug?: string) =>
     [...dailyTasksKeys.all, workspaceSlug] as const,
 };
 
 export function useDailyTasks(workspaceSlug?: string) {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
+  const queryKey = dailyTasksKeys.byWorkspace(workspaceSlug);
 
-  // Fetch daily tasks
   const {
     data: dailyTasks,
     isLoading,
     error,
     refetch,
   } = useQuery({
-    queryKey: dailyTasksKeys.byWorkspace(workspaceSlug),
+    queryKey,
     queryFn: async () => {
       const response = await api.get<DailyTasksData>("/api/daily-tasks");
       return response?.data || { primaryTask: null, secondaryTasks: [] };
     },
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
   });
 
-  // Add task to daily tasks (primary or secondary)
   const addDailyTaskMutation = useMutation({
     mutationFn: async (payload: AddDailyTaskPayload) => {
       return await api.post("/api/daily-tasks", payload, {
@@ -45,14 +43,44 @@ export function useDailyTasks(workspaceSlug?: string) {
         showErrorToast: true,
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: dailyTasksKeys.byWorkspace(workspaceSlug),
-      });
+    onMutate: async (payload) => {
+      await qc.cancelQueries({ queryKey });
+
+      const previous = qc.getQueryData<DailyTasksData>(queryKey);
+
+      const task = findTaskInCache(qc, payload.taskId);
+
+      if (task) {
+        qc.setQueryData<DailyTasksData>(queryKey, (old) => {
+          const current = old || { primaryTask: null, secondaryTasks: [] };
+
+          if (payload.type === "PRIMARY") {
+            return { ...current, primaryTask: task };
+          } else {
+            const already = current.secondaryTasks.some(
+              (t) => t.id === task.id,
+            );
+            if (already) return current;
+            return {
+              ...current,
+              secondaryTasks: [...current.secondaryTasks, task],
+            };
+          }
+        });
+      }
+
+      return { previous };
+    },
+    onError: (_err, _payload, context) => {
+      if (context?.previous) {
+        qc.setQueryData(queryKey, context.previous);
+      }
+    },
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey });
     },
   });
 
-  // Remove daily task
   const removeDailyTaskMutation = useMutation({
     mutationFn: async (taskId: string) => {
       return await api.delete(`/api/daily-tasks/${taskId}`, {
@@ -60,20 +88,33 @@ export function useDailyTasks(workspaceSlug?: string) {
         showErrorToast: true,
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: dailyTasksKeys.byWorkspace(workspaceSlug),
+    onMutate: async (taskId) => {
+      await qc.cancelQueries({ queryKey });
+      const previous = qc.getQueryData<DailyTasksData>(queryKey);
+
+      qc.setQueryData<DailyTasksData>(queryKey, (old) => {
+        if (!old) return old;
+        return {
+          primaryTask: old.primaryTask?.id === taskId ? null : old.primaryTask,
+          secondaryTasks: old.secondaryTasks.filter((t) => t.id !== taskId),
+        };
       });
+
+      return { previous };
+    },
+    onError: (_err, _taskId, context) => {
+      if (context?.previous) {
+        qc.setQueryData(queryKey, context.previous);
+      }
+    },
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey });
     },
   });
 
-  // Helper functions
   const addToPrimary = async (taskId: string) => {
     try {
-      await addDailyTaskMutation.mutateAsync({
-        taskId,
-        type: "PRIMARY",
-      });
+      await addDailyTaskMutation.mutateAsync({ taskId, type: "PRIMARY" });
       return { success: true };
     } catch (err) {
       return {
@@ -85,10 +126,7 @@ export function useDailyTasks(workspaceSlug?: string) {
 
   const addToSecondary = async (taskId: string) => {
     try {
-      await addDailyTaskMutation.mutateAsync({
-        taskId,
-        type: "SECONDARY",
-      });
+      await addDailyTaskMutation.mutateAsync({ taskId, type: "SECONDARY" });
       return { success: true };
     } catch (err) {
       return {
@@ -113,15 +151,29 @@ export function useDailyTasks(workspaceSlug?: string) {
   return {
     primaryTask: dailyTasks?.primaryTask || null,
     secondaryTasks: dailyTasks?.secondaryTasks || [],
-    hasPrimaryTask: dailyTasks?.primaryTask !== null,
+    hasPrimaryTask: !!dailyTasks?.primaryTask,
     isLoading,
     error: error?.message || null,
     addToPrimary,
     addToSecondary,
     removeDailyTask,
     refresh: refetch,
-    // Expose mutation states for more granular control if needed
     isAdding: addDailyTaskMutation.isPending,
     isRemoving: removeDailyTaskMutation.isPending,
   };
+}
+
+function findTaskInCache(
+  qc: ReturnType<typeof useQueryClient>,
+  taskId: string,
+): Task | undefined {
+  const allCaches = qc.getQueriesData<{ tasks: Task[] }>({
+    queryKey: ["tasks"],
+  });
+
+  for (const [, data] of allCaches) {
+    if (!data?.tasks) continue;
+    const found = data.tasks.find((t) => t.id === taskId);
+    if (found) return found;
+  }
 }

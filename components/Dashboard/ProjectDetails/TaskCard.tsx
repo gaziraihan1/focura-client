@@ -1,29 +1,18 @@
 import React from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { MessageSquare, Clock } from 'lucide-react';
 import Image from 'next/image';
+import { Task } from '@/types/task.types';
+// import { Task } from '@/hooks/useProjects';
 
 interface TaskCardProps {
-  task: {
-    id: string;
-    title: string;
-    priority: string;
-    dueDate?: string;
-    assignees: Array<{
-      user: {
-        id: string;
-        name: string;
-        image?: string;
-      };
-    }>;
-    _count: {
-      comments: number;
-    };
-  };
+  task: Task;
+  workspaceSlug: string
 }
 
-export default function TaskCard({ task }: TaskCardProps) {
+export default function TaskCard({ task, workspaceSlug }: TaskCardProps) {
   const router = useRouter();
+  const {projectSlug} = useParams();
 
   const priorityColors: Record<string, string> = {
     URGENT: 'bg-red-500',
@@ -34,7 +23,7 @@ export default function TaskCard({ task }: TaskCardProps) {
 
   return (
     <div
-      onClick={() => router.push(`/dashboard/tasks/${task.id}`)}
+      onClick={() => router.push(`/dashboard/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/${task.id}`)}
       className="p-4 rounded-lg bg-card border border-border hover:border-primary cursor-pointer transition space-y-3"
     >
       <div className="flex items-start justify-between">

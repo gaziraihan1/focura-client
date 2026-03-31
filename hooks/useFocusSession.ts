@@ -1,9 +1,11 @@
 // hooks/useFocusSession.ts
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import toast from 'react-hot-toast';
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 export type FocusType = 'POMODORO' | 'SHORT_BREAK' | 'LONG_BREAK' | 'DEEP_WORK' | 'CUSTOM';
 
@@ -24,7 +26,7 @@ export interface FocusSession {
 }
 
 export interface StartFocusSessionInput {
-  taskId?: string;
+  taskId: string;
   type: FocusType;
   duration: number; // in minutes
 }
@@ -37,104 +39,174 @@ export interface FocusSessionStats {
   focusStreak: number; // consecutive days with focus sessions
 }
 
+// ─── Query Key Factory ────────────────────────────────────────────────────────
+
+export const focusSessionKeys = {
+  all: ['focus-sessions'] as const,
+  active: () => [...focusSessionKeys.all, 'active'] as const,
+  stats: () => [...focusSessionKeys.all, 'stats'] as const,
+  lists: () => [...focusSessionKeys.all, 'list'] as const,
+  detail: (id: string) => [...focusSessionKeys.all, 'detail', id] as const,
+};
+
+// ─── Fetchers ─────────────────────────────────────────────────────────────────
+
+const fetchActiveSession = async (): Promise<FocusSession | null> => {
+  const result = await api.get<FocusSession>('/api/focus-sessions/active', {
+    showErrorToast: false,
+  });
+  return result?.success ? (result.data ?? null) : null;
+};
+
+const fetchFocusSessionStats = async (): Promise<FocusSessionStats> => {
+  const result = await api.get<FocusSessionStats>('/api/focus-sessions/stats');
+  if (!result?.success || !result.data) {
+    throw new Error('Failed to fetch focus session stats');
+  }
+  return result.data;
+};
+
+// ─── Hook ─────────────────────────────────────────────────────────────────────
+
 export function useFocusSession() {
-  const [activeSession, setActiveSession] = useState<FocusSession | null>(null);
-  const [loading, setLoading] = useState(false);
+  const qc = useQueryClient();
 
-  // Check for active session on mount
-  useEffect(() => {
-    checkActiveSession();
-  }, []);
+  // Active session — polling every 30s to stay in sync across tabs
+  const {
+    data: activeSession = null,
+    isLoading: isLoadingActive,
+  } = useQuery({
+    queryKey: focusSessionKeys.active(),
+    queryFn: fetchActiveSession,
+    refetchInterval: 30_000,
+    staleTime: 15_000,
+  });
 
-  const checkActiveSession = async () => {
-    try {
-      const result = await api.get<FocusSession>('/api/focus-sessions/active', {
-        showErrorToast: false,
-      });
-      
-      if (result?.success && result.data) {
-        setActiveSession(result.data);
-      }
-    } catch (error) {
-      // Silently fail - no active session is normal
-      console.debug('No active session', error);
-    }
-  };
+  // ── Start session ──────────────────────────────────────────────────────────
 
-  const startSession = async (
-    taskId: string,
-    duration: number = 25,
-    type: FocusType = 'POMODORO'
-  ) => {
-    setLoading(true);
-    try {
+  const { mutate: startSession, isPending: isStarting } = useMutation({
+    mutationFn: async ({
+      taskId,
+      duration = 25,
+      type = 'POMODORO',
+    }: {
+      taskId: string;
+      duration?: number;
+      type?: FocusType;
+    }) => {
       const result = await api.post<FocusSession>(
         '/api/focus-sessions/start',
-        {
-          taskId,
-          type,
-          duration,
-        },
+        { taskId, type, duration },
         { showSuccessToast: true }
       );
-
-      if (result?.success && result.data) {
-        setActiveSession(result.data);
-        return result.data;
+      if (!result?.success || !result.data) {
+        throw new Error('Failed to start focus session');
       }
-    } catch (error) {
-      console.error('Failed to start focus session:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+      return result.data;
+    },
+    onSuccess: (newSession) => {
+      qc.setQueryData<FocusSession | null>(
+        focusSessionKeys.active(),
+        newSession
+      );
+    },
+    onError: () => {
+      // Invalidate so the query re-fetches the real server state
+      qc.invalidateQueries({ queryKey: focusSessionKeys.active() });
+    },
+  });
 
-  const completeSession = async () => {
-    if (!activeSession) return;
+  // ── Complete session ───────────────────────────────────────────────────────
 
-    setLoading(true);
-    try {
+  const { mutate: completeSession, isPending: isCompleting } = useMutation({
+    mutationFn: async () => {
+      if (!activeSession) throw new Error('No active session to complete');
       await api.post(
         `/api/focus-sessions/${activeSession.id}/complete`,
         {},
-        { showSuccessToast: true }
+        { showSuccessToast: false } // We show a custom toast below
       );
-      
-      setActiveSession(null);
+    },
+    onMutate: async () => {
+      await qc.cancelQueries({ queryKey: focusSessionKeys.active() });
+      const previous = qc.getQueryData<FocusSession | null>(
+        focusSessionKeys.active()
+      );
+      // Optimistically clear the active session
+      qc.setQueryData<FocusSession | null>(focusSessionKeys.active(), null);
+      return { previous };
+    },
+    onSuccess: () => {
       toast.success('🎉 Focus session completed! Time added to calendar.');
-    } catch (error) {
-      console.error('Failed to complete focus session:', error);
+      // Invalidate stats so they refresh with the new completed session
+      qc.invalidateQueries({ queryKey: focusSessionKeys.stats() });
+    },
+    onError: (_error, _vars, context) => {
+      // Roll back optimistic clear on failure
+      if (context?.previous !== undefined) {
+        qc.setQueryData(focusSessionKeys.active(), context.previous);
+      }
       toast.error('Failed to complete session');
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+  });
 
-  const cancelSession = async () => {
-    if (!activeSession) return;
+  // ── Cancel session ─────────────────────────────────────────────────────────
 
-    setLoading(true);
-    try {
+  const { mutate: cancelSession, isPending: isCancelling } = useMutation({
+    mutationFn: async () => {
+      if (!activeSession) throw new Error('No active session to cancel');
       await api.post(
         `/api/focus-sessions/${activeSession.id}/cancel`,
         {},
         { showErrorToast: true }
       );
-      
-      setActiveSession(null);
-    } catch (error) {
-      console.error('Failed to cancel focus session:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    onMutate: async () => {
+      await qc.cancelQueries({ queryKey: focusSessionKeys.active() });
+      const previous = qc.getQueryData<FocusSession | null>(
+        focusSessionKeys.active()
+      );
+      qc.setQueryData<FocusSession | null>(focusSessionKeys.active(), null);
+      return { previous };
+    },
+    onError: (_error, _vars, context) => {
+      if (context?.previous !== undefined) {
+        qc.setQueryData(focusSessionKeys.active(), context.previous);
+      }
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: focusSessionKeys.stats() });
+    },
+  });
 
   return {
+    // State
     activeSession,
-    loading,
+    isLoading: isLoadingActive,
+    isMutating: isStarting || isCompleting || isCancelling,
+
+    // Granular loading flags (useful for button states)
+    isStarting,
+    isCompleting,
+    isCancelling,
+
+    // Actions
     startSession,
     completeSession,
     cancelSession,
-    checkActiveSession,
+
+    // Manual refetch escape hatch (matches checkActiveSession usage)
+    refetchActiveSession: () =>
+      qc.invalidateQueries({ queryKey: focusSessionKeys.active() }),
   };
+}
+
+// ─── Stats Hook (separate concern) ───────────────────────────────────────────
+
+export function useFocusSessionStats() {
+  return useQuery({
+    queryKey: focusSessionKeys.stats(),
+    queryFn: fetchFocusSessionStats,
+    staleTime: 60_000, // Stats are less time-sensitive
+  });
 }

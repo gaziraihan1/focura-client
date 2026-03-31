@@ -176,18 +176,7 @@ export function getPlanLimits(plan: string) {
         '50 team members',
       ],
     },
-    ENTERPRISE: {
-      storage: 1048576, // 1 TB
-      maxFileSize: 500,
-      features: [
-        'Unlimited storage',
-        'Up to 500 MB per file',
-        'Real-time backups',
-        'Unlimited version history',
-        'Unlimited team members',
-        'Priority support',
-      ],
-    },
+    
   };
 
   return limits[plan] || limits.FREE;

@@ -3,52 +3,11 @@ import React from 'react';
 import { Plus } from 'lucide-react';
 import TaskCard from './TaskCard';
 import CreateTaskModal from './CreateTaskModal';
-// import CreateTaskModal from './CreateTaskModal';
+import { ProjectDetails } from '@/hooks/useProjects';
 
-interface Task {
-  id: string;
-  title: string;
-  status: string;
-  priority: string;
-  dueDate?: string;
-  assignees: Array<{
-    user: {
-      id: string;
-      name: string;
-      image?: string;
-    };
-  }>;
-  _count: {
-    comments: number;
-  };
-}
-
-interface ProjectMember {
-  id: string;
-  userId: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    image?: string;
-  };
-}
-
-// interface WorkspaceDetails {
-//   id: string;
-//   name: string;
-//   ownerId: string;
-// }
 
 interface TasksTabProps {
-  project: {
-    id: string;
-    tasks: Task[];
-    members: ProjectMember[];
-    isAdmin: boolean;
-    // workspace: WorkspaceDetails;
-    workspaceId: string
-  };
+  project: ProjectDetails
   showCreateTask: boolean;
   setShowCreateTask: (show: boolean) => void;
 }
@@ -83,7 +42,7 @@ export default function TasksTab({ project, showCreateTask, setShowCreateTask }:
             </div>
             <div className="space-y-2">
               {tasks.map(task => (
-                <TaskCard key={task.id} task={task} />
+                <TaskCard key={task.id} task={task} workspaceSlug={project.workspace?.slug as string} />
               ))}
               {tasks.length === 0 && (
                 <div className="p-4 rounded-lg border border-dashed border-border text-center text-sm text-muted-foreground">

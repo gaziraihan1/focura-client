@@ -6,6 +6,7 @@ import { Task, TaskComment } from "@/types/task.types";
 import { CommentEditor } from "./CommentEditor";
 import { CommentsList } from "./CommentsList";
 import { MentionUser } from "@/types/comment.types";
+import { useUpdateComment } from "@/hooks/useComment";
 
 interface CommentsTabProps {
   taskId: string;
@@ -42,6 +43,10 @@ export const CommentsTab = ({
 }: CommentsTabProps) => {
   const [replyingTo, setReplyingTo] = useState<TaskComment | null>(null);
   const editorRef = useRef<HTMLDivElement>(null);
+  const editComment = useUpdateComment();
+  const handleEditComment = async (commentId: string, taskId: string, content: string) => {
+    await editComment.mutateAsync({commentId, taskId, content})
+  }
 
   const handleReply = (comment: TaskComment) => {
     setReplyingTo(comment);
@@ -64,8 +69,10 @@ export const CommentsTab = ({
     <div className="space-y-6">
       {/* Comment list */}
       <CommentsList
+      taskId={task.id}
         comments={comments}
         currentUserId={currentUserId}
+        onEdit={handleEditComment}
         onDelete={onDelete}
         onReply={canComment ? handleReply : () => {}}
       />

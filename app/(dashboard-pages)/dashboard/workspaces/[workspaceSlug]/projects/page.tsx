@@ -24,7 +24,8 @@ export default function WorkspaceProjectsPage() {
     currentUserId,
   } = useWorkspaceProjectsPage({ workspaceSlug });
 
-  const {data: projects, isLoading: projectLoading} = useProjects(workspace?.id)
+  const {data: projects, isLoading: projectLoading} = useProjects(workspace?.id);
+  console.log(projects)
 
   if (isLoading || projectLoading) {
     return <LoadingState />;
@@ -57,7 +58,7 @@ export default function WorkspaceProjectsPage() {
           {projects?.map((project) => (
             <WorkspaceProjectCard
               key={project.id}
-              projectId={project.id}
+              projectSlug={project.slug}
               workspaceSlug={workspaceSlug}
               currentUserId={currentUserId}
             />

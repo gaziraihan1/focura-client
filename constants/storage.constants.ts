@@ -63,9 +63,4 @@ export const plans = [
       icon: Crown,
       description: 'For established organizations',
     },
-    {
-      name: 'ENTERPRISE',
-      icon: Crown,
-      description: 'For large-scale operations',
-    },
   ];

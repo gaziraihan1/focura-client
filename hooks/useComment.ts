@@ -1,12 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios'; // your axios instance
-import { Comment, commentKeys } from './useTask';
+import { commentKeys } from './useTask';
+import { TaskComment } from '@/types/task.types'
+import { activityKeys } from './useActivity';
 
 
 interface UpdateCommentInput {
   commentId: string;
   content: string;
-  taskId?: string; 
+  taskId: string; 
 }
 
 interface DeleteCommentInput {
@@ -16,24 +18,28 @@ interface DeleteCommentInput {
 
 // Hook to update a comment
 export function useUpdateComment() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ commentId, taskId, content }: UpdateCommentInput) => {
-      const response = await api.put<Comment>(
+      const res = await api.put<TaskComment>(
         `/api/tasks/${taskId}/comments/${commentId}`,
         { content }
       );
-      return response.data;
+      return res?.data;
     },
     onSuccess: (_, { taskId, commentId }) => {
-      queryClient.invalidateQueries({ queryKey: commentKeys.byTask(taskId || "") });
-      queryClient.invalidateQueries({ queryKey: ['comments', commentId] });
+      qc.invalidateQueries({ queryKey: commentKeys.byTask(taskId) });
+      qc.invalidateQueries({ queryKey: ['comments', commentId] });
+      setTimeout(() => {
+        qc.invalidateQueries({ queryKey: activityKeys.task(taskId) });
+      }, 800);
     },
   });
 }
+
 export function useDeleteComment() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ commentId, taskId }: DeleteCommentInput) => {
@@ -41,7 +47,7 @@ export function useDeleteComment() {
       return response.data;
     },
     onSuccess: (_, { taskId }) => {
-      queryClient.invalidateQueries({ queryKey: commentKeys.byTask(taskId) });
+      qc.invalidateQueries({ queryKey: commentKeys.byTask(taskId) });
     },
   });
 }

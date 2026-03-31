@@ -123,7 +123,7 @@ export function TaskMetadata({ task }: TaskMetadataProps) {
 
       {/* Counts */}
       <div className="flex items-center gap-3 text-xs text-muted-foreground ml-auto">
-        {task._count?.comments > 0 && (
+        {task._count.comments > 0 && (
           <span className="font-medium">{task._count.comments} 💬</span>
         )}
         {task._count?.subtasks > 0 && (

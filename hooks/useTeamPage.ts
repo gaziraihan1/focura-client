@@ -110,8 +110,8 @@ export function useTeamPage(): UseTeamPageReturn {
         icon: p.icon,
         status: p.status,
         priority: p.priority,
-        memberCount: p._count?.members ?? 0,
-        taskCount: p._count?.tasks ?? 0,
+        memberCount: p._count.members ?? 0,
+        taskCount: p._count.tasks ?? 0,
         completedTasks: p.stats?.completedTasks ?? 0,
       })),
     [projects]

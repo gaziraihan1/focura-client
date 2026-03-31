@@ -9,6 +9,7 @@ import TaskDetailsView from "@/components/Dashboard/TaskDetails/TaskDetailsView"
 export default function WorkspaceTaskDetailsPage() {
   const { id, workspaceSlug } = useParams();
   const controller = useTaskDetailsController(id as string, workspaceSlug as string);
+  console.log(controller.task)
 
   if (controller.taskQuery.isLoading || controller.permissions.isLoading) {
     return (

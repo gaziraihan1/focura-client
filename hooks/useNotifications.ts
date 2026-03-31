@@ -46,7 +46,7 @@ interface UnreadCountResponse {
 const EMPTY_PAGE: NotificationsResponse = { items: [], nextCursor: null, hasMore: false };
 
 export function useNotifications() {
-  const queryClient       = useQueryClient();
+  const qc       = useQueryClient();
   const { data: session } = useSession();
   const backendToken = session?.backendToken ?? null;
   
@@ -126,7 +126,7 @@ export function useNotifications() {
 
           const notification = data as Notification;
 
-          queryClient.setQueryData<InfiniteData<NotificationsResponse>>(
+          qc.setQueryData<InfiniteData<NotificationsResponse>>(
             ["notifications"],
             (old) => {
               if (!old) {
@@ -146,7 +146,7 @@ export function useNotifications() {
             }
           );
 
-          queryClient.setQueryData<UnreadCountResponse>(
+          qc.setQueryData<UnreadCountResponse>(
             ["notifications", "unread-count"],
             (old) => ({ count: (old?.count ?? 0) + 1 })
           );
@@ -171,7 +171,7 @@ export function useNotifications() {
       eventSourceRef.current?.close();
       eventSourceRef.current = null;
     };
-  }, [backendToken, queryClient]);
+  }, [backendToken, qc]);
 
 
   const markAsReadMutation = useMutation({
@@ -180,7 +180,7 @@ export function useNotifications() {
       return response.data;
     },
     onSuccess: (_, notificationId) => {
-      queryClient.setQueryData<InfiniteData<NotificationsResponse>>(
+      qc.setQueryData<InfiniteData<NotificationsResponse>>(
         ["notifications"],
         (old) => {
           if (!old) return old;
@@ -197,7 +197,7 @@ export function useNotifications() {
           };
         }
       );
-      queryClient.setQueryData<UnreadCountResponse>(
+      qc.setQueryData<UnreadCountResponse>(
         ["notifications", "unread-count"],
         (old) => ({ count: Math.max(0, (old?.count ?? 1) - 1) })
       );
@@ -210,7 +210,7 @@ export function useNotifications() {
       return response.data;
     },
     onSuccess: () => {
-      queryClient.setQueryData<InfiniteData<NotificationsResponse>>(
+      qc.setQueryData<InfiniteData<NotificationsResponse>>(
         ["notifications"],
         (old) => {
           if (!old) return old;
@@ -227,7 +227,7 @@ export function useNotifications() {
           };
         }
       );
-      queryClient.setQueryData<UnreadCountResponse>(
+      qc.setQueryData<UnreadCountResponse>(
         ["notifications", "unread-count"],
         { count: 0 }
       );
@@ -240,7 +240,7 @@ export function useNotifications() {
       return notificationId;
     },
     onSuccess: (notificationId) => {
-      queryClient.setQueryData<InfiniteData<NotificationsResponse>>(
+      qc.setQueryData<InfiniteData<NotificationsResponse>>(
         ["notifications"],
         (old) => {
           if (!old) return old;
@@ -253,7 +253,7 @@ export function useNotifications() {
           };
         }
       );
-      queryClient.invalidateQueries({ queryKey: ["notifications", "unread-count"] });
+      qc.invalidateQueries({ queryKey: ["notifications", "unread-count"] });
     },
   });
 
@@ -263,7 +263,7 @@ export function useNotifications() {
       return response.data;
     },
     onSuccess: () => {
-      queryClient.setQueryData<InfiniteData<NotificationsResponse>>(
+      qc.setQueryData<InfiniteData<NotificationsResponse>>(
         ["notifications"],
         (old) => {
           if (!old) return old;

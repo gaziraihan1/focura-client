@@ -106,7 +106,7 @@ export const TaskSidebar = ({
             <Folder size={16} className="text-muted-foreground" />
             <div className="flex-1">
               <p className="text-xs text-muted-foreground">Project</p>
-              <Link className="font-medium" style={{color: task.project.color}} href={`/dashboard/workspaces/${task.project.workspace?.slug}/projects/${task.projectId}`}>
+              <Link className="font-medium" style={{color: task.project.color}} href={`/dashboard/workspaces/${task.project.workspace?.slug}/projects/${task.project.slug}`}>
               {task.project.name}
               </Link>
             </div>

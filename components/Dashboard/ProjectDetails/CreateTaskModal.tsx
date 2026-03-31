@@ -12,6 +12,7 @@ import { TaskDueDateInput } from "./TaskModal/TaskDueDateInput";
 import { TaskEstimatedHoursInput } from "./TaskModal/TaskEstimatedHoursInput";
 import { TaskAssigneePicker } from "./TaskModal/TaskAssigneePicker";
 import { CreateTaskModalProps } from "@/types/taskForm.types";
+import { TaskStartDateInput } from "./TaskModal/TaskStartDateInput";
 
 export default function CreateTaskModal({
   projectId,
@@ -92,6 +93,10 @@ export default function CreateTaskModal({
           <TaskPriorityPicker
             value={formData.priority}
             onChange={(value) => updateField("priority", value)}
+          />
+          <TaskStartDateInput
+          value={formData.startDate}
+          onChange={(value) => updateField("startDate", value)}
           />
 
           {/* Due Date */}

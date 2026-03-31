@@ -14,6 +14,7 @@ import {
   Store,
   UserLock,
   CreditCard,
+  Megaphone,
 } from "lucide-react";
 
 type TabType = "overview" | "projects" | "members";
@@ -95,6 +96,12 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
       href: `/dashboard/workspaces/${slug}`,
       icon: LayoutDashboard,
       match: (path: string) => path === `/dashboard/workspaces/${slug}`,
+    },
+    {
+      name: "Announcements",
+      href: `/dashboard/workspaces/${slug}/announcements`,
+      icon: Megaphone,
+      match: (path: string) => path.includes(`/${slug}/announcements`)
     },
     {
       name: "Tasks",

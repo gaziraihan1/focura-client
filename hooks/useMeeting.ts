@@ -70,7 +70,7 @@ export function useMeeting(workspaceId: string, meetingId: string) {
 // ─── useCreateMeeting ────────────────────────────────────────────────────────
 
 export function useCreateMeeting(workspaceId: string) {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation<Meeting, unknown, CreateMeetingPayload>({
     mutationFn: async (payload: CreateMeetingPayload): Promise<Meeting> => {
@@ -82,7 +82,7 @@ export function useCreateMeeting(workspaceId: string) {
       return response?.data as Meeting;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: meetingKeys.lists() });
+      qc.invalidateQueries({ queryKey: meetingKeys.lists() });
     },
   });
 }
@@ -90,7 +90,7 @@ export function useCreateMeeting(workspaceId: string) {
 // ─── useUpdateMeeting ────────────────────────────────────────────────────────
 
 export function useUpdateMeeting(workspaceId: string) {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation<
     Meeting,
@@ -107,11 +107,11 @@ export function useUpdateMeeting(workspaceId: string) {
     },
     onSuccess: (meeting) => {
       // Update the detail cache immediately
-      queryClient.setQueryData(
+      qc.setQueryData(
         meetingKeys.detail(workspaceId, meeting.id),
         meeting
       );
-      queryClient.invalidateQueries({ queryKey: meetingKeys.lists() });
+      qc.invalidateQueries({ queryKey: meetingKeys.lists() });
     },
   });
 }
@@ -119,7 +119,7 @@ export function useUpdateMeeting(workspaceId: string) {
 // ─── useCancelMeeting ────────────────────────────────────────────────────────
 
 export function useCancelMeeting(workspaceId: string) {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation<Meeting, unknown, string>({
     mutationFn: async (meetingId: string): Promise<Meeting> => {
@@ -131,11 +131,11 @@ export function useCancelMeeting(workspaceId: string) {
       return response?.data as Meeting;
     },
     onSuccess: (meeting) => {
-      queryClient.setQueryData(
+      qc.setQueryData(
         meetingKeys.detail(workspaceId, meeting.id),
         meeting
       );
-      queryClient.invalidateQueries({ queryKey: meetingKeys.lists() });
+      qc.invalidateQueries({ queryKey: meetingKeys.lists() });
     },
   });
 }
@@ -143,7 +143,7 @@ export function useCancelMeeting(workspaceId: string) {
 // ─── useDeleteMeeting ────────────────────────────────────────────────────────
 
 export function useDeleteMeeting(workspaceId: string) {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation<void, unknown, string>({
     mutationFn: async (meetingId: string): Promise<void> => {
@@ -153,10 +153,10 @@ export function useDeleteMeeting(workspaceId: string) {
       );
     },
     onSuccess: (_, meetingId) => {
-      queryClient.removeQueries({
+      qc.removeQueries({
         queryKey: meetingKeys.detail(workspaceId, meetingId),
       });
-      queryClient.invalidateQueries({ queryKey: meetingKeys.lists() });
+      qc.invalidateQueries({ queryKey: meetingKeys.lists() });
     },
   });
 }

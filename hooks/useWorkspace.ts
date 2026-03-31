@@ -152,7 +152,7 @@ export function useWorkspace(workspaceSlugOrId: string) {
 }
 
 export function useCreateWorkspace() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const router      = useRouter();
 
   return useMutation<Workspace, unknown, CreateWorkspaceDto>({
@@ -164,14 +164,14 @@ export function useCreateWorkspace() {
       return response.data as Workspace;
     },
     onSuccess: (workspace) => {
-      queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() });
+      qc.invalidateQueries({ queryKey: workspaceKeys.lists() });
       if (workspace?.slug) router.push(`/dashboard/workspaces/${workspace.slug}`);
     },
   });
 }
 
 export function useUpdateWorkspace() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation<Workspace, unknown, { id: string; data: Partial<CreateWorkspaceDto> }>({
     mutationFn: async ({ id, data }): Promise<Workspace> => {
@@ -183,15 +183,15 @@ export function useUpdateWorkspace() {
     },
     onSuccess: (workspace) => {
       if (workspace.slug) {
-        queryClient.setQueryData(workspaceKeys.detail(workspace.slug), workspace);
+        qc.setQueryData(workspaceKeys.detail(workspace.slug), workspace);
       }
-      queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() });
+      qc.invalidateQueries({ queryKey: workspaceKeys.lists() });
     },
   });
 }
 
 export function useDeleteWorkspace() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const router      = useRouter();
 
   return useMutation({
@@ -203,7 +203,7 @@ export function useDeleteWorkspace() {
       return response;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() });
+      qc.invalidateQueries({ queryKey: workspaceKeys.lists() });
       router.push('/dashboard/workspaces');
     },
   });
@@ -225,7 +225,7 @@ export function useWorkspaceMembers(workspaceId?: string) {
 }
 
 export function useInviteMember() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
@@ -243,13 +243,13 @@ export function useInviteMember() {
       return response.data;
     },
     onSuccess: (_, { workspaceId }) => {
-      queryClient.invalidateQueries({ queryKey: workspaceKeys.members(workspaceId) });
+      qc.invalidateQueries({ queryKey: workspaceKeys.members(workspaceId) });
     },
   });
 }
 
 export function useRemoveMember() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
@@ -265,13 +265,13 @@ export function useRemoveMember() {
       return response.data;
     },
     onSuccess: (_, { workspaceId }) => {
-      queryClient.invalidateQueries({ queryKey: workspaceKeys.members(workspaceId) });
+      qc.invalidateQueries({ queryKey: workspaceKeys.members(workspaceId) });
     },
   });
 }
 
 export function useUpdateMemberRole() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
@@ -289,7 +289,7 @@ export function useUpdateMemberRole() {
       return response.data;
     },
     onSuccess: (_, { workspaceId }) => {
-      queryClient.invalidateQueries({ queryKey: workspaceKeys.members(workspaceId) });
+      qc.invalidateQueries({ queryKey: workspaceKeys.members(workspaceId) });
     },
   });
 }
@@ -310,7 +310,7 @@ export function useWorkspaceStats(workspaceId: string) {
 }
 
 export function useAcceptInvitation() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const router      = useRouter();
 
   return useMutation<Workspace, unknown, string>({
@@ -323,14 +323,14 @@ export function useAcceptInvitation() {
       return response.data as Workspace;
     },
     onSuccess: (workspace) => {
-      queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() });
+      qc.invalidateQueries({ queryKey: workspaceKeys.lists() });
       if (workspace.slug) router.push(`/dashboard/${workspace.slug}`);
     },
   });
 }
 
 export function useLeaveWorkspace() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const router      = useRouter();
 
   return useMutation({
@@ -343,7 +343,7 @@ export function useLeaveWorkspace() {
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() });
+      qc.invalidateQueries({ queryKey: workspaceKeys.lists() });
       router.push('/dashboard/workspaces');
     },
   });

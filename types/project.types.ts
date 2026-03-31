@@ -10,6 +10,7 @@ export interface ProjectFilters {
 
 export interface ProjectData {
   id: string;
+  slug: string;
   name: string;
   description?: string;
   color: string;
@@ -27,10 +28,10 @@ export interface ProjectData {
     slug: string;
     ownerId: string;
   };
-  _count?: {
+  _count: {
     tasks: number;
   };
-  stats?: {
+  stats: {
     totalTasks: number;
     completedTasks?: number;
   };

@@ -24,9 +24,6 @@ export default function WorkspaceBillingPage() {
     handleCancelSubscription,
     handleReactivateSubscription,
   } = useWorkspaceBilling(workspaceId);
-  console.log(sub, invoices)
-
-  console.log('workspaceId:', workspaceId)
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10 space-y-6">

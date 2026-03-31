@@ -40,7 +40,7 @@ export default function LabelCard({
         <div className="relative">
           <button
             onClick={onDropdownToggle}
-            className="p-1.5 opacity-0 group-hover:opacity-100 hover:bg-accent rounded transition-all"
+            className="p-1.5 md:opacity-0 group-hover:opacity-100 hover:bg-accent rounded transition-all"
             aria-label="Label options"
           >
             <MoreVertical className="w-4 h-4 text-muted-foreground" />

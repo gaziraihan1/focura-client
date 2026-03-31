@@ -131,7 +131,7 @@ export function useUploaders(workspaceId: string, enabled: boolean = true) {
 }
 
 export function useDeleteFile(workspaceId: string) {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async (fileId: string) => {
@@ -146,7 +146,7 @@ export function useDeleteFile(workspaceId: string) {
     },
     onSuccess: () => {
       // Invalidate all file queries for this workspace
-      queryClient.invalidateQueries({
+      qc.invalidateQueries({
         queryKey: fileManagementKeys.all(workspaceId),
       });
     },

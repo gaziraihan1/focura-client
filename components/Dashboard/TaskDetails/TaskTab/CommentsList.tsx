@@ -8,8 +8,10 @@ import { buildCommentTree } from '@/utils/comments.utils';
 import type { CommentsListProps } from '@/types/comment.types';
 
 export const CommentsList = ({
+  taskId,
   comments,
   currentUserId,
+  onEdit,
   onDelete,
   onReply,
 }: CommentsListProps) => {
@@ -25,8 +27,10 @@ export const CommentsList = ({
         {tree.map((comment) => (
           <CommentItem
             key={comment.id}
+            taskId={taskId}
             comment={comment}
             currentUserId={currentUserId}
+            onEdit={onEdit}
             onDelete={onDelete}
             onReply={onReply}
           />

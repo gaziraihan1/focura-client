@@ -1,7 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
-import { useRouter } from 'next/navigation';
 import { Attachment, TaskComment } from '@/types/task.types';
+import { projectKeys } from './useProjects';
+import { Activity, activityKeys } from './useActivity';
 
 export interface Task {
   id: string;
@@ -26,6 +27,7 @@ export interface Task {
   }>;
   project?: {
     id: string;
+    slug: string;
     name: string;
     color: string;
     workspace: {
@@ -272,7 +274,7 @@ export function useTask(taskId: string) {
 }
 
 export function usePersonalQuota() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   useQuery({
     queryKey: [...taskKeys.personalQuota(), '__midnight_reset__'],
@@ -282,7 +284,7 @@ export function usePersonalQuota() {
     refetchInterval: () => {
       const ms = msUntilMidnight();
       setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: taskKeys.personalQuota() });
+        qc.invalidateQueries({ queryKey: taskKeys.personalQuota() });
       }, ms);
       return false; 
     },
@@ -303,7 +305,7 @@ export function usePersonalQuota() {
 }
 
 export function useWorkspaceQuota(workspaceId: string | undefined) {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   useQuery({
     queryKey: workspaceId
@@ -317,7 +319,7 @@ export function useWorkspaceQuota(workspaceId: string | undefined) {
       if (!workspaceId) return false;
       const ms = msUntilMidnight();
       setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: taskKeys.workspaceQuota(workspaceId!) });
+        qc.invalidateQueries({ queryKey: taskKeys.workspaceQuota(workspaceId!) });
       }, ms);
       return false;
     },
@@ -341,8 +343,7 @@ export function useWorkspaceQuota(workspaceId: string | undefined) {
 
 
 export function useCreateTask() {
-  const queryClient = useQueryClient();
-  const router      = useRouter();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async (newTask: CreateTaskDto) => {
@@ -351,25 +352,70 @@ export function useCreateTask() {
       });
       return response?.data;
     },
-    onSuccess: (task) => {
-      queryClient.invalidateQueries({ queryKey: taskKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: taskKeys.stats() });
+    onMutate: async (newTask) => {
+      if (!newTask.projectId) return;
 
-      if (task?.project?.workspace?.id) {
-        queryClient.invalidateQueries({
-          queryKey: taskKeys.workspaceQuota(task.project.workspace.id),
-        });
-      } else {
-        queryClient.invalidateQueries({ queryKey: taskKeys.personalQuota() });
+      await qc.cancelQueries({
+        queryKey: projectKeys.detail(newTask.projectId),
+      });
+
+      const previous = qc.getQueryData(
+        projectKeys.detail(newTask.projectId)
+      );
+
+      // Optimistically append a placeholder task
+      qc.setQueryData(
+        projectKeys.detail(newTask.projectId),
+        (old: any) => {
+          if (!old) return old;
+          const optimisticTask = {
+            id: `optimistic-${Date.now()}`,
+            title: newTask.title,
+            description: newTask.description ?? null,
+            status: newTask.status ?? 'TODO',
+            priority: newTask.priority ?? 'MEDIUM',
+            startDate: newTask.startDate ?? null,
+            dueDate: newTask.dueDate ?? null,
+            createdAt: new Date().toISOString(),
+            assignees: [],
+            _count: { comments: 0, subtasks: 0, files: 0 },
+          };
+          return {
+            ...old,
+            tasks: [...(old.tasks ?? []), optimisticTask],
+            _count: { ...old._count, tasks: (old._count?.tasks ?? 0) + 1 },
+          };
+        }
+      );
+
+      return { previous };
+    },
+    onError: (_err, variables, context: any) => {
+      if (context?.previous && variables.projectId) {
+        qc.setQueryData(
+          projectKeys.detail(variables.projectId),
+          context.previous
+        );
       }
+    },
+    onSettled: (_data, _err, variables) => {
+      qc.invalidateQueries({ queryKey: taskKeys.lists() });
+      qc.invalidateQueries({ queryKey: taskKeys.stats() });
 
-      router.push('/dashboard/tasks');
+      if (variables.projectId) {
+        qc.invalidateQueries({
+          queryKey: projectKeys.detail(variables.projectId),
+        });
+        qc.invalidateQueries({
+          queryKey: [...projectKeys.details(), 'slug'],
+        });
+      }
     },
   });
 }
 
 export function useUpdateTask() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<Task> }) => {
@@ -380,16 +426,19 @@ export function useUpdateTask() {
     },
     onSuccess: (data) => {
       if (data) {
-        queryClient.setQueryData(taskKeys.detail(data.id), data);
-        queryClient.invalidateQueries({ queryKey: taskKeys.lists() });
-        queryClient.invalidateQueries({ queryKey: taskKeys.stats() });
+        qc.setQueryData(taskKeys.detail(data.id), data);
+        qc.invalidateQueries({ queryKey: taskKeys.lists() });
+        qc.invalidateQueries({ queryKey: taskKeys.stats() });
+        setTimeout(() => {
+          qc.invalidateQueries({ queryKey: activityKeys.task(data.id)})
+        }, 800)
       }
     },
   });
 }
 
 export function useDeleteTask() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async (taskId: string) => {
@@ -399,15 +448,15 @@ export function useDeleteTask() {
       return response?.data;
     },
     onSuccess: (_, taskId) => {
-      queryClient.removeQueries({ queryKey: taskKeys.detail(taskId) });
-      queryClient.invalidateQueries({ queryKey: taskKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: taskKeys.stats() });
+      qc.removeQueries({ queryKey: taskKeys.detail(taskId) });
+      qc.invalidateQueries({ queryKey: taskKeys.lists() });
+      qc.invalidateQueries({ queryKey: taskKeys.stats() });
     },
   });
 }
 
 export function useUpdateTaskStatus() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ id, status }: { id: string; status: Task['status'] }) => {
@@ -419,22 +468,25 @@ export function useUpdateTaskStatus() {
       return response?.data;
     },
     onMutate: async ({ id, status }) => {
-      await queryClient.cancelQueries({ queryKey: taskKeys.detail(id) });
-      const previousTask = queryClient.getQueryData<Task>(taskKeys.detail(id));
+      await qc.cancelQueries({ queryKey: taskKeys.detail(id) });
+      const previousTask = qc.getQueryData<Task>(taskKeys.detail(id));
       if (previousTask) {
-        queryClient.setQueryData<Task>(taskKeys.detail(id), { ...previousTask, status });
+        qc.setQueryData<Task>(taskKeys.detail(id), { ...previousTask, status });
       }
       return { previousTask };
     },
     onError: (_, { id }, context) => {
       if (context?.previousTask) {
-        queryClient.setQueryData(taskKeys.detail(id), context.previousTask);
+        qc.setQueryData(taskKeys.detail(id), context.previousTask);
       }
     },
     onSettled: (_, __, { id }) => {
-      queryClient.invalidateQueries({ queryKey: taskKeys.detail(id) });
-      queryClient.invalidateQueries({ queryKey: taskKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: taskKeys.stats() });
+      qc.invalidateQueries({ queryKey: taskKeys.detail(id) });
+      qc.invalidateQueries({ queryKey: taskKeys.lists() });
+      qc.invalidateQueries({ queryKey: taskKeys.stats() });
+      setTimeout(() => {
+        qc.invalidateQueries({ queryKey: activityKeys.task(id) })
+      }, 800)
     },
   });
 }
@@ -457,7 +509,7 @@ export function useTaskComments(taskId: string) {
 }
 
 export function useAddComment() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
@@ -478,7 +530,7 @@ export function useAddComment() {
     },
     onSuccess: (newComment, { taskId }) => {
       // Optimistically append into cache instead of waiting for refetch
-      queryClient.setQueryData<TaskComment[]>(
+      qc.setQueryData<TaskComment[]>(
         commentKeys.byTask(taskId),
         (old) => {
           if (!old) return [newComment!];
@@ -488,32 +540,21 @@ export function useAddComment() {
         }
       );
       // Still invalidate to sync with server (picks up any other changes)
-      queryClient.invalidateQueries({ queryKey: commentKeys.byTask(taskId) });
-      queryClient.invalidateQueries({ queryKey: taskKeys.detail(taskId) });
+      qc.invalidateQueries({ queryKey: commentKeys.byTask(taskId) });
+      qc.invalidateQueries({ queryKey: taskKeys.detail(taskId) });
+      setTimeout(() => {
+      qc.invalidateQueries({ queryKey: activityKeys.task(taskId)})
+      }, 800)
     },
   });
 }
 
-export interface Activity {
-  id: string;
-  type: string;
-  description: string;
-  createdAt: string;
-  user: {
-    id: string;
-    name: string;
-    image?: string;
-  };
-}
 
-export const activityKeys = {
-  all:    ['activities'] as const,
-  byTask: (taskId: string) => [...activityKeys.all, taskId] as const,
-};
+
 
 export function useTaskActivity(taskId: string) {
   return useQuery({
-    queryKey: activityKeys.byTask(taskId),
+    queryKey: activityKeys.task(taskId),
     queryFn: async () => {
       const response = await api.get<Activity[]>(`/api/tasks/${taskId}/activity`);
       return response?.data || [];
@@ -540,7 +581,7 @@ export function useTaskAttachments(taskId: string) {
 }
 
 export function useUploadAttachment() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ taskId, file }: { taskId: string; file: File }) => {
@@ -555,14 +596,17 @@ export function useUploadAttachment() {
       return response?.data;
     },
     onSuccess: (_, { taskId }) => {
-      queryClient.invalidateQueries({ queryKey: attachmentKeys.byTask(taskId) });
-      queryClient.invalidateQueries({ queryKey: taskKeys.detail(taskId) });
+      qc.invalidateQueries({ queryKey: attachmentKeys.byTask(taskId) });
+      qc.invalidateQueries({ queryKey: taskKeys.detail(taskId) });
+      setTimeout(() => {
+        qc.invalidateQueries({ queryKey: activityKeys.task(taskId) })
+      }, 800)
     },
   });
 }
 
 export function useDeleteAttachment() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ taskId, attachmentId }: { taskId: string; attachmentId: string }) => {
@@ -573,8 +617,11 @@ export function useDeleteAttachment() {
       return response?.data;
     },
     onSuccess: (_, { taskId }) => {
-      queryClient.invalidateQueries({ queryKey: attachmentKeys.byTask(taskId) });
-      queryClient.invalidateQueries({ queryKey: taskKeys.detail(taskId) });
+      qc.invalidateQueries({ queryKey: attachmentKeys.byTask(taskId) });
+      qc.invalidateQueries({ queryKey: taskKeys.detail(taskId) });
+      setTimeout(() => {
+        qc.invalidateQueries({ queryKey: activityKeys.task(taskId) })
+      }, 800)
     },
   });
 }

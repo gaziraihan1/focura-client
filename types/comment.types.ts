@@ -2,8 +2,10 @@
 import type { TaskComment } from './task.types';
 
 export interface CommentsListProps {
+  taskId: string;
   comments: TaskComment[];
   currentUserId?: string;
+  onEdit: (commentId: string, taskId: string, content: string) => Promise<void>
   onDelete: (commentId: string) => void;
   onReply: (comment: TaskComment) => void;
 }

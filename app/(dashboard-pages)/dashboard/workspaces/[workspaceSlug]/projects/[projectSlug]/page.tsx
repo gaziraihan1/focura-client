@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { AlertCircle } from 'lucide-react';
-import { useProjectDetails } from '@/hooks/useProjects';
+import { useProjectDetailsBySlug } from '@/hooks/useProjects';
 import TasksTab from '@/components/Dashboard/ProjectDetails/TaskTab';
 import MembersTab from '@/components/Dashboard/ProjectDetails/MembersTab';
 import LoadingState from '@/components/Dashboard/ProjectDetails/LoadingState';
@@ -16,13 +16,14 @@ import { AccessDeniedProject } from '@/components/Dashboard/ProjectDetails/Acces
 export default function ProjectDetailsPage() {
   const params = useParams();
   const router = useRouter();
-  const projectId = params?.projectId as string;
 
   const [activeTab, setActiveTab] = useState('tasks');
   const [showCreateTask, setShowCreateTask] = useState(false);
   const [showAddMember, setShowAddMember] = useState(false);
 
-  const { data: response, isLoading, error } = useProjectDetails(projectId);
+  const projectSlug = params?.projectSlug as string;  
+  console.log(projectSlug)
+const { data: response, isLoading, error } = useProjectDetailsBySlug(projectSlug);
   const project = response;
 
   const { userId } = useUserProfile();

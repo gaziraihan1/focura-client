@@ -4,7 +4,7 @@ import { useProjects } from "@/hooks/useProjects";
 import { useLabels } from "@/hooks/useLabels";
 import { useTeamMembers } from "@/hooks/useTeam";
 import { useRouter } from "next/navigation";
-import { useTasks, useTaskStats, TaskFilters, TaskSort, usePersonalQuota, useWorkspaceQuota } from "@/hooks/useTask";
+import { useTasks, useTaskStats, TaskFilters, TaskSort, usePersonalQuota, useWorkspaceQuota, useTask } from "@/hooks/useTask";
 import { useUserProfile } from "./useUser";
 import { useFocusSession } from "./useFocusSession";
 
@@ -145,9 +145,7 @@ export function useTasksPage() {
   }, [activeSession, completeSession]);
 
   // Find the focused task in current task list
-  const focusedTask = activeSession?.taskId 
-    ? tasks.find(t => t.id === activeSession.taskId)
-    : null;
+  const {data: focusedTask = null} = useTask(activeSession?.taskId as string)
 
   return {
     activeTab,
@@ -204,6 +202,8 @@ export function useWorkspaceTasksPage({
   const [selectedProject, setSelectedProject] = useState<string>("all");
   const [selectedAssignee, setSelectedAssignee] = useState<string>("all");
   const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
+
+  const [timeRemaining, setTimeRemaining] = useState(0);
 
   const [sortBy, setSortBy] = useState<TaskSort['sortBy']>('dueDate');
   const [sortOrder, setSortOrder] = useState<TaskSort['sortOrder']>('asc');
@@ -280,7 +280,29 @@ export function useWorkspaceTasksPage({
   const { data: stats } = useTaskStats(workspace?.id);
 
   const toggleFilters = () => setShowFilters(!showFilters);
-  const {data: qouta} = useWorkspaceQuota(workspace?.id)
+  const {data: qouta} = useWorkspaceQuota(workspace?.id);
+
+  const {activeSession, completeSession} = useFocusSession();
+  const {data: focusedTask = null} = useTask(activeSession?.taskId as string);
+
+  useEffect(() => {
+    if(!activeSession?.taskId) return;
+
+    const updateTimer = () => {
+      const startTime = new Date(activeSession?.startedAt).getTime();
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const remaining = Math.max(0, activeSession.duration * 60 - elapsed);
+      setTimeRemaining(remaining);
+      if(remaining === 0 && !!activeSession.completed) {
+        completeSession()
+      };
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [activeSession, completeSession])
+
 
   const handleSortChange = (newSortBy: TaskSort['sortBy']) => {
     if (newSortBy === sortBy) {
@@ -355,6 +377,10 @@ export function useWorkspaceTasksPage({
     projects,
     labels,
     members,
-    qouta
+    qouta,
+    focusedTask,
+    timeRemaining,
+    activeSession,
+    completeSession
   };
 }

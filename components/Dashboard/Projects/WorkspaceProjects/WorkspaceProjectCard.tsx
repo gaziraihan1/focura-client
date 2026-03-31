@@ -1,24 +1,24 @@
 // WorkspaceProjectCard.tsx
 import { useWorkspaceProjectsPage } from "@/hooks/useProjectsPage";
-import { useProjectDetails } from "@/hooks/useProjects";
+import { useProjectDetailsBySlug } from "@/hooks/useProjects";
 import { useState } from "react";
 import { ProjectCard } from "./ProjectCard";
 import { AccessDeniedModal } from "./AceessDeniedModal";
 import { CardLoadingState } from "@/components/Shared/CardLoadingState";
 
 interface WorkspaceProjectCardProps {
-  projectId: string;
+  projectSlug: string;
   workspaceSlug: string;
   currentUserId?: string;
 }
 
 export function WorkspaceProjectCard({
-  projectId,
+  projectSlug,
   workspaceSlug,
   currentUserId,
 }: WorkspaceProjectCardProps) {
   const [showAccessModal, setShowAccessModal] = useState(false);
-  const { data: project, isLoading } = useProjectDetails(projectId);
+  const { data: project, isLoading } = useProjectDetailsBySlug(projectSlug);
   const { canCreateProjects } = useWorkspaceProjectsPage({ workspaceSlug });
 
   const joined = project?.members?.some((m) => m.user?.id === currentUserId);

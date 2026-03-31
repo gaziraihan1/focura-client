@@ -37,8 +37,6 @@ export default function TasksPage() {
     qouta
   } = useTasksPage();
 
-  console.log(qouta)
-
   return (
     <div className="space-y-6">
       <TasksPageHeader onCreateTask={handleCreateTask} />

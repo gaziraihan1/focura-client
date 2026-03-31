@@ -16,6 +16,7 @@ export interface TimeTracking {
 
 export interface Project {
   id: string;
+  slug:string;
   name: string;
   color: string;
   workspaceId?: string;
@@ -126,7 +127,7 @@ export interface Task {
   
   timeTracking?: TimeTracking;
   
-  _count?: {
+  _count: {
     comments: number;
     subtasks: number;
     files: number;

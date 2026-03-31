@@ -71,7 +71,7 @@ export function CalendarDay({
   return (
     <div
       className={cn(
-        'relative min-h-20 sm:min-h-[100px] lg:min-h-[120px] p-1 sm:p-1.5 lg:p-2 transition-all border-none',
+        'relative min-h-20 sm:min-h-25 lg:min-h-30 p-1 sm:p-1.5 lg:p-2 transition-all border-none',
         getBgColor(),
         !isCurrentMonth && 'opacity-40'
       )}
@@ -127,7 +127,7 @@ export function CalendarDay({
       </div>
 
       {tasks.length === 0 && isCurrentMonth && (
-        <div className="absolute inset-0 hidden sm:flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+        <div className="absolute inset-0 hidden sm:flex items-center justify-center md:opacity-0 hover:opacity-100 transition-opacity">
           <span className="text-[10px] sm:text-xs text-muted-foreground">Free time</span>
         </div>
       )}

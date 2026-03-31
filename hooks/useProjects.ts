@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { useSession } from 'next-auth/react';
 import { useMemo } from 'react';
+import { Task } from '@/types/task.types';
 
 
 export interface ProjectMember {
@@ -17,28 +18,9 @@ export interface ProjectMember {
   };
 }
 
-export interface Task {
-  id: string;
-  title: string;
-  description?: string;
-  status: 'TODO' | 'IN_PROGRESS' | 'IN_REVIEW' | 'BLOCKED' | 'COMPLETED' | 'CANCELLED';
-  priority: 'URGENT' | 'HIGH' | 'MEDIUM' | 'LOW';
-  dueDate?: string;
-  createdAt: string;
-  assignees: {
-    user: {
-      id: string;
-      name: string;
-      image?: string;
-    };
-  }[];
-  _count: {
-    comments: number;
-  };
-}
-
 export interface ProjectDetails {
   id: string;
+  slug: string;
   name: string;
   description?: string;
   color: string;
@@ -184,8 +166,19 @@ export const useProjectDetails = (projectId?: string) => {
   });
 };
 
+export const useProjectDetailsBySlug = (slug?: string) => {
+  return useQuery({
+    queryKey: [...projectKeys.details(), 'slug', slug],
+    queryFn: async () => {
+      const res = await api.get(`/api/projects/slug/${slug}`);
+      return res.data as ProjectDetails;
+    },
+    enabled: !!slug,
+  });
+};
+
 export const useCreateProject = () => {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: async (data: CreateProjectDto) => {
       const res = await api.post('/api/projects', data, {
@@ -195,7 +188,7 @@ export const useCreateProject = () => {
       return res.data;
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
+      qc.invalidateQueries({
         queryKey: projectKeys.list(variables.workspaceId),
       });
     },
@@ -203,7 +196,7 @@ export const useCreateProject = () => {
 };
 
 export const useUpdateProject = () => {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ projectId, data }: { projectId: string; data: UpdateProjectDto }) => {
       const res = await api.patch(`/api/projects/${projectId}`, data, {
@@ -213,7 +206,7 @@ export const useUpdateProject = () => {
       return res.data;
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
+      qc.invalidateQueries({
         queryKey: projectKeys.detail(variables.projectId),
       });
     },
@@ -221,7 +214,7 @@ export const useUpdateProject = () => {
 };
 
 export const useDeleteProject = () => {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: async (projectId: string) => {
       const res = await api.delete(`/api/projects/${projectId}`, {
@@ -231,7 +224,7 @@ export const useDeleteProject = () => {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
+      qc.invalidateQueries({
         queryKey: projectKeys.lists(),
       });
     },
@@ -239,7 +232,7 @@ export const useDeleteProject = () => {
 };
 
 export const useAddProjectMember = () => {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ projectId, data }: { projectId: string; data: AddProjectMemberDto }) => {
       const res = await api.post(`/api/projects/${projectId}/members`, data, {
@@ -249,7 +242,7 @@ export const useAddProjectMember = () => {
       return res.data;
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
+      qc.invalidateQueries({
         queryKey: projectKeys.detail(variables.projectId),
       });
     },
@@ -257,7 +250,7 @@ export const useAddProjectMember = () => {
 };
 
 export const useUpdateProjectMemberRole = () => {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({
       projectId,
@@ -279,7 +272,7 @@ export const useUpdateProjectMemberRole = () => {
       return res.data;
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
+      qc.invalidateQueries({
         queryKey: projectKeys.detail(variables.projectId),
       });
     },
@@ -287,7 +280,7 @@ export const useUpdateProjectMemberRole = () => {
 };
 
 export const useRemoveProjectMember = () => {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ projectId, memberId }: { projectId: string; memberId: string }) => {
       const res = await api.delete(`/api/projects/${projectId}/members/${memberId}`, {
@@ -297,7 +290,7 @@ export const useRemoveProjectMember = () => {
       return res.data;
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
+      qc.invalidateQueries({
         queryKey: projectKeys.detail(variables.projectId),
       });
     },

@@ -13,8 +13,8 @@ type CalendarView = "month" | "week" | "day";
 export function useCalendarPage() {
   const params    = useParams();
   const slug      = params?.workspaceSlug as string | undefined;
-  const queryClient = useQueryClient();
-  const workspace   = queryClient.getQueryData<Workspace>(
+  const qc = useQueryClient();
+  const workspace   = qc.getQueryData<Workspace>(
     workspaceKeys.detail(slug ?? "")
   );
   const workspaceId = workspace?.id;

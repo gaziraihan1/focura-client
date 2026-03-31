@@ -79,7 +79,7 @@ export function TaskCompletionTrend({ data }: TaskCompletionTrendProps) {
               />
 
               {/* Tooltip */}
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 md:opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                 <div className="bg-popover border rounded-lg shadow-lg p-3 whitespace-nowrap">
                   <p className="text-xs text-muted-foreground">
                     {formatShortDate(point.date)}

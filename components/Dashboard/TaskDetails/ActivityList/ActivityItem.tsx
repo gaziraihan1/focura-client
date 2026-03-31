@@ -23,7 +23,8 @@ export function ActivityItem({ activity }: ActivityItemProps) {
   const colorClass = getActionColor(activity.action);
   const description = getActivityDescription(
     activity.action,
-    activity.metadata
+    activity.metadata,
+    activity.entityType
   );
 
   return (
@@ -44,7 +45,7 @@ export function ActivityItem({ activity }: ActivityItemProps) {
                 {activity.user.name}
               </span>{' '}
               <span className="text-gray-600 dark:text-gray-400">
-                {description} {activity.entityType.toLowerCase()}
+                {description}
               </span>{' '}
               
               {(activity.metadata?.subtaskTitle || activity.metadata?.taskTitle) && (

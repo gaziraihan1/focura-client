@@ -42,7 +42,7 @@ export function useSubtaskStats(parentTaskId: string) {
 }
 
 export function useCreateSubtask(parentTaskId: string) {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: CreateSubtaskDto): Promise<Subtask> => {
@@ -55,7 +55,7 @@ export function useCreateSubtask(parentTaskId: string) {
     },
     onSuccess: (newSubtask) => {
       // Optimistic append
-      queryClient.setQueryData<Subtask[]>(
+      qc.setQueryData<Subtask[]>(
         subtaskKeys.all(parentTaskId),
         (old) => {
           if (!old) return [newSubtask];
@@ -63,14 +63,14 @@ export function useCreateSubtask(parentTaskId: string) {
           return [...old, newSubtask];
         },
       );
-      queryClient.invalidateQueries({ queryKey: subtaskKeys.all(parentTaskId) });
-      queryClient.invalidateQueries({ queryKey: subtaskKeys.stats(parentTaskId) });
+      qc.invalidateQueries({ queryKey: subtaskKeys.all(parentTaskId) });
+      qc.invalidateQueries({ queryKey: subtaskKeys.stats(parentTaskId) });
     },
   });
 }
 
 export function useUpdateSubtask(parentTaskId: string) {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
@@ -88,17 +88,17 @@ export function useUpdateSubtask(parentTaskId: string) {
       return res?.data as Subtask;
     },
     onSuccess: (updated) => {
-      queryClient.setQueryData<Subtask[]>(
+      qc.setQueryData<Subtask[]>(
         subtaskKeys.all(parentTaskId),
         (old) => old?.map((s) => (s.id === updated.id ? updated : s)) ?? [],
       );
-      queryClient.invalidateQueries({ queryKey: subtaskKeys.stats(parentTaskId) });
+      qc.invalidateQueries({ queryKey: subtaskKeys.stats(parentTaskId) });
     },
   });
 }
 
 export function useUpdateSubtaskStatus(parentTaskId: string) {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
@@ -116,9 +116,9 @@ export function useUpdateSubtaskStatus(parentTaskId: string) {
       return res?.data as Subtask;
     },
     onMutate: async ({ subtaskId, status }) => {
-      await queryClient.cancelQueries({ queryKey: subtaskKeys.all(parentTaskId) });
-      const previous = queryClient.getQueryData<Subtask[]>(subtaskKeys.all(parentTaskId));
-      queryClient.setQueryData<Subtask[]>(
+      await qc.cancelQueries({ queryKey: subtaskKeys.all(parentTaskId) });
+      const previous = qc.getQueryData<Subtask[]>(subtaskKeys.all(parentTaskId));
+      qc.setQueryData<Subtask[]>(
         subtaskKeys.all(parentTaskId),
         (old) => old?.map((s) => (s.id === subtaskId ? { ...s, status } : s)) ?? [],
       );
@@ -126,18 +126,18 @@ export function useUpdateSubtaskStatus(parentTaskId: string) {
     },
     onError: (_err, _vars, context) => {
       if (context?.previous) {
-        queryClient.setQueryData(subtaskKeys.all(parentTaskId), context.previous);
+        qc.setQueryData(subtaskKeys.all(parentTaskId), context.previous);
       }
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: subtaskKeys.all(parentTaskId) });
-      queryClient.invalidateQueries({ queryKey: subtaskKeys.stats(parentTaskId) });
+      qc.invalidateQueries({ queryKey: subtaskKeys.all(parentTaskId) });
+      qc.invalidateQueries({ queryKey: subtaskKeys.stats(parentTaskId) });
     },
   });
 }
 
 export function useDeleteSubtask(parentTaskId: string) {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async (subtaskId: string): Promise<void> => {
@@ -147,9 +147,9 @@ export function useDeleteSubtask(parentTaskId: string) {
       );
     },
     onMutate: async (subtaskId) => {
-      await queryClient.cancelQueries({ queryKey: subtaskKeys.all(parentTaskId) });
-      const previous = queryClient.getQueryData<Subtask[]>(subtaskKeys.all(parentTaskId));
-      queryClient.setQueryData<Subtask[]>(
+      await qc.cancelQueries({ queryKey: subtaskKeys.all(parentTaskId) });
+      const previous = qc.getQueryData<Subtask[]>(subtaskKeys.all(parentTaskId));
+      qc.setQueryData<Subtask[]>(
         subtaskKeys.all(parentTaskId),
         (old) => old?.filter((s) => s.id !== subtaskId) ?? [],
       );
@@ -157,12 +157,12 @@ export function useDeleteSubtask(parentTaskId: string) {
     },
     onError: (_err, _vars, context) => {
       if (context?.previous) {
-        queryClient.setQueryData(subtaskKeys.all(parentTaskId), context.previous);
+        qc.setQueryData(subtaskKeys.all(parentTaskId), context.previous);
       }
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: subtaskKeys.all(parentTaskId) });
-      queryClient.invalidateQueries({ queryKey: subtaskKeys.stats(parentTaskId) });
+      qc.invalidateQueries({ queryKey: subtaskKeys.all(parentTaskId) });
+      qc.invalidateQueries({ queryKey: subtaskKeys.stats(parentTaskId) });
     },
   });
 }

@@ -75,7 +75,7 @@ export function MeetingCard({
           <div className="relative" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setMenuOpen((v) => !v)}
-              className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:bg-accent hover:text-foreground"
+              className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground md:opacity-0 transition-opacity group-hover:opacity-100 hover:bg-accent hover:text-foreground"
               aria-label="Meeting actions"
             >
               <MoreVertical size={15} />

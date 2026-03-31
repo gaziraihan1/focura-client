@@ -101,7 +101,7 @@ export function SubtaskRow({
       )}
     >
       {/* Drag handle — visual only */}
-      <div className="mt-0.5 opacity-0 group-hover:opacity-25 transition-opacity shrink-0">
+      <div className="mt-0.5 md:opacity-0 group-hover:opacity-25 transition-opacity shrink-0">
         <GripVertical className="w-3.5 h-3.5 text-muted-foreground" />
       </div>
 
@@ -203,7 +203,7 @@ export function SubtaskRow({
       {!isEditing && (
         <div className={cn(
           "flex items-center gap-0.5 shrink-0 mt-0.5",
-          "opacity-0 group-hover:opacity-100 transition-opacity duration-150",
+          "md:opacity-0 group-hover:opacity-100 transition-opacity duration-150",
         )}>
           {canEdit && (
             <motion.button

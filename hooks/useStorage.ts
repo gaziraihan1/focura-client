@@ -200,7 +200,7 @@ export function useLargestFiles(workspaceId: string, limit: number = 10) {
 
 
 export function useBulkDeleteFiles(workspaceId: string) {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async (fileIds: string[]) => {
@@ -218,17 +218,17 @@ export function useBulkDeleteFiles(workspaceId: string) {
       return response?.data as { deletedCount: number; freedMB: number };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
+      qc.invalidateQueries({
         queryKey: storageKeys.workspace(workspaceId),
       });
-      queryClient.invalidateQueries({ queryKey: storageKeys.workspaces() });
-      queryClient.invalidateQueries({ queryKey: ["files"] });
+      qc.invalidateQueries({ queryKey: storageKeys.workspaces() });
+      qc.invalidateQueries({ queryKey: ["files"] });
     },
   });
 }
 
 export function useDeleteFile(workspaceId: string) {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async (fileId: string) => {
@@ -242,11 +242,11 @@ export function useDeleteFile(workspaceId: string) {
       return response?.data as { freedMB: number };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
+      qc.invalidateQueries({
         queryKey: storageKeys.workspace(workspaceId),
       });
-      queryClient.invalidateQueries({ queryKey: storageKeys.workspaces() });
-      queryClient.invalidateQueries({ queryKey: ["files"] });
+      qc.invalidateQueries({ queryKey: storageKeys.workspaces() });
+      qc.invalidateQueries({ queryKey: ["files"] });
     },
   });
 }

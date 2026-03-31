@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Play, Clock, Zap, CheckCircle2 } from "lucide-react";
 import { useFocusSession } from "@/hooks/useFocusSession";
 
@@ -11,7 +11,7 @@ interface FocusSessionCardProps {
 export function FocusSessionCard({ taskId }: FocusSessionCardProps) {
   const {
     activeSession,
-    loading,
+    isLoading,
     startSession,
     completeSession,
     cancelSession,
@@ -33,38 +33,36 @@ export function FocusSessionCard({ taskId }: FocusSessionCardProps) {
   const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining);
 
   // Update timer and handle auto-complete
-  useEffect(() => {
-    if (!activeSession || activeSession.taskId !== taskId) {
-      return;
+  const completeSessionRef = useRef(completeSession);
+useEffect(() => { completeSessionRef.current = completeSession; }, [completeSession]);
+
+useEffect(() => {
+  if (!activeSession || activeSession.taskId !== taskId) return;
+
+  const updateTimer = () => {
+    const startTime = new Date(activeSession.startedAt).getTime();
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const remaining = Math.max(0, activeSession.duration * 60 - elapsed);
+    setTimeRemaining(remaining);
+
+    if (remaining === 0 && !activeSession.completed) {
+      completeSessionRef.current();
     }
+  };
 
-    const updateTimer = () => {
-      const startTime = new Date(activeSession.startedAt).getTime();
-      const now = Date.now();
-      const elapsed = Math.floor((now - startTime) / 1000); // seconds
-      const remaining = Math.max(0, activeSession.duration * 60 - elapsed);
-      setTimeRemaining(remaining);
-
-      // Auto-complete when time runs out
-      if (remaining === 0 && !activeSession.completed) {
-        completeSession();
-      }
-    };
-
-    updateTimer();
-    const interval = setInterval(updateTimer, 1000);
-
-    return () => clearInterval(interval);
-  }, [activeSession, taskId, completeSession]);
+  updateTimer();
+  const interval = setInterval(updateTimer, 1000);
+  return () => clearInterval(interval);
+}, [activeSession, taskId]); // completeSession no longer a dep
 
   const isActiveForThisTask = activeSession?.taskId === taskId && !activeSession.completed;
 
-  const handleStart = async (duration: number, type: 'POMODORO' | 'DEEP_WORK') => {
-    await startSession(taskId, duration, type);
+  const handleStart =  (duration: number, type: 'POMODORO' | 'DEEP_WORK') => {
+    startSession({taskId, duration, type});
   };
 
-  const handleComplete = async () => {
-    await completeSession();
+  const handleComplete = () => {
+    completeSession();
   };
 
   const formatTime = (seconds: number): string => {
@@ -100,7 +98,7 @@ export function FocusSessionCard({ taskId }: FocusSessionCardProps) {
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => handleStart(25, 'POMODORO')}
-              disabled={loading || !!activeSession}
+              disabled={isLoading || !!activeSession}
               className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg border border-purple-500/20 bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Play className="w-4 h-4" />
@@ -112,7 +110,7 @@ export function FocusSessionCard({ taskId }: FocusSessionCardProps) {
 
             <button
               onClick={() => handleStart(60, 'DEEP_WORK')}
-              disabled={loading || !!activeSession}
+              disabled={isLoading || !!activeSession}
               className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg border border-purple-500/20 bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Clock className="w-4 h-4" />
@@ -154,7 +152,7 @@ export function FocusSessionCard({ taskId }: FocusSessionCardProps) {
           <div className="flex gap-2">
             <button
               onClick={handleComplete}
-              disabled={loading}
+              disabled={isLoading}
               className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 hover:bg-green-500/20 font-medium transition-colors disabled:opacity-50"
             >
               <CheckCircle2 className="w-4 h-4" />
@@ -162,8 +160,8 @@ export function FocusSessionCard({ taskId }: FocusSessionCardProps) {
             </button>
 
             <button
-              onClick={cancelSession}
-              disabled={loading}
+              onClick={() => cancelSession()}
+              disabled={isLoading}
               className="px-4 py-2.5 rounded-lg border border-border hover:bg-accent text-muted-foreground hover:text-foreground font-medium transition-colors disabled:opacity-50"
             >
               Cancel

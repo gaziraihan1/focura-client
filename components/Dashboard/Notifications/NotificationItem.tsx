@@ -67,7 +67,7 @@ export function NotificationItem({
             e.stopPropagation();
             onDelete();
           }}
-          className="opacity-0 group-hover:opacity-100 p-2 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-all"
+          className="md:opacity-0 group-hover:opacity-100 p-2 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-all"
           title="Delete notification"
         >
           <Trash2 className="w-4 h-4" />

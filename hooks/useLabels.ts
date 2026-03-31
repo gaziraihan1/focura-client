@@ -23,7 +23,7 @@ export interface Label {
     image: string | null;
   };
   createdAt: Date;
-  _count?: {
+  _count: {
     tasks: number;
   };
 }
@@ -142,7 +142,7 @@ export function usePopularLabels(limit: number = 10) {
 }
 
 export function useCreateLabel() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const params = useParams<{ workspaceSlug: string }>();
   const workspaceSlug = params?.workspaceSlug;
   const { data: workspace } = useWorkspace(workspaceSlug || '');
@@ -162,10 +162,10 @@ export function useCreateLabel() {
       return response.data;
     },
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: labelKeys.all });
+      qc.invalidateQueries({ queryKey: labelKeys.all });
 
       if (data?.workspaceId || variables.workspaceId) {
-        queryClient.invalidateQueries({
+        qc.invalidateQueries({
           queryKey: labelKeys.list({ workspaceId: data?.workspaceId || variables.workspaceId }),
         });
       }
@@ -177,7 +177,7 @@ export function useCreateLabel() {
 }
 
 export function useUpdateLabel() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: UpdateLabelDto }) => {
@@ -189,9 +189,9 @@ export function useUpdateLabel() {
     },
     onSuccess: (data) => {
       if (data) {
-        queryClient.setQueryData(labelKeys.detail(data.id), data);
+        qc.setQueryData(labelKeys.detail(data.id), data);
       }
-      queryClient.invalidateQueries({ queryKey: labelKeys.all });
+      qc.invalidateQueries({ queryKey: labelKeys.all });
     },
     onError: (error) => {
       console.error('Error updating label:', error);
@@ -200,7 +200,7 @@ export function useUpdateLabel() {
 }
 
 export function useDeleteLabel() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: string) => {
@@ -214,9 +214,9 @@ export function useDeleteLabel() {
       return { ...response.data, id };
     },
     onSuccess: (data, deletedId) => {
-      queryClient.removeQueries({ queryKey: labelKeys.detail(deletedId) });
-      queryClient.invalidateQueries({ queryKey: labelKeys.all });
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      qc.removeQueries({ queryKey: labelKeys.detail(deletedId) });
+      qc.invalidateQueries({ queryKey: labelKeys.all });
+      qc.invalidateQueries({ queryKey: ['tasks'] });
     },
     onError: (error) => {
       console.error('Error deleting label:', error);
@@ -225,7 +225,7 @@ export function useDeleteLabel() {
 }
 
 export function useAddLabelToTask() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ labelId, taskId }: { labelId: string; taskId: string }) => {
@@ -233,15 +233,15 @@ export function useAddLabelToTask() {
       return response.data;
     },
     onSuccess: (_, { labelId, taskId }) => {
-      queryClient.invalidateQueries({ queryKey: labelKeys.detail(labelId) });
-      queryClient.invalidateQueries({ queryKey: ['tasks', taskId] });
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      qc.invalidateQueries({ queryKey: labelKeys.detail(labelId) });
+      qc.invalidateQueries({ queryKey: ['tasks', taskId] });
+      qc.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
 }
 
 export function useRemoveLabelFromTask() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ labelId, taskId }: { labelId: string; taskId: string }) => {
@@ -249,9 +249,9 @@ export function useRemoveLabelFromTask() {
       return response.data;
     },
     onSuccess: (_, { labelId, taskId }) => {
-      queryClient.invalidateQueries({ queryKey: labelKeys.detail(labelId) });
-      queryClient.invalidateQueries({ queryKey: ['tasks', taskId] });
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      qc.invalidateQueries({ queryKey: labelKeys.detail(labelId) });
+      qc.invalidateQueries({ queryKey: ['tasks', taskId] });
+      qc.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
 }

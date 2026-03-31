@@ -17,7 +17,7 @@ import { useTaskPermissions } from "@/hooks/useTaskPermissions";
 
 import { Task } from "@/types/task.types";
 
-export function useTaskDetailsController(taskId: string, workspaceSlug: string) {
+export function useTaskDetailsController(taskId: string, workspaceSlug: string | undefined) {
   const router = useRouter();
 
   const [isEditing, setIsEditing] = useState(false);

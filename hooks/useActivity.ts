@@ -27,7 +27,7 @@ export interface Activity {
     status: string;
     priority?: string;
     project?: {
-      id: true;
+      id: string;
       name: string;
       color: string;
     };
@@ -106,7 +106,7 @@ export function useActivities(filters?: ActivityFilters) {
       });
       return response.data || [];
     },
-    staleTime: 1 * 60 * 1000, // 1 minute
+    staleTime: 30 * 1000, // 1 minute
   });
 }
 
@@ -145,7 +145,7 @@ export function useInfiniteActivities(filters?: Omit<ActivityFilters, 'offset'>)
       }
       return undefined;
     },
-    initialPageParam: 0,
+    initialPageParam: 0 as number,
     staleTime: 1 * 60 * 1000,
   });
 }
@@ -221,6 +221,7 @@ export function useTaskActivities(
     },
     enabled: !!taskId,
     staleTime: 1 * 60 * 1000,
+    refetchOnWindowFocus: true
   });
 }
 
@@ -250,7 +251,7 @@ export function useActivityStats(workspaceId?: string) {
  * Delete an activity
  */
 export function useDeleteActivity() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   
   return useMutation({
     mutationFn: async (activityId: string) => {
@@ -261,7 +262,7 @@ export function useDeleteActivity() {
     },
     onSuccess: () => {
       // Invalidate all activity queries
-      queryClient.invalidateQueries({ queryKey: activityKeys.all });
+      qc.invalidateQueries({ queryKey: activityKeys.all });
     },
   });
 }
@@ -270,7 +271,7 @@ export function useDeleteActivity() {
  * Clear activities with optional filters
  */
 export function useClearActivities() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   
   return useMutation({
     mutationFn: async (filters?: { workspaceId?: string; before?: string }) => {
@@ -295,7 +296,7 @@ export function useClearActivities() {
     },
     onSuccess: () => {
       // Invalidate all activity queries
-      queryClient.invalidateQueries({ queryKey: activityKeys.all });
+      qc.invalidateQueries({ queryKey: activityKeys.all });
     },
   });
 }

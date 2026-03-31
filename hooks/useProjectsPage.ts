@@ -89,7 +89,7 @@ export function useProjectsPage() {
     ).length;
     const totalTasks = projects.reduce(
       (sum: number, p: ProjectData) =>
-        sum + (p._count?.tasks || p.stats?.totalTasks || 0),
+        sum + (p._count.tasks || p.stats?.totalTasks || 0),
       0
     );
 
@@ -139,11 +139,11 @@ export function useProjectsPage() {
 
   if (project.workspace?.slug) {
     router.push(
-      `/dashboard/workspaces/${project.workspace.slug}/projects/${project.id}`
+      `/dashboard/workspaces/${project.workspace.slug}/projects/${project.slug}`
     );
   } else {
     // Fallback to projects without workspace
-    router.push(`/dashboard/projects/${project.id}`);
+    router.push(`/dashboard/projects/${project.slug}`);
   }
 };
 

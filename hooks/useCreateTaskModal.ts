@@ -19,6 +19,7 @@ export function useCreateTaskModal({
     description: "",
     priority: "MEDIUM",
     status: "TODO",
+    startDate: "",
     dueDate: "",
     estimatedHours: undefined,
     assigneeIds: [],

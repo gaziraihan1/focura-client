@@ -9,7 +9,6 @@ import { LoadingState } from "@/components/Shared/LoadingState";
 import { useWorkspaceDetailPage } from "@/hooks/useWorkspaceLayout";
 import { WorkspaceDetailErrorState } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceDetailErrorState";
 import { WorkspaceDetailContent } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceDetailsContent";
-import { useWorkspaceStorage } from "@/hooks/useWorkspace";
 
 export default function WorkspaceDetailPage() {
   const params = useParams();
@@ -31,8 +30,6 @@ export default function WorkspaceDetailPage() {
     canCreateProjects,
   } = useWorkspaceDetailPage({ slug });
 
-  const {data: storageOverview} = useWorkspaceStorage(workspace?.id);
-  console.log(storageOverview)
   if (isLoading) {
     return <LoadingState />;
   }

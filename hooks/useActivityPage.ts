@@ -22,7 +22,7 @@ export function useActivityPage({ workspaceId }: UseActivityPageProps) {
   const [filters, setFilters] = useState<ActivityFilterValues>({});
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const clearActivities = useClearActivities();
 
   const mergedFilters = {
@@ -43,7 +43,7 @@ export function useActivityPage({ workspaceId }: UseActivityPageProps) {
   };
 
   const handleRefresh = () => {
-    queryClient.invalidateQueries({ queryKey: activityKeys.all });
+    qc.invalidateQueries({ queryKey: activityKeys.all });
   };
 
   return {

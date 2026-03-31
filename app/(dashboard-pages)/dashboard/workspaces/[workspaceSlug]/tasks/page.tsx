@@ -11,6 +11,7 @@ import { useDailyTasks } from "@/hooks/useDailyTasks";
 import toast from "react-hot-toast";
 import { PrimaryTasksView } from "@/components/Dashboard/AllTasks/WorkspaceTasks/PrimaryTaskView";
 import TaskQuotaDetails from "@/components/Dashboard/AllTasks/TaskQoutaDetails";
+import { FocusModeBanner } from "@/components/Dashboard/AllTasks/FocusModeBanner";
 
 export default function WorkspaceTasksPage() {
   const params = useParams();
@@ -49,7 +50,11 @@ export default function WorkspaceTasksPage() {
     projects,
     labels,
     members,
-    qouta
+    qouta,
+    focusedTask,
+    timeRemaining,
+    activeSession,
+    completeSession
   } = useWorkspaceTasksPage({ workspaceSlug });
 
   const {
@@ -73,9 +78,7 @@ export default function WorkspaceTasksPage() {
 
     const result = await addToPrimary(taskId);
     
-    if (result.success) {
-      toast.success(result.message || "Task added to Primary");
-    } else {
+    if (!result.success) {
       toast.error(result.message || "Failed to add task to Primary");
     }
   };
@@ -83,9 +86,7 @@ export default function WorkspaceTasksPage() {
   const handleAddToSecondary = async (taskId: string) => {
     const result = await addToSecondary(taskId);
     
-    if (result.success) {
-      toast.success(result.message || "Task added to Secondary");
-    } else {
+    if (!result.success) {
       toast.error(result.message || "Failed to add task to Secondary");
     }
   };
@@ -101,9 +102,13 @@ export default function WorkspaceTasksPage() {
         onCreateTask={handleCreateTask}
       />
       <TaskQuotaDetails qouta={qouta} />
+      {
+        focusedTask && activeSession && (
+          <FocusModeBanner task={focusedTask} timeRemaining={timeRemaining} onEndFocus={completeSession} />
+        )
+      }
 
       {stats && <TaskStatsGrid stats={stats} />}
-
       <TaskSearchAndFilters
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}

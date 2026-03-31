@@ -78,7 +78,7 @@ export function ProjectCard({
 
   if (haveAccess) {
     return (
-      <Link href={`/dashboard/workspaces/${workspaceSlug}/projects/${project?.id}`}>
+      <Link href={`/dashboard/workspaces/${workspaceSlug}/projects/${project?.slug}`}>
         {CardContent}
       </Link>
     );
