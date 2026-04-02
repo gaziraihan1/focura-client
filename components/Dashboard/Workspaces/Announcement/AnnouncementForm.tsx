@@ -1,35 +1,10 @@
-// src/components/announcements/AnnouncementForm.tsx
 'use client';
 
-import { Pin, Globe, Lock } from 'lucide-react';
+import { Pin, Globe, Lock, FolderOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AnnouncementContentEditor } from './AnnouncementContentEditor';
-import type { AnnouncementVisibility } from '@/types/announcement.types';
+import type { AnnouncementFormProps, AnnouncementVisibility } from '@/types/announcement.types';
 import Image from 'next/image';
-
-interface WorkspaceMember {
-  userId: string;
-  user: { id: string; name: string; image: string | null };
-}
-
-interface FormState {
-  title:      string;
-  content:    string;
-  visibility: AnnouncementVisibility;
-  isPinned:   boolean;
-  targetIds:  string[];
-}
-
-interface AnnouncementFormProps {
-  formState:          FormState;
-  members:            WorkspaceMember[];
-  onTitleChange:      (v: string) => void;
-  onContentChange:    (v: string) => void;
-  onVisibilityChange: (v: AnnouncementVisibility) => void;
-  onIsPinnedChange:   (v: boolean) => void;
-  onTargetToggle:     (uid: string) => void;
-  disabled?:          boolean;
-}
 
 const VISIBILITY_OPTIONS: {
   value: AnnouncementVisibility;
@@ -50,9 +25,13 @@ export function AnnouncementForm({
   onIsPinnedChange,
   onTargetToggle,
   disabled,
+  projects,
+  lockedProjectId,
+  onProjectChange,
 }: AnnouncementFormProps) {
   return (
     <div className="flex flex-col gap-5">
+
       {/* Title */}
       <div className="flex flex-col gap-2">
         <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
@@ -74,14 +53,60 @@ export function AnnouncementForm({
         />
       </div>
 
-      {/* Content — rich editor */}
+      {/* Content */}
       <AnnouncementContentEditor
         value={formState.content}
         onChange={onContentChange}
         disabled={disabled}
       />
 
-      {/* Visibility */}
+      {/* Scope — only shown when projects are passed and not locked */}
+      {projects && projects.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            Scope
+          </label>
+
+          {lockedProjectId ? (
+            /* Locked — show read-only pill when opened from project page */
+            <div className={cn(
+              'flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-border bg-muted/40',
+              'text-sm text-foreground/70',
+            )}>
+              <FolderOpen className="w-3.5 h-3.5 text-primary shrink-0" />
+              <span>{projects.find((p) => p.id === lockedProjectId)?.name ?? 'Project'}</span>
+              <span className="ml-auto text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                Locked
+              </span>
+            </div>
+          ) : (
+            <select
+              disabled={disabled}
+              value={formState.projectId ?? ''}
+              onChange={(e) => onProjectChange?.(e.target.value || null)}
+              className={cn(
+                'w-full rounded-xl border border-border bg-transparent px-3.5 py-2.5',
+                'text-sm text-foreground',
+                'focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20',
+                'transition-all disabled:opacity-50',
+              )}
+            >
+              <option value="">Workspace-wide</option>
+              {projects.map((p) => (
+                <option key={p.id} value={p.id}>{p.name}</option>
+              ))}
+            </select>
+          )}
+
+          <p className="text-[11px] text-muted-foreground">
+            {formState.projectId
+              ? 'Only members of this project will see it.'
+              : 'Visible to all workspace members (who match the audience setting).'}
+          </p>
+        </div>
+      )}
+
+      {/* Audience */}
       <div className="flex flex-col gap-2">
         <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
           Audience
@@ -119,7 +144,7 @@ export function AnnouncementForm({
         </div>
       </div>
 
-      {/* Target member picker (PRIVATE only) */}
+      {/* Private recipient picker */}
       {formState.visibility === 'PRIVATE' && (
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
@@ -146,18 +171,15 @@ export function AnnouncementForm({
                     onClick={() => onTargetToggle(userId)}
                     className={cn(
                       'flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-colors',
-                      selected
-                        ? 'bg-primary/8 text-foreground'
-                        : 'hover:bg-muted text-foreground/80',
+                      selected ? 'bg-primary/8 text-foreground' : 'hover:bg-muted text-foreground/80',
                       'disabled:opacity-50',
                     )}
                   >
-                    {/* Avatar */}
                     <span className="relative shrink-0">
                       {user.image ? (
                         <Image
-                        width={24}
-                        height={24}
+                          width={24}
+                          height={24}
                           src={user.image}
                           alt={user.name}
                           className="w-6 h-6 rounded-full object-cover"

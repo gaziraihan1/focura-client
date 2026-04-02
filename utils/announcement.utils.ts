@@ -78,3 +78,12 @@ function escHtml(s: string) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 }
+
+export function stripTokens(raw: string): string {
+  return raw
+    .replace(/\/\/([\s\S]*?)\//g,           '$1')
+    .replace(/\*\*([\s\S]*?)\*\*/g,         '$1')
+    .replace(/\$\$([\s\S]*?)\$\$/g,         '$1')
+    .replace(/\{([^}|]+)(?:\|([^}]*))?\}/g, (_, url, label) => label ?? url)
+    .replace(/>/g, ' ');
+}

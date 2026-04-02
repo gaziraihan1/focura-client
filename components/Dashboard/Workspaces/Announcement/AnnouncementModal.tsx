@@ -1,82 +1,43 @@
 'use client';
 
-import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Megaphone, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AnnouncementForm } from './AnnouncementForm';
 import type {
-  CreateAnnouncementDto,
-  AnnouncementVisibility,
+  AnnouncementModalProps,
 } from '@/types/announcement.types';
-
-interface WorkspaceMember {
-  userId: string;
-  user: { id: string; name: string; image: string | null };
-}
-
-interface AnnouncementModalProps {
-  isOpen:    boolean;
-  onClose:   () => void;
-  onSubmit:  (data: CreateAnnouncementDto) => Promise<void>;
-  isLoading: boolean;
-  members:   WorkspaceMember[];
-}
-
-const DEFAULT_FORM = {
-  title:      '',
-  content:    '',
-  visibility: 'PUBLIC' as AnnouncementVisibility,
-  isPinned:   false,
-  targetIds:  [] as string[],
-};
 
 export function AnnouncementModal({
   isOpen,
+  isLoading,
+  isValid,
+  form,
+  members,
+  projects,
+  lockedProjectId,
   onClose,
   onSubmit,
-  isLoading,
-  members,
+  onTitleChange,
+  onContentChange,
+  onVisibilityChange,
+  onIsPinnedChange,
+  onProjectChange,
+  onTargetToggle,
 }: AnnouncementModalProps) {
-  const [form, setForm] = useState(DEFAULT_FORM);
-
-  const resetForm = useCallback(() => setForm(DEFAULT_FORM), []);
-
-  const handleClose = () => {
-    if (isLoading) return;
-    resetForm();
-    onClose();
-  };
-
-  const handleSubmit = async () => {
-    if (!form.title.trim() || !form.content.trim()) return;
-    await onSubmit({
-      title:      form.title.trim(),
-      content:    form.content.trim(),
-      visibility: form.visibility,
-      isPinned:   form.isPinned,
-      targetIds:  form.visibility === 'PRIVATE' ? form.targetIds : [],
-    });
-    resetForm();
-  };
-
-  const isValid = form.title.trim().length > 0 && form.content.trim().length > 0;
-
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            onClick={handleClose}
+            onClick={onClose}
             className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
           />
 
-          {/* Modal */}
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.96, y: 12 }}
@@ -100,7 +61,7 @@ export function AnnouncementModal({
                 </div>
                 <button
                   type="button"
-                  onClick={handleClose}
+                  onClick={onClose}
                   disabled={isLoading}
                   className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 >
@@ -108,23 +69,20 @@ export function AnnouncementModal({
                 </button>
               </div>
 
-              {/* Body */}
+              {/* Body — pure form, no state */}
               <div className="flex-1 overflow-y-auto px-6 py-5">
                 <AnnouncementForm
                   formState={form}
                   members={members}
-                  onTitleChange={(v)      => setForm((f) => ({ ...f, title: v }))}
-                  onContentChange={(v)    => setForm((f) => ({ ...f, content: v }))}
-                  onVisibilityChange={(v) => setForm((f) => ({ ...f, visibility: v, targetIds: [] }))}
-                  onIsPinnedChange={(v)   => setForm((f) => ({ ...f, isPinned: v }))}
-                  onTargetToggle={(uid)   =>
-                    setForm((f) => ({
-                      ...f,
-                      targetIds: f.targetIds.includes(uid)
-                        ? f.targetIds.filter((id) => id !== uid)
-                        : [...f.targetIds, uid],
-                    }))
-                  }
+                  projects={projects}
+                  lockedProjectId={lockedProjectId}
+                  onTitleChange={onTitleChange}
+                  onContentChange={onContentChange}
+                  onVisibilityChange={onVisibilityChange}
+                  onIsPinnedChange={onIsPinnedChange}
+                  onProjectChange={onProjectChange}
+                  onTargetToggle={onTargetToggle}
+                  disabled={isLoading}
                 />
               </div>
 
@@ -132,7 +90,7 @@ export function AnnouncementModal({
               <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border shrink-0">
                 <button
                   type="button"
-                  onClick={handleClose}
+                  onClick={onClose}
                   disabled={isLoading}
                   className="px-4 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 >
@@ -141,7 +99,7 @@ export function AnnouncementModal({
                 <motion.button
                   whileTap={{ scale: 0.97 }}
                   type="button"
-                  onClick={handleSubmit}
+                  onClick={onSubmit}
                   disabled={!isValid || isLoading}
                   className={cn(
                     'flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium',
@@ -152,8 +110,7 @@ export function AnnouncementModal({
                 >
                   {isLoading
                     ? <Loader2 className="w-4 h-4 animate-spin" />
-                    : <Megaphone className="w-4 h-4" />
-                  }
+                    : <Megaphone className="w-4 h-4" />}
                   {isLoading ? 'Publishing…' : 'Publish'}
                 </motion.button>
               </div>

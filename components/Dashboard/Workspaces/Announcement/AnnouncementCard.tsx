@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { Avatar } from '@/components/Shared/Avatar';
 import type { Announcement } from '@/types/announcement.types';
 import { DeleteConfirmModal } from './DeleteConfirmModal';
+import { stripTokens } from '@/utils/announcement.utils';
 
 interface AnnouncementCardProps {
   announcement: Announcement;
@@ -20,17 +21,6 @@ interface AnnouncementCardProps {
   index:        number;
 }
 
-/** Strip format tokens for the plain-text card preview */
-function stripTokens(raw: string): string {
-  return raw
-    .replace(/\/\/([\s\S]*?)\//g,           '$1')
-    .replace(/\*\*([\s\S]*?)\*\*/g,         '$1')
-    .replace(/\$\$([\s\S]*?)\$\$/g,         '$1')
-    .replace(/\{([^}|]+)(?:\|([^}]*))?\}/g, (_, url, label) => label ?? url)
-    .replace(/>/g, ' ');
-}
-
-// ─── Card ─────────────────────────────────────────────────────────────────────
 
 export function AnnouncementCard({
   announcement,
@@ -56,7 +46,6 @@ export function AnnouncementCard({
   const handleConfirm = (e: React.MouseEvent) => {
     e.stopPropagation();
     onDelete(e);
-    // modal stays open while isDeleting — parent unmounts card on success
   };
 
   const handleCancel = (e: React.MouseEvent) => {
@@ -81,12 +70,10 @@ export function AnnouncementCard({
           announcement.isPinned && 'border-amber-500/30 bg-amber-500/5',
         )}
       >
-        {/* Pin strip */}
         {announcement.isPinned && (
           <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-xl bg-linear-to-r from-amber-500/60 to-amber-400/20" />
         )}
 
-        {/* Header */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-2 min-w-0">
             {announcement.isPinned && (
@@ -110,7 +97,6 @@ export function AnnouncementCard({
           </span>
         </div>
 
-        {/* Content preview */}
         <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
           {preview.length >= 50 ? `${preview.slice(0, 50)}...` : preview}
           {preview.length >= 50 && (
@@ -120,7 +106,6 @@ export function AnnouncementCard({
           )}
         </p>
 
-        {/* Footer */}
         <div className="flex items-center justify-between gap-2 pt-1">
           <div className="flex items-center gap-2 min-w-0">
             <Avatar
@@ -171,7 +156,6 @@ export function AnnouncementCard({
           )}
         </div>
 
-        {/* Private recipients */}
         {!isPublic && announcement.targets.length > 0 && (
           <div className="flex items-center gap-1.5 pt-2 border-t border-border/40">
             <div className="flex -space-x-1">
@@ -186,7 +170,6 @@ export function AnnouncementCard({
         )}
       </motion.div>
 
-      {/* Confirm delete modal — rendered outside the card so clicks don't bubble */}
       {confirmOpen && (
         <DeleteConfirmModal
           title={announcement.title}

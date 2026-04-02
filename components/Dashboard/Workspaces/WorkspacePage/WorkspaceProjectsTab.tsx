@@ -65,7 +65,7 @@ export function WorkspaceProjectsTab({
             }
             className="px-3 sm:px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2 text-sm sm:text-base"
           >
-            <Plus size={16} className="sm:w-[18px] sm:h-[18px]" />
+            <Plus size={16} className="sm:w-4.5 sm:h-4.5" />
             <span className="hidden sm:inline">New Project</span>
             <span className="sm:hidden">New</span>
           </button>

@@ -1,47 +1,26 @@
-// app/dashboard/workspaces/[workspaceSlug]/announcements/page.tsx
-"use client";
-import { useParams } from "next/navigation";
-import { useState } from "react";
-import { Plus, Megaphone } from "lucide-react";
-import { AnnouncementList }    from "@/components/Dashboard/Workspaces/Announcement/AnnouncementList";
+'use client';
 
-import { AnnouncementFilters } from "@/components/Dashboard/Workspaces/Announcement/AnnouncementFilters";
-import { useAnnouncementFilters, useAnnouncements, useCreateAnnouncement, useDeleteAnnouncement, useTogglePinAnnouncement } from "@/hooks/useAnnouncement";
-import { useWorkspace, useWorkspaceRole }        from "@/hooks/useWorkspace";
-import { useTeamMembers } from "@/hooks/useTeam";
-import { AnnouncementModal } from "@/components/Dashboard/Workspaces/Announcement/AnnouncementModal";
+import { useParams } from 'next/navigation';
+import { Plus, Megaphone } from 'lucide-react';
+import { AnnouncementList }    from '@/components/Dashboard/Workspaces/Announcement/AnnouncementList';
+import { AnnouncementFilters } from '@/components/Dashboard/Workspaces/Announcement/AnnouncementFilters';
+import { AnnouncementModal }   from '@/components/Dashboard/Workspaces/Announcement/AnnouncementModal';
+import { useAnnouncementPage } from '@/hooks/useAnnouncementPage';
 
 export default function AnnouncementsPage() {
   const { workspaceSlug } = useParams();
-  const [showModal, setShowModal] = useState(false);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [pinningId,  setPinningId]  = useState<string | null>(null);
 
-  const { data: workspace } = useWorkspace(workspaceSlug as string);
-  const workspaceId = workspace?.id;
-
-  const { filters, setVisibility, setIsPinned, setPage, resetFilters, activeFiltersCount } = useAnnouncementFilters();
-  const { data, isLoading } = useAnnouncements(workspaceId ?? "", filters);
-  const workspaceRole = useWorkspaceRole(workspaceId ?? "");
-  const canManage = workspaceRole.isOwner || workspaceRole.isAdmin;
-
-  const { data: members = [] } = useTeamMembers(workspaceId);
-
-  const createAnnouncement = useCreateAnnouncement(workspaceId ?? "");
-  const deleteAnnouncement = useDeleteAnnouncement(workspaceId ?? "");
-  const togglePin          = useTogglePinAnnouncement(workspaceId ?? "");
-
-  const handleDelete = async (id: string) => {
-    setDeletingId(id);
-    try { await deleteAnnouncement.mutateAsync(id); }
-    finally { setDeletingId(null); }
-  };
-
-  const handleTogglePin = async (id: string) => {
-    setPinningId(id);
-    try { await togglePin.mutateAsync(id); }
-    finally { setPinningId(null); }
-  };
+  const {
+    data, isLoading, filters,
+    setVisibility, setIsPinned, setPage, resetFilters, activeFiltersCount,
+    canManage, members,
+    showModal, openModal, handleClose,
+    form, isValid, isSubmitting,
+    setTitle, setContent, setVisibilityField,
+    setIsPinnedField, setProjectId, toggleTarget,
+    handleSubmit,
+    deletingId, pinningId, handleDelete, handleTogglePin,
+  } = useAnnouncementPage(workspaceSlug as string);
 
   return (
     <div className="space-y-6 px-2 sm:px-4 lg:px-6">
@@ -50,18 +29,23 @@ export default function AnnouncementsPage() {
           <Megaphone className="w-5 h-5 text-primary" />
           <h1 className="text-xl font-bold text-foreground">Announcements</h1>
           {data?.pagination.totalCount !== undefined && (
-            <span className="text-sm text-muted-foreground">({data.pagination.totalCount})</span>
+            <span className="text-sm text-muted-foreground">
+              ({data.pagination.totalCount})
+            </span>
           )}
         </div>
         {canManage && (
-          <button onClick={() => setShowModal(true)} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
+          <button
+            onClick={openModal}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+          >
             <Plus className="w-4 h-4" /> New
           </button>
         )}
       </div>
 
       <AnnouncementFilters
-        visibility={filters.visibility ?? "ALL"}
+        visibility={filters.visibility ?? 'ALL'}
         isPinned={filters.isPinned}
         activeFiltersCount={activeFiltersCount}
         onVisibilityChange={setVisibility}
@@ -71,7 +55,10 @@ export default function AnnouncementsPage() {
 
       <AnnouncementList
         announcements={data?.data ?? []}
-        pagination={data?.pagination ?? { page: 1, pageSize: 10, totalCount: 0, totalPages: 0, hasNext: false, hasPrev: false }}
+        pagination={data?.pagination ?? {
+          page: 1, pageSize: 10, totalCount: 0,
+          totalPages: 0, hasNext: false, hasPrev: false,
+        }}
         canManage={canManage}
         isLoading={isLoading}
         deletingId={deletingId}
@@ -84,10 +71,21 @@ export default function AnnouncementsPage() {
 
       <AnnouncementModal
         isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        onSubmit={async (data) => { await createAnnouncement.mutateAsync(data); setShowModal(false); }}
-        isLoading={createAnnouncement.isPending}
-        members={members.map(m => ({ userId: m.id, user: { id: m.id, name: m.name, image: m.image ?? null } }))}
+        isLoading={isSubmitting}
+        isValid={isValid}
+        form={form}
+        members={members.map((m) => ({
+          userId: m.id,
+          user: { id: m.id, name: m.name, image: m.image ?? null },
+        }))}
+        onClose={handleClose}
+        onSubmit={handleSubmit}
+        onTitleChange={setTitle}
+        onContentChange={setContent}
+        onVisibilityChange={setVisibilityField}
+        onIsPinnedChange={setIsPinnedField}
+        onProjectChange={setProjectId}
+        onTargetToggle={toggleTarget}
       />
     </div>
   );

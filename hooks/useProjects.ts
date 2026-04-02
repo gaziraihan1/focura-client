@@ -3,6 +3,7 @@ import { api } from '@/lib/axios';
 import { useSession } from 'next-auth/react';
 import { useMemo } from 'react';
 import { Task } from '@/types/task.types';
+import { Announcement } from '@/types/announcement.types';
 
 
 export interface ProjectMember {
@@ -38,6 +39,7 @@ export interface ProjectDetails {
   };
   members: ProjectMember[];
   tasks: Task[];
+  announcement: Announcement[]
   stats: {
     totalTasks: number;
     completedTasks: number;
@@ -49,12 +51,14 @@ export interface ProjectDetails {
       name: string;
       image?: string;
     };
+    totalAnnouncement: number;
   };
   isAdmin: boolean;
   workspaceId: string;
   _count: {
     tasks: number;
     members: number;
+    announcement: number
   }
 }
 

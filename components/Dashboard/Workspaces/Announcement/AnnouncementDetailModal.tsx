@@ -1,86 +1,18 @@
 'use client';
 
-import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Globe, Lock, Pin, Calendar, Copy, Check } from 'lucide-react';
+import { X, Globe, Lock, Pin, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Avatar } from '@/components/Shared/Avatar';
-import { parseAnnouncement } from '@/utils/announcement.utils';
 import type { Announcement } from '@/types/announcement.types';
-import Link from 'next/link';
+import { RenderedContent } from './RenderedContent';
 
 interface AnnouncementDetailModalProps {
   announcement: Announcement | null;
   isOpen:       boolean;
   onClose:      () => void;
 }
-
-function RenderedContent({ raw }: { raw: string }) {
-  const [copied, setCopied] = useState<string | null>(null);
-
-  const handleCopy = useCallback((val: string) => {
-    navigator.clipboard.writeText(val).then(() => {
-      setCopied(val);
-      setTimeout(() => setCopied(null), 1800);
-    });
-  }, []);
-
-  const tokens = parseAnnouncement(raw);
-
-  return (
-    <p className="text-sm text-foreground/85 leading-relaxed wrap-break-word">
-      {tokens.map((token, i): React.ReactNode => {
-        if (token.type === 'text')
-          return <span key={i}>{token.value}</span>;
-
-        if (token.type === 'italic')
-          return <em key={i} className="italic">{token.value}</em>;
-
-        if (token.type === 'bold')
-          return <strong key={i} className="font-semibold">{token.value}</strong>;
-
-        if (token.type === 'break')
-          return <br key={i} />;
-
-        if (token.type === 'mono')
-          return (
-            <span key={i} className="inline-flex items-center gap-1">
-              <code className="px-1.5 py-0.5 rounded bg-muted text-[0.8em] font-mono border border-border/60 text-foreground/80">
-                {token.value}
-              </code>
-              <button
-                type="button"
-                onClick={() => handleCopy(token.value)}
-                className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors"
-                title="Copy"
-              >
-                {copied === token.value
-                  ? <Check className="w-3 h-3 text-green-500" />
-                  : <Copy  className="w-3 h-3" />}
-              </button>
-            </span>
-          );
-
-        if (token.type === 'link')
-          return (
-            <Link
-              key={i}
-              href={token.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary underline underline-offset-2 hover:text-primary/80 transition-colors"
-            >
-              {token.label}
-            </Link>
-          );
-
-        return null;
-      })}
-    </p>
-  );
-}
-
 export function AnnouncementDetailModal({
   announcement,
   isOpen,
@@ -119,7 +51,6 @@ export function AnnouncementDetailModal({
                 <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-2xl" />
               )}
 
-              {/* Header */}
               <div className="flex items-start justify-between gap-4 px-6 py-5 border-b border-border shrink-0">
                 <div className="flex-1 min-w-0 space-y-2">
                   <div className="flex items-center gap-2 flex-wrap">
@@ -155,11 +86,9 @@ export function AnnouncementDetailModal({
                 </button>
               </div>
 
-              {/* Body */}
               <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
                 <RenderedContent raw={announcement.content} />
 
-                {/* Meta */}
                 <div className="flex items-center gap-4 pt-4 border-t border-border flex-wrap">
                   <div className="flex items-center gap-2">
                     <Avatar
@@ -181,7 +110,6 @@ export function AnnouncementDetailModal({
                   </div>
                 </div>
 
-                {/* Private recipients */}
                 {!isPublic && announcement.targets.length > 0 && (
                   <div className="space-y-2">
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">

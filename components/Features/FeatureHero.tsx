@@ -3,8 +3,10 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function FeaturesHero() {
+  const router = useRouter();
   return (
     <section className="relative pt-32 pb-24 overflow-hidden bg-background">
       <div className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-primary/10 to-transparent pointer-events-none" />
@@ -30,7 +32,7 @@ export default function FeaturesHero() {
             <ArrowRight size={20} />
           </button>
 
-          <button className="px-7 py-3 rounded-xl border border-border/60 text-foreground font-semibold text-lg hover:bg-foreground/5 transition-all backdrop-blur-md">
+          <button onClick={() => router.push("/features/all-features")} className="px-7 py-3 rounded-xl border border-border/60 text-foreground font-semibold text-lg hover:bg-foreground/5 transition-all backdrop-blur-md hover:cursor-pointer">
             Explore All Features
           </button>
         </div>

@@ -148,7 +148,15 @@ export const TaskSidebar = ({
             </div>
           </div>
         )}
-
+          <div className="flex gap-2">
+        {
+          task.labels.map((l) => (
+              <p key={l.id}>
+{l.label.name}
+              </p>
+          ))
+        }
+        </div>
         <div className="flex items-center gap-3">
           <User size={16} className="text-muted-foreground" />
           <div className="flex-1">

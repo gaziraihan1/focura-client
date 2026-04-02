@@ -42,16 +42,18 @@ export function getActivityDescription(
   const isSubtask = metadata?.isSubtask === true;
 
   const subject =
-    entityType === 'COMMENT'   ? 'comment'   :
-    entityType === 'FILE'      ? 'file'      :
-    entityType === 'MEMBER'    ? 'member'    :
-    entityType === 'PROJECT'   ? 'project'   :
-    entityType === 'WORKSPACE' ? 'workspace' :
-    isSubtask                  ? 'subtask'   :
+    entityType === 'COMMENT'      ? 'comment'    :
+    entityType === 'FILE'         ? 'file'       :
+    entityType === 'MEMBER'       ? 'member'     :
+    entityType === 'PROJECT'      ? 'project'    :
+    entityType === 'WORKSPACE'    ? 'workspace'  :
+    entityType === 'ANNOUNCEMENT' ? 'announcement':
+    isSubtask                     ? 'subtask'    :
     'task';
 
   switch (action) {
     case 'CREATED':
+      if (entityType === 'ANNOUNCEMENT') return 'created an announcement'
       return `created a ${subject}`;
 
     case 'UPDATED':
@@ -66,6 +68,7 @@ export function getActivityDescription(
     case 'DELETED':
       if (entityType === 'COMMENT') return 'deleted a comment';
       if (entityType === 'FILE')    return 'deleted an attachment';
+      if (entityType ===  'ANNOUNCEMENT') return 'deleted an announcement'
       return `deleted a ${subject}`;
 
     case 'STATUS_CHANGED':

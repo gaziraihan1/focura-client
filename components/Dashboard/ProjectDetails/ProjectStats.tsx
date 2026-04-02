@@ -20,6 +20,16 @@ export default function ProjectStats({activeTab, setActiveTab, project}: Project
             >
               Tasks ({project.stats.totalTasks})
             </button>
+             <button
+              onClick={() => setActiveTab('announcements')}
+              className={`pb-4 px-2 font-medium transition border-b-2 ${
+                activeTab === 'announcements'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Announcement ({project.stats.totalAnnouncement})
+            </button>
             <button
               onClick={() => setActiveTab('members')}
               className={`pb-4 px-2 font-medium transition border-b-2 ${

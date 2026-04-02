@@ -29,7 +29,6 @@ export function AnnouncementFilters({
 }: AnnouncementFiltersProps) {
   return (
     <div className="flex items-center gap-2 flex-wrap">
-      {/* Visibility filter */}
       <div className="flex items-center gap-1 p-1 rounded-lg bg-muted">
         {VISIBILITY_OPTIONS.map((opt) => {
           const Icon    = opt.icon;
@@ -53,7 +52,6 @@ export function AnnouncementFilters({
         })}
       </div>
 
-      {/* Pinned toggle */}
       <button
         type="button"
         onClick={() => onIsPinnedChange(isPinned === true ? undefined : true)}
@@ -69,7 +67,6 @@ export function AnnouncementFilters({
         Pinned
       </button>
 
-      {/* Reset */}
       {activeFiltersCount > 0 && (
         <button
           type="button"

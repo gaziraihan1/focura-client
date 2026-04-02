@@ -54,7 +54,7 @@ export function ProjectCardMembers({ members, totalMembers }: ProjectCardMembers
       </div>
       {totalMembers > 3 && (
         <span className="text-xs text-muted-foreground ml-1">
-          +{totalMembers - 3}
+          +{totalMembers - 3 }
         </span>
       )}
     </div>

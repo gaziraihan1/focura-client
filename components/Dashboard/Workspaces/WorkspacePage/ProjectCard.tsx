@@ -4,37 +4,11 @@ import { ProjectCardHeader } from "../ProjectCard/ProjectCardHeader";
 import { ProjectCardDescription } from "../ProjectCard/ProjectCardDescription";
 import { ProjectCardStats } from "../ProjectCard/ProjectCardStats";
 import { ProjectCardFooter } from "../ProjectCard/ProjectCardFooter";
+import { ProjectDetails } from "@/hooks/useProjects";
 
-
-interface ProjectMember {
-  id: string;
-  role: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    image?: string;
-  };
-}
 
 interface ProjectCardProps {
-  project: {
-    id: string;
-    name: string;
-    description?: string | null;
-    color: string;
-    icon?: string | null;
-    status: string;
-    priority: string;
-    dueDate?: string | null;
-    stats?: {
-      totalTasks: number;
-      completedTasks: number;
-      overdueTasks: number;
-      totalMembers: number;
-    };
-    members?: ProjectMember[];
-  };
+  project: ProjectDetails;
   workspaceSlug: string ;
   index: number;
 }
@@ -59,7 +33,7 @@ export function ProjectCard({ project, workspaceSlug, index }: ProjectCardProps)
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
     >
-      <Link href={`/dashboard/workspaces/${workspaceSlug}/projects/${project.id}`}>
+      <Link href={`/dashboard/workspaces/${workspaceSlug}/projects/${project.slug}`}>
         <div className="group p-4 sm:p-6 rounded-lg sm:rounded-xl bg-card border border-border hover:border-primary/50 transition-all cursor-pointer h-full">
           <ProjectCardHeader
             name={project.name}

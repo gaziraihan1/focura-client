@@ -1,3 +1,5 @@
+import { Label } from "@/hooks/useLabels";
+
 // types/task.types.ts
 export interface User {
   id: string;
@@ -100,6 +102,12 @@ export type EnergyType =
   | "LEARNING"
   | "COMMUNICATION"
 
+interface LabelTypes {
+  id: string;
+  labelId: string;
+  taskId: string;
+  label:Label
+}
 export interface Task {
   id: string;
   title: string;
@@ -124,6 +132,7 @@ export interface Task {
   createdBy: User;
   assignees: TaskAssignee[];
   project?: Project;
+  labels:LabelTypes[]
   
   timeTracking?: TimeTracking;
   

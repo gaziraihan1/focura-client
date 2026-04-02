@@ -6,20 +6,26 @@ import { prisma } from "@/lib/prisma";
 import * as argon2 from "argon2";
 import crypto from "crypto";
 
-const isProd      = process.env.NODE_ENV === "production";
+const isProd = process.env.NODE_ENV === "production";
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
-const DUMMY_HASH  = "$argon2id$v=19$m=65536,t=3,p=4$c29tZXNhbHQ$ZHVtbXloYXNo";
+const DUMMY_HASH = "$argon2id$v=19$m=65536,t=3,p=4$c29tZXNhbHQ$ZHVtbXloYXNo";
 
-interface GoogleProfile { email_verified?: boolean; verified_email?: boolean; }
+interface GoogleProfile {
+  email_verified?: boolean;
+  verified_email?: boolean;
+}
 
 const refreshLocks = new Map<string, Promise<any>>();
 
 // ─── HMAC exchange proof ──────────────────────────────────────────────────────
 function createExchangeProof(
-  userId: string, email: string, role: string, sessionId: string
+  userId: string,
+  email: string,
+  role: string,
+  sessionId: string,
 ) {
   const timestamp = Date.now();
-  const payload   = `${userId}${email}${role}${sessionId}${timestamp}`;
+  const payload = `${userId}${email}${role}${sessionId}${timestamp}`;
   const signature = crypto
     .createHmac("sha256", process.env.NEXTAUTH_SECRET!)
     .update(payload)
@@ -29,21 +35,30 @@ function createExchangeProof(
 
 async function exchangeForTokens(
   user: { id: string; email: string; role: string },
-  sessionId: string
+  sessionId: string,
 ): Promise<{
-  accessToken: string; refreshToken: string;
-  accessTokenExpiry: number; refreshTokenExpiry: number;
+  accessToken: string;
+  refreshToken: string;
+  accessTokenExpiry: number;
+  refreshTokenExpiry: number;
 } | null> {
   try {
     const { timestamp, signature } = createExchangeProof(
-      user.id, user.email, user.role, sessionId
+      user.id,
+      user.email,
+      user.role,
+      sessionId,
     );
     const res = await fetch(`${BACKEND_URL}/api/auth/exchange`, {
-      method:  "POST",
+      method: "POST",
       headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify({
-        userId: user.id, email: user.email, role: user.role,
-        sessionId, timestamp, signature,
+      body: JSON.stringify({
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+        sessionId,
+        timestamp,
+        signature,
       }),
     });
     if (!res.ok) {
@@ -59,10 +74,12 @@ async function exchangeForTokens(
 
 async function silentRefresh(
   sessionId: string,
-  refreshToken: string
+  refreshToken: string,
 ): Promise<{
-  accessToken: string; refreshToken: string;
-  accessTokenExpiry: number; refreshTokenExpiry: number;
+  accessToken: string;
+  refreshToken: string;
+  accessTokenExpiry: number;
+  refreshTokenExpiry: number;
 } | null> {
   // If a refresh is already in-flight for this session, wait for it
   const existing = refreshLocks.get(sessionId);
@@ -71,10 +88,10 @@ async function silentRefresh(
   // Create the promise handles BEFORE starting async work
   // so the lock is in place synchronously
   let resolve!: (value: any) => void;
-  let reject!:  (reason: any) => void;
+  let reject!: (reason: any) => void;
   const promise = new Promise<any>((res, rej) => {
     resolve = res;
-    reject  = rej;
+    reject = rej;
   });
 
   // Lock is set synchronously — any concurrent callback arriving now
@@ -83,9 +100,9 @@ async function silentRefresh(
 
   try {
     const res = await fetch(`${BACKEND_URL}/api/auth/refresh`, {
-      method:  "POST",
+      method: "POST",
       headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify({ refreshToken }),
+      body: JSON.stringify({ refreshToken }),
     });
 
     const result = res.ok ? await res.json() : null;
@@ -99,25 +116,29 @@ async function silentRefresh(
   }
 }
 
-
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
 
   providers: [
     GoogleProvider({
-      clientId:     process.env.GOOGLE_CLIENT_ID!,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       authorization: {
-        params: { prompt: "consent", access_type: "offline", response_type: "code" },
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
       },
       allowDangerousEmailAccountLinking: true,
       httpOptions: { timeout: 10000 },
     }),
 
     CredentialsProvider({
-      id: "credentials", name: "Credentials",
+      id: "credentials",
+      name: "Credentials",
       credentials: {
-        email:    { label: "Email",    type: "email" },
+        email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
@@ -125,23 +146,35 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid login attempt.");
         }
         const email = credentials.email.toLowerCase().trim();
-        const user  = await prisma.user.findUnique({
-          where:  { email },
+        const user = await prisma.user.findUnique({
+          where: { email },
           select: {
-            id: true, email: true, name: true, password: true,
-            role: true, image: true, emailVerified: true,
+            id: true,
+            email: true,
+            name: true,
+            password: true,
+            role: true,
+            image: true,
+            emailVerified: true,
           },
         });
         if (!user || !user.password) {
           await argon2.verify(DUMMY_HASH, "invalid");
           throw new Error("Invalid credentials.");
         }
-        if (!user.emailVerified) throw new Error("Please verify your email to log in.");
-        const isValid = await argon2.verify(user.password, credentials.password);
+        if (!user.emailVerified)
+          throw new Error("Please verify your email to log in.");
+        const isValid = await argon2.verify(
+          user.password,
+          credentials.password,
+        );
         if (!isValid) throw new Error("Invalid credentials.");
-        await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { lastLoginAt: new Date() },
+        });
         const { password: _pw, ...safeUser } = user;
-        return safeUser ;
+        return safeUser;
       },
     }),
   ],
@@ -149,37 +182,43 @@ export const authOptions: NextAuthOptions = {
   events: {
     async linkAccount({ user, account }) {
       if (account.provider === "google") {
-        await prisma.user.update({ where: { id: user.id }, data: { emailVerified: new Date() } });
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { emailVerified: new Date() },
+        });
       }
     },
   },
 
-  session: { strategy: "jwt", maxAge: 7 * 24 * 60 * 60, updateAge: 24 * 60 * 60 },
+  session: {
+    strategy: "jwt",
+    maxAge: 7 * 24 * 60 * 60,
+    updateAge: 24 * 60 * 60,
+  },
   secret: process.env.NEXTAUTH_SECRET,
 
   callbacks: {
     async jwt({ token, user }) {
-
-      if (user) {
+      if (user && !token.backendToken) {
         const sessionId = crypto.randomUUID();
-        token.id        = user.id;
-        token.role      = user.role ?? "USER";
+        token.id = user.id;
+        token.role = user.role ?? "USER";
         token.sessionId = sessionId;
 
         const tokens = await exchangeForTokens(
           { id: user.id, email: user.email!, role: user.role ?? "USER" },
-          sessionId
+          sessionId,
         );
 
         if (tokens) {
-          token.backendToken       = tokens.accessToken;
+          token.backendToken = tokens.accessToken;
           token.backendTokenExpiry = tokens.accessTokenExpiry;
-          token.refreshToken       = tokens.refreshToken;
+          token.refreshToken = tokens.refreshToken;
           token.refreshTokenExpiry = tokens.refreshTokenExpiry;
         } else {
-          token.backendToken       = "";
+          token.backendToken = "";
           token.backendTokenExpiry = 0;
-          token.refreshToken       = "";
+          token.refreshToken = "";
           token.refreshTokenExpiry = 0;
           console.error("⚠️  Exchange failed on sign-in — session degraded");
         }
@@ -195,80 +234,85 @@ export const authOptions: NextAuthOptions = {
       if (nearExpiry && token.refreshToken) {
         const tokens = await silentRefresh(
           token.sessionId as string,
-          token.refreshToken as string
+          token.refreshToken as string,
         );
 
         if (tokens) {
-  token.backendToken = tokens.accessToken;
-  token.backendTokenExpiry = tokens.accessTokenExpiry;
-  token.refreshToken = tokens.refreshToken;
-  token.refreshTokenExpiry = tokens.refreshTokenExpiry;
-} else {
-  const refreshExpired =
-    !token.refreshTokenExpiry ||
-    Date.now() > (token.refreshTokenExpiry as number);
+          token.backendToken = tokens.accessToken;
+          token.backendTokenExpiry = tokens.accessTokenExpiry;
+          token.refreshToken = tokens.refreshToken;
+          token.refreshTokenExpiry = tokens.refreshTokenExpiry;
+        } else {
+          const refreshExpired =
+            !token.refreshTokenExpiry ||
+            Date.now() > (token.refreshTokenExpiry as number);
 
-  if (refreshExpired) {
-    throw new Error("SESSION_EXPIRED");
-  }
+          if (refreshExpired) {
+            throw new Error("SESSION_EXPIRED");
+          }
 
-  token.backendToken = "";
-  token.backendTokenExpiry = 0;
-}
+          token.backendToken = "";
+          token.backendTokenExpiry = 0;
+        }
       }
 
       return token;
     },
 
     async session({ session, token }) {
-      session.user.id      = token.id as string;
-      session.user.role    = token.role as string;
+      session.user.id = token.id as string;
+      session.user.role = token.role as string;
       session.backendToken = token.backendToken as string;
-      session.sessionId    = token.sessionId as string;
+      session.sessionId = token.sessionId as string;
       return session;
     },
 
     async signIn({ user, account, profile }) {
       if (account?.provider === "google") {
         try {
-          const gp         = profile as GoogleProfile;
-          const isVerified = gp?.email_verified === true || gp?.verified_email === true;
-          const existing   = await prisma.user.findUnique({ where: { email: user.email! } });
+          const gp = profile as GoogleProfile;
+          const isVerified =
+            gp?.email_verified === true || gp?.verified_email === true;
+          const existing = await prisma.user.findUnique({
+            where: { email: user.email! },
+          });
+
           if (existing) {
+            // Existing user — safe to update
             await prisma.user.update({
               where: { email: user.email! },
               data: {
-                lastLoginAt:   new Date(),
-                emailVerified: isVerified ? (existing.emailVerified ?? new Date()) : existing.emailVerified,
-                name:          existing.name  || user.name,
-                image:         existing.image || user.image,
+                lastLoginAt: new Date(),
+                emailVerified: isVerified
+                  ? (existing.emailVerified ?? new Date())
+                  : existing.emailVerified,
+                name: existing.name || user.name,
+                image: existing.image || user.image,
               },
             });
-          } else {
-            if (isVerified) {
-              await prisma.user.update({
-                where: { email: user.email! },
-                data:  { emailVerified: new Date() },
-              }).catch(() => {
-              });
-            }
           }
+          // ↑ New users: adapter creates them; emailVerified is handled
+          //   by the `linkAccount` event which already fires for Google.
+          //   No else branch needed — the broken update() is removed.
+
           return true;
         } catch (err) {
           if (!isProd) console.error("Google sign-in error:", err);
           return true;
         }
       }
+
       if (account?.provider === "credentials" && !user.emailVerified) {
         throw new Error("Please verify your email to log in.");
       }
+
       return true;
     },
   },
 
   pages: {
     signIn: "/authentication/login",
-    error:  "/authentication/error",
+    error: "/authentication/error",
   },
   debug: !isProd && process.env.NEXTAUTH_DEBUG === "true",
 };
@@ -276,19 +320,30 @@ export const authOptions: NextAuthOptions = {
 declare module "next-auth" {
   interface Session {
     user: {
-      id: string; email: string; name?: string | null;
-      image?: string | null; role: string; emailVerified?: Date | null;
+      id: string;
+      email: string;
+      name?: string | null;
+      image?: string | null;
+      role: string;
+      emailVerified?: Date | null;
     };
     backendToken: string;
     sessionId: string;
   }
-  interface User { role?: string; emailVerified: Date | null; }
+  interface User {
+    role?: string;
+    emailVerified: Date | null;
+  }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    id: string; role: string; sessionId: string;
-    backendToken: string; backendTokenExpiry: number;
-    refreshToken: string; refreshTokenExpiry: number;
+    id: string;
+    role: string;
+    sessionId: string;
+    backendToken: string;
+    backendTokenExpiry: number;
+    refreshToken: string;
+    refreshTokenExpiry: number;
   }
 }

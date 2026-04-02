@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { Attachment, TaskComment } from '@/types/task.types';
-import { projectKeys } from './useProjects';
+import { ProjectDetails, projectKeys } from './useProjects';
 import { Activity, activityKeys } from './useActivity';
 
 export interface Task {
@@ -467,26 +467,66 @@ export function useUpdateTaskStatus() {
       );
       return response?.data;
     },
+
     onMutate: async ({ id, status }) => {
-      await qc.cancelQueries({ queryKey: taskKeys.detail(id) });
+      await Promise.all([
+        qc.cancelQueries({ queryKey: taskKeys.detail(id) }),
+        qc.cancelQueries({ queryKey: taskKeys.lists() }),
+        qc.cancelQueries({ queryKey: projectKeys.all }), // ← covers all project caches
+      ]);
+
       const previousTask = qc.getQueryData<Task>(taskKeys.detail(id));
+
+      const projectCacheSnapshots: Array<{
+        queryKey: readonly unknown[];
+        data: ProjectDetails;
+      }> = [];
+
+      qc.getQueriesData<ProjectDetails>({ queryKey: projectKeys.all }).forEach(
+        ([queryKey, projectData]) => {
+          if (!projectData?.tasks) return;
+          const taskExists = projectData.tasks.some(t => t.id === id);
+          if (!taskExists) return;
+
+          projectCacheSnapshots.push({ queryKey, data: projectData });
+
+          qc.setQueryData<ProjectDetails>(queryKey, {
+            ...projectData,
+            tasks: projectData.tasks.map(t =>
+              t.id === id ? { ...t, status } : t
+            ),
+          });
+        }
+      );
+
       if (previousTask) {
         qc.setQueryData<Task>(taskKeys.detail(id), { ...previousTask, status });
       }
-      return { previousTask };
+
+      return { previousTask, projectCacheSnapshots };
     },
+
     onError: (_, { id }, context) => {
       if (context?.previousTask) {
         qc.setQueryData(taskKeys.detail(id), context.previousTask);
       }
+      context?.projectCacheSnapshots?.forEach(({ queryKey, data }) => {
+        qc.setQueryData(queryKey, data);
+      });
     },
-    onSettled: (_, __, { id }) => {
+
+    onSettled: (data, _, { id }) => {
+      if (data) {
+        qc.setQueryData<Task>(taskKeys.detail(id), data);
+      }
+
       qc.invalidateQueries({ queryKey: taskKeys.detail(id) });
       qc.invalidateQueries({ queryKey: taskKeys.lists() });
       qc.invalidateQueries({ queryKey: taskKeys.stats() });
+
       setTimeout(() => {
-        qc.invalidateQueries({ queryKey: activityKeys.task(id) })
-      }, 800)
+        qc.invalidateQueries({ queryKey: activityKeys.task(id) });
+      }, 800);
     },
   });
 }

@@ -70,6 +70,7 @@ useEffect(() => {
   const isWorkspaceRoute = segments[0] === "dashboard" && segments[1] === "workspaces";
   const thirdSegment = segments[2];
   const hideLayout = isWorkspaceRoute && thirdSegment && thirdSegment !== "new-workspace";
+  console.log(profile)
 
   if (isLoading) {
     return (
