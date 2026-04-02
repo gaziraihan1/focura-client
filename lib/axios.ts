@@ -133,11 +133,20 @@ const handleAxiosError = async (
     error.response?.data?.message || error.message || "Unknown error";
   const url = error.config?.url || "";
   const code = error.response?.data?.code;
-  if (status === 401 && code !== "TOKEN_EXPIRED" && code !== "INVALID_TOKEN") {
+  if (
+    status === 401 &&
+    code !== "TOKEN_EXPIRED" &&
+    code !== "INVALID_TOKEN" &&
+    code !== "TOKEN_INVALID"
+  ) {
   return Promise.reject(error);
 }
 
-  if (code === "TOKEN_EXPIRED" || code === "INVALID_TOKEN") {
+  if (
+    code === "TOKEN_EXPIRED" ||
+    code === "INVALID_TOKEN" ||
+    code === "TOKEN_INVALID"
+  ) {
     invalidateTokenCache();
     toast.error("Session expired. Please login again.");
     signOut({ callbackUrl: "/authentication/login" });

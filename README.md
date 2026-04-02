@@ -1,188 +1,168 @@
 # Focura
 
-Focura is a modern, workspace-based task and collaboration platform built for individuals and teams who want clarity, structure, and focus in their daily work.
+Focura is a focus-first productivity and collaboration platform for individuals and small teams.
 
-It supports **personal tasks**, **team collaboration**, **multiple task views**, and **scalable architecture**, designed with real-world SaaS growth in mind.
+It helps users turn scattered tasks into clear priorities, protect deep work time, and maintain steady progress without unnecessary complexity.
 
 ---
 
-## 🚀 Features
+## What Focura Solves
 
-### 🏢 Workspace System
+- Too many tasks, low clarity on what to do next
+- Constant context switching and attention fragmentation
+- Team misalignment on ownership, deadlines, and progress
+- Busy days with low meaningful output
+
+---
+
+## Core Product Capabilities
+
+### Workspace and Team Collaboration
 - Multiple workspaces per user
-- Role-based access (Owner, Admin, Member)
+- Role-based access (Owner, Admin, Member, Guest)
+- Invitations and membership management
 - Workspace-level data isolation
 
-### ✅ Task Management
-- Personal and team tasks
-- Task assignment
-- Status and priority tracking
-- Due dates and overdue detection
-- Task comments and discussions
+### Project and Task Execution
+- Project planning with statuses, priorities, members, and timelines
+- Task lifecycle with assignees, labels, comments, and activity history
+- Subtasks, dependencies, recurrence, and daily planning workflows
+- Multiple work views: List, Calendar, and Kanban
 
-### 📊 Task Statistics & Insights
-- Total tasks
-- Overdue tasks
-- Completed tasks
-- Assigned vs personal task separation
-- Workspace-scoped analytics
+### Focus and Productivity Intelligence
+- Focus sessions (Pomodoro, deep work, custom)
+- Daily focus flows and execution-oriented task metadata
+- Capacity and workload-aware planning primitives
+- Workspace analytics and usage insights
 
-### 🗂 Multiple Task Views
-- **List View** – clean, filterable task lists
-- **Calendar View** – deadline-focused planning
-- **Kanban View** – workflow-based task movement
+### Communication and Collaboration Signals
+- In-app notifications with real-time updates (SSE)
+- Mentions, comments, and collaborative discussion on tasks
+- Workspace announcements and meeting coordination
+- Activity logs for accountability and transparency
 
-### 🔐 Authentication & Security
-- Secure authentication using NextAuth
-- JWT-based backend authorization
-- Protected API routes
-- Role and permission checks
+### Billing and Plan Management
+- Workspace-level subscriptions and plan limits
+- Plan upgrades, cancel/reactivate flows, and billing status
+- Invoice history and usage-aware limits
+- Admin-level billing visibility
+
+### Security and Access Control
+- NextAuth-based authentication (credentials + Google)
+- Backend token exchange and refresh flow
+- Role-aware authorization checks
+- Rate limiting and audit-oriented security events
 
 ---
 
-## 🧱 Tech Stack
+## Tech Stack
 
 ### Frontend
-- **Next.js** (App Router)
-- **React**
-- **TypeScript**
-- **Tailwind CSS**
-- **Framer Motion**
-- **TanStack Query (React Query)**
+- Next.js (App Router)
+- React
+- TypeScript
+- Tailwind CSS
+- TanStack Query
 
 ### Backend
-- **Node.js**
-- **Express.js**
-- **PostgreSQL**
-- **Prisma ORM**
+- Node.js
+- Express.js
+- PostgreSQL
+- Prisma ORM
 
-### Authentication
-- **NextAuth**
-- **JWT (Backend Token)**
+### Authentication and Session
+- NextAuth
+- Backend-issued JWT access/refresh tokens
 
 ---
 
-## 🏗 Architecture Overview
+## Architecture Snapshot
 
-Focura follows a **clean, scalable architecture**:
-
-- Frontend and backend are decoupled
-- API-first design
-- Workspace-scoped data queries
-- Centralized Axios instance with interceptors
-- Prisma for strict data modeling and type safety
+Focura follows a decoupled API-first architecture:
 
 ```
 Frontend (Next.js)
-   ↓
-Axios Client (JWT + Interceptors)
-   ↓
-Express API (Auth Middleware)
-   ↓
+   ->
+Axios Client (auth interceptors + typed API hooks)
+   ->
+Backend API (Express auth/permission middleware)
+   ->
 Prisma ORM
-   ↓
+   ->
 PostgreSQL
 ```
 
----
-
-## 🔐 Security Practices
-
-- HTTPS enforced in production
-- Authorization headers injected via Axios interceptors
-- Token expiration and invalid token handling
-- Workspace-level authorization checks
-- Rate limiting on sensitive endpoints (login, registration)
-
-> End-to-end encryption is applied for data in transit (HTTPS) and data at rest via database-level encryption.
+Key properties:
+- Frontend and backend are decoupled
+- Workspace-scoped data access
+- Centralized API client and error handling
+- Schema-driven domain model with Prisma
 
 ---
 
-## 📂 Project Structure (Simplified)
+## Environment Variables (Minimum)
 
-```
-src/
- ├── app/                # Next.js App Router
- ├── components/         # UI components
- ├── constant/            # Intent
- ├── context/             # For context
- ├── hooks/              # Custom React hooks
- ├── lib/                # Axios, utilities, constants
- ├── prisma/             # Prisma schema
- ├── types/              # Types seperation
- ├── utils/              # Utility function
-```
+Create a `.env` file:
 
----
-
-## ⚙️ Environment Variables
-
-Create a `.env` file and configure:
-
-```
+```env
 DATABASE_URL=""
 NODE_ENV="development"
-BACKEND_JWT_SECRET=""
 
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET=""
-NEXT_PUBLIC_API_URL=
+
+BACKEND_URL="http://localhost:5000"
+NEXT_PUBLIC_API_URL="http://localhost:5000"
 
 GOOGLE_CLIENT_ID=""
 GOOGLE_CLIENT_SECRET=""
 
-EMAIL_SERVER_HOST=""
-EMAIL_SERVER_PORT=
-EMAIL_SERVER_USER=""   
-EMAIL_SERVER_PASSWORD=""
-EMAIL_FROM=""
-
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=""
-CLOUDINARY_API_KEY=""
-CLOUDINARY_API_SECRET=""
-
+UPSTASH_REDIS_REST_URL=""
+UPSTASH_REDIS_REST_TOKEN=""
 ```
+
+See `AUTHENTICATION.md` for security and token-flow-specific environment requirements.
 
 ---
 
-## 🛠 Installation & Setup
+## Local Setup
 
-### 1. Clone the repository
-```
+1. Clone repository
+```bash
 git clone https://github.com/gaziraihan1/focura-client.git
-cd focura-client
+cd focura-client/focura
 ```
 
-### 2. Install dependencies
-```
+2. Install dependencies
+```bash
 npm install
 ```
 
-### 3. Setup Prisma
-```
+3. Generate Prisma client and run migrations
+```bash
 npx prisma generate
 npx prisma migrate dev
 ```
 
-### 4. Run the project
-```
+4. Start development server
+```bash
 npm run dev
 ```
 
 ---
 
-## 🧪 Development Status
+## Current Scope Status
 
-- Core task system: ✅ Complete
-- Calendar view: ✅ Complete
-- Kanban view: ✅ Complete
-- Analytics & stats: ✅ Complete
-- Notifications: 🚧 In progress
-- Billing & plans: 🚧 Planned
+- Workspace management: available
+- Project and task workflows: available
+- Calendar and Kanban views: available
+- Notifications: available
+- Billing and plans: available
+- Admin dashboard: available
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome.
 
@@ -190,23 +170,9 @@ Please read:
 - `CONTRIBUTING.md`
 - `CODE_OF_CONDUCT.md`
 
-before submitting pull requests.
-
 ---
 
-## 📄 License
+## License
 
-This project is licensed under the **Source-Available License**.  
-See the [LICENSE](./LICENSE) file for details.
-
----
-
-## 👤 Author
-
-**Mohammad Raihan Gazi**  
-Full Stack Developer  
-Dhaka, Bangladesh
-
----
-
-> Focura is built with long-term scalability, clean architecture, and real SaaS principles in mind.
+This project is licensed under the Source-Available License.
+See [LICENSE](./LICENSE) for details.

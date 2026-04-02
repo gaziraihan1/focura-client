@@ -7,6 +7,7 @@ import ThemeSwitcher from "../Themes/ThemeSwitcher";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { logout } from "@/lib/auth/logout";
+import { useIsFocuraAdmin } from "@/hooks/useFeatures";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -18,6 +19,8 @@ const navLinks = [
 ];
 
 export default function NavbarMain() {
+  const {data: isAdmin} = useIsFocuraAdmin();
+  console.log(isAdmin)
   const [open, setOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { data: session, status } = useSession();
@@ -57,6 +60,16 @@ const isAuthenticated =
                 {link.name}
               </Link>
             ))}
+            {
+              isAdmin && (
+                <Link
+                href={'/admin-dashboard'}
+                className="text-sm font-medium text-foreground/80 hover:text-foreground transition"
+                >
+                Admin Dashboard
+                </Link>
+              )
+            }
 
             {isAuthenticated ? (
               <>
@@ -121,6 +134,17 @@ const isAuthenticated =
                 {link.name}
               </Link>
             ))}
+            {
+              isAdmin && (
+                <Link
+                href={'/admin-dashboard'}
+                className="text-sm py-2 font-medium text-foreground/80 hover:text-foreground transition"
+                onClick={() => setOpen(false)}
+                >
+                  Admin Dashboard
+                </Link>
+              )
+            }
 
             {session ? (
               <>

@@ -23,7 +23,7 @@ export default function AdminProjectsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-2.5">
           <FolderOpen className="w-5 h-5 text-primary" />
           <h1 className="text-xl font-bold text-foreground">Projects</h1>
@@ -31,7 +31,7 @@ export default function AdminProjectsPage() {
             <span className="text-sm text-muted-foreground">({data.pagination.totalCount})</span>
           )}
         </div>
-        <div className="relative w-64">
+        <div className="relative w-full sm:w-64">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
           <input
             value={input}
@@ -43,7 +43,8 @@ export default function AdminProjectsPage() {
       </div>
 
       <div className="rounded-xl border border-border bg-card overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-245 text-sm">
           <thead>
             <tr className="border-b border-border bg-muted/30">
               {['Project', 'Workspace', 'Created by', 'Status', 'Tasks', 'Members', 'Created'].map((h) => (
@@ -97,7 +98,8 @@ export default function AdminProjectsPage() {
                   </tr>
                 ))}
           </tbody>
-        </table>
+          </table>
+        </div>
       </div>
 
       <Pagination

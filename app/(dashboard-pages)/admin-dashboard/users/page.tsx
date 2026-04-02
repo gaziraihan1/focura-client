@@ -14,7 +14,7 @@ export default function AdminUsersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-2.5">
           <Users className="w-5 h-5 text-primary" />
           <h1 className="text-xl font-bold text-foreground">Users</h1>
@@ -22,7 +22,7 @@ export default function AdminUsersPage() {
             <span className="text-sm text-muted-foreground">({data.pagination.totalCount})</span>
           )}
         </div>
-        <div className="relative w-64">
+        <div className="relative w-full sm:w-64">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
           <input
             value={input}
@@ -34,7 +34,8 @@ export default function AdminUsersPage() {
       </div>
 
       <div className="rounded-xl border border-border bg-card overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-190 text-sm">
           <thead>
             <tr className="border-b border-border bg-muted/30">
               {['User', 'Role', 'Owns', 'Member of', 'Joined'].map((h) => (
@@ -72,7 +73,7 @@ export default function AdminUsersPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3 text-xs text-muted-foreground tabular-nums">
-                      {u._count.workspaces} workspace{u._count.workspaces !== 1 ? 's' : ''}
+                      {u._count.ownedWorkspaces} workspace{u._count.ownedWorkspaces !== 1 ? 's' : ''}
                     </td>
                     <td className="px-4 py-3 text-xs text-muted-foreground tabular-nums">
                       {u._count.workspaceMember} workspace{u._count.workspaceMember !== 1 ? 's' : ''}
@@ -83,7 +84,8 @@ export default function AdminUsersPage() {
                   </tr>
                 ))}
           </tbody>
-        </table>
+          </table>
+        </div>
       </div>
 
       <Pagination

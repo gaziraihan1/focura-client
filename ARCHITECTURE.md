@@ -255,8 +255,8 @@ All stats are:
 - Background job queues
 - Real-time updates (WebSockets)
 - File storage service
-- Subscription & billing system
-- Activity logs
+- Advanced AI-assisted planning workflows
+- Deeper observability and operations tooling
 - Multi-region deployment
 
 ---

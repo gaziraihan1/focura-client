@@ -1,54 +1,48 @@
-'use client';
+"use client";
 
-import { useState, useCallback } from 'react';
-import { useQuery }              from '@tanstack/react-query';
-import { api }                   from '@/lib/axios';
+import { useState, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 import type {
   AdminStats,
   AdminWorkspace,
   AdminWorkspaceDetail,
   AdminUser,
+  AdminUserDetail,
   AdminProject,
+  AdminBilling,
   AdminActivity,
   AdminPaginatedResponse,
-} from '@/types/admin.types';
-
-// ─── Query keys ───────────────────────────────────────────────────────────────
+} from "@/types/admin.types";
 
 export const adminKeys = {
-  all:             ['admin']                              as const,
-  stats:           ['admin', 'stats']                    as const,
-  workspaces:      (p: object) => ['admin', 'workspaces', p]       as const,
-  workspaceDetail: (id: string) => ['admin', 'workspaces', id]     as const,
-  users:           (p: object) => ['admin', 'users', p]            as const,
-  projects:        (p: object) => ['admin', 'projects', p]         as const,
-  activity:        (p: object) => ['admin', 'activity', p]         as const,
+  stats: ["admin", "stats"] as const,
+  workspaces: (p: object) => ["admin", "workspaces", p] as const,
+  workspaceDetail: (slug: string) => ["admin", "workspace", slug] as const,
+  users: (p: object) => ["admin", "users", p] as const,
+  userDetail: (id: string) => ["admin", "user", id] as const,
+  projects: (p: object) => ["admin", "projects", p] as const,
+  billing: (p: object) => ["admin", "billing", p] as const,
+  activity: (p: object) => ["admin", "activity", p] as const,
 };
 
-// ─── Shared param builder ─────────────────────────────────────────────────────
-
-function buildParams(p: {
-  page?: number; pageSize?: number; search?: string; workspaceId?: string;
-}): string {
+function buildParams(p: Record<string, string | number | undefined>): string {
   const params = new URLSearchParams();
-  if (p.page)        params.append('page',        String(p.page));
-  if (p.pageSize)    params.append('pageSize',    String(p.pageSize));
-  if (p.search)      params.append('search',      p.search);
-  if (p.workspaceId) params.append('workspaceId', p.workspaceId);
+  Object.entries(p).forEach(([k, v]) => {
+    if (v !== undefined && v !== "") params.append(k, String(v));
+  });
   return params.toString();
 }
 
-async function fetchAdmin<T>(url: string): Promise<T> {
-  const res = await api.get<never>(url) as unknown as T;
-  return res;
+async function get<T>(url: string): Promise<T> {
+  return api.get<never>(url) as unknown as T;
 }
 
-// ─── Pagination state helper ──────────────────────────────────────────────────
+// ─── Pagination state ─────────────────────────────────────────────────────────
 
 export function useAdminPagination(defaultPageSize = 20) {
-  const [page,     setPage]     = useState(1);
-  const [search,   setSearch]   = useState('');
-  const [pageSize, setPageSize] = useState(defaultPageSize);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
 
   const handleSearch = useCallback((v: string) => {
     setSearch(v);
@@ -57,107 +51,133 @@ export function useAdminPagination(defaultPageSize = 20) {
 
   const reset = useCallback(() => {
     setPage(1);
-    setSearch('');
+    setSearch("");
   }, []);
 
-  return { page, setPage, search, handleSearch, pageSize, setPageSize, reset };
+  return {
+    page,
+    setPage,
+    search,
+    handleSearch,
+    pageSize: defaultPageSize,
+    reset,
+  };
 }
 
-// ─── Stats ────────────────────────────────────────────────────────────────────
+// ─── Hooks ────────────────────────────────────────────────────────────────────
 
 export function useAdminStats() {
   return useQuery({
     queryKey: adminKeys.stats,
     staleTime: 60 * 1000,
     queryFn: async () => {
-      const res = await fetchAdmin<{ data: AdminStats }>('/api/admin/stats');
+      const res = await get<{ data: AdminStats }>("/api/admin/stats");
       return res.data;
     },
   });
 }
-
-// ─── Workspaces ───────────────────────────────────────────────────────────────
 
 export function useAdminWorkspaces(params: {
-  page?: number; pageSize?: number; search?: string;
+  page?: number;
+  pageSize?: number;
+  search?: string;
 }) {
   return useQuery({
-    queryKey:        adminKeys.workspaces(params),
-    staleTime:       30 * 1000,
+    queryKey: adminKeys.workspaces(params),
+    staleTime: 30 * 1000,
     placeholderData: (prev) => prev,
-    queryFn: async () => {
-      const res = await fetchAdmin<AdminPaginatedResponse<AdminWorkspace>>(
+    queryFn: async () =>
+      get<AdminPaginatedResponse<AdminWorkspace>>(
         `/api/admin/workspaces?${buildParams(params)}`,
-      );
-      return res;
-    },
+      ),
   });
 }
 
-export function useAdminWorkspaceDetail(id: string) {
+export function useAdminWorkspaceDetail(slug: string) {
   return useQuery({
-    queryKey: adminKeys.workspaceDetail(id),
-    enabled:  !!id,
+    queryKey: adminKeys.workspaceDetail(slug),
+    enabled: !!slug,
     staleTime: 30 * 1000,
     queryFn: async () => {
-      const res = await fetchAdmin<{ data: AdminWorkspaceDetail }>(
-        `/api/admin/workspaces/${id}`,
+      const res = await get<{ data: AdminWorkspaceDetail }>(
+        `/api/admin/workspaces/${slug}`,
       );
       return res.data;
     },
   });
 }
 
-// ─── Users ────────────────────────────────────────────────────────────────────
-
 export function useAdminUsers(params: {
-  page?: number; pageSize?: number; search?: string;
+  page?: number;
+  pageSize?: number;
+  search?: string;
 }) {
   return useQuery({
-    queryKey:        adminKeys.users(params),
-    staleTime:       30 * 1000,
+    queryKey: adminKeys.users(params),
+    staleTime: 30 * 1000,
     placeholderData: (prev) => prev,
-    queryFn: async () => {
-      const res = await fetchAdmin<AdminPaginatedResponse<AdminUser>>(
+    queryFn: async () =>
+      get<AdminPaginatedResponse<AdminUser>>(
         `/api/admin/users?${buildParams(params)}`,
-      );
-      return res;
-    },
+      ),
   });
 }
 
-// ─── Projects ─────────────────────────────────────────────────────────────────
+export function useAdminUserDetail(id: string) {
+  return useQuery({
+    queryKey: adminKeys.userDetail(id),
+    enabled: !!id,
+    staleTime: 30 * 1000,
+    queryFn: async () => {
+      const res = await get<{ data: AdminUserDetail }>(
+        `/api/admin/users/${id}`,
+      );
+      return res.data;
+    },
+  });
+}
 
 export function useAdminProjects(params: {
-  page?: number; pageSize?: number; search?: string; workspaceId?: string;
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  workspaceId?: string;
 }) {
   return useQuery({
-    queryKey:        adminKeys.projects(params),
-    staleTime:       30 * 1000,
+    queryKey: adminKeys.projects(params),
+    staleTime: 30 * 1000,
     placeholderData: (prev) => prev,
-    queryFn: async () => {
-      const res = await fetchAdmin<AdminPaginatedResponse<AdminProject>>(
+    queryFn: async () =>
+      get<AdminPaginatedResponse<AdminProject>>(
         `/api/admin/projects?${buildParams(params)}`,
-      );
-      return res;
-    },
+      ),
   });
 }
 
-// ─── Activity ─────────────────────────────────────────────────────────────────
-
-export function useAdminActivity(params: {
-  page?: number; pageSize?: number;
+export function useAdminBilling(params: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
 }) {
   return useQuery({
-    queryKey:        adminKeys.activity(params),
-    staleTime:       15 * 1000,
+    queryKey: adminKeys.billing(params),
+    staleTime: 30 * 1000,
     placeholderData: (prev) => prev,
-    queryFn: async () => {
-      const res = await fetchAdmin<AdminPaginatedResponse<AdminActivity>>(
+    queryFn: async () =>
+      get<AdminPaginatedResponse<AdminBilling>>(
+        `/api/admin/billing?${buildParams(params)}`,
+      ),
+  });
+}
+
+export function useAdminActivity(params: { page?: number; pageSize?: number }) {
+  return useQuery({
+    queryKey: adminKeys.activity(params),
+    staleTime: 15 * 1000,
+    placeholderData: (prev) => prev,
+    queryFn: async () =>
+      get<AdminPaginatedResponse<AdminActivity>>(
         `/api/admin/activity?${buildParams(params)}`,
-      );
-      return res;
-    },
+      ),
   });
 }
