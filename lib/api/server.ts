@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth/authOptions";
 const API_BASE_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:5000"
-    : process.env.NEXT_PUBLIC_API_URL;
+    : process.env.BACKEND_URL;
 
 export async function serverApi<T = unknown>(
   endpoint: string,
