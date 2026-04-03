@@ -267,7 +267,7 @@ export function EngagementSection({
       )}
 
       {/* Collaboration leaderboard */}
-      <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-3.5 sm:p-5">
+      <div className="bg-card border border-border max-w-full rounded-xl sm:rounded-2xl p-3.5 sm:p-5">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 mb-4 sm:mb-5">
           <div className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-muted-foreground" />
@@ -287,8 +287,8 @@ export function EngagementSection({
           </div>
         </div>
 
-        <div className="overflow-x-auto -mx-3.5 sm:-mx-5 px-3.5 sm:px-5 pb-1">
-          <table className="w-full min-w-96">
+        <div className="w-full max-w-full overflow-x-auto">
+          <table className="w-full table-fixed">
             <thead>
               <tr className="border-b border-border">
                 {["Member", "Tasks", "Comments", "Assigned", "Score"].map(
@@ -311,8 +311,8 @@ export function EngagementSection({
                   key={user.userId}
                   className="hover:bg-muted/50 transition-colors"
                 >
-                  <td className="py-2.5 sm:py-3">
-                    <div className="flex items-center gap-2 sm:gap-2.5">
+                  <td className="py-2.5 sm:py-3 min-w-0">
+                    <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
                       <span
                         className={`text-sm font-bold w-5 text-center ${
                           medalColors[index] ?? "text-muted-foreground"

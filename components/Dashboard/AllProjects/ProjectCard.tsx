@@ -33,7 +33,7 @@ export function ProjectCard({ project, index, onNavigate, showModal, onCloseModa
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
               {project.icon ? (
-                <div className="text-3xl">{project.icon}</div>
+                <div className="text-xl sm:text-3xl">{project.icon}</div>
               ) : (
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg"
@@ -43,7 +43,7 @@ export function ProjectCard({ project, index, onNavigate, showModal, onCloseModa
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-bold text-foreground truncate group-hover:text-primary transition">
+                <h3 className="sm:text-lg font-bold text-foreground truncate group-hover:text-primary transition">
                   {project.name}
                 </h3>
                 {project.workspace && (

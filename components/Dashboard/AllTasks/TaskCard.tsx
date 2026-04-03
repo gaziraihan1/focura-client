@@ -29,17 +29,17 @@ export function TaskCard({ task, index }: TaskCardProps) {
     >
       <Link href={`/dashboard/tasks/${task.id}`}>
         <div className="p-4 rounded-xl bg-card border border-border hover:shadow-lg hover:border-primary/50 transition-all cursor-pointer group">
-          <div className="flex items-start gap-4">
+          <div className="sm:flex items-start gap-4">
             <div className="shrink-0 mt-1">
               <div
-                className={`w-10 h-10 rounded-lg ${getStatusColor(
+                className={`w-6 h-6 sm:w-10 sm:h-10 rounded-lg ${getStatusColor(
                   task.status
                 )} flex items-center justify-center`}
               >
                 {task.status === "COMPLETED" ? (
-                  <CheckCircle2 size={20} />
+                  <CheckCircle2 size={16} className="sm:h-10 sm:w-10" />
                 ) : (
-                  <Clock size={20} />
+                  <Clock size={16} className="sm:h-10 sm:w-10" />
                 )}
               </div>
             </div>

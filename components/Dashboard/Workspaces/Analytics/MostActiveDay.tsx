@@ -35,7 +35,7 @@ export function MostActiveDay({ data }: MostActiveDayProps) {
         </div>
 
         <div className="flex-1">
-          <p className="text-2xl font-bold">{data.day || 'No data'}</p>
+          <p className="text-xl sm:text-2xl font-bold">{data.day || 'No data'}</p>
           <p className="text-sm text-muted-foreground mt-1">
             {data.count} {data.count === 1 ? 'activity' : 'activities'}
           </p>

@@ -21,7 +21,7 @@ export function MeetingFilters({
 }: Props) {
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <div className="flex items-center rounded-lg border bg-card p-1 gap-0.5">
+      <div className="flex flex-wrap items-center rounded-lg border bg-card p-1 gap-0.5">
         {STATUSES.map((s) => {
           const active = s === 'ALL' ? !activeStatus : activeStatus === s;
           return (

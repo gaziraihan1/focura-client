@@ -12,9 +12,9 @@ export function PriorityDistribution({ data }: PriorityDistributionProps) {
   const {maxCount, priorityConfig, total} = priorityDistribution({data})
 
   return (
-    <div className="bg-card border rounded-lg p-6">
+    <div className="bg-card border rounded-lg p-4">
       <div className="mb-6">
-        <h2 className="text-lg font-semibold">Tasks by Priority</h2>
+        <h2 className="sm:text-lg font-semibold">Tasks by Priority</h2>
         <p className="text-sm text-muted-foreground mt-1">
           Active and in-progress tasks
         </p>

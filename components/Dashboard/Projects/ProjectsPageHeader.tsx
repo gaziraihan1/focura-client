@@ -30,9 +30,9 @@ export function ProjectsPageHeader({ onNewProject }: ProjectsPageHeaderProps) {
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={onNewProject}
-        className="lg:px-6 lg:py-3 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2 shadow-lg shadow-primary/20 font-medium px-4 py-2"
+        className="lg:px-6 lg:py-3 rounded-xl bg-primary text-xs sm:text-sm  text-primary-foreground hover:opacity-90 transition flex items-center gap-2 shadow-lg shadow-primary/20 font-medium px-4 py-2"
       >
-        <Plus size={20} />
+        <Plus size={16} className="sm:h-10 sm:w-10"/>
         New Project
       </motion.button>
     </motion.div>

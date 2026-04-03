@@ -16,9 +16,9 @@ export function ProfilePageHeader({
   onSave,
 }: ProfilePageHeaderProps) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center flex-wrap gap-3 justify-between">
       <div>
-        <h1 className="text-3xl font-bold text-foreground">Profile</h1>
+        <h1 className="text-xl sm:text-3xl font-bold text-foreground">Profile</h1>
         <p className="text-muted-foreground mt-1">
           Manage your account settings and preferences
         </p>
@@ -27,7 +27,7 @@ export function ProfilePageHeader({
       {!isEditing ? (
         <button
           onClick={onEdit}
-          className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
+          className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
         >
           Edit Profile
         </button>

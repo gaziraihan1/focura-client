@@ -28,7 +28,7 @@ export function CalendarDayView({
   }
 
   return (
-    <div className="h-full bg-background p-6 overflow-y-auto scrollbar-hide">
+    <div className="h-full bg-background px-3 py-5 overflow-y-auto scrollbar-hide">
       <div className="mb-6">
         <DayViewHeader currentDate={currentDate} />
         <DayViewStats

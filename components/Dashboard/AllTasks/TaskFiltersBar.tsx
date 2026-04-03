@@ -48,12 +48,12 @@ export function TaskFiltersBar({
     <div className="rounded-xl bg-card border border-border p-4">
       <div className="flex flex-col lg:flex-row gap-4 flex-wrap">
         {/* Tabs */}
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {tabs.map((tab) => (
             <button
               key={tab.value}
               onClick={() => onTabChange(tab.value)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+              className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition ${
                 activeTab === tab.value
                   ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:bg-accent"
@@ -75,7 +75,7 @@ export function TaskFiltersBar({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search tasks..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg bg-background border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 ring-primary outline-none"
+            className="text-xs sm:text-sm w-full pl-10 pr-4 py-2 rounded-lg bg-background border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 ring-primary outline-none"
           />
         </div>
 
@@ -83,7 +83,7 @@ export function TaskFiltersBar({
         <select
           value={selectedStatus}
           onChange={(e) => onStatusChange(e.target.value)}
-          className="px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
+          className="text-xs sm:text-sm px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
         >
           <option value="all">All Status</option>
           <option value="TODO">To Do</option>
@@ -97,7 +97,7 @@ export function TaskFiltersBar({
         <select
           value={selectedPriority}
           onChange={(e) => onPriorityChange(e.target.value)}
-          className="px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
+          className="text-xs sm:text-sm px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
         >
           <option value="all">All Priority</option>
           <option value="URGENT">Urgent</option>
@@ -114,7 +114,7 @@ export function TaskFiltersBar({
           <select
             value={sortBy}
             onChange={(e) => onSortChange(e.target.value as Sorting)}
-            className="px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
+            className="text-xs sm:text-sm px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
           >
             <option value="createdAt">Created Date</option>
             <option value="dueDate">Due Date</option>

@@ -11,12 +11,12 @@ export function TaskStatusChart({ data }: TaskStatusChartProps) {
   const { conicGradient, colors, total } = statusChartData({ data });
 
   return (
-    <div className="bg-card border rounded-lg p-6">
-      <h2 className="text-lg font-semibold mb-6">Task Status Distribution</h2>
+    <div className="bg-card border rounded-lg p-4">
+      <h2 className="sm:text-lg font-semibold mb-6">Task Status Distribution</h2>
 
       {/* Donut Chart */}
       <div className="flex items-center justify-center mb-6">
-        <div className="relative w-48 h-48">
+        <div className="relative w-44 h-44">
           <div
             className="w-full h-full rounded-full"
             style={{
@@ -35,7 +35,7 @@ export function TaskStatusChart({ data }: TaskStatusChartProps) {
       {/* Legend */}
       <div className="space-y-2">
         {data.map((item, index) => (
-          <div key={item.status} className="flex items-center justify-between">
+          <div key={item.status} className="flex flex-wrap items-center justify-between">
             <div className="flex items-center gap-2">
               <div
                 className="w-3 h-3 rounded-full"

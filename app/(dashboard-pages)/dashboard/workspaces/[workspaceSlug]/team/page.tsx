@@ -67,7 +67,7 @@ export default function MainTeamPage() {
   }
 
   return (
-    <div className="min-h-100 flex flex-col gap-6 p-4 sm:p-6">
+    <div className="min-h-100  flex flex-col gap-6 px-2 sm:px-4 lg:px-0">
       <div>
         <h1 className="text-xl font-bold text-foreground">
           {workspaceName ? `${workspaceName} — Team` : "Team"}

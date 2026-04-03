@@ -16,10 +16,10 @@ export function CalendarHeader({
 }: CalendarHeaderProps) {
   return (
     <div className="border-b border-border bg-card sticky top-0 z-10">
-      <div className="max-w-[1600px] mx-auto px-2 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-400 mx-auto px-2 sm:px-6 lg:px-8 py-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text">
+            <h1 className="text-xl sm:text-3xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text">
               Time Intelligence
             </h1>
             <p className="text-muted-foreground mt-1">
@@ -44,7 +44,7 @@ export function CalendarHeader({
                 <ChevronLeft className="w-4 h-4" />
               </button>
 
-              <span className="px-4 text-sm font-medium min-w-[140px] text-center">
+              <span className="px-4 text-sm font-medium min-w-35 text-center">
                 {currentDate.toLocaleString('default', {
                   month: 'long',
                   year: 'numeric',

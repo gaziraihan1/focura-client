@@ -25,8 +25,8 @@ export function StorageTrendChart({ trend }: StorageTrendChartProps) {
     >
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h2 className="text-lg font-semibold">Storage Trend</h2>
-          <p className="text-sm text-muted-foreground mt-1">Last 30 days</p>
+          <h2 className="sm:text-lg font-semibold">Storage Trend</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">Last 30 days</p>
         </div>
         <div className="flex items-center gap-2">
           <TrendingUp

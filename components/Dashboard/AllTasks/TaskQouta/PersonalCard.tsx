@@ -13,7 +13,7 @@ export function PersonalCard({ q }: { q: PersonalQuotaInfo }) {
     <div className="rounded-xl border border-border bg-card p-4 flex flex-col gap-4">
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-primary/8 flex items-center justify-center shrink-0">
             <User className="w-4 h-4 text-primary" />
           </div>
@@ -67,7 +67,7 @@ export function PersonalCard({ q }: { q: PersonalQuotaInfo }) {
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-between pt-1 border-t border-border">
+      <div className="flex flex-wrap items-center justify-between pt-1 border-t border-border">
         <div className="flex items-center gap-1.5 text-muted-foreground">
           <Clock className="w-3.5 h-3.5" />
           <span className="text-xs">Resets in {formatResetTime(q.resetAt)}</span>

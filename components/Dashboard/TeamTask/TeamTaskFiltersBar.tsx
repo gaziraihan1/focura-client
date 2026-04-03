@@ -50,7 +50,7 @@ export function TeamTaskFiltersBar({
           <button
             key={key}
             onClick={() => onScopeChange(key as TeamTaskScope)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition ${
+            className={`text-xs px-4 py-2 rounded-lg sm:text-sm font-medium flex items-center gap-2 transition ${
               scope === key
                 ? "bg-primary text-primary-foreground"
                 : "text-muted-foreground hover:bg-accent"
@@ -67,14 +67,14 @@ export function TeamTaskFiltersBar({
         {/* Search */}
         <div className="relative flex-1">
           <Search
-            size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+            size={14}
+            className="absolute left-4 sm:left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
           />
           <input
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search team tasks..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg bg-background border border-border focus:ring-2 ring-primary outline-none"
+            className="text-xs sm:text-sm w-full pl-10 pr-4 py-2 rounded-lg bg-background border border-border focus:ring-2 ring-primary outline-none"
           />
         </div>
 
@@ -82,7 +82,7 @@ export function TeamTaskFiltersBar({
         <select
           value={status}
           onChange={(e) => onStatusChange(e.target.value)}
-          className="px-4 py-2 rounded-lg bg-background border border-border focus:ring-2 ring-primary outline-none"
+          className="text-xs sm:text-sm px-4 py-2 rounded-lg bg-background border border-border focus:ring-2 ring-primary outline-none"
         >
           <option value="all">All Status</option>
           <option value="TODO">To Do</option>
@@ -96,7 +96,7 @@ export function TeamTaskFiltersBar({
         <select
           value={priority}
           onChange={(e) => onPriorityChange(e.target.value)}
-          className="px-4 py-2 rounded-lg bg-background border border-border focus:ring-2 ring-primary outline-none"
+          className="text-xs sm:text-sm px-4 py-2 rounded-lg bg-background border border-border focus:ring-2 ring-primary outline-none"
         >
           <option value="all">All Priority</option>
           <option value="URGENT">Urgent</option>
@@ -108,7 +108,7 @@ export function TeamTaskFiltersBar({
         {/* Needs Attention */}
         <button
           onClick={onAttentionToggle}
-          className={`px-4 py-2 rounded-lg border flex items-center gap-2 text-sm transition ${
+          className={`text-xs sm:text-sm px-4 py-2 rounded-lg border flex items-center gap-2 transition ${
             attentionOnly
               ? "bg-destructive/10 text-destructive border-destructive/30"
               : "border-border text-muted-foreground hover:bg-accent"

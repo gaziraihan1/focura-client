@@ -40,7 +40,7 @@ export function WorkspaceHeader({
 
   return (
     <div className="flex flex-col space-y-4">
-      <div className="flex items-center gap-3 sm:gap-4">
+      <div className="flex flex-wrap items-center gap-3 sm:gap-4">
         <button
           onClick={() => router.push("/dashboard/workspaces")}
           className="p-2 rounded-lg hover:bg-accent transition shrink-0"
@@ -88,7 +88,7 @@ export function WorkspaceHeader({
             onClick={() => router.push(`/dashboard/workspaces/${workspaceSlug}/projects/new-project`)}
             className="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center justify-center gap-2 text-sm sm:text-base"
           >
-            <Plus size={16} className="sm:w-[18px] sm:h-[18px]" />
+            <Plus size={16} className="sm:w-4.5 sm:h-4.5" />
             <span className="hidden xs:inline">New Project</span>
             <span className="xs:hidden">New Project</span>
           </button>

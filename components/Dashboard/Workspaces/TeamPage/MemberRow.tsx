@@ -1,18 +1,15 @@
 'use client';
 
 import React from 'react';
-import { Avatar }  from '@/components/Shared/Avatar';
-import { RoleBadge }  from './RoleBadge';
+import { Avatar }       from '@/components/Shared/Avatar';
+import { RoleBadge }    from './RoleBadge';
 import { RoleDropdown, WorkspaceRoleOption } from './RoleDropdown';
 import { WorkspaceMemberRow } from '@/hooks/useTeamPage';
 
 interface MemberRowProps {
   member: WorkspaceMemberRow;
-  /** true when the logged-in user is the owner of this workspace */
   isCurrentUser: boolean;
-  /** Whether the viewer has permission to change roles */
   canManage: boolean;
-  /** Is this member the *only* OWNER? If so we must not let them be demoted. */
   isOnlyOwner: boolean;
   onRoleChange: (memberId: string, role: WorkspaceRoleOption) => void;
 }
@@ -24,19 +21,26 @@ export function MemberRow({
   isOnlyOwner,
   onRoleChange,
 }: MemberRowProps) {
-  const showDropdown = canManage;
+  const showDropdown    = canManage;
   const dropdownDisabled = isCurrentUser || (member.role === 'OWNER' && isOnlyOwner);
-  const disabledReason = isCurrentUser
+  const disabledReason  = isCurrentUser
     ? 'You cannot change your own role'
     : 'Cannot demote the only Owner';
 
   return (
     <tr className="group border-b border-border/50 last:border-0 hover:bg-muted/40 transition-colors duration-100">
-      {/* avatar + name */}
-      <td className="px-4 py-3">
-        <div className="flex items-center gap-3">
-          <Avatar image={member.user.image} name={member.displayName} size="md" />
-          <div className="min-w-0">
+
+      {/* ── Member ─────────────────────────────────────────────────────── */}
+      <td className="px-4 py-3 min-w-0">
+        {/* min-w-0 on BOTH the td and the flex child is required for truncate to work */}
+        <div className="flex items-center gap-3 min-w-0">
+          {/* Avatar must not shrink */}
+          <div className="shrink-0">
+            <Avatar image={member.user.image} name={member.displayName} size="md" />
+          </div>
+
+          {/* Text block — must be min-w-0 to allow truncation inside a flex row */}
+          <div className="min-w-0 flex-1">
             <p className="text-sm font-semibold text-foreground truncate">
               {member.displayName}
               {isCurrentUser && (
@@ -48,16 +52,16 @@ export function MemberRow({
         </div>
       </td>
 
-      {/* joined date */}
+      {/* ── Joined ─────────────────────────────────────────────────────── */}
       <td className="hidden md:table-cell px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
         {new Date(member.joinedAt).toLocaleDateString(undefined, {
-          year: 'numeric',
+          year:  'numeric',
           month: 'short',
-          day: 'numeric',
+          day:   'numeric',
         })}
       </td>
 
-      {/* role badge (always visible) + dropdown (replaces badge when canManage) */}
+      {/* ── Role ───────────────────────────────────────────────────────── */}
       <td className="px-4 py-3">
         {showDropdown ? (
           <RoleDropdown
@@ -71,6 +75,7 @@ export function MemberRow({
           <RoleBadge role={member.role} />
         )}
       </td>
+
     </tr>
   );
 }

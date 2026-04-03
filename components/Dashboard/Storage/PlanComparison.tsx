@@ -21,8 +21,8 @@ export function PlanComparison({
       className="bg-card border rounded-lg p-6"
     >
       <div className="mb-6">
-        <h2 className="text-lg font-semibold">Workspace Plan Comparison</h2>
-        <p className="text-sm text-muted-foreground mt-1">
+        <h2 className="sm:text-lg font-semibold">Workspace Plan Comparison</h2>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1">
           Upgrade {workspaceName} for more storage and features
         </p>
       </div>

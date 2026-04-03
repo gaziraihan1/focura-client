@@ -39,11 +39,11 @@ export function StorageSummaryCards({ storageInfo }: StorageSummaryCardsProps) {
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Workspace</p>
-              <h2 className="text-2xl font-bold">{workspaceName}</h2>
+              <h2 className="text-xl sm:text-2xl font-bold">{workspaceName}</h2>
             </div>
           </div>
           <div className="text-right">
-            <p className="text-sm text-muted-foreground mb-1">Current Plan</p>
+            <p className="text-xs sm:text-sm text-muted-foreground mb-1">Current Plan</p>
             <span className="px-3 py-1.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium">
               {plan}
             </span>
@@ -62,7 +62,7 @@ export function StorageSummaryCards({ storageInfo }: StorageSummaryCardsProps) {
             <div className="p-2 bg-primary/10 rounded-lg">
               <Database className="w-5 h-5 text-primary" />
             </div>
-            <span className="text-2xl font-semibold">{formatStorageSize(usedMB)}</span>
+            <span className="text-lg sm:text-2xl font-semibold">{formatStorageSize(usedMB)}</span>
           </div>
           <p className="text-sm text-muted-foreground">Storage Used</p>
         </motion.div>
@@ -77,7 +77,7 @@ export function StorageSummaryCards({ storageInfo }: StorageSummaryCardsProps) {
             <div className="p-2 bg-blue-500/10 rounded-lg">
               <HardDrive className="w-5 h-5 text-blue-500" />
             </div>
-            <span className="text-2xl font-semibold">{formatStorageSize(totalMB)}</span>
+            <span className="text-lg sm:text-2xl font-semibold">{formatStorageSize(totalMB)}</span>
           </div>
           <p className="text-sm text-muted-foreground">Total Limit</p>
         </motion.div>
@@ -92,7 +92,7 @@ export function StorageSummaryCards({ storageInfo }: StorageSummaryCardsProps) {
             <div className="p-2 bg-green-500/10 rounded-lg">
               <CheckCircle className="w-5 h-5 text-green-500" />
             </div>
-            <span className="text-2xl font-semibold">{formatStorageSize(remainingMB)}</span>
+            <span className="text-lg sm:text-2xl font-semibold">{formatStorageSize(remainingMB)}</span>
           </div>
           <p className="text-sm text-muted-foreground">Remaining</p>
         </motion.div>
@@ -105,7 +105,7 @@ export function StorageSummaryCards({ storageInfo }: StorageSummaryCardsProps) {
         >
           <div className="flex items-start justify-between mb-4">
             <div className="p-2 bg-muted rounded-lg">{getStatusIcon()}</div>
-            <span className="text-2xl font-semibold">{percentage}%</span>
+            <span className="text-lg sm:text-2xl font-semibold">{percentage}%</span>
           </div>
           <p className="text-sm text-muted-foreground mb-3">Usage</p>
 

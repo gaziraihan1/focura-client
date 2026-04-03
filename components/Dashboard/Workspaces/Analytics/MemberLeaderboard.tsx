@@ -13,15 +13,15 @@ export function MemberLeaderboard({ data }: MemberLeaderboardProps) {
   const maxScore = Math.max(...data.map((m) => m.contributionScore), 1);
 
   return (
-    <div className="bg-card border rounded-lg p-6">
-      <div className="flex items-center justify-between mb-6">
+    <div className="bg-card border rounded-lg p-4">
+      <div className="flex flex-wrap items-center gap-4 justify-between mb-6">
         <div>
-          <h2 className="text-lg font-semibold">Team Leaderboard</h2>
+          <h2 className="sm:text-lg font-semibold">Team Leaderboard</h2>
           <p className="text-sm text-muted-foreground mt-1">
             Top contributors by activity
           </p>
         </div>
-        <div className="px-3 py-1.5 bg-primary/10 rounded-lg">
+        <div className="px-2 py-1 sm:px-3 sm:py-1.5 bg-primary/10 rounded-lg">
           <span className="text-sm font-medium text-primary">
             {data.length} member{data.length !== 1 ? 's' : ''}
           </span>
@@ -37,8 +37,8 @@ export function MemberLeaderboard({ data }: MemberLeaderboardProps) {
               key={member.userId}
               className="group p-4 rounded-lg border hover:bg-muted/50 transition-colors"
             >
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-3 min-w-0 flex-1">
+              <div className="flex flex-wrap gap-2 items-center justify-between mb-3">
+                <div className="flex flex-wrap items-center gap-3 min-w-0 flex-1">
                   {/* Rank Badge */}
                   {index < 3 && (
                     <div
@@ -59,9 +59,9 @@ export function MemberLeaderboard({ data }: MemberLeaderboardProps) {
                     <Image
                       src={member.userImage}
                       width={40}
-                      height={4}
+                      height={40}
                       alt={member.userName || 'User'}
-                      className="w-10 h-10 rounded-full shrink-0"
+                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-full shrink-0"
                     />
                   ) : (
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
@@ -95,25 +95,24 @@ export function MemberLeaderboard({ data }: MemberLeaderboardProps) {
               </div>
 
               {/* Stats Grid */}
-              <div className="grid grid-cols-4 gap-4 mb-3">
-                <div className="text-center">
-                  <p className="text-sm font-semibold">{member.completedTasks}</p>
-                  <p className="text-xs text-muted-foreground">Tasks</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm font-semibold">{formatHours(member.totalHours)}</p>
-                  <p className="text-xs text-muted-foreground">Hours</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm font-semibold">{member.commentsCount}</p>
-                  <p className="text-xs text-muted-foreground">Comments</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm font-semibold">{member.filesCount}</p>
-                  <p className="text-xs text-muted-foreground">Files</p>
-                </div>
-              </div>
-
+<div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-3">
+  <div className="text-center">
+    <p className="text-sm font-semibold">{member.completedTasks}</p>
+    <p className="text-xs text-muted-foreground">Tasks</p>
+  </div>
+  <div className="text-center">
+    <p className="text-sm font-semibold">{formatHours(member.totalHours)}</p>
+    <p className="text-xs text-muted-foreground">Hours</p>
+  </div>
+  <div className="text-center">
+    <p className="text-sm font-semibold">{member.commentsCount}</p>
+    <p className="text-xs text-muted-foreground">Comments</p>
+  </div>
+  <div className="text-center">
+    <p className="text-sm font-semibold">{member.filesCount}</p>
+    <p className="text-xs text-muted-foreground">Files</p>
+  </div>
+</div>
               {/* Progress Bar */}
               <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
                 <div

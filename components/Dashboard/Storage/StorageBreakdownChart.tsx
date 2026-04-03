@@ -22,7 +22,7 @@ export function StorageBreakdownChart({
       animate={{ opacity: 1, y: 0 }}
       className="bg-card border rounded-lg p-6"
     >
-      <h2 className="text-lg font-semibold mb-6">Storage Breakdown</h2>
+      <h2 className="sm:text-lg font-semibold mb-6">Storage Breakdown</h2>
 
       <div className="space-y-6">
         <div className="w-full h-4 bg-muted rounded-full overflow-hidden flex">
@@ -87,7 +87,7 @@ export function StorageBreakdownChart({
 
         <div className="pt-4 border-t">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-muted-foreground">
+            <span className="text-xs sm:text-sm font-medium text-muted-foreground">
               Total Storage
             </span>
             <span className="text-lg font-semibold">

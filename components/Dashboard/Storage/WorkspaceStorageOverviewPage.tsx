@@ -25,7 +25,7 @@ export function WorkspaceStorageOverviewPage({ workspaceId }: WorkspaceStoragePa
       <div className="space-y-8">
         {/* Header */}
         <div className="flex-1">
-          <h1 className="text-3xl font-semibold tracking-tight">Storage Overview</h1>
+          <h1 className="text-xl sm:text-3xl font-semibold tracking-tight">Storage Overview</h1>
           <p className="text-muted-foreground mt-2">
             Monitor and manage workspace file storage
           </p>
@@ -46,7 +46,7 @@ export function WorkspaceStorageOverviewPage({ workspaceId }: WorkspaceStoragePa
       <div className="space-y-8 pb-8">
         {/* Header */}
         <div className="flex-1">
-          <h1 className="text-3xl font-semibold tracking-tight">Storage Overview</h1>
+          <h1 className="text-xl sm:text-3xl font-semibold tracking-tight">Storage Overview</h1>
           <p className="text-muted-foreground mt-2">
             Monitor and manage workspace file storage
           </p>
@@ -79,7 +79,7 @@ export function WorkspaceStorageOverviewPage({ workspaceId }: WorkspaceStoragePa
               <HardDrive className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <h1 className="text-3xl font-semibold tracking-tight">Storage Overview</h1>
+              <h1 className="text-xl sm:text-3xl font-semibold tracking-tight">Storage Overview</h1>
               <p className="text-muted-foreground mt-1">
                 {data.storageInfo.workspaceName}
               </p>

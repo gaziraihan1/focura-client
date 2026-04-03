@@ -56,7 +56,7 @@ export function ControlBarActions({
           <span className="capitalize font-medium text-foreground">{sort}</span>
         </button>
 
-        <div className="hidden group-hover:block absolute top-full left-0 mt-1 bg-card border border-border rounded-lg shadow-lg z-10 min-w-[150px]">
+        <div className="hidden group-hover:block absolute top-full left-0 mt-1 bg-card border border-border rounded-lg shadow-lg z-10 min-w-37.5">
           {(["priority", "aging", "recent", "comments"] as const).map((s) => (
             <button
               key={s}

@@ -30,7 +30,7 @@ export function WorkloadChart({ data }: WorkloadChartProps) {
   return (
     <div className="bg-card border rounded-lg p-6">
       <div className="mb-6">
-        <h2 className="text-lg font-semibold">Workload Distribution</h2>
+        <h2 className="sm:text-lg font-semibold">Workload Distribution</h2>
         <p className="text-sm text-muted-foreground mt-1">
           Current task assignments per team member
         </p>
@@ -51,7 +51,7 @@ export function WorkloadChart({ data }: WorkloadChartProps) {
           </p>
         </div>
         <div className="p-3 rounded-lg border bg-red-500/5 border-red-500/20">
-          <p className="text-xs text-muted-foreground mb-1">Overloaded</p>
+          <p className="text-xs text-muted-foreground mb-1 truncate">Overloaded</p>
           <p className="text-2xl font-bold text-red-600 dark:text-red-400">
             {overloaded}
           </p>

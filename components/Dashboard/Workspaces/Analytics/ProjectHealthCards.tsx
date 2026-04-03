@@ -16,8 +16,8 @@ export function ProjectHealthCards({ data }: ProjectHealthCardsProps) {
   };
 
   return (
-    <div className="bg-card border rounded-lg p-6">
-      <h2 className="text-lg font-semibold mb-6">Project Health</h2>
+    <div className="bg-card border rounded-lg p-4">
+      <h2 className="sm:text-lg font-semibold mb-6">Project Health</h2>
 
       <div className="space-y-4">
         {data.map((project) => (

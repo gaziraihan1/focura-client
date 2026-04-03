@@ -13,7 +13,7 @@ export function TeamTasksPageHeader({
         <Users className="w-5 h-5 text-muted-foreground" />
         Team Tasks
       </h1>
-      <p className="text-sm text-muted-foreground">
+      <p className="text-xs sm:text-sm text-muted-foreground">
         {workspaceId
           ? "Tasks assigned in this workspace"
           : "Work that requires coordination and shared accountability"}

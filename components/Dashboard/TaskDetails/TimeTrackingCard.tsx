@@ -54,7 +54,7 @@ export const TimeTrackingCard = ({
         </div>
 
         {estimatedHours && timeTracking.timeProgress !== null && (
-          <div className="flex-1 min-w-[200px] max-w-md">
+          <div className="flex-1 min-w-50 max-w-md">
             <div className="w-full h-3 bg-background/50 rounded-full overflow-hidden">
               <div
                 className={`h-full transition-all ${

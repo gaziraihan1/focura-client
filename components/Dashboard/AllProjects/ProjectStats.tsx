@@ -72,8 +72,8 @@ function StatsCard({
       <div className="flex items-center gap-3">
         {icon}
         <div>
-          <p className="text-2xl font-bold">{value}</p>
-          <p className="text-sm opacity-80">{label}</p>
+          <p className="text-xl sm:text-2xl font-bold">{value}</p>
+          <p className="text-xs sm:text-sm opacity-80">{label}</p>
         </div>
       </div>
     </div>

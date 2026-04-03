@@ -36,7 +36,7 @@ export default function WorkspaceProjectsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-2 sm:px-4">
       <WorkspaceProjectsPageHeader
         workspaceName={workspace!.name}
         workspaceSlug={workspaceSlug}

@@ -17,7 +17,7 @@ export function WorkspaceSettingsTabs({
   onTabChange,
 }: WorkspaceSettingsTabsProps) {
   return (
-    <div className="flex gap-2 border-b border-border">
+    <div className="flex flex-wrap gap-2 border-b border-border">
       {TABS.map((tab) => (
         <button
           key={tab.id}

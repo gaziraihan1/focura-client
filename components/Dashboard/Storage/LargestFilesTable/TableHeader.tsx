@@ -10,8 +10,8 @@ export function TableHeader({ filterType, setFilterType }: TableHeaderProps) {
   return (
     <div className="flex items-center flex-wrap justify-between mb-6 gap-4">
       <div>
-        <h2 className="text-lg font-semibold">Largest Files</h2>
-        <p className="text-sm text-muted-foreground mt-1">
+        <h2 className="sm:text-lg font-semibold">Largest Files</h2>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1">
           Manage workspace storage
         </p>
       </div>

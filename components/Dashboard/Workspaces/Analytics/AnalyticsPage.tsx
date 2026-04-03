@@ -80,11 +80,11 @@ export function AnalyticsPage({
   if (!overview) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="flex flex-col items-center gap-4 text-center max-w-md">
+        <div className="flex flex-col items-center gap-4 mx-auto text-center max-w-md">
           <BarChart3 className="w-12 h-12 text-muted-foreground" />
           <div>
             <h3 className="text-lg font-semibold">No Analytics Data</h3>
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="text-xs sm:text-sm text-muted-foreground mt-2">
               Analytics data is not available for this workspace.
             </p>
           </div>
@@ -94,15 +94,15 @@ export function AnalyticsPage({
   }
 
   return (
-    <div className="space-y-8 pb-8">
+    <div className="space-y-8 pb-8 px-2 sm:px-4 lg:px-0 mx-auto">
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
         <div className="flex-1">
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
               <BarChart3 className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <h1 className="text-3xl font-semibold tracking-tight">Analytics</h1>
+              <h1 className="text-2xl font-semibold tracking-tight">Analytics</h1>
               <p className="text-muted-foreground mt-1">
                 Comprehensive workspace insights and metrics
               </p>

@@ -15,7 +15,7 @@ export function FilterSelect<T extends string>({
   placeholder,
 }: FilterSelectProps<T>) {
   return (
-    <div className="flex-1 min-w-[200px]">
+    <div className="flex-1 min-w-50">
       <select
         value={value || 'all'}
         onChange={(e) => onChange(e.target.value)}

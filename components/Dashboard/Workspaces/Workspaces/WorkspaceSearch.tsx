@@ -19,7 +19,7 @@ export function WorkspaceSearch({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Search workspaces..."
-        className="w-full pl-10 pr-4 py-3 rounded-lg bg-card border focus:ring-2 ring-primary outline-none"
+        className="text-xs sm:text-sm w-full pl-10 pr-4 py-3 rounded-lg bg-card border focus:ring-2 ring-primary outline-none"
       />
     </div>
   );

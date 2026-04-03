@@ -26,14 +26,14 @@ export function UserContributionsTable({
       animate={{ opacity: 1, y: 0 }}
       className="bg-card border rounded-lg p-6"
     >
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center flex-wrap gap-3 justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-500/10 rounded-lg">
             <Users className="w-5 h-5 text-blue-500" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold">Team Storage Usage</h2>
-            <p className="text-sm text-muted-foreground">
+            <h2 className="sm:text-lg font-semibold">Team Storage Usage</h2>
+            <p className="text-xs sm:text-sm text-muted-foreground">
               Storage contribution by team members
             </p>
           </div>
@@ -54,7 +54,7 @@ export function UserContributionsTable({
             transition={{ delay: index * 0.05 }}
             className="group p-4 rounded-lg border hover:bg-muted/50 transition-colors"
           >
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center flex-wrap justify-between mb-3">
               <div className="flex items-center gap-3 min-w-0 flex-1">
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                   <UserIcon className="w-5 h-5 text-primary" />
@@ -108,7 +108,7 @@ export function UserContributionsTable({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-muted-foreground" />
-            <span className="text-sm font-medium text-muted-foreground">
+            <span className="text-xs sm:text-sm font-medium text-muted-foreground">
               Total Team Storage
             </span>
           </div>

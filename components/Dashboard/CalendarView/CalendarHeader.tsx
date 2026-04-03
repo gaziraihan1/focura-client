@@ -48,7 +48,7 @@ export function CalendarHeader({
               <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             
-            <h1 className="text-base sm:text-xl lg:text-2xl font-semibold min-w-[140px] sm:min-w-[180px] lg:min-w-[220px] text-center">
+            <h1 className="text-base sm:text-xl lg:text-2xl font-semibold min-w-35 sm:min-w-45 lg:min-w-55 text-center">
               {view === 'month' && (
                 <>
                   <span className="hidden sm:inline">{format(currentDate, 'MMMM yyyy')}</span>

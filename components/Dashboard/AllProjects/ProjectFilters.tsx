@@ -41,15 +41,15 @@ export function ProjectFilters({
         {/* Search */}
         <div className="relative flex-1">
           <Search
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
-            size={20}
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none sm:w-10 sm:h-10"
+            size={16}
           />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search projects by name, description, or workspace..."
-            className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 ring-primary/50 outline-none transition"
+            className="text-xs sm:text-sm w-full pl-12 pr-4 py-3.5 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 ring-primary/50 outline-none transition"
           />
         </div>
 
@@ -58,13 +58,13 @@ export function ProjectFilters({
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={onToggleFilters}
-          className={`px-5 py-3.5 rounded-xl border transition flex items-center gap-2.5 font-medium ${
+          className={`text-xs sm:text-sm px-5 py-3.5 rounded-xl border transition flex items-center gap-2.5 font-medium ${
             showFilters || activeFiltersCount > 0
               ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/20"
               : "border-border text-foreground hover:bg-accent"
           }`}
         >
-          <Filter size={18} />
+          <Filter size={14} className="sm:h-8 sm:w-8" />
           Filters
           {activeFiltersCount > 0 && (
             <span className="px-2.5 py-0.5 rounded-full bg-primary-foreground text-primary text-xs font-bold">

@@ -14,20 +14,18 @@ interface MembersTabProps {
   onRoleChange: (memberId: string, role: WorkspaceRoleOption) => void;
 }
 
-// filter chips
 const ROLE_FILTERS: { label: string; value: string | null }[] = [
-  { label: 'All',           value: null },
-  { label: 'Owners',       value: 'OWNER' },
-  { label: 'Admins',       value: 'ADMIN' },
-  { label: 'Members',      value: 'MEMBER' },
-  { label: 'Guests',       value: 'GUEST' },
+  { label: 'All',     value: null },
+  { label: 'Owners',  value: 'OWNER' },
+  { label: 'Admins',  value: 'ADMIN' },
+  { label: 'Members', value: 'MEMBER' },
+  { label: 'Guests',  value: 'GUEST' },
 ];
 
 export function MembersTab({ members, currentUserId, canManage, onRoleChange }: MembersTabProps) {
-  const [search, setSearch]       = useState('');
+  const [search, setSearch]         = useState('');
   const [roleFilter, setRoleFilter] = useState<string | null>(null);
 
-  // is there only one OWNER total?
   const ownerCount = members.filter((m) => m.role === 'OWNER').length;
 
   const filtered = useMemo(() => {
@@ -38,7 +36,7 @@ export function MembersTab({ members, currentUserId, canManage, onRoleChange }: 
       list = list.filter(
         (m) =>
           m.displayName.toLowerCase().includes(q) ||
-          m.user.email.toLowerCase().includes(q)
+          m.user.email.toLowerCase().includes(q),
       );
     }
     return list;
@@ -46,23 +44,26 @@ export function MembersTab({ members, currentUserId, canManage, onRoleChange }: 
 
   return (
     <div className="flex flex-col gap-4">
-      {/* ── search + filter row ──────────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        {/* search input */}
+
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+
         <div className="relative w-full sm:w-72">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" strokeWidth={2} />
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
+            strokeWidth={2}
+          />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search members…"
-            className="w-full rounded-lg border border-border bg-background text-foreground pl-9 pr-3 py-2 text-sm
-                       placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+            className="w-full rounded-lg border border-border bg-background text-foreground
+                       pl-9 pr-3 py-2 text-sm placeholder-muted-foreground
+                       focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
           />
         </div>
 
-        {/* role chips */}
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-1.5 sm:flex-nowrap sm:overflow-x-auto sm:pb-0.5">
           {ROLE_FILTERS.map((chip) => {
             const active = roleFilter === chip.value;
             return (
@@ -70,7 +71,7 @@ export function MembersTab({ members, currentUserId, canManage, onRoleChange }: 
                 key={chip.label}
                 onClick={() => setRoleFilter(chip.value)}
                 className={[
-                  'px-3 py-1 rounded-full text-xs font-medium border transition-colors duration-150',
+                  'whitespace-nowrap px-3 py-1 rounded-full text-xs font-medium border transition-colors duration-150',
                   active
                     ? 'bg-foreground text-background border-foreground'
                     : 'bg-background text-muted-foreground border-border hover:border-muted-foreground',
@@ -83,7 +84,7 @@ export function MembersTab({ members, currentUserId, canManage, onRoleChange }: 
         </div>
       </div>
 
-      {/* ── table ─────────────────────────────────────────────────────────── */}
+      {/* ── table ───────────────────────────────────────────────────────── */}
       {filtered.length === 0 ? (
         <EmptyState
           icon={Users}
@@ -91,17 +92,30 @@ export function MembersTab({ members, currentUserId, canManage, onRoleChange }: 
           description="Try adjusting your search or filter criteria."
         />
       ) : (
-        <div className="rounded-xl border border-border bg-card overflow-hidden shadow-sm">
+        <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
+            <table className="w-full min-w-[320px] table-fixed text-left">
+              <colgroup>
+                <col className="w-auto" />
+                <col className="hidden md:table-column w-32" />
+                <col className="w-28 sm:w-36" />
+              </colgroup>
+
               <thead>
                 <tr className="bg-muted/60 text-muted-foreground">
-                  <th className="px-4 py-2.5 text-xs font-semibold uppercase tracking-wider">Member</th>
-                  <th className="hidden md:table-cell px-4 py-2.5 text-xs font-semibold uppercase tracking-wider">Joined</th>
-                  <th className="px-4 py-2.5 text-xs font-semibold uppercase tracking-wider">Role</th>
+                  <th className="px-4 py-2.5 text-xs font-semibold uppercase tracking-wider">
+                    Member
+                  </th>
+                  <th className="hidden md:table-cell px-4 py-2.5 text-xs font-semibold uppercase tracking-wider">
+                    Joined
+                  </th>
+                  <th className="px-4 py-2.5 text-xs font-semibold uppercase tracking-wider">
+                    Role
+                  </th>
                 </tr>
               </thead>
-              <tbody>
+
+              <tbody className="divide-y divide-border">
                 {filtered.map((member) => (
                   <MemberRow
                     key={member.id}
@@ -116,10 +130,10 @@ export function MembersTab({ members, currentUserId, canManage, onRoleChange }: 
             </table>
           </div>
 
-          {/* footer count */}
           <div className="px-4 py-2 border-t border-border/50 bg-muted/30">
             <span className="text-xs text-muted-foreground">
-              Showing {filtered.length} of {members.length} member{members.length !== 1 ? 's' : ''}
+              Showing {filtered.length} of {members.length}{' '}
+              member{members.length !== 1 ? 's' : ''}
             </span>
           </div>
         </div>

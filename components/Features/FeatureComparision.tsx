@@ -69,7 +69,7 @@ export default function FeatureComparison() {
         </div>
 
         <div className="overflow-x-auto">
-          <div className="min-w-[800px] grid grid-cols-4 bg-background/50 backdrop-blur-sm rounded-2xl border border-border">
+          <div className="min-w-200 grid grid-cols-4 bg-background/50 backdrop-blur-sm rounded-2xl border border-border">
             <div></div>
             {plans.map((plan, i) => (
               <div

@@ -73,7 +73,7 @@ export function StorageResourcesSection({
 
   return (
     <section className="space-y-3 sm:space-y-4">
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <HardDrive className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
         <h2 className="text-lg font-semibold text-foreground">Storage & Resources</h2>
       </div>
@@ -169,7 +169,7 @@ export function StorageResourcesSection({
           <h3 className="text-sm font-semibold text-foreground mb-3 sm:mb-4">
             Storage Growth Trend
           </h3>
-          <div className="h-40 sm:h-47.5">
+          <div className="h-40 sm:h-44">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={storageGrowthData}>
                 <CartesianGrid
@@ -217,7 +217,7 @@ export function StorageResourcesSection({
             <Folder className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground" />
             Top Projects by Storage
           </h3>
-          <div className="h-40 sm:h-47.5">
+          <div className="h-40 sm:h-44">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={storageByProject.slice(0, 5)}
@@ -265,7 +265,7 @@ export function StorageResourcesSection({
           File Type Distribution
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 items-center">
-          <div className="h-42.5 sm:h-50">
+          <div className="h-42.5 sm:h-48">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie

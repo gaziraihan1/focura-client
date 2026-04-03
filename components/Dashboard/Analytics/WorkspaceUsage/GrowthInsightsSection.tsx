@@ -37,43 +37,34 @@ function GrowthMetric({ label, value, change, icon: Icon }: GrowthMetricProps) {
   const isNeutral  = change === 0;
 
   return (
-    <div className="flex items-center gap-2.5 sm:gap-3 p-3 sm:p-4 rounded-lg sm:rounded-xl bg-muted/50 border border-border">
-      <div
-        className={`p-2 sm:p-2.5 rounded-lg sm:rounded-xl ${
-          isPositive
-            ? "bg-green-100 dark:bg-green-900/30"
-            : isNeutral
-            ? "bg-muted"
-            : "bg-red-100 dark:bg-red-900/30"
-        }`}
-      >
-        <Icon
-          className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${
-            isPositive
-              ? "text-green-600 dark:text-green-400"
-              : isNeutral
-              ? "text-muted-foreground"
-              : "text-red-600 dark:text-red-400"
-          }`}
-        />
+    <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg sm:rounded-xl bg-muted/50 border border-border">
+      <div className={`p-2 rounded-lg sm:rounded-xl shrink-0 ${
+        isPositive ? "bg-green-100 dark:bg-green-900/30"
+        : isNeutral ? "bg-muted"
+        : "bg-red-100 dark:bg-red-900/30"
+      }`}>
+        <Icon className={`w-3.5 h-3.5 ${
+          isPositive ? "text-green-600 dark:text-green-400"
+          : isNeutral ? "text-muted-foreground"
+          : "text-red-600 dark:text-red-400"
+        }`} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-xs text-muted-foreground">{label}</p>
-        <p className="text-xl font-bold text-foreground">{value}</p>
+        <p className="text-[11px] text-muted-foreground truncate">{label}</p>
+        {/* Smaller font on mobile — text-xl at 2-col (~160px) clips */}
+        <p className="text-base sm:text-xl font-bold text-foreground leading-tight">{value}</p>
       </div>
-      <div
-        className={`flex items-center gap-0.5 text-xs font-semibold ${
-          isPositive
-            ? "text-green-600 dark:text-green-400"
-            : isNeutral
-            ? "text-muted-foreground"
-            : "text-red-600 dark:text-red-400"
-        }`}
-      >
-        {isPositive  && <TrendingUp   className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
-        {!isPositive && !isNeutral && <TrendingDown className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
-        {isPositive ? "+" : ""}
-        {change}%
+      {/* Badge: shrink to just the percentage, hide icon on mobile */}
+      <div className={`text-xs font-semibold shrink-0 ${
+        isPositive ? "text-green-600 dark:text-green-400"
+        : isNeutral ? "text-muted-foreground"
+        : "text-red-600 dark:text-red-400"
+      }`}>
+        <span className="hidden sm:inline">
+          {isPositive && <TrendingUp className="w-3 h-3 inline mr-0.5" />}
+          {!isPositive && !isNeutral && <TrendingDown className="w-3 h-3 inline mr-0.5" />}
+        </span>
+        {isPositive ? "+" : ""}{change}%
       </div>
     </div>
   );

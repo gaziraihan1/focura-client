@@ -25,34 +25,24 @@ interface KPICardProps {
   iconBgClass: string;
 }
 
-function KPICard({
-  icon: Icon,
-  label,
-  value,
-  subtitle,
-  accentClass,
-  iconBgClass,
-}: KPICardProps) {
+function KPICard({ icon: Icon, label, value, subtitle, accentClass, iconBgClass }: KPICardProps) {
   return (
-    <div className="group relative bg-card border border-border rounded-xl sm:rounded-2xl p-3.5 sm:p-5 hover:shadow-md hover:border-primary/20 transition-all duration-300">
-      <div className="flex items-start justify-between mb-2.5 sm:mb-4">
-        <div className={`p-2 sm:p-2.5 rounded-lg sm:rounded-xl ${iconBgClass}`}>
-          <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${accentClass}`} />
-        </div>
+    <div className="group bg-card border border-border rounded-xl sm:rounded-2xl p-3 sm:p-5 hover:shadow-md hover:border-primary/20 transition-all duration-300">
+      <div className={`p-2 rounded-lg ${iconBgClass} w-fit mb-2.5 sm:mb-4`}>
+        <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${accentClass}`} />
       </div>
-
-      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-0.5 sm:mb-1">
+      <p className="text-[11px] sm:text-xs font-medium text-muted-foreground sm:uppercase sm:tracking-wider mb-0.5 sm:mb-1 truncate">
         {label}
       </p>
-      <p className="text-lg sm:text-2xl font-bold text-foreground">{value}</p>
-      
+      <p className="text-base sm:text-2xl font-bold text-foreground leading-tight">
+        {value}
+      </p>
       {subtitle && (
-        <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
+        <p className="text-[11px] text-muted-foreground mt-1">{subtitle}</p>
       )}
     </div>
   );
 }
-
 export function UsageSnapshot({ data }: UsageSnapshotProps) {
   // ✅ 100% REAL DATA from backend snapshot
   const snapshot = data.snapshot;

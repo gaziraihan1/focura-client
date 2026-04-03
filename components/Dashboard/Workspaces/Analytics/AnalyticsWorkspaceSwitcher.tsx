@@ -1,17 +1,24 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Check, ChevronDown, Building2, Crown, Shield, Users } from 'lucide-react';
-import { useWorkspaces, Workspace } from '@/hooks/useWorkspace';
+import { useState } from "react";
+import {
+  Check,
+  ChevronDown,
+  Building2,
+  Crown,
+  Shield,
+  Users,
+} from "lucide-react";
+import { useWorkspaces, Workspace } from "@/hooks/useWorkspace";
 
 interface AnalyticsWorkspaceSwitcherProps {
   currentWorkspaceId: string;
   onWorkspaceChange: (workspaceId: string) => void;
 }
 
-export function AnalyticsWorkspaceSwitcher({ 
-  currentWorkspaceId, 
-  onWorkspaceChange 
+export function AnalyticsWorkspaceSwitcher({
+  currentWorkspaceId,
+  onWorkspaceChange,
 }: AnalyticsWorkspaceSwitcherProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { data: workspaces = [], isLoading } = useWorkspaces();
@@ -20,11 +27,11 @@ export function AnalyticsWorkspaceSwitcher({
 
   const getRoleIcon = (role: string) => {
     switch (role) {
-      case 'OWNER':
+      case "OWNER":
         return <Crown className="w-3 h-3 text-amber-500" />;
-      case 'ADMIN':
+      case "ADMIN":
         return <Shield className="w-3 h-3 text-blue-500" />;
-      case 'MEMBER':
+      case "MEMBER":
         return <Users className="w-3 h-3 text-blue-400" />;
       default:
         return <Users className="w-3 h-3 text-muted-foreground" />;
@@ -33,9 +40,9 @@ export function AnalyticsWorkspaceSwitcher({
 
   const getUserRole = (workspace: Workspace) => {
     if (workspace.ownerId === workspace.members?.[0]?.userId) {
-      return 'OWNER';
+      return "OWNER";
     }
-    return workspace.members?.[0]?.role || 'MEMBER';
+    return workspace.members?.[0]?.role || "MEMBER";
   };
 
   if (isLoading) {
@@ -52,11 +59,11 @@ export function AnalyticsWorkspaceSwitcher({
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center justify-between px-4 py-2.5 bg-card border rounded-lg hover:bg-muted/50 transition-colors"
       >
-        <div className="flex items-center gap-3 min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-3 min-w-0 flex-1">
           <Building2 className="w-5 h-5 text-primary shrink-0" />
           <div className="min-w-0 flex-1 text-left">
             <p className="text-sm font-medium truncate">
-              {currentWorkspace?.name || 'Select Workspace'}
+              {currentWorkspace?.name || "Select Workspace"}
             </p>
             {currentWorkspace && (
               <div className="flex items-center gap-2 mt-1">
@@ -70,7 +77,7 @@ export function AnalyticsWorkspaceSwitcher({
         </div>
         <ChevronDown
           className={`w-4 h-4 text-muted-foreground transition-transform shrink-0 ${
-            isOpen ? 'rotate-180' : ''
+            isOpen ? "rotate-180" : ""
           }`}
         />
       </button>
@@ -100,8 +107,8 @@ export function AnalyticsWorkspaceSwitcher({
                     }}
                     className={`w-full flex items-center justify-between px-3 py-3 rounded-lg transition-colors ${
                       workspace.id === currentWorkspaceId
-                        ? 'bg-primary/10 text-primary'
-                        : 'hover:bg-muted/50'
+                        ? "bg-primary/10 text-primary"
+                        : "hover:bg-muted/50"
                     }`}
                   >
                     <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -113,7 +120,7 @@ export function AnalyticsWorkspaceSwitcher({
                           </p>
                           {getRoleIcon(role)}
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5">
                           <span className="text-xs text-muted-foreground capitalize">
                             {role.toLowerCase()}
                           </span>
@@ -136,7 +143,9 @@ export function AnalyticsWorkspaceSwitcher({
               {workspaces.length === 0 && (
                 <div className="text-center py-8">
                   <Building2 className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-                  <p className="text-sm text-muted-foreground">No workspaces found</p>
+                  <p className="text-sm text-muted-foreground">
+                    No workspaces found
+                  </p>
                 </div>
               )}
             </div>

@@ -66,7 +66,7 @@ export function RoleDropdown(props: RoleDropdownProps) {
         disabled={disabled}
         className={[
           'appearance-none',
-          'w-full min-w-[120px]',
+          'w-full min-w-30',
           'rounded-lg border border-border bg-background text-foreground',
           'pl-3 pr-8 py-1.5 text-sm',
           'focus:outline-none focus:ring-2 focus:ring-ring',

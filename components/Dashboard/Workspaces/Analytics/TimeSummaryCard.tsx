@@ -13,7 +13,7 @@ export function TimeSummaryCard({ data, days = 7 }: TimeSummaryCardProps) {
   return (
     <div className="bg-card border rounded-lg p-6">
       <div className="mb-6">
-        <h2 className="text-lg font-semibold">Time Tracking Summary</h2>
+        <h2 className="sm:text-lg font-semibold">Time Tracking Summary</h2>
         <p className="text-sm text-muted-foreground mt-1">
           Last {days} days
         </p>

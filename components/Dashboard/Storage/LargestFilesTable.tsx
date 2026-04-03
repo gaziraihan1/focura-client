@@ -56,7 +56,9 @@ export function LargestFilesTable({
       />
 
       <div className="overflow-x-auto">
-        <table className="w-full table-fixed">
+        <table
+        style={{minWidth: "460"}}
+        className="w-full table-fixed">
           <thead>
             <tr className="border-b">
               <th className="text-left py-3 px-2 w-10">

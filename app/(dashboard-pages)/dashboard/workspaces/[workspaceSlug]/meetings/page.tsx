@@ -21,9 +21,9 @@ export default function MeetingsPage() {
   if (controller.roleLoading || !controller.workspaceId) return <PageSkeleton />;
 
   return (
-    <div className="flex h-full flex-col">
-      <header className="border-b bg-background px-4 sm:px-6 py-4">
-        <div className="flex items-center justify-between gap-4">
+    <div className="flex h-full flex-col justify-center">
+      <header className="border-b bg-background px-2 sm:px-4 py-4">
+        <div className="flex items-center flex-wrap justify-between gap-4">
           <div>
             <h1 className="text-lg font-semibold text-foreground">Meetings</h1>
             <p className="text-xs text-muted-foreground mt-0.5">
@@ -44,7 +44,7 @@ export default function MeetingsPage() {
       </header>
 
       {/* Filters */}
-      <div className="border-b bg-background px-4 sm:px-6 py-3">
+      <div className="border-b bg-background px-2 sm:px-4 lg:px-0 py-3 ">
         <MeetingFilters
           activeStatus={controller.activeStatus}
           onStatusChange={controller.setActiveStatus}
@@ -54,7 +54,7 @@ export default function MeetingsPage() {
         />
       </div>
 
-      <main className="flex-1 overflow-y-auto px-4 sm:px-6 py-5">
+      <main className="flex-1 overflow-y-auto px-2 sm:px-6 lg:px-0 py-5">
         {controller.isLoading ? (
           <MeetingGridSkeleton />
         ) : controller.error ? (

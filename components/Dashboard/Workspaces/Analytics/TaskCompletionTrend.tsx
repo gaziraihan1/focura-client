@@ -11,8 +11,8 @@ interface TaskCompletionTrendProps {
 export function TaskCompletionTrend({ data }: TaskCompletionTrendProps) {
   if (data.length === 0) {
     return (
-      <div className="bg-card border rounded-lg p-6">
-        <h2 className="text-lg font-semibold mb-4">Completion Trend</h2>
+      <div className="bg-card border rounded-lg p-4">
+        <h2 className="sm:text-lg font-semibold mb-4">Completion Trend</h2>
         <div className="flex items-center justify-center h-64 text-muted-foreground">
           No data available
         </div>
@@ -32,7 +32,7 @@ export function TaskCompletionTrend({ data }: TaskCompletionTrendProps) {
     <div className="bg-card border rounded-lg p-6">
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h2 className="text-lg font-semibold">Task Completion Trend</h2>
+          <h2 className="sm:text-lg font-semibold">Task Completion Trend</h2>
           <p className="text-sm text-muted-foreground mt-1">Last 30 days</p>
         </div>
         <div className="flex items-center gap-2">

@@ -71,7 +71,7 @@ export default function LabelManagementMain({
         onCreateLabel={() => setIsCreateModalOpen(true)}
       />
 
-      <main className="mx-auto py-8">
+      <main className="mx-auto p-2 sm:p-4 lg:p-0">
         {isLoading && <LabelGridSkeleton />}
 
         {!isLoading && filteredLabels.length === 0 && (

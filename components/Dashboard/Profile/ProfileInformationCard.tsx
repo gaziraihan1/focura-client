@@ -30,7 +30,7 @@ export function ProfileInformationCard({
       animate={{ opacity: 1, y: 0 }}
       className="rounded-xl bg-card border border-border p-6"
     >
-      <h2 className="text-xl font-bold text-foreground mb-6">
+      <h2 className="text-lg sm:text-xl font-bold text-foreground mb-6">
         Profile Information
       </h2>
 

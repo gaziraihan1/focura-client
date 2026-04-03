@@ -22,7 +22,7 @@ export default function Tabs({
   projects,
 }: TabsProps) {
   return (
-    <div className="flex items-center gap-1 border-b border-border">
+    <div className="flex flex-wrap items-center gap-1 border-b border-border">
       {tabs.map((tab) => {
         const active = activeTab === tab.id;
         return (

@@ -22,7 +22,7 @@ export default function LabelsPage() {
 
   if (!workspace) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <div className="min-h-screen bg-background flex items-center justify-center px-2 sm:px-4 lg:px-0">
         <div className="text-center">
           <h2 className="text-xl font-semibold text-foreground mb-2">
             Workspace not found

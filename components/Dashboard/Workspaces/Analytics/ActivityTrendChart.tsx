@@ -11,7 +11,7 @@ export function ActivityTrendChart({ data }: ActivityTrendChartProps) {
   if (data.length === 0) {
     return (
       <div className="bg-card border rounded-lg p-6">
-        <h2 className="text-lg font-semibold mb-4">Activity Trends</h2>
+        <h2 className="sm:text-lg font-semibold mb-4">Activity Trends</h2>
         <div className="flex items-center justify-center h-64 text-muted-foreground">
           No activity data available
         </div>
@@ -24,7 +24,7 @@ export function ActivityTrendChart({ data }: ActivityTrendChartProps) {
   return (
     <div className="bg-card border rounded-lg p-6">
       <div className="mb-6">
-        <h2 className="text-lg font-semibold">Activity Volume Trend</h2>
+        <h2 className="sm:text-lg font-semibold">Activity Volume Trend</h2>
         <p className="text-sm text-muted-foreground mt-1">
           Team activity over the last 30 days
         </p>

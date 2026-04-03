@@ -51,7 +51,7 @@ export function MembersSettingsTab({
 
       <div className="rounded-xl bg-card border border-border overflow-hidden">
         <div className="p-6 border-b border-border">
-          <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+          <h3 className="sm:text-lg font-semibold text-foreground flex items-center gap-2">
             <Users size={20} />
             Team Members ({members.length})
           </h3>
@@ -61,10 +61,10 @@ export function MembersSettingsTab({
           {members.map((member) => (
             <div
               key={member.id}
-              className="p-6 flex items-center justify-between"
+              className="p-4 sm:p-6 flex sm:items-center justify-between"
             >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-medium">
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-xs sm:text-sm font-medium">
                 <Avatar name={member.user.name} image={member.user.image} size="md" />
                 </div>
                 <div>
@@ -81,7 +81,7 @@ export function MembersSettingsTab({
                 
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-start gap-3">
                 {member.role !== "OWNER" && isAdmin ? (
                   <select
                     value={member.role}

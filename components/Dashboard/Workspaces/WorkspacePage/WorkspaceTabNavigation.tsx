@@ -23,18 +23,18 @@ export function WorkspaceTabNavigation({
 }: WorkspaceTabNavigationProps) {
   return (
     <div className="border-b border-border -mx-3 sm:mx-0">
-      <div className="flex gap-2 sm:gap-4 overflow-x-auto scrollbar-hide px-3 sm:px-0">
+      <div className="flex flex-wrap gap-2 sm:gap-4 overflow-x-auto scrollbar-hide px-3 sm:px-0">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
-            className={`flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 border-b-2 transition whitespace-nowrap text-sm sm:text-base ${
+            className={`flex items-center gap-2 px-2 sm:px-4 py-2 sm:py-3 border-b-2 transition whitespace-nowrap text-sm truncate sm:text-base ${
               activeTab === tab.id
                 ? "border-primary text-primary"
                 : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
-            <tab.icon size={16} className="sm:w-[18px] sm:h-[18px]" />
+            <tab.icon size={16} className="sm:w-4.5 sm:h-4.5" />
             {tab.label}
           </button>
         ))}

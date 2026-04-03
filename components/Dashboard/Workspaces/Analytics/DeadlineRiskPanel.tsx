@@ -23,24 +23,26 @@ export function DeadlineRiskPanel({ data }: DeadlineRiskPanelProps) {
 
   return (
     <div className="bg-card border rounded-lg p-6">
-      <div className="flex items-start justify-between mb-6">
-        <div>
-          <h2 className="text-lg font-semibold">Deadline Risk Analysis</h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            Tasks approaching deadlines
-          </p>
-        </div>
-        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg ${
-          data.riskLevel === 'high'
-            ? 'bg-red-500/10 text-red-600 dark:text-red-400'
-            : data.riskLevel === 'medium'
-            ? 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400'
-            : 'bg-green-500/10 text-green-600 dark:text-green-400'
-        }`}>
-          {riskIcon[data.riskLevel]}
-          <span className="text-sm font-medium">{riskLabel[data.riskLevel]}</span>
-        </div>
-      </div>
+<div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-6">
+  {/* min-w-0 lets the title side compress */}
+  <div className="min-w-0">
+    <h2 className="text-lg font-semibold">Deadline Risk Analysis</h2>
+    <p className="text-sm text-muted-foreground mt-1">
+      Tasks approaching deadlines
+    </p>
+  </div>
+  {/* Badge goes full-width on mobile, auto on sm+ */}
+  <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg w-fit shrink-0 ${
+    data.riskLevel === 'high'
+      ? 'bg-red-500/10 text-red-600 dark:text-red-400'
+      : data.riskLevel === 'medium'
+      ? 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400'
+      : 'bg-green-500/10 text-green-600 dark:text-green-400'
+  }`}>
+    {riskIcon[data.riskLevel]}
+    <span className="text-sm font-medium">{riskLabel[data.riskLevel]}</span>
+  </div>
+</div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="p-4 rounded-lg border bg-red-500/5 border-red-500/20">
