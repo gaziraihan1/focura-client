@@ -63,6 +63,11 @@ axiosInstance.interceptors.request.use(
     const now = Date.now();
     if (!cachedBackendToken || now > cachedTokenExpiry) {
       const session = await getFreshSession();
+      console.log("🌐 Session:", {
+  exists: !!session,
+  hasBackendToken: !!session?.backendToken,
+  backendTokenLength: session?.backendToken?.length,
+})
       cachedBackendToken = session?.backendToken ?? null;
       cachedTokenExpiry = cachedBackendToken ? now + TOKEN_CACHE_TTL : 0;
     }

@@ -204,11 +204,17 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.role = user.role ?? "USER";
         token.sessionId = sessionId;
+            console.log("🔑 Attempting exchange for:", user.email);
+            console.log("🔑 BACKEND_URL:", process.env.BACKEND_URL);
+
 
         const tokens = await exchangeForTokens(
           { id: user.id, email: user.email!, role: user.role ?? "USER" },
           sessionId,
         );
+            console.log("🔑 Exchange result:", tokens ? "SUCCESS" : "FAILED");
+    console.log("🔑 backendToken present:", !!tokens?.accessToken);
+
 
         if (tokens) {
           token.backendToken = tokens.accessToken;
