@@ -19,15 +19,15 @@ export default function AnnouncementsPage() {
     setTitle, setContent, setVisibilityField,
     setIsPinnedField, setProjectId, toggleTarget,
     handleSubmit,
-    deletingId, pinningId, handleDelete, handleTogglePin,
+    deletingId, pinningId, handleDelete, handleTogglePin, isFetching
   } = useAnnouncementPage(workspaceSlug as string);
 
   return (
     <div className="space-y-6 px-2 sm:px-4 lg:px-6">
       <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center flex-wrap gap-2.5">
           <Megaphone className="w-5 h-5 text-primary" />
-          <h1 className="text-xl font-bold text-foreground">Announcements</h1>
+          <h1 className="text-2xl lg:text-3xl font-bold text-foreground truncate">Announcements</h1>
           {data?.pagination.totalCount !== undefined && (
             <span className="text-sm text-muted-foreground">
               ({data.pagination.totalCount})
@@ -67,6 +67,7 @@ export default function AnnouncementsPage() {
         onDelete={handleDelete}
         onTogglePin={handleTogglePin}
         onPageChange={setPage}
+        isFetching={isFetching}
       />
 
       <AnnouncementModal

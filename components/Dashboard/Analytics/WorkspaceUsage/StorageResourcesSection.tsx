@@ -241,7 +241,8 @@ export function StorageResourcesSection({
                   tick={{ fontSize: 13, fill: "hsl(var(--muted-foreground))" }}
                   stroke="hsl(var(--border))"
                   tickLine={false}
-                  width={70}
+                  width={30}
+                  tickFormatter={(v: string) => v.length > 8 ? `${v.slice(0,8)}...` : v}
                 />
                 <Tooltip
                   contentStyle={{

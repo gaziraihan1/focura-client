@@ -9,6 +9,11 @@ interface TaskListProps {
   onAddToSecondary?: (taskId: string) => void;
   isPrimaryDisabled?: boolean;
   showAddButtons?: boolean;
+  loadingTaskId?: string | null;
+  loadingType?: "primary" | "secondary" | null;
+  primaryTaskId?: string | null;
+  secondaryTaskIds?: string[];
+
 }
 
 export function TaskList({
@@ -18,6 +23,10 @@ export function TaskList({
   onAddToSecondary,
   isPrimaryDisabled = false,
   showAddButtons = false,
+  loadingTaskId,
+  loadingType,
+  primaryTaskId,
+  secondaryTaskIds
 }: TaskListProps) {
   return (
     <div className="space-y-3">
@@ -35,6 +44,12 @@ export function TaskList({
             onAddToSecondary={onAddToSecondary}
             isPrimaryDisabled={isPrimaryDisabled}
             showAddButtons={showAddButtons}
+            loadingTaskId={loadingTaskId}
+            loadingType={loadingType}
+            isInPrimary={primaryTaskId === task.id}
+            isInSecondary={secondaryTaskIds?.includes(task.id)
+            }
+
           />
         </motion.div>
       ))}

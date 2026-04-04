@@ -288,7 +288,7 @@ export function EngagementSection({
         </div>
 
         <div className="w-full max-w-full overflow-x-auto">
-          <table className="w-full table-fixed">
+          <table className="w-full min-w-160 table-fixed">
             <thead>
               <tr className="border-b border-border">
                 {["Member", "Tasks", "Comments", "Assigned", "Score"].map(

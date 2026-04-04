@@ -18,6 +18,11 @@ interface TasksContentAreaProps {
   pagination?: TaskPagination;
   currentPage: number;
   onPageChange: (v: number) => void;
+  // ...existing props
+  loadingTaskId?: string | null;
+  loadingType?: "primary" | "secondary" | null;
+  primaryTaskId?: string | null;
+  secondaryTaskIds?: string[];
 }
 
 export function TasksContentArea({
@@ -33,7 +38,12 @@ export function TasksContentArea({
   isPrimaryDisabled = false,
   pagination,
   currentPage,
-  onPageChange
+  onPageChange,
+  loadingTaskId,
+  loadingType,
+  primaryTaskId,
+  secondaryTaskIds
+
 }: TasksContentAreaProps) {
   if (isLoading) {
     return (
@@ -77,6 +87,10 @@ export function TasksContentArea({
         onAddToSecondary={onAddToSecondary}
         isPrimaryDisabled={isPrimaryDisabled}
         showAddButtons={true}
+        loadingTaskId={loadingTaskId}
+        loadingType={loadingType}
+        primaryTaskId={primaryTaskId}
+        secondaryTaskIds={secondaryTaskIds}
       />
 
       {/* Pagination */}

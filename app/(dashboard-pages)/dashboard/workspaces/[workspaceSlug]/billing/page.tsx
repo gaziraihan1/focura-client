@@ -28,7 +28,7 @@ export default function WorkspaceBillingPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-10 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Billing</h1>
+        <h1 className="text-2xl lg:text-3xl font-bold text-foreground">Billing</h1>
         <p className="text-sm text-muted-foreground mt-0.5">
           Manage this workspace&apos;s plan and invoices
         </p>

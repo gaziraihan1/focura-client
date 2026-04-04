@@ -25,7 +25,7 @@ export default function MeetingsPage() {
       <header className="border-b bg-background px-2 sm:px-4 py-4">
         <div className="flex items-center flex-wrap justify-between gap-4">
           <div>
-            <h1 className="text-lg font-semibold text-foreground">Meetings</h1>
+            <h1 className="text-2xl lg:text-3xl font-bold text-foreground">Meetings</h1>
             <p className="text-xs text-muted-foreground mt-0.5">
               {controller.isAdminOrOwner ? 'Schedule and manage team meetings' : 'Meetings available to you'}
             </p>

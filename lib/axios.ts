@@ -1,6 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import toast from "react-hot-toast";
 import { getSession, signOut } from "next-auth/react";
+import { logout } from "./auth/logout";
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
@@ -48,7 +49,7 @@ export const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-const TOKEN_CACHE_TTL = 12 * 60 * 1000;
+const TOKEN_CACHE_TTL = 10 * 60 * 1000;
 
 let cachedBackendToken: string | null = null;
 let cachedTokenExpiry = 0;
@@ -97,6 +98,7 @@ axiosInstance.interceptors.response.use(
       _retried?: boolean;
     };
 
+    console.log(code)
     if (
       code === "TOKEN_EXPIRED" &&
       originalConfig &&
@@ -119,6 +121,7 @@ axiosInstance.interceptors.response.use(
       const session = await getFreshSession();
 
       if (session?.backendToken) {
+        originalConfig.headers.Authorization = `Bearer ${session.backendToken}`
         return axiosInstance(originalConfig);
       }
 
@@ -150,11 +153,12 @@ const handleAxiosError = async (
   if (
     code === "TOKEN_EXPIRED" ||
     code === "INVALID_TOKEN" ||
-    code === "TOKEN_INVALID"
+    code === "TOKEN_INVALID" 
   ) {
     invalidateTokenCache();
     toast.error("Session expired. Please login again.");
     signOut({ callbackUrl: "/authentication/login" });
+    logout()
     return Promise.reject(error);
   }
 

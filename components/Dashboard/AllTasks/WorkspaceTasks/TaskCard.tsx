@@ -9,6 +9,7 @@ import {
   TrendingUp,
   Calendar,
   Plus,
+  Loader2,
 } from "lucide-react";
 import { Task } from "@/hooks/useTask";
 import {
@@ -27,6 +28,10 @@ interface TaskCardProps {
   onAddToSecondary?: (taskId: string) => void;
   isPrimaryDisabled?: boolean;
   showAddButtons?: boolean;
+  loadingTaskId?: string | null;
+  loadingType?: "primary" | "secondary" | null;
+  isInPrimary?: boolean;
+  isInSecondary?: boolean
 }
 
 export function TaskCard({
@@ -36,14 +41,28 @@ export function TaskCard({
   onAddToSecondary,
   isPrimaryDisabled = false,
   showAddButtons = false,
+  loadingTaskId,
+  loadingType,
+  isInPrimary = false,
+  isInSecondary = false
 }: TaskCardProps) {
   const isCompleted = task.status === "COMPLETED";
   const showButtons = showAddButtons && !isCompleted;
 
+    const isThisCardLoading = loadingTaskId === task.id;
+  const isPrimaryLoading = isThisCardLoading && loadingType === "primary";
+  const isSecondaryLoading = isThisCardLoading && loadingType === "secondary";
+
+  
+  
+  const isAnyLoading = !!loadingTaskId;
+  const primaryDisabled = isPrimaryDisabled || isInPrimary || isAnyLoading;
+    
+    const secondaryDisabled = isInSecondary || isAnyLoading;
   const handlePrimaryClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (onAddToPrimary && !isPrimaryDisabled) {
+    if (onAddToPrimary && !isPrimaryDisabled &&!isAnyLoading ) {
       onAddToPrimary(task.id);
     }
   };
@@ -51,7 +70,7 @@ export function TaskCard({
   const handleSecondaryClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (onAddToSecondary) {
+    if (onAddToSecondary && !isAnyLoading) {
       onAddToSecondary(task.id);
     }
   };
@@ -63,22 +82,29 @@ export function TaskCard({
   <div className="absolute top-3 right-3 flex gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity z-10">
     <button
       onClick={handlePrimaryClick}
-      disabled={isPrimaryDisabled}
+      disabled={primaryDisabled}
       className={`p-2 rounded-lg transition-all ${
         isPrimaryDisabled
           ? "bg-muted text-muted-foreground cursor-not-allowed opacity-50"
           : "bg-purple-500 hover:bg-purple-600 text-white shadow-md hover:shadow-lg"
       }`}
-      title={isPrimaryDisabled ? "Primary task already set" : "Add to Primary"}
+      title={isInPrimary ? "Already your primary task" :isPrimaryDisabled ? "Primary task already set" : "Add to Primary"}
     >
-      <Plus size={16} />
+      {
+        isPrimaryLoading ? <Loader2 size={16} className="animate-spin" />
+        : <Plus size={16} />
+      }
     </button>
     <button
       onClick={handleSecondaryClick}
+      disabled={secondaryDisabled}
       className="p-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-white shadow-md hover:shadow-lg transition-all"
-      title="Add to Secondary"
+      title={isInSecondary ? "Already a secondary task" : "Add to Secondary"}
     >
-      <Plus size={16} />
+      {
+        isSecondaryLoading ? <Loader2 size={16} className="animate-spin" />
+        : <Plus size={16} />
+      }
     </button>
   </div>
 )}

@@ -27,7 +27,7 @@ export default function TestimonialSection() {
         </p>
 
         <div className="mt-20 flex justify-center">
-          <div className="relative w-full max-w-xl min-h-80">
+          <div className="relative w-full max-w-xl min-h-85">
             <AnimatePresence mode="wait">
               <motion.div
                 key={index}
@@ -64,7 +64,7 @@ export default function TestimonialSection() {
                   </p>
                 </div>
 
-                <div className="mt-4 flex justify-center gap-1">
+                <div className="mt-4 flex justify-center gap-1 pb-4 mb-4">
                   {[...Array(testimonials[index].rating)].map((_, i) => (
                     <Star
                       key={i}

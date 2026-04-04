@@ -1,18 +1,32 @@
 import { Task } from "@/hooks/useTask";
-import { TaskCard } from "./TaskCard";
 import { Sparkles, ListChecks } from "lucide-react";
+import { useState } from "react";
+import { RemovableTaskCard } from "./RemovalTaskCard";
 
 interface PrimaryTasksViewProps {
   primaryTask: Task | null;
   secondaryTasks: Task[];
   workspaceSlug: string;
+  onRemove: (taskId: string) => Promise<void>;
 }
 
 export function PrimaryTasksView({
   primaryTask,
   secondaryTasks,
   workspaceSlug,
+  onRemove,
 }: PrimaryTasksViewProps) {
+  const [removingId, setRemovingId] = useState<string | null>(null);
+
+  const handleRemove = async (taskId: string) => {
+    setRemovingId(taskId);
+    try {
+      await onRemove(taskId);
+    } finally {
+      setRemovingId(null);
+    }
+  };
+
   const hasTasks = primaryTask || secondaryTasks.length > 0;
 
   if (!hasTasks) {
@@ -23,8 +37,8 @@ export function PrimaryTasksView({
           No Primary Tasks Yet
         </h3>
         <p className="text-muted-foreground max-w-md mx-auto">
-          Go to the &qout;All Tasks&qout; tab and click the purple + icon to set your primary task,
-          or the amber + icon to add secondary tasks.
+          Go to the &quot;All Tasks&quot; tab and click the purple + icon to set your
+          primary task, or the amber + icon to add secondary tasks.
         </p>
       </div>
     );
@@ -32,27 +46,31 @@ export function PrimaryTasksView({
 
   return (
     <div className="space-y-6">
-      {/* Primary Task Section */}
       {primaryTask && (
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></div>
+            <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
             <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
               <Sparkles size={20} className="text-purple-500" />
               Primary Task
             </h2>
           </div>
           <div className="border-l-4 border-purple-500 pl-4">
-            <TaskCard task={primaryTask} workspaceSlug={workspaceSlug} />
+            <RemovableTaskCard
+              task={primaryTask}
+              workspaceSlug={workspaceSlug}
+              isRemoving={removingId === primaryTask.id}
+              onRemove={handleRemove}
+              accentColor="purple"
+            />
           </div>
         </div>
       )}
 
-      {/* Divider */}
       {primaryTask && secondaryTasks.length > 0 && (
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-border"></div>
+            <div className="w-full border-t border-border" />
           </div>
           <div className="relative flex justify-center">
             <span className="bg-background px-4 text-sm text-muted-foreground">
@@ -62,11 +80,10 @@ export function PrimaryTasksView({
         </div>
       )}
 
-      {/* Secondary Tasks Section */}
       {secondaryTasks.length > 0 && (
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-amber-500"></div>
+            <div className="w-2 h-2 rounded-full bg-amber-500" />
             <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
               <ListChecks size={20} className="text-amber-500" />
               Secondary Tasks ({secondaryTasks.length})
@@ -74,7 +91,14 @@ export function PrimaryTasksView({
           </div>
           <div className="space-y-3 border-l-4 border-amber-500 pl-4">
             {secondaryTasks.map((task) => (
-              <TaskCard key={task.id} task={task} workspaceSlug={workspaceSlug} />
+              <RemovableTaskCard
+                key={task.id}
+                task={task}
+                workspaceSlug={workspaceSlug}
+                isRemoving={removingId === task.id}
+                onRemove={handleRemove}
+                accentColor="amber"
+              />
             ))}
           </div>
         </div>

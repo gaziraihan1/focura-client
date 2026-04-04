@@ -127,6 +127,9 @@
 :root {
   --foreground-rgb: 17, 17, 17; /* for light mode */
 }
+html {
+  scroll-behavior: smooth;
+}
 
 .dark {
   --foreground-rgb: 255, 255, 255; /* for dark mode */

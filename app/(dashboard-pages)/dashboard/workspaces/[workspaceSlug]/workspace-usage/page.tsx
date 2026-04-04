@@ -101,7 +101,7 @@ export default function WorkspaceUsagePage() {
   }
 
   return (
-    <div className="space-y-5 sm:space-y-6 lg:space-y-8 px-2 sm:px-0">
+    <div className="space-y-5 sm:space-y-6 lg:space-y-8 px-2 sm:px-0 overflow-hidden">
       <WorkspaceUsageHeader
         dateRange={dateRange}
         onDateRangeChange={setDateRange}

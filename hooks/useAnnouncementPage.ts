@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import type {
   AnnouncementVisibility,
 } from '@/types/announcement.types';
@@ -99,16 +99,16 @@ export function useAnnouncementPage(
   });
 
   // ── Workspace data
-  const { data: workspace }  = useWorkspace(workspaceSlug);
+  const { data: workspace, isLoading: workspaceLoading }  = useWorkspace(workspaceSlug);
   const workspaceId          = workspace?.id ?? '';
   const workspaceRole        = useWorkspaceRole(workspaceId);
-  const canManage            = workspaceRole.isOwner || workspaceRole.isAdmin;
-  const { data: members = [] } = useTeamMembers(workspaceId);
+  const canManage            = !!workspaceId && (workspaceRole.isOwner || workspaceRole.isAdmin);
+  const { data: members = [] } = useTeamMembers(workspaceId || undefined);
 
   // ── Announcement data + mutations
   const { filters, setVisibility, setIsPinned, setPage, resetFilters, activeFiltersCount } =
     useAnnouncementFilters();
-  const { data, isLoading }  = useAnnouncements(workspaceId, filters);
+  const { data, isLoading: listLoading, isFetching }  = useAnnouncements(workspaceId, filters);
   const createAnnouncement   = useCreateAnnouncement(workspaceId);
   const deleteAnnouncement   = useDeleteAnnouncement(workspaceId);
   const togglePin            = useTogglePinAnnouncement(workspaceId);
@@ -185,13 +185,14 @@ export function useAnnouncementPage(
   return {
     // list
     data,
-    isLoading,
+    isLoading: workspaceLoading || (!workspaceId ? true : listLoading),
     filters,
     setVisibility,
     setIsPinned,
     setPage,
     resetFilters,
     activeFiltersCount,
+    isFetching,
 
     // permissions
     canManage,
@@ -243,56 +244,84 @@ export function useAnnouncementModal(
   lockedProjectId?: string | null,
 ) {
   const [isOpen, setIsOpen] = useState(false);
-  const [form, setForm]     = useState<AnnouncementFormState>({
+
+  // Lazy initializer — runs once on mount, reads lockedProjectId at that time
+  const [form, setForm] = useState<AnnouncementFormState>(() => ({
     ...EMPTY_FORM,
     projectId: lockedProjectId ?? null,
-  });
+  }));
 
   const { mutateAsync, isPending } = useCreateAnnouncement(workspaceId);
 
-  // Reset whenever modal closes
+  const resetForm = useCallback(() =>
+    setForm({ ...EMPTY_FORM, projectId: lockedProjectId ?? null }),
+    [lockedProjectId],
+  );
 
-  const open  = useCallback(() => setIsOpen(true),  []);
+  const open = useCallback(() => setIsOpen(true), []);
+
   const close = useCallback(() => {
-  if (isPending) return;
-  setForm({ ...EMPTY_FORM, projectId: lockedProjectId ?? null });
-  setIsOpen(false);
-}, [isPending, lockedProjectId]);
+    if (isPending) return;
+    resetForm();
+    setIsOpen(false);
+  }, [isPending, resetForm]);
 
   const onSubmit = useCallback(async () => {
-  if (!form.title.trim() || !form.content.trim()) return;
-  await mutateAsync({
-    title:      form.title.trim(),
-    content:    form.content.trim(),
-    visibility: form.visibility,
-    isPinned:   form.isPinned,
-    targetIds:  form.visibility === 'PRIVATE' ? form.targetIds : [],
-    projectId:  form.projectId,
-  });
-  setForm({ ...EMPTY_FORM, projectId: lockedProjectId ?? null }); // ← reset here
-  setIsOpen(false);
-}, [form, mutateAsync, lockedProjectId]);
+    if (!form.title.trim() || !form.content.trim()) return;
+    await mutateAsync({
+      title:      form.title.trim(),
+      content:    form.content.trim(),
+      visibility: form.visibility,
+      isPinned:   form.isPinned,
+      targetIds:  form.visibility === 'PRIVATE' ? form.targetIds : [],
+      // Always use the latest lockedProjectId at submit time, not form state
+      // This handles the case where projectId resolved after initial render
+      projectId:  lockedProjectId ?? form.projectId,
+    });
+    resetForm();
+    setIsOpen(false);
+  }, [form, mutateAsync, resetForm, lockedProjectId]);
+
+  const onTitleChange = useCallback(
+    (v: string) => setForm((f) => ({ ...f, title: v })), []);
+
+  const onContentChange = useCallback(
+    (v: string) => setForm((f) => ({ ...f, content: v })), []);
+
+  const onVisibilityChange = useCallback(
+    (v: AnnouncementVisibility) => setForm((f) => ({ ...f, visibility: v, targetIds: [] })), []);
+
+  const onIsPinnedChange = useCallback(
+    (v: boolean) => setForm((f) => ({ ...f, isPinned: v })), []);
+
+  const onProjectChange = useCallback(
+    (id: string | null) => setForm((f) => ({ ...f, projectId: id })), []);
+
+  const onTargetToggle = useCallback(
+    (uid: string) => setForm((f) => ({
+      ...f,
+      targetIds: f.targetIds.includes(uid)
+        ? f.targetIds.filter((id) => id !== uid)
+        : [...f.targetIds, uid],
+    })), []);
+
+  const isValid = form.title.trim().length > 0 && form.content.trim().length > 0;
 
   return {
     open,
     modalProps: {
       isOpen,
-      isLoading:         isPending,
-      isValid:           form.title.trim().length > 0 && form.content.trim().length > 0,
+      isLoading: isPending,
+      isValid,
       form,
       onClose:           close,
       onSubmit,
-      onTitleChange:      (v: string)                  => setForm(f => ({ ...f, title: v })),
-      onContentChange:    (v: string)                  => setForm(f => ({ ...f, content: v })),
-      onVisibilityChange: (v: AnnouncementVisibility)  => setForm(f => ({ ...f, visibility: v, targetIds: [] })),
-      onIsPinnedChange:   (v: boolean)                 => setForm(f => ({ ...f, isPinned: v })),
-      onProjectChange:    (id: string | null)          => setForm(f => ({ ...f, projectId: id })),
-      onTargetToggle:     (uid: string)                => setForm(f => ({
-        ...f,
-        targetIds: f.targetIds.includes(uid)
-          ? f.targetIds.filter(id => id !== uid)
-          : [...f.targetIds, uid],
-      })),
+      onTitleChange,
+      onContentChange,
+      onVisibilityChange,
+      onIsPinnedChange,
+      onProjectChange,
+      onTargetToggle,
     },
   } as const;
 }

@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { useProjects } from "@/hooks/useProjects";
 import { useLabels } from "@/hooks/useLabels";
@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { useTasks, useTaskStats, TaskFilters, TaskSort, usePersonalQuota, useWorkspaceQuota, useTask } from "@/hooks/useTask";
 import { useUserProfile } from "./useUser";
 import { useFocusSession } from "./useFocusSession";
+import { useDailyTasks } from "./useDailyTasks";
+import toast from "react-hot-toast";
 
 export const DEFAULT_PAGE_SIZE = 10;
 
@@ -192,6 +194,9 @@ export function useWorkspaceTasksPage({
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(DEFAULT_PAGE_SIZE);
 
+  const [loadingTaskId, setLoadingTaskId] = useState<string | null>(null);
+const [loadingType, setLoadingType] = useState<"primary" | "secondary" | null>(null);
+
   const { data: workspace } = useWorkspace(workspaceSlug);
   const { data: projects = [] } = useProjects(workspace?.id);
   const { data: labels = [] } = useLabels();
@@ -303,47 +308,101 @@ export function useWorkspaceTasksPage({
     return () => clearInterval(interval);
   }, [activeSession, completeSession])
 
+  // All of this is INSIDE useWorkspaceTasksPage
 
-  const handleSortChange = (newSortBy: TaskSort['sortBy']) => {
-    if (newSortBy === sortBy) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortBy(newSortBy);
-      setSortOrder(newSortBy === 'dueDate' || newSortBy === 'createdAt' ? 'asc' : 'desc');
-    }
+
+const {
+  primaryTask,
+  secondaryTasks,
+  hasPrimaryTask,
+  isLoading: dailyTasksLoading,
+  addToPrimary,
+  addToSecondary,
+  removeDailyTask,
+} = useDailyTasks(workspaceSlug);
+
+// ✅ These handlers live in the same hook, so they can directly
+// access setLoadingTaskId and setLoadingType via closure
+const handleAddToPrimary = useCallback(async (taskId: string) => {
+  if (hasPrimaryTask) {
+    toast.error("You already have a primary task set for today");
+    return;
+  }
+  setLoadingTaskId(taskId);       // ✅ direct access, same scope
+  setLoadingType("primary");      // ✅ direct access, same scope
+  try {
+    const result = await addToPrimary(taskId);
+    if (!result.success) toast.error(result.message || "Failed to add task to Primary");
+  } finally {
+    setLoadingTaskId(null);
+    setLoadingType(null);
+  }
+}, [hasPrimaryTask, addToPrimary]);
+
+// Inside useWorkspaceTasksPage, next to handleAddToPrimary/handleAddToSecondary
+
+const handleRemoveDailyTask = useCallback(async (taskId: string) => {
+  const result = await removeDailyTask(taskId);
+  if (!result.success) {
+    toast.error(result.message || "Failed to remove task");
+  }
+}, [removeDailyTask]);
+
+;
+
+const handleAddToSecondary = useCallback(async (taskId: string) => {
+  setLoadingTaskId(taskId);       // ✅ direct access, same scope
+  setLoadingType("secondary");    // ✅ direct access, same scope
+  try {
+    const result = await addToSecondary(taskId);
+    if (!result.success) toast.error(result.message || "Failed to add task to Secondary");
+  } finally {
+    setLoadingTaskId(null);
+    setLoadingType(null);
+  }
+}, [addToSecondary]);
+
+
+const handleSortChange = (newSortBy: TaskSort['sortBy']) => {
+  if (newSortBy === sortBy) {
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+  } else {
+    setSortBy(newSortBy);
+    setSortOrder(newSortBy === 'dueDate' || newSortBy === 'createdAt' ? 'asc' : 'desc');
+  }
     setCurrentPage(1);
   };
-
+  
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
+  
   const handleStatusChange = (status: string) => {
     setSelectedStatus(status);
     setCurrentPage(1);
   };
-
+  
   const handlePriorityChange = (priority: string) => {
     setSelectedPriority(priority);
     setCurrentPage(1);
   };
-
+  
   const handleProjectChange = (projectId: string) => {
     setSelectedProject(projectId);
     setCurrentPage(1);
   };
-
+  
   const handleAssigneeChange = (assigneeId: string) => {
     setSelectedAssignee(assigneeId);
     setCurrentPage(1);
   };
-
+  
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
     setCurrentPage(1);
   };
-
+  
   return {
     workspace,
     workspaceSlug,
@@ -374,6 +433,14 @@ export function useWorkspaceTasksPage({
     toggleLabel,
     clearFilters,
     handlePageChange,
+    handleAddToSecondary,
+    handleAddToPrimary,
+    loadingTaskId,
+    primaryTask,
+    secondaryTasks,
+    hasPrimaryTask,
+    dailyTasksLoading,
+    handleRemoveDailyTask,
     projects,
     labels,
     members,
@@ -381,6 +448,7 @@ export function useWorkspaceTasksPage({
     focusedTask,
     timeRemaining,
     activeSession,
-    completeSession
+    completeSession,
+    loadingType
   };
 }

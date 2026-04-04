@@ -4,14 +4,12 @@ import { TasksPageHeader } from "@/components/Dashboard/AllTasks/WorkspaceTasks/
 import { TaskStatsGrid } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskStatsGrid";
 import { TaskSearchAndFilters } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskSearchAndFilters";
 import { TasksContentArea } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TasksContentArea";
-import { LoadingState } from "@/components/Shared/LoadingState";
 import { TaskTabs } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskTabs";
 import { useWorkspaceTasksPage } from "@/hooks/useTasksPage";
-import { useDailyTasks } from "@/hooks/useDailyTasks";
-import toast from "react-hot-toast";
 import { PrimaryTasksView } from "@/components/Dashboard/AllTasks/WorkspaceTasks/PrimaryTaskView";
 import TaskQuotaDetails from "@/components/Dashboard/AllTasks/TaskQoutaDetails";
 import { FocusModeBanner } from "@/components/Dashboard/AllTasks/FocusModeBanner";
+import { LoadingState } from "@/components/Shared/LoadingState";
 
 export default function WorkspaceTasksPage() {
   const params = useParams();
@@ -54,46 +52,26 @@ export default function WorkspaceTasksPage() {
     focusedTask,
     timeRemaining,
     activeSession,
-    completeSession
+    completeSession,
+  primaryTask,
+  secondaryTasks,
+  hasPrimaryTask,
+  dailyTasksLoading,
+  handleAddToPrimary,
+  handleAddToSecondary,
+  handleRemoveDailyTask,
+  loadingTaskId,
+  loadingType,
+
   } = useWorkspaceTasksPage({ workspaceSlug });
 
-  const {
-    primaryTask,
-    secondaryTasks,
-    hasPrimaryTask,
-    isLoading: dailyTasksLoading,
-    addToPrimary,
-    addToSecondary,
-  } = useDailyTasks(workspaceSlug);
+  if(!workspace) return <LoadingState />;
+
 
   const handleCreateTask = () => {
     router.push(`/dashboard/workspaces/${workspaceSlug}/tasks/new-task`);
   };
 
-  const handleAddToPrimary = async (taskId: string) => {
-    if (hasPrimaryTask) {
-      toast.error("You already have a primary task set for today");
-      return;
-    }
-
-    const result = await addToPrimary(taskId);
-    
-    if (!result.success) {
-      toast.error(result.message || "Failed to add task to Primary");
-    }
-  };
-
-  const handleAddToSecondary = async (taskId: string) => {
-    const result = await addToSecondary(taskId);
-    
-    if (!result.success) {
-      toast.error(result.message || "Failed to add task to Secondary");
-    }
-  };
-
-  if (!workspace) {
-    return <LoadingState />;
-  }
 
   return (
     <div className="space-y-6 px-2 sm:px-4 lg:px-6">
@@ -150,6 +128,11 @@ export default function WorkspaceTasksPage() {
             onAddToPrimary={handleAddToPrimary}
             onAddToSecondary={handleAddToSecondary}
             isPrimaryDisabled={hasPrimaryTask}
+              loadingTaskId={loadingTaskId}
+  loadingType={loadingType}
+  primaryTaskId={primaryTask?.id}
+  secondaryTaskIds={secondaryTasks.map((t) => t.id)}
+
           />
         }
         primaryTasksContent={
@@ -162,6 +145,8 @@ export default function WorkspaceTasksPage() {
               primaryTask={primaryTask}
               secondaryTasks={secondaryTasks}
               workspaceSlug={workspaceSlug}
+                onRemove={handleRemoveDailyTask}  // ✅ now wired up
+
             />
           )
         }

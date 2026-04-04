@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowLeft, Plus, Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 
 export interface LabelManagementHeaderProps {
   workspaceSlug: string;
@@ -14,7 +14,6 @@ export interface LabelManagementHeaderProps {
 export function LabelManagementHeader({
   searchQuery,
   onSearchChange,
-  onBack,
   onCreateLabel,
 }: LabelManagementHeaderProps) {
   return (
@@ -23,15 +22,9 @@ export function LabelManagementHeader({
         <div className="flex flex-col gap-4">
           {/* Title + Back */}
           <div className="flex items-center gap-3">
-            <button
-              onClick={onBack}
-              className="p-2 hover:bg-accent rounded-lg transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5 text-muted-foreground" />
-            </button>
 
             <div className="flex-1">
-              <h1 className="text-2xl font-semibold text-foreground">
+              <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
                 Label Management
               </h1>
               <p className="mt-1 text-sm text-muted-foreground">

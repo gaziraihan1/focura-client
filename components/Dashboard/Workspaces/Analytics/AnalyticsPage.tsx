@@ -102,7 +102,7 @@ export function AnalyticsPage({
               <BarChart3 className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight">Analytics</h1>
+              <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">Analytics</h1>
               <p className="text-muted-foreground mt-1">
                 Comprehensive workspace insights and metrics
               </p>

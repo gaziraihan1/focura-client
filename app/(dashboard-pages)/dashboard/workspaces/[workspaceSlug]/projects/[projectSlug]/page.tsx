@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
 import React, { useState, useMemo } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { AlertCircle } from 'lucide-react';
-import { useProjectDetailsBySlug } from '@/hooks/useProjects';
-import TasksTab      from '@/components/Dashboard/ProjectDetails/TaskTab';
-import MembersTab    from '@/components/Dashboard/ProjectDetails/MembersTab';
-import LoadingState  from '@/components/Dashboard/ProjectDetails/LoadingState';
+import { useParams, useRouter }     from 'next/navigation';
+import { AlertCircle, Plus }        from 'lucide-react';
+import { useProjectDetailsBySlug }  from '@/hooks/useProjects';
+import TasksTab             from '@/components/Dashboard/ProjectDetails/TaskTab';
+import MembersTab           from '@/components/Dashboard/ProjectDetails/MembersTab';
+import LoadingState         from '@/components/Dashboard/ProjectDetails/LoadingState';
 import ProjectDetailsHeader from '@/components/Dashboard/ProjectDetails/ProjectDetailsHeader';
-import ProjectStats  from '@/components/Dashboard/ProjectDetails/ProjectStats';
-import AllStats      from '@/components/Dashboard/ProjectDetails/AllStats';
-import { useUserProfile } from '@/hooks/useUser';
+import ProjectStats         from '@/components/Dashboard/ProjectDetails/ProjectStats';
+import AllStats             from '@/components/Dashboard/ProjectDetails/AllStats';
+import { useUserProfile }   from '@/hooks/useUser';
 import { AccessDeniedProject } from '@/components/Dashboard/ProjectDetails/AccessDeniedProject';
 import { AnnouncementList }  from '@/components/Dashboard/Workspaces/Announcement/AnnouncementList';
 import { AnnouncementModal } from '@/components/Dashboard/Workspaces/Announcement/AnnouncementModal';
@@ -20,8 +20,8 @@ import {
   useDeleteAnnouncement,
   useTogglePinAnnouncement,
 } from '@/hooks/useAnnouncement';
-import { useWorkspaceRole } from '@/hooks/useWorkspace';
-import { useTeamMembers }   from '@/hooks/useTeam';
+import { useWorkspaceRole }   from '@/hooks/useWorkspace';
+import { useTeamMembers }     from '@/hooks/useTeam';
 import { useAnnouncementModal } from '@/hooks/useAnnouncementPage';
 
 export default function ProjectDetailsPage() {
@@ -38,27 +38,26 @@ export default function ProjectDetailsPage() {
 
   const { data: project, isLoading, error } = useProjectDetailsBySlug(projectSlug);
 
-  // Derive IDs from the project response
   const workspaceId = project?.workspaceId ?? '';
   const projectId   = project?.id          ?? '';
 
-  // Announcement hooks — only active when on the announcements tab
-  const { filters, setPage } = useAnnouncementFilters();
-  const { data: announcementData, isLoading: announcementsLoading } = useProjectAnnouncements(
+  // ── Announcement data ─────────────────────────────────────────────────────
+  const { filters, setPage }    = useAnnouncementFilters();
+  const {
+    data:       announcementData,
+    isLoading:  announcementsLoading,
+    isFetching: announcementsFetching,
+  } = useProjectAnnouncements(workspaceId, projectId, filters);
+
+  // ── Modal (locked to this project) ────────────────────────────────────────
+  const { open: openModal, modalProps } = useAnnouncementModal(
     workspaceId,
-    projectId,
-    filters,
+    projectId || null,
   );
 
-    const { open: openModal, modalProps } = useAnnouncementModal(workspaceId, projectId);
-
-
+  // ── Permissions ───────────────────────────────────────────────────────────
   const workspaceRole = useWorkspaceRole(workspaceId);
-  const { data: members = [] } = useTeamMembers(workspaceId);
-
-  // Project managers/leads can also create — canManage from workspace role covers
-  // admins/owners; we also check the current user's project role below
-  const { userId } = useUserProfile();
+  const { userId }    = useUserProfile();
 
   const currentProjectMember = useMemo(
     () => project?.members?.find((m) => m.userId === userId || m.user?.id === userId),
@@ -68,8 +67,13 @@ export default function ProjectDetailsPage() {
   const canManage =
     workspaceRole.isOwner ||
     workspaceRole.isAdmin ||
-    currentProjectMember?.role === 'MANAGER' 
+    currentProjectMember?.role === 'MANAGER';
 
+  // ── Members (for recipient picker in modal) ────────────────────────────────
+  // Only fetch when workspaceId is resolved to avoid empty-string requests
+  const { data: members = [] } = useTeamMembers(workspaceId || undefined);
+
+  // ── Delete / pin ──────────────────────────────────────────────────────────
   const deleteAnnouncement = useDeleteAnnouncement(workspaceId);
   const togglePin          = useTogglePinAnnouncement(workspaceId);
 
@@ -85,6 +89,7 @@ export default function ProjectDetailsPage() {
     finally { setPinningId(null); }
   };
 
+  // ── Access check ──────────────────────────────────────────────────────────
   const isMember = useMemo(() => {
     if (!project?.members || !userId) return false;
     return project.members.some((m) => m.userId === userId || m.user?.id === userId);
@@ -98,7 +103,9 @@ export default function ProjectDetailsPage() {
         <AlertCircle className="w-16 h-16 text-destructive mb-4" />
         <h2 className="text-2xl font-semibold text-foreground mb-2">Project not found</h2>
         <p className="text-muted-foreground mb-4">
-          {error ? 'Failed to load project details' : 'This project does not exist or you do not have access'}
+          {error
+            ? 'Failed to load project details'
+            : 'This project does not exist or you do not have access'}
         </p>
         <button
           onClick={() => router.back()}
@@ -137,7 +144,11 @@ export default function ProjectDetailsPage() {
 
         <AllStats completionRate={completionRate} project={project} />
 
-        <ProjectStats activeTab={activeTab} setActiveTab={setActiveTab} project={project} />
+        <ProjectStats
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          project={project}
+        />
 
         {activeTab === 'tasks' && (
           <TasksTab
@@ -149,13 +160,13 @@ export default function ProjectDetailsPage() {
 
         {activeTab === 'announcements' && (
           <div className="space-y-4">
-            {/* Tab header with create button */}
             {canManage && (
               <div className="flex justify-end">
                 <button
                   onClick={openModal}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
                 >
+                  <Plus className="w-4 h-4" />
                   New Announcement
                 </button>
               </div>
@@ -168,7 +179,8 @@ export default function ProjectDetailsPage() {
                 totalPages: 0, hasNext: false, hasPrev: false,
               }}
               canManage={canManage}
-              isLoading={announcementsLoading}
+              isLoading={announcementsLoading && !announcementData}
+              isFetching={announcementsFetching}
               deletingId={deletingId}
               pinningId={pinningId}
               currentPage={filters.page ?? 1}
@@ -188,14 +200,14 @@ export default function ProjectDetailsPage() {
         )}
       </div>
 
-      {/* Create modal — locked to this project, no scope picker */}
+      {/* Modal — locked to this project, scope picker hidden */}
       <AnnouncementModal
         {...modalProps}
         members={members.map((m) => ({
           userId: m.id,
-          user: { id: m.id, name: m.name, image: m.image ?? null },
+          user:   { id: m.id, name: m.name, image: m.image ?? null },
         }))}
-        lockedProjectId={projectId}   // locks scope, shows read-only pill
+        lockedProjectId={projectId || null}
       />
     </div>
   );

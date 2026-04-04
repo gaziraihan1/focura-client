@@ -96,7 +96,8 @@ export function useAnnouncements(
   return useQuery({
     queryKey:        announcementKeys.list(workspaceId, filters),
     enabled:         !!workspaceId,
-    staleTime:       2 * 60 * 1000,
+    staleTime:       5 * 60 * 1000,
+    gcTime:          10 * 60 * 1000,
     placeholderData: (prev) => prev,
     queryFn: () =>
       fetchAnnouncements(

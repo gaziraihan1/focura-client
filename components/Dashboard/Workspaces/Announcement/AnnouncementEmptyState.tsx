@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion'
 import { Megaphone } from "lucide-react";
 
-export function EmptyState() {
+export function AnnouncementEmptyState() {
   return (
     <motion.div
       initial={{ opacity: 0 }}
