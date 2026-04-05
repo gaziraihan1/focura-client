@@ -763,21 +763,3 @@ Creator & Maintainer of Focura
 **Happy coding! 🚀**
 
 If you find Focura Client helpful, please consider giving it a ⭐ star on GitHub!
-
----
-
-This README covers:
-- ✅ Project overview and features
-- ✅ Tech stack and dependencies
-- ✅ Architecture and data flow
-- ✅ Setup and installation
-- ✅ Project structure
-- ✅ Authentication details
-- ✅ API integration
-- ✅ Development workflow
-- ✅ Deployment instructions
-- ✅ Contributing guidelines
-- ✅ Security practices
-- ✅ Additional resources
-
-Would you like me to adjust any sections, add more details, or modify the formatting?
