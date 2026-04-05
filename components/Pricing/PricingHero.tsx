@@ -31,7 +31,7 @@ export default function PricingHero() {
 
           <div className="flex items-center gap-2">
             <Check className="w-4 h-4 text-primary" />
-            14-day free trial
+            7-day free trial
           </div>
         </div>
       </div>

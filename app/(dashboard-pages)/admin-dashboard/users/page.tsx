@@ -6,6 +6,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { useAdminUsers, useAdminPagination } from '@/hooks/useAdmin';
 import { Avatar }              from '@/components/Shared/Avatar';
 import { Pagination }          from '@/components/Shared/Pagination';
+import Link from 'next/link';
 
 export default function AdminUsersPage() {
   const { page, setPage, search, handleSearch } = useAdminPagination();
@@ -62,7 +63,12 @@ export default function AdminUsersPage() {
                       <div className="flex items-center gap-2.5">
                         <Avatar name={u.name} image={u.image} size="sm" />
                         <div>
-                          <p className="text-xs font-medium text-foreground">{u.name}</p>
+      <Link
+        href={`/admin-dashboard/users/${u.id}`}
+        className="text-xs font-medium text-foreground hover:text-primary transition-colors"
+      >
+        {u.name}
+      </Link>
                           <p className="text-[10px] text-muted-foreground">{u.email}</p>
                         </div>
                       </div>

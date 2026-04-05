@@ -20,7 +20,6 @@ const navLinks = [
 
 export default function NavbarMain() {
   const {data: isAdmin} = useIsFocuraAdmin();
-  console.log(isAdmin)
   const [open, setOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { data: session, status } = useSession();

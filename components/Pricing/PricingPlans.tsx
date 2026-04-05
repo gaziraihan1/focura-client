@@ -54,7 +54,7 @@ export default function PricingPlans() {
                   {plan.price}
                 </span>
                 {plan.price !== "Free" && plan.price !== "Custom" && (
-                  <span className="text-foreground/50 text-sm"> /user</span>
+                  <span className="text-foreground/50 text-sm"> /workspace</span>
                 )}
               </div>
 

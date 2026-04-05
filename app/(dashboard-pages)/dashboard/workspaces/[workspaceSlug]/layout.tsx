@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams, usePathname } from "next/navigation";
+import { WorkspacePlanProvider, useWorkspacePlan } from "@/context/workspacePlan/WorkspacePlanContext";
 import { LoadingState } from "@/components/Shared/LoadingState";
 import EmptyState from "@/components/Dashboard/Workspaces/EmptyState";
 import { useWorkspaceLayout } from "@/hooks/useWorkspaceLayout";
@@ -8,14 +9,17 @@ import { WorkspaceSidebar } from "@/components/Dashboard/Workspaces/WorkspaceSid
 import { WorkspaceLayoutHeader } from "@/components/Dashboard/Workspaces/WorkspaceLayoutHeader";
 import { WorkspaceSwitcherModal } from "@/components/Dashboard/Workspaces/WorkspaceSwitcherModal";
 
-export default function WorkspaceLayout({
+// ── Inner layout — runs INSIDE the provider so useWorkspacePlan works ──────
+function WorkspaceLayoutInner({
+  slug,
+  pathname,
   children,
 }: {
+  slug: string;
+  pathname: string;
   children: React.ReactNode;
 }) {
-  const params = useParams();
-  const pathname = usePathname();
-  const slug = params.workspaceSlug as string;
+  const { isFree } = useWorkspacePlan(); // ✅ safe — provider is already mounted
 
   const {
     workspace,
@@ -30,15 +34,10 @@ export default function WorkspaceLayout({
     session,
     handleWorkspaceSwitch,
     handleCreateWorkspace,
-  } = useWorkspaceLayout({ slug, pathname });
+  } = useWorkspaceLayout({ slug, pathname, isFree }); // ← pass it in
 
-  if (isLoading) {
-    return <LoadingState />;
-  }
-
-  if (!workspace) {
-    return <EmptyState />;
-  }
+  if (isLoading) return <LoadingState />;
+  if (!workspace) return <EmptyState />;
 
   return (
     <div className="flex h-screen overflow-hidden bg-background scroll-smooth">
@@ -59,7 +58,6 @@ export default function WorkspaceLayout({
           onSidebarOpen={() => setSidebarOpen(true)}
           onSwitcherOpen={() => setSwitcherOpen(true)}
         />
-
         <main className="flex-1 overflow-y-auto min-h-0 px-4 py-6 sm:px-6 lg:px-8">
           {children}
         </main>
@@ -74,5 +72,20 @@ export default function WorkspaceLayout({
         onCreateWorkspace={handleCreateWorkspace}
       />
     </div>
+  );
+}
+
+// ── Outer layout — mounts the provider first, then renders inner ───────────
+export default function WorkspaceLayout({ children }: { children: React.ReactNode }) {
+  const params   = useParams();
+  const pathname = usePathname();
+  const slug     = params.workspaceSlug as string;
+
+  return (
+    <WorkspacePlanProvider slug={slug}>         {/* ← provider is first */}
+      <WorkspaceLayoutInner slug={slug} pathname={pathname}>
+        {children}
+      </WorkspaceLayoutInner>
+    </WorkspacePlanProvider>
   );
 }

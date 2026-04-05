@@ -181,3 +181,64 @@ export function useAdminActivity(params: { page?: number; pageSize?: number }) {
       ),
   });
 }
+
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+export function useBanUser() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, reason }: { id: string; reason: string }) => {
+      const res = await api.patch(`/api/admin/users/${id}/ban`, { reason });
+      return res as unknown as { success: boolean; message: string };
+    },
+    onSuccess: (_, { id }) => {
+      qc.invalidateQueries({ queryKey: ['admin', 'users'] });
+      qc.invalidateQueries({ queryKey: ['admin', 'user', id] });
+    },
+  });
+}
+
+export function useUnbanUser() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const res = await api.patch(`/api/admin/users/${id}/unban`, {});
+      return res as unknown as { success: boolean; message: string };
+    },
+    onSuccess: (_, id) => {
+      qc.invalidateQueries({ queryKey: ['admin', 'users'] });
+      qc.invalidateQueries({ queryKey: ['admin', 'user', id] });
+    },
+  });
+}
+
+export function useDeleteWorkspace() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      slug, reason, hardDelete,
+    }: { slug: string; reason?: string; hardDelete: boolean }) => {
+      const res = await api.post(
+        `/api/admin/workspaces/${slug}/delete`,
+        { reason, hardDelete },
+      );
+      return res as unknown as { success: boolean; message: string };
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin', 'workspaces'] });
+    },
+  });
+}
+
+export function useRestoreWorkspace() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (slug: string) => {
+      const res = await api.patch(`/api/admin/workspaces/${slug}/restore`, {});
+      return res as unknown as { success: boolean; message: string };
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin', 'workspaces'] });
+    },
+  });
+}

@@ -190,6 +190,28 @@ export function useUpdateWorkspace() {
   });
 }
 
+
+export type PlanName = Workspace['plan']; // 'FREE' | 'PRO' | 'BUSINESS' | 'ENTERPRISE'
+
+export function useWorkspacePlan(slug: string) {
+  const { data: workspace, isLoading } = useWorkspace(slug);
+
+  return useMemo(() => {
+    const plan = workspace?.plan ?? null;
+
+    return {
+      planName:     plan,
+      isLoading,
+      isFree:       plan === 'FREE',
+      isPro:        plan === 'PRO',
+      isBusiness:   plan === 'BUSINESS',
+      isEnterprise: plan === 'ENTERPRISE',
+      isPaid:       plan !== 'FREE' && plan !== null,
+      hasPlan:      (p: PlanName) => plan === p,
+    };
+  }, [workspace?.plan, isLoading]);
+}
+
 export function useDeleteWorkspace() {
   const qc = useQueryClient();
   const router      = useRouter();

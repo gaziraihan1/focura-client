@@ -4,26 +4,8 @@ import { Users, Building2, FolderOpen, CheckSquare, Megaphone, Lightbulb } from 
 import { formatDistanceToNow } from 'date-fns';
 import { useAdminStats } from '@/hooks/useAdmin';
 import { Avatar }        from '@/components/Shared/Avatar';
-import { cn }            from '@/lib/utils';
 import Link from 'next/link';
-
-function StatCard({ icon: Icon, label, value, className }: {
-  icon: typeof Users; label: string; value: number; className?: string;
-}) {
-  return (
-    <div className="flex items-center gap-4 p-5 rounded-xl border border-border bg-card">
-      <div className={cn('p-2.5 rounded-lg', className)}>
-        <Icon className="w-5 h-5" />
-      </div>
-      <div>
-        <p className="text-2xl font-bold text-foreground tabular-nums">
-          {value.toLocaleString()}
-        </p>
-        <p className="text-xs text-muted-foreground">{label}</p>
-      </div>
-    </div>
-  );
-}
+import {StatCard} from '@/components/AdminDashboard/StatCard';
 
 export default function AdminOverviewPage() {
   const { data: stats, isLoading } = useAdminStats();
@@ -116,7 +98,7 @@ export default function AdminOverviewPage() {
             <div key={w.id} className="flex items-center justify-between py-2.5 gap-4">
               <div className="min-w-0">
                 <Link
-                  href={`/admin/workspaces/${w.id}`}
+                  href={`/admin-dashboard/workspaces/${w.slug}`}
                   className="text-sm font-medium text-foreground hover:text-primary transition-colors"
                 >
                   {w.name}

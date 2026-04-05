@@ -10,7 +10,6 @@ import {
   FolderOpen,
   Users,
   Calendar,
-  BarChart3,
   Settings,
   HelpCircle,
   ChevronDown,
@@ -94,11 +93,6 @@ const navigation: NavItem[] = [
     name: "Calendar",
     href: "/dashboard/calendar",
     icon: Calendar,
-  },
-  {
-    name: "Analytics",
-    href: "/dashboard/analytics",
-    icon: BarChart3,
   },
   {
     name: "Activity Logs",

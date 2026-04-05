@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useWorkspace, useWorkspaceRole, useWorkspaces, useWorkspaceStats, useWorkspaceMembers, useWorkspaceRoleFromWorkspace } from "@/hooks/useWorkspace";
+import {
+  useWorkspace,
+  useWorkspaceRole,
+  useWorkspaces,
+  useWorkspaceStats,
+  useWorkspaceMembers,
+  useWorkspaceRoleFromWorkspace,
+} from "@/hooks/useWorkspace";
 import {
   LayoutDashboard,
   CheckSquare,
@@ -22,13 +29,17 @@ type TabType = "overview" | "projects" | "members";
 interface UseWorkspaceDetailPageProps {
   slug: string;
 }
-
 interface UseWorkspaceLayoutProps {
   slug: string;
   pathname: string;
+  isFree: boolean
 }
 
-export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) {
+export function useWorkspaceLayout({
+  slug,
+  pathname,
+  isFree
+}: UseWorkspaceLayoutProps) {
   const router = useRouter();
   const { data: session } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -38,7 +49,6 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
   const { data: allWorkspaces = [] } = useWorkspaces();
   const { canManageWorkspace } = useWorkspaceRoleFromWorkspace(slug);
 
-  // Keyboard shortcut for workspace switcher
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
@@ -46,49 +56,9 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
         setSwitcherOpen((open) => !open);
       }
     };
-
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
-
-  const label = {
-    name: "Labels",
-    href: `/dashboard/workspaces/${slug}/label`,
-    icon: Tags,
-    match: (path: string) => path === `/dashboard/workspaces/${slug}/label`,
-  };
-  const analytics = {
-      name: "Analytics",
-      href: `/dashboard/workspaces/${slug}/analytics`,
-      icon: BarChart3,
-      match: (path: string) => path.includes(`/${slug}/analytics`),
-    }
-
-    const storage = {
-      name: "Storage",
-      href:  `/dashboard/workspaces/${slug}/storage`,
-      icon: Store,
-      match: (path: string) => path.includes(`/${slug}/storage`)
-    }
-
-    const files = {
-      name: "Files",
-      href: `/dashboard/workspaces/${slug}/files`,
-      icon: Files,
-      match: (path: string) => path.includes(`/${slug}/files`)
-    }
-    const workspaceUsage = {
-      name: "Workspace Usage",
-      href: `/dashboard/workspaces/${slug}/workspace-usage`,
-      icon: UserLock,
-      match: (path: string) => path.includes(`/${slug}/workspace-usage`)
-    }
-    const billing = {
-      name: "Billing Page",
-      href: `/dashboard/workspaces/${slug}/billing`,
-      icon: CreditCard,
-      match: (path: string) => path.includes(`/${slug}/billing`)
-    }
 
   const navigation = [
     {
@@ -101,7 +71,7 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
       name: "Announcements",
       href: `/dashboard/workspaces/${slug}/announcements`,
       icon: Megaphone,
-      match: (path: string) => path.includes(`/${slug}/announcements`)
+      match: (path: string) => path.includes(`/${slug}/announcements`),
     },
     {
       name: "Tasks",
@@ -127,11 +97,58 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
       icon: Users,
       match: (path: string) => path.includes(`/${slug}/team`),
     },
-    ...(canManageWorkspace ? [label, analytics, workspaceUsage, storage, files, billing] : []),
+
+    // ── Admin-only items ───────────────────────────────────────────────────
+    ...(canManageWorkspace
+      ? [
+          {
+            name: "Labels",
+            href: `/dashboard/workspaces/${slug}/label`,
+            icon: Tags,
+            match: (path: string) =>
+              path === `/dashboard/workspaces/${slug}/label`,
+          },
+          {
+            name: "Files",
+            href: `/dashboard/workspaces/${slug}/files`,
+            icon: Files,
+            match: (path: string) => path.includes(`/${slug}/files`),
+          },
+          {
+            name: "Billing Page",
+            href: `/dashboard/workspaces/${slug}/billing`,
+            icon: CreditCard,
+            match: (path: string) => path.includes(`/${slug}/billing`),
+          },
+
+          // ── Paid-only items — visible but locked on FREE plan ────────────────
+          {
+            name: "Analytics",
+            href: `/dashboard/workspaces/${slug}/analytics`,
+            icon: BarChart3,
+            match: (path: string) => path.includes(`/${slug}/analytics`),
+            locked: isFree,
+          },
+          {
+            name: "Workspace Usage",
+            href: `/dashboard/workspaces/${slug}/workspace-usage`,
+            icon: UserLock,
+            match: (path: string) => path.includes(`/${slug}/workspace-usage`),
+            locked: isFree,
+          },
+          {
+            name: "Storage",
+            href: `/dashboard/workspaces/${slug}/storage`,
+            icon: Store,
+            match: (path: string) => path.includes(`/${slug}/storage`),
+            locked: isFree,
+          },
+        ]
+      : []),
   ];
 
   const currentMember = workspace?.members.find(
-    (m) => m.user.id === session?.user?.id
+    (m) => m.user.id === session?.user?.id,
   );
 
   const handleWorkspaceSwitch = (workspaceSlug: string) => {
@@ -162,8 +179,6 @@ export function useWorkspaceLayout({ slug, pathname }: UseWorkspaceLayoutProps) 
   };
 }
 
-
-
 export function useWorkspaceDetailPage({ slug }: UseWorkspaceDetailPageProps) {
   const [activeTab, setActiveTab] = useState<TabType>("overview");
   const [showInviteModal, setShowInviteModal] = useState(false);
@@ -171,18 +186,9 @@ export function useWorkspaceDetailPage({ slug }: UseWorkspaceDetailPageProps) {
   const { data: workspace, isLoading, isError } = useWorkspace(slug);
   const { data: stats } = useWorkspaceStats(workspace?.id || "");
   const { data: members = [] } = useWorkspaceMembers(workspace?.id || "");
-
   const { isAdmin, isOwner, canCreateProjects } = useWorkspaceRole(
-    workspace?.id
+    workspace?.id,
   );
-
-  const handleInviteClick = () => {
-    setShowInviteModal(true);
-  };
-
-  const handleInviteClose = () => {
-    setShowInviteModal(false);
-  };
 
   return {
     workspace,
@@ -193,8 +199,8 @@ export function useWorkspaceDetailPage({ slug }: UseWorkspaceDetailPageProps) {
     activeTab,
     setActiveTab,
     showInviteModal,
-    handleInviteClick,
-    handleInviteClose,
+    handleInviteClick: () => setShowInviteModal(true),
+    handleInviteClose: () => setShowInviteModal(false),
     isAdmin,
     isOwner,
     canCreateProjects,

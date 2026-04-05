@@ -12,19 +12,14 @@ import { WorkloadChart } from './WorkloadChart';
 import { MostActiveDay } from './MostActiveDay';
 import { TimeSummaryCard } from './TimeSummaryCard';
 import { PriorityDistribution } from './PriorityDistribution';
-import { AnalyticsWorkspaceSwitcher } from './AnalyticsWorkspaceSwitcher';
 import { useAnalyticsPage } from '@/hooks/useAnalyticsPage';
 
 interface AnalyticsPageProps {
   workspaceId: string;
-  selectedWorkspaceId?: string;
-  setSelectedWorkspaceId?: (id: string) => void;
 }
 
 export function AnalyticsPage({
   workspaceId,
-  selectedWorkspaceId,
-  setSelectedWorkspaceId,
 }: AnalyticsPageProps) {
   const {
     overview,
@@ -110,12 +105,6 @@ export function AnalyticsPage({
           </div>
         </div>
 
-        {selectedWorkspaceId && setSelectedWorkspaceId && (
-          <AnalyticsWorkspaceSwitcher
-            currentWorkspaceId={selectedWorkspaceId}
-            onWorkspaceChange={setSelectedWorkspaceId}
-          />
-        )}
       </div>
 
       <KPICards kpis={overview.kpis} />

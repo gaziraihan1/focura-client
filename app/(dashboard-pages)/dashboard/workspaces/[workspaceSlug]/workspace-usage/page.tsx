@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
@@ -10,62 +10,60 @@ import { UsageSnapshot } from "@/components/Dashboard/Analytics/WorkspaceUsage/U
 import { PlanLimitsSection } from "@/components/Dashboard/Analytics/WorkspaceUsage/PlanLimitsSection";
 import type { DateRangeFilter } from "@/types/workspace-usage.types";
 import { useWorkspaces } from "@/hooks/useWorkspace";
+import { useWorkspacePlan } from "@/context/workspacePlan/WorkspacePlanContext";
+import { UpgradePlanCard } from "@/components/Shared/UpgradePlanCard";
 
 const EngagementSection = dynamic(
-  () =>
-    import("@/components/Dashboard/Analytics/WorkspaceUsage/EngagementSection").then(
-      (m) => m.EngagementSection
-    ),
+  () => import("@/components/Dashboard/Analytics/WorkspaceUsage/EngagementSection").then((m) => m.EngagementSection),
   { ssr: false }
 );
-
 const StorageResourcesSection = dynamic(
-  () =>
-    import(
-      "@/components/Dashboard/Analytics/WorkspaceUsage/StorageResourcesSection"
-    ).then((m) => m.StorageResourcesSection),
+  () => import("@/components/Dashboard/Analytics/WorkspaceUsage/StorageResourcesSection").then((m) => m.StorageResourcesSection),
   { ssr: false }
 );
-
 const FeatureUsageSection = dynamic(
-  () =>
-    import(
-      "@/components/Dashboard/Analytics/WorkspaceUsage/FeatureUsageSection"
-    ).then((m) => m.FeatureUsageSection),
+  () => import("@/components/Dashboard/Analytics/WorkspaceUsage/FeatureUsageSection").then((m) => m.FeatureUsageSection),
   { ssr: false }
 );
-
 const GrowthInsightsSection = dynamic(
-  () =>
-    import(
-      "@/components/Dashboard/Analytics/WorkspaceUsage/GrowthInsightsSection"
-    ).then((m) => m.GrowthInsightsSection),
+  () => import("@/components/Dashboard/Analytics/WorkspaceUsage/GrowthInsightsSection").then((m) => m.GrowthInsightsSection),
   { ssr: false }
 );
 
 export default function WorkspaceUsagePage() {
   const { workspaceSlug } = useParams();
+  const { isFree, isLoading: isPlanLoading } = useWorkspacePlan();
+
   const { data: workspaces } = useWorkspaces();
   const workspace   = workspaces?.find((w) => w.slug === workspaceSlug);
   const workspaceId = workspace?.id;
 
-  const [dateRange, setDateRange] = useState<DateRangeFilter>("30d");
+  const [dateRange, setDateRange]     = useState<DateRangeFilter>("30d");
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const { data, isLoading, isError, refetch } = useWorkspaceUsage(
-    workspaceId as string
+    workspaceId as string,
+    { enabled: !isFree } // ← skip the fetch entirely when locked
   );
-
-  const handleExportCSV = () => {
-    // TODO: implement CSV export
-    console.log("Exporting CSV…");
-  };
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
     await refetch?.();
     setIsRefreshing(false);
   };
+
+  // Plan still resolving — let the layout handle it, render nothing
+  if (isPlanLoading) return null;
+
+  // Locked on FREE — show upgrade card, no data fetch happened
+  if (isFree) {
+    return (
+      <UpgradePlanCard
+        feature="Workspace Usage"
+        description="Track how your team uses the workspace — member activity, storage consumption, feature adoption, and growth trends over time."
+      />
+    );
+  }
 
   if (isLoading) {
     return (
@@ -105,7 +103,7 @@ export default function WorkspaceUsagePage() {
       <WorkspaceUsageHeader
         dateRange={dateRange}
         onDateRangeChange={setDateRange}
-        onExport={handleExportCSV}
+        onExport={() => console.log("Exporting CSV…")}
         isRefreshing={isRefreshing}
         onRefresh={handleRefresh}
       />
@@ -120,11 +118,8 @@ export default function WorkspaceUsagePage() {
       )}
 
       <StorageResourcesSection resourceUsage={data.resourceUsage} />
-
       <FeatureUsageSection featureUsage={data.featureUsage} />
-
       <PlanLimitsSection planLimits={data.planLimits} workspaceSlug={workspaceSlug as string} />
-
       <GrowthInsightsSection workspaceGrowth={data.workspaceGrowth} />
     </div>
   );

@@ -60,6 +60,9 @@ export interface AdminWorkspaceDetail {
   name: string;
   slug: string;
   plan: string;
+  deletedAt: string | null;
+  deletedById: string | null;
+  deleteReason: string | null;
   description: string | null;
   createdAt: string;
   updatedAt: string;
@@ -150,6 +153,9 @@ export interface AdminUserDetail {
   name: string;
   email: string;
   image: string | null;
+  bannedAt: string | null;
+  banReason: string | null;
+  bannedById: string | null;
   role: string;
   bio: string | null;
   timezone: string | null;
@@ -293,4 +299,25 @@ export interface AdminPagination {
 export interface AdminPaginatedResponse<T> {
   data: T[];
   pagination: AdminPagination;
+}
+
+// types/admin-user-detail.types.ts
+import { LucideIcon } from 'lucide-react';
+
+export interface StatCardProps {
+  icon: LucideIcon;
+  label: string;
+  value: React.ReactNode;
+  sub?: string;
+  className?: string;
+}
+
+export interface SectionCardProps {
+  title: string;
+  children: React.ReactNode;
+  count?: number;
+}
+
+export interface CopyableIdProps {
+  id: string;
 }

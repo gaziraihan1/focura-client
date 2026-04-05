@@ -121,10 +121,10 @@ export default function DashboardShell({
   }
 
   return (
-    <div className="min-h-screen bg-background scroll-smooth">
+    <div className="min-h-screen bg-background scroll-smooth overflow-hidden">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <div className=" min-w-0">
+      <div className="lg:pl-64 min-w-0">
         <TopNavbar onMenuClick={() => setSidebarOpen(true)} user={profile} />
         <main className="flex-1 p-5 lg:py-8 lg:px-5">{children}</main>
       </div>
