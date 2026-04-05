@@ -87,7 +87,7 @@ If you experience or witness unacceptable behavior, please report it responsibly
 
 You may report issues by contacting the project maintainer directly:
 
-**Email:** focura.team@gmail.com *(replace if needed)*
+**Email:** focurabusiness@gmail.com 
 
 All reports will be reviewed promptly and confidentially.
 Maintainers are committed to protecting reporters from retaliation.
