@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Calendar, Clock } from "lucide-react";
+import { AlertCircle, Calendar, Clock } from "lucide-react";
 
 interface TaskDatesSectionProps {
   startDate: string;
@@ -33,6 +33,13 @@ export function TaskDatesSection({
           onChange={(e) => onStartDateChange(e.target.value)}
           className="w-full px-3 py-2 rounded-lg border border-border"
         />
+        {
+          errors.startDate && (
+            <p className="text-[11px] text-destructive">
+              <AlertCircle size={14} /> {errors.startDate}
+            </p>
+          )
+        }
       </div>
 
       <div>
@@ -46,6 +53,13 @@ export function TaskDatesSection({
           onChange={(e) => onDueDateChange(e.target.value)}
           className="w-full px-3 py-2 rounded-lg border border-border"
         />
+        {
+          errors.dueDate && (
+            <p className="text-[11px] text-destructive">
+              <AlertCircle size={14} /> {errors.dueDate}
+            </p>
+          )
+        }
       </div>
 
       <div>
@@ -68,6 +82,13 @@ export function TaskDatesSection({
           }`}
           placeholder="e.g. 1.5"
         />
+        {
+          errors.estimatedHours && (
+            <p className="text-[11px] text-destructive">
+              <AlertCircle size={14} /> {errors.estimatedHours}
+            </p>
+          )
+        }
       </div>
     </motion.div>
   );

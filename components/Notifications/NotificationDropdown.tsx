@@ -37,14 +37,15 @@ export function NotificationDropdown({
   onClose,
 }: NotificationDropdownProps) {
   return (
-    <div className="absolute right-0 mt-2 w-96 bg-popover border border-border rounded-xl shadow-lg z-40 overflow-hidden">
+    <div className="absolute right-0 mt-4 w-[calc(100vw-6rem)] sm:w-96 max-w-96 bg-popover border border-border rounded-xl shadow-lg z-40 overflow-hidden">
       <NotificationDropdownHeader
         unreadCount={unreadCount}
         isMarkingAllAsRead={isMarkingAllAsRead}
         onMarkAllAsRead={onMarkAllAsRead}
       />
 
-      <div className="max-h-[450px] overflow-y-auto">
+      <div className="max-h-[min(450px,calc(100vh-12rem))]
+ overflow-y-auto">
         {isLoading && <NotificationLoadingState />}
 
         {!isLoading && notifications.length === 0 && (

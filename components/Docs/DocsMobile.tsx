@@ -1,14 +1,19 @@
-import { DocsTree } from "@/types/docs.types";
+'use client';
+
+import { DocsTree }    from "@/types/docs.types";
 import { ChevronsLeft } from "lucide-react";
-import Link from "next/link";
-import React from "react";
+import Link            from "next/link";
+import { usePathname } from "next/navigation";
+import { cn }          from "@/lib/utils";
 
 interface DocsMobileProps {
-  tree: DocsTree;
+  tree:       DocsTree;
   onMenuOpen: (v: boolean) => void;
 }
 
 export default function DocsMobile({ tree, onMenuOpen }: DocsMobileProps) {
+  const pathname = usePathname();
+
   return (
     <aside className="lg:hidden fixed left-0 top-16 bottom-0 w-72 bg-background border-r border-border px-6 py-3 overflow-y-auto z-50 scrollbar-hide">
       <div className="flex items-center justify-between mb-6">
@@ -28,17 +33,25 @@ export default function DocsMobile({ tree, onMenuOpen }: DocsMobileProps) {
               {section.title}
             </h3>
             <ul className="space-y-0.5">
-              {section.pages.map((page) => (
-                <li key={page.slug}>
-                  <Link
-                    href={page.slug}
-                    onClick={() => onMenuOpen(false)}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors block py-2 px-3 rounded-md hover:bg-accent"
-                  >
-                    {page.title}
-                  </Link>
-                </li>
-              ))}
+              {section.pages.map((page) => {
+                const isActive = pathname === page.slug;
+                return (
+                  <li key={page.slug}>
+                    <Link
+                      href={page.slug}
+                      onClick={() => onMenuOpen(false)}
+                      className={cn(
+                        'text-sm block py-2 px-3 rounded-md transition-colors',
+                        isActive
+                          ? 'bg-primary/10 text-primary font-medium border-l-2 border-primary'
+                          : 'text-muted-foreground hover:text-foreground hover:bg-accent',
+                      )}
+                    >
+                      {page.title}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}

@@ -9,7 +9,7 @@ export function TeamTasksPageHeader({
 }: TeamTasksPageHeaderProps) {
   return (
     <div>
-      <h1 className="text-xl font-semibold flex items-center gap-2">
+      <h1 className="text-xl lg:text-3xl font-semibold flex items-center gap-2">
         <Users className="w-5 h-5 text-muted-foreground" />
         Team Tasks
       </h1>

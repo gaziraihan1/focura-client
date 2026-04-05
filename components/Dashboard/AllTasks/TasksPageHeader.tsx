@@ -8,7 +8,7 @@ export function TasksPageHeader({ onCreateTask }: TasksPageHeaderProps) {
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div>
-        <h1 className="text-lg sm:text-xl lg:text-3xl font-bold text-foreground">Tasks</h1>
+        <h1 className="text-xl lg:text-3xl font-bold text-foreground">Tasks</h1>
         <p className="text-xs sm:text-sm text-muted-foreground mt-1">
           Manage your tasks and stay productive
         </p>
