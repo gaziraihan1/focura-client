@@ -1,178 +1,783 @@
-# Focura
+# 🎯 **Focura Client**
 
-Focura is a focus-first productivity and collaboration platform for individuals and small teams.
+> **Focus Smarter. Manage Workspaces, Projects & Teams.**
 
-It helps users turn scattered tasks into clear priorities, protect deep work time, and maintain steady progress without unnecessary complexity.
+A modern, full-stack productivity and collaboration SaaS platform built with **Next.js 16, React 19, TypeScript, and TanStack Query**. Focura helps teams turn scattered tasks into clear priorities, protect deep work time, and maintain steady progress without unnecessary complexity.
 
----
-
-## What Focura Solves
-
-- Too many tasks, low clarity on what to do next
-- Constant context switching and attention fragmentation
-- Team misalignment on ownership, deadlines, and progress
-- Busy days with low meaningful output
+**Live Demo:** https://focura-client.vercel.app
 
 ---
 
-## Core Product Capabilities
+## 📋 Table of Contents
 
-### Workspace and Team Collaboration
-- Multiple workspaces per user
-- Role-based access (Owner, Admin, Member, Guest)
-- Invitations and membership management
-- Workspace-level data isolation
-
-### Project and Task Execution
-- Project planning with statuses, priorities, members, and timelines
-- Task lifecycle with assignees, labels, comments, and activity history
-- Subtasks, dependencies, recurrence, and daily planning workflows
-- Multiple work views: List, Calendar, and Kanban
-
-### Focus and Productivity Intelligence
-- Focus sessions (Pomodoro, deep work, custom)
-- Daily focus flows and execution-oriented task metadata
-- Capacity and workload-aware planning primitives
-- Workspace analytics and usage insights
-
-### Communication and Collaboration Signals
-- In-app notifications with real-time updates (SSE)
-- Mentions, comments, and collaborative discussion on tasks
-- Workspace announcements and meeting coordination
-- Activity logs for accountability and transparency
-
-### Billing and Plan Management
-- Workspace-level subscriptions and plan limits
-- Plan upgrades, cancel/reactivate flows, and billing status
-- Invoice history and usage-aware limits
-- Admin-level billing visibility
-
-### Security and Access Control
-- NextAuth-based authentication (credentials + Google)
-- Backend token exchange and refresh flow
-- Role-aware authorization checks
-- Rate limiting and audit-oriented security events
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Architecture](#-architecture)
+- [Getting Started](#-getting-started)
+- [Project Structure](#-project-structure)
+- [Authentication](#-authentication)
+- [API Integration](#-api-integration)
+- [Development](#-development)
+- [Deployment](#-deployment)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 ---
 
-## Tech Stack
+## ✨ Features
 
-### Frontend
-- Next.js (App Router)
-- React
-- TypeScript
-- Tailwind CSS
-- TanStack Query
+### **Core Productivity Features**
 
-### Backend
-- Node.js
-- Express.js
-- PostgreSQL
-- Prisma ORM
+#### **Workspace & Team Management**
+- ✅ Multiple workspaces per user
+- ✅ Role-based access control (OWNER, ADMIN, MEMBER)
+- ✅ Team member invitations and management
+- ✅ Workspace-level data isolation
+- ✅ Settings and customization per workspace
 
-### Authentication and Session
-- NextAuth
-- Backend-issued JWT access/refresh tokens
+#### **Task Management**
+- ✅ Full CRUD operations for tasks
+- ✅ Task metadata: title, description, status, priority, dates
+- ✅ Task assignment to team members
+- ✅ Subtasks with hierarchy support
+- ✅ Task dependencies and relationships
+- ✅ Recurring tasks with custom schedules
+- ✅ Task filtering, sorting, and searching
+- ✅ Bulk operations for batch updates
+
+#### **Multiple Work Views**
+- ✅ **List View** - Traditional task list with filters
+- ✅ **Kanban Board** - Drag-and-drop task board
+- ✅ **Calendar View** - Visual task scheduling and deadlines
+- ✅ **Daily Tasks** - Focused daily planning workflow
+
+#### **Collaboration & Communication**
+- ✅ Comments and discussions on tasks
+- ✅ @mentions for team notifications
+- ✅ Real-time notifications via SSE
+- ✅ Activity feed and audit trail
+- ✅ Team visibility and transparency
+- ✅ Workspace announcements
+
+#### **Focus & Productivity Intelligence**
+- ✅ Focus sessions (Pomodoro, deep work, custom)
+- ✅ Time tracking and analytics
+- ✅ Daily planning workflows
+- ✅ Capacity and workload visualization
+- ✅ Productivity insights and metrics
+
+#### **Project Management**
+- ✅ Project creation and configuration
+- ✅ Project statuses and lifecycle
+- ✅ Team member assignment
+- ✅ Project timelines and milestones
+- ✅ Project analytics and statistics
+- ✅ Project archiving
+
+#### **Analytics & Insights**
+- ✅ Workspace analytics dashboard
+- ✅ Task completion rates
+- ✅ Focus session statistics
+- ✅ Team activity tracking
+- ✅ Storage and usage statistics
+- ✅ Custom charts and visualizations
+
+#### **Labels & Organization**
+- ✅ Custom label creation per workspace
+- ✅ Multi-label task tagging
+- ✅ Label filtering and organization
+- ✅ Color-coded labels
+
+#### **File Management & Storage**
+- ✅ File uploads and attachments
+- ✅ Cloudinary cloud integration
+- ✅ Storage usage tracking
+- ✅ File browser and management UI
+- ✅ Storage optimization tools
+
+#### **Billing & Subscription**
+- ✅ Plan management and upgrades
+- ✅ Stripe payment integration
+- ✅ Billing history and invoices
+- ✅ Usage-aware plan limits
+- ✅ Subscription status tracking
+
+#### **Admin Dashboard**
+- ✅ Platform-wide metrics and monitoring
+- ✅ User management
+- ✅ Workspace administration
+- ✅ System statistics and health
+
+#### **User Experience**
+- ✅ Dark/Light theme support
+- ✅ Responsive design (mobile, tablet, desktop)
+- ✅ Real-time updates via SSE
+- ✅ Optimistic UI updates
+- ✅ Toast notifications and alerts
+- ✅ Smooth animations with Framer Motion
 
 ---
 
-## Architecture Snapshot
+## 🛠 Tech Stack
 
-Focura follows a decoupled API-first architecture:
+### **Frontend**
+
+| Category | Technology | Version |
+|----------|-----------|---------|
+| **Framework** | Next.js (App Router) | 16.0.10 |
+| **UI Library** | React | 19.2.0 |
+| **Language** | TypeScript | 5.9.3 |
+| **Styling** | Tailwind CSS | 4.0 |
+| **State Management** | TanStack Query | 5.90.21 |
+| **Authentication** | NextAuth.js | 4.24.13 |
+| **HTTP Client** | Axios | 1.13.2 |
+| **Form Management** | React Hook Form | 7.66.1 |
+| **Validation** | Zod | 4.1.13 |
+| **Animations** | Framer Motion | 12.23.24 |
+| **Charts** | Recharts | 3.7.0 |
+| **Icons** | Lucide React | 0.554.0 |
+| **File Upload** | Cloudinary | 2.8.0 |
+| **State Management** | Redux Toolkit | 2.11.0 |
+| **Notifications** | React Hot Toast | 2.6.0 |
+| **Theme** | next-themes | 0.4.6 |
+
+### **Backend (API)**
+- Node.js with Express.js
+- PostgreSQL with Prisma ORM
+- RS256 JWT Authentication
+- Redis for caching and rate limiting
+- Server-Sent Events (SSE) for real-time updates
+
+### **Infrastructure & Deployment**
+- **Hosting**: Vercel
+- **CDN**: Vercel Edge Network
+- **Database**: PostgreSQL (Prisma managed)
+- **Cache/Redis**: Upstash Redis
+- **Files**: Cloudinary
+- **Payments**: Stripe
+- **Monitoring**: Vercel Speed Insights
+
+---
+
+## 🏗 Architecture
+
+### **High-Level Architecture**
 
 ```
-Frontend (Next.js)
-   ->
-Axios Client (auth interceptors + typed API hooks)
-   ->
-Backend API (Express auth/permission middleware)
-   ->
-Prisma ORM
-   ->
-PostgreSQL
+┌─────────────────────────────────────────────────────────────┐
+│                     Frontend Layer                           │
+│  Next.js 16 (App Router) + React 19 + TypeScript + Tailwind │
+│                                                              │
+│  • Server Components for data fetching                       │
+│  • Client Components for interactivity                       │
+│  • Hook-based data abstraction                               │
+│  • Centralized API layer with interceptors                   │
+│  • React Query for caching & deduplication                   │
+└────────────────┬────────────────────────────────────────────┘
+                 │
+                 │ HTTPS + RS256 JWT Authentication
+                 │ Authorization: Bearer <accessToken>
+                 │
+┌────────────────▼────────────────────────────────────────────┐
+│                    Backend API Layer                         │
+│     Express.js + Node.js + Prisma ORM + PostgreSQL          │
+│                                                              │
+│  • Modular monolith architecture                             │
+│  • Role-based access control middleware                      │
+│  • Real-time notifications (SSE)                             │
+│  • Rate limiting & audit logging                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-Key properties:
-- Frontend and backend are decoupled
-- Workspace-scoped data access
-- Centralized API client and error handling
-- Schema-driven domain model with Prisma
+### **Data Flow**
+
+```
+User Action (e.g., Create Task)
+    ↓
+useTask() hook triggered
+    ↓
+Optimistic update: prepend to React Query cache
+    ↓
+POST /api/tasks (with JWT token)
+    ↓
+Axios interceptor attaches token
+    ↓
+Backend validates token → checks permissions → creates task
+    ↓
+Notification sent to assignees via SSE
+    ↓
+Response updates React Query cache
+    ↓
+UI reflects changes (already visible via optimistic update)
+```
+
+### **Real-Time Updates (SSE)**
+
+```
+useNotifications hook connects
+    ↓
+GET /api/notifications/stream?token=<accessToken>
+    ↓
+Backend verifies token, extracts userId
+    ↓
+Maintains persistent connection per user
+    ↓
+Events sent in real-time as they occur
+    ↓
+React Query cache updated instantly
+    ↓
+UI re-renders with new notifications
+```
 
 ---
 
-## Environment Variables (Minimum)
+## 🚀 Getting Started
 
-Create a `.env` file:
+### **Prerequisites**
+
+- **Node.js** 18+ and npm
+- **Backend** running locally or accessible via API URL
+- `.env.local` file with required environment variables
+
+### **Environment Variables**
+
+Create a `.env.local` file in the root directory:
 
 ```env
-DATABASE_URL=""
-NODE_ENV="development"
+# Authentication
+NEXTAUTH_SECRET=<your-nextauth-secret>
+NEXTAUTH_URL=http://localhost:3000
 
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET=""
+# API Configuration
+BACKEND_URL=http://localhost:5000                    # Server-side only
+NEXT_PUBLIC_API_URL=http://localhost:5000           # Client-side for SSE
 
-BACKEND_URL="http://localhost:5000"
-NEXT_PUBLIC_API_URL="http://localhost:5000"
+# OAuth (Optional - for Google login)
+GOOGLE_CLIENT_ID=<your-google-client-id>
+GOOGLE_CLIENT_SECRET=<your-google-client-secret>
 
-GOOGLE_CLIENT_ID=""
-GOOGLE_CLIENT_SECRET=""
+# File Upload
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=<your-cloudinary-name>
 
-UPSTASH_REDIS_REST_URL=""
-UPSTASH_REDIS_REST_TOKEN=""
+# Redis (For rate limiting and caching)
+UPSTASH_REDIS_REST_URL=<your-upstash-url>
+UPSTASH_REDIS_REST_TOKEN=<your-upstash-token>
+
+# Optional
+NODE_OPTIONS=--dns-result-order=ipv4first
 ```
 
-See `AUTHENTICATION.md` for security and token-flow-specific environment requirements.
+### **Installation**
 
----
-
-## Local Setup
-
-1. Clone repository
+1. **Clone the repository**
 ```bash
 git clone https://github.com/gaziraihan1/focura-client.git
-cd focura-client/focura
+cd focura-client
 ```
 
-2. Install dependencies
+2. **Install dependencies**
 ```bash
 npm install
 ```
 
-3. Generate Prisma client and run migrations
+3. **Setup Prisma** (if using database features)
 ```bash
 npx prisma generate
 npx prisma migrate dev
 ```
 
-4. Start development server
+4. **Start development server**
 ```bash
 npm run dev
 ```
 
----
-
-## Current Scope Status
-
-- Workspace management: available
-- Project and task workflows: available
-- Calendar and Kanban views: available
-- Notifications: available
-- Billing and plans: available
-- Admin dashboard: available
+5. **Open in browser**
+```
+http://localhost:3000
+```
 
 ---
 
-## Contributing
+## 📂 Project Structure
 
-Contributions are welcome.
-
-Please read:
-- `CONTRIBUTING.md`
-- `CODE_OF_CONDUCT.md`
+```
+focura-client/
+├── app/                           # Next.js App Router
+│   ├── (auth)/                    # Auth routes (login, signup)
+│   ├── (dashboard-pages)/         # Protected dashboard routes
+│   │   ├── admin-dashboard/       # Admin dashboard
+│   │   └── dashboard/             # Main dashboard
+│   ├── (public-pages)/            # Public routes (landing, pricing)
+│   ├── authentication/            # Auth flow pages
+│   ├── api/                       # API route handlers
+│   ├── layout.tsx                 # Root layout
+│   ├── page.tsx                   # Home page
+│   ├── globals.css                # Global styles
+│   └── not-found.tsx              # 404 page
+│
+├── components/                    # React Components
+│   ├── AdminDashboard/            # Admin UI
+│   ├── Authentication/            # Auth forms
+│   ├── Dashboard/                 # Dashboard layouts
+│   ├── Tasks/                     # Task management UI
+│   ├── Kanban/                    # Kanban board
+│   ├── Calendar/                  # Calendar view
+│   ├── Notifications/             # Notifications UI
+│   ├── Labels/                    # Label management
+│   ├── Projects/                  # Project management
+│   ├── Workspace/                 # Workspace UI
+│   ├── Billing/                   # Payment & billing
+│   ├── Storage/                   # File management
+│   ├── Shared/                    # Reusable components
+│   ├── Navbar/                    # Navigation
+│   └── Footer/                    # Footer
+│
+├── lib/                           # Core libraries & utilities
+│   ├── api/                       # API client methods
+│   ├── auth/                      # NextAuth configuration
+│   ├── axios.ts                   # Axios interceptors
+│   ├── email.ts                   # Email utilities
+│   ├── hash.ts                    # Hashing functions
+│   ├── limiter.ts                 # Rate limiting
+│   ├── prisma.ts                  # Prisma client
+│   ├── react-query/               # TanStack Query setup
+│   ├── task/                      # Task utilities
+│   └── tokens.ts                  # JWT utilities
+│
+├── hooks/                         # Custom React Hooks (80+)
+│   ├── useWorkspace.ts            # Workspace operations
+│   ├── useTask.ts                 # Task CRUD
+│   ├── useProject.ts              # Project management
+│   ├── useCalendar.ts             # Calendar logic
+│   ├── useKanbanBoard.ts          # Kanban operations
+│   ├── useNotifications.ts        # Real-time notifications
+│   ├── useLabels.ts               # Label operations
+│   ├── useFocusSession.ts         # Focus sessions
+│   ├── useAnalytics.ts            # Analytics queries
+│   ├── useBilling.ts              # Billing operations
+│   ├── useStorage.ts              # File storage
+│   ├── useAdmin.ts                # Admin operations
+│   └── [Page-specific hooks]      # Page controllers
+│
+├── types/                         # TypeScript type definitions
+│   ├── types.ts                   # Core domain types
+│   ├── task.types.ts              # Task types
+│   ├── project.types.ts           # Project types
+│   ├── workspace-usage.types.ts   # Usage types
+│   ├── admin.types.ts             # Admin types
+│   └── [Feature types]            # Feature-specific types
+│
+├── utils/                         # Utility functions
+│   └── [Helpers & formatters]     # Common utilities
+│
+├── constants/                     # App constants
+│   └── [Configuration values]     # Feature flags, defaults
+│
+├── context/                       # React Context
+│   └── [Context providers]        # Global state
+│
+├── public/                        # Static assets
+│   └── [Images, fonts]            # Public files
+│
+├── prisma/                        # Prisma schema & migrations
+│   ├── schema.prisma              # Database schema
+│   └── migrations/                # Migration history
+│
+├── .env.local                     # Environment variables (local)
+├── next.config.ts                 # Next.js configuration
+├── tsconfig.json                  # TypeScript configuration
+├── tailwind.config.ts             # Tailwind CSS configuration
+├── components.json                # Shadcn UI components config
+├── package.json                   # Dependencies
+├── README.md                       # This file
+├── ARCHITECTURE.md                # Architecture documentation
+├── AUTHENTICATION.md              # Auth system documentation
+├── CONTRIBUTING.md                # Contributing guidelines
+└── LICENSE                        # Project license
+```
 
 ---
 
-## License
+## 🔐 Authentication
 
-This project is licensed under the Source-Available License.
-See [LICENSE](./LICENSE) for details.
+### **Authentication Flow**
+
+1. **User Login**
+   - User enters credentials or uses Google OAuth
+   - NextAuth validates credentials locally or with Google
+
+2. **Token Exchange**
+   - NextAuth generates HMAC-signed proof
+   - Proof sent to backend's `/api/auth/exchange`
+   - Backend validates proof and issues RS256 JWT tokens
+
+3. **Token Storage**
+   - Tokens stored in HTTP-only NextAuth session cookie
+   - Private key never exposed to frontend
+   - Secure by default
+
+4. **Token Refresh**
+   - Axios interceptor attaches token to requests
+   - Backend validates token on every request
+   - Token silently refreshes 1 min before expiry
+   - Automatic refresh on page load via NextAuth
+
+5. **Token Revocation**
+   - Logout revokes token JTI in Redis
+   - Logout-all-devices revokes all refresh tokens
+   - Global invalidation via token version increment
+
+### **Protected Routes**
+
+All dashboard routes require authentication:
+- Middleware checks for valid session
+- Missing/invalid session redirects to login
+- API routes validate JWT token
+
+### **Role-Based Access Control**
+
+```ts
+// Owner - Full workspace control
+// Admin - Member management, project creation
+// Member - Task and project access
+```
+
+For detailed authentication documentation, see [AUTHENTICATION.md](./AUTHENTICATION.md)
+
+---
+
+## 🔌 API Integration
+
+### **API Client Setup**
+
+The Axios instance in `lib/axios.ts` handles:
+- Automatic JWT token attachment
+- Error handling & response transformation
+- Type-safe API responses
+- Request/response logging
+
+```ts
+import { api } from '@/lib/axios';
+
+// Type-safe GET request
+const response = await api.get<TasksResponse>('/api/tasks');
+const { success, data } = response;
+
+// Type-safe POST request
+await api.post('/api/tasks', { title: 'New Task', ... });
+```
+
+### **Backend API Endpoints**
+
+**Base URL:** `/api`
+
+#### Authentication
+- `POST /api/auth/exchange` - Exchange for RS256 tokens
+- `POST /api/auth/refresh` - Rotate refresh token
+- `POST /api/auth/logout` - Logout (single/all devices)
+
+#### Workspaces
+- `GET /api/workspaces` - List user workspaces
+- `POST /api/workspaces` - Create workspace
+- `PATCH /api/workspaces/:id` - Update workspace
+- `DELETE /api/workspaces/:id` - Delete workspace
+
+#### Tasks
+- `GET /api/tasks` - List tasks (paginated)
+- `GET /api/tasks/stats` - Task statistics
+- `POST /api/tasks` - Create task
+- `PATCH /api/tasks/:id` - Update task
+- `DELETE /api/tasks/:id` - Delete task
+- `POST /api/tasks/:id/comments` - Add comment
+
+#### Projects
+- `GET /api/projects` - List projects
+- `POST /api/projects` - Create project
+- `PATCH /api/projects/:id` - Update project
+- `DELETE /api/projects/:id` - Delete project
+
+#### Notifications
+- `GET /api/notifications/stream` - SSE stream (real-time)
+- `GET /api/notifications` - Paginated notifications
+- `PATCH /api/notifications/:id/read` - Mark as read
+- `DELETE /api/notifications/:id` - Delete notification
+
+#### More Endpoints
+- `GET /api/labels` - List labels
+- `GET /api/calendar` - Calendar events
+- `GET /api/analytics` - Workspace analytics
+- `GET /api/storage` - Storage usage
+- `POST /api/upload` - File upload
+
+For complete API documentation, see backend [README](https://github.com/gaziraihan1/focura-backend)
+
+---
+
+## 💻 Development
+
+### **Development Commands**
+
+```bash
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+
+# Run ESLint
+npm run lint
+
+# Generate Prisma client
+npx prisma generate
+
+# Prisma Studio (database UI)
+npx prisma studio
+```
+
+### **Code Style**
+
+- **Linter**: ESLint (Next.js preset)
+- **Formatter**: Prettier (configured in Next.js)
+- **Language**: TypeScript (strict mode)
+
+### **Best Practices**
+
+1. **Server Components by Default**
+   - Use server components for data fetching
+   - Minimize client-side JavaScript
+
+2. **Use Custom Hooks**
+   - Encapsulate data fetching logic
+   - Reuse across components
+   - Easier testing
+
+3. **Type Safety**
+   - Fully type all props and returns
+   - Use Zod for runtime validation
+   - Avoid `any` types
+
+4. **Error Handling**
+   - Use try-catch in async operations
+   - Show user-friendly error messages
+   - Log errors for debugging
+
+5. **Performance**
+   - Use React.memo for expensive renders
+   - Lazy load routes and components
+   - Optimize images with next/image
+
+### **Testing Considerations**
+
+- Unit tests for hooks and utilities
+- Integration tests for features
+- E2E tests for critical user flows
+
+---
+
+## 🚀 Deployment
+
+### **Deploy to Vercel**
+
+The easiest way to deploy Focura Client:
+
+1. **Push to GitHub**
+```bash
+git push origin main
+```
+
+2. **Connect to Vercel**
+   - Go to https://vercel.com
+   - Import this repository
+   - Add environment variables
+   - Deploy
+
+3. **Automatic Deployments**
+   - Every push to `main` triggers deployment
+   - Preview deployments for PRs
+
+### **Environment Variables (Production)**
+
+Set these in Vercel dashboard:
+```env
+NEXTAUTH_SECRET=<production-secret>
+NEXTAUTH_URL=https://your-domain.com
+BACKEND_URL=https://your-api.com
+NEXT_PUBLIC_API_URL=https://your-api.com
+GOOGLE_CLIENT_ID=<production-id>
+GOOGLE_CLIENT_SECRET=<production-secret>
+UPSTASH_REDIS_REST_URL=<upstash-url>
+UPSTASH_REDIS_REST_TOKEN=<upstash-token>
+```
+
+### **Build Optimization**
+
+```bash
+# Build output
+npm run build
+
+# Analyze bundle size
+npm run analyze
+```
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how:
+
+1. **Fork the repository**
+```bash
+git clone https://github.com/<your-username>/focura-client.git
+cd focura-client
+```
+
+2. **Create a feature branch**
+```bash
+git checkout -b feature/amazing-feature
+```
+
+3. **Make your changes**
+   - Follow code style (TypeScript, Tailwind)
+   - Write clear commit messages
+   - Add comments for complex logic
+
+4. **Test your changes**
+```bash
+npm run dev
+# Test locally
+```
+
+5. **Push to your fork**
+```bash
+git push origin feature/amazing-feature
+```
+
+6. **Open a Pull Request**
+   - Describe your changes clearly
+   - Reference related issues
+   - Wait for review
+
+### **Contribution Guidelines**
+
+- Read [CONTRIBUTING.md](./CONTRIBUTING.md)
+- Read [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
+- Follow TypeScript and Tailwind conventions
+- Add tests for new features
+- Update documentation
+
+---
+
+## 🔒 Security
+
+### **Security Practices**
+
+- ✅ HTTPS only communication
+- ✅ RS256 JWT authentication
+- ✅ HTTP-only secure cookies
+- ✅ CORS enforcement
+- ✅ Rate limiting on auth endpoints
+- ✅ Audit logging of security events
+- ✅ Timing-safe comparisons
+- ✅ Argon2 password hashing
+- ✅ Role-based access control
+- ✅ Workspace-scoped data isolation
+
+### **Reporting Security Issues**
+
+Found a security vulnerability? Please email security concerns to the maintainers instead of opening a public issue.
+
+For more details, see [AUTHENTICATION.md](./AUTHENTICATION.md#-security-properties-summary)
+
+---
+
+## 📚 Documentation
+
+- [**ARCHITECTURE.md**](./ARCHITECTURE.md) - System architecture and design decisions
+- [**AUTHENTICATION.md**](./AUTHENTICATION.md) - Complete authentication and security documentation
+- [**CONTRIBUTING.md**](./CONTRIBUTING.md) - How to contribute to the project
+- [**Backend README**](https://github.com/gaziraihan1/focura-backend) - Backend API documentation
+
+---
+
+## 📊 Project Stats
+
+- **Language**: TypeScript
+- **Framework**: Next.js 16
+- **React Version**: 19.2.0
+- **Deployment**: Vercel
+- **Database**: PostgreSQL (via backend)
+- **Real-Time**: Server-Sent Events (SSE)
+
+---
+
+## 🔗 Quick Links
+
+- **Live Demo**: https://focura-client.vercel.app
+- **Backend Repository**: https://github.com/gaziraihan1/focura-backend
+- **Issues**: https://github.com/gaziraihan1/focura-client/issues
+- **Discussions**: https://github.com/gaziraihan1/focura-client/discussions
+
+---
+
+## 📄 License
+
+This project is licensed under the **Source-Available License**.
+
+See [LICENSE](./LICENSE) file for details.
+
+---
+
+## 👤 Maintainer
+
+**Mohammad Raihan Gazi**
+
+Creator & Maintainer of Focura
+
+- GitHub: [@gaziraihan1](https://github.com/gaziraihan1)
+
+---
+
+## 🙏 Acknowledgments
+
+- **Next.js** - React framework
+- **TanStack Query** - Server state management
+- **Tailwind CSS** - Utility-first CSS
+- **NextAuth.js** - Authentication
+- **Vercel** - Deployment platform
+- Open source community
+
+---
+
+## 📞 Support
+
+- 📧 Email: [contact information if available]
+- 💬 Discussions: GitHub Discussions
+- 🐛 Issues: GitHub Issues
+- 📖 Docs: [ARCHITECTURE.md](./ARCHITECTURE.md) and [AUTHENTICATION.md](./AUTHENTICATION.md)
+
+---
+
+**Happy coding! 🚀**
+
+If you find Focura Client helpful, please consider giving it a ⭐ star on GitHub!
+
+---
+
+This README covers:
+- ✅ Project overview and features
+- ✅ Tech stack and dependencies
+- ✅ Architecture and data flow
+- ✅ Setup and installation
+- ✅ Project structure
+- ✅ Authentication details
+- ✅ API integration
+- ✅ Development workflow
+- ✅ Deployment instructions
+- ✅ Contributing guidelines
+- ✅ Security practices
+- ✅ Additional resources
+
+Would you like me to adjust any sections, add more details, or modify the formatting?
