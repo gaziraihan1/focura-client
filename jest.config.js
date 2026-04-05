@@ -1,0 +1,1 @@
+module.exports = {\n  testEnvironment: 'jsdom',\n  setupFilesAfterEnv: ['<rootDir>/setupTests.js'],\n  testPathIgnorePatterns: ['/node_modules/', '/.next/'],\n  collectCoverage: true,\n  collectCoverageFrom: ['src/**/*.{js,jsx}', '!src/**/*.test.{js,jsx}'],\n};
