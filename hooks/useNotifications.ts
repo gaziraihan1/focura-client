@@ -1,9 +1,3 @@
-// frontend/src/hooks/useNotifications.ts
-//
-// SSE connects to /api/notifications/stream?token=<accessToken>
-// Backend verifies the token and extracts userId server-side.
-// The client never decides which userId's notifications it receives.
-
 import {
   useInfiniteQuery,
   useMutation,
