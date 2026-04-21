@@ -110,7 +110,6 @@ export function useNotifications() {
       eventSourceRef.current = es;
 
       es.onopen = () => {
-        console.log("✅ SSE connected");
       };
 
       es.onmessage = (event) => {

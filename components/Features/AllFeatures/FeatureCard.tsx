@@ -24,7 +24,6 @@ export function FeatureCard({ feature, isAdmin, isDeleting, onDelete, index }: P
   const [expanded,     setExpanded]     = useState(false);
   const [confirmOpen,  setConfirmOpen]  = useState(false);
 
-  console.log(feature)
   const timeAgo = formatDistanceToNow(new Date(feature.createdAt), { addSuffix: true });
 
   return (

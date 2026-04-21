@@ -51,7 +51,6 @@ export default function TaskDetailsView({
 }: TaskDetailsViewProps) {
   const router = useRouter();
   const isPersonalTask = !task.projectId;
-  console.log(task)
   
   
   return (

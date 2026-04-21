@@ -34,7 +34,12 @@ interface WorkspaceSidebarProps {
   sidebarOpen: boolean;
   onSidebarClose: () => void;
   onSwitcherOpen: () => void;
+  isLoading: boolean; // ← new
 }
+
+const Skeleton = ({ className }: { className?: string }) => (
+  <div className={`animate-pulse bg-muted rounded-md ${className}`} />
+);
 
 export function WorkspaceSidebar({
   workspace,
@@ -45,6 +50,7 @@ export function WorkspaceSidebar({
   sidebarOpen,
   onSidebarClose,
   onSwitcherOpen,
+  isLoading,
 }: WorkspaceSidebarProps) {
   const router = useRouter();
 
@@ -61,101 +67,119 @@ export function WorkspaceSidebar({
         <div className="flex flex-col h-full">
 
           {/* Workspace switcher */}
-          <div className="p-4 border-b border-border">
-            <button
-              onClick={onSwitcherOpen}
-              className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition group"
-            >
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold"
-                style={{ backgroundColor: workspace.color || "#667eea" }}
-              >
-                {workspace.logo || workspace.name.charAt(0).toUpperCase()}
-              </div>
-              <div className="flex-1 text-left">
-                <p className="font-semibold text-foreground truncate">{workspace.name}</p>
-                <p className="text-xs text-muted-foreground">{currentMember?.role || "Member"}</p>
-              </div>
-              <ChevronDown size={16} className="text-muted-foreground" />
-            </button>
-          </div>
-
+<div className="p-4 border-b border-border">
+  {isLoading ? (
+    <div className="flex items-center gap-3 p-3">
+      <Skeleton className="w-10 h-10 rounded-lg" />
+      <div className="flex-1 space-y-2">
+        <Skeleton className="h-4 w-24" />
+        <Skeleton className="h-3 w-16" />
+      </div>
+    </div>
+  ) : (
+    <button
+      onClick={onSwitcherOpen}
+      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition group"
+    >
+      <div
+        className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold"
+        style={{ backgroundColor: workspace.color || "#667eea" }}
+      >
+        {workspace.logo || workspace.name.charAt(0).toUpperCase()}
+      </div>
+      <div className="flex-1 text-left">
+        <p className="font-semibold text-foreground truncate">{workspace.name}</p>
+        <p className="text-xs text-muted-foreground">{currentMember?.role || "Member"}</p>
+      </div>
+      <ChevronDown size={16} className="text-muted-foreground" />
+    </button>
+  )}
+</div>
           {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+  {isLoading ? (
+    <>
+      {[...Array(6)].map((_, i) => (
+        <div key={i} className="flex items-center gap-3 px-3 py-2">
+          <Skeleton className="w-5 h-5" />
+          <Skeleton className="h-4 w-24" />
+        </div>
+      ))}
+    </>
+  ) : (
+    <>
+      {freeItems.map((item) => {
+        const isActive = item.match(pathname);
+        return (
+          <Link
+            key={item.name}
+            href={item.href}
+            onClick={onSidebarClose}
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition ${
+              isActive
+                ? "bg-primary text-primary-foreground"
+                : "text-foreground hover:bg-accent"
+            }`}
+          >
+            <item.icon size={18} />
+            <span>{item.name}</span>
+          </Link>
+        );
+      })}
 
-            {/* Normal items */}
-            {freeItems.map((item) => {
-              const isActive = item.match(pathname);
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={onSidebarClose}
-                  className={`flex items-center gap-3 px-3 py-2 rounded-lg transition ${
-                    isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "text-foreground hover:bg-accent"
-                  }`}
-                >
-                  <item.icon size={18} />
-                  <span>{item.name}</span>
-                </Link>
-              );
-            })}
-
-            {/* Locked items — only render section if there are any */}
-            {lockedItems.length > 0 && (
-              <div className="pt-3">
-
-                {/* Locked nav buttons */}
-                <div className="space-y-1 opacity-45 pointer-events-none select-none">
-                  {lockedItems.map((item) => (
-                    <div
-                      key={item.name}
-                      className="flex items-center gap-3 px-3 py-2 rounded-lg text-foreground"
-                    >
-                      <item.icon size={18} />
-                      <span>{item.name}</span>
-                      <Lock size={12} className="ml-auto" />
-                    </div>
-                  ))}
-                </div>
-
-                {/* Upgrade CTA */}
-                <button
-                  onClick={() => {
-                    router.push(`/dashboard/workspaces/${slug}/billing`);
-                    onSidebarClose();
-                  }}
-                  className="mt-3 w-full flex items-center justify-center gap-2 px-3 py-2
-                             rounded-lg border border-primary/30 bg-primary/5
-                             text-primary text-xs font-medium
-                             hover:bg-primary/10 transition-colors"
-                >
-                  <Sparkles size={13} />
-                  Upgrade to unlock
-                </button>
+      {lockedItems.length > 0 && (
+        <div className="pt-3">
+          <div className="space-y-1 opacity-45 pointer-events-none select-none">
+            {lockedItems.map((item) => (
+              <div
+                key={item.name}
+                className="flex items-center gap-3 px-3 py-2 rounded-lg text-foreground"
+              >
+                <item.icon size={18} />
+                <span>{item.name}</span>
+                <Lock size={12} className="ml-auto" />
               </div>
-            )}
-          </nav>
+            ))}
+          </div>
+          <button onClick={() => { router.push(`/dashboard/workspaces/${slug}/billing`); onSidebarClose(); }} className="mt-3 w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-primary/30 bg-primary/5 text-primary text-xs font-medium hover:bg-primary/10 transition-colors" > <Sparkles size={13} /> Upgrade to unlock </button>
+        </div>
+      )}
+    </>
+  )}
+</nav>
 
           {/* Bottom links */}
           <div className="p-4 border-t border-border space-y-2">
-            <Link
-              href={`/dashboard/workspaces/${slug}/settings`}
-              className="flex items-center gap-3 px-3 py-2 rounded-lg text-foreground hover:bg-accent transition"
-            >
-              <Settings size={18} />
-              <span>Settings</span>
-            </Link>
-            <Link
-              href="/dashboard/workspaces"
-              className="flex items-center gap-3 px-3 py-2 rounded-lg text-foreground hover:bg-accent transition"
-            >
-              <LogOut size={18} />
-              <span>All Workspaces</span>
-            </Link>
-          </div>
+  {isLoading ? (
+    <>
+      <div className="flex items-center gap-3 px-3 py-2">
+        <Skeleton className="w-5 h-5" />
+        <Skeleton className="h-4 w-20" />
+      </div>
+      <div className="flex items-center gap-3 px-3 py-2">
+        <Skeleton className="w-5 h-5" />
+        <Skeleton className="h-4 w-28" />
+      </div>
+    </>
+  ) : (
+    <>
+      <Link
+        href={`/dashboard/workspaces/${slug}/settings`}
+        className="flex items-center gap-3 px-3 py-2 rounded-lg text-foreground hover:bg-accent transition"
+      >
+        <Settings size={18} />
+        <span>Settings</span>
+      </Link>
+      <Link
+        href="/dashboard/workspaces"
+        className="flex items-center gap-3 px-3 py-2 rounded-lg text-foreground hover:bg-accent transition"
+      >
+        <LogOut size={18} />
+        <span>All Workspaces</span>
+      </Link>
+    </>
+  )}
+</div>
 
         </div>
       </aside>

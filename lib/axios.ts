@@ -64,11 +64,6 @@ axiosInstance.interceptors.request.use(
     const now = Date.now();
     if (!cachedBackendToken || now > cachedTokenExpiry) {
       const session = await getFreshSession();
-      console.log("🌐 Session:", {
-  exists: !!session,
-  hasBackendToken: !!session?.backendToken,
-  backendTokenLength: session?.backendToken?.length,
-})
       cachedBackendToken = session?.backendToken ?? null;
       cachedTokenExpiry = cachedBackendToken ? now + TOKEN_CACHE_TTL : 0;
     }
@@ -78,11 +73,7 @@ axiosInstance.interceptors.request.use(
     }
 
     if (process.env.NODE_ENV === "development") {
-      console.log("API Request:", {
-        url: config.url,
-        method: config.method,
-        hasAuth: !!config.headers.Authorization,
-      });
+      console.log("API Request:", {});
     }
 
     return config;
@@ -98,7 +89,6 @@ axiosInstance.interceptors.response.use(
       _retried?: boolean;
     };
 
-    console.log(code)
     if (
       code === "TOKEN_EXPIRED" &&
       originalConfig &&

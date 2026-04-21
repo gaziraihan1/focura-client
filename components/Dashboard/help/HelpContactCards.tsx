@@ -58,7 +58,6 @@ export function HelpContactCards({
   const handleAction = (option: ContactOption) => {
     if (option.href) {
       window.open(option.href, "_blank", "noopener,noreferrer");
-      console.log(option)
       return;
     }
     if (option.id === "chat") onChatOpen?.();

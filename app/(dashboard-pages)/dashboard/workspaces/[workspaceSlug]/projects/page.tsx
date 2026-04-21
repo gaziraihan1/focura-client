@@ -25,7 +25,6 @@ export default function WorkspaceProjectsPage() {
   } = useWorkspaceProjectsPage({ workspaceSlug });
 
   const {data: projects, isLoading: projectLoading} = useProjects(workspace?.id);
-  console.log(projects)
 
   if (isLoading || projectLoading) {
     return <LoadingState />;

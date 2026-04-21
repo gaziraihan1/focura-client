@@ -2,7 +2,6 @@
 
 import { useParams, usePathname } from "next/navigation";
 import { WorkspacePlanProvider, useWorkspacePlan } from "@/context/workspacePlan/WorkspacePlanContext";
-import { LoadingState } from "@/components/Shared/LoadingState";
 import EmptyState from "@/components/Dashboard/Workspaces/EmptyState";
 import { useWorkspaceLayout } from "@/hooks/useWorkspaceLayout";
 import { WorkspaceSidebar } from "@/components/Dashboard/Workspaces/WorkspaceSidebar";
@@ -36,16 +35,16 @@ function WorkspaceLayoutInner({
     handleCreateWorkspace,
   } = useWorkspaceLayout({ slug, pathname, isFree }); // ← pass it in
 
-  if (isLoading) return <LoadingState />;
   if (!workspace) return <EmptyState />;
 
   return (
     <div className="flex h-screen overflow-hidden bg-background scroll-smooth">
       <WorkspaceSidebar
-        workspace={workspace}
+        workspace={workspace ?? null}
         currentMember={currentMember}
         navigation={navigation}
         pathname={pathname}
+        isLoading={isLoading}
         slug={slug}
         sidebarOpen={sidebarOpen}
         onSidebarClose={() => setSidebarOpen(false)}

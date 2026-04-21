@@ -1,6 +1,6 @@
 export function QuotaSkeleton() {
   return (
-    <div className="rounded-xl border border-border bg-card sm:p-4 lg:p-6 space-y-4 animate-pulse">
+    <div className="rounded-xl border border-border bg-card p-2 sm:p-4 lg:p-6 space-y-4 animate-pulse">
       <div className="flex items-center gap-2.5">
         <div className="w-8 h-8 rounded-lg bg-muted" />
         <div className="space-y-1.5">

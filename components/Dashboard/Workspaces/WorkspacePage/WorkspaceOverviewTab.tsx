@@ -30,7 +30,6 @@ export function WorkspaceOverviewTab({
   );
  const hasMore = activities.length > limit;
 const visibleActivities = activities.slice(0, limit);
-console.log(visibleActivities)
 
   return (
     <div className="space-y-4 sm:space-y-6">

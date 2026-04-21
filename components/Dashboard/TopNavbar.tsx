@@ -2,12 +2,10 @@
 
 import { logout } from "@/lib/auth/logout";
 import { useState } from "react";
-// import { signOut } from "next-auth/react";
 import Link from "next/link";
 import {
   Menu,
   Search,
-  // Bell,
   Plus,
   ChevronDown,
   User,
@@ -19,45 +17,32 @@ import {
 import ThemeSwitcher from "../Themes/ThemeSwitcher";
 import Image from "next/image";
 import NotificationBell from "../Notifications/NotificationBell";
+import type { UserProfile } from "@/hooks/useUserProfile"; // ← single source of truth
 
 interface TopNavbarProps {
   onMenuClick: () => void;
-  user?: UserProfile
-}
-interface UserProfile {
-  id: string;
-  name: string;
-  email: string;
-  image?: string;
-  bio?: string;
-  timezone?: string;
-  role: string;
-  createdAt: string;
-  ownedWorkspaces: Array<{
-    id: string;
-    plan: string;
-    maxStorage: number;
-  }>;
+  user?: UserProfile;
+  isRefreshing?: boolean; // subtle indicator when background-refetching
 }
 
-export default function TopNavbar({ onMenuClick, user }: TopNavbarProps) {
+export default function TopNavbar({ onMenuClick, user, isRefreshing }: TopNavbarProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
-    const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-const handleLogout = async () => {
-  setIsLoggingOut(true);
-  try {
-    await logout();
-  } catch (error) {
-    console.error('Logout error:', error);
-    setIsLoggingOut(false);
-  }
-};
-
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Logout error:", error);
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-9999 bg-background/80 backdrop-blur-xl border-b border-border">
       <div className="flex items-center justify-between h-16 px-4 lg:px-8">
+        {/* Left — hamburger + search */}
         <div className="flex items-center gap-4">
           <button
             onClick={onMenuClick}
@@ -79,6 +64,7 @@ const handleLogout = async () => {
           </div>
         </div>
 
+        {/* Right — actions + user menu */}
         <div className="flex items-center gap-2 lg:gap-3">
           <button className="md:hidden p-2 rounded-lg hover:bg-accent transition">
             <Search size={20} className="text-foreground" />
@@ -90,19 +76,26 @@ const handleLogout = async () => {
           </button>
 
           <ThemeSwitcher />
-
           <NotificationBell />
 
+          {/* User menu */}
           <div className="relative">
             <button
-              onClick={() => setShowUserMenu(!showUserMenu)}
+              onClick={() => setShowUserMenu((prev) => !prev)}
               className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-accent transition"
             >
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+              {/* Avatar — ring pulses while background-refetching */}
+              <div
+                className={`w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center ring-2 transition-all ${
+                  isRefreshing
+                    ? "ring-primary/50 animate-pulse"
+                    : "ring-transparent"
+                }`}
+              >
                 {user?.image ? (
                   <Image
                     src={user.image}
-                    alt={user.name || "User"}
+                    alt={user.name ?? "User"}
                     width={300}
                     height={300}
                     className="w-full h-full rounded-full object-cover"
@@ -111,75 +104,65 @@ const handleLogout = async () => {
                   <User size={18} className="text-primary" />
                 )}
               </div>
-              <ChevronDown
-                size={16}
-                className="text-foreground hidden lg:block"
-              />
+              <ChevronDown size={16} className="text-foreground hidden lg:block" />
             </button>
 
             {showUserMenu && (
               <>
+                {/* Backdrop */}
                 <div
                   className="fixed inset-0 z-40"
                   onClick={() => setShowUserMenu(false)}
                 />
+
                 <div className="absolute right-0 mt-2 w-64 bg-popover border border-border rounded-xl shadow-lg z-50 overflow-hidden">
+                  {/* Identity */}
                   <div className="p-4 border-b border-border">
                     <p className="font-medium text-foreground">
-                      {user?.name || "User"}
+                      {user?.name ?? "User"}
                     </p>
                     <p className="text-sm text-muted-foreground mt-1">
-                      {user?.email || "user@example.com"}
+                      {user?.email ?? "user@example.com"}
                     </p>
                   </div>
 
+                  {/* Nav links */}
                   <div className="py-2">
-                    <Link
-                      href="/dashboard/profile"
-                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-accent transition"
-                      onClick={() => setShowUserMenu(false)}
-                    >
-                      <User size={18} className="text-muted-foreground" />
-                      <span className="text-sm text-foreground">Profile</span>
-                    </Link>
-                    <Link
-                      href="/dashboard/settings"
-                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-accent transition"
-                      onClick={() => setShowUserMenu(false)}
-                    >
-                      <Settings
-                        size={18}
-                        className="text-muted-foreground"
-                      />
-                      <span className="text-sm text-foreground">Settings</span>
-                    </Link>
-                    <Link
-                      href="/dashboard/billing"
-                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-accent transition"
-                      onClick={() => setShowUserMenu(false)}
-                    >
-                      <FileText
-                        size={18}
-                        className="text-muted-foreground"
-                      />
-                      <span className="text-sm text-foreground">Billing</span>
-                    </Link>
+                    {[
+                      { href: "/dashboard/profile",  icon: User,     label: "Profile"  },
+                      { href: "/dashboard/settings", icon: Settings, label: "Settings" },
+                      { href: "/dashboard/billing",  icon: FileText, label: "Billing"  },
+                    ].map(({ href, icon: Icon, label }) => (
+                      <Link
+                        key={href}
+                        href={href}
+                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-accent transition"
+                        onClick={() => setShowUserMenu(false)}
+                      >
+                        <Icon size={18} className="text-muted-foreground" />
+                        <span className="text-sm text-foreground">{label}</span>
+                      </Link>
+                    ))}
                   </div>
 
+                  {/* Logout */}
                   <div className="border-t border-border">
                     <button
                       onClick={() => {
                         setShowUserMenu(false);
                         handleLogout();
                       }}
-                      className="flex items-center gap-3 px-4 py-2.5 w-full hover:bg-accent transition text-left"
+                      disabled={isLoggingOut}
+                      className="flex items-center gap-3 px-4 py-2.5 w-full hover:bg-accent transition text-left disabled:opacity-60"
                     >
                       {isLoggingOut ? (
-        <Loader2 size={16} className="animate-spin" />
-      ) : (
-        <LogOut size={16} />
-      )}
-      {isLoggingOut ? 'Logging out...' : 'Logout'}
+                        <Loader2 size={16} className="animate-spin" />
+                      ) : (
+                        <LogOut size={16} />
+                      )}
+                      <span className="text-sm text-foreground">
+                        {isLoggingOut ? "Logging out…" : "Logout"}
+                      </span>
                     </button>
                   </div>
                 </div>

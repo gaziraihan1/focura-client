@@ -41,8 +41,8 @@ export function ProjectFilters({
         {/* Search */}
         <div className="relative flex-1">
           <Search
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none sm:w-10 sm:h-10"
-            size={16}
+            className="absolute left-2 top-1/2 md:top-2/5 -translate-y-1/2 text-muted-foreground pointer-events-none sm:w-8 sm:h-8"
+            size={12}
           />
           <input
             type="text"
@@ -64,7 +64,7 @@ export function ProjectFilters({
               : "border-border text-foreground hover:bg-accent"
           }`}
         >
-          <Filter size={14} className="sm:h-8 sm:w-8" />
+          <Filter size={12} className="sm:h-8 sm:w-8" />
           Filters
           {activeFiltersCount > 0 && (
             <span className="px-2.5 py-0.5 rounded-full bg-primary-foreground text-primary text-xs font-bold">

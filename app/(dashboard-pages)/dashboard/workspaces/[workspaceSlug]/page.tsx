@@ -12,14 +12,14 @@ import { WorkspaceDetailContent } from "@/components/Dashboard/Workspaces/Worksp
 
 export default function WorkspaceDetailPage() {
   const params = useParams();
-  const slug = params.workspaceSlug as string;
+  const slug   = params.workspaceSlug as string;
 
   const {
     workspace,
     stats,
     members,
     isLoading,
-    isError,
+    isError,   // now only true when error AND no cached data
     activeTab,
     setActiveTab,
     showInviteModal,
@@ -30,14 +30,12 @@ export default function WorkspaceDetailPage() {
     canCreateProjects,
   } = useWorkspaceDetailPage({ slug });
 
-  if (isLoading) {
-    return <LoadingState />;
-  }
+  if (isLoading && !workspace) return <LoadingState />;
 
-  if (isError || !workspace) {
-    return <WorkspaceDetailErrorState />;
-  }
+  if (isError) return <WorkspaceDetailErrorState />;
 
+  // workspace is guaranteed here — no flash
+  if (!workspace) return null;
 
   return (
     <div className="w-full max-w-7xl mx-auto space-y-4 sm:space-y-6 px-2 sm:px-4 lg:px-6 xl:px-0 pb-6">
@@ -57,10 +55,7 @@ export default function WorkspaceDetailPage() {
         <WorkspaceStats stats={stats} maxMembers={workspace.maxMembers} />
       )}
 
-      <WorkspaceTabNavigation
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-      />
+      <WorkspaceTabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
 
       <WorkspaceDetailContent
         activeTab={activeTab}

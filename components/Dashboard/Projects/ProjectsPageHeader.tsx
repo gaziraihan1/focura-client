@@ -17,7 +17,7 @@ export function ProjectsPageHeader({ onNewProject }: ProjectsPageHeaderProps) {
           <FolderKanban className="lg:w-8 lg:h-8 text-primary-foreground" />
         </div>
         <div>
-          <h1 className="text-xl md:text-3xl lg:text-5xl font-bold text-foreground tracking-tight">
+          <h1 className="text-xl md:text-3xl font-bold text-foreground tracking-tight">
             My Projects
           </h1>
           <p className="text-muted-foreground mt-2 lg:text-lg">

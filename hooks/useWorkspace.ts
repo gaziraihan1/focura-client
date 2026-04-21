@@ -90,6 +90,13 @@ export interface WorkspaceRoleResult {
 }
 
 // ─── Storage Types ────────────────────────────────────────────────────────────
+export interface WorkspaceOverview {
+  
+  workspace: Workspace;
+  stats:     WorkspaceStats;
+  projects:  ProjectDetails[]; // use your existing ProjectDetails type
+
+}
 
 export interface StorageLimitInfo {
   maxFileSizeMB:    number;
@@ -148,6 +155,40 @@ export function useWorkspace(workspaceSlugOrId: string) {
     },
     enabled:   typeof workspaceSlugOrId === 'string' && workspaceSlugOrId.length > 0,
     staleTime: 3 * 60 * 1000,
+  });
+}
+
+// Add to useWorkspace.ts
+
+import { ProjectDetails, projectKeys } from "@/hooks/useProjects"; // adjust import path
+
+
+/**
+ * Fetches workspace + stats + projects in one round trip.
+ * Seeds individual query caches so all dependent hooks are instant.
+ */
+export function useWorkspaceOverview(slug: string) {
+  const qc = useQueryClient();
+
+  return useQuery({
+    queryKey: [...workspaceKeys.detail(slug), "overview"] as const,
+    queryFn:  async (): Promise<WorkspaceOverview> => {
+      const res = await api.get<WorkspaceOverview>(
+        `/api/workspaces/${slug}/overview`,
+        { showErrorToast: true },
+      );
+      const overview = res.data as WorkspaceOverview;
+
+      // Seed individual caches so no extra fetches fire anywhere
+      qc.setQueryData(workspaceKeys.detail(slug),                   overview.workspace);
+      qc.setQueryData(workspaceKeys.stats(overview.workspace.id),   overview.stats);
+      qc.setQueryData(workspaceKeys.members(overview.workspace.id), overview.workspace.members);
+      qc.setQueryData(projectKeys.list(overview.workspace.id),      overview.projects);
+
+      return overview;
+    },
+    staleTime: 3 * 60 * 1000,
+    retry: 1,
   });
 }
 

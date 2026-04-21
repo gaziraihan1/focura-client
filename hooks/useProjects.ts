@@ -143,6 +143,8 @@ export const useProjects = (workspaceId?: string) => {
       return res.data as ProjectDetails[];
     },
     enabled: !!workspaceId,
+        staleTime: 3 * 60 * 1000, // reads from overview-seeded cache for 3 min
+
   });
 };
 
