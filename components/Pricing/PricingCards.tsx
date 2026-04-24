@@ -9,7 +9,7 @@ type Props = {
 
 const prices = {
   free: 0,
-  pro: { monthly: 19, yearly: 190 },
+  pro: { monthly: 12, yearly: 120 },
   business: { monthly: 49, yearly: 490 },
 };
 
