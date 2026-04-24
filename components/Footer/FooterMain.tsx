@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function FooterMain() {
   return (
     <footer className="w-full border-t border-white/10 bg-black py-14">
@@ -15,29 +17,28 @@ export default function FooterMain() {
           <div>
             <h3 className="text-white font-semibold text-lg mb-4">Company</h3>
             <ul className="space-y-2 text-gray-400 text-sm">
-              <li><a href="#" className="hover:text-white">About</a></li>
-              <li><a href="#" className="hover:text-white">Careers</a></li>
-              <li><a href="#" className="hover:text-white">Blog</a></li>
-              <li><a href="#" className="hover:text-white">Contact</a></li>
+              <li><Link href="/about" className="hover:text-white">About</Link></li>
+              <li><Link href="/careers" className="hover:text-white">Careers</Link></li>
+              <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
             </ul>
           </div>
 
           <div>
             <h3 className="text-white font-semibold text-lg mb-4">Resources</h3>
             <ul className="space-y-2 text-gray-400 text-sm">
-              <li><a href="#" className="hover:text-white">Help Center</a></li>
-              <li><a href="#" className="hover:text-white">Guides</a></li>
-              <li><a href="#" className="hover:text-white">API Docs</a></li>
-              <li><a href="#" className="hover:text-white">Templates</a></li>
+              <li><Link href="/help" className="hover:text-white">Help Center</Link></li>
+              <li><Link href="/guides" className="hover:text-white">Guides</Link></li>
+              <li><Link href="/api-docs" className="hover:text-white">API Docs</Link></li>
+              <li><Link href="/templates" className="hover:text-white">Templates</Link></li>
             </ul>
           </div>
 
           <div>
             <h3 className="text-white font-semibold text-lg mb-4">Legal</h3>
             <ul className="space-y-2 text-gray-400 text-sm">
-              <li><a href="#" className="hover:text-white">Terms & Conditions</a></li>
-              <li><a href="#" className="hover:text-white">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-white">Cookies</a></li>
+              <li><Link href="/terms" className="hover:text-white">Terms & Conditions</Link></li>
+              <li><Link href="/privacy" className="hover:text-white">Privacy Policy</Link></li>
+              <li><Link href="/cookies" className="hover:text-white">Cookies</Link></li>
             </ul>
           </div>
 
