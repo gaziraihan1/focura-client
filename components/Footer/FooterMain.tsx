@@ -38,6 +38,7 @@ export default function FooterMain() {
             <ul className="space-y-2 text-gray-400 text-sm">
               <li><Link href="/terms" className="hover:text-white">Terms & Conditions</Link></li>
               <li><Link href="/privacy" className="hover:text-white">Privacy Policy</Link></li>
+              <li><Link href="/refund" className="hover:text-white">Refund Policy</Link></li>
               <li><Link href="/cookies" className="hover:text-white">Cookies</Link></li>
             </ul>
           </div>
