@@ -233,8 +233,8 @@ describe('useClearActivities', () => {
     )
 
     await act(async () => {
-      result.current.mutate()
-    })
+  result.current.mutate(undefined)
+})
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
   })

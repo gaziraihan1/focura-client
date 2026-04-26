@@ -187,7 +187,7 @@ export const useCreateProject = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (data: CreateProjectDto) => {
-      const res = await api.post('/api/projects', data, {
+      const res = await api.post<ProjectDetails>('/api/projects', data, {
         showSuccessToast: true,
         showErrorToast: true,
       });
@@ -205,7 +205,7 @@ export const useUpdateProject = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ projectId, data }: { projectId: string; data: UpdateProjectDto }) => {
-      const res = await api.patch(`/api/projects/${projectId}`, data, {
+      const res = await api.patch<ProjectDetails>(`/api/projects/${projectId}`, data, {
         showSuccessToast: true,
         showErrorToast: true,
       });
@@ -241,7 +241,7 @@ export const useAddProjectMember = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ projectId, data }: { projectId: string; data: AddProjectMemberDto }) => {
-      const res = await api.post(`/api/projects/${projectId}/members`, data, {
+      const res = await api.post<ProjectMember>(`/api/projects/${projectId}/members`, data, {
         showSuccessToast: true,
         showErrorToast: true,
       });
@@ -267,7 +267,7 @@ export const useUpdateProjectMemberRole = () => {
       memberId: string;
       role: 'MANAGER' | 'COLLABORATOR' | 'VIEWER';
     }) => {
-      const res = await api.patch(
+      const res = await api.patch<ProjectMember>(
         `/api/projects/${projectId}/members/${memberId}`,
         { role },
         {

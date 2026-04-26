@@ -110,7 +110,7 @@ export function useCreateCheckout(workspaceId: string) {
  * On success, redirects the user to the Stripe-hosted portal page.
  */
 export function useCreatePortal(workspaceId: string) {
-  return useMutation({
+  return useMutation<string | undefined, Error, void>({
     mutationFn: async () => {
       const res = await api.post<{ url: string }>(
         `/api/workspaces/${workspaceId}/billing/create-portal-session`,
@@ -162,24 +162,24 @@ export function useChangePlan(workspaceId: string) {
 /** Cancel the workspace subscription. Defaults to cancel at period end. */
 export function useCancelSubscription(workspaceId: string) {
   const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async (vars?: { immediately?: boolean; reason?: string }) => {
-      const res = await api.post(
-        `/api/workspaces/${workspaceId}/billing/cancel-subscription`,
-        vars ?? {},
-      );
-      return res?.data;
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: billingKeys.subscription(workspaceId) });
-    },
-  });
+  return useMutation<any, Error, void | { immediately?: boolean; reason?: string }>({
+  mutationFn: async (vars) => {
+    const res = await api.post(
+      `/api/workspaces/${workspaceId}/billing/cancel-subscription`,
+      vars ?? {}
+    );
+    return res?.data;
+  },
+  onSuccess: () => {
+    qc.invalidateQueries({ queryKey: billingKeys.subscription(workspaceId) });
+  },
+});
 }
 
 /** Reactivate a subscription that was set to cancel at period end. */
 export function useReactivateSubscription(workspaceId: string) {
   const qc = useQueryClient();
-  return useMutation({
+  return useMutation<any, Error, void>({
     mutationFn: async () => {
       const res = await api.post(
         `/api/workspaces/${workspaceId}/billing/reactivate-subscription`,
