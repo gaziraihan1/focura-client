@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { href: '/admin-dashboard/projects',   label: 'Projects'    },
   { href: '/admin-dashboard/billing',    label: 'Billing'     },
   { href: '/admin-dashboard/activity',   label: 'Activity'    },
+  { href: '/admin-dashboard/contact',   label: 'Messages'    },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

@@ -1,11 +1,14 @@
-'use client';
+"use client";
 
-import { useParams } from 'next/navigation';
-import { useWorkspace } from '@/hooks/useWorkspace';
-import { useWorkspaceBilling } from '@/hooks/useWorkspaceUpgrade';
-import { InvoiceTableSkeleton, PlanCardSkeleton } from '@/components/Dashboard/Workspaces/billing/Billing/BillingLoadingSkeleton';
-import { BillingPlanCard } from '@/components/Dashboard/Workspaces/billing/Billing/BillingPlanCard';
-import { BillingInvoiceTable } from '@/components/Dashboard/Workspaces/billing/Billing/BillingInvoiceTable';
+import { useParams } from "next/navigation";
+import { useWorkspace } from "@/hooks/useWorkspace";
+import { useWorkspaceBilling } from "@/hooks/useWorkspaceUpgrade";
+import {
+  InvoiceTableSkeleton,
+  PlanCardSkeleton,
+} from "@/components/Dashboard/Workspaces/billing/Billing/BillingLoadingSkeleton";
+import { BillingPlanCard } from "@/components/Dashboard/Workspaces/billing/Billing/BillingPlanCard";
+import { BillingInvoiceTable } from "@/components/Dashboard/Workspaces/billing/Billing/BillingInvoiceTable";
 
 export default function WorkspaceBillingPage() {
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
@@ -28,7 +31,9 @@ export default function WorkspaceBillingPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-10 space-y-6">
       <div>
-        <h1 className="text-2xl lg:text-3xl font-bold text-foreground">Billing</h1>
+        <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
+          Billing
+        </h1>
         <p className="text-sm text-muted-foreground mt-0.5">
           Manage this workspace&apos;s plan and invoices
         </p>
@@ -62,7 +67,7 @@ export default function WorkspaceBillingPage() {
       </section>
 
       <p className="text-center text-xs text-muted-foreground pb-4">
-        Payments processed by Stripe · This plan only applies to this workspace
+        Payments processed securely · This plan only applies to this workspace
       </p>
     </div>
   );

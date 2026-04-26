@@ -1,19 +1,19 @@
 // app/workspaces/[workspaceSlug]/billing/success/page.tsx
-'use client';
+"use client";
 
-import { useParams } from 'next/navigation';
-import { useWorkspace } from '@/hooks/useWorkspace';
-import { useBillingSuccess } from '@/hooks/useBillingSuccess';
-import { BillingSuccessHeader } from '@/components/Dashboard/Workspaces/billing/Success/BillingSuccessHeader';
-import { SuccessPlanCard } from '@/components/Dashboard/Workspaces/billing/Success/SuccessPlanCard';
-import { FeaturesGained } from '@/components/Dashboard/Workspaces/billing/Success/FeaturesGained';
-import { ActionButtons } from '@/components/Dashboard/Workspaces/billing/Success/ActionButtons';
-import { SubscriptionDetails } from '@/components/Dashboard/Workspaces/billing/Success/SubscriptionDetails';
+import { useParams } from "next/navigation";
+import { useWorkspace } from "@/hooks/useWorkspace";
+import { useBillingSuccess } from "@/hooks/useBillingSuccess";
+import { BillingSuccessHeader } from "@/components/Dashboard/Workspaces/billing/Success/BillingSuccessHeader";
+import { SuccessPlanCard } from "@/components/Dashboard/Workspaces/billing/Success/SuccessPlanCard";
+import { FeaturesGained } from "@/components/Dashboard/Workspaces/billing/Success/FeaturesGained";
+import { ActionButtons } from "@/components/Dashboard/Workspaces/billing/Success/ActionButtons";
+import { SubscriptionDetails } from "@/components/Dashboard/Workspaces/billing/Success/SubscriptionDetails";
 
 export default function BillingSuccessPage() {
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: workspace } = useWorkspace(workspaceSlug);
-  const workspaceId = workspace?.id ?? '';
+  const workspaceId = workspace?.id ?? "";
 
   const {
     visible,
@@ -30,7 +30,7 @@ export default function BillingSuccessPage() {
   } = useBillingSuccess(
     workspaceId,
     workspace?.name ?? workspaceSlug,
-    workspaceSlug
+    workspaceSlug,
   );
 
   return (
@@ -66,10 +66,7 @@ export default function BillingSuccessPage() {
         />
 
         {/* Subscription Details */}
-        <SubscriptionDetails
-          details={subscriptionDetails}
-          visible={visible}
-        />
+        <SubscriptionDetails details={subscriptionDetails} visible={visible} />
 
         {/* Action Buttons */}
         <ActionButtons
@@ -80,7 +77,7 @@ export default function BillingSuccessPage() {
 
         {/* Footer */}
         <p className="text-center text-xs text-muted-foreground mt-8">
-          A receipt has been sent to your email · Payments by Stripe
+          A receipt has been sent to your email · Payments processed securely
         </p>
       </div>
     </div>
