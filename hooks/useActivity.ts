@@ -44,23 +44,11 @@ export interface ActivityMeta {
   total?: number;
 }
 
-type ActivityAction =
-  | 'CREATED'
-  | 'UPDATED'
-  | 'DELETED'
-  | 'COMPLETED'
-  | 'ASSIGNED'
-  | 'UNASSIGNED'
-  | 'COMMENTED'
-  | 'UPLOADED'
-  | 'MOVED'
-  | 'STATUS_CHANGED'
-  | 'PRIORITY_CHANGED';
 
 export interface ActivityStats {
   total: number;
   today: number;
-  byAction: Record<ActivityAction, number>;
+  byAction: Partial<Record<ActivityAction, number>>;
 }
 
 export interface ActivityFilters {
@@ -72,6 +60,7 @@ export interface ActivityFilters {
   limit?: number;
   offset?: number;
 }
+export type ActivityAction = Activity['action'];
 
 // Query keys
 export const activityKeys = {
