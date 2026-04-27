@@ -99,7 +99,7 @@ export function AnnouncementModal({
                 <motion.button
                   whileTap={{ scale: 0.97 }}
                   type="button"
-                  onClick={onSubmit}
+                  onClick={() => onSubmit(form)}
                   disabled={!isValid || isLoading}
                   className={cn(
                     'flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium',

@@ -1,6 +1,6 @@
 // hooks/useInvitation.ts
-import { useState, useEffect } from "react";
-import { api } from "@/lib/axios";
+import { useState, useEffect, useCallback } from "react";
+import { api, normalizeError } from "@/lib/axios";
 
 interface Workspace {
   id: string;
@@ -34,6 +34,29 @@ export function useInvitation(token: string): UseInvitationReturn {
   const [error, setError] = useState<string | null>(null);
   const [isAccepting, setIsAccepting] = useState(false);
 
+  const fetchInvitation = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const response = await api.get<Invitation>(
+        `/api/workspaces/invitations/${token}`,
+        { showErrorToast: false },
+      );
+
+      if (response?.success && response.data) {
+        setInvitation(response.data);
+      } else {
+        setError("Failed to fetch invitation");
+      }
+    } catch (err: unknown) {
+      const normalized = normalizeError(err);
+      setError(normalized.message || "Invalid or expired invitation");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [token]);
+
   useEffect(() => {
     if (!token) {
       setError("Invalid invitation token");
@@ -42,32 +65,7 @@ export function useInvitation(token: string): UseInvitationReturn {
     }
 
     fetchInvitation();
-  }, [token]);
-
-  const fetchInvitation = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      const response = await api.get<Invitation>(
-        `/api/workspaces/invitations/${token}`,
-        { showErrorToast: false }
-      );
-
-      if (response.success && response.data) {
-        setInvitation(response.data);
-      } else {
-        setError("Failed to fetch invitation");
-      }
-    } catch (err: any) {
-      const errorMessage = 
-        err.response?.data?.message || 
-        "Invalid or expired invitation";
-      setError(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [token, fetchInvitation]);
 
   const acceptInvitation = async (): Promise<Workspace> => {
     try {
@@ -76,10 +74,10 @@ export function useInvitation(token: string): UseInvitationReturn {
       const response = await api.post<Workspace>(
         `/api/workspaces/invitations/${token}/accept`,
         undefined,
-        { 
+        {
           showSuccessToast: true,
-          showErrorToast: true 
-        }
+          showErrorToast: true,
+        },
       );
 
       if (!response.success || !response.data) {
@@ -87,11 +85,9 @@ export function useInvitation(token: string): UseInvitationReturn {
       }
 
       return response.data;
-    } catch (err: any) {
-      const errorMessage = 
-        err.response?.data?.message || 
-        "Failed to accept invitation";
-      throw new Error(errorMessage);
+    } catch (err: unknown) {
+      const normalized = normalizeError(err);
+      throw new Error(normalized.message || "Failed to accept invitation");
     } finally {
       setIsAccepting(false);
     }

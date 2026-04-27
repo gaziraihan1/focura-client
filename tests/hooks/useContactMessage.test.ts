@@ -1,5 +1,5 @@
 // tests/hooks/useContactMessages.test.tsx
-import { renderHook, waitFor, act } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { server } from '../mock/server'
 import { http, HttpResponse } from 'msw'

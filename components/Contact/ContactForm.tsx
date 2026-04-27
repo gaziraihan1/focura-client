@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import axios, { AxiosError } from "axios";
@@ -153,7 +153,7 @@ export const ContactForm = () => {
     register,
     handleSubmit,
     reset,
-    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -163,8 +163,11 @@ export const ContactForm = () => {
     },
   });
 
-  const messageValue = watch("message", "");
-
+const messageValue = useWatch({
+  control,
+  name: "message",
+  defaultValue: "",
+});
   const onSubmit = async (values: FormValues) => {
     setServerError(null);
     try {

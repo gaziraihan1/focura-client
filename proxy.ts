@@ -44,7 +44,7 @@ export async function proxy(request: NextRequest) {
   // Optional: Add debug headers in development
   if (token && process.env.NODE_ENV === 'development') {
     response.headers.set('X-User-Email', token.email || '');
-    response.headers.set('X-User-Role', (token as any).role || 'USER');
+    response.headers.set('X-User-Role', token.role || 'USER');
   }
 
   return response;

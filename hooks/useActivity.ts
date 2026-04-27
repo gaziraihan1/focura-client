@@ -9,7 +9,7 @@ export interface Activity {
   userId: string;
   workspaceId: string;
   taskId?: string;
-  metadata?: any;
+  metadata?: ActivityMetadata;
   createdAt: string;
   user: {
     id: string;
@@ -33,17 +33,40 @@ export interface Activity {
     };
   };
 }
+export type ActivityMetadata =
+  | { type: "PROJECT"; projectName: string }
+  | { type: "TASK_UPDATE"; changes: Record<string, unknown> }
+  | Record<string, unknown>;
+export interface ActivityMeta {
+  hasMore: boolean;
+  limit: number;
+  offset: number;
+  total?: number;
+}
+
+type ActivityAction =
+  | 'CREATED'
+  | 'UPDATED'
+  | 'DELETED'
+  | 'COMPLETED'
+  | 'ASSIGNED'
+  | 'UNASSIGNED'
+  | 'COMMENTED'
+  | 'UPLOADED'
+  | 'MOVED'
+  | 'STATUS_CHANGED'
+  | 'PRIORITY_CHANGED';
 
 export interface ActivityStats {
   total: number;
   today: number;
-  byAction: Record<string, number>;
+  byAction: Record<ActivityAction, number>;
 }
 
 export interface ActivityFilters {
   workspaceId?: string;
-  entityType?: string;
-  action?: string;
+  entityType?: Activity['entityType'];
+  action?: ActivityAction;
   startDate?: string;
   endDate?: string;
   limit?: number;
@@ -136,7 +159,7 @@ export function useInfiniteActivities(filters?: Omit<ActivityFilters, 'offset'>)
       const queryString = params.toString();
       const endpoint = `/api/activities${queryString ? `?${queryString}` : ''}`;
       
-      const response = await api.get<{ data: Activity[]; meta: any }>(endpoint);
+      const response = await api.get<{ data: Activity[]; meta: ActivityMeta }>(endpoint);
       return response.data;
     },
     getNextPageParam: (lastPage, pages) => {

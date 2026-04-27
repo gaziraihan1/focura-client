@@ -282,7 +282,7 @@ export interface AdminActivity {
   entityType: string;
   entityId: string;
   createdAt: string;
-  metadata: any;
+  metadata: Record<string, unknown> | null;
   user: { id: string; name: string; email: string; image: string | null };
   workspace: { id: string; name: string; slug: string } | null;
 }

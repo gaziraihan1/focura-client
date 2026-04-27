@@ -13,6 +13,7 @@ import {
   initializeCalendar,
   recalculateAggregate,
 } from '@/hooks/useCalendar'
+import { GoalCheckpoint } from '@/types/calendar.types'
 
 beforeEach(() => {
   vi.spyOn(console, 'error').mockImplementation(() => {})
@@ -287,7 +288,7 @@ describe('useGoalCheckpoints', () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false))
 
-    let created: any
+    let created: GoalCheckpoint | undefined
     await act(async () => {
       created = await result.current.createGoal({
         title:       'Launch beta',

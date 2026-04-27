@@ -1,3 +1,11 @@
+export type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JsonValue[]
+  | { [key: string]: JsonValue };
+
 export enum UserPlan {
   FREE = "FREE",
   PRO = "PRO",
@@ -217,8 +225,8 @@ export interface ProjectView {
   projectId: string;
   name: string;
   type: ProjectViewType;
-  filters: Record<string, any> | null;
-  sort: Record<string, any> | null;
+  filters: Record<string, JsonValue> | null;
+  sort: Record<string, JsonValue> | null;
 }
 
 export interface ProjectFavorite {
@@ -460,7 +468,7 @@ export interface Activity {
   action: ActivityType;
   entityType: EntityType;
   entityId: string;
-  metadata: Record<string, any> | null;
+  metadata: Record<string, JsonValue> | null;
   createdAt: Date;
   userId: string;
   workspaceId: string;
@@ -506,7 +514,7 @@ export interface Integration {
   provider: string;
   accessToken: string | null;
   refreshToken: string | null;
-  config: Record<string, any> | null;
+  config: Record<string, JsonValue> | null;
   active: boolean;
   createdAt: Date;
   updatedAt: Date;

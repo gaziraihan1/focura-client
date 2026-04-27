@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import type {
   AnnouncementVisibility,
+  EditorTool,
 } from '@/types/announcement.types';
 import {
   useAnnouncementFilters,
@@ -23,6 +24,7 @@ interface FormState {
   projectId:  string | null;
 }
 
+
 const DEFAULT_FORM: FormState = {
   title:      '',
   content:    '',
@@ -41,39 +43,46 @@ export function useAnnouncementEditor(
 ) {
   const [preview, setPreview] = useState(false);
 
-  const applyFormat = useCallback(
-    (tool: any) => {
-      const ta = textareaRef.current;
-      if (!ta) return;
+ const applyFormat = useCallback(
+  (tool: EditorTool) => {
+    const ta = textareaRef.current;
+    if (!ta) return;
 
-      const start = ta.selectionStart;
-      const end   = ta.selectionEnd;
-      const sel   = value.slice(start, end);
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const sel = value.slice(start, end);
 
-      let next:     string;
-      let cursorAt: number;
+    let next: string;
+    let cursorAt: number;
 
-      if ('insert' in tool && tool.insert) {
-        next     = value.slice(0, start) + tool.insert + value.slice(end);
-        cursorAt = start + tool.insert.length;
-      } else if (tool.wrap) {
-        const [open, close] = tool.wrap;
-        const inner = sel || tool.sample;
-        next     = value.slice(0, start) + open + inner + close + value.slice(end);
-        cursorAt = start + open.length + inner.length + close.length;
-      } else {
-        return;
-      }
+    if (tool.insert) {
+      next = value.slice(0, start) + tool.insert + value.slice(end);
+      cursorAt = start + tool.insert.length;
+    } else if (tool.wrap) {
+      const [open, close] = tool.wrap;
+      const inner = sel || tool.sample;
 
-      onChange(next);
-      requestAnimationFrame(() => {
-        ta.focus();
-        ta.setSelectionRange(cursorAt, cursorAt);
-      });
-    },
-    [value, onChange, textareaRef],
-  );
+      next =
+        value.slice(0, start) +
+        open +
+        inner +
+        close +
+        value.slice(end);
 
+      cursorAt = start + open.length + inner.length + close.length;
+    } else {
+      return;
+    }
+
+    onChange(next);
+
+    requestAnimationFrame(() => {
+      ta.focus();
+      ta.setSelectionRange(cursorAt, cursorAt);
+    });
+  },
+  [value, onChange, textareaRef],
+);
   return {
     preview,
     togglePreview: useCallback(() => setPreview((p) => !p), []),

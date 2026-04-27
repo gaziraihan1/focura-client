@@ -2,31 +2,19 @@
 
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
 
 export default function ThemeSwitcher() {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme, setTheme } = useTheme();
 
-  // Wait until after client-side hydration
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Render a placeholder during SSR and initial hydration
-  if (!mounted) {
-    return (
-      <div className="p-2 rounded-lg bg-secondary w-9 h-9" aria-hidden="true" />
-    );
-  }
+  const isDark = resolvedTheme === "dark";
 
   return (
     <button
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      onClick={() => setTheme(isDark ? "light" : "dark")}
       className="p-2 rounded-lg bg-secondary text-secondary-foreground hover:bg-accent transition-all flex items-center justify-center"
       aria-label="Toggle Theme"
     >
-      {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
+      {isDark ? <Sun size={18} /> : <Moon size={18} />}
     </button>
   );
 }

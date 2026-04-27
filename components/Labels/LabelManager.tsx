@@ -17,6 +17,7 @@ import LabelItem from './LabelItem';
 import LabelForm from './LabelForm';
 import { useWorkspaceRoleCheck } from '@/hooks/useWorkspace';
 import { useSession } from 'next-auth/react';
+import { getErrorMessage } from '@/lib/error/error';
 
 interface LabelManagerProps {
   workspaceId?: string;
@@ -75,7 +76,7 @@ export function LabelManager({ workspaceId, onClose }: LabelManagerProps) {
       },
       onError: (error) => {
         console.error('Failed to create label:', error);
-        const message = (error as any)?.response?.data?.message || 'Failed to create label';
+        const message = getErrorMessage(error, 'Failed to create label');
         alert(message);
       },
     });
@@ -90,7 +91,7 @@ export function LabelManager({ workspaceId, onClose }: LabelManagerProps) {
         },
         onError: (error) => {
           console.error('Failed to update label:', error);
-          const message = (error as any)?.response?.data?.message || 'Failed to update label';
+          const message = getErrorMessage(error, 'Failed to update label');
           alert(message);
         },
       }
@@ -110,7 +111,7 @@ export function LabelManager({ workspaceId, onClose }: LabelManagerProps) {
       },
       onError: (error) => {
         console.error('Failed to delete label:', error);
-        const message = (error as any)?.response?.data?.message || 'Failed to delete label';
+        const message = getErrorMessage(error, 'Failed to delete label');
         alert(message);
         setDeleteConfirm(null);
       },

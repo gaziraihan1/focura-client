@@ -14,9 +14,14 @@ interface GoogleProfile {
   email_verified?: boolean;
   verified_email?: boolean;
 }
+type TokenResponse = {
+  accessToken: string;
+  refreshToken: string;
+  accessTokenExpiry: number;
+  refreshTokenExpiry: number;
+};
 
-const refreshLocks = new Map<string, Promise<any>>();
-
+const refreshLocks = new Map<string, Promise<TokenResponse | null>>();
 // ─── HMAC exchange proof ──────────────────────────────────────────────────────
 function createExchangeProof(
   userId: string,
@@ -72,30 +77,20 @@ async function exchangeForTokens(
   }
 }
 
+
 async function silentRefresh(
   sessionId: string,
   refreshToken: string,
-): Promise<{
-  accessToken: string;
-  refreshToken: string;
-  accessTokenExpiry: number;
-  refreshTokenExpiry: number;
-} | null> {
-  // If a refresh is already in-flight for this session, wait for it
+): Promise<TokenResponse | null> {
   const existing = refreshLocks.get(sessionId);
   if (existing) return existing.catch(() => null);
 
-  // Create the promise handles BEFORE starting async work
-  // so the lock is in place synchronously
-  let resolve!: (value: any) => void;
-  let reject!: (reason: any) => void;
-  const promise = new Promise<any>((res, rej) => {
+  let resolve!: (value: TokenResponse | null) => void;
+
+  const promise = new Promise<TokenResponse | null>((res) => {
     resolve = res;
-    reject = rej;
   });
 
-  // Lock is set synchronously — any concurrent callback arriving now
-  // will find this promise and wait on it instead of firing a second refresh
   refreshLocks.set(sessionId, promise);
 
   try {
@@ -105,11 +100,11 @@ async function silentRefresh(
       body: JSON.stringify({ refreshToken }),
     });
 
-    const result = res.ok ? await res.json() : null;
+    const result: TokenResponse | null = res.ok ? await res.json() : null;
     resolve(result);
     return result;
-  } catch (err) {
-    resolve(null); // resolve (not reject) so waiting callbacks get null, not an unhandled rejection
+  } catch {
+    resolve(null);
     return null;
   } finally {
     refreshLocks.delete(sessionId);

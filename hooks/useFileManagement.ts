@@ -2,7 +2,12 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
+import { AxiosError } from "axios";
 
+type ApiErrorResponse = {
+  message?: string;
+  code?: string;
+};
 // ==================== TYPES ====================
 
 export interface FileWithDetails {
@@ -76,12 +81,12 @@ export const fileManagementKeys = {
 };
 
 // ==================== HOOKS ====================
-
 export function useFiles(workspaceId: string, filters?: FileFilters) {
-  return useQuery({
+  return useQuery<FilesResponse, AxiosError<ApiErrorResponse>>({
     queryKey: fileManagementKeys.files(workspaceId, filters),
     queryFn: async () => {
       const params = new URLSearchParams();
+
       if (filters?.search) params.append('search', filters.search);
       if (filters?.fileType) params.append('fileType', filters.fileType);
       if (filters?.uploadedBy) params.append('uploadedBy', filters.uploadedBy);
@@ -95,10 +100,11 @@ export function useFiles(workspaceId: string, filters?: FileFilters) {
       const response = await api.get<FilesResponse>(
         `/api/file-management/${workspaceId}/files?${params.toString()}`
       );
+
       return response?.data as FilesResponse;
     },
     enabled: !!workspaceId,
-    staleTime: 1 * 60 * 1000, // 1 minute
+    staleTime: 1 * 60 * 1000,
   });
 }
 

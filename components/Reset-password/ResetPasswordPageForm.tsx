@@ -2,9 +2,14 @@ import { Loader2 } from "lucide-react";
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 import { ResetPasswordInput } from "./ResetPasswordInput";
 
+type ResetPasswordForm = {
+  password: string;
+  confirmPassword: string;
+};
+
 interface ResetPasswordPageFormProps {
-  register: UseFormRegister<any>;
-  errors: FieldErrors;
+  register: UseFormRegister<ResetPasswordForm>;
+  errors: FieldErrors<ResetPasswordForm>;
   isSubmitting: boolean;
   success: boolean;
   onSubmit: (e: React.FormEvent) => void;

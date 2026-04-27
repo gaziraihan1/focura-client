@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useCreateTask, CreateTaskDto } from "@/hooks/useTask";
+import { AxiosError } from "axios";
 
 interface FormData {
   title: string;
@@ -89,22 +90,29 @@ export function useAddTaskPage() {
 
       toast.success("Task created successfully");
       router.push("/dashboard/tasks");
-    } catch (err: any) {
-      const fieldErrors = err?.response?.data?.errors;
-      if(Array.isArray(fieldErrors) && fieldErrors.length > 0) {
-        const mapped: Record<string, string> = {};
-        fieldErrors.forEach((issue: {path: string[]; message: string}) => {
-          if(issue.path.length > 0) {
-            mapped[issue.path[0]] = issue.message;
-          }
-        });
-        setErrors(mapped);
-        toast.error('Please fix the errors before sumbmitting')
-      } else {
+   } catch (err) {
+  const error = err as AxiosError<{
+    message?: string;
+    errors?: { path: string[]; message: string }[];
+  }>;
 
-        toast.error(err.response.data.message ?? "Failed to create task");
+  const fieldErrors = error.response?.data?.errors;
+
+  if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
+    const mapped: Record<string, string> = {};
+
+    fieldErrors.forEach((issue) => {
+      if (issue.path.length > 0) {
+        mapped[issue.path[0]] = issue.message;
       }
-    }
+    });
+
+    setErrors(mapped);
+    toast.error("Please fix the errors before submitting");
+  } else {
+    toast.error(error.response?.data?.message ?? "Failed to create task");
+  }
+}
   };
 
   const handleCancel = () => {

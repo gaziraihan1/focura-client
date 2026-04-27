@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/axios";
+import { api, AppError } from "@/lib/axios";
 import { signOut, useSession } from "next-auth/react";
 
 export interface UserProfile {
@@ -43,11 +43,11 @@ export function useUserProfile() {
     enabled: isReady,
     staleTime: 5 * 60 * 1000,   // treat as fresh for 5 min — no refetch on nav
     gcTime:    15 * 60 * 1000,  // keep in cache for 15 min
-    retry: (failureCount, error: any) => {
+    retry: (failureCount, error: AppError) => {
       const code   = error?.response?.data?.code;
       const status = error?.response?.status;
       // Don't retry auth errors — sign out immediately
-      if (AUTH_ERROR_CODES.has(code) || status === 401 || status === 403) {
+      if (AUTH_ERROR_CODES.has(code!) || status === 401 || status === 403) {
         signOut({ callbackUrl: "/authentication/login" });
         return false;
       }

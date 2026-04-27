@@ -41,7 +41,14 @@ export interface InvoiceData {
   paidAt:        string | null;
   createdAt:     string;
 }
-
+type CancelSubscriptionResponse = {
+  success: boolean;
+  message?: string;
+};
+type ReactivateSubscriptionResponse = {
+  success: boolean;
+  message?: string;
+};
 export type PlanName    = 'FREE' | 'PRO' | 'BUSINESS';
 export type BillingCycle = 'MONTHLY' | 'YEARLY';
 
@@ -141,7 +148,7 @@ export function useChangePlan(workspaceId: string) {
     onMutate: async (vars) => {
       await qc.cancelQueries({ queryKey: billingKeys.subscription(workspaceId) });
       const previous = qc.getQueryData(billingKeys.subscription(workspaceId));
-      qc.setQueryData(billingKeys.subscription(workspaceId), (old: any) => {
+      qc.setQueryData(billingKeys.subscription(workspaceId), (old: WorkspaceSubscription | null) => {
         if (!old) return old;
         return { ...old, planName: vars.newPlanName };
       });
@@ -162,32 +169,42 @@ export function useChangePlan(workspaceId: string) {
 /** Cancel the workspace subscription. Defaults to cancel at period end. */
 export function useCancelSubscription(workspaceId: string) {
   const qc = useQueryClient();
-  return useMutation<any, Error, void | { immediately?: boolean; reason?: string }>({
-  mutationFn: async (vars) => {
-    const res = await api.post(
-      `/api/workspaces/${workspaceId}/billing/cancel-subscription`,
-      vars ?? {}
-    );
-    return res?.data;
-  },
-  onSuccess: () => {
-    qc.invalidateQueries({ queryKey: billingKeys.subscription(workspaceId) });
-  },
-});
+
+  return useMutation<
+    CancelSubscriptionResponse,
+    Error,
+    void | { immediately?: boolean; reason?: string }
+  >({
+    mutationFn: async (vars) => {
+      const res = await api.post<CancelSubscriptionResponse>(
+        `/api/workspaces/${workspaceId}/billing/cancel-subscription`,
+        vars ?? {}
+      );
+      return res!;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({
+        queryKey: billingKeys.subscription(workspaceId),
+      });
+    },
+  });
 }
 
 /** Reactivate a subscription that was set to cancel at period end. */
 export function useReactivateSubscription(workspaceId: string) {
   const qc = useQueryClient();
-  return useMutation<any, Error, void>({
+
+  return useMutation<ReactivateSubscriptionResponse, Error, void>({
     mutationFn: async () => {
-      const res = await api.post(
+      const res = await api.post<ReactivateSubscriptionResponse>(
         `/api/workspaces/${workspaceId}/billing/reactivate-subscription`,
       );
-      return res?.data;
+      return res!;
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: billingKeys.subscription(workspaceId) });
+      qc.invalidateQueries({
+        queryKey: billingKeys.subscription(workspaceId),
+      });
     },
   });
 }

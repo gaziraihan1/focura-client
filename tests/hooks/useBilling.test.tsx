@@ -24,6 +24,7 @@ const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 // `window.location.href = url` which jsdom silently ignores in test env,
 // so we verify redirect intent via the returned url value from the mutation.
 
+
 afterEach(() => {
   vi.restoreAllMocks()
 })

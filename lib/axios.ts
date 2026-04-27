@@ -2,11 +2,26 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import toast from "react-hot-toast";
 import { getSession, signOut } from "next-auth/react";
 import { logout } from "./auth/logout";
+import type { Session } from "next-auth";
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   message?: string;
+}
+
+interface AppSession extends Session {
+  backendToken: string;
+}
+// lib/axios.ts — extend the existing AppError
+export interface AppError {
+  message: string;
+  status?: number;
+  code?: string;
+  response?: {
+    data?: { code?: string; message?: string };
+    status?: number;
+  };
 }
 
 export interface ApiOptions {
@@ -20,8 +35,30 @@ interface ApiErrorResponse {
   code?: string;
 }
 
-let sessionPromise: Promise<any> | null = null;
 
+export function normalizeError(error: unknown): AppError {
+  if (axios.isAxiosError<ApiErrorResponse>(error)) {
+    return {
+      message: error.response?.data?.message || error.message,
+      status: error.response?.status,
+      code: error.response?.data?.code,
+    };
+  }
+
+  if (error instanceof Error) {
+    return {
+      message: error.message,
+    };
+  }
+
+  return {
+    message: "Unknown error",
+  };
+}
+
+
+
+let sessionPromise: Promise<AppSession | null> | null = null;
 async function getFreshSession() {
   if (!sessionPromise) {
     sessionPromise = getSession().finally(() => {

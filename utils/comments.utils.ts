@@ -67,43 +67,44 @@ export function stripMentionSyntax(text: string): string {
 export function getCaretCoordinates(
   textarea: HTMLTextAreaElement
 ): CaretCoordinates | null {
-  const mirror = document.createElement('div');
+  const mirror = document.createElement("div");
   const style = window.getComputedStyle(textarea);
-  
-  const props = [
-    'boxSizing',
-    'width',
-    'height',
-    'overflowX',
-    'overflowY',
-    'borderTopWidth',
-    'borderRightWidth',
-    'borderBottomWidth',
-    'borderLeftWidth',
-    'borderStyle',
-    'paddingTop',
-    'paddingRight',
-    'paddingBottom',
-    'paddingLeft',
-    'fontStyle',
-    'fontVariant',
-    'fontWeight',
-    'fontStretch',
-    'fontSize',
-    'lineHeight',
-    'fontFamily',
-    'textAlign',
-    'letterSpacing',
-    'wordSpacing',
+
+  const props: (keyof CSSStyleDeclaration)[] = [
+    "boxSizing",
+    "width",
+    "height",
+    "overflowX",
+    "overflowY",
+    "borderTopWidth",
+    "borderRightWidth",
+    "borderBottomWidth",
+    "borderLeftWidth",
+    "borderStyle",
+    "paddingTop",
+    "paddingRight",
+    "paddingBottom",
+    "paddingLeft",
+    "fontStyle",
+    "fontVariant",
+    "fontWeight",
+    "fontStretch",
+    "fontSize",
+    "lineHeight",
+    "fontFamily",
+    "textAlign",
+    "letterSpacing",
+    "wordSpacing",
   ];
 
-  mirror.style.position = 'absolute';
-  mirror.style.visibility = 'hidden';
-  mirror.style.whiteSpace = 'pre-wrap';
-  mirror.style.wordWrap = 'break-word';
+  mirror.style.position = "absolute";
+  mirror.style.visibility = "hidden";
+  mirror.style.whiteSpace = "pre-wrap";
+  mirror.style.wordWrap = "break-word";
 
   props.forEach((p) => {
-    (mirror.style as any)[p] = (style as any)[p];
+    const value = style.getPropertyValue(p as string);
+    mirror.style.setProperty(p as string, value);
   });
 
   document.body.appendChild(mirror);
@@ -111,12 +112,14 @@ export function getCaretCoordinates(
   const textBefore = textarea.value.substring(0, textarea.selectionStart);
   mirror.textContent = textBefore;
 
-  const span = document.createElement('span');
-  span.textContent = textarea.value.substring(textarea.selectionStart) || '.';
+  const span = document.createElement("span");
+  span.textContent =
+    textarea.value.substring(textarea.selectionStart) || ".";
   mirror.appendChild(span);
 
   const rect = textarea.getBoundingClientRect();
   const spanRect = span.getBoundingClientRect();
+
   document.body.removeChild(mirror);
 
   return {

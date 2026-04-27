@@ -1,11 +1,16 @@
 import { Lock } from "lucide-react";
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 
+type ResetPasswordForm = {
+  password: string;
+  confirmPassword: string;
+};
+
 interface ResetPasswordInputProps {
   name: "password" | "confirmPassword";
   placeholder: string;
-  register: UseFormRegister<any>;
-  errors: FieldErrors;
+  register: UseFormRegister<ResetPasswordForm>;
+  errors: FieldErrors<ResetPasswordForm>;
   disabled: boolean;
 }
 

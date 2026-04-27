@@ -100,6 +100,7 @@ export function ActivityItem({
     if (activity.entityType === 'WORKSPACE') {
       return `/dashboard/workspaces/${activity.entityId}`;
     }
+    
     return null;
   };
 
@@ -108,17 +109,29 @@ export function ActivityItem({
     const entityType = activity.entityType.toLowerCase();
     
     let description = `${action} ${entityType}`;
+    const metadata = activity.metadata;
     
     if (activity.task) {
       description = `${action} task "${activity.task.title}"`;
-    } else if (activity.entityType === 'PROJECT' && activity.metadata?.projectName) {
-      description = `${action} project "${activity.metadata.projectName}"`;
-    } else if (activity.entityType === 'WORKSPACE') {
+    } else if (
+  activity.entityType === "PROJECT" &&
+  metadata &&
+  "projectName" in metadata
+) {
+  description = `${action} project "${metadata.projectName}"`;
+} else if (activity.entityType === 'WORKSPACE') {
       description = `${action} workspace "${activity.workspace.name}"`;
     }
+
+if (metadata && "changes" in metadata) {
+  const changes = metadata.changes as Record<string, unknown>;
+
+  description = `Updated: ${Object.keys(changes).join(", ")}`;
+}
     
     return description;
   };
+  
 
   const entityLink = getEntityLink();
   const timeAgo = formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true });
@@ -126,6 +139,7 @@ export function ActivityItem({
   // User avatar initials
   const userInitials = activity.user.name?.charAt(0).toUpperCase() || 'U';
 
+  
   return (
     <div
       className={`group relative flex gap-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50 ${
@@ -173,7 +187,7 @@ export function ActivityItem({
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1 text-xs font-normal text-gray-700 dark:text-gray-300">
                   {getEntityIcon()}
-                  <span className="truncate max-w-[200px]">
+                  <span className="truncate max-w-50">
                     {activity.task.title}
                   </span>
                 </span>
@@ -188,7 +202,7 @@ export function ActivityItem({
                     }}
                   >
                     <FolderKanban className="h-3 w-3" />
-                    <span className="truncate max-w-[150px]">
+                    <span className="truncate max-w-37.5">
                       {activity.task.project.name}
                     </span>
                   </span>
@@ -199,11 +213,13 @@ export function ActivityItem({
             {/* Metadata */}
             {activity.metadata && Object.keys(activity.metadata).length > 0 && (
               <div className="text-xs text-gray-500 dark:text-gray-500">
-                {activity.metadata.changes && (
-                  <span>
-                    Updated: {Object.keys(activity.metadata.changes).join(', ')}
-                  </span>
-                )}
+               {activity.metadata && "changes" in activity.metadata && (
+  <span>
+    Updated: {Object.keys(
+      activity.metadata.changes as Record<string, unknown>
+    ).join(", ")}
+  </span>
+)}
               </div>
             )}
           </div>

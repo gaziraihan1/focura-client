@@ -1,14 +1,15 @@
 // components/FileManagement/ErrorState.tsx
+import { getErrorMessage } from '@/lib/error/error';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 interface ErrorStateProps {
-  error: any;
+  error: unknown;
   onRetry: () => void;
 }
 
 export function ErrorState({ error, onRetry }: ErrorStateProps) {
   const errorMessage =
-    error?.response?.data?.message || 'Failed to load files';
+    getErrorMessage(error, 'An unexpected error occurred while loading files.') ;
   const isAccessDenied =
     errorMessage.toLowerCase().includes('access') ||
     errorMessage.toLowerCase().includes('permission');

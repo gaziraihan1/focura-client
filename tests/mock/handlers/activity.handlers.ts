@@ -12,7 +12,7 @@ export const mockActivity: Activity = {
   userId: 'user-1',
   workspaceId: 'ws-1',
   taskId: 'task-1',
-  metadata: null,
+  metadata: { type: 'PROJECT', projectName: 'Test Project' },
   createdAt: '2024-01-01T00:00:00.000Z',
   user: { id: 'user-1', name: 'Test User', email: 'test@focura.com' },
   workspace: { id: 'ws-1', name: 'Test Workspace' },
@@ -53,6 +53,13 @@ export const mockActivityStats: ActivityStats = {
     UPDATED: 15,
     STATUS_CHANGED: 8,
     COMMENTED: 9,
+    DELETED: 0,
+    COMPLETED: 0,
+    ASSIGNED: 0,
+    UNASSIGNED: 0,
+    UPLOADED: 0,
+    MOVED: 0,
+    PRIORITY_CHANGED: 0
   },
 }
 

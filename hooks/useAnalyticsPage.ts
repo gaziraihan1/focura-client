@@ -10,6 +10,7 @@ import {
   useActivityTrends,
   useWorkload,
 } from "./useAnalytics";
+import { normalizeError } from "@/lib/axios";
 
 interface UseAnalyticsPageParams {
   workspaceId: string;
@@ -25,7 +26,7 @@ export function useAnalyticsPage({ workspaceId }: UseAnalyticsPageParams) {
 
   const { data: taskTrends, isPending: trendsPending } = useTaskTrends(
     workspaceId,
-    30,
+    30
   );
   const { data: projectHealth, isPending: projectsPending } =
     useProjectHealth(workspaceId);
@@ -33,12 +34,17 @@ export function useAnalyticsPage({ workspaceId }: UseAnalyticsPageParams) {
     useMemberContribution(workspaceId);
   const { data: timeSummary, isPending: timePending } = useTimeSummary(
     workspaceId,
-    7,
+    7
   );
   const { data: activityTrends, isPending: activityPending } =
     useActivityTrends(workspaceId, 30);
   const { data: workload, isPending: workloadPending } =
     useWorkload(workspaceId);
+
+  // 🔥 Normalize error ONCE (correct pattern)
+  const normalizedError = useMemo(() => {
+    return overviewError ? normalizeError(overviewError) : null;
+  }, [overviewError]);
 
   const overviewLoading = overviewPending || overviewFetching;
 
@@ -51,27 +57,27 @@ export function useAnalyticsPage({ workspaceId }: UseAnalyticsPageParams) {
     workloadPending;
 
   const isAccessDenied = useMemo(() => {
-    if (!overviewError) return false;
-    const error = overviewError as any;
+    if (!normalizedError) return false;
+
     return (
-      error?.response?.status === 403 ||
-      error?.message?.toLowerCase().includes("access") ||
-      error?.message?.toLowerCase().includes("permission")
+      normalizedError.status === 403 ||
+      normalizedError.message.toLowerCase().includes("access") ||
+      normalizedError.message.toLowerCase().includes("permission")
     );
-  }, [overviewError]);
+  }, [normalizedError]);
 
   const errorMessage = useMemo(() => {
-    if (!overviewError) return "";
-    const error = overviewError as any;
+    if (!normalizedError) return "";
+
     if (isAccessDenied) {
       return "You do not have permission to view analytics for this workspace.";
     }
+
     return (
-      error?.response?.data?.message ||
-      error?.message ||
+      normalizedError.message ||
       "An unexpected error occurred while loading analytics."
     );
-  }, [overviewError, isAccessDenied]);
+  }, [normalizedError, isAccessDenied]);
 
   return {
     overview,
@@ -85,7 +91,7 @@ export function useAnalyticsPage({ workspaceId }: UseAnalyticsPageParams) {
     overviewLoading,
     isLoading,
 
-    overviewError,
+    overviewError: normalizedError, // ✅ return normalized version
     isAccessDenied,
     errorMessage,
   };

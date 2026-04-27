@@ -138,26 +138,26 @@ describe('useCreateProject', () => {
 
 // ─── useUpdateProject ─────────────────────────────────────────────────────────
 
-describe('useUpdateProject', () => {
-  it('updates a project', async () => {
-    const { result } = renderHook(
-      () => useUpdateProject(),
-      { wrapper: createWrapper() }
-    )
+it('updates a project', async () => {
+  const { result } = renderHook(
+    () => useUpdateProject(),
+    { wrapper: createWrapper() }
+  )
 
-    await act(async () => {
-      result.current.mutate({
-        projectId: PROJECT_ID,
-        data: { name: 'Updated Project', status: 'ON_HOLD' },
-      })
+  await act(async () => {
+    result.current.mutate({
+      projectId: PROJECT_ID,
+      data: { name: 'Updated Project', status: 'ON_HOLD' },
     })
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true))
-    expect(result.current.data?.name).toBe('Updated Project')
-    expect(result.current.data?.status).toBe('ON_HOLD')
   })
-})
 
+  await waitFor(() => {
+    expect(result.current.isSuccess).toBe(true)
+  })
+
+  expect(result.current.data?.name).toBe('Updated Project')
+  expect(result.current.data?.status).toBe('ON_HOLD')
+})
 // ─── useDeleteProject ─────────────────────────────────────────────────────────
 
 describe('useDeleteProject', () => {
@@ -198,25 +198,25 @@ describe('useAddProjectMember', () => {
 })
 
 // ─── useUpdateProjectMemberRole ───────────────────────────────────────────────
+it('updates a member role', async () => {
+  const { result } = renderHook(
+    () => useUpdateProjectMemberRole(),
+    { wrapper: createWrapper() }
+  )
 
-describe('useUpdateProjectMemberRole', () => {
-  it('updates a member role', async () => {
-    const { result } = renderHook(
-      () => useUpdateProjectMemberRole(),
-      { wrapper: createWrapper() }
-    )
-
-    await act(async () => {
-      result.current.mutate({
-        projectId: PROJECT_ID,
-        memberId: 'pm-1',
-        role: 'VIEWER',
-      })
+  await act(async () => {
+    result.current.mutate({
+      projectId: PROJECT_ID,
+      memberId: 'pm-1',
+      role: 'VIEWER',
     })
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true))
-    expect(result.current.data?.role).toBe('VIEWER')
   })
+
+  await waitFor(() => {
+    expect(result.current.isSuccess).toBe(true)
+  })
+
+  expect(result.current.data?.role).toBe('VIEWER')
 })
 
 // ─── useRemoveProjectMember ───────────────────────────────────────────────────

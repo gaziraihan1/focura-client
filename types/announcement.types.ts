@@ -53,7 +53,7 @@ export interface AnnouncementsResponse {
 }
 
 // ─── DTOs ─────────────────────────────────────────────────────────────────────
-
+export type AnnouncementSubmitDto = AnnouncementFormState;
 export interface CreateAnnouncementDto {
   title:      string;
   content:    string;
@@ -118,7 +118,7 @@ export interface AnnouncementModalProps {
   projects?:         WorkspaceProject[];
   lockedProjectId?:  string | null;
   onClose:           () => void;
-  onSubmit:          (data: any) => Promise<void>;               // no args — hook owns the data
+  onSubmit:          (data: AnnouncementSubmitDto) => Promise<void>;               // no args — hook owns the data
   onTitleChange:     (v: string) => void;
   onContentChange:   (v: string) => void;
   onVisibilityChange:(v: AnnouncementVisibility) => void;

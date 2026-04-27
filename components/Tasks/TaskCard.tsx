@@ -1,6 +1,7 @@
+import { Task } from "@/types/task.types";
 import Link from "next/link";
 
-export default function TaskCard({ task }: any) {
+export default function TaskCard({ task }: { task: Task }) {
   return (
     <div className="border rounded-xl p-4 shadow hover:shadow-md transition">
       {/* Status */}

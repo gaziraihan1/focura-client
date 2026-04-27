@@ -430,7 +430,7 @@ export function useCreateTask() {
       const previous = qc.getQueryData(projectKeys.detail(newTask.projectId));
 
       // Optimistically append a placeholder task
-      qc.setQueryData(projectKeys.detail(newTask.projectId), (old: any) => {
+      qc.setQueryData(projectKeys.detail(newTask.projectId), (old: ProjectDetails | undefined) => {
         if (!old) return old;
         const optimisticTask = {
           id: `optimistic-${Date.now()}`,
@@ -453,7 +453,7 @@ export function useCreateTask() {
 
       return { previous };
     },
-    onError: (_err, variables, context: any) => {
+    onError: (_err, variables, context) => {
       if (context?.previous && variables.projectId) {
         qc.setQueryData(
           projectKeys.detail(variables.projectId),
