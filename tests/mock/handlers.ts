@@ -16,6 +16,7 @@ import { storageHandlers } from "./handlers/storage.handlers";
 import { focusSessionHandlers } from "./handlers/focusSession.handlers";
 import { billingHandlers } from "./handlers/billing.handlers";
 import { contactHandlers } from "./handlers/contact.handlers";
+import { jobsHandlers } from "./handlers/job.handlers";
 
 export const handlers = [
   ...workspaceHandlers,
@@ -35,4 +36,5 @@ export const handlers = [
   ...focusSessionHandlers,
   ...billingHandlers,
   ...contactHandlers,
+  ...jobsHandlers,
 ];
