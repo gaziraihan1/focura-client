@@ -177,20 +177,20 @@ export function useWorkspaceLayout({
     handleCreateWorkspace,
   };
 }
-
 export function useWorkspaceDetailPage({ slug }: UseWorkspaceDetailPageProps) {
-  const [activeTab, setActiveTab]       = useState<TabType>("overview");
+  const [activeTab, setActiveTab] = useState<TabType>("overview");
   const [showInviteModal, setShowInviteModal] = useState(false);
 
-  // Single fetch — seeds workspace/stats/members/projects caches automatically
-  const { data: overview, isLoading, isError } = useWorkspaceOverview(slug);
+  const {
+    data: overview,
+    isPending,   // ← true when no cached data exists and query hasn't resolved
+    isError,
+  } = useWorkspaceOverview(slug);
 
-  // These read from the cache seeded above — zero extra network calls
   const workspace = overview?.workspace;
   const stats     = overview?.stats;
   const members   = (overview?.workspace.members ?? []) as WorkspaceMember[];
 
-  // Uses workspace.members from cache — no separate /members fetch
   const { isAdmin, isOwner, canCreateProjects } =
     useWorkspaceRoleFromWorkspace(slug);
 
@@ -198,9 +198,8 @@ export function useWorkspaceDetailPage({ slug }: UseWorkspaceDetailPageProps) {
     workspace,
     stats,
     members,
-    isLoading,
-    // Only surface error when we truly have nothing to show
-    isError: isError,
+    isLoading: isPending,
+    isError: isError && !overview,  // suppress error if stale data is still available
     activeTab,
     setActiveTab,
     showInviteModal,
