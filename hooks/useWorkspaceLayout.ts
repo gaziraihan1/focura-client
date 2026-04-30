@@ -200,7 +200,7 @@ export function useWorkspaceDetailPage({ slug }: UseWorkspaceDetailPageProps) {
     members,
     isLoading,
     // Only surface error when we truly have nothing to show
-    isError: isError && !workspace,
+    isError: isError,
     activeTab,
     setActiveTab,
     showInviteModal,
