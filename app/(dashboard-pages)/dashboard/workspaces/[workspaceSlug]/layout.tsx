@@ -7,6 +7,7 @@ import { useWorkspaceLayout } from "@/hooks/useWorkspaceLayout";
 import { WorkspaceSidebar } from "@/components/Dashboard/Workspaces/WorkspaceSidebar";
 import { WorkspaceLayoutHeader } from "@/components/Dashboard/Workspaces/WorkspaceLayoutHeader";
 import { WorkspaceSwitcherModal } from "@/components/Dashboard/Workspaces/WorkspaceSwitcherModal";
+import { Workspace } from "@/hooks/useWorkspace";
 
 // ── Inner layout — runs INSIDE the provider so useWorkspacePlan works ──────
 function WorkspaceLayoutInner({
@@ -35,12 +36,13 @@ function WorkspaceLayoutInner({
     handleCreateWorkspace,
   } = useWorkspaceLayout({ slug, pathname, isFree }); // ← pass it in
 
-  if (!workspace) return <EmptyState />;
+   const workspaceReady = !isLoading && !!workspace;
+
 
   return (
     <div className="flex h-screen overflow-hidden bg-background scroll-smooth">
       <WorkspaceSidebar
-        workspace={workspace ?? null}
+        workspace={workspace as Workspace} // assert it's there, since sidebar should only render when workspace is ready
         currentMember={currentMember}
         navigation={navigation}
         pathname={pathname}
@@ -62,14 +64,21 @@ function WorkspaceLayoutInner({
         </main>
       </div>
 
-      <WorkspaceSwitcherModal
-        isOpen={switcherOpen}
-        allWorkspaces={allWorkspaces}
-        currentSlug={slug}
-        onClose={() => setSwitcherOpen(false)}
-        onWorkspaceSwitch={handleWorkspaceSwitch}
-        onCreateWorkspace={handleCreateWorkspace}
-      />
+{
+  workspaceReady && (
+
+    <WorkspaceSwitcherModal
+      isOpen={switcherOpen}
+      allWorkspaces={allWorkspaces}
+      currentSlug={slug}
+      onClose={() => setSwitcherOpen(false)}
+      onWorkspaceSwitch={handleWorkspaceSwitch}
+      onCreateWorkspace={handleCreateWorkspace}
+    />
+
+  )
+}
+{!isLoading && !workspace && <EmptyState />}
     </div>
   );
 }

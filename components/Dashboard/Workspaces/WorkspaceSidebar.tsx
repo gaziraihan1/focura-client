@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChevronDown, Settings, LogOut, LucideIcon, Sparkles, Lock } from "lucide-react";
+import { Workspace } from "@/hooks/useWorkspace";
 
 interface NavigationItem {
   name: string;
@@ -18,12 +19,12 @@ interface Member {
   role: string;
 }
 
-interface Workspace {
-  id: string;
-  name: string;
-  color?: string | null;
-  logo?: string | null;
-}
+// interface Workspace {
+//   id: string;
+//   name: string;
+//   color?: string | null;
+//   logo?: string | null;
+// }
 
 interface WorkspaceSidebarProps {
   workspace: Workspace;
