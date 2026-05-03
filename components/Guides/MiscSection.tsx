@@ -48,7 +48,7 @@ export function FocusSection() {
 // ── Meetings ──────────────────────────────────────────────────────────────────
 
 const MEETING_STEPS = [
-  { title: "Open Meetings", desc: "Navigate to the Meetings section from the sidebar." },
+  { title: "Open Meetings", desc: "Navigate to the Meetings section from the workspace sidebar." },
   {
     title: "Create a new meeting",
     desc: 'Click "New Meeting" and fill in the title, date, time, and agenda.',
@@ -88,7 +88,7 @@ export function MeetingsSection() {
 const VOTING_STEPS = [
   {
     title: "Go to Feature Voting",
-    desc: "Find the Feature Voting section in the workspace navigation.",
+    desc: "Find the Feature Voting section in the homepage navigation.",
   },
   {
     title: "Submit your idea",
@@ -132,7 +132,7 @@ export function VotingSection() {
 
 const BILLING_STEPS = [
   {
-    title: "Open Settings → Billing",
+    title: "Find Billing in the workspace navigation",
     desc: "Only the workspace Owner has access to this page.",
   },
   {

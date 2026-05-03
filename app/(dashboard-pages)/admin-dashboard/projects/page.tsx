@@ -73,7 +73,7 @@ export default function AdminProjectsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <Link
-                        href={`/admin/workspaces/${p.workspace.id}`}
+                        href={`/admin-dashboard/workspaces/${p.workspace.slug}`}
                         className="text-xs text-foreground hover:text-primary transition-colors"
                       >
                         {p.workspace.name}

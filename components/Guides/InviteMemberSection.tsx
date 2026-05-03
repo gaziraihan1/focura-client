@@ -4,7 +4,7 @@ import { FeatureList, InfoCard, SectionH, StepList, Tip, Warn } from "../ui";
 
 const INVITE_STEPS = [
   {
-    title: "Go to Settings → Members",
+    title: "Go to workspace Settings → Members",
     desc: "Only Owners and Admins can access the Members settings page.",
   },
   {

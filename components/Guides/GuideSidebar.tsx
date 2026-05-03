@@ -70,7 +70,7 @@ export function GuideSidebar({ sections, activeId, mobileOpen, onNavigate }: Gui
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden sm:flex flex-col w-52 shrink-0 sticky top-20 self-start">
+      <aside className="hidden sm:flex flex-col w-52 shrink-0 sticky top-34 self-start">
         <div className="">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 px-3">
             Topics
@@ -90,7 +90,7 @@ export function GuideSidebar({ sections, activeId, mobileOpen, onNavigate }: Gui
 
       {/* Mobile fullscreen overlay */}
       {mobileOpen && (
-        <div className="sm:hidden fixed inset-0 z-20 top-20 bg-background/95 backdrop-blur overflow-y-auto">
+        <div className="sm:hidden fixed inset-0 z-20 top-30 bg-background/95 backdrop-blur overflow-y-auto">
           <div className="p-4 grid grid-cols-2 gap-2">
             {sections.map((section) => (
               <MobileNavItem

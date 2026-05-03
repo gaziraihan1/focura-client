@@ -5,12 +5,8 @@ import { FeatureList, InfoCard, SectionH, StepList, Tip } from "../ui";
 
 const LABEL_CREATE_STEPS = [
   {
-    title: "Open a project",
-    desc: "Labels are created and managed per project. Navigate to the project where you want to add a label.",
-  },
-  {
-    title: "Go to Labels settings",
-    desc: "Find the Labels option in the project settings or task filter panel.",
+    title: "Open the workspace",
+    desc: "Labels are created and managed per workspace. Navigate to the Labels page in the workspace sidebar.",
   },
   {
     title: "Create a new label",

@@ -13,7 +13,7 @@ export function GuideHeader({ current, mobileOpen, onMobileToggle }: GuideHeader
   const col = COLOR_MAP[current.color];
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur-md">
+    <header className="sticky top-16 z-30 border-b border-border bg-background/80 backdrop-blur-md">
       <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
         {/* Left: logo + breadcrumb */}
         <div className="flex items-center gap-3">

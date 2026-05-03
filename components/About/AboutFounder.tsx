@@ -4,7 +4,7 @@ import { Github, Globe, Code2, GitBranch, Package } from "lucide-react";
 const stats = [
   { icon: GitBranch, label: "Commits", value: "110+" },
   { icon: Package, label: "Custom Hooks", value: "80+" },
-  { icon: Code2, label: "TypeScript", value: "98.6%" },
+  { icon: Code2, label: "TypeScript", value: "99.8%" },
 ];
 
 export const AboutFounder = () => {
@@ -144,14 +144,12 @@ export const AboutFounder = () => {
               </p>
               {/* Language bar */}
               <div className="flex rounded-full overflow-hidden h-2 mb-3 gap-px">
-                <div className="bg-blue-500" style={{ width: "98.5%" }} />
-                <div className="bg-purple-400" style={{ width: "1.3%" }} />
+                <div className="bg-blue-500" style={{ width: "99.8%" }} />
                 <div className="bg-neutral-300 dark:bg-neutral-600 flex-1" />
               </div>
               <div className="flex items-center gap-4 flex-wrap">
                 {[
-                  { color: "bg-blue-500", label: "TypeScript", pct: "98.6%" },
-                  { color: "bg-purple-400", label: "MDX", pct: "1.2%" },
+                  { color: "bg-blue-500", label: "TypeScript", pct: "99.8%" },
                   { color: "bg-neutral-300 dark:bg-neutral-600", label: "Other", pct: "0.2%" },
                 ].map(({ color, label, pct }) => (
                   <div key={label} className="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
