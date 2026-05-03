@@ -28,7 +28,7 @@ export default function FeatureShowcase() {
               <div
                 className="flex-1 relative rounded-3xl overflow-hidden 
                 bg-white/30 dark:bg-white/5 backdrop-blur-xl 
-                border border-border shadow-xl h-[300px] md:h-[360px]"
+                border border-border shadow-xl h-75 md:h-90"
               >
                 <Image
                   src={f.image}

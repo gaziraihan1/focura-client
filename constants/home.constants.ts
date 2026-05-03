@@ -25,13 +25,13 @@ export const features = [
   {
     title: "Organize your workspace effortlessly",
     desc: "Create structured roadmaps, assign tasks, and visualize your team’s workload with clarity. Focura makes planning intuitive and powerful.",
-    image: "/showcase/workspace.png",
+    image: "/images/showcase/workspace workflow.png",
     reverse: false,
   },
   {
     title: "Collaborate in real time",
     desc: "Keep everyone aligned with live updates, instant notifications, and seamless communication — all inside one unified workspace.",
-    image: "/showcase/collaboration.png",
+    image: "/images/showcase/collaborate.png",
     reverse: true,
   },
   {
@@ -43,12 +43,12 @@ export const features = [
 ];
 
 export const integrations = [
-  { name: "Slack", logo: "/integrations/slack.png" },
-  { name: "Notion", logo: "/integrations/notion.png" },
-  { name: "Google Drive", logo: "/integrations/drive.png" },
-  { name: "Figma", logo: "/integrations/figma.png" },
-  { name: "Asana", logo: "/integrations/asana.png" },
-  { name: "Trello", logo: "/integrations/trello.png" },
+  { name: "Slack", logo: "/images/slack_logo_icon.png" },
+  { name: "Notion", logo: "/images/notion_logo_icon.png" },
+  { name: "Google Drive", logo: "/images/google_drive_logo_icon.png" },
+  { name: "Figma", logo: "/images/figma_logo_icon.png" },
+  { name: "Asana", logo: "/images/asana_logo_icon.png" },
+  { name: "Trello", logo: "/images/trello_icon-icons.png" },
 ];
 
 export const plans = [

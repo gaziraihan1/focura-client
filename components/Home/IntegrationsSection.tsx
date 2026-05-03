@@ -36,7 +36,7 @@ export default function IntegrationsSection() {
                 transition-all duration-300 cursor-pointer
               "
             >
-              <div className="relative w-14 h-14">
+              <div className="relative w-8 h-8">
                 <Image
                   src={item.logo}
                   alt={item.name}
