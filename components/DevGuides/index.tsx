@@ -6,7 +6,6 @@ export { FrontendArchSection, BackendArchSection } from "./ArchSection";
 export { AuthSection, ApiLayerSection, DatabaseSection, CachingSection, RealtimeSection } from "./TechSection";
 export { AddingFeatureSection, TestingSection, EnvVarsSection, ConventionsSection } from "./WorkflowSection";
 
-// ── SectionH ─────────────────────────────────────────────────────────────────
 export function SectionH({ children }: { children: ReactNode }) {
   return (
     <h3 className="text-xs font-bold text-foreground mb-3 mt-7 first:mt-0 uppercase tracking-widest">
@@ -15,12 +14,10 @@ export function SectionH({ children }: { children: ReactNode }) {
   );
 }
 
-// ── Prose ─────────────────────────────────────────────────────────────────────
 export function Prose({ children }: { children: ReactNode }) {
   return <p className="text-sm text-muted-foreground leading-relaxed mb-4">{children}</p>;
 }
 
-// ── InfoCard ──────────────────────────────────────────────────────────────────
 export function InfoCard({ icon, title, children }: { icon: string; title: string; children: ReactNode }) {
   return (
     <div className="rounded-xl border border-border bg-card p-4 mb-3">
@@ -33,7 +30,6 @@ export function InfoCard({ icon, title, children }: { icon: string; title: strin
   );
 }
 
-// ── Tip ───────────────────────────────────────────────────────────────────────
 export function Tip({ children }: { children: ReactNode }) {
   return (
     <div className="flex gap-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 p-3.5 mb-4">
@@ -43,7 +39,6 @@ export function Tip({ children }: { children: ReactNode }) {
   );
 }
 
-// ── Warn ──────────────────────────────────────────────────────────────────────
 export function Warn({ children }: { children: ReactNode }) {
   return (
     <div className="flex gap-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 p-3.5 mb-4">
@@ -53,7 +48,6 @@ export function Warn({ children }: { children: ReactNode }) {
   );
 }
 
-// ── CodeBlock ─────────────────────────────────────────────────────────────────
 export function CodeBlock({ children, label }: { children: string; label?: string }) {
   return (
     <div className="mb-4">
@@ -69,7 +63,6 @@ export function CodeBlock({ children, label }: { children: string; label?: strin
   );
 }
 
-// ── InlineCode ────────────────────────────────────────────────────────────────
 export function IC({ children }: { children: ReactNode }) {
   return (
     <code className="text-xs bg-muted border border-border px-1.5 py-0.5 rounded font-mono text-foreground">
@@ -78,7 +71,6 @@ export function IC({ children }: { children: ReactNode }) {
   );
 }
 
-// ── Badge ─────────────────────────────────────────────────────────────────────
 export function Badge({ children, color = "slate" }: { children: ReactNode; color?: string }) {
   const c = COLOR_MAP[color] ?? COLOR_MAP.slate;
   return (
@@ -88,7 +80,6 @@ export function Badge({ children, color = "slate" }: { children: ReactNode; colo
   );
 }
 
-// ── Step ──────────────────────────────────────────────────────────────────────
 export function Step({ num, title, desc }: { num: number; title: string; desc: ReactNode }) {
   return (
     <div className="flex gap-4 items-start">
@@ -103,7 +94,6 @@ export function Step({ num, title, desc }: { num: number; title: string; desc: R
   );
 }
 
-// ── StepList ──────────────────────────────────────────────────────────────────
 export function StepList({ steps }: { steps: Array<{ title: string; desc: ReactNode }> }) {
   return (
     <div className="flex flex-col gap-0 mb-5">
@@ -112,7 +102,6 @@ export function StepList({ steps }: { steps: Array<{ title: string; desc: ReactN
   );
 }
 
-// ── Table ─────────────────────────────────────────────────────────────────────
 export function Table({ headers, rows }: { headers: string[]; rows: string[][] }) {
   return (
     <div className="rounded-xl border border-border overflow-hidden mb-4">
@@ -142,7 +131,6 @@ export function Table({ headers, rows }: { headers: string[]; rows: string[][] }
   );
 }
 
-// ── FileTree ──────────────────────────────────────────────────────────────────
 export function FileTree({ children }: { children: string }) {
   return (
     <pre className="bg-muted border border-border rounded-xl p-4 text-xs font-mono text-muted-foreground leading-relaxed overflow-x-auto mb-4">
@@ -151,7 +139,6 @@ export function FileTree({ children }: { children: string }) {
   );
 }
 
-// ── DividerLabel ─────────────────────────────────────────────────────────────
 export function DividerLabel({ children }: { children: ReactNode }) {
   return (
     <div className="flex items-center gap-3 my-6">
@@ -162,13 +149,12 @@ export function DividerLabel({ children }: { children: ReactNode }) {
   );
 }
 
-// ── RowList ───────────────────────────────────────────────────────────────────
 export function RowList({ items }: { items: Array<{ label: string; desc: string }> }) {
   return (
     <div className="rounded-xl border border-border overflow-hidden mb-4">
       {items.map(({ label, desc }, i) => (
         <div key={label} className={`flex items-start gap-3 px-4 py-3 ${i < items.length - 1 ? "border-b border-border" : ""}`}>
-          <span className="text-xs font-mono text-muted-foreground shrink-0 w-44 mt-0.5">{label}</span>
+          <span className="text-xs font-mono text-muted-foreground shrink-0 w-44 mt-0.5 truncate">{label}</span>
           <span className="text-sm text-muted-foreground">{desc}</span>
         </div>
       ))}
