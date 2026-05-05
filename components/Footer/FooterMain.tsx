@@ -28,6 +28,7 @@ export default function FooterMain() {
             <ul className="space-y-2 text-gray-400 text-sm">
               <li><Link href="/help" className="hover:text-white">Help Center</Link></li>
               <li><Link href="/guides" className="hover:text-white">Guides</Link></li>
+              <li><Link href="/dev-guides" className="hover:text-white">Developer Guides</Link></li>
               <li><Link href="/api-docs" className="hover:text-white">API Docs</Link></li>
               <li><Link href="/templates" className="hover:text-white">Templates</Link></li>
             </ul>
