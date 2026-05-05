@@ -1,39 +1,67 @@
 "use client";
 
-import { useTaskOverview }          from "@/hooks/useTask";
+import { useTaskOverview } from "@/hooks/useTask";
 import { useTaskDetailsController } from "@/hooks/useTaskDetailsController";
-import TaskEmpty                    from "@/components/Dashboard/TaskDetails/TaskEmpty";
-import TaskDetailsPermission        from "@/components/Dashboard/TaskDetails/TaskDetailsPermission";
-import TaskDetailsView              from "@/components/Dashboard/TaskDetails/TaskDetailsView";
+
+import TaskEmpty from "@/components/Dashboard/TaskDetails/TaskEmpty";
+import TaskDetailsPermission from "@/components/Dashboard/TaskDetails/TaskDetailsPermission";
+import TaskDetailsView from "@/components/Dashboard/TaskDetails/TaskDetailsView";
 import TaskDetailsSkeleton from "./TaskDetailsSkeleton";
 
 interface Props {
-  id:             string;
-  workspaceSlug:  string;
+  id: string;
+  workspaceSlug: string;
 }
 
 export function TaskDetailsClient({ id, workspaceSlug }: Props) {
-  // Single fetch — seeds task/comment/attachment caches
-  const { isLoading, isError, data: overview } = useTaskOverview(id);
+  // ── 1. Overview fetch (seeds cache)
+  const {
+    isLoading,
+    isError,
+    data: overview,
+  } = useTaskOverview(id);
 
-  // Controller reads task from the cache seeded above (no extra fetch)
+  // ── 2. Controller (reads from cache)
   const controller = useTaskDetailsController(id, workspaceSlug);
 
-  // Show skeleton only on the very first load (no cached data yet)
-  if (isLoading && !overview) return <TaskDetailsSkeleton />;
+  const { task, permissions } = controller;
 
-  // Real error (not just "undefined while loading")
-  if (isError && !overview) return <TaskEmpty />;
+  // ── 3. HARD LOADING GATE (NO PARTIAL STATE BEYOND THIS POINT)
+  const isLoadingState =
+    isLoading ||
+    !overview ||
+    controller.taskQuery?.isLoading ||
+    permissions.isLoading;
 
-  if (!controller.task)              return <TaskEmpty />;
-  if (!controller.permissions.canView) return <TaskDetailsPermission />;
+  if (isLoadingState) {
+    return <TaskDetailsSkeleton />;
+  }
 
+  // ── 4. ERROR STATE
+  if (isError && !overview) {
+    return <TaskEmpty />;
+  }
+
+  // ── 5. EMPTY STATE
+  if (!task) {
+    return <TaskEmpty />;
+  }
+
+  // ── 6. PERMISSION DENIED STATE
+  if (permissions.canView === false) {
+    return <TaskDetailsPermission />;
+  }
+
+  // ── 7. SUCCESS STATE (FULLY RESOLVED DATA ONLY)
   return (
     <TaskDetailsView
-      {...controller}
-      task={controller.task}
+      task={task}
+      permissions={permissions}   // already resolved upstream
       id={id}
       workspaceSlug={workspaceSlug}
+      isEditing={controller.isEditing}
+      handlers={controller.handlers}
+      mutations={controller.mutations}
     />
   );
 }

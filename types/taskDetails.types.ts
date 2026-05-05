@@ -7,8 +7,10 @@ import {
   useUpdateTaskStatus,
   useUploadAttachment,
 } from "@/hooks/useTask";
+
 import { Task } from "./task.types";
 import { useDeleteComment, useUpdateComment } from "@/hooks/useComment";
+
 
 export interface EditTaskData {
   title: string;
@@ -18,14 +20,37 @@ export interface EditTaskData {
   estimatedHours: string;
 }
 
-export interface TaskPermissions {
-  canView: boolean;
+
+export type TaskPermissionsState = {
   canEdit: boolean;
   canDelete: boolean;
   canChangeStatus: boolean;
   canComment: boolean;
+
+  canView: boolean | null; // 🔥 loading-safe
+
+  isOwner: boolean;
+  isAssignee: boolean;
+
+  isLoading: boolean;
   reason?: string;
-}
+};
+
+
+export type TaskPermissions = {
+  canEdit: boolean;
+  canDelete: boolean;
+  canChangeStatus: boolean;
+  canComment: boolean;
+
+  canView: boolean; // 🔥 strictly boolean
+
+  isOwner: boolean;
+  isAssignee: boolean;
+
+  reason?: string;
+};
+
 
 export interface TaskHandlers {
   handleEditClick: () => void;
@@ -45,6 +70,9 @@ export interface TaskMutations {
   updateStatus: ReturnType<typeof useUpdateTaskStatus>;
 }
 
+/* ─────────────────────────────────────────────
+   DETAILS SECTION PROPS
+───────────────────────────────────────────── */
 export interface TaskDetailsSectionProps {
   status: CreateTaskDto["status"];
   priority: "URGENT" | "HIGH" | "MEDIUM" | "LOW";
@@ -56,10 +84,14 @@ export interface TaskDetailsSectionProps {
   startDate?: string;
   dueDate?: string;
   estimatedHours?: number | null;
+
   errors: Record<string, string>;
+
   onStatusChange: (status: CreateTaskDto["status"]) => void;
   onPriorityChange: (priority: "URGENT" | "HIGH" | "MEDIUM" | "LOW") => void;
-  onIntentChange: (intent: "EXECUTION" | "PLANNING" | "REVIEW" | "LEARNING" | "COMMUNICATION") => void;
+  onIntentChange: (
+    intent: "EXECUTION" | "PLANNING" | "REVIEW" | "LEARNING" | "COMMUNICATION",
+  ) => void;
   onEnergyTypeChange: (energyType: "LOW" | "MEDIUM" | "HIGH") => void;
   onFocusRequiredChange: (focusRequired: boolean) => void;
   onFocusLevelChange: (focusLevel: number) => void;

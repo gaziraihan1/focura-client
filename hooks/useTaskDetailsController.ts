@@ -1,4 +1,3 @@
-// useTaskDetailsController.ts
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -29,7 +28,6 @@ export function useTaskDetailsController(taskId: string, workspaceSlug: string |
     estimatedHours: "",
   });
 
-  // All three read from cache seeded by useTaskOverview — zero extra network calls
   const taskQuery       = useTask(taskId);
   const task            = taskQuery.data as Task | undefined;
   const commentsQuery   = useTaskComments(taskId);
@@ -37,7 +35,6 @@ export function useTaskDetailsController(taskId: string, workspaceSlug: string |
 
   const permissions = useTaskPermissions(task);
 
-  // Mutations
   const updateTask       = useUpdateTask();
   const deleteTask       = useDeleteTask();
   const updateStatus     = useUpdateTaskStatus();
