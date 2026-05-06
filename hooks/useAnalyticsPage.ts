@@ -17,6 +17,9 @@ interface UseAnalyticsPageParams {
 }
 
 export function useAnalyticsPage({ workspaceId }: UseAnalyticsPageParams) {
+  // -------------------------------
+  // Overview (SOURCE OF TRUTH)
+  // -------------------------------
   const {
     data: overview,
     isPending: overviewPending,
@@ -24,48 +27,95 @@ export function useAnalyticsPage({ workspaceId }: UseAnalyticsPageParams) {
     error: overviewError,
   } = useAnalyticsOverview(workspaceId);
 
-  const { data: taskTrends, isPending: trendsPending } = useTaskTrends(
-    workspaceId,
-    30
-  );
-  const { data: projectHealth, isPending: projectsPending } =
-    useProjectHealth(workspaceId);
-  const { data: memberContribution, isPending: membersPending } =
-    useMemberContribution(workspaceId);
-  const { data: timeSummary, isPending: timePending } = useTimeSummary(
-    workspaceId,
-    7
-  );
-  const { data: activityTrends, isPending: activityPending } =
-    useActivityTrends(workspaceId, 30);
-  const { data: workload, isPending: workloadPending } =
-    useWorkload(workspaceId);
+  const overviewLoading = overviewPending || overviewFetching;
 
-  // 🔥 Normalize error ONCE (correct pattern)
+  // -------------------------------
+  // Normalize error once
+  // -------------------------------
   const normalizedError = useMemo(() => {
     return overviewError ? normalizeError(overviewError) : null;
   }, [overviewError]);
 
-  const overviewLoading = overviewPending || overviewFetching;
+  // -------------------------------
+  // Plan / Permission detection
+  // -------------------------------
+  const hasNotPlan = useMemo(() => {
+    if (!normalizedError) return false;
 
-  const isLoading =
-    trendsPending ||
-    projectsPending ||
-    membersPending ||
-    timePending ||
-    activityPending ||
-    workloadPending;
+    return (
+      normalizedError.status === 403 &&
+      normalizedError.message
+        .toLowerCase()
+        .includes("upgrade workspace plan")
+    );
+  }, [normalizedError]);
 
   const isAccessDenied = useMemo(() => {
     if (!normalizedError) return false;
 
     return (
-      normalizedError.status === 403 ||
-      normalizedError.message.toLowerCase().includes("access") ||
+      normalizedError.status === 403 &&
       normalizedError.message.toLowerCase().includes("permission")
     );
   }, [normalizedError]);
 
+  // -------------------------------
+  // Gate ALL other queries
+  // -------------------------------
+  const canRunAnalytics = useMemo(() => {
+    return !!workspaceId && !overviewLoading && !hasNotPlan && !isAccessDenied;
+  }, [workspaceId, overviewLoading, hasNotPlan, isAccessDenied]);
+
+  // -------------------------------
+  // Dependent Queries (GATED)
+  // -------------------------------
+  const { data: taskTrends, isPending: trendsPending } = useTaskTrends(
+    workspaceId,
+    30,
+    { enabled: canRunAnalytics }
+  );
+
+  const { data: projectHealth, isPending: projectsPending } =
+    useProjectHealth(workspaceId, {
+      enabled: canRunAnalytics,
+    });
+
+  const { data: memberContribution, isPending: membersPending } =
+    useMemberContribution(workspaceId, {
+      enabled: canRunAnalytics,
+    });
+
+  const { data: timeSummary, isPending: timePending } = useTimeSummary(
+    workspaceId,
+    7,
+    { enabled: canRunAnalytics }
+  );
+
+  const { data: activityTrends, isPending: activityPending } =
+    useActivityTrends(workspaceId, 30, {
+      enabled: canRunAnalytics,
+    });
+
+  const { data: workload, isPending: workloadPending } =
+    useWorkload(workspaceId, {
+      enabled: canRunAnalytics,
+    });
+
+  // -------------------------------
+  // Global loading state
+  // -------------------------------
+  const isLoading =
+    canRunAnalytics &&
+    (trendsPending ||
+      projectsPending ||
+      membersPending ||
+      timePending ||
+      activityPending ||
+      workloadPending);
+
+  // -------------------------------
+  // Error message mapping
+  // -------------------------------
   const errorMessage = useMemo(() => {
     if (!normalizedError) return "";
 
@@ -73,14 +123,20 @@ export function useAnalyticsPage({ workspaceId }: UseAnalyticsPageParams) {
       return "You do not have permission to view analytics for this workspace.";
     }
 
+    if (hasNotPlan) {
+      return "Your current plan does not include analytics. Please upgrade your workspace plan to access analytics features.";
+    }
+
     return (
       normalizedError.message ||
       "An unexpected error occurred while loading analytics."
     );
-  }, [normalizedError, isAccessDenied]);
+  }, [normalizedError, isAccessDenied, hasNotPlan]);
 
   return {
     overview,
+    hasNotPlan,
+
     taskTrends,
     projectHealth,
     memberContribution,
@@ -91,7 +147,7 @@ export function useAnalyticsPage({ workspaceId }: UseAnalyticsPageParams) {
     overviewLoading,
     isLoading,
 
-    overviewError: normalizedError, // ✅ return normalized version
+    overviewError: normalizedError,
     isAccessDenied,
     errorMessage,
   };

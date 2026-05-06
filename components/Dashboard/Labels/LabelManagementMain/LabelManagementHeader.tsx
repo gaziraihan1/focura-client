@@ -17,7 +17,7 @@ export function LabelManagementHeader({
   onCreateLabel,
 }: LabelManagementHeaderProps) {
   return (
-    <header className="bg-card rounded-2xl border-border sticky top-0 z-10">
+    <header className="bg-card rounded-2xl border-border sticky top-0 z-10 p-4">
       <div className="mx-auto px-2 sm:px-4 lg:px-0 py-6">
         <div className="flex flex-col gap-4">
           {/* Title + Back */}

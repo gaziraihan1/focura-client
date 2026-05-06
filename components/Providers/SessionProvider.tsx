@@ -7,19 +7,21 @@ import ToastProvider from "@/context/providers/ToastProvider";
 import { QueryProvider } from "@/context/providers/query-provider";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  return <SessionProvider>
-    <QueryProvider>
-      
-    <ThemeProvider
-    attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange>
+  return (
+    <SessionProvider>
+      <QueryProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           <LayoutWrapper>
             {children}
             <ToastProvider />
           </LayoutWrapper>
         </ThemeProvider>
-    </QueryProvider>
-  </SessionProvider>;
+      </QueryProvider>
+    </SessionProvider>
+  );
 }

@@ -79,7 +79,7 @@ export function UpgradePlanCard({ feature, description }: UpgradePlanCardProps) 
             {/* Actions */}
             <div className="flex flex-wrap gap-3 pt-1">
               <button
-                onClick={() => router.push(`/dashboard/workspaces/${slug}/settings/billing`)}
+                onClick={() => router.push(`/dashboard/workspaces/${slug}/billing/upgrade`)}
                 className="flex-1 flex items-center justify-center gap-2 h-9 px-4 rounded-lg
                            bg-primary text-primary-foreground text-sm font-medium
                            hover:bg-primary/90 transition-colors"
@@ -88,7 +88,7 @@ export function UpgradePlanCard({ feature, description }: UpgradePlanCardProps) 
                 Upgrade to Pro
               </button>
               <button
-                onClick={() => router.push(`/dashboard/workspaces/${slug}/settings/billing`)}
+                onClick={() => router.push(`/dashboard/workspaces/${slug}/billing/upgrade`)}
                 className="h-9 px-4 rounded-lg border text-sm font-medium text-muted-foreground
                            hover:text-foreground hover:bg-muted/50 transition-colors"
               >

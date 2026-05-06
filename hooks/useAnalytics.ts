@@ -168,7 +168,7 @@ export function useAnalyticsOverview(workspaceId: string) {
   });
 }
 
-export function useTaskTrends(workspaceId: string, days: number = 30) {
+export function useTaskTrends(workspaceId: string, days: number = 30, options?: {enabled?: boolean}) {
   return useQuery({
     queryKey: analyticsKeys.taskTrends(workspaceId, days),
     queryFn: async () => {
@@ -177,13 +177,13 @@ export function useTaskTrends(workspaceId: string, days: number = 30) {
       );
       return response?.data as TaskTrends;
     },
-    enabled: !!workspaceId,
+    enabled: !!workspaceId && (options?.enabled ?? true),
     retry: false, 
     staleTime: 5 * 60 * 1000, 
   });
 }
 
-export function useProjectHealth(workspaceId: string) {
+export function useProjectHealth(workspaceId: string, options?: {enabled?: boolean}) {
   return useQuery({
     queryKey: analyticsKeys.projectHealth(workspaceId),
     queryFn: async () => {
@@ -192,13 +192,13 @@ export function useProjectHealth(workspaceId: string) {
       );
       return response?.data as ProjectHealth[];
     },
-    enabled: !!workspaceId,
+    enabled: !!workspaceId && (options?.enabled ?? true),
     retry: false, 
     staleTime: 3 * 60 * 1000,
   });
 }
 
-export function useMemberContribution(workspaceId: string) {
+export function useMemberContribution(workspaceId: string, options?: {enabled?: boolean}) {
   return useQuery({
     queryKey: analyticsKeys.memberContribution(workspaceId),
     queryFn: async () => {
@@ -207,13 +207,13 @@ export function useMemberContribution(workspaceId: string) {
       );
       return response?.data as MemberContribution[];
     },
-    enabled: !!workspaceId,
+    enabled: !!workspaceId && (options?.enabled ?? true),
     retry: false, 
     staleTime: 5 * 60 * 1000,
   });
 }
 
-export function useTimeSummary(workspaceId: string, days: number = 7) {
+export function useTimeSummary(workspaceId: string, days: number = 7, options?: {enabled?: boolean}) {
   return useQuery({
     queryKey: analyticsKeys.timeSummary(workspaceId, days),
     queryFn: async () => {
@@ -222,13 +222,13 @@ export function useTimeSummary(workspaceId: string, days: number = 7) {
       );
       return response?.data as TimeSummary;
     },
-    enabled: !!workspaceId,
+    enabled: !!workspaceId && (options?.enabled ?? true),
     retry: false, 
     staleTime: 5 * 60 * 1000,
   });
 }
 
-export function useActivityTrends(workspaceId: string, days: number = 30) {
+export function useActivityTrends(workspaceId: string, days: number = 30, options?: {enabled?: boolean}) {
   return useQuery({
     queryKey: analyticsKeys.activityTrends(workspaceId, days),
     queryFn: async () => {
@@ -237,13 +237,13 @@ export function useActivityTrends(workspaceId: string, days: number = 30) {
       );
       return response?.data as ActivityTrends;
     },
-    enabled: !!workspaceId,
+    enabled: !!workspaceId && (options?.enabled ?? true),
     retry: false,
     staleTime: 5 * 60 * 1000,
   });
 }
 
-export function useWorkload(workspaceId: string) {
+export function useWorkload(workspaceId: string, options?: {enabled?: boolean}) {
   return useQuery({
     queryKey: analyticsKeys.workload(workspaceId),
     queryFn: async () => {
@@ -252,7 +252,7 @@ export function useWorkload(workspaceId: string) {
       );
       return response?.data as WorkloadMember[];
     },
-    enabled: !!workspaceId,
+    enabled: !!workspaceId && (options?.enabled ?? true),
     retry: false, 
     staleTime: 2 * 60 * 1000,
   });

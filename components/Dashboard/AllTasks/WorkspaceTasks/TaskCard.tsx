@@ -20,9 +20,8 @@ import {
 } from "@/utils/task.utils";
 import { formatHoursSinceCreation } from "@/utils/taskcard.utils";
 
-
 interface TaskCardProps {
-  task: Task ;
+  task: Task;
   workspaceSlug: string;
   onAddToPrimary?: (taskId: string) => void;
   onAddToSecondary?: (taskId: string) => void;
@@ -31,7 +30,7 @@ interface TaskCardProps {
   loadingTaskId?: string | null;
   loadingType?: "primary" | "secondary" | null;
   isInPrimary?: boolean;
-  isInSecondary?: boolean
+  isInSecondary?: boolean;
 }
 
 export function TaskCard({
@@ -44,25 +43,23 @@ export function TaskCard({
   loadingTaskId,
   loadingType,
   isInPrimary = false,
-  isInSecondary = false
+  isInSecondary = false,
 }: TaskCardProps) {
   const isCompleted = task.status === "COMPLETED";
   const showButtons = showAddButtons && !isCompleted;
 
-    const isThisCardLoading = loadingTaskId === task.id;
+  const isThisCardLoading = loadingTaskId === task.id;
   const isPrimaryLoading = isThisCardLoading && loadingType === "primary";
   const isSecondaryLoading = isThisCardLoading && loadingType === "secondary";
 
-  
-  
   const isAnyLoading = !!loadingTaskId;
   const primaryDisabled = isPrimaryDisabled || isInPrimary || isAnyLoading;
-    
-    const secondaryDisabled = isInSecondary || isAnyLoading;
+  const secondaryDisabled = isInSecondary || isAnyLoading;
+
   const handlePrimaryClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (onAddToPrimary && !isPrimaryDisabled &&!isAnyLoading ) {
+    if (onAddToPrimary && !isPrimaryDisabled && !isAnyLoading) {
       onAddToPrimary(task.id);
     }
   };
@@ -75,192 +72,269 @@ export function TaskCard({
     }
   };
 
-  return (
-    <Link href={`/dashboard/workspaces/${workspaceSlug}/projects/${task.project?.slug}/tasks/${task.id}`}>
-      <div className="p-4 rounded-xl bg-card border border-border hover:shadow-lg hover:border-primary/50 transition-all cursor-pointer group relative">
-       {showButtons && (
-  <div className="absolute top-3 right-3 flex gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity z-10">
-    <button
-      onClick={handlePrimaryClick}
-      disabled={primaryDisabled}
-      className={`p-2 rounded-lg transition-all ${
-        isPrimaryDisabled
-          ? "bg-muted text-muted-foreground cursor-not-allowed opacity-50"
-          : "bg-purple-500 hover:bg-purple-600 text-white shadow-md hover:shadow-lg"
-      }`}
-      title={isInPrimary ? "Already your primary task" :isPrimaryDisabled ? "Primary task already set" : "Add to Primary"}
-    >
-      {
-        isPrimaryLoading ? <Loader2 size={16} className="animate-spin" />
-        : <Plus size={16} />
-      }
-    </button>
-    <button
-      onClick={handleSecondaryClick}
-      disabled={secondaryDisabled}
-      className="p-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-white shadow-md hover:shadow-lg transition-all"
-      title={isInSecondary ? "Already a secondary task" : "Add to Secondary"}
-    >
-      {
-        isSecondaryLoading ? <Loader2 size={16} className="animate-spin" />
-        : <Plus size={16} />
-      }
-    </button>
-  </div>
-)}
+  const progress =
+    task.timeTracking?.timeProgress != null
+      ? Math.min(100, task.timeTracking.timeProgress)
+      : null;
 
-        <div className="flex items-start gap-4">
-          {/* Status Icon */}
-          <div className="shrink-0 mt-1">
+  return (
+    <Link
+      href={`/dashboard/workspaces/${workspaceSlug}/projects/${task.project?.slug}/tasks/${task.id}`}
+    >
+      <div
+        className={`
+          group relative rounded-2xl border bg-card overflow-hidden
+          transition-all duration-300 ease-out
+          hover:shadow-[0_8px_32px_-4px_hsl(var(--foreground)/0.12)]
+          hover:-translate-y-[2px] hover:border-primary/30
+          ${isCompleted ? "opacity-70" : ""}
+        `}
+      >
+
+
+        <div className="p-5">
+          {/* ── Row 1: Status icon + Title + Priority flag + Action buttons ── */}
+          <div className="flex items-start gap-3">
+            {/* Status orb */}
             <div
-              className={`w-10 h-10 rounded-lg ${getStatusColor(
-                task.status
-              )} flex items-center justify-center`}
+              className={`
+                shrink-0 mt-0.5 w-9 h-9 rounded-xl flex items-center justify-center
+                ${getStatusColor(task.status)}
+                shadow-sm ring-1 ring-inset ring-white/10
+              `}
             >
-              {task.status === "COMPLETED" ? (
-                <CheckCircle2 size={20} />
+              {isCompleted ? (
+                <CheckCircle2 size={17} strokeWidth={2.2} />
               ) : (
-                <Clock size={20} />
+                <Clock size={17} strokeWidth={2.2} />
+              )}
+            </div>
+
+            {/* Title + description */}
+            <div className="flex-1 min-w-0 pr-1">
+              <h3
+                className={`
+                  font-semibold leading-snug tracking-tight text-foreground
+                  group-hover:text-primary transition-colors duration-200
+                  ${isCompleted ? "line-through text-muted-foreground" : ""}
+                `}
+              >
+                {task.title}
+              </h3>
+              {task.description && (
+                <p className="mt-1 text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                  {task.description}
+                </p>
+              )}
+            </div>
+
+            {/* Right-side controls */}
+            <div className="flex items-center gap-2 shrink-0 ml-1">
+              {/* Priority flag — always visible */}
+              <Flag
+                size={16}
+                strokeWidth={2.2}
+                className={`${getPriorityColor(task.priority)} shrink-0`}
+              />
+
+              {/* Action buttons — reveal on hover (or always visible on mobile) */}
+              {showButtons && (
+                <div className="flex gap-1.5 md:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  {/* Primary */}
+                  <button
+                    onClick={handlePrimaryClick}
+                    disabled={primaryDisabled}
+                    title={
+                      isInPrimary
+                        ? "Already your primary task"
+                        : isPrimaryDisabled
+                        ? "Primary task already set"
+                        : "Set as Primary task"
+                    }
+                    className={`
+                      flex items-center justify-center w-7 h-7 rounded-lg text-white text-xs font-bold
+                      transition-all duration-150 shadow-sm
+                      ${
+                        primaryDisabled
+                          ? "bg-muted text-muted-foreground cursor-not-allowed opacity-40 shadow-none"
+                          : "bg-violet-500 hover:bg-violet-600 hover:shadow-md active:scale-95"
+                      }
+                    `}
+                  >
+                    {isPrimaryLoading ? (
+                      <Loader2 size={13} className="animate-spin" />
+                    ) : (
+                      <Plus size={13} strokeWidth={2.8} />
+                    )}
+                  </button>
+
+                  {/* Secondary */}
+                  <button
+                    onClick={handleSecondaryClick}
+                    disabled={secondaryDisabled}
+                    title={
+                      isInSecondary
+                        ? "Already a secondary task"
+                        : "Add to Secondary"
+                    }
+                    className={`
+                      flex items-center justify-center w-7 h-7 rounded-lg text-white text-xs font-bold
+                      transition-all duration-150 shadow-sm
+                      ${
+                        secondaryDisabled
+                          ? "bg-muted text-muted-foreground cursor-not-allowed opacity-40 shadow-none"
+                          : "bg-amber-500 hover:bg-amber-600 hover:shadow-md active:scale-95"
+                      }
+                    `}
+                  >
+                    {isSecondaryLoading ? (
+                      <Loader2 size={13} className="animate-spin" />
+                    ) : (
+                      <Plus size={13} strokeWidth={2.8} />
+                    )}
+                  </button>
+                </div>
               )}
             </div>
           </div>
 
-          <div className="flex-1 min-w-0">
-            {/* Title and Priority */}
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex-1">
-                <h3 className="font-semibold text-foreground group-hover:text-primary transition">
-                  {task.title}
-                </h3>
-                {task.description && (
-                  <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                    {task.description}
-                  </p>
-                )}
-              </div>
+          {/* ── Row 2: Meta chips ── */}
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            {/* Project badge */}
+            {task.project && (
+              <span
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
+                style={{
+                  backgroundColor: `${task.project.color}18`,
+                  color: task.project.color,
+                  border: `1px solid ${task.project.color}30`,
+                }}
+              >
+                <Folder size={11} strokeWidth={2.2} />
+                {task.project.name}
+              </span>
+            )}
 
-              <Flag size={18} className={getPriorityColor(task.priority)} />
+            {/* Status pill */}
+            <span
+              className={`
+                inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold
+                ${getStatusColor(task.status)}
+                ring-1 ring-inset ring-current/20
+              `}
+            >
+              {task.status.replace("_", " ")}
+            </span>
+
+            {/* Time since creation */}
+            {task.timeTracking && (
+              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                <Timer size={12} strokeWidth={2} />
+                {formatHoursSinceCreation(
+                  task.timeTracking.hoursSinceCreation
+                )}{" "}
+                ago
+              </span>
+            )}
+
+            {/* Due countdown */}
+            {task.timeTracking?.hoursUntilDue != null && (
+              <span
+                className={`inline-flex items-center gap-1 text-xs font-semibold ${getTimeStatusColor(
+                  task.timeTracking
+                )}`}
+              >
+                <AlertCircle size={12} strokeWidth={2.2} />
+                {formatTimeDuration(task.timeTracking.hoursUntilDue)}
+              </span>
+            )}
+
+            {/* Fallback due date */}
+            {task.dueDate && !task.timeTracking && (
+              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                <Calendar size={12} strokeWidth={2} />
+                {new Date(task.dueDate).toLocaleDateString()}
+              </span>
+            )}
+
+            {/* Engagement counts — pushed right */}
+            <div className="flex items-center gap-2.5 text-xs text-muted-foreground ml-auto">
+              {task._count.comments > 0 && (
+                <span className="flex items-center gap-1">
+                  <span>💬</span>
+                  <span className="font-medium">{task._count.comments}</span>
+                </span>
+              )}
+              {task._count.subtasks > 0 && (
+                <span className="flex items-center gap-1">
+                  <span>✓</span>
+                  <span className="font-medium">{task._count.subtasks}</span>
+                </span>
+              )}
+              {task._count.files > 0 && (
+                <span className="flex items-center gap-1">
+                  <span>📎</span>
+                  <span className="font-medium">{task._count.files}</span>
+                </span>
+              )}
             </div>
+          </div>
 
-            {/* Metadata */}
-            <div className="flex flex-wrap items-center gap-4 mt-3">
-              {/* Project Badge */}
-              {task.project && (
-                <div className="flex items-center gap-2">
-                  <Folder size={14} className="text-muted-foreground" />
-                  <span
-                    className="text-xs px-2 py-1 rounded-full font-medium"
-                    style={{
-                      backgroundColor: `${task.project.color}20`,
-                      color: task.project.color,
-                    }}
-                  >
-                    {task.project.name}
+          {/* ── Row 3: Progress bar + Assignees ── */}
+          {(progress !== null || task.assignees.length > 0) && (
+            <div className="mt-3.5 flex items-center gap-3">
+              {/* Progress */}
+              {progress !== null && task.estimatedHours && (
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <TrendingUp
+                    size={12}
+                    strokeWidth={2}
+                    className="text-muted-foreground shrink-0"
+                  />
+                  <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${
+                        progress > 100
+                          ? "bg-red-500"
+                          : progress > 80
+                          ? "bg-orange-500"
+                          : "bg-blue-500"
+                      }`}
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                  <span className="text-[11px] font-semibold tabular-nums text-muted-foreground shrink-0">
+                    {progress}%
                   </span>
                 </div>
               )}
 
-              <span
-                className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                  task.status
-                )}`}
-              >
-                {task.status.replace("_", " ")}
-              </span>
-
-              {task.timeTracking && (
-                <>
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Timer size={14} />
-                    <span>
-                      {formatHoursSinceCreation(task.timeTracking.hoursSinceCreation)} ago
-                    </span>
-                  </div>
-
-                  {task.timeTracking.hoursUntilDue !== null && (
-                    <div
-                      className={`flex items-center gap-1 text-xs font-medium ${getTimeStatusColor(
-                        task.timeTracking
-                      )}`}
-                    >
-                      <AlertCircle size={14} />
-                      <span>
-                        {formatTimeDuration(task.timeTracking.hoursUntilDue)}
-                      </span>
-                    </div>
-                  )}
-
-                  {task.timeTracking.timeProgress !== null &&
-                    task.estimatedHours && (
-                      <div className="flex items-center gap-2">
-                        <TrendingUp size={14} className="text-muted-foreground" />
-                        <div className="w-20 h-2 bg-muted rounded-full overflow-hidden">
-                          <div
-                            className={`h-full transition-all ${
-                              task.timeTracking.timeProgress > 100
-                                ? "bg-red-500"
-                                : task.timeTracking.timeProgress > 80
-                                ? "bg-orange-500"
-                                : "bg-blue-500"
-                            }`}
-                            style={{
-                              width: `${Math.min(
-                                100,
-                                task.timeTracking.timeProgress
-                              )}%`,
-                            }}
-                          />
-                        </div>
-                        <span className="text-xs text-muted-foreground">
-                          {task.timeTracking.timeProgress}%
-                        </span>
-                      </div>
-                    )}
-                </>
-              )}
-
-              {/* Due Date (fallback if no time tracking) */}
-              {task.dueDate && !task.timeTracking && (
-                <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <Calendar size={14} />
-                  {new Date(task.dueDate).toLocaleDateString()}
-                </div>
-              )}
-
-              {/* Assignees */}
+              {/* Assignee avatars */}
               {task.assignees.length > 0 && (
-                <div className="flex -space-x-2">
-                  {task.assignees.slice(0, 3).map((assignee) => (
+                <div className="flex -space-x-1.5 ml-auto">
+                  {task.assignees.slice(0, 4).map((assignee) => (
                     <div
                       key={assignee.user.id}
-                      className="w-6 h-6 rounded-full bg-primary/20 border-2 border-card flex items-center justify-center text-xs font-medium text-primary-foreground"
                       title={assignee.user.name}
+                      className="
+                        w-6 h-6 rounded-full border-2 border-card
+                        bg-primary/20 flex items-center justify-center
+                        text-[10px] font-bold text-primary
+                        ring-1 ring-primary/10
+                      "
                     >
-                      {assignee.user.name.charAt(0)}
+                      {assignee.user.name.charAt(0).toUpperCase()}
                     </div>
                   ))}
-                  {task.assignees.length > 3 && (
-                    <div className="w-6 h-6 rounded-full bg-muted border-2 border-card flex items-center justify-center text-xs font-medium text-muted-foreground">
-                      +{task.assignees.length - 3}
+                  {task.assignees.length > 4 && (
+                    <div className="w-6 h-6 rounded-full border-2 border-card bg-muted flex items-center justify-center text-[10px] font-medium text-muted-foreground">
+                      +{task.assignees.length - 4}
                     </div>
                   )}
                 </div>
               )}
-
-              {/* Counts */}
-              <div className="flex items-center gap-3 text-xs text-muted-foreground ml-auto">
-                {task._count.comments > 0 && (
-                  <span>{task._count.comments} 💬</span>
-                )}
-                {task._count.subtasks > 0 && (
-                  <span>{task._count.subtasks} ✓</span>
-                )}
-                {task._count.files > 0 && (
-                  <span>{task._count.files} 📎</span>
-                )}
-              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </Link>

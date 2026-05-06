@@ -19,6 +19,7 @@ export default function FooterMain() {
             <ul className="space-y-2 text-gray-400 text-sm">
               <li><Link href="/about" className="hover:text-white">About</Link></li>
               <li><Link href="/careers" className="hover:text-white">Careers</Link></li>
+              <li><Link href="/roadmap" className="hover:text-white">Roadmap</Link></li>
               <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
             </ul>
           </div>

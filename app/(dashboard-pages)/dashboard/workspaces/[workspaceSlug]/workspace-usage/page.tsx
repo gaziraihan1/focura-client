@@ -45,7 +45,7 @@ export default function WorkspaceUsagePage() {
     workspaceId as string,
     { enabled: !isFree } // ← skip the fetch entirely when locked
   );
-
+  
   const handleRefresh = async () => {
     setIsRefreshing(true);
     await refetch?.();
