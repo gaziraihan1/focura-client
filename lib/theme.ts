@@ -16,6 +16,8 @@ export const themeScript = `
 `;
 
 export function toggleTheme() {
+  if (typeof document === "undefined") return;
+
   const root = document.documentElement;
   const isDark = root.classList.toggle("dark");
 
@@ -26,6 +28,10 @@ export function toggleTheme() {
 }
 
 export function getCurrentTheme() {
+  if (typeof document === "undefined") {
+    return "light";
+  }
+
   return document.documentElement.classList.contains("dark")
     ? "dark"
     : "light";

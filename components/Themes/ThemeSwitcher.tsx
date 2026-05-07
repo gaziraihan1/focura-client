@@ -5,7 +5,13 @@ import { toggleTheme, getCurrentTheme } from "@/lib/theme";
 import { Moon, Sun } from "lucide-react";
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState<"light" | "dark">(() => getCurrentTheme());
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    if (typeof document === "undefined") {
+      return "light";
+    }
+
+    return getCurrentTheme();
+  });
 
   const handleToggle = () => {
     toggleTheme();
@@ -14,7 +20,11 @@ export default function ThemeToggle() {
 
   return (
     <button onClick={handleToggle}>
-      {theme === "dark" ? <Sun size={18}/> : <Moon size={18} />}
+      {theme === "dark" ? (
+        <Sun size={18} />
+      ) : (
+        <Moon size={18} />
+      )}
     </button>
   );
 }
