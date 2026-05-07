@@ -8,20 +8,18 @@ interface TeamTaskStatusIconProps {
 
 export function TeamTaskStatusIcon({ status }: TeamTaskStatusIconProps) {
   const getIcon = () => {
-    if (status === 'COMPLETED') {
-      return <CheckCircle2 size={20} />;
-    }
-    if (status === 'BLOCKED') {
-      return <AlertTriangle size={20} />;
-    }
-    return <Clock size={20} />;
+    if (status === 'COMPLETED') return <CheckCircle2 size={17} strokeWidth={2.2} />;
+    if (status === 'BLOCKED') return <AlertTriangle size={17} strokeWidth={2.2} />;
+    return <Clock size={17} strokeWidth={2.2} />;
   };
 
   return (
     <div
-      className={`w-10 h-10 rounded-lg ${getStatusColor(
-        status
-      )} flex items-center justify-center`}
+      className={`
+        w-9 h-9 rounded-xl flex items-center justify-center
+        ${getStatusColor(status)}
+        shadow-sm ring-1 ring-inset ring-white/10
+      `}
     >
       {getIcon()}
     </div>

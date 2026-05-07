@@ -1,16 +1,15 @@
 "use client";
 
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { getTaskTimeInfo } from '@/lib/task/time';
-import { calculateTimeProgress } from '@/utils/taskcard.utils';
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { getTaskTimeInfo } from "@/lib/task/time";
+import { calculateTimeProgress } from "@/utils/taskcard.utils";
 
-// types/task-card-team.types.ts
-import { Task } from '@/hooks/useTask';
-import { TeamTaskStatusIcon } from './TaskCardTeam/TeamTaskStatusIcon';
-import { TeamTaskHeader } from './TaskCardTeam/TeamTaskHeader';
-import { TeamTaskProjectInfo } from './TaskCardTeam/TeamTaskProjectInfo';
-import { TeamTaskBadges } from './TaskCardTeam/TeamTaskBadges';
+import { Task } from "@/hooks/useTask";
+import { TeamTaskStatusIcon } from "./TaskCardTeam/TeamTaskStatusIcon";
+import { TeamTaskHeader } from "./TaskCardTeam/TeamTaskHeader";
+import { TeamTaskProjectInfo } from "./TaskCardTeam/TeamTaskProjectInfo";
+import { TeamTaskBadges } from "./TaskCardTeam/TeamTaskBadges";
 
 export interface TaskCardTeamProps {
   task: Task;
@@ -30,43 +29,54 @@ export function TaskCardTeam({ task, index }: TaskCardTeamProps) {
     task.estimatedHours
   );
 
+  const isCompleted = task.status === "COMPLETED";
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
+      transition={{ delay: index * 0.05, duration: 0.25, ease: "easeOut" }}
     >
       <Link href={`/dashboard/tasks/${task.id}`}>
-        <div className="p-4 rounded-xl bg-card border border-border hover:shadow-lg hover:border-primary/50 transition-all cursor-pointer group">
-          <div className="flex items-start gap-4">
-            {/* Status Icon */}
-            <div className="shrink-0 mt-1">
-              <TeamTaskStatusIcon status={task.status} />
-            </div>
+        <div
+          className={`
+            group relative rounded-2xl border bg-card overflow-hidden
+            transition-all duration-300 ease-out
+            hover:shadow-[0_8px_32px_-4px_hsl(var(--foreground)/0.12)]
+            hover:-translate-y-0.5 hover:border-primary/30
+            ${isCompleted ? "opacity-70" : ""}
+          `}
+        >
+          <div className="p-5">
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 mt-0.5">
+                <TeamTaskStatusIcon status={task.status} />
+              </div>
 
-            {/* Task Content */}
-            <div className="flex-1 min-w-0">
-              {/* Header */}
-              <TeamTaskHeader
-                title={task.title}
-                description={task.description}
-                priority={task.priority}
-              />
-
-              {/* Project Info */}
-              {task.project && (
-                <TeamTaskProjectInfo
-                  workspaceName={task.project.workspace.name}
-                  projectName={task.project.name}
+              <div className="flex-1 min-w-0">
+                <TeamTaskHeader
+                  title={task.title}
+                  description={task.description}
+                  priority={task.priority}
                 />
-              )}
 
-              {/* Badges */}
-              <TeamTaskBadges
-                task={task}
-                timeInfo={timeInfo}
-                timeProgress={timeProgress}
-              />
+                {task.project && (
+                  <div className="mt-2">
+                    <TeamTaskProjectInfo
+                      workspaceName={task.project.workspace.name}
+                      projectName={task.project.name}
+                    />
+                  </div>
+                )}
+
+                <div className="mt-3">
+                  <TeamTaskBadges
+                    task={task}
+                    timeInfo={timeInfo}
+                    timeProgress={timeProgress}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

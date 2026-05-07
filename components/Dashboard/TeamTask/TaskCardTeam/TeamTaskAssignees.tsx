@@ -13,24 +13,29 @@ interface TeamTaskAssigneesProps {
 }
 
 export function TeamTaskAssignees({ assignees }: TeamTaskAssigneesProps) {
-  const visibleAssignees = assignees.slice(0, 3);
-  const remainingCount = assignees.length - 3;
+  const visibleAssignees = assignees.slice(0, 4);
+  const remainingCount = assignees.length - 4;
 
   return (
-    <div className="flex -space-x-2">
+    <div className="flex -space-x-1.5">
       {visibleAssignees.map((assignee) => (
         <div
           key={assignee.user.id}
-          className="w-6 h-6 rounded-full bg-primary/20 border-2 border-card flex items-center justify-center text-xs font-medium"
           title={assignee.user.name}
+          className="
+            w-6 h-6 rounded-full border-2 border-card
+            bg-primary/20 flex items-center justify-center
+            text-[10px] font-bold text-primary
+            ring-1 ring-primary/10 overflow-hidden
+          "
         >
           {assignee.user.image ? (
             <Image
               src={assignee.user.image}
               alt={assignee.user.name}
-              width={20}
-              height={20}
-              className="w-full h-full rounded-full object-cover"
+              width={24}
+              height={24}
+              className="w-full h-full object-cover"
             />
           ) : (
             assignee.user.name.charAt(0).toUpperCase()
@@ -38,7 +43,7 @@ export function TeamTaskAssignees({ assignees }: TeamTaskAssigneesProps) {
         </div>
       ))}
       {remainingCount > 0 && (
-        <div className="w-6 h-6 rounded-full bg-muted border-2 border-card flex items-center justify-center text-xs font-medium">
+        <div className="w-6 h-6 rounded-full border-2 border-card bg-muted flex items-center justify-center text-[10px] font-medium text-muted-foreground">
           +{remainingCount}
         </div>
       )}

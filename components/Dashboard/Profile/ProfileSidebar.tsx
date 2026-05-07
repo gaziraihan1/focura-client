@@ -12,6 +12,7 @@ interface Workspace {
   id: string;
   plan: string;
   maxStorage: number;
+  slug: string
 }
 
 interface ProfileSidebarProps {

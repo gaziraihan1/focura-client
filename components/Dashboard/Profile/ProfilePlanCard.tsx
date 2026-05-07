@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
 import { Crown, Check } from "lucide-react";
+import Link from "next/link";
 
 interface Workspace {
   id: string;
   plan: string;
   maxStorage: number;
+  slug: string
 }
 
 interface ProfilePlanCardProps {
@@ -70,9 +72,12 @@ export function ProfilePlanCard({ ownedWorkspaces }: ProfilePlanCardProps) {
             </div>
           </div>
 
+          <Link href={`/dashboard/workspaces/${workspace.slug}/billing/upgrade`}>
           <button className="w-full mt-4 py-2 rounded-lg border border-primary text-primary hover:bg-primary/10 transition text-sm font-medium">
+
             Upgrade Plan
           </button>
+          </Link>
         </div>
       ) : (
         <p className="text-sm text-muted-foreground">

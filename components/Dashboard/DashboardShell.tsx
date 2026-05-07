@@ -12,7 +12,10 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 function FullPageSpinner() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary" />
+      <div className="flex flex-col items-center gap-4">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted border-t-primary" />
+        <p className="text-xs text-muted-foreground animate-pulse">Loading…</p>
+      </div>
     </div>
   );
 }
@@ -48,12 +51,9 @@ export default function DashboardShell({
           {
             hasBackendToken: !!session?.backendToken,
             tokenLength: session?.backendToken?.length || 0,
-          },
+          }
         );
-
-        signOut({
-          callbackUrl: "/authentication/login",
-        });
+        signOut({ callbackUrl: "/authentication/login" });
       }
     }
   }, [status, session?.backendToken, router]);
@@ -65,18 +65,13 @@ export default function DashboardShell({
   } = useUserProfile();
 
   const segments = pathname.split("/").filter(Boolean);
-
   const isWorkspaceRoute =
     segments[0] === "dashboard" && segments[1] === "workspaces";
-
   const thirdSegment = segments[2];
-
   const hideLayout =
     isWorkspaceRoute && thirdSegment && thirdSegment !== "new-workspace";
 
-  if (status === "loading") {
-    return <FullPageSpinner />;
-  }
+  if (status === "loading") return <FullPageSpinner />;
 
   if (
     status === "unauthenticated" ||
@@ -86,15 +81,23 @@ export default function DashboardShell({
     return null;
   }
 
-  if (hideLayout) {
-    return <>{children}</>;
-  }
+  if (hideLayout) return <>{children}</>;
 
   return (
-    <div className="min-h-screen overflow-hidden bg-background scroll-smooth">
+    <div className="min-h-screen bg-background">
+      {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <div className="min-w-0 lg:pl-64">
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Main area */}
+      <div className="lg:pl-64 flex flex-col min-h-screen">
         <TopNavbar
           onMenuClick={() => setSidebarOpen(true)}
           user={profile}
@@ -102,15 +105,10 @@ export default function DashboardShell({
           isRefreshing={isFetching && !!profile}
         />
 
-        <main className="flex-1 p-5 lg:px-5 lg:py-8">{children}</main>
+        <main className="flex-1 px-4 py-5 lg:px-6 lg:py-7 max-w-screen-2xl w-full mx-auto">
+          {children}
+        </main>
       </div>
-
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
     </div>
   );
 }

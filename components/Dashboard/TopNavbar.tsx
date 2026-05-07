@@ -13,12 +13,12 @@ import {
   LogOut,
   FileText,
   Loader2,
+  X,
 } from "lucide-react";
 
 import ThemeSwitcher from "../Themes/ThemeSwitcher";
 import Image from "next/image";
 import NotificationBell from "../Notifications/NotificationBell";
-
 import type { UserProfile } from "@/hooks/useUserProfile";
 
 interface TopNavbarProps {
@@ -35,11 +35,11 @@ export default function TopNavbar({
   isLoadingProfile,
 }: TopNavbarProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
-
     try {
       await logout();
     } catch (error) {
@@ -49,180 +49,177 @@ export default function TopNavbar({
   };
 
   return (
-    <header className="sticky top-0 z-9999 border-b border-border bg-background/80 backdrop-blur-xl">
-      <div className="flex h-16 items-center justify-between px-4 lg:px-8">
-        {/* Left */}
-        <div className="flex items-center gap-4">
-          <button
-            onClick={onMenuClick}
-            className="rounded-lg p-2 transition hover:bg-accent lg:hidden"
-          >
-            <Menu size={24} className="text-foreground" />
-          </button>
+    <>
+      <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-xl">
+        <div className="flex h-14 items-center justify-between px-4 lg:px-6 gap-3">
 
-          <div className="hidden min-w-75 items-center gap-2 rounded-xl border border-border bg-muted/50 px-4 py-2 md:flex lg:min-w-100">
-            <Search size={18} className="text-muted-foreground" />
-
-            <input
-              type="text"
-              placeholder="Search tasks, projects, files..."
-              className="flex-1 border-none bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
-            />
-
-            <kbd className="hidden h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground lg:inline-flex">
-              <span className="text-xs">⌘</span>K
-            </kbd>
-          </div>
-        </div>
-
-        {/* Right */}
-        <div className="flex items-center gap-2 lg:gap-3">
-          <button className="rounded-lg p-2 transition hover:bg-accent md:hidden">
-            <Search size={20} className="text-foreground" />
-          </button>
-
-          <button className="hidden items-center gap-2 rounded-lg bg-primary px-4 py-2 text-primary-foreground transition hover:opacity-90 sm:flex">
-            <Plus size={18} />
-            <span className="text-sm font-medium">New Task</span>
-          </button>
-
-          <ThemeSwitcher />
-          <NotificationBell />
-
-          {/* User menu */}
-          <div className="relative">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
             <button
-              onClick={() => setShowUserMenu((prev) => !prev)}
-              className="flex items-center gap-2 rounded-lg p-1.5 transition hover:bg-accent"
+              onClick={onMenuClick}
+              className="shrink-0 rounded-xl p-2 transition hover:bg-accent lg:hidden"
             >
-              <div
-                className={`flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 ring-2 transition-all ${
-                  isRefreshing
-                    ? "animate-pulse ring-primary/50"
-                    : "ring-transparent"
-                }`}
-              >
-                {isLoadingProfile ? (
-                  <Loader2
-                    size={16}
-                    className="animate-spin text-primary"
-                  />
-                ) : user?.image ? (
-                  <Image
-                    src={user.image}
-                    alt={user.name ?? "User"}
-                    width={300}
-                    height={300}
-                    className="h-full w-full rounded-full object-cover"
-                  />
-                ) : (
-                  <User size={18} className="text-primary" />
-                )}
-              </div>
-
-              <ChevronDown
-                size={16}
-                className="hidden text-foreground lg:block"
-              />
+              <Menu size={20} className="text-foreground" />
             </button>
 
-            {showUserMenu && (
-              <>
+            <div className="hidden md:flex flex-1 max-w-sm items-center gap-2 rounded-xl border border-border bg-muted/40 px-3.5 py-2 hover:border-primary/30 hover:bg-muted/60 transition-all duration-200 group">
+              <Search size={15} className="text-muted-foreground shrink-0" />
+              <input
+                type="text"
+                placeholder="Search tasks, projects, files…"
+                className="flex-1 border-none bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground min-w-0"
+              />
+              <kbd className="hidden lg:inline-flex h-5 select-none items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground shrink-0">
+                <span className="text-xs">⌘</span>K
+              </kbd>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5 shrink-0">
+            <button
+              onClick={() => setShowMobileSearch(true)}
+              className="md:hidden rounded-xl p-2 transition hover:bg-accent"
+            >
+              <Search size={19} className="text-foreground" />
+            </button>
+
+            <Link
+              href="/dashboard/tasks/add-task"
+              className="hidden sm:flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-primary-foreground transition hover:opacity-90 active:scale-95"
+            >
+              <Plus size={16} strokeWidth={2.5} />
+              <span className="text-[13px] font-semibold">New Task</span>
+            </Link>
+
+            <ThemeSwitcher />
+            <NotificationBell />
+
+            {/* User menu */}
+            <div className="relative">
+              <button
+                onClick={() => setShowUserMenu((prev) => !prev)}
+                className="flex items-center gap-2 rounded-xl px-2 py-1.5 transition hover:bg-accent"
+              >
                 <div
-                  className="fixed inset-0 z-40"
-                  onClick={() => setShowUserMenu(false)}
-                />
-
-                <div className="absolute right-0 z-50 mt-2 w-64 overflow-hidden rounded-xl border border-border bg-popover shadow-lg">
-                  {/* Identity */}
-                  <div className="border-b border-border p-4">
-                    {isLoadingProfile ? (
-                      <div className="space-y-2">
-                        <div className="h-4 w-28 animate-pulse rounded bg-muted" />
-                        <div className="h-3 w-40 animate-pulse rounded bg-muted" />
-                      </div>
-                    ) : (
-                      <>
-                        <p className="font-medium text-foreground">
-                          {user?.name ?? "User"}
-                        </p>
-
-                        <p className="mt-1 text-sm text-muted-foreground">
-                          {user?.email ?? "user@example.com"}
-                        </p>
-                      </>
-                    )}
-                  </div>
-
-                  {/* Nav links */}
-                  <div className="py-2">
-                    {[
-                      {
-                        href: "/dashboard/profile",
-                        icon: User,
-                        label: "Profile",
-                      },
-                      {
-                        href: "/dashboard/settings",
-                        icon: Settings,
-                        label: "Settings",
-                      },
-                      {
-                        href: "/dashboard/billing",
-                        icon: FileText,
-                        label: "Billing",
-                      },
-                    ].map(({ href, icon: Icon, label }) => (
-                      <Link
-                        key={href}
-                        href={href}
-                        className="flex items-center gap-3 px-4 py-2.5 transition hover:bg-accent"
-                        onClick={() => setShowUserMenu(false)}
-                      >
-                        <Icon
-                          size={18}
-                          className="text-muted-foreground"
-                        />
-
-                        <span className="text-sm text-foreground">
-                          {label}
-                        </span>
-                      </Link>
-                    ))}
-                  </div>
-
-                  {/* Logout */}
-                  <div className="border-t border-border">
-                    <button
-                      onClick={() => {
-                        setShowUserMenu(false);
-                        handleLogout();
-                      }}
-                      disabled={isLoggingOut}
-                      className="flex w-full items-center gap-3 px-4 py-2.5 text-left transition hover:bg-accent disabled:opacity-60"
-                    >
-                      {isLoggingOut ? (
-                        <Loader2
-                          size={16}
-                          className="animate-spin"
-                        />
-                      ) : (
-                        <LogOut size={16} />
-                      )}
-
-                      <span className="text-sm text-foreground">
-                        {isLoggingOut
-                          ? "Logging out…"
-                          : "Logout"}
-                      </span>
-                    </button>
-                  </div>
+                  className={`relative flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 ring-2 transition-all duration-300 overflow-hidden ${
+                    isRefreshing ? "ring-primary/50 animate-pulse" : "ring-transparent"
+                  }`}
+                >
+                  {isLoadingProfile ? (
+                    <Loader2 size={15} className="animate-spin text-primary" />
+                  ) : user?.image ? (
+                    <Image
+                      src={user.image}
+                      alt={user.name ?? "User"}
+                      width={32}
+                      height={32}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <User size={16} className="text-primary" />
+                  )}
                 </div>
-              </>
-            )}
+
+                <div className="hidden lg:block text-left">
+                  {isLoadingProfile ? (
+                    <div className="h-3 w-20 animate-pulse rounded bg-muted" />
+                  ) : (
+                    <p className="text-[13px] font-medium text-foreground leading-none">
+                      {user?.name ?? "User"}
+                    </p>
+                  )}
+                </div>
+
+                <ChevronDown
+                  size={14}
+                  className={`hidden lg:block text-muted-foreground transition-transform duration-200 ${showUserMenu ? "rotate-180" : ""}`}
+                />
+              </button>
+
+              {showUserMenu && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowUserMenu(false)}
+                  />
+                  <div className="absolute right-0 z-50 mt-2 w-60 overflow-hidden rounded-2xl border border-border bg-popover shadow-xl shadow-black/10">
+                    <div className="px-4 py-3.5 border-b border-border">
+                      {isLoadingProfile ? (
+                        <div className="space-y-1.5">
+                          <div className="h-3.5 w-28 animate-pulse rounded bg-muted" />
+                          <div className="h-3 w-40 animate-pulse rounded bg-muted" />
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-sm font-semibold text-foreground">{user?.name ?? "User"}</p>
+                          <p className="mt-0.5 text-xs text-muted-foreground">{user?.email ?? "user@example.com"}</p>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Nav links */}
+                    <div className="py-1.5">
+                      {[
+                        { href: "/dashboard/profile", icon: User, label: "Profile" },
+                        { href: "/dashboard/settings", icon: Settings, label: "Settings" },
+                        { href: "/dashboard/billing", icon: FileText, label: "Billing" },
+                      ].map(({ href, icon: Icon, label }) => (
+                        <Link
+                          key={href}
+                          href={href}
+                          onClick={() => setShowUserMenu(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground transition hover:bg-accent"
+                        >
+                          <Icon size={16} className="text-muted-foreground" />
+                          {label}
+                        </Link>
+                      ))}
+                    </div>
+
+                    {/* Logout */}
+                    <div className="border-t border-border py-1.5">
+                      <button
+                        onClick={() => { setShowUserMenu(false); handleLogout(); }}
+                        disabled={isLoggingOut}
+                        className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-destructive transition hover:bg-destructive/8 disabled:opacity-50"
+                      >
+                        {isLoggingOut ? (
+                          <Loader2 size={15} className="animate-spin" />
+                        ) : (
+                          <LogOut size={15} />
+                        )}
+                        {isLoggingOut ? "Logging out…" : "Log out"}
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {showMobileSearch && (
+        <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm md:hidden flex flex-col">
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
+            <Search size={18} className="text-muted-foreground shrink-0" />
+            <input
+              autoFocus
+              type="text"
+              placeholder="Search tasks, projects, files…"
+              className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+            />
+            <button
+              onClick={() => setShowMobileSearch(false)}
+              className="p-1.5 rounded-lg hover:bg-accent transition"
+            >
+              <X size={18} className="text-muted-foreground" />
+            </button>
+          </div>
+          <div className="flex-1 flex items-center justify-center text-sm text-muted-foreground">
+            Start typing to search…
+          </div>
+        </div>
+      )}
+    </>
   );
 }

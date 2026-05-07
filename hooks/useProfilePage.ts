@@ -15,6 +15,7 @@ interface UserProfile {
     id: string;
     plan: string;
     maxStorage: number;
+    slug: string
   }>;
 }
 
