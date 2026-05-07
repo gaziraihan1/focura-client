@@ -194,75 +194,89 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async jwt({ token, user }) {
-      if (user && !token.backendToken) {
-        const sessionId = crypto.randomUUID();
-        token.id = user.id;
-        token.role = user.role ?? "USER";
-        token.sessionId = sessionId;
+    if (user && !token.backendToken) {
+      const sessionId = crypto.randomUUID();
+      token.id = user.id;
+      token.role = user.role ?? "USER";
+      token.sessionId = sessionId;
 
+      const tokens = await exchangeForTokens(
+        { id: user.id, email: user.email!, role: user.role ?? "USER" },
+        sessionId,
+      );
 
-        const tokens = await exchangeForTokens(
-          { id: user.id, email: user.email!, role: user.role ?? "USER" },
-          sessionId,
-        );
-
-
-        if (tokens) {
-          token.backendToken = tokens.accessToken;
-          token.backendTokenExpiry = tokens.accessTokenExpiry;
-          token.refreshToken = tokens.refreshToken;
-          token.refreshTokenExpiry = tokens.refreshTokenExpiry;
-        } else {
-          token.backendToken = "";
-          token.backendTokenExpiry = 0;
-          token.refreshToken = "";
-          token.refreshTokenExpiry = 0;
-          console.error("⚠️  Exchange failed on sign-in — session degraded");
-        }
-
-        return token;
-      }
-
-      // ─── Subsequent requests: silently refresh when near expiry ──────────
-      const nearExpiry =
-        !token.backendTokenExpiry ||
-        Date.now() > (token.backendTokenExpiry as number) - 60_000;
-
-      if (nearExpiry && token.refreshToken) {
-        const tokens = await silentRefresh(
-          token.sessionId as string,
-          token.refreshToken as string,
-        );
-
-        if (tokens) {
-          token.backendToken = tokens.accessToken;
-          token.backendTokenExpiry = tokens.accessTokenExpiry;
-          token.refreshToken = tokens.refreshToken;
-          token.refreshTokenExpiry = tokens.refreshTokenExpiry;
-        } else {
-          const refreshExpired =
-            !token.refreshTokenExpiry ||
-            Date.now() > (token.refreshTokenExpiry as number);
-
-          if (refreshExpired) {
-            throw new Error("SESSION_EXPIRED");
-          }
-
-          token.backendToken = "";
-          token.backendTokenExpiry = 0;
-        }
+      if (tokens) {
+        token.backendToken = tokens.accessToken;
+        token.backendTokenExpiry = tokens.accessTokenExpiry;
+        token.refreshToken = tokens.refreshToken;
+        token.refreshTokenExpiry = tokens.refreshTokenExpiry;
+        console.log("✅ Exchange successful on sign-in");
+      } else {
+        token.backendToken = "";
+        token.backendTokenExpiry = 0;
+        token.refreshToken = "";
+        token.refreshTokenExpiry = 0;
+        console.error("⚠️ Exchange failed on sign-in — session degraded");
       }
 
       return token;
-    },
+    }
 
-    async session({ session, token }) {
-      session.user.id = token.id as string;
-      session.user.role = token.role as string;
-      session.backendToken = token.backendToken as string;
-      session.sessionId = token.sessionId as string;
-      return session;
-    },
+    // Subsequent requests: silently refresh when near expiry
+    const nearExpiry =
+      !token.backendTokenExpiry ||
+      Date.now() > (token.backendTokenExpiry as number) - 60_000;
+
+    if (nearExpiry && token.refreshToken) {
+      console.log("🔄 Attempting silent refresh...");
+      
+      const tokens = await silentRefresh(
+        token.sessionId as string,
+        token.refreshToken as string,
+      );
+
+      if (tokens) {
+        token.backendToken = tokens.accessToken;
+        token.backendTokenExpiry = tokens.accessTokenExpiry;
+        token.refreshToken = tokens.refreshToken;
+        token.refreshTokenExpiry = tokens.refreshTokenExpiry;
+        console.log("✅ Silent refresh successful");
+      } else {
+        const refreshExpired =
+          !token.refreshTokenExpiry ||
+          Date.now() > (token.refreshTokenExpiry as number);
+
+        if (refreshExpired) {
+          console.error("❌ Refresh token expired - throwing SESSION_EXPIRED");
+          throw new Error("SESSION_EXPIRED");
+        }
+
+        // Refresh failed but token not expired - degrade session
+        console.warn("⚠️ Silent refresh failed - degrading session");
+        token.backendToken = "";
+        token.backendTokenExpiry = 0;
+      }
+    }
+
+    return token;
+  },
+
+  async session({ session, token }) {
+    session.user.id = token.id as string;
+    session.user.role = token.role as string;
+    session.backendToken = token.backendToken as string;
+    session.sessionId = token.sessionId as string;
+    
+    // Log session state for debugging
+    if (process.env.NODE_ENV === "development") {
+      console.log("📋 Session callback:", {
+        hasBackendToken: !!session.backendToken,
+        tokenLength: session.backendToken?.length || 0,
+      });
+    }
+    
+    return session;
+  },
 
     async signIn({ user, account, profile }) {
       if (account?.provider === "google") {

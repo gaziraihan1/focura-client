@@ -29,16 +29,33 @@ export default function DashboardShell({
 
   const { status, data: session } = useSession();
 
+  // IMPROVED: Single effect with better logging and token validation
   useEffect(() => {
+    if (status === "loading") return;
+
     if (status === "unauthenticated") {
+      console.log("🔴 DashboardShell: Unauthenticated - redirecting to login");
       router.replace("/authentication/login");
       return;
     }
 
-    if (status === "authenticated" && !session?.backendToken) {
-      signOut({
-        callbackUrl: "/authentication/login",
-      });
+    if (status === "authenticated") {
+      const hasBackendToken =
+        !!session?.backendToken && session.backendToken.length > 10;
+
+      if (!hasBackendToken) {
+        console.error(
+          "🔴 DashboardShell: Authenticated but no valid backend token - forcing logout",
+          {
+            hasBackendToken: !!session?.backendToken,
+            tokenLength: session?.backendToken?.length || 0,
+          },
+        );
+
+        signOut({
+          callbackUrl: "/authentication/login",
+        });
+      }
     }
   }, [status, session?.backendToken, router]);
 
@@ -51,15 +68,12 @@ export default function DashboardShell({
   const segments = pathname.split("/").filter(Boolean);
 
   const isWorkspaceRoute =
-    segments[0] === "dashboard" &&
-    segments[1] === "workspaces";
+    segments[0] === "dashboard" && segments[1] === "workspaces";
 
   const thirdSegment = segments[2];
 
   const hideLayout =
-    isWorkspaceRoute &&
-    thirdSegment &&
-    thirdSegment !== "new-workspace";
+    isWorkspaceRoute && thirdSegment && thirdSegment !== "new-workspace";
 
   /**
    * Only block for auth loading.
@@ -69,9 +83,13 @@ export default function DashboardShell({
   }
 
   /**
-   * Redirect handled in effect.
+   * Redirect handled in effect - don't render anything
    */
-  if (status === "unauthenticated") {
+  if (
+    status === "unauthenticated" ||
+    !session?.backendToken ||
+    session.backendToken.length < 10
+  ) {
     return null;
   }
 
@@ -84,10 +102,7 @@ export default function DashboardShell({
 
   return (
     <div className="min-h-screen overflow-hidden bg-background scroll-smooth">
-      <Sidebar
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-      />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="min-w-0 lg:pl-64">
         <TopNavbar
@@ -97,9 +112,7 @@ export default function DashboardShell({
           isRefreshing={isFetching && !!profile}
         />
 
-        <main className="flex-1 p-5 lg:px-5 lg:py-8">
-          {children}
-        </main>
+        <main className="flex-1 p-5 lg:px-5 lg:py-8">{children}</main>
       </div>
 
       {sidebarOpen && (

@@ -15,29 +15,31 @@ const navLinks = [
   { name: "Solutions", href: "/solutions" },
   { name: "Pricing", href: "/pricing" },
   { name: "Resources", href: "/resources" },
-  { name: "Guides", href: "/guides"}
+  { name: "Guides", href: "/guides" },
 ];
 
 export default function NavbarMain() {
-  const {data: isAdmin} = useIsFocuraAdmin();
+  const { data: isAdmin } = useIsFocuraAdmin();
   const [open, setOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { data: session, status } = useSession();
 
-const isAuthenticated =
-  status === "authenticated" &&
-  session?.backendToken &&
-  session.backendToken.length > 0;
+  // IMPROVED: Check both session status AND token presence with length validation
+  const isAuthenticated =
+    status === "authenticated" &&
+    !!session?.backendToken &&
+    session.backendToken.length > 10; // RSA JWT tokens are always >100 chars, 10 is safety minimum
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
       await logout();
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
       setIsLoggingOut(false);
     }
   };
+
   
 
   return (
@@ -59,16 +61,14 @@ const isAuthenticated =
                 {link.name}
               </Link>
             ))}
-            {
-              isAdmin && (
-                <Link
-                href={'/admin-dashboard'}
+            {isAdmin && (
+              <Link
+                href={"/admin-dashboard"}
                 className="text-sm font-medium text-foreground/80 hover:text-foreground transition"
-                >
+              >
                 Admin Dashboard
-                </Link>
-              )
-            }
+              </Link>
+            )}
 
             {isAuthenticated ? (
               <>
@@ -89,7 +89,7 @@ const isAuthenticated =
                   ) : (
                     <LogOut size={16} />
                   )}
-                  {isLoggingOut ? 'Logging out...' : 'Logout'}
+                  {isLoggingOut ? "Logging out..." : "Logout"}
                 </button>
               </>
             ) : (
@@ -133,19 +133,17 @@ const isAuthenticated =
                 {link.name}
               </Link>
             ))}
-            {
-              isAdmin && (
-                <Link
-                href={'/admin-dashboard'}
+            {isAdmin && (
+              <Link
+                href={"/admin-dashboard"}
                 className="text-sm py-2 font-medium text-foreground/80 hover:text-foreground transition"
                 onClick={() => setOpen(false)}
-                >
-                  Admin Dashboard
-                </Link>
-              )
-            }
+              >
+                Admin Dashboard
+              </Link>
+            )}
 
-            {session ? (
+            {isAuthenticated ? (
               <>
                 <Link
                   href="/dashboard"
@@ -170,7 +168,7 @@ const isAuthenticated =
                   ) : (
                     <LogOut size={16} />
                   )}
-                  {isLoggingOut ? 'Logging out...' : 'Logout'}
+                  {isLoggingOut ? "Logging out..." : "Logout"}
                 </button>
               </>
             ) : (

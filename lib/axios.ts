@@ -126,6 +126,7 @@ axiosInstance.interceptors.response.use(
       _retried?: boolean;
     };
 
+    // TOKEN_EXPIRED: try to refresh via NextAuth
     if (
       code === "TOKEN_EXPIRED" &&
       originalConfig &&
@@ -135,6 +136,15 @@ axiosInstance.interceptors.response.use(
       invalidateTokenCache();
 
       const session = await getFreshSession();
+      
+      // CRITICAL: If session exists but backendToken is missing/empty, force logout
+      if (session && (!session.backendToken || session.backendToken.length === 0)) {
+        console.error("❌ Backend token missing after refresh - forcing logout");
+        toast.error("Session expired. Please login again.");
+        await signOut({ callbackUrl: "/authentication/login" });
+        return Promise.reject(new Error("SESSION_EXPIRED"));
+      }
+
       cachedBackendToken = session?.backendToken ?? null;
       cachedTokenExpiry = cachedBackendToken ? Date.now() + TOKEN_CACHE_TTL : 0;
 
@@ -142,17 +152,28 @@ axiosInstance.interceptors.response.use(
         originalConfig.headers.Authorization = `Bearer ${cachedBackendToken}`;
         return axiosInstance(originalConfig);
       }
+
+      // No valid token after refresh - logout
+      console.error("❌ No valid backend token after refresh");
+      toast.error("Session expired. Please login again.");
+      await signOut({ callbackUrl: "/authentication/login" });
+      return Promise.reject(new Error("SESSION_EXPIRED"));
     }
+
+    // TOKEN_REPLAY_DETECTED: force fresh session fetch
     if (code === "TOKEN_REPLAY_DETECTED") {
       invalidateTokenCache();
       const session = await getFreshSession();
 
-      if (session?.backendToken) {
-        originalConfig.headers.Authorization = `Bearer ${session.backendToken}`
+      if (session?.backendToken && session.backendToken.length > 0) {
+        originalConfig.headers.Authorization = `Bearer ${session.backendToken}`;
         return axiosInstance(originalConfig);
       }
 
-      signOut({ callbackUrl: "/authentication/login" });
+      // Replay detected but no valid token - logout
+      console.error("❌ TOKEN_REPLAY_DETECTED with invalid session");
+      await signOut({ callbackUrl: "/authentication/login" });
+      return Promise.reject(new Error("TOKEN_REPLAY_DETECTED"));
     }
 
     return Promise.reject(error);
