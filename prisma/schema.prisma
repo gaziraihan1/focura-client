@@ -1270,6 +1270,10 @@ model JobPosting {
   @@index([createdAt])
 }
 
+model TemplateList {
+  email             String         @unique
+}
+
 enum JobDepartment {
   ENGINEERING
   DESIGN

@@ -86,7 +86,7 @@ export function TaskCard({
           group relative rounded-2xl border bg-card overflow-hidden
           transition-all duration-300 ease-out
           hover:shadow-[0_8px_32px_-4px_hsl(var(--foreground)/0.12)]
-          hover:-translate-y-[2px] hover:border-primary/30
+          hover:-translate-y-0.5 hover:border-primary/30
           ${isCompleted ? "opacity-70" : ""}
         `}
       >
