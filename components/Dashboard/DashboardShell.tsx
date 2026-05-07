@@ -29,7 +29,6 @@ export default function DashboardShell({
 
   const { status, data: session } = useSession();
 
-  // IMPROVED: Single effect with better logging and token validation
   useEffect(() => {
     if (status === "loading") return;
 
@@ -75,16 +74,10 @@ export default function DashboardShell({
   const hideLayout =
     isWorkspaceRoute && thirdSegment && thirdSegment !== "new-workspace";
 
-  /**
-   * Only block for auth loading.
-   */
   if (status === "loading") {
     return <FullPageSpinner />;
   }
 
-  /**
-   * Redirect handled in effect - don't render anything
-   */
   if (
     status === "unauthenticated" ||
     !session?.backendToken ||
@@ -93,9 +86,6 @@ export default function DashboardShell({
     return null;
   }
 
-  /**
-   * Hide shell layout for specific routes.
-   */
   if (hideLayout) {
     return <>{children}</>;
   }

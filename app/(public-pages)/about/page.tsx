@@ -28,20 +28,6 @@ export const metadata: Metadata = {
   },
 };
 
-/**
- * /about — Public page
- *
- * Sections (all server components except where noted):
- * 1. AboutHero          — tagline, version badge, live stats, CTAs
- * 2. AboutMission       — the problem Focura solves + 3 core pillars
- * 3. AboutFeatures      — 8 feature areas from the real README
- * 4. AboutStack         — full tech stack with versions, grouped by category
- * 5. AboutArchitecture  — 3-layer diagram + request lifecycle + SSE + auth flow
- * 6. AboutFounder       — Mohammad Raihan Gazi, profile card, repo stats
- * 7. AboutValues        — 6 engineering principles baked into the codebase
- * 8. AboutOpenSource    — contribution guide + documentation resource links
- * 9. AboutCTA           — final call-to-action with live app + GitHub + contact
- */
 const AboutPage = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-950">
