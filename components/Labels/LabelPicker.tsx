@@ -17,7 +17,8 @@ export function LabelPicker({
   maxLabels = 10,
 }: LabelPickerProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: allLabels = [], isLoading } = useLabels();
+  const { data: labels, isLoading } = useLabels();
+  const allLabels = labels?.data || [];
 
   const selectedLabels = allLabels.filter((label) =>
     selectedLabelIds.includes(label.id)

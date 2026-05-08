@@ -64,9 +64,9 @@ describe('useLabels', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(result.current.data).toHaveLength(2)
-    expect(result.current.data?.[0].id).toBe('label-1')
-    expect(result.current.data?.[0].name).toBe('Bug')
+    expect(result.current.data?.data).toHaveLength(2)
+    expect(result.current.data?.data?.[0].id).toBe('label-1')
+    expect(result.current.data?.data?.[0].name).toBe('Bug')
   })
 
   it('returns correct label shape', async () => {
@@ -76,7 +76,7 @@ describe('useLabels', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    const label = result.current.data?.[0]
+    const label = result.current.data?.data?.[0]
     expect(label).toHaveProperty('id')
     expect(label).toHaveProperty('color')
     expect(label).toHaveProperty('_count')
@@ -85,7 +85,6 @@ describe('useLabels', () => {
   })
 
   it('is disabled (idle) until workspace resolves', () => {
-    // No defaultWorkspace seeded → workspace query returns undefined → enabled=false
     const { result } = renderHook(() => useLabels(), {
       wrapper: createWrapper(),
     })
@@ -106,7 +105,7 @@ describe('useLabels', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(result.current.data).toEqual([])
+    expect(result.current.data?.data ?? []).toEqual([])
   })
 
   it('returns empty array when API returns non-array data', async () => {
@@ -122,7 +121,7 @@ describe('useLabels', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(result.current.data).toEqual([])
+    expect(result.current.data?.data ?? []).toEqual([])
   })
 
   it('returns empty array when API throws', async () => {
@@ -138,8 +137,7 @@ describe('useLabels', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    // Hook catches errors internally and returns []
-    expect(result.current.data).toEqual([])
+    expect(result.current.data?.data ?? []).toEqual([])
   })
 })
 
@@ -153,10 +151,10 @@ describe('useLabel', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(result.current.data?.id).toBe('label-1')
-    expect(result.current.data?.name).toBe('Bug')
-    expect(result.current.data?.tasks).toHaveLength(2)
-    expect(result.current.data?.tasks[0].task.title).toBe('Fix login bug')
+    expect(result.current.data?.data?.id).toBe('label-1')
+    expect(result.current.data?.data?.name).toBe('Bug')
+    expect(result.current.data?.data?.tasks).toHaveLength(2)
+    expect(result.current.data?.data?.tasks[0].task.title).toBe('Fix login bug')
   })
 
   it('returns task details on the label', async () => {
@@ -166,7 +164,7 @@ describe('useLabel', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    const task = result.current.data?.tasks[0].task
+    const task = result.current.data?.data?.tasks[0].task
     expect(task).toHaveProperty('id')
     expect(task).toHaveProperty('status')
     expect(task).toHaveProperty('priority')
@@ -199,19 +197,18 @@ describe('useLabel', () => {
 
 describe('usePopularLabels', () => {
   it('fetches popular labels for the current workspace', async () => {
-    const { result } = renderHook(() => usePopularLabels(), {
-      wrapper: withWorkspace(),
-    })
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true))
-
-    expect(result.current.data).toHaveLength(2)
-    // Fixture returns label-2 first (higher task count)
-    expect(result.current.data?.[0].id).toBe('label-2')
+  const { result } = renderHook(() => usePopularLabels(), {
+    wrapper: withWorkspace(),
   })
 
+  await waitFor(() => expect(result.current.isSuccess).toBe(true))
+
+  expect(result.current.data).toHaveLength(2)
+
+  expect(result.current.data?.[0].id).toBe('label-2')
+})
   it('accepts a custom limit param', async () => {
-    const { result } = renderHook(() => usePopularLabels(5), {
+    const { result } = renderHook(() => usePopularLabels({limit: 5}), {
       wrapper: withWorkspace(),
     })
 
@@ -241,10 +238,9 @@ describe('usePopularLabels', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(result.current.data).toEqual([])
+    expect(result.current.data ?? []).toEqual([])
   })
 })
-
 // ── useCreateLabel ────────────────────────────────────────────────────────────
 
 describe('useCreateLabel', () => {
@@ -257,7 +253,6 @@ describe('useCreateLabel', () => {
       result.current.mutate({
         name: 'Chore',
         color: '#6b7280',
-        createdAt: new Date(),
       })
     })
 
@@ -279,7 +274,6 @@ describe('useCreateLabel', () => {
         name: 'Docs',
         color: '#10b981',
         description: 'Documentation updates',
-        createdAt: new Date(),
       })
     })
 
@@ -303,7 +297,6 @@ describe('useCreateLabel', () => {
       result.current.mutate({
         name: 'Bad',
         color: '#000',
-        createdAt: new Date(),
       })
     })
 

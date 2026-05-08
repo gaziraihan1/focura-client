@@ -34,7 +34,8 @@ export function LabelManager({ workspaceId, onClose }: LabelManagerProps) {
   
   const { canManage } = useWorkspaceRoleCheck(workspaceId);
   
-  const { data: labels = [], isLoading } = useLabels();
+  const { data: labelsData , isLoading } = useLabels();
+  const labels = labelsData?.data || [];
   const createLabel = useCreateLabel();
   const updateLabel = useUpdateLabel();
   const deleteLabel = useDeleteLabel();

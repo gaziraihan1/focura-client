@@ -116,34 +116,47 @@ export interface LabelsResponse {
   pagination: PaginationMeta;
 }
 
+// ─── useLabels — paginated list ───────────────────────────────────────────────
+
 export function useLabels(params: UseLabelsParams = {}) {
   const { page = 1, limit = 20 } = params;
 
-  const routeParams  = useParams<{ workspaceSlug: string }>();
+  const routeParams   = useParams<{ workspaceSlug: string }>();
   const workspaceSlug = routeParams?.workspaceSlug;
   const { data: workspace } = useWorkspace(workspaceSlug || '');
   const workspaceId = workspace?.id;
 
   return useQuery<LabelsResponse>({
     queryKey: labelKeys.list({ workspaceId, page, limit }),
-    queryFn:  async () => {
-      const qs = buildQuery({ workspaceId, page, limit });
-      const response = await api.get(`/api/labels${qs}`);
-      return response as LabelsResponse;
+    queryFn: async () => {
+      try {
+        const qs = buildQuery({ workspaceId, page, limit });
+        const response = await api.get(`/api/labels${qs}`) as LabelsResponse;
+        return {
+          ...response,
+          data: Array.isArray(response?.data) ? response.data : [],
+        };
+      } catch {
+        return {
+          success: false,
+          data: [],
+          pagination: {
+            page, limit, total: 0, totalPages: 0,
+            hasNextPage: false, hasPrevPage: false,
+          },
+        };
+      }
     },
-    enabled:   !!workspaceId,
-    staleTime: 10 * 60 * 1000,
+    enabled:         !!workspaceId,
+    staleTime:       10 * 60 * 1000,
     placeholderData: (prev) => prev,
   });
 }
-
-// ─── useLabel — single label metadata ────────────────────────────────────────
-
 // ─── useLabel — single label metadata ────────────────────────────────────────
 
 export interface LabelResponse {
   success: boolean;
-  data: Label;
+  data: LabelWithTasks;
 }
 
 export function useLabel(id: string) {
@@ -164,7 +177,6 @@ export interface UseLabelTasksParams extends LabelTasksFilters {
   limit?: number;
 }
 
-// ─── useLabelTasks — paginated tasks for a label ──────────────────────────────
 
 // ─── useLabelTasks — paginated tasks for a label ──────────────────────────────
 
@@ -207,20 +219,31 @@ export interface UsePopularLabelsParams {
 export function usePopularLabels(params: UsePopularLabelsParams = {}) {
   const { page = 1, limit = 10 } = params;
 
-  const routeParams   = useParams<{ workspaceSlug: string }>();
+  const routeParams = useParams<{ workspaceSlug: string }>();
   const workspaceSlug = routeParams?.workspaceSlug;
   const { data: workspace } = useWorkspace(workspaceSlug || '');
   const workspaceId = workspace?.id;
 
-  return useQuery({
+  return useQuery<Label[]>({
     queryKey: labelKeys.popular(workspaceId, page),
-    queryFn:  async () => {
+
+    queryFn: async () => {
       const qs = buildQuery({ workspaceId, page, limit });
-      const response = await api.get<PaginatedResponse<Label>>(`/api/labels/popular${qs}`);
-      return response.data;
+
+      const res = await api.get<PaginatedResponse<Label>>(
+        `/api/labels/popular${qs}`
+      );
+
+      // IMPORTANT: api.get already returns ApiResponse<T>
+      const data = res?.data;
+
+      if (!data) return [];
+
+      return Array.isArray(data) ? data : data.data ?? [];
     },
-    enabled:         !!workspaceId,
-    staleTime:       15 * 60 * 1000,
+
+    enabled: !!workspaceId,
+    staleTime: 15 * 60 * 1000,
     placeholderData: (prev) => prev,
   });
 }

@@ -199,7 +199,8 @@ const [loadingType, setLoadingType] = useState<"primary" | "secondary" | null>(n
 
   const { data: workspace } = useWorkspace(workspaceSlug);
   const { data: projects = [] } = useProjects(workspace?.id);
-  const { data: labels = [] } = useLabels();
+  const { data: labelsResponse } = useLabels();
+const labels = labelsResponse?.data ?? [];
   const { data: members = [] } = useTeamMembers(workspace?.id);
 
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
