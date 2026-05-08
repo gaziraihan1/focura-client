@@ -1,177 +1,256 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useParams }                        from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { api } from '@/lib/axios';
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { api }                              from '@/lib/axios';
+import { useWorkspace }                     from '@/hooks/useWorkspace';
 
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface Label {
-  id: string;
-  name: string;
-  color: string;
+  id:          string;
+  name:        string;
+  color:       string;
   description?: string | null;
   workspaceId?: string | null;
   createdById: string;
   workspace?: {
-    id: string;
+    id:   string;
     name: string;
+    slug: string;
   } | null;
   createdBy?: {
-    id: string;
-    name: string | null;
+    id:    string;
+    name:  string | null;
     image: string | null;
   };
   createdAt: Date;
-  _count: {
-    tasks: number;
-  };
+  _count: { tasks: number };
 }
 
 export interface CreateLabelDto {
-  name: string;
-  color: string;
+  name:        string;
+  color:       string;
   description?: string;
-  createdAt: Date;
   workspaceId?: string;
 }
 
 export interface UpdateLabelDto {
-  name?: string;
-  color?: string;
+  name?:        string;
+  color?:       string;
   description?: string | null;
 }
 
 export interface LabelWithTasks extends Label {
   tasks: {
     task: {
-      id: string;
-      title: string;
-      status: string;
+      id:       string;
+      title:    string;
+      status:   string;
       priority: string;
+      workspace: { id: string; name: string; slug: string };
+      project:   { id: string; name: string; slug: string };
     };
   }[];
 }
 
+export interface PaginationMeta {
+  page:        number;
+  limit:       number;
+  total:       number;
+  totalPages:  number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+export interface PaginatedResponse<T> {
+  success:    boolean;
+  data:       T[];
+  pagination: PaginationMeta;
+}
+
+export interface LabelTasksFilters {
+  status?:   'TODO' | 'IN_PROGRESS' | 'IN_REVIEW' | 'BLOCKED' | 'COMPLETED' | 'CANCELLED';
+  priority?: 'URGENT' | 'HIGH' | 'MEDIUM' | 'LOW';
+}
+
+// ─── Query key factory ────────────────────────────────────────────────────────
 
 export const labelKeys = {
-  all: ['labels'] as const,
-  lists: () => [...labelKeys.all, 'list'] as const,
-  list: (filters: { workspaceId?: string }) => [...labelKeys.lists(), filters] as const,
+  all:     ['labels'] as const,
+  lists:   () => [...labelKeys.all, 'list'] as const,
+  list:    (filters: { workspaceId?: string; page?: number; limit?: number }) =>
+             [...labelKeys.lists(), filters] as const,
   details: () => [...labelKeys.all, 'detail'] as const,
-  detail: (id: string) => [...labelKeys.details(), id] as const,
-  popular: (workspaceId?: string) => [...labelKeys.all, 'popular', workspaceId] as const,
+  detail:  (id: string) => [...labelKeys.details(), id] as const,
+  tasks:   (id: string, filters?: LabelTasksFilters & { page?: number; limit?: number }) =>
+             [...labelKeys.detail(id), 'tasks', filters] as const,
+  popular: (workspaceId?: string, page?: number) =>
+             [...labelKeys.all, 'popular', workspaceId, page] as const,
 };
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
-export function useLabels() {
-  const params = useParams<{ workspaceSlug: string }>();
-  const workspaceSlug = params?.workspaceSlug;
+function buildQuery(params: Record<string, string | number | undefined>): string {
+  const qs = new URLSearchParams();
+  for (const [key, val] of Object.entries(params)) {
+    if (val !== undefined && String(val) !== '') qs.set(key, String(val));
+  }
+  const str = qs.toString();
+  return str ? `?${str}` : '';
+}
 
+// ─── useLabels — paginated list ───────────────────────────────────────────────
+
+// ─── useLabels — paginated list ───────────────────────────────────────────────
+
+export interface UseLabelsParams {
+  page?:  number;
+  limit?: number;
+}
+
+// Add response type for labels list
+export interface LabelsResponse {
+  success: boolean;
+  data: Label[];
+  pagination: PaginationMeta;
+}
+
+export function useLabels(params: UseLabelsParams = {}) {
+  const { page = 1, limit = 20 } = params;
+
+  const routeParams  = useParams<{ workspaceSlug: string }>();
+  const workspaceSlug = routeParams?.workspaceSlug;
   const { data: workspace } = useWorkspace(workspaceSlug || '');
   const workspaceId = workspace?.id;
 
-  return useQuery({
-    queryKey: labelKeys.list({ workspaceId }),
-    queryFn: async () => {
-      try {
-        const params = new URLSearchParams();
-        if (workspaceId) {
-          params.append('workspaceId', workspaceId);
-        }
-
-        const endpoint = `/api/labels${params.toString() ? `?${params.toString()}` : ''}`;
-        
-        const response = await api.get<Label[]>(endpoint);
-        
-        const labels = response?.data;
-
-        if (!labels) {
-          console.warn('No data in labels response');
-          return [];
-        }
-
-        if (!Array.isArray(labels)) {
-          console.warn('Labels is not an array:', labels);
-          return [];
-        }
-
-        return labels;
-      } catch (error) {
-        console.error('Error fetching labels:', error);
-        return [];
-      }
+  return useQuery<LabelsResponse>({
+    queryKey: labelKeys.list({ workspaceId, page, limit }),
+    queryFn:  async () => {
+      const qs = buildQuery({ workspaceId, page, limit });
+      const response = await api.get(`/api/labels${qs}`);
+      return response as LabelsResponse;
     },
-    enabled: !!workspaceId, // don't fire until workspace is resolved
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    enabled:   !!workspaceId,
+    staleTime: 10 * 60 * 1000,
+    placeholderData: (prev) => prev,
   });
+}
+
+// ─── useLabel — single label metadata ────────────────────────────────────────
+
+// ─── useLabel — single label metadata ────────────────────────────────────────
+
+export interface LabelResponse {
+  success: boolean;
+  data: Label;
 }
 
 export function useLabel(id: string) {
-  return useQuery({
+  return useQuery<LabelResponse>({
     queryKey: labelKeys.detail(id),
-    queryFn: async () => {
-      const response = await api.get<LabelWithTasks>(`/api/labels/${id}`);
-      return response.data;
+    queryFn:  async () => {
+      const response = await api.get(`/api/labels/${id}`);
+      return response as LabelResponse;
     },
-    enabled: !!id,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    enabled:   !!id,
+    staleTime: 5 * 60 * 1000,
   });
 }
+// ─── useLabelTasks — paginated tasks for a label ──────────────────────────────
 
-export function usePopularLabels(limit: number = 10) {
-  const params = useParams<{ workspaceSlug: string }>();
-  const workspaceSlug = params?.workspaceSlug;
+export interface UseLabelTasksParams extends LabelTasksFilters {
+  page?:  number;
+  limit?: number;
+}
 
+// ─── useLabelTasks — paginated tasks for a label ──────────────────────────────
+
+// ─── useLabelTasks — paginated tasks for a label ──────────────────────────────
+
+export interface UseLabelTasksParams extends LabelTasksFilters {
+  page?:  number;
+  limit?: number;
+}
+
+// Define the response type that matches what the backend actually sends
+export interface LabelTasksResponse {
+  success: boolean;
+  data: LabelWithTasks['tasks'];
+  pagination: PaginationMeta;
+}
+
+export function useLabelTasks(id: string, params: UseLabelTasksParams = {}) {
+  const { page = 1, limit = 20, status, priority } = params;
+
+  return useQuery<LabelTasksResponse>({
+    queryKey: labelKeys.tasks(id, { page, limit, status, priority }),
+    queryFn:  async () => {
+      const qs = buildQuery({ page, limit, status, priority });
+      // Don't pass a generic type to api.get, let it return the raw response
+      const response = await api.get(`/api/labels/${id}/tasks${qs}`);
+      // Cast the response to our expected type
+      return response as LabelTasksResponse;
+    },
+    enabled:         !!id,
+    staleTime:       5 * 60 * 1000,
+    placeholderData: (prev) => prev,
+  });
+}
+// ─── usePopularLabels — paginated popular labels ──────────────────────────────
+
+export interface UsePopularLabelsParams {
+  page?:  number;
+  limit?: number;
+}
+
+export function usePopularLabels(params: UsePopularLabelsParams = {}) {
+  const { page = 1, limit = 10 } = params;
+
+  const routeParams   = useParams<{ workspaceSlug: string }>();
+  const workspaceSlug = routeParams?.workspaceSlug;
   const { data: workspace } = useWorkspace(workspaceSlug || '');
   const workspaceId = workspace?.id;
 
   return useQuery({
-    queryKey: labelKeys.popular(workspaceId),
-    queryFn: async () => {
-      const params = new URLSearchParams();
-      if (workspaceId) params.append('workspaceId', workspaceId);
-      params.append('limit', limit.toString());
-
-      const response = await api.get<Label[]>(`/api/labels/popular?${params.toString()}`);
-      return response.data || [];
+    queryKey: labelKeys.popular(workspaceId, page),
+    queryFn:  async () => {
+      const qs = buildQuery({ workspaceId, page, limit });
+      const response = await api.get<PaginatedResponse<Label>>(`/api/labels/popular${qs}`);
+      return response.data;
     },
-    enabled: !!workspaceId,
-    staleTime: 15 * 60 * 1000, // 15 minutes
+    enabled:         !!workspaceId,
+    staleTime:       15 * 60 * 1000,
+    placeholderData: (prev) => prev,
   });
 }
 
+// ─── Mutations ────────────────────────────────────────────────────────────────
+
 export function useCreateLabel() {
-  const qc = useQueryClient();
-  const params = useParams<{ workspaceSlug: string }>();
-  const workspaceSlug = params?.workspaceSlug;
+  const qc            = useQueryClient();
+  const routeParams   = useParams<{ workspaceSlug: string }>();
+  const workspaceSlug = routeParams?.workspaceSlug;
   const { data: workspace } = useWorkspace(workspaceSlug || '');
   const workspaceId = workspace?.id;
 
   return useMutation({
     mutationFn: async (data: CreateLabelDto) => {
-      // If workspaceId isn't in the DTO, inject it from the current workspace
       const payload = { ...data };
-      if (!payload.workspaceId && workspaceId) {
-        payload.workspaceId = workspaceId;
-      }
+      if (!payload.workspaceId && workspaceId) payload.workspaceId = workspaceId;
       const response = await api.post<Label>('/api/labels', payload, {
         showSuccessToast: true,
-        showErrorToast: true,
+        showErrorToast:   true,
       });
       return response.data;
     },
     onSuccess: (data, variables) => {
       qc.invalidateQueries({ queryKey: labelKeys.all });
-
       if (data?.workspaceId || variables.workspaceId) {
         qc.invalidateQueries({
           queryKey: labelKeys.list({ workspaceId: data?.workspaceId || variables.workspaceId }),
         });
       }
-    },
-    onError: (error) => {
-      console.error('Error creating label:', error);
     },
   });
 }
@@ -183,18 +262,13 @@ export function useUpdateLabel() {
     mutationFn: async ({ id, data }: { id: string; data: UpdateLabelDto }) => {
       const response = await api.patch<Label>(`/api/labels/${id}`, data, {
         showSuccessToast: true,
-        showErrorToast: true,
+        showErrorToast:   true,
       });
       return response.data;
     },
     onSuccess: (data) => {
-      if (data) {
-        qc.setQueryData(labelKeys.detail(data.id), data);
-      }
+      if (data) qc.setQueryData(labelKeys.detail(data.id), data);
       qc.invalidateQueries({ queryKey: labelKeys.all });
-    },
-    onError: (error) => {
-      console.error('Error updating label:', error);
     },
   });
 }
@@ -206,10 +280,7 @@ export function useDeleteLabel() {
     mutationFn: async (id: string) => {
       const response = await api.delete<{ message: string; tasksAffected: number }>(
         `/api/labels/${id}`,
-        {
-          showSuccessToast: true,
-          showErrorToast: true,
-        }
+        { showSuccessToast: true, showErrorToast: true },
       );
       return { ...response.data, id };
     },
@@ -217,9 +288,6 @@ export function useDeleteLabel() {
       qc.removeQueries({ queryKey: labelKeys.detail(deletedId) });
       qc.invalidateQueries({ queryKey: labelKeys.all });
       qc.invalidateQueries({ queryKey: ['tasks'] });
-    },
-    onError: (error) => {
-      console.error('Error deleting label:', error);
     },
   });
 }
@@ -234,6 +302,7 @@ export function useAddLabelToTask() {
     },
     onSuccess: (_, { labelId, taskId }) => {
       qc.invalidateQueries({ queryKey: labelKeys.detail(labelId) });
+      qc.invalidateQueries({ queryKey: labelKeys.tasks(labelId) });
       qc.invalidateQueries({ queryKey: ['tasks', taskId] });
       qc.invalidateQueries({ queryKey: ['tasks'] });
     },
@@ -250,30 +319,31 @@ export function useRemoveLabelFromTask() {
     },
     onSuccess: (_, { labelId, taskId }) => {
       qc.invalidateQueries({ queryKey: labelKeys.detail(labelId) });
+      qc.invalidateQueries({ queryKey: labelKeys.tasks(labelId) });
       qc.invalidateQueries({ queryKey: ['tasks', taskId] });
       qc.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
 }
 
+// ─── Derived helpers ──────────────────────────────────────────────────────────
+
 export function useLabelOptions() {
-  const { data: labels = [], isLoading } = useLabels();
+  const { data } = useLabels();
+  const labels   = data?.data ?? [];
 
-  const options = labels.map((label) => ({
-    value: label.id,
-    label: label.name,
-    color: label.color,
-  }));
-
-  return { options, isLoading };
+  return {
+    options:   labels.map((label) => ({ value: label.id, label: label.name, color: label.color })),
+    isLoading: !data,
+  };
 }
 
 export function useLabelNameExists() {
-  const { data: labels = [] } = useLabels();
+  const { data } = useLabels();
+  const labels   = data?.data ?? [];
 
-  return (name: string, excludeId?: string) => {
-    return labels.some(
-      (label) => label.name.toLowerCase() === name.toLowerCase() && label.id !== excludeId
+  return (name: string, excludeId?: string) =>
+    labels.some(
+      (label) => label.name.toLowerCase() === name.toLowerCase() && label.id !== excludeId,
     );
-  };
 }

@@ -2,6 +2,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Label } from "@/hooks/useLabels";
 import { Edit2, MoreVertical, Tag, Trash2 } from "lucide-react";
+import Link from "next/link";
 
 interface LabelCardProps {
   label: Label;
@@ -30,13 +31,18 @@ export default function LabelCard({
       className="bg-card rounded-lg border border-border p-4 hover:shadow-md transition-all relative group"
     >
       <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-2 flex-1 min-w-0">
+        <Link 
+          href={`/dashboard/workspaces/${label?.workspace?.slug}/label/${label.id}`}
+          className="flex items-center gap-2 flex-1 min-w-0"
+        >
           <div
             className="w-3 h-3 rounded-full shrink-0 ring-2 ring-background"
             style={{ backgroundColor: label.color }}
           />
-          <h3 className="font-medium text-foreground truncate">{label.name}</h3>
-        </div>
+          <h3 className="font-medium text-foreground truncate hover:underline">
+            {label.name}
+          </h3>
+        </Link>
         <div className="relative">
           <button
             onClick={onDropdownToggle}
@@ -87,25 +93,31 @@ export default function LabelCard({
           </AnimatePresence>
         </div>
       </div>
-      {label.description && (
-        <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-          {label.description}
-        </p>
-      )}
-      <div className="flex items-center justify-between text-xs text-muted-foreground pt-3 border-t border-border">
-        <div className="flex items-center gap-1">
-          <Tag className="w-3 h-3" />
+
+      <Link 
+        href={`/dashboard/workspaces/${label?.workspace?.slug}/label/${label.id}`}
+        className="block"
+      >
+        {label.description && (
+          <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+            {label.description}
+          </p>
+        )}
+        <div className="flex items-center justify-between text-xs text-muted-foreground pt-3 border-t border-border">
+          <div className="flex items-center gap-1">
+            <Tag className="w-3 h-3" />
+            <span>
+              {taskCount} task{taskCount !== 1 ? "s" : ""}
+            </span>
+          </div>
           <span>
-            {taskCount} task{taskCount !== 1 ? "s" : ""}
+            {new Date(label.createdAt).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+            })}
           </span>
         </div>
-        <span>
-          {new Date(label.createdAt).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-          })}
-        </span>
-      </div>
+      </Link>
     </motion.div>
   );
 }

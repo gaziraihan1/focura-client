@@ -12,6 +12,7 @@ import {
   LabelManagementSkeleton,
   LabelGridSkeleton,
 } from "./LabelManagementSkeleton";
+import { PaginationControls } from "./LabelDetails/PaginationControls";
 
 export interface LabelManagementPageProps {
   workspaceId: string;
@@ -32,6 +33,7 @@ export default function LabelManagementMain({
     router,
     searchQuery,
     setSearchQuery,
+    setPage,
     isCreateModalOpen,
     setIsCreateModalOpen,
     editingLabel,
@@ -44,6 +46,7 @@ export default function LabelManagementMain({
     filteredLabels,
     isLoading,
     canManageLabels,
+    pagination,
   } = useLabelPage(workspaceId);
 
   if (isRoleLoading) {
@@ -82,25 +85,36 @@ export default function LabelManagementMain({
         )}
 
         {!isLoading && filteredLabels.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <AnimatePresence mode="popLayout">
-              {filteredLabels.map((label) => (
-                <LabelCard
-                  key={label.id}
-                  label={label}
-                  onEdit={() => setEditingLabel(label)}
-                  onDelete={() => setDeletingLabel(label)}
-                  isDropdownActive={activeDropdown === label.id}
-                  onDropdownToggle={(e) => {
-                    e.stopPropagation();
-                    setActiveDropdown(
-                      activeDropdown === label.id ? null : label.id,
-                    );
-                  }}
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <AnimatePresence mode="popLayout">
+                {filteredLabels.map((label) => (
+                  <LabelCard
+                    key={label.id}
+                    label={label}
+                    onEdit={() => setEditingLabel(label)}
+                    onDelete={() => setDeletingLabel(label)}
+                    isDropdownActive={activeDropdown === label.id}
+                    onDropdownToggle={(e) => {
+                      e.stopPropagation();
+                      setActiveDropdown(
+                        activeDropdown === label.id ? null : label.id,
+                      );
+                    }}
+                  />
+                ))}
+              </AnimatePresence>
+            </div>
+
+            {pagination && pagination.totalPages > 1 && (
+              <div className="mt-8">
+                <PaginationControls
+                  pagination={pagination}
+                  onPageChange={setPage}
                 />
-              ))}
-            </AnimatePresence>
-          </div>
+              </div>
+            )}
+          </>
         )}
       </main>
 

@@ -8,24 +8,28 @@ import {
   useCreateLabel,
   useLabelNameExists,
   useUpdateLabel,
-  } from "./useLabels";
+} from "./useLabels";
 import { useWorkspaceRole } from "./useWorkspace";
 
 export const useLabelPage = (workspaceId: string) => {
   const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingLabel, setEditingLabel] = useState<Label | null>(null);
   const [deletingLabel, setDeletingLabel] = useState<Label | null>(null);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
-  const { data: labels = [], isLoading } = useLabels();
+  const { data: labelsResponse, isLoading } = useLabels({ page, limit: 20 });
   const { canManageWorkspace, isLoading: isRoleLoading } =
     useWorkspaceRole(workspaceId);
 
   const canManageLabels = canManageWorkspace;
 
+  // Extract labels array from the response
+  const labels = labelsResponse?.data ?? [];
+  const pagination = labelsResponse?.pagination;
   
   const filteredLabels = labels.filter((label) =>
     label.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -44,6 +48,8 @@ export const useLabelPage = (workspaceId: string) => {
     router,
     searchQuery,
     setSearchQuery,
+    page,
+    setPage,
     isCreateModalOpen,
     setIsCreateModalOpen,
     editingLabel,
@@ -56,10 +62,10 @@ export const useLabelPage = (workspaceId: string) => {
     isRoleLoading,
     filteredLabels,
     isLoading,
-    canManageLabels
+    canManageLabels,
+    pagination,
   }
 };
-
 
 export interface LabelFormData {
   name: string;
@@ -160,7 +166,7 @@ export function useLabelFormModal({
           color: formData.color,
           description: formData.description.trim() || undefined,
           workspaceId,
-          createdAt: new Date("2024-01-01"),
+          // createdAt: new Date("2024-01-01"),
         };
 
         await createMutation.mutateAsync(createData);
