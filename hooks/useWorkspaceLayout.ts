@@ -96,17 +96,17 @@ export function useWorkspaceLayout({
       icon: Users,
       match: (path: string) => path.includes(`/${slug}/team`),
     },
-
-    // ── Admin-only items ───────────────────────────────────────────────────
-    ...(canManageWorkspace
-      ? [
-          {
+{
             name: "Labels",
             href: `/dashboard/workspaces/${slug}/label`,
             icon: Tags,
             match: (path: string) =>
               path === `/dashboard/workspaces/${slug}/label`,
           },
+    // ── Admin-only items ───────────────────────────────────────────────────
+    ...(canManageWorkspace
+      ? [
+          
           {
             name: "Files",
             href: `/dashboard/workspaces/${slug}/files`,

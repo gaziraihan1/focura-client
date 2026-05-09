@@ -4,7 +4,6 @@ import { AnimatePresence } from "framer-motion";
 import LabelCard from "./LabelCard";
 import LabelFormModal from "./LabelFormModal";
 import DeleteConfirmModal from "./DeleteConfirmModal";
-import AccessDenied from "./AccessDenied";
 import { useLabelPage } from "@/hooks/useLabelPage";
 import { LabelManagementHeader } from "./LabelManagementMain/LabelManagementHeader";
 import { LabelsEmptyState } from "./LabelManagementMain/LabelsEmptyState";
@@ -53,20 +52,10 @@ export default function LabelManagementMain({
     return <LabelManagementSkeleton />;
   }
 
-  if (!canManageLabels) {
-    return (
-      <AccessDenied
-        title="Access Denied"
-        desc="Only workspace owners and admins can manage labels"
-        btnText="Back to Workspace"
-        workspaceSlug={workspaceSlug}
-      />
-    );
-  }
-
   return (
     <div className="min-h-screen bg-background">
       <LabelManagementHeader
+      canManageLabels={canManageLabels}
         workspaceSlug={workspaceSlug}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -90,6 +79,7 @@ export default function LabelManagementMain({
               <AnimatePresence mode="popLayout">
                 {filteredLabels.map((label) => (
                   <LabelCard
+                  canManageLabels={canManageLabels}
                     key={label.id}
                     label={label}
                     onEdit={() => setEditingLabel(label)}

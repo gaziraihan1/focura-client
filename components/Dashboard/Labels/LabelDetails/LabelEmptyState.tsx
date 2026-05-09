@@ -8,7 +8,7 @@ export function LabelEmptyState() {
       </div>
       <h3 className="text-sm font-medium text-foreground">No tasks yet</h3>
       <p className="mt-1 text-sm text-muted-foreground">
-        Tasks assigned to this label will appear here.
+        Tasks assigned to this label (<span className="font-semibold">Related to you</span>) will appear here.
       </p>
     </div>
   );

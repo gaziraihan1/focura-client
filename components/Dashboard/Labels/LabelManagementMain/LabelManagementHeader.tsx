@@ -1,63 +1,85 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Plus, Search } from "lucide-react";
+import { useState }        from "react";
+import { motion }          from "framer-motion";
+import { Plus, Search }    from "lucide-react";
+import { PermissionModal } from "@/components/Shared/PermissionModal";
 
 export interface LabelManagementHeaderProps {
-  workspaceSlug: string;
-  searchQuery: string;
-  onSearchChange: (value: string) => void;
-  onBack: () => void;
-  onCreateLabel: () => void;
+  workspaceSlug:   string;
+  searchQuery:     string;
+  onSearchChange:  (value: string) => void;
+  onBack:          () => void;
+  onCreateLabel:   () => void;
+  canManageLabels: boolean;
 }
 
 export function LabelManagementHeader({
   searchQuery,
   onSearchChange,
   onCreateLabel,
+  canManageLabels,
 }: LabelManagementHeaderProps) {
+  const [showPermissionModal, setShowPermissionModal] = useState(false);
+
+  function handleCreateClick() {
+    if (canManageLabels) {
+      onCreateLabel();
+    } else {
+      setShowPermissionModal(true);
+    }
+  }
+
   return (
-    <header className="bg-card rounded-2xl border-border z-10 p-4">
-      <div className="mx-auto px-2 sm:px-4 lg:px-0 py-6">
-        <div className="flex flex-col gap-4">
-          {/* Title + Back */}
-          <div className="flex items-center gap-3">
-
-            <div className="flex-1">
-              <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
-                Label Management
-              </h1>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Create and manage labels for your workspace
-              </p>
-            </div>
-          </div>
-
-          {/* Search + Action */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search labels..."
-                value={searchQuery}
-                onChange={(e) => onSearchChange(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-shadow text-foreground placeholder:text-muted-foreground"
-              />
+    <>
+      <header className="bg-card rounded-2xl border-border z-10 p-4">
+        <div className="mx-auto px-2 sm:px-4 lg:px-0 py-6">
+          <div className="flex flex-col gap-4">
+            {/* Title */}
+            <div className="flex items-center gap-3">
+              <div className="flex-1">
+                <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
+                  Label Management
+                </h1>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Create and manage labels for your workspace
+                </p>
+              </div>
             </div>
 
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={onCreateLabel}
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium shadow-sm whitespace-nowrap"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Create Label</span>
-            </motion.button>
+            {/* Search + Action */}
+            <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <input
+                  type="text"
+                  placeholder="Search labels..."
+                  value={searchQuery}
+                  onChange={(e) => onSearchChange(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-shadow text-foreground placeholder:text-muted-foreground"
+                />
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleCreateClick}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium shadow-sm whitespace-nowrap"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Create Label</span>
+              </motion.button>
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      <PermissionModal
+        operation="create"
+        resource="label"
+        isOpen={showPermissionModal}
+        onClose={() => setShowPermissionModal(false)}
+      />
+    </>
   );
 }
