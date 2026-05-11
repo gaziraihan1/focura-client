@@ -3,6 +3,8 @@ import toast from "react-hot-toast";
 import { getSession, signOut } from "next-auth/react";
 import { logout } from "./auth/logout";
 import type { Session } from "next-auth";
+import { getCsrfToken, invalidateCsrfToken } from './csrf';
+
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
@@ -108,6 +110,12 @@ axiosInstance.interceptors.request.use(
     if (cachedBackendToken) {
       config.headers.Authorization = `Bearer ${cachedBackendToken}`;
     }
+    if (config.method && !['get', 'head', 'options'].includes(config.method.toLowerCase())) {
+      const csrfToken = await getCsrfToken();
+      if (csrfToken) {
+        config.headers['X-CSRF-Token'] = csrfToken;
+      }
+    }
 
     if (process.env.NODE_ENV === "development") {
       console.log("API Request:", {});
@@ -152,12 +160,33 @@ axiosInstance.interceptors.response.use(
         originalConfig.headers.Authorization = `Bearer ${cachedBackendToken}`;
         return axiosInstance(originalConfig);
       }
+      
 
+      
       // No valid token after refresh - logout
       console.error("❌ No valid backend token after refresh");
       toast.error("Session expired. Please login again.");
       await signOut({ callbackUrl: "/authentication/login" });
       return Promise.reject(new Error("SESSION_EXPIRED"));
+    }
+     if (code === 'CSRF_VALIDATION_FAILED') {
+      console.warn('⚠️ CSRF token validation failed, refreshing token');
+      invalidateCsrfToken();
+      
+      // Retry with fresh CSRF token
+      const originalConfig = error.config as InternalAxiosRequestConfig & {
+        _csrfRetried?: boolean;
+      };
+      
+      if (originalConfig && !originalConfig._csrfRetried) {
+        originalConfig._csrfRetried = true;
+        const csrfToken = await getCsrfToken(true); // Force refresh
+        
+        if (csrfToken) {
+          originalConfig.headers['X-CSRF-Token'] = csrfToken;
+          return axiosInstance(originalConfig);
+        }
+      }
     }
 
     // TOKEN_REPLAY_DETECTED: force fresh session fetch

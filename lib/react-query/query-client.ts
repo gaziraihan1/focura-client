@@ -1,4 +1,7 @@
 import { QueryClient, DefaultOptions } from '@tanstack/react-query';
+import { invalidateCsrfToken } from '../csrf';
+import { AppError } from '../axios';
+
 
 const queryConfig: DefaultOptions = {
   queries: {
@@ -9,6 +12,12 @@ const queryConfig: DefaultOptions = {
   },
   mutations: {
     retry: 0,
+    onError: (error: AppError) => {
+        // Invalidate CSRF token on authentication errors
+        if (error?.response?.data?.code === 'CSRF_VALIDATION_FAILED') {
+          invalidateCsrfToken();
+        }
+      },
   },
 };
 
