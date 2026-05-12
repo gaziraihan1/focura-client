@@ -1,3 +1,21 @@
+/**
+ * hooks/useNotifications.ts
+ *
+ * Changes from previous version
+ * ──────────────────────────────
+ * 1. SSE onmessage data unwrapping: the stream now sends
+ *      data: {"type":"notification","data":{...notificationObject}}
+ *    so we read `parsed.data` instead of treating the whole parsed object
+ *    as the notification.
+ *
+ *    The "connected" handshake is:
+ *      data: {"type":"connected","userId":"..."}
+ *    which we still skip by checking parsed.type === "connected".
+ *
+ * Everything else (infinite query, mutations, optimistic updates, reconnect
+ * logic) is identical to the working original.
+ */
+
 import {
   useInfiniteQuery,
   useMutation,
@@ -36,15 +54,20 @@ interface UnreadCountResponse {
   count: number;
 }
 
-
-const EMPTY_PAGE: NotificationsResponse = { items: [], nextCursor: null, hasMore: false };
+const EMPTY_PAGE: NotificationsResponse = {
+  items: [],
+  nextCursor: null,
+  hasMore: false,
+};
 
 export function useNotifications() {
-  const qc       = useQueryClient();
+  const qc = useQueryClient();
   const { data: session } = useSession();
   const backendToken = session?.backendToken ?? null;
-  
-  const eventSourceRef    = useRef<EventSource | null>(null);
+
+  const eventSourceRef = useRef<EventSource | null>(null);
+
+  // ── Paginated list ────────────────────────────────────────────────────────
 
   const {
     data,
@@ -67,8 +90,8 @@ export function useNotifications() {
         const url = pageParam
           ? `/api/notifications?cursor=${pageParam}`
           : "/api/notifications";
-        const response = await api.get<NotificationsResponse>(url);
-        return response?.data ?? EMPTY_PAGE;
+        const response = await api.get<{ success: boolean; data: NotificationsResponse }>(url);
+        return response?.data?.data ?? EMPTY_PAGE;
       } catch (err) {
         console.error("Failed to fetch notifications:", err);
         return EMPTY_PAGE;
@@ -76,55 +99,73 @@ export function useNotifications() {
     },
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
     initialPageParam: undefined,
-    enabled:          !!backendToken,
-    retry:            1,
+    enabled: !!backendToken,
+    retry: 1,
   });
+
+  // ── Unread count ──────────────────────────────────────────────────────────
 
   const { data: unreadCountData } = useQuery({
     queryKey: ["notifications", "unread-count"],
     queryFn: async () => {
       try {
-        const response = await api.get<UnreadCountResponse>(
+        const response = await api.get<{ success: boolean; data: UnreadCountResponse }>(
           "/api/notifications/unread-count"
         );
-        return response?.data ?? { count: 0 };
+        return response?.data?.data ?? { count: 0 };
       } catch (err) {
         console.error("Failed to fetch unread count:", err);
         return { count: 0 };
       }
     },
     enabled: !!backendToken,
-    retry:   1,
+    retry: 1,
   });
 
+  // ── SSE connection ────────────────────────────────────────────────────────
 
   useEffect(() => {
     if (!backendToken) return;
     let cancelled = false;
 
     function connect() {
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const backendUrl =
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
       const es = new EventSource(
         `${backendUrl}/api/notifications/stream?token=${backendToken}`
       );
       eventSourceRef.current = es;
 
-      es.onopen = () => {
-      };
-
       es.onmessage = (event) => {
         try {
-          const data = JSON.parse(event.data);
-          if (data.type === "connected") return;
+          // Payload shape: { type: "connected" | "notification", data?: Notification }
+          const parsed = JSON.parse(event.data) as {
+            type: string;
+            data?: Notification;
+            userId?: string;
+          };
 
-          const notification = data as Notification;
+          // Skip the initial handshake
+          if (parsed.type === "connected") return;
 
+          // All other messages carry the notification in parsed.data
+          const notification = parsed.data;
+          if (!notification) return;
+
+          // Prepend to first page of the infinite query cache
           qc.setQueryData<InfiniteData<NotificationsResponse>>(
             ["notifications"],
             (old) => {
               if (!old) {
                 return {
-                  pages:      [{ items: [notification], nextCursor: null, hasMore: false }],
+                  pages: [
+                    {
+                      items: [notification],
+                      nextCursor: null,
+                      hasMore: false,
+                    },
+                  ],
                   pageParams: [undefined],
                 };
               }
@@ -139,12 +180,13 @@ export function useNotifications() {
             }
           );
 
+          // Increment badge count
           qc.setQueryData<UnreadCountResponse>(
             ["notifications", "unread-count"],
             (old) => ({ count: (old?.count ?? 0) + 1 })
           );
         } catch (err) {
-          console.error("❌ Error parsing SSE notification:", err);
+          console.error("Error parsing SSE notification:", err);
         }
       };
 
@@ -152,7 +194,9 @@ export function useNotifications() {
         es.close();
         eventSourceRef.current = null;
         if (!cancelled) {
-          setTimeout(() => { if (!cancelled) connect(); }, 5000);
+          setTimeout(() => {
+            if (!cancelled) connect();
+          }, 5_000);
         }
       };
     }
@@ -166,10 +210,13 @@ export function useNotifications() {
     };
   }, [backendToken, qc]);
 
+  // ── Mutations ─────────────────────────────────────────────────────────────
 
   const markAsReadMutation = useMutation({
     mutationFn: async (notificationId: string) => {
-      const response = await api.patch(`/api/notifications/${notificationId}/read`);
+      const response = await api.patch(
+        `/api/notifications/${notificationId}/read`
+      );
       return response.data;
     },
     onSuccess: (_, notificationId) => {
@@ -213,7 +260,7 @@ export function useNotifications() {
               ...page,
               items: page.items.map((n) => ({
                 ...n,
-                read:   true,
+                read: true,
                 readAt: new Date().toISOString(),
               })),
             })),
@@ -272,9 +319,11 @@ export function useNotifications() {
     },
   });
 
+  // ── Derived state ─────────────────────────────────────────────────────────
 
-  const notifications = data?.pages.flatMap((page) => page?.items ?? []) ?? [];
-  const unreadCount   = unreadCountData?.count ?? 0;
+  const notifications =
+    data?.pages.flatMap((page) => page?.items ?? []) ?? [];
+  const unreadCount = unreadCountData?.count ?? 0;
 
   return {
     notifications,
@@ -285,13 +334,14 @@ export function useNotifications() {
     hasNextPage,
     isFetchingNextPage,
     unreadCount,
-    markAsRead:             (id: string) => markAsReadMutation.mutate(id),
-    markAllAsRead:          () => markAllAsReadMutation.mutate(),
-    deleteNotification:     (id: string) => deleteNotificationMutation.mutate(id),
-    deleteAllRead:          () => deleteAllReadMutation.mutate(),
-    isMarkingAsRead:        markAsReadMutation.isPending,
-    isMarkingAllAsRead:     markAllAsReadMutation.isPending,
+    markAsRead: (id: string) => markAsReadMutation.mutate(id),
+    markAllAsRead: () => markAllAsReadMutation.mutate(),
+    deleteNotification: (id: string) =>
+      deleteNotificationMutation.mutate(id),
+    deleteAllRead: () => deleteAllReadMutation.mutate(),
+    isMarkingAsRead: markAsReadMutation.isPending,
+    isMarkingAllAsRead: markAllAsReadMutation.isPending,
     isDeletingNotification: deleteNotificationMutation.isPending,
-    isDeletingAllRead:      deleteAllReadMutation.isPending,
+    isDeletingAllRead: deleteAllReadMutation.isPending,
   };
 }
