@@ -165,6 +165,7 @@ export function useAnalyticsOverview(workspaceId: string) {
     enabled: !!workspaceId,
     retry: false, 
     staleTime: 2 * 60 * 1000, 
+    gcTime: 10 * 60 * 1000 // 10 minutes
   });
 }
 
@@ -180,6 +181,7 @@ export function useTaskTrends(workspaceId: string, days: number = 30, options?: 
     enabled: !!workspaceId && (options?.enabled ?? true),
     retry: false, 
     staleTime: 5 * 60 * 1000, 
+    gcTime: 20 * 60 * 1000 // 15 minutes
   });
 }
 
@@ -195,6 +197,7 @@ export function useProjectHealth(workspaceId: string, options?: {enabled?: boole
     enabled: !!workspaceId && (options?.enabled ?? true),
     retry: false, 
     staleTime: 3 * 60 * 1000,
+    gcTime: 15 * 60 * 1000 // 15 minutes
   });
 }
 
@@ -210,6 +213,7 @@ export function useMemberContribution(workspaceId: string, options?: {enabled?: 
     enabled: !!workspaceId && (options?.enabled ?? true),
     retry: false, 
     staleTime: 5 * 60 * 1000,
+    gcTime: 15 * 60 * 1000 // 15 minutes
   });
 }
 
@@ -225,6 +229,7 @@ export function useTimeSummary(workspaceId: string, days: number = 7, options?: 
     enabled: !!workspaceId && (options?.enabled ?? true),
     retry: false, 
     staleTime: 5 * 60 * 1000,
+    gcTime: 15 * 60 * 1000 // 15 minutes
   });
 }
 
@@ -240,6 +245,7 @@ export function useActivityTrends(workspaceId: string, days: number = 30, option
     enabled: !!workspaceId && (options?.enabled ?? true),
     retry: false,
     staleTime: 5 * 60 * 1000,
+    gcTime: 20 * 60 * 1000 // 20 minutes
   });
 }
 

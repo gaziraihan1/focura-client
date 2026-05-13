@@ -41,8 +41,8 @@ export function useUserProfile() {
       return user;
     },
     enabled: isReady,
-    staleTime: 5 * 60 * 1000,   // treat as fresh for 5 min — no refetch on nav
-    gcTime:    15 * 60 * 1000,  // keep in cache for 15 min
+    staleTime: 10 * 60 * 1000,   // treat as fresh for 10 min — no refetch on nav
+    gcTime:    30 * 60 * 1000,  // keep in cache for 30 min
     retry: (failureCount, error: AppError) => {
       const code   = error?.response?.data?.code;
       const status = error?.response?.status;

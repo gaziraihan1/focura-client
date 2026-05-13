@@ -206,6 +206,7 @@ export function useLabelTasks(id: string, params: UseLabelTasksParams = {}) {
     },
     enabled:         !!id,
     staleTime:       5 * 60 * 1000,
+    gcTime: 15 * 60 * 1000, // 15 minutes
     placeholderData: (prev) => prev,
   });
 }
@@ -244,6 +245,7 @@ export function usePopularLabels(params: UsePopularLabelsParams = {}) {
 
     enabled: !!workspaceId,
     staleTime: 15 * 60 * 1000,
+    gcTime: 30 * 60 * 1000, // 30 minutes
     placeholderData: (prev) => prev,
   });
 }

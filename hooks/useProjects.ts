@@ -144,6 +144,7 @@ export const useProjects = (workspaceId?: string) => {
     },
     enabled: !!workspaceId,
         staleTime: 3 * 60 * 1000, // reads from overview-seeded cache for 3 min
+        gcTime: 10 * 60 * 1000
 
   });
 };
@@ -158,6 +159,7 @@ export const useAllUserProjects = () => {
       return res.data as ProjectDetails[];
     },
     staleTime: 2 * 60 * 1000, // 2 minutes
+    gcTime: 10 * 60 * 1000, // 5 minutes
   });
 };
 
@@ -169,6 +171,7 @@ export const useProjectDetails = (projectId?: string) => {
       return res.data as ProjectDetails;
     },
     enabled: !!projectId,
+    staleTime: 2 * 60 * 1000, // 5 minutes
   });
 };
 
