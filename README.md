@@ -54,7 +54,7 @@ A modern, full-stack productivity and collaboration SaaS platform built with **N
 #### **Collaboration & Communication**
 - ✅ Comments and discussions on tasks
 - ✅ @mentions for team notifications
-- ✅ Real-time notifications via SSE
+- ✅ Real-time notifications via SSE + Redis pub/sub
 - ✅ Activity feed and audit trail
 - ✅ Team visibility and transparency
 - ✅ Workspace announcements
@@ -111,7 +111,7 @@ A modern, full-stack productivity and collaboration SaaS platform built with **N
 #### **User Experience**
 - ✅ Dark/Light theme support
 - ✅ Responsive design (mobile, tablet, desktop)
-- ✅ Real-time updates via SSE
+- ✅ Real-time updates via SSE + Redis pub/sub
 - ✅ Optimistic UI updates
 - ✅ Toast notifications and alerts
 - ✅ Smooth animations with Framer Motion
@@ -143,16 +143,18 @@ A modern, full-stack productivity and collaboration SaaS platform built with **N
 
 ### **Backend (API)**
 - Node.js with Express.js
-- PostgreSQL with Prisma ORM
+- PostgreSQL with Prisma ORM (primary + read replica)
 - RS256 JWT Authentication
-- Redis for caching and rate limiting
-- Server-Sent Events (SSE) for real-time updates
+- Upstash Redis (REST) for caching, rate limiting, and dedup
+- ioredis for Redis pub/sub (SSE fan-out)
+- Server-Sent Events (SSE) for real-time delivery
 
 ### **Infrastructure & Deployment**
 - **Hosting**: Vercel
 - **CDN**: Vercel Edge Network
 - **Database**: PostgreSQL (Prisma managed)
 - **Cache/Redis**: Upstash Redis
+- **Pub/Sub**: Redis (ioredis TCP connection)
 - **Files**: Cloudinary
 - **Payments**: Stripe
 - **Monitoring**: Vercel Speed Insights
@@ -184,8 +186,9 @@ A modern, full-stack productivity and collaboration SaaS platform built with **N
 │                                                              │
 │  • Modular monolith architecture                             │
 │  • Role-based access control middleware                      │
-│  • Real-time notifications (SSE)                             │
+│  • Real-time notifications (SSE + Redis pub/sub)             │
 │  • Rate limiting & audit logging                             │
+│  • DB connection pooling (primary + read replica)            │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -204,30 +207,71 @@ Axios interceptor attaches token
     ↓
 Backend validates token → checks permissions → creates task
     ↓
-Notification sent to assignees via SSE
+Notification written to Postgres + published to Redis channel
+    ↓
+SSE stream delivers notification to recipient's browser
     ↓
 Response updates React Query cache
     ↓
 UI reflects changes (already visible via optimistic update)
 ```
 
-### **Real-Time Updates (SSE)**
+### **Real-Time Notifications (SSE + Redis Pub/Sub)**
 
 ```
-useNotifications hook connects
+useNotifications hook — browser opens SSE connection
     ↓
 GET /api/notifications/stream?token=<accessToken>
     ↓
 Backend verifies token, extracts userId
     ↓
-Maintains persistent connection per user
+Awaits Redis SUBSCRIBE sse:user:<userId> confirmation
     ↓
-Events sent in real-time as they occur
+Sends "connected" handshake — channel is guaranteed live
     ↓
-React Query cache updated instantly
+─────────────────────────────────────────────────
+Any backend instance calls notifyUser()
     ↓
-UI re-renders with new notifications
+1. Writes Notification row to Postgres (durable)
+2. PUBLISH sse:user:<userId> payload → Redis
+    ↓
+Redis delivers to all subscribed backend instances
+    ↓
+Each instance fans out to its open SSE Response objects
+    ↓
+─────────────────────────────────────────────────
+Browser EventSource.onmessage fires
+    ↓
+React Query cache prepended → unread count incremented
+    ↓
+UI re-renders instantly
 ```
+
+**Why Redis pub/sub instead of in-memory Map:**
+- Works across multiple backend instances (horizontal scaling)
+- Any instance can publish; every instance with that user's SSE connection delivers it
+- Notifications are durable in Postgres — Redis failure never loses data
+- One Redis SUBSCRIBE per unique userId per process, not one per browser tab
+
+**Two Redis clients (ioredis):**
+
+| Client | Purpose |
+|--------|---------|
+| `publisher` | Sends PUBLISH commands — stays in normal mode |
+| `subscriber` | Dedicated to SUBSCRIBE/UNSUBSCRIBE — required because a subscribed ioredis client can only send subscribe commands |
+
+**Upstash Redis (REST)** remains untouched for token revocation, rate limiting, and notification dedup keys. ioredis handles only pub/sub over a standard TCP connection.
+
+### **DB Connection Pooling**
+
+Two Prisma clients with separate connection pools:
+
+| Client | Pool size | Used for |
+|--------|-----------|---------|
+| `prisma` | 5 | All mutations, consistency-critical reads (unread count) |
+| `prismaRead` | 10 | Notification list, analytics, activity feeds, calendar aggregates |
+
+Read-heavy endpoints hit the replica so write traffic on the primary stays low. If `READ_DATABASE_URL` is not set, `prismaRead` falls back to the primary automatically.
 
 ---
 
@@ -250,7 +294,7 @@ NEXTAUTH_URL=http://localhost:3000
 
 # API Configuration
 BACKEND_URL=http://localhost:5000                    # Server-side only
-NEXT_PUBLIC_API_URL=http://localhost:5000           # Client-side for SSE
+NEXT_PUBLIC_API_URL=http://localhost:5000           # Client-side for SSE stream
 
 # OAuth (Optional - for Google login)
 GOOGLE_CLIENT_ID=<your-google-client-id>
@@ -259,13 +303,16 @@ GOOGLE_CLIENT_SECRET=<your-google-client-secret>
 # File Upload
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=<your-cloudinary-name>
 
-# Redis (For rate limiting and caching)
+# Redis (Upstash REST — for rate limiting and caching)
 UPSTASH_REDIS_REST_URL=<your-upstash-url>
 UPSTASH_REDIS_REST_TOKEN=<your-upstash-token>
 
 # Optional
 NODE_OPTIONS=--dns-result-order=ipv4first
 ```
+
+> **Note:** The `REDIS_URL` (ioredis TCP) env var is backend-only and never
+> needed on the frontend.
 
 ### **Installation**
 
@@ -280,18 +327,12 @@ cd focura-client
 npm install
 ```
 
-3. **Setup Prisma** (if using database features)
-```bash
-npx prisma generate
-npx prisma migrate dev
-```
-
-4. **Start development server**
+3. **Start development server**
 ```bash
 npm run dev
 ```
 
-5. **Open in browser**
+4. **Open in browser**
 ```
 http://localhost:3000
 ```
@@ -335,11 +376,10 @@ focura-client/
 ├── lib/                           # Core libraries & utilities
 │   ├── api/                       # API client methods
 │   ├── auth/                      # NextAuth configuration
-│   ├── axios.ts                   # Axios interceptors
+│   ├── axios.ts                   # Axios instance + interceptors
 │   ├── email.ts                   # Email utilities
 │   ├── hash.ts                    # Hashing functions
 │   ├── limiter.ts                 # Rate limiting
-│   ├── prisma.ts                  # Prisma client
 │   ├── react-query/               # TanStack Query setup
 │   ├── task/                      # Task utilities
 │   └── tokens.ts                  # JWT utilities
@@ -350,7 +390,7 @@ focura-client/
 │   ├── useProject.ts              # Project management
 │   ├── useCalendar.ts             # Calendar logic
 │   ├── useKanbanBoard.ts          # Kanban operations
-│   ├── useNotifications.ts        # Real-time notifications
+│   ├── useNotifications.ts        # Real-time notifications (SSE + pub/sub)
 │   ├── useLabels.ts               # Label operations
 │   ├── useFocusSession.ts         # Focus sessions
 │   ├── useAnalytics.ts            # Analytics queries
@@ -379,17 +419,13 @@ focura-client/
 ├── public/                        # Static assets
 │   └── [Images, fonts]            # Public files
 │
-├── prisma/                        # Prisma schema & migrations
-│   ├── schema.prisma              # Database schema
-│   └── migrations/                # Migration history
-│
 ├── .env.local                     # Environment variables (local)
 ├── next.config.ts                 # Next.js configuration
 ├── tsconfig.json                  # TypeScript configuration
 ├── tailwind.config.ts             # Tailwind CSS configuration
 ├── components.json                # Shadcn UI components config
 ├── package.json                   # Dependencies
-├── README.md                       # This file
+├── README.md                      # This file
 ├── ARCHITECTURE.md                # Architecture documentation
 ├── AUTHENTICATION.md              # Auth system documentation
 ├── CONTRIBUTING.md                # Contributing guidelines
@@ -423,7 +459,7 @@ focura-client/
    - Automatic refresh on page load via NextAuth
 
 5. **Token Revocation**
-   - Logout revokes token JTI in Redis
+   - Logout revokes token JTI in Upstash Redis
    - Logout-all-devices revokes all refresh tokens
    - Global invalidation via token version increment
 
@@ -451,20 +487,21 @@ For detailed authentication documentation, see [AUTHENTICATION.md](./AUTHENTICAT
 ### **API Client Setup**
 
 The Axios instance in `lib/axios.ts` handles:
-- Automatic JWT token attachment
-- Error handling & response transformation
-- Type-safe API responses
-- Request/response logging
+- Automatic JWT token attachment from NextAuth session
+- Token caching with 10-minute TTL to avoid redundant session fetches
+- Silent token refresh on `TOKEN_EXPIRED` responses
+- CSRF token attachment for mutating requests
+- Type-safe API responses via `ApiResponse<T>` wrapper
 
 ```ts
 import { api } from '@/lib/axios';
 
-// Type-safe GET request
-const response = await api.get<TasksResponse>('/api/tasks');
-const { success, data } = response;
+// api.get<T> returns ApiResponse<T> = { success, data?: T, message? }
+const response = await api.get<NotificationsResponse>('/api/notifications');
+const notifications = response?.data; // NotificationsResponse
 
-// Type-safe POST request
-await api.post('/api/tasks', { title: 'New Task', ... });
+// POST / PATCH / DELETE follow the same pattern
+await api.post('/api/tasks', { title: 'New Task' });
 ```
 
 ### **Backend API Endpoints**
@@ -497,10 +534,13 @@ await api.post('/api/tasks', { title: 'New Task', ... });
 - `DELETE /api/projects/:id` - Delete project
 
 #### Notifications
-- `GET /api/notifications/stream` - SSE stream (real-time)
-- `GET /api/notifications` - Paginated notifications
+- `GET /api/notifications/stream` - SSE stream (token via query param, Redis-backed)
+- `GET /api/notifications` - Paginated list (cursor-based, read replica)
+- `GET /api/notifications/unread-count` - Badge count (primary DB)
 - `PATCH /api/notifications/:id/read` - Mark as read
+- `PATCH /api/notifications/read-all` - Mark all as read
 - `DELETE /api/notifications/:id` - Delete notification
+- `DELETE /api/notifications/read/all` - Delete all read
 
 #### More Endpoints
 - `GET /api/labels` - List labels
@@ -529,12 +569,6 @@ npm start
 
 # Run ESLint
 npm run lint
-
-# Generate Prisma client
-npx prisma generate
-
-# Prisma Studio (database UI)
-npx prisma studio
 ```
 
 ### **Code Style**
@@ -569,19 +603,11 @@ npx prisma studio
    - Lazy load routes and components
    - Optimize images with next/image
 
-### **Testing Considerations**
-
-- Unit tests for hooks and utilities
-- Integration tests for features
-- E2E tests for critical user flows
-
 ---
 
 ## 🚀 Deployment
 
 ### **Deploy to Vercel**
-
-The easiest way to deploy Focura Client:
 
 1. **Push to GitHub**
 ```bash
@@ -610,16 +636,16 @@ GOOGLE_CLIENT_ID=<production-id>
 GOOGLE_CLIENT_SECRET=<production-secret>
 UPSTASH_REDIS_REST_URL=<upstash-url>
 UPSTASH_REDIS_REST_TOKEN=<upstash-token>
-```
+EMAIL_SERVER_HOST="smtp.gmail.com"
+EMAIL_SERVER_PORT=587
+EMAIL_SERVER_USER=<email>   
+EMAIL_SERVER_PASSWORD=<your password>
+EMAIL_FROM="Focura <email>"
 
-### **Build Optimization**
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=<cloud name>
+CLOUDINARY_API_KEY=<api key>
+CLOUDINARY_API_SECRET=<api secret>
 
-```bash
-# Build output
-npm run build
-
-# Analyze bundle size
-npm run analyze
 ```
 
 ---
@@ -629,67 +655,30 @@ npm run analyze
 We welcome contributions! Here's how:
 
 1. **Fork the repository**
-```bash
-git clone https://github.com/<your-username>/focura-client.git
-cd focura-client
-```
+2. **Create a feature branch** — `git checkout -b feature/amazing-feature`
+3. **Make your changes** — follow TypeScript and Tailwind conventions
+4. **Push to your fork** — `git push origin feature/amazing-feature`
+5. **Open a Pull Request**
 
-2. **Create a feature branch**
-```bash
-git checkout -b feature/amazing-feature
-```
-
-3. **Make your changes**
-   - Follow code style (TypeScript, Tailwind)
-   - Write clear commit messages
-   - Add comments for complex logic
-
-4. **Test your changes**
-```bash
-npm run dev
-# Test locally
-```
-
-5. **Push to your fork**
-```bash
-git push origin feature/amazing-feature
-```
-
-6. **Open a Pull Request**
-   - Describe your changes clearly
-   - Reference related issues
-   - Wait for review
-
-### **Contribution Guidelines**
-
-- Read [CONTRIBUTING.md](./CONTRIBUTING.md)
-- Read [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
-- Follow TypeScript and Tailwind conventions
-- Add tests for new features
-- Update documentation
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for full guidelines.
 
 ---
 
 ## 🔒 Security
-
-### **Security Practices**
 
 - ✅ HTTPS only communication
 - ✅ RS256 JWT authentication
 - ✅ HTTP-only secure cookies
 - ✅ CORS enforcement
 - ✅ Rate limiting on auth endpoints
+- ✅ CSRF protection on mutating requests
 - ✅ Audit logging of security events
 - ✅ Timing-safe comparisons
 - ✅ Argon2 password hashing
 - ✅ Role-based access control
 - ✅ Workspace-scoped data isolation
 
-### **Reporting Security Issues**
-
-Found a security vulnerability? Please email security concerns to the maintainers instead of opening a public issue.
-
-For more details, see [AUTHENTICATION.md](./AUTHENTICATION.md#-security-properties-summary)
+For more details, see [AUTHENTICATION.md](./AUTHENTICATION.md)
 
 ---
 
@@ -697,19 +686,8 @@ For more details, see [AUTHENTICATION.md](./AUTHENTICATION.md#-security-properti
 
 - [**ARCHITECTURE.md**](./ARCHITECTURE.md) - System architecture and design decisions
 - [**AUTHENTICATION.md**](./AUTHENTICATION.md) - Complete authentication and security documentation
-- [**CONTRIBUTING.md**](./CONTRIBUTING.md) - How to contribute to the project
+- [**CONTRIBUTING.md**](./CONTRIBUTING.md) - How to contribute
 - [**Backend README**](https://github.com/gaziraihan1/focura-backend) - Backend API documentation
-
----
-
-## 📊 Project Stats
-
-- **Language**: TypeScript
-- **Framework**: Next.js 16
-- **React Version**: 19.2.0
-- **Deployment**: Vercel
-- **Database**: PostgreSQL (via backend)
-- **Real-Time**: Server-Sent Events (SSE)
 
 ---
 
@@ -718,45 +696,20 @@ For more details, see [AUTHENTICATION.md](./AUTHENTICATION.md#-security-properti
 - **Live Demo**: https://focura-client.vercel.app
 - **Backend Repository**: https://github.com/gaziraihan1/focura-backend
 - **Issues**: https://github.com/gaziraihan1/focura-client/issues
-- **Discussions**: https://github.com/gaziraihan1/focura-client/discussions
 
 ---
 
 ## 📄 License
 
-This project is licensed under the **Source-Available License**.
-
-See [LICENSE](./LICENSE) file for details.
+This project is licensed under the **Source-Available License**. See [LICENSE](./LICENSE) for details.
 
 ---
 
 ## 👤 Maintainer
 
-**Mohammad Raihan Gazi**
-
-Creator & Maintainer of Focura
+**Mohammad Raihan Gazi** — Creator & Maintainer of Focura
 
 - GitHub: [@gaziraihan1](https://github.com/gaziraihan1)
-
----
-
-## 🙏 Acknowledgments
-
-- **Next.js** - React framework
-- **TanStack Query** - Server state management
-- **Tailwind CSS** - Utility-first CSS
-- **NextAuth.js** - Authentication
-- **Vercel** - Deployment platform
-- Open source community
-
----
-
-## 📞 Support
-
-- 📧 Email: [contact information if available]
-- 💬 Discussions: GitHub Discussions
-- 🐛 Issues: GitHub Issues
-- 📖 Docs: [ARCHITECTURE.md](./ARCHITECTURE.md) and [AUTHENTICATION.md](./AUTHENTICATION.md)
 
 ---
 
