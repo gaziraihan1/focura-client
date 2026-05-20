@@ -101,7 +101,7 @@ export function useAnnouncements(
     placeholderData: (prev) => prev,
     queryFn: () =>
       fetchAnnouncements(
-        `/api/workspaces/${workspaceId}/announcements?${buildParams(filters)}`,
+        `/api/v1/workspaces/${workspaceId}/announcements?${buildParams(filters)}`,
       ),
   });
 }
@@ -119,7 +119,7 @@ export function useProjectAnnouncements(
     placeholderData: (prev) => prev,
     queryFn: () =>
       fetchAnnouncements(
-        `/api/workspaces/${workspaceId}/projects/${projectId}/announcements?${buildParams(filters)}`,
+        `/api/v1/workspaces/${workspaceId}/projects/${projectId}/announcements?${buildParams(filters)}`,
       ),
   });
 }
@@ -131,7 +131,7 @@ export function useAnnouncement(id: string) {
     enabled:   !!id,
     staleTime: 5 * 60 * 1000,
     queryFn: async () => {
-      const res = await api.get<Announcement>(`/api/announcements/${id}`);
+      const res = await api.get<Announcement>(`/api/v1/announcements/${id}`);
       return res?.data as Announcement;
     },
   });
@@ -144,7 +144,7 @@ export function useCreateAnnouncement(workspaceId: string) {
   return useMutation({
     mutationFn: async (data: CreateAnnouncementDto) => {
       const res = await api.post<Announcement>(
-        `/api/workspaces/${workspaceId}/announcements`,
+        `/api/v1/workspaces/${workspaceId}/announcements`,
         data,
       );
       return res?.data as Announcement;
@@ -167,7 +167,7 @@ export function useTogglePinAnnouncement(workspaceId: string) {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const res = await api.patch<Announcement>(`/api/announcements/${id}/pin`, {});
+      const res = await api.patch<Announcement>(`/api/v1/announcements/${id}/pin`, {});
       return res?.data as Announcement;
     },
     onSuccess: (updated) => {
@@ -207,7 +207,7 @@ export function useDeleteAnnouncement(workspaceId: string) {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      await api.delete(`/api/announcements/${id}`);
+      await api.delete(`/api/v1/announcements/${id}`);
       return id;
     },
     onMutate: async (id) => {

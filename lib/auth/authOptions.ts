@@ -54,7 +54,7 @@ async function exchangeForTokens(
       user.role,
       sessionId,
     );
-    const res = await fetch(`${BACKEND_URL}/api/auth/exchange`, {
+    const res = await fetch(`${BACKEND_URL}/api/v1/auth/exchange`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -94,7 +94,7 @@ async function silentRefresh(
   refreshLocks.set(sessionId, promise);
 
   try {
-    const res = await fetch(`${BACKEND_URL}/api/auth/refresh`, {
+    const res = await fetch(`${BACKEND_URL}/api/v1/auth/refresh`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ refreshToken }),

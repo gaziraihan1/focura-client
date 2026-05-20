@@ -64,7 +64,7 @@ export function useContactMessages(opts: UseContactMessagesOptions = {}) {
       });
 
       const res = await api.get<ContactMessagesResponse>(
-        `/api/contact?${params.toString()}`
+        `/api/v1/contact?${params.toString()}`
       );
       return res?.data ?? { success: false, messages: [], pagination: { page, limit, total: 0, totalPages: 0 } };
     },

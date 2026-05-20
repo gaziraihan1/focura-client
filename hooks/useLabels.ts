@@ -131,7 +131,7 @@ export function useLabels(params: UseLabelsParams = {}) {
     queryFn: async () => {
       try {
         const qs = buildQuery({ workspaceId, page, limit });
-        const response = await api.get(`/api/labels${qs}`) as LabelsResponse;
+        const response = await api.get(`/api/v1/labels${qs}`) as LabelsResponse;
         return {
           ...response,
           data: Array.isArray(response?.data) ? response.data : [],
@@ -163,7 +163,7 @@ export function useLabel(id: string) {
   return useQuery<LabelResponse>({
     queryKey: labelKeys.detail(id),
     queryFn:  async () => {
-      const response = await api.get(`/api/labels/${id}`);
+      const response = await api.get(`/api/v1/labels/${id}`);
       return response as LabelResponse;
     },
     enabled:   !!id,
@@ -200,7 +200,7 @@ export function useLabelTasks(id: string, params: UseLabelTasksParams = {}) {
     queryFn:  async () => {
       const qs = buildQuery({ page, limit, status, priority });
       // Don't pass a generic type to api.get, let it return the raw response
-      const response = await api.get(`/api/labels/${id}/tasks${qs}`);
+      const response = await api.get(`/api/v1/labels/${id}/tasks${qs}`);
       // Cast the response to our expected type
       return response as LabelTasksResponse;
     },
@@ -232,7 +232,7 @@ export function usePopularLabels(params: UsePopularLabelsParams = {}) {
       const qs = buildQuery({ workspaceId, page, limit });
 
       const res = await api.get<PaginatedResponse<Label>>(
-        `/api/labels/popular${qs}`
+        `/api/v1/labels/popular${qs}`
       );
 
       // IMPORTANT: api.get already returns ApiResponse<T>
@@ -263,7 +263,7 @@ export function useCreateLabel() {
     mutationFn: async (data: CreateLabelDto) => {
       const payload = { ...data };
       if (!payload.workspaceId && workspaceId) payload.workspaceId = workspaceId;
-      const response = await api.post<Label>('/api/labels', payload, {
+      const response = await api.post<Label>('/api/v1/labels', payload, {
         showSuccessToast: true,
         showErrorToast:   true,
       });
@@ -285,7 +285,7 @@ export function useUpdateLabel() {
 
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: UpdateLabelDto }) => {
-      const response = await api.patch<Label>(`/api/labels/${id}`, data, {
+      const response = await api.patch<Label>(`/api/v1/labels/${id}`, data, {
         showSuccessToast: true,
         showErrorToast:   true,
       });
@@ -304,7 +304,7 @@ export function useDeleteLabel() {
   return useMutation({
     mutationFn: async (id: string) => {
       const response = await api.delete<{ message: string; tasksAffected: number }>(
-        `/api/labels/${id}`,
+        `/api/v1/labels/${id}`,
         { showSuccessToast: true, showErrorToast: true },
       );
       return { ...response.data, id };
@@ -322,7 +322,7 @@ export function useAddLabelToTask() {
 
   return useMutation({
     mutationFn: async ({ labelId, taskId }: { labelId: string; taskId: string }) => {
-      const response = await api.post(`/api/labels/${labelId}/tasks/${taskId}`);
+      const response = await api.post(`/api/v1/labels/${labelId}/tasks/${taskId}`);
       return response.data;
     },
     onSuccess: (_, { labelId, taskId }) => {
@@ -339,7 +339,7 @@ export function useRemoveLabelFromTask() {
 
   return useMutation({
     mutationFn: async ({ labelId, taskId }: { labelId: string; taskId: string }) => {
-      const response = await api.delete(`/api/labels/${labelId}/tasks/${taskId}`);
+      const response = await api.delete(`/api/v1/labels/${labelId}/tasks/${taskId}`);
       return response.data;
     },
     onSuccess: (_, { labelId, taskId }) => {

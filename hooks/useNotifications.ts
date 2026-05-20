@@ -71,8 +71,8 @@ export function useNotifications() {
     queryFn: async ({ pageParam }) => {
       try {
         const url = pageParam
-          ? `/api/notifications?cursor=${pageParam}`
-          : "/api/notifications";
+          ? `/api/v1/notifications?cursor=${pageParam}`
+          : "/api/v1/notifications";
         const response = await api.get<NotificationsResponse>(url);
         console.log("[notifications] raw response:", response);
         return response?.data?? EMPTY_PAGE;
@@ -94,7 +94,7 @@ export function useNotifications() {
     queryFn: async () => {
       try {
         const response = await api.get<UnreadCountResponse>(
-          "/api/notifications/unread-count"
+          "/api/v1/notifications/unread-count"
         );
         return response?.data ?? { count: 0 };
       } catch (err) {
@@ -130,7 +130,7 @@ export function useNotifications() {
         process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
       const es = new EventSource(
-        `${backendUrl}/api/notifications/stream?token=${backendToken}`
+        `${backendUrl}/api/v1/notifications/stream?token=${backendToken}`
       );
       eventSourceRef.current = es;
 
@@ -208,7 +208,7 @@ export function useNotifications() {
 
   const markAsReadMutation = useMutation({
     mutationFn: async (notificationId: string) => {
-      const response = await api.patch(`/api/notifications/${notificationId}/read`);
+      const response = await api.patch(`/api/v1/notifications/${notificationId}/read`);
       return response?.data;
     },
     onSuccess: (_, notificationId) => {
@@ -238,7 +238,7 @@ export function useNotifications() {
 
   const markAllAsReadMutation = useMutation({
     mutationFn: async () => {
-      const response = await api.patch("/api/notifications/read-all");
+      const response = await api.patch("/api/v1/notifications/read-all");
       return response?.data;
     },
     onSuccess: () => {
@@ -268,7 +268,7 @@ export function useNotifications() {
 
   const deleteNotificationMutation = useMutation({
     mutationFn: async (notificationId: string) => {
-      await api.delete(`/api/notifications/${notificationId}`);
+      await api.delete(`/api/v1/notifications/${notificationId}`);
       return notificationId;
     },
     onSuccess: (notificationId) => {
@@ -291,7 +291,7 @@ export function useNotifications() {
 
   const deleteAllReadMutation = useMutation({
     mutationFn: async () => {
-      const response = await api.delete("/api/notifications/read/all");
+      const response = await api.delete("/api/v1/notifications/read/all");
       return response?.data;
     },
     onSuccess: () => {

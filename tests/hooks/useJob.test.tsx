@@ -47,7 +47,7 @@ describe('useAdminJobs', () => {
 
   it('handles error state', async () => {
     server.use(
-      http.get(`${BASE}/api/jobs/admin/all`, () =>
+      http.get(`${BASE}/api/v1/jobs/admin/all`, () =>
         new HttpResponse(null, { status: 500 })
       )
     )

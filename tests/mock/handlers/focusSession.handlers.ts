@@ -39,17 +39,17 @@ const ok = (data: unknown) => HttpResponse.json({ success: true, data })
 
 export const focusSessionHandlers = [
   // Active session
-  http.get(`${BASE}/api/focus-sessions/active`, () =>
+  http.get(`${BASE}/api/v1/focus-sessions/active`, () =>
     okActive(mockFocusSession)
   ),
 
   // Stats
-  http.get(`${BASE}/api/focus-sessions/stats`, () =>
+  http.get(`${BASE}/api/v1/focus-sessions/stats`, () =>
     okStats(mockFocusSessionStats)
   ),
 
   // Start session
-  http.post(`${BASE}/api/focus-sessions/start`, async ({ request }) => {
+  http.post(`${BASE}/api/v1/focus-sessions/start`, async ({ request }) => {
     const body = await request.json() as Partial<FocusSession>
     return ok({
       ...mockFocusSession,
@@ -60,18 +60,18 @@ export const focusSessionHandlers = [
   }),
 
   // Complete session
-  http.post(`${BASE}/api/focus-sessions/:sessionId/complete`, () =>
+  http.post(`${BASE}/api/v1/focus-sessions/:sessionId/complete`, () =>
     ok({ completed: true })
   ),
 
   // Cancel session
-  http.post(`${BASE}/api/focus-sessions/:sessionId/cancel`, () =>
+  http.post(`${BASE}/api/v1/focus-sessions/:sessionId/cancel`, () =>
     ok({ cancelled: true })
   ),
 ]
 
 // Override for no active session scenario
 export const noActiveSessionHandler = http.get(
-  `${BASE}/api/focus-sessions/active`,
+  `${BASE}/api/v1/focus-sessions/active`,
   () => okActive(null)
 )

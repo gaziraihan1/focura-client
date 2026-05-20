@@ -16,5 +16,5 @@ export const mockUserProfile:UserProfile = {
 const ok = (data: unknown) => HttpResponse.json({ success: true, data });
 
 export const userHandler = [
-    http.get(`${BASE}/api/user/profile`, () => ok({user: [mockUserProfile]}))
+    http.get(`${BASE}/api/v1/user/profile`, () => ok({user: [mockUserProfile]}))
 ]

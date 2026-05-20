@@ -135,7 +135,7 @@ export function useWorkspaces() {
   return useQuery({
     queryKey: workspaceKeys.lists(),
     queryFn: async () => {
-      const response = await api.get<Workspace[]>('/api/workspaces', {
+      const response = await api.get<Workspace[]>('/api/v1/workspaces', {
         showErrorToast: true,
       });
       return response.data || [];
@@ -148,7 +148,7 @@ export function useWorkspace(workspaceSlugOrId: string) {
   return useQuery({
     queryKey: workspaceKeys.detail(workspaceSlugOrId),
     queryFn: async () => {
-      const response = await api.get<Workspace>(`/api/workspaces/${workspaceSlugOrId}`, {
+      const response = await api.get<Workspace>(`/api/v1/workspaces/${workspaceSlugOrId}`, {
         showErrorToast: true,
       });
       return response.data;
@@ -174,7 +174,7 @@ export function useWorkspaceOverview(slug: string) {
     queryKey: [...workspaceKeys.detail(slug), "overview"] as const,
     queryFn:  async (): Promise<WorkspaceOverview> => {
       const res = await api.get<WorkspaceOverview>(
-        `/api/workspaces/${slug}/overview`,
+        `/api/v1/workspaces/${slug}/overview`,
         { showErrorToast: true },
       );
       const overview = res.data as WorkspaceOverview;
@@ -198,7 +198,7 @@ export function useCreateWorkspace() {
 
   return useMutation<Workspace, unknown, CreateWorkspaceDto>({
     mutationFn: async (data): Promise<Workspace> => {
-      const response = await api.post<Workspace>('/api/workspaces', data, {
+      const response = await api.post<Workspace>('/api/v1/workspaces', data, {
         showErrorToast:  true,
         showSuccessToast: true,
       });
@@ -216,7 +216,7 @@ export function useUpdateWorkspace() {
 
   return useMutation<Workspace, unknown, { id: string; data: Partial<CreateWorkspaceDto> }>({
     mutationFn: async ({ id, data }): Promise<Workspace> => {
-      const response = await api.put<Workspace>(`/api/workspaces/${id}`, data, {
+      const response = await api.put<Workspace>(`/api/v1/workspaces/${id}`, data, {
         showSuccessToast: true,
         showErrorToast:   true,
       });
@@ -259,7 +259,7 @@ export function useDeleteWorkspace() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await api.delete(`/api/workspaces/${id}`, {
+      const response = await api.delete(`/api/v1/workspaces/${id}`, {
         showSuccessToast: true,
         showErrorToast:   true,
       });
@@ -277,7 +277,7 @@ export function useWorkspaceMembers(workspaceId?: string) {
     queryKey: workspaceKeys.members(workspaceId ?? ''),
     queryFn: async () => {
       const response = await api.get<WorkspaceMember[]>(
-        `/api/workspaces/${workspaceId}/members`,
+        `/api/v1/workspaces/${workspaceId}/members`,
         { showErrorToast: true },
       );
       return response.data || [];
@@ -299,7 +299,7 @@ export function useInviteMember() {
       role:        'OWNER' | 'ADMIN' | 'MEMBER' | 'GUEST';
     }) => {
       const response = await api.post(
-        `/api/workspaces/${workspaceId}/invite`,
+        `/api/v1/workspaces/${workspaceId}/invite`,
         { email, role },
         { showSuccessToast: true, showErrorToast: true },
       );
@@ -322,7 +322,7 @@ export function useRemoveMember() {
       memberId:    string;
     }) => {
       const response = await api.delete(
-        `/api/workspaces/${workspaceId}/members/${memberId}`,
+        `/api/v1/workspaces/${workspaceId}/members/${memberId}`,
         { showSuccessToast: true, showErrorToast: true },
       );
       return response.data;
@@ -345,7 +345,7 @@ export function useUpdateMemberRole() {
       role:        'OWNER' | 'ADMIN' | 'MEMBER' | 'GUEST';
     }) => {
       const response = await api.put(
-        `/api/workspaces/${workspaceId}/members/${memberId}/role`,
+        `/api/v1/workspaces/${workspaceId}/members/${memberId}/role`,
         { role },
         { showSuccessToast: true, showErrorToast: true },
       );
@@ -362,7 +362,7 @@ export function useWorkspaceStats(workspaceId: string) {
     queryKey: workspaceKeys.stats(workspaceId),
     queryFn: async () => {
       const response = await api.get<WorkspaceStats>(
-        `/api/workspaces/${workspaceId}/stats`,
+        `/api/v1/workspaces/${workspaceId}/stats`,
         { showErrorToast: true },
       );
       return response.data;
@@ -379,7 +379,7 @@ export function useAcceptInvitation() {
   return useMutation<Workspace, unknown, string>({
     mutationFn: async (token): Promise<Workspace> => {
       const response = await api.post<Workspace>(
-        `/api/workspaces/invitations/${token}/accept`,
+        `/api/v1/workspaces/invitations/${token}/accept`,
         {},
         { showSuccessToast: true, showErrorToast: true },
       );
@@ -399,7 +399,7 @@ export function useLeaveWorkspace() {
   return useMutation({
     mutationFn: async (workspaceId: string) => {
       const response = await api.post(
-        `/api/workspaces/${workspaceId}/leave`,
+        `/api/v1/workspaces/${workspaceId}/leave`,
         {},
         { showSuccessToast: true, showErrorToast: true },
       );
@@ -425,7 +425,7 @@ export function useWorkspaceStorage(workspaceId: string | undefined) {
     queryKey: workspaceId ? workspaceKeys.storage(workspaceId) : ['__disabled__'],
     queryFn: async (): Promise<WorkspaceStorageInfo> => {
       const response = await api.get<WorkspaceStorageInfo>(
-        `/api/workspaces/${workspaceId}/storage`,
+        `/api/v1/workspaces/${workspaceId}/storage`,
         { showErrorToast: true },
       );
       return response.data as WorkspaceStorageInfo;

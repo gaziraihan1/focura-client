@@ -14,7 +14,7 @@ const TemplatesOwnerPage = () => {
   const [deleting, setDeleting] = useState<string | null>(null);
 
   const fetchSubscribers = async () => {
-    const res = await api.get<TemplateSubscriber[]>('/api/templates');
+    const res = await api.get<TemplateSubscriber[]>('/api/v1/templates');
     if (res?.success && res.data) return res.data;
     return [];
   };
@@ -42,7 +42,7 @@ const TemplatesOwnerPage = () => {
     setDeleting(email);
 
     const res = await api.delete(
-      `/api/templates/${encodeURIComponent(email)}`,
+      `/api/v1/templates/${encodeURIComponent(email)}`,
       {
         showSuccessToast: true,
         showErrorToast: true,

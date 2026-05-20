@@ -41,7 +41,7 @@ export function useMeetings({ workspaceId, status, upcoming }: UseMeetingsOption
       const query = qs.toString();
 
       const response = await api.get<MeetingsListResponse>(
-        `/api/meetings/${workspaceId}/meetings${query ? `?${query}` : ''}`,
+        `/api/v1/meetings/${workspaceId}/meetings${query ? `?${query}` : ''}`,
         { showErrorToast: true }
       );
       return response?.data ?? { meetings: [], total: 0, nextCursor: null };
@@ -57,7 +57,7 @@ export function useMeeting(workspaceId: string, meetingId: string) {
   return useQuery({
     queryKey: meetingKeys.detail(workspaceId, meetingId),
     queryFn: async () => {
-      const response = await api.get<Meeting>(`/api/meetings/${workspaceId}/meetings/${meetingId}`,
+      const response = await api.get<Meeting>(`/api/v1/meetings/${workspaceId}/meetings/${meetingId}`,
         { showErrorToast: true }
       );
       return response?.data ?? null;
@@ -75,7 +75,7 @@ export function useCreateMeeting(workspaceId: string) {
   return useMutation<Meeting, unknown, CreateMeetingPayload>({
     mutationFn: async (payload: CreateMeetingPayload): Promise<Meeting> => {
       const response = await api.post<Meeting>(
-        `/api/meetings/${workspaceId}/meetings`,
+        `/api/v1/meetings/${workspaceId}/meetings`,
         payload,
         { showSuccessToast: false, showErrorToast: true }
       );
@@ -99,7 +99,7 @@ export function useUpdateMeeting(workspaceId: string) {
   >({
     mutationFn: async ({ meetingId, data }): Promise<Meeting> => {
       const response = await api.patch<Meeting>(
-        `/api/meetings/${workspaceId}/meetings/${meetingId}`,
+        `/api/v1/meetings/${workspaceId}/meetings/${meetingId}`,
         data,
         { showSuccessToast: false, showErrorToast: true }
       );
@@ -124,7 +124,7 @@ export function useCancelMeeting(workspaceId: string) {
   return useMutation<Meeting, unknown, string>({
     mutationFn: async (meetingId: string): Promise<Meeting> => {
       const response = await api.post<Meeting>(
-        `/api/meetings/${workspaceId}/meetings/${meetingId}/cancel`,
+        `/api/v1/meetings/${workspaceId}/meetings/${meetingId}/cancel`,
         {},
         { showSuccessToast: false, showErrorToast: true }
       );
@@ -148,7 +148,7 @@ export function useDeleteMeeting(workspaceId: string) {
   return useMutation<void, unknown, string>({
     mutationFn: async (meetingId: string): Promise<void> => {
       await api.delete(
-        `/api/meetings/${workspaceId}/meetings/${meetingId}`,
+        `/api/v1/meetings/${workspaceId}/meetings/${meetingId}`,
         { showSuccessToast: false, showErrorToast: true }
       );
     },

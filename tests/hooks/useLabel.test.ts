@@ -94,7 +94,7 @@ describe('useLabels', () => {
 
   it('returns empty array when API returns no data', async () => {
     server.use(
-      http.get(`${BASE}/api/labels`, () =>
+      http.get(`${BASE}/api/v1/labels`, () =>
         HttpResponse.json({ data: null })
       )
     )
@@ -110,7 +110,7 @@ describe('useLabels', () => {
 
   it('returns empty array when API returns non-array data', async () => {
     server.use(
-      http.get(`${BASE}/api/labels`, () =>
+      http.get(`${BASE}/api/v1/labels`, () =>
         HttpResponse.json({ data: 'unexpected string' })
       )
     )
@@ -126,7 +126,7 @@ describe('useLabels', () => {
 
   it('returns empty array when API throws', async () => {
     server.use(
-      http.get(`${BASE}/api/labels`, () =>
+      http.get(`${BASE}/api/v1/labels`, () =>
         new HttpResponse(null, { status: 500 })
       )
     )
@@ -180,7 +180,7 @@ describe('useLabel', () => {
 
   it('enters error state for unknown id', async () => {
     server.use(
-      http.get(`${BASE}/api/labels/:id`, () =>
+      http.get(`${BASE}/api/v1/labels/:id`, () =>
         new HttpResponse(null, { status: 404 })
       )
     )
@@ -227,7 +227,7 @@ describe('usePopularLabels', () => {
 
   it('returns empty array when API returns no data', async () => {
     server.use(
-      http.get(`${BASE}/api/labels/popular`, () =>
+      http.get(`${BASE}/api/v1/labels/popular`, () =>
         HttpResponse.json({ data: null })
       )
     )
@@ -284,7 +284,7 @@ describe('useCreateLabel', () => {
 
   it('enters error state when creation fails', async () => {
     server.use(
-      http.post(`${BASE}/api/labels`, () =>
+      http.post(`${BASE}/api/v1/labels`, () =>
         new HttpResponse(null, { status: 400 })
       )
     )
@@ -352,7 +352,7 @@ describe('useUpdateLabel', () => {
 
   it('enters error state when update fails', async () => {
     server.use(
-      http.patch(`${BASE}/api/labels/:id`, () =>
+      http.patch(`${BASE}/api/v1/labels/:id`, () =>
         new HttpResponse(null, { status: 404 })
       )
     )
@@ -390,7 +390,7 @@ describe('useDeleteLabel', () => {
 
   it('enters error state when delete fails', async () => {
     server.use(
-      http.delete(`${BASE}/api/labels/:id`, () =>
+      http.delete(`${BASE}/api/v1/labels/:id`, () =>
         new HttpResponse(null, { status: 404 })
       )
     )
@@ -424,7 +424,7 @@ describe('useAddLabelToTask', () => {
 
   it('enters error state when API fails', async () => {
     server.use(
-      http.post(`${BASE}/api/labels/:labelId/tasks/:taskId`, () =>
+      http.post(`${BASE}/api/v1/labels/:labelId/tasks/:taskId`, () =>
         new HttpResponse(null, { status: 400 })
       )
     )
@@ -458,7 +458,7 @@ describe('useRemoveLabelFromTask', () => {
 
   it('enters error state when API fails', async () => {
     server.use(
-      http.delete(`${BASE}/api/labels/:labelId/tasks/:taskId`, () =>
+      http.delete(`${BASE}/api/v1/labels/:labelId/tasks/:taskId`, () =>
         new HttpResponse(null, { status: 400 })
       )
     )

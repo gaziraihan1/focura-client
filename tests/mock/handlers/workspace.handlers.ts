@@ -56,27 +56,27 @@ export const mockStorage: WorkspaceStorageInfo = {
 const ok = (data: unknown) => HttpResponse.json({ success: true, data })
 
 export const workspaceHandlers = [
-  http.get(`${BASE}/api/workspaces`,              () => ok([mockWorkspace])),
+  http.get(`${BASE}/api/v1/workspaces`,              () => ok([mockWorkspace])),
   
-  http.get(`${BASE}/api/workspaces/:slugOrId`,    () => ok(mockWorkspace)),
-  http.post(`${BASE}/api/workspaces`,             async ({ request }) => {
+  http.get(`${BASE}/api/v1/workspaces/:slugOrId`,    () => ok(mockWorkspace)),
+  http.post(`${BASE}/api/v1/workspaces`,             async ({ request }) => {
     const body = await request.json() as Partial<Workspace>
     return ok({ ...mockWorkspace, ...body, id: 'ws-new' })
   }),
-  http.put(`${BASE}/api/workspaces/:id`,          async ({ request }) => {
+  http.put(`${BASE}/api/v1/workspaces/:id`,          async ({ request }) => {
     const body = await request.json() as Partial<Workspace>
     return ok({ ...mockWorkspace, ...body })
   }),
-  http.delete(`${BASE}/api/workspaces/:id`,       () => ok(null)),
-  http.get(`${BASE}/api/workspaces/:id/members`,  () => ok([mockMember])),
-  http.post(`${BASE}/api/workspaces/:id/invite`,  () => ok({ success: true })),
-  http.delete(`${BASE}/api/workspaces/:id/members/:memberId`, () => ok(null)),
-  http.put(`${BASE}/api/workspaces/:id/members/:memberId/role`, async ({ request }) => {
+  http.delete(`${BASE}/api/v1/workspaces/:id`,       () => ok(null)),
+  http.get(`${BASE}/api/v1/workspaces/:id/members`,  () => ok([mockMember])),
+  http.post(`${BASE}/api/v1/workspaces/:id/invite`,  () => ok({ success: true })),
+  http.delete(`${BASE}/api/v1/workspaces/:id/members/:memberId`, () => ok(null)),
+  http.put(`${BASE}/api/v1/workspaces/:id/members/:memberId/role`, async ({ request }) => {
     const body = await request.json() as { role: string }
     return ok({ ...mockMember, role: body.role })
   }),
-  http.get(`${BASE}/api/workspaces/:id/stats`,   () => ok(mockStats)),
-  http.get(`${BASE}/api/workspaces/:id/storage`,  () => ok(mockStorage)),
-  http.post(`${BASE}/api/workspaces/invitations/:token/accept`, () => ok(mockWorkspace)),
-  http.post(`${BASE}/api/workspaces/:id/leave`,   () => ok({ success: true })),
+  http.get(`${BASE}/api/v1/workspaces/:id/stats`,   () => ok(mockStats)),
+  http.get(`${BASE}/api/v1/workspaces/:id/storage`,  () => ok(mockStorage)),
+  http.post(`${BASE}/api/v1/workspaces/invitations/:token/accept`, () => ok(mockWorkspace)),
+  http.post(`${BASE}/api/v1/workspaces/:id/leave`,   () => ok({ success: true })),
 ]

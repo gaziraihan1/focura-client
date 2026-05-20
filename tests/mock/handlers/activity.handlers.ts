@@ -67,30 +67,30 @@ const ok = (data: unknown) => HttpResponse.json({ success: true, data })
 
 export const activityHandlers = [
   // General activities list
-  http.get(`${BASE}/api/activities`, () =>
+  http.get(`${BASE}/api/v1/activities`, () =>
     ok([mockActivity, mockActivity2])
   ),
 
   // Workspace activities
-  http.get(`${BASE}/api/activities/workspace/:workspaceId`, () =>
+  http.get(`${BASE}/api/v1/activities/workspace/:workspaceId`, () =>
     ok([mockActivity, mockActivity2])
   ),
 
   // Task activities
-  http.get(`${BASE}/api/activities/task/:taskId`, () =>
+  http.get(`${BASE}/api/v1/activities/task/:taskId`, () =>
     ok([mockActivity, mockActivity2])
   ),
 
   // Activity stats
-  http.get(`${BASE}/api/activities/stats`, () =>
+  http.get(`${BASE}/api/v1/activities/stats`, () =>
     ok(mockActivityStats)
   ),
 
   // Delete activity
-  http.delete(`${BASE}/api/activities/:activityId`, () => ok(null)),
+  http.delete(`${BASE}/api/v1/activities/:activityId`, () => ok(null)),
 
   // Clear activities
-  http.delete(`${BASE}/api/activities/clear/all`, () =>
+  http.delete(`${BASE}/api/v1/activities/clear/all`, () =>
     ok({ cleared: true })
   ),
 ]

@@ -53,8 +53,8 @@ export const mockInvoice2: InvoiceData = {
 // ── Handlers ──────────────────────────────────────────────────────────────────
 
 export const billingHandlers = [
-  // GET /api/workspaces/:id/billing/subscription
-  http.get(`${BASE}/api/workspaces/:workspaceId/billing/subscription`, ({ params }) => {
+  // GET /api/v1/workspaces/:id/billing/subscription
+  http.get(`${BASE}/api/v1/workspaces/:workspaceId/billing/subscription`, ({ params }) => {
     // Simulate FREE workspace returning 404
     if (params.workspaceId === 'ws-free') {
       return new HttpResponse(null, { status: 404 })
@@ -62,36 +62,36 @@ export const billingHandlers = [
     return HttpResponse.json({ data: mockSubscription })
   }),
 
-  // GET /api/workspaces/:id/billing/invoices
-  http.get(`${BASE}/api/workspaces/:workspaceId/billing/invoices`, () =>
+  // GET /api/v1/workspaces/:id/billing/invoices
+  http.get(`${BASE}/api/v1/workspaces/:workspaceId/billing/invoices`, () =>
     HttpResponse.json({ data: [mockInvoice, mockInvoice2] })
   ),
 
-  // POST /api/workspaces/:id/billing/create-checkout-session
-  http.post(`${BASE}/api/workspaces/:workspaceId/billing/create-checkout-session`, () =>
+  // POST /api/v1/workspaces/:id/billing/create-checkout-session
+  http.post(`${BASE}/api/v1/workspaces/:workspaceId/billing/create-checkout-session`, () =>
     HttpResponse.json({ data: { url: 'https://checkout.stripe.com/session-123' } })
   ),
 
-  // POST /api/workspaces/:id/billing/create-portal-session
-  http.post(`${BASE}/api/workspaces/:workspaceId/billing/create-portal-session`, () =>
+  // POST /api/v1/workspaces/:id/billing/create-portal-session
+  http.post(`${BASE}/api/v1/workspaces/:workspaceId/billing/create-portal-session`, () =>
     HttpResponse.json({ data: { url: 'https://billing.stripe.com/portal-123' } })
   ),
 
-  // POST /api/workspaces/:id/billing/change-plan
-  http.post(`${BASE}/api/workspaces/:workspaceId/billing/change-plan`, async ({ request }) => {
+  // POST /api/v1/workspaces/:id/billing/change-plan
+  http.post(`${BASE}/api/v1/workspaces/:workspaceId/billing/change-plan`, async ({ request }) => {
     const body = await request.json() as { newPlanName: string; billingCycle?: string }
     return HttpResponse.json({
       data: { ...mockSubscription, planName: body.newPlanName, billingCycle: body.billingCycle ?? mockSubscription.billingCycle },
     })
   }),
 
-  // POST /api/workspaces/:id/billing/cancel-subscription
-  http.post(`${BASE}/api/workspaces/:workspaceId/billing/cancel-subscription`, () =>
+  // POST /api/v1/workspaces/:id/billing/cancel-subscription
+  http.post(`${BASE}/api/v1/workspaces/:workspaceId/billing/cancel-subscription`, () =>
     HttpResponse.json({ data: { ...mockSubscription, cancelAtPeriodEnd: true } })
   ),
 
-  // POST /api/workspaces/:id/billing/reactivate-subscription
-  http.post(`${BASE}/api/workspaces/:workspaceId/billing/reactivate-subscription`, () =>
+  // POST /api/v1/workspaces/:id/billing/reactivate-subscription
+  http.post(`${BASE}/api/v1/workspaces/:workspaceId/billing/reactivate-subscription`, () =>
     HttpResponse.json({ data: { ...mockSubscription, cancelAtPeriodEnd: false } })
   ),
 ]

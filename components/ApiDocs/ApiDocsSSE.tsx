@@ -70,7 +70,7 @@ export function useNotifications() {
   }, [queryClient]);
 
   useEffect(() => {
-    const es = new EventSource(\`\${API}/api/notifications/stream\`, {
+    const es = new EventSource(\`\${API}/api/v1/notifications/stream\`, {
       withCredentials: true,   // sends HTTP-only auth cookie
     });
 
@@ -111,7 +111,7 @@ export const ApiDocsSSE = () => {
       <div className='grid sm:grid-cols-3 gap-3 mb-6'>
         {[
           { label: 'Protocol',      value: 'Server-Sent Events (SSE)'  },
-          { label: 'Endpoint',      value: 'GET /api/notifications/stream' },
+          { label: 'Endpoint',      value: 'GET /api/v1/notifications/stream' },
           { label: 'Content-Type',  value: 'text/event-stream'         },
         ].map(({ label, value }) => (
           <div key={label} className='rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4'>

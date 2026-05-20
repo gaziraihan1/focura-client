@@ -66,8 +66,8 @@ const ok = (data: unknown) => HttpResponse.json({ data })
 // ── Handlers ──────────────────────────────────────────────────────────────────
 
 export const labelHandlers = [
-  // GET /api/labels  (list, optional ?workspaceId)
-  http.get(`${BASE}/api/labels`, ({ request }) => {
+  // GET /api/v1/labels  (list, optional ?workspaceId)
+  http.get(`${BASE}/api/v1/labels`, ({ request }) => {
     const url = new URL(request.url)
     const workspaceId = url.searchParams.get('workspaceId')
 
@@ -78,21 +78,21 @@ export const labelHandlers = [
     return ok(labels)
   }),
 
-  // GET /api/labels/popular  — must be before /:id wildcard
-  http.get(`${BASE}/api/labels/popular`, () =>
+  // GET /api/v1/labels/popular  — must be before /:id wildcard
+  http.get(`${BASE}/api/v1/labels/popular`, () =>
     ok([mockLabel2, mockLabel]) // sorted by task count desc
   ),
 
-  // GET /api/labels/:id
-  http.get(`${BASE}/api/labels/:id`, ({ params }) => {
+  // GET /api/v1/labels/:id
+  http.get(`${BASE}/api/v1/labels/:id`, ({ params }) => {
     if (params.id === 'not-found') {
       return HttpResponse.json({ message: 'Not found' }, { status: 404 })
     }
     return ok(mockLabelWithTasks)
   }),
 
-  // POST /api/labels  (create)
-  http.post(`${BASE}/api/labels`, async ({ request }) => {
+  // POST /api/v1/labels  (create)
+  http.post(`${BASE}/api/v1/labels`, async ({ request }) => {
     const body = await request.json() as {
       name: string
       color: string
@@ -114,8 +114,8 @@ export const labelHandlers = [
     return ok(created)
   }),
 
-  // PATCH /api/labels/:id  (update)
-  http.patch(`${BASE}/api/labels/:id`, async ({ params, request }) => {
+  // PATCH /api/v1/labels/:id  (update)
+  http.patch(`${BASE}/api/v1/labels/:id`, async ({ params, request }) => {
     const body = await request.json() as { name?: string; color?: string; description?: string | null }
     const updated: Label = {
       ...mockLabel,
@@ -125,21 +125,21 @@ export const labelHandlers = [
     return ok(updated)
   }),
 
-  // DELETE /api/labels/:id
-  http.delete(`${BASE}/api/labels/:id`, ({ params }) => {
+  // DELETE /api/v1/labels/:id
+  http.delete(`${BASE}/api/v1/labels/:id`, ({ params }) => {
     if (params.id === 'not-found') {
       return HttpResponse.json({ message: 'Not found' }, { status: 404 })
     }
     return ok({ message: 'Label deleted successfully', tasksAffected: 3 })
   }),
 
-  // POST /api/labels/:labelId/tasks/:taskId  (add label to task)
-  http.post(`${BASE}/api/labels/:labelId/tasks/:taskId`, () =>
+  // POST /api/v1/labels/:labelId/tasks/:taskId  (add label to task)
+  http.post(`${BASE}/api/v1/labels/:labelId/tasks/:taskId`, () =>
     ok({ success: true })
   ),
 
-  // DELETE /api/labels/:labelId/tasks/:taskId  (remove label from task)
-  http.delete(`${BASE}/api/labels/:labelId/tasks/:taskId`, () =>
+  // DELETE /api/v1/labels/:labelId/tasks/:taskId  (remove label from task)
+  http.delete(`${BASE}/api/v1/labels/:labelId/tasks/:taskId`, () =>
     ok({ success: true })
   ),
 ]

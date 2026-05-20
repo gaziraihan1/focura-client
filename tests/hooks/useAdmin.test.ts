@@ -65,7 +65,7 @@ describe('useAdminStats', () => {
 
   it('enters error state when API fails', async () => {
     server.use(
-      http.get(`${BASE}/api/admin/stats`, () =>
+      http.get(`${BASE}/api/v1/admin/stats`, () =>
         new HttpResponse(null, { status: 500 })
       )
     )
@@ -162,7 +162,7 @@ describe('useAdminWorkspaceDetail', () => {
 
   it('enters error state for unknown slug', async () => {
     server.use(
-      http.get(`${BASE}/api/admin/workspaces/:slug`, () =>
+      http.get(`${BASE}/api/v1/admin/workspaces/:slug`, () =>
         new HttpResponse(null, { status: 404 })
       )
     )
@@ -458,7 +458,7 @@ describe('useBanUser', () => {
 
   it('enters error state when ban fails', async () => {
     server.use(
-      http.patch(`${BASE}/api/admin/users/:id/ban`, () =>
+      http.patch(`${BASE}/api/v1/admin/users/:id/ban`, () =>
         new HttpResponse(null, { status: 403 })
       )
     )
@@ -528,7 +528,7 @@ describe('useDeleteWorkspace', () => {
 
   it('enters error state when delete fails', async () => {
     server.use(
-      http.post(`${BASE}/api/admin/workspaces/:slug/delete`, () =>
+      http.post(`${BASE}/api/v1/admin/workspaces/:slug/delete`, () =>
         new HttpResponse(null, { status: 403 })
       )
     )
@@ -564,7 +564,7 @@ describe('useRestoreWorkspace', () => {
 
   it('enters error state when restore fails', async () => {
     server.use(
-      http.patch(`${BASE}/api/admin/workspaces/:slug/restore`, () =>
+      http.patch(`${BASE}/api/v1/admin/workspaces/:slug/restore`, () =>
         new HttpResponse(null, { status: 403 })
       )
     )

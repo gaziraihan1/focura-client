@@ -72,7 +72,7 @@ export function useAdminJobs(options: UseAdminJobsOptions = {}) {
       if (limit) qs.set('limit', String(limit));
       
       const response = await api.get<AdminJobsResponse>(
-        `/api/jobs/admin/all${qs.toString() ? `?${qs.toString()}` : ''}`,
+        `/api/v1/jobs/admin/all${qs.toString() ? `?${qs.toString()}` : ''}`,
         { showErrorToast: true }
       );
       
@@ -88,7 +88,7 @@ export function useAdminJob(jobId: string) {
     queryKey: jobKeys.detail(jobId),
     queryFn: async () => {
       const response = await api.get<JobPosting>(
-        `/api/jobs/admin/${jobId}`,
+        `/api/v1/jobs/admin/${jobId}`,
         { showErrorToast: true }
       );
       
@@ -110,7 +110,7 @@ export function useCreateJob() {
   return useMutation<JobPosting, Error, AdminJobFormValues>({
     mutationFn: async (payload): Promise<JobPosting> => {
       const response = await api.post<JobPosting>(
-        `/api/jobs/admin`,
+        `/api/v1/jobs/admin`,
         payload,
         { showSuccessToast: false, showErrorToast: true }
       );
@@ -129,7 +129,7 @@ export function useUpdateJob() {
   return useMutation<JobPosting, Error, { jobId: string; data: AdminJobFormValues }>({
     mutationFn: async ({ jobId, data }): Promise<JobPosting> => {
       const response = await api.put<JobPosting>(
-        `/api/jobs/admin/${jobId}`,
+        `/api/v1/jobs/admin/${jobId}`,
         data,
         { showSuccessToast: false, showErrorToast: true }
       );
@@ -149,7 +149,7 @@ export function useDeleteJob() {
   return useMutation<void, Error, string>({
     mutationFn: async (jobId: string): Promise<void> => {
       await api.delete(
-        `/api/jobs/admin/${jobId}`,
+        `/api/v1/jobs/admin/${jobId}`,
         { showSuccessToast: false, showErrorToast: true }
       );
     },
@@ -167,7 +167,7 @@ export function useToggleJobPin() {
   return useMutation<JobPosting, Error, string>({
     mutationFn: async (jobId: string): Promise<JobPosting> => {
       const response = await api.patch<JobPosting>(
-        `/api/jobs/admin/${jobId}/pin`,
+        `/api/v1/jobs/admin/${jobId}/pin`,
         {},
         { showSuccessToast: false, showErrorToast: true }
       );
@@ -188,7 +188,7 @@ export function useToggleJobStatus() {
     mutationFn: async ({ jobId, currentStatus }): Promise<JobPosting> => {
       const newStatus: JobStatus = currentStatus === 'OPEN' ? 'PAUSED' : 'OPEN';
       const response = await api.put<JobPosting>(
-        `/api/jobs/admin/${jobId}`,
+        `/api/v1/jobs/admin/${jobId}`,
         { status: newStatus },
         { showSuccessToast: false, showErrorToast: true }
       );

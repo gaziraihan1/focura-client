@@ -29,8 +29,8 @@ const defaultMessages = [
 ]
 
 export const contactHandlers = [
-  // GET /api/contact — paginated list (admin)
-  http.get(`${BASE}/api/contact`, () =>
+  // GET /api/v1/contact — paginated list (admin)
+  http.get(`${BASE}/api/v1/contact`, () =>
     HttpResponse.json({
       success: true,
       messages: defaultMessages,

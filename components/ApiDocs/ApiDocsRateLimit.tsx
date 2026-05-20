@@ -2,7 +2,7 @@ import { Gauge, AlertTriangle } from 'lucide-react';
 
 const tiers = [
   {
-    endpoint   : 'POST /api/contact',
+    endpoint   : 'POST /api/v1/contact',
     limit      : '3 / hour per IP',
     limit2     : '2 / 24 h per email',
     backend    : 'Upstash Redis sliding window',
@@ -10,7 +10,7 @@ const tiers = [
     exceeded   : '429 + retryAfter timestamp',
   },
   {
-    endpoint   : 'POST /api/files/upload',
+    endpoint   : 'POST /api/v1/files/upload',
     limit      : '10 uploads / 10 min per user',
     limit2     : 'Plan file size limit',
     backend    : 'Upstash Redis + DB quota check',
@@ -18,7 +18,7 @@ const tiers = [
     exceeded   : '429 or 413 / 507',
   },
   {
-    endpoint   : 'POST /api/auth/login',
+    endpoint   : 'POST /api/v1/auth/login',
     limit      : '10 attempts / 15 min per IP',
     limit2     : '—',
     backend    : 'Upstash Redis',
@@ -26,7 +26,7 @@ const tiers = [
     exceeded   : '429 with lockout duration',
   },
   {
-    endpoint   : 'POST /api/auth/register',
+    endpoint   : 'POST /api/v1/auth/register',
     limit      : '5 / hour per IP',
     limit2     : '—',
     backend    : 'Upstash Redis',

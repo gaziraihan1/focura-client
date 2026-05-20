@@ -28,7 +28,7 @@ export function useIsFocuraAdmin() {
     queryKey:  featureKeys.admin,
     staleTime: Infinity,
     queryFn: async () => {
-      const res = await api.get<{ isAdmin: boolean }>('/api/features/admin/me');
+      const res = await api.get<{ isAdmin: boolean }>('/api/v1/features/admin/me');
       return (res as unknown as { isAdmin: boolean })?.isAdmin ?? false;
     },
   });
@@ -70,7 +70,7 @@ export function useFeatureRequests(filters: FeatureFilters = {}) {
       if (filters.pageSize) p.append('pageSize', String(filters.pageSize));
 
       const res = await api.get<never>(
-        `/api/features?${p.toString()}`,
+        `/api/v1/features?${p.toString()}`,
       ) as unknown as { data: FeatureRequest[]; pagination: FeaturePagination };
 
       return {
@@ -89,7 +89,7 @@ export function useFeatureRequest(id: string) {
     queryKey: featureKeys.detail(id),
     enabled:  !!id,
     queryFn: async () => {
-      const res = await api.get<FeatureRequest>(`/api/features/${id}`);
+      const res = await api.get<FeatureRequest>(`/api/v1/features/${id}`);
       return res?.data as FeatureRequest;
     },
   });
@@ -100,7 +100,7 @@ export function useCreateFeatureRequest() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (data: CreateFeatureRequestDto) => {
-      const res = await api.post<FeatureRequest>('/api/features', data);
+      const res = await api.post<FeatureRequest>('/api/v1/features', data);
       return res?.data as FeatureRequest;
     },
     onSuccess: () => {
@@ -113,7 +113,7 @@ export function useUpdateFeatureStatus() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, ...data }: UpdateFeatureStatusDto & { id: string }) => {
-      const res = await api.patch<FeatureRequest>(`/api/features/${id}/status`, data);
+      const res = await api.patch<FeatureRequest>(`/api/v1/features/${id}/status`, data);
       return res?.data as FeatureRequest;
     },
     onSuccess: (updated) => {
@@ -136,7 +136,7 @@ export function useDeleteFeatureRequest() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      await api.delete(`/api/features/${id}`);
+      await api.delete(`/api/v1/features/${id}`);
       return id;
     },
     onMutate: async (id) => {
@@ -168,7 +168,7 @@ export function useDeleteFeatureRequest() {
   return useMutation({
     mutationFn: async ({ id, type }: { id: string; type: VoteType }) => {
       const res = await api.post<{ action: string; feature: FeatureRequest }>(
-        `/api/features/${id}/vote`,
+        `/api/v1/features/${id}/vote`,
         { type },
       );
       return res as unknown as { action: string; feature: FeatureRequest };

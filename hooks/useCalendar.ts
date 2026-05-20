@@ -26,7 +26,7 @@ export function useCalendarAggregates(filters: CalendarFilters) {
       });
 
       const result = await api.get<CalendarDayAggregate[]>(
-        `/api/calendar/aggregates?${params}`,
+        `/api/v1/calendar/aggregates?${params}`,
         { showErrorToast: false }
       );
 
@@ -66,7 +66,7 @@ export function useCalendarInsights(filters: CalendarFilters) {
       });
 
       const result = await api.get<CalendarInsights>(
-        `/api/calendar/insights?${params}`,
+        `/api/v1/calendar/insights?${params}`,
         { showErrorToast: false }
       );
 
@@ -106,7 +106,7 @@ export function useGoalCheckpoints(filters: CalendarFilters) {
       });
 
       const result = await api.get<GoalCheckpoint[]>(
-        `/api/calendar/goals?${params}`,
+        `/api/v1/calendar/goals?${params}`,
         { showErrorToast: false }
       );
 
@@ -129,7 +129,7 @@ export function useGoalCheckpoints(filters: CalendarFilters) {
   const createGoal = async (input: CreateGoalCheckpointInput) => {
     try {
       const result = await api.post<GoalCheckpoint>(
-        '/api/calendar/goals',
+        '/api/v1/calendar/goals',
         input,
         { showSuccessToast: true }
       );
@@ -165,7 +165,7 @@ export function useSystemEvents(filters: CalendarFilters) {
       });
 
       const result = await api.get<SystemCalendarEvent[]>(
-        `/api/calendar/system-events?${params}`,
+        `/api/v1/calendar/system-events?${params}`,
         { showErrorToast: false }
       );
 
@@ -191,7 +191,7 @@ export function useSystemEvents(filters: CalendarFilters) {
 export async function initializeCalendar() {
   try {
     const result = await api.post<void>(
-      '/api/calendar/initialize',
+      '/api/v1/calendar/initialize',
       {},
       { showSuccessToast: false }
     );
@@ -210,7 +210,7 @@ export async function initializeCalendar() {
 export async function recalculateAggregate(date: Date, workspaceId?: string) {
   try {
     const result = await api.post<void>(
-      '/api/calendar/recalculate',
+      '/api/v1/calendar/recalculate',
       { date, workspaceId },
       { showSuccessToast: false }
     );

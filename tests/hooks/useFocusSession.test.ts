@@ -139,7 +139,7 @@ describe('completeSession', () => {
 
   it('rolls back optimistic clear on API error', async () => {
     server.use(
-      http.post(`${BASE}/api/focus-sessions/:sessionId/complete`, () =>
+      http.post(`${BASE}/api/v1/focus-sessions/:sessionId/complete`, () =>
         HttpResponse.json({ success: false }, { status: 500 })
       )
     )
@@ -180,7 +180,7 @@ describe('cancelSession', () => {
 
   it('rolls back optimistic clear on API error', async () => {
     server.use(
-      http.post(`${BASE}/api/focus-sessions/:sessionId/cancel`, () =>
+      http.post(`${BASE}/api/v1/focus-sessions/:sessionId/cancel`, () =>
         HttpResponse.json({ success: false }, { status: 500 })
       )
     )
@@ -219,7 +219,7 @@ describe('useFocusSessionStats', () => {
 
   it('throws when stats fetch fails', async () => {
     server.use(
-      http.get(`${BASE}/api/focus-sessions/stats`, () =>
+      http.get(`${BASE}/api/v1/focus-sessions/stats`, () =>
         HttpResponse.json({ success: false }, { status: 500 })
       )
     )

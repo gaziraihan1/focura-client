@@ -11,7 +11,7 @@ export function AuthSection() {
       <SectionH>Token exchange flow</SectionH>
       <CodeBlock label="full auth flow">{`1. User signs in via NextAuth (credentials or Google OAuth)
 2. NextAuth jwt() callback fires
-3. Client POSTs to POST /api/auth/exchange with:
+3. Client POSTs to POST /api/v1/auth/exchange with:
      { userId, email, signature (HMAC), timestamp }
 4. Backend verifies HMAC using NEXTAUTH_SECRET (timing-safe compare)
 5. Backend checks timestamp — rejects if >5 min old (replay protection)
@@ -20,7 +20,7 @@ export function AuthSection() {
      refreshToken (RS256, 7 day expiry)
 7. Tokens stored in NextAuth session (HTTP-only cookie)
 8. Every API call: Axios interceptor attaches Authorization: Bearer <accessToken>
-9. On 401: interceptor calls POST /api/auth/refresh, retries original request`}</CodeBlock>
+9. On 401: interceptor calls POST /api/v1/auth/refresh, retries original request`}</CodeBlock>
 
       <SectionH>Key files</SectionH>
       <RowList items={[

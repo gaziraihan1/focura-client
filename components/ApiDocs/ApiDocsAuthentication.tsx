@@ -36,7 +36,7 @@ Content-Type: application/json`,
     detail : 'Access tokens expire in 15 minutes. Call POST /api/auth/refresh with the HTTP-only cookie to get a new access token. The refresh token is rotated on each call — the old one is revoked immediately in Redis.',
     code   : `// Recommended: refresh ~60 seconds before expiry
 
-POST /api/auth/refresh
+POST /api/v1/auth/refresh
 // (no body — refresh token is sent automatically via HTTP-only cookie)
 
 // Response
@@ -54,7 +54,7 @@ axios.interceptors.response.use(null, async (error) => {
   if (error.response?.status === 401 && !error.config._retry) {
     error.config._retry = true;
     try {
-      const { data } = await axios.post('/api/auth/refresh', {},
+      const { data } = await axios.post('/api/v1/auth/refresh', {},
         { withCredentials: true }
       );
       const newToken = data.data.accessToken;

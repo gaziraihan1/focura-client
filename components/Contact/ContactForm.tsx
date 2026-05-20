@@ -174,7 +174,7 @@ const messageValue = useWatch({
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { consent, ...payload } = values;
       await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/contact`,
+        `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/contact`,
         payload,
         { withCredentials: true }
       );

@@ -28,7 +28,7 @@ describe('useDailyTasks', () => {
 
   it('returns empty state when no tasks are set', async () => {
     server.use(
-      http.get(`${BASE}/api/daily-tasks`, () =>
+      http.get(`${BASE}/api/v1/daily-tasks`, () =>
         ok({ primaryTask: null, secondaryTasks: [] })
       )
     )
@@ -76,7 +76,7 @@ describe('addToPrimary', () => {
 
   it('returns success false on API error', async () => {
     server.use(
-      http.post(`${BASE}/api/daily-tasks`, () =>
+      http.post(`${BASE}/api/v1/daily-tasks`, () =>
         HttpResponse.json({ success: false }, { status: 500 })
       )
     )
@@ -138,7 +138,7 @@ describe('removeDailyTask', () => {
 
   it('returns success false on API error', async () => {
     server.use(
-      http.delete(`${BASE}/api/daily-tasks/:taskId`, () =>
+      http.delete(`${BASE}/api/v1/daily-tasks/:taskId`, () =>
         HttpResponse.json({ success: false }, { status: 500 })
       )
     )

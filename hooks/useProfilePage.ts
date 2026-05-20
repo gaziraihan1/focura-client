@@ -52,7 +52,7 @@ export function useProfilePage() {
       const response = await api.get<{
         user: UserProfile;
         storage: StorageData;
-      }>("/api/user/profile");
+      }>("/api/v1/user/profile");
 
       if (response.data) {
         setProfile(response.data.user);
@@ -90,13 +90,13 @@ export function useProfilePage() {
       uploadFormData.append("uploadType", "profile");
 
       const uploadResponse = await api.upload<{ url: string }>(
-        "/api/upload",
+        "/api/v1/upload",
         uploadFormData
       );
 
       if (uploadResponse.data?.url) {
         const saveResponse = await api.put<{ user: UserProfile }>(
-          "/api/user/profile",
+          "/api/v1/user/profile",
           {
             image: uploadResponse.data.url,
           }
@@ -121,7 +121,7 @@ export function useProfilePage() {
 
     try {
       const response = await api.put<{ user: UserProfile }>(
-        "/api/user/profile",
+        "/api/v1/user/profile",
         formData
       );
 

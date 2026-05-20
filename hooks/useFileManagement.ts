@@ -98,7 +98,7 @@ export function useFiles(workspaceId: string, filters?: FileFilters) {
       if (filters?.limit) params.append('limit', filters.limit.toString());
 
       const response = await api.get<FilesResponse>(
-        `/api/file-management/${workspaceId}/files?${params.toString()}`
+        `/api/v1/file-management/${workspaceId}/files?${params.toString()}`
       );
 
       return response?.data as FilesResponse;
@@ -113,7 +113,7 @@ export function useFileStats(workspaceId: string) {
     queryKey: fileManagementKeys.stats(workspaceId),
     queryFn: async () => {
       const response = await api.get<FileTypeStat[]>(
-        `/api/file-management/${workspaceId}/stats`
+        `/api/v1/file-management/${workspaceId}/stats`
       );
       return response?.data as FileTypeStat[];
     },
@@ -127,7 +127,7 @@ export function useUploaders(workspaceId: string, enabled: boolean = true) {
     queryKey: fileManagementKeys.uploaders(workspaceId),
     queryFn: async () => {
       const response = await api.get<Uploader[]>(
-        `/api/file-management/${workspaceId}/uploaders`
+        `/api/v1/file-management/${workspaceId}/uploaders`
       );
       return response?.data as Uploader[];
     },
@@ -142,7 +142,7 @@ export function useDeleteFile(workspaceId: string) {
   return useMutation({
     mutationFn: async (fileId: string) => {
       const response = await api.delete(
-        `/api/file-management/${workspaceId}/files/${fileId}`,
+        `/api/v1/file-management/${workspaceId}/files/${fileId}`,
         {
           showSuccessToast: true,
           showErrorToast: true,

@@ -42,18 +42,18 @@ const ok = (data: unknown) => HttpResponse.json({ success: true, data })
 
 export const subtaskHandlers = [
   // List subtasks
-  http.get(`${BASE}/api/tasks/:parentTaskId/subtasks`, ({ params }) => {
+  http.get(`${BASE}/api/v1/tasks/:parentTaskId/subtasks`, ({ params }) => {
     if (params.parentTaskId === 'empty-task') return ok([])
     return ok([mockSubtask])
   }),
 
   // Subtask stats
-  http.get(`${BASE}/api/tasks/:parentTaskId/subtasks/stats`, () =>
+  http.get(`${BASE}/api/v1/tasks/:parentTaskId/subtasks/stats`, () =>
     ok(mockSubtaskStats)
   ),
 
   // Create subtask
-  http.post(`${BASE}/api/tasks/:parentTaskId/subtasks`, async ({ request, params }) => {
+  http.post(`${BASE}/api/v1/tasks/:parentTaskId/subtasks`, async ({ request, params }) => {
     const body = await request.json() as Partial<Subtask>
     return ok({
       ...mockSubtask,
@@ -64,14 +64,14 @@ export const subtaskHandlers = [
   }),
 
   // Update subtask
-  http.put(`${BASE}/api/tasks/:parentTaskId/subtasks/:subtaskId`, async ({ request }) => {
+  http.put(`${BASE}/api/v1/tasks/:parentTaskId/subtasks/:subtaskId`, async ({ request }) => {
     const body = await request.json() as Partial<Subtask>
     return ok({ ...mockSubtask, ...body })
   }),
 
   // Update subtask status
   http.patch(
-    `${BASE}/api/tasks/:parentTaskId/subtasks/:subtaskId/status`,
+    `${BASE}/api/v1/tasks/:parentTaskId/subtasks/:subtaskId/status`,
     async ({ request }) => {
       const body = await request.json() as { status: string }
       return ok({ ...mockSubtask, status: body.status })
@@ -79,7 +79,7 @@ export const subtaskHandlers = [
   ),
 
   // Delete subtask
-  http.delete(`${BASE}/api/tasks/:parentTaskId/subtasks/:subtaskId`, () =>
+  http.delete(`${BASE}/api/v1/tasks/:parentTaskId/subtasks/:subtaskId`, () =>
     ok(null)
   ),
 ]

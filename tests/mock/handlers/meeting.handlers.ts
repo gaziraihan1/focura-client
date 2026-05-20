@@ -46,12 +46,12 @@ const ok = (data: unknown) => HttpResponse.json({ success: true, data })
 
 export const meetingHandlers = [
   // List meetings
-  http.get(`${BASE}/api/meetings/:workspaceId/meetings`, () =>
+  http.get(`${BASE}/api/v1/meetings/:workspaceId/meetings`, () =>
     ok(mockMeetingsListResponse)
   ),
 
   // Get single meeting
-  http.get(`${BASE}/api/meetings/:workspaceId/meetings/:meetingId`, ({ params }) => {
+  http.get(`${BASE}/api/v1/meetings/:workspaceId/meetings/:meetingId`, ({ params }) => {
     if (params.meetingId === 'not-found') {
       return HttpResponse.json({ success: false, message: 'Not found' }, { status: 404 })
     }
@@ -59,24 +59,24 @@ export const meetingHandlers = [
   }),
 
   // Create meeting
-  http.post(`${BASE}/api/meetings/:workspaceId/meetings`, async ({ request }) => {
+  http.post(`${BASE}/api/v1/meetings/:workspaceId/meetings`, async ({ request }) => {
     const body = await request.json() as Partial<Meeting>
     return ok({ ...mockMeeting, ...body, id: 'meeting-new' })
   }),
 
   // Update meeting
-  http.patch(`${BASE}/api/meetings/:workspaceId/meetings/:meetingId`, async ({ request }) => {
+  http.patch(`${BASE}/api/v1/meetings/:workspaceId/meetings/:meetingId`, async ({ request }) => {
     const body = await request.json() as Partial<Meeting>
     return ok({ ...mockMeeting, ...body })
   }),
 
   // Cancel meeting
-  http.post(`${BASE}/api/meetings/:workspaceId/meetings/:meetingId/cancel`, () =>
+  http.post(`${BASE}/api/v1/meetings/:workspaceId/meetings/:meetingId/cancel`, () =>
     ok({ ...mockMeeting, status: 'CANCELLED' })
   ),
 
   // Delete meeting
-  http.delete(`${BASE}/api/meetings/:workspaceId/meetings/:meetingId`, () =>
+  http.delete(`${BASE}/api/v1/meetings/:workspaceId/meetings/:meetingId`, () =>
     ok(null)
   ),
 ]

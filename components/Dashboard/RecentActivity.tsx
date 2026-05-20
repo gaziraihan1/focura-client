@@ -43,7 +43,7 @@ export function RecentActivity() {
       const results = await Promise.all(
         workspaces.map((ws) =>
           api
-            .get<ActivityItem[]>(`/api/activities/workspace/${ws.id}?limit=10`)
+            .get<ActivityItem[]>(`/api/v1/activities/workspace/${ws.id}?limit=10`)
             .then((res) =>
               (res?.data ?? []).map((a) => ({ ...a, workspaceName: ws.name }))
             )

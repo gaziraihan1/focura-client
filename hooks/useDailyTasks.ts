@@ -30,7 +30,7 @@ export function useDailyTasks(workspaceSlug?: string) {
   } = useQuery({
     queryKey,
     queryFn: async () => {
-      const response = await api.get<DailyTasksData>("/api/daily-tasks");
+      const response = await api.get<DailyTasksData>("/api/v1/daily-tasks");
       return response?.data || { primaryTask: null, secondaryTasks: [] };
     },
     staleTime: 1000 * 60 * 5,
@@ -38,7 +38,7 @@ export function useDailyTasks(workspaceSlug?: string) {
 
   const addDailyTaskMutation = useMutation({
     mutationFn: async (payload: AddDailyTaskPayload) => {
-      return await api.post("/api/daily-tasks", payload, {
+      return await api.post("/api/v1/daily-tasks", payload, {
         showSuccessToast: true,
         showErrorToast: true,
       });
@@ -83,7 +83,7 @@ export function useDailyTasks(workspaceSlug?: string) {
 
   const removeDailyTaskMutation = useMutation({
     mutationFn: async (taskId: string) => {
-      return await api.delete(`/api/daily-tasks/${taskId}`, {
+      return await api.delete(`/api/v1/daily-tasks/${taskId}`, {
         showSuccessToast: true,
         showErrorToast: true,
       });

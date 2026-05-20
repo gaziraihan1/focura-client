@@ -49,7 +49,7 @@ export function AddingFeatureSection() {
 
       <SectionH>Step 4 — Backend: register routes in src/index.ts</SectionH>
       <CodeBlock label="src/index.ts">{`import reactionRoutes from "./modules/reaction";
-app.use("/api/workspaces/:workspaceId/reactions", authenticate, reactionRoutes);`}</CodeBlock>
+app.use("/api/v1/workspaces/:workspaceId/reactions", authenticate, reactionRoutes);`}</CodeBlock>
 
       <SectionH>Step 5 — Frontend: add types</SectionH>
       <CodeBlock label="types/reaction.types.ts">{`export interface Reaction {

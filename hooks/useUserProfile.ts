@@ -35,7 +35,7 @@ export function useUserProfile() {
   return useQuery({
     queryKey: profileKeys.me,
     queryFn: async (): Promise<UserProfile> => {
-      const response = await api.get<{ user: UserProfile }>("/api/user/profile");
+      const response = await api.get<{ user: UserProfile }>("/api/v1/user/profile");
       const user = response?.data?.user;
       if (!user) throw new Error("No profile returned");
       return user;

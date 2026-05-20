@@ -4,7 +4,7 @@ import { signOut } from "next-auth/react";
 export async function logout(logoutAll = false): Promise<void> {
   const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
   try {
-    await fetch(`${backendUrl}/api/auth/logout`, {
+    await fetch(`${backendUrl}/api/v1/auth/logout`, {
       method: "POST", credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ logoutAll }),

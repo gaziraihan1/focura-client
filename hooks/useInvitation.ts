@@ -40,7 +40,7 @@ export function useInvitation(token: string): UseInvitationReturn {
       setError(null);
 
       const response = await api.get<Invitation>(
-        `/api/workspaces/invitations/${token}`,
+        `/api/v1/workspaces/invitations/${token}`,
         { showErrorToast: false },
       );
 
@@ -72,7 +72,7 @@ export function useInvitation(token: string): UseInvitationReturn {
       setIsAccepting(true);
 
       const response = await api.post<Workspace>(
-        `/api/workspaces/invitations/${token}/accept`,
+        `/api/v1/workspaces/invitations/${token}/accept`,
         undefined,
         {
           showSuccessToast: true,

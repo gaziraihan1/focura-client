@@ -27,7 +27,7 @@ export function useUser() {
   return useQuery({
     queryKey: userKeys.profile(),
     queryFn: async () => {
-      const response = await api.get<ProfileResponse>('/api/user/profile', {
+      const response = await api.get<ProfileResponse>('/api/v1/user/profile', {
         showErrorToast: false, // Don't show error toast for auth checks
       });
       return response.data?.user || null;

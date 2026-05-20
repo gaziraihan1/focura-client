@@ -67,17 +67,17 @@ const ok = (data: unknown) => HttpResponse.json({ success: true, data })
 
 export const projectHandlers = [
   // List projects by workspace
-  http.get(`${BASE}/api/projects/workspace/:workspaceId`, () =>
+  http.get(`${BASE}/api/v1/projects/workspace/:workspaceId`, () =>
     ok([mockProjectDetails])
   ),
 
   // All user projects
-  http.get(`${BASE}/api/projects/user/all`, () =>
+  http.get(`${BASE}/api/v1/projects/user/all`, () =>
     ok([mockProjectDetails])
   ),
 
   // Get project by slug
-  http.get(`${BASE}/api/projects/slug/:slug`, ({ params }) => {
+  http.get(`${BASE}/api/v1/projects/slug/:slug`, ({ params }) => {
     if (params.slug === 'not-found') {
       return HttpResponse.json({ success: false, message: 'Not found' }, { status: 404 })
     }
@@ -85,7 +85,7 @@ export const projectHandlers = [
   }),
 
   // Get project by id
-  http.get(`${BASE}/api/projects/:projectId`, ({ params }) => {
+  http.get(`${BASE}/api/v1/projects/:projectId`, ({ params }) => {
     if (params.projectId === 'not-found') {
       return HttpResponse.json({ success: false, message: 'Not found' }, { status: 404 })
     }
@@ -93,22 +93,22 @@ export const projectHandlers = [
   }),
 
   // Create project
-  http.post(`${BASE}/api/projects`, async ({ request }) => {
+  http.post(`${BASE}/api/v1/projects`, async ({ request }) => {
     const body = await request.json() as Partial<ProjectDetails>
     return ok({ ...mockProjectDetails, ...body, id: 'project-new' })
   }),
 
   // Update project
-  http.patch(`${BASE}/api/projects/:projectId`, async ({ request }) => {
+  http.patch(`${BASE}/api/v1  /projects/:projectId`, async ({ request }) => {
     const body = await request.json() as Partial<ProjectDetails>
     return ok({ ...mockProjectDetails, ...body })
   }),
 
   // Delete project
-  http.delete(`${BASE}/api/projects/:projectId`, () => ok(null)),
+  http.delete(`${BASE}/api/v1/projects/:projectId`, () => ok(null)),
 
   // Add member
-  http.post(`${BASE}/api/projects/:projectId/members`, async ({ request }) => {
+  http.post(`${BASE}/api/v1/projects/:projectId/members`, async ({ request }) => {
     const body = await request.json() as { userId: string; role: string }
     return ok({
       ...mockProjectMember,
@@ -119,11 +119,11 @@ export const projectHandlers = [
   }),
 
   // Update member role
-  http.patch(`${BASE}/api/projects/:projectId/members/:memberId`, async ({ request }) => {
+  http.patch(`${BASE}/api/v1/projects/:projectId/members/:memberId`, async ({ request }) => {
     const body = await request.json() as { role: string }
     return ok({ ...mockProjectMember, role: body.role })
   }),
 
   // Remove member
-  http.delete(`${BASE}/api/projects/:projectId/members/:memberId`, () => ok(null)),
+  http.delete(`${BASE}/api/v1/projects/:projectId/members/:memberId`, () => ok(null)),
 ]

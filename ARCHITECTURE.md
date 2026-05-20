@@ -610,7 +610,7 @@ interface ApiResponse<T> {
 }
 
 // Usage
-const response = await api.get<Task[]>("/api/tasks");
+const response = await api.get<Task[]>("/api/v1/tasks");
 if (response?.success) {
   setTasks(response.data);
 }
@@ -978,7 +978,7 @@ interface ErrorResponse {
 ```typescript
 // In hooks
 try {
-  const response = await api.post("/api/tasks", data);
+  const response = await api.post("/api/v1/tasks", data);
   if (response?.success) {
     return response.data;
   }

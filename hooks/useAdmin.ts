@@ -71,7 +71,7 @@ export function useAdminStats() {
     queryKey: adminKeys.stats,
     staleTime: 60 * 1000,
     queryFn: async () => {
-      const res = await get<{ data: AdminStats }>("/api/admin/stats");
+      const res = await get<{ data: AdminStats }>("/api/v1/admin/stats");
       return res.data;
     },
   });
@@ -88,7 +88,7 @@ export function useAdminWorkspaces(params: {
     placeholderData: (prev) => prev,
     queryFn: async () =>
       get<AdminPaginatedResponse<AdminWorkspace>>(
-        `/api/admin/workspaces?${buildParams(params)}`,
+        `/api/v1/admin/workspaces?${buildParams(params)}`,
       ),
   });
 }
@@ -100,7 +100,7 @@ export function useAdminWorkspaceDetail(slug: string) {
     staleTime: 30 * 1000,
     queryFn: async () => {
       const res = await get<{ data: AdminWorkspaceDetail }>(
-        `/api/admin/workspaces/${slug}`,
+        `/api/v1/admin/workspaces/${slug}`,
       );
       return res.data;
     },
@@ -118,7 +118,7 @@ export function useAdminUsers(params: {
     placeholderData: (prev) => prev,
     queryFn: async () =>
       get<AdminPaginatedResponse<AdminUser>>(
-        `/api/admin/users?${buildParams(params)}`,
+        `/api/v1/admin/users?${buildParams(params)}`,
       ),
   });
 }
@@ -130,7 +130,7 @@ export function useAdminUserDetail(id: string) {
     staleTime: 30 * 1000,
     queryFn: async () => {
       const res = await get<{ data: AdminUserDetail }>(
-        `/api/admin/users/${id}`,
+        `/api/v1/admin/users/${id}`,
       );
       return res.data;
     },
@@ -149,7 +149,7 @@ export function useAdminProjects(params: {
     placeholderData: (prev) => prev,
     queryFn: async () =>
       get<AdminPaginatedResponse<AdminProject>>(
-        `/api/admin/projects?${buildParams(params)}`,
+        `/api/v1/admin/projects?${buildParams(params)}`,
       ),
   });
 }
@@ -165,7 +165,7 @@ export function useAdminBilling(params: {
     placeholderData: (prev) => prev,
     queryFn: async () =>
       get<AdminPaginatedResponse<AdminBilling>>(
-        `/api/admin/billing?${buildParams(params)}`,
+        `/api/v1/admin/billing?${buildParams(params)}`,
       ),
   });
 }
@@ -177,7 +177,7 @@ export function useAdminActivity(params: { page?: number; pageSize?: number }) {
     placeholderData: (prev) => prev,
     queryFn: async () =>
       get<AdminPaginatedResponse<AdminActivity>>(
-        `/api/admin/activity?${buildParams(params)}`,
+        `/api/v1/admin/activity?${buildParams(params)}`,
       ),
   });
 }
@@ -188,7 +188,7 @@ export function useBanUser() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, reason }: { id: string; reason: string }) => {
-      const res = await api.patch(`/api/admin/users/${id}/ban`, { reason });
+      const res = await api.patch(`/api/v1/admin/users/${id}/ban`, { reason });
       return res as unknown as { success: boolean; message: string };
     },
     onSuccess: (_, { id }) => {
@@ -202,7 +202,7 @@ export function useUnbanUser() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      const res = await api.patch(`/api/admin/users/${id}/unban`, {});
+      const res = await api.patch(`/api/v1/admin/users/${id}/unban`, {});
       return res as unknown as { success: boolean; message: string };
     },
     onSuccess: (_, id) => {
@@ -219,7 +219,7 @@ export function useDeleteWorkspace() {
       slug, reason, hardDelete,
     }: { slug: string; reason?: string; hardDelete: boolean }) => {
       const res = await api.post(
-        `/api/admin/workspaces/${slug}/delete`,
+        `/api/v1/admin/workspaces/${slug}/delete`,
         { reason, hardDelete },
       );
       return res as unknown as { success: boolean; message: string };
@@ -234,7 +234,7 @@ export function useRestoreWorkspace() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (slug: string) => {
-      const res = await api.patch(`/api/admin/workspaces/${slug}/restore`, {});
+      const res = await api.patch(`/api/v1/admin/workspaces/${slug}/restore`, {});
       return res as unknown as { success: boolean; message: string };
     },
     onSuccess: () => {

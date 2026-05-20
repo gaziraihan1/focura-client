@@ -52,14 +52,14 @@ export const focusSessionKeys = {
 // ─── Fetchers ─────────────────────────────────────────────────────────────────
 
 const fetchActiveSession = async (): Promise<FocusSession | null> => {
-  const result = await api.get<FocusSession>('/api/focus-sessions/active', {
+  const result = await api.get<FocusSession>('/api/v1/focus-sessions/active', {
     showErrorToast: false,
   });
   return result?.success ? (result.data ?? null) : null;
 };
 
 const fetchFocusSessionStats = async (): Promise<FocusSessionStats> => {
-  const result = await api.get<FocusSessionStats>('/api/focus-sessions/stats');
+  const result = await api.get<FocusSessionStats>('/api/v1/focus-sessions/stats');
   if (!result?.success || !result.data) {
     throw new Error('Failed to fetch focus session stats');
   }
@@ -95,7 +95,7 @@ export function useFocusSession() {
       type?: FocusType;
     }) => {
       const result = await api.post<FocusSession>(
-        '/api/focus-sessions/start',
+        '/api/v1/focus-sessions/start',
         { taskId, type, duration },
         { showSuccessToast: true }
       );
@@ -122,7 +122,7 @@ export function useFocusSession() {
     mutationFn: async () => {
       if (!activeSession) throw new Error('No active session to complete');
       await api.post(
-        `/api/focus-sessions/${activeSession.id}/complete`,
+        `/api/v1/focus-sessions/${activeSession.id}/complete`,
         {},
         { showSuccessToast: false } // We show a custom toast below
       );
@@ -156,7 +156,7 @@ export function useFocusSession() {
     mutationFn: async () => {
       if (!activeSession) throw new Error('No active session to cancel');
       await api.post(
-        `/api/focus-sessions/${activeSession.id}/cancel`,
+        `/api/v1/focus-sessions/${activeSession.id}/cancel`,
         {},
         { showErrorToast: true }
       );

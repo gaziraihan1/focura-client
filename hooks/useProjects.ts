@@ -139,7 +139,7 @@ export const useProjects = (workspaceId?: string) => {
   return useQuery({
     queryKey: projectKeys.list(workspaceId || ''),
     queryFn: async () => {
-      const res = await api.get(`/api/projects/workspace/${workspaceId}`);
+      const res = await api.get(`/api/v1/projects/workspace/${workspaceId}`);
       return res.data as ProjectDetails[];
     },
     enabled: !!workspaceId,
@@ -153,7 +153,7 @@ export const useAllUserProjects = () => {
   return useQuery({
     queryKey: [...projectKeys.all, 'user-projects'],
     queryFn: async () => {
-      const res = await api.get('/api/projects/user/all', {
+      const res = await api.get('/api/v1/projects/user/all', {
         showErrorToast: true,
       });
       return res.data as ProjectDetails[];
@@ -167,7 +167,7 @@ export const useProjectDetails = (projectId?: string) => {
   return useQuery({
     queryKey: projectKeys.detail(projectId || ''),
     queryFn: async () => {
-      const res = await api.get(`/api/projects/${projectId}`);
+      const res = await api.get(`/api/v1/projects/${projectId}`);
       return res.data as ProjectDetails;
     },
     enabled: !!projectId,
@@ -179,7 +179,7 @@ export const useProjectDetailsBySlug = (slug?: string) => {
   return useQuery({
     queryKey: [...projectKeys.details(), 'slug', slug],
     queryFn: async () => {
-      const res = await api.get(`/api/projects/slug/${slug}`);
+      const res = await api.get(`/api/v1/projects/slug/${slug}`);
       return res.data as ProjectDetails;
     },
     enabled: !!slug,
@@ -190,7 +190,7 @@ export const useCreateProject = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (data: CreateProjectDto) => {
-      const res = await api.post<ProjectDetails>('/api/projects', data, {
+      const res = await api.post<ProjectDetails>('/api/v1/projects', data, {
         showSuccessToast: true,
         showErrorToast: true,
       });
@@ -208,7 +208,7 @@ export const useUpdateProject = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ projectId, data }: { projectId: string; data: UpdateProjectDto }) => {
-      const res = await api.patch<ProjectDetails>(`/api/projects/${projectId}`, data, {
+      const res = await api.patch<ProjectDetails>(`/api/v1/projects/${projectId}`, data, {
         showSuccessToast: true,
         showErrorToast: true,
       });
@@ -226,7 +226,7 @@ export const useDeleteProject = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (projectId: string) => {
-      const res = await api.delete(`/api/projects/${projectId}`, {
+      const res = await api.delete(`/api/v1/projects/${projectId}`, {
         showSuccessToast: true,
         showErrorToast: true,
       });
@@ -244,7 +244,7 @@ export const useAddProjectMember = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ projectId, data }: { projectId: string; data: AddProjectMemberDto }) => {
-      const res = await api.post<ProjectMember>(`/api/projects/${projectId}/members`, data, {
+      const res = await api.post<ProjectMember>(`/api/v1/projects/${projectId}/members`, data, {
         showSuccessToast: true,
         showErrorToast: true,
       });
@@ -271,7 +271,7 @@ export const useUpdateProjectMemberRole = () => {
       role: 'MANAGER' | 'COLLABORATOR' | 'VIEWER';
     }) => {
       const res = await api.patch<ProjectMember>(
-        `/api/projects/${projectId}/members/${memberId}`,
+        `/api/v1/projects/${projectId}/members/${memberId}`,
         { role },
         {
           showSuccessToast: true,
@@ -292,7 +292,7 @@ export const useRemoveProjectMember = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ projectId, memberId }: { projectId: string; memberId: string }) => {
-      const res = await api.delete(`/api/projects/${projectId}/members/${memberId}`, {
+      const res = await api.delete(`/api/v1/projects/${projectId}/members/${memberId}`, {
         showSuccessToast: true,
         showErrorToast: true,
       });

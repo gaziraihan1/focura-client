@@ -117,7 +117,7 @@ export function useWorkspacesSummary() {
     queryKey: storageKeys.workspaces(),
     queryFn: async () => {
       const response = await api.get<WorkspaceSummary[]>(
-        "/api/storage/workspaces",
+        "/api/v1/storage/workspaces",
       );
       return response?.data as WorkspaceSummary[];
     },
@@ -130,7 +130,7 @@ export function useWorkspaceStorageOverview(workspaceId: string) {
     queryKey: storageKeys.overview(workspaceId),
     queryFn: async () => {
       const response = await api.get<WorkspaceStorageOverview>(
-        `/api/storage/${workspaceId}/overview`,
+        `/api/v1/storage/${workspaceId}/overview`,
       );
       return response?.data as WorkspaceStorageOverview;
     },
@@ -144,7 +144,7 @@ export function useWorkspaceStorageInfo(workspaceId: string) {
     queryKey: storageKeys.info(workspaceId),
     queryFn: async () => {
       const response = await api.get<StorageInfo>(
-        `/api/storage/${workspaceId}/info`,
+        `/api/v1/storage/${workspaceId}/info`,
       );
       return response?.data as StorageInfo;
     },
@@ -158,7 +158,7 @@ export function useMyContribution(workspaceId: string) {
     queryKey: storageKeys.myContribution(workspaceId),
     queryFn: async () => {
       const response = await api.get<MyContribution>(
-        `/api/storage/${workspaceId}/my-contribution`,
+        `/api/v1/storage/${workspaceId}/my-contribution`,
       );
       return response?.data as MyContribution;
     },
@@ -175,7 +175,7 @@ export function useUserContributions(
     queryKey: storageKeys.userContributions(workspaceId),
     queryFn: async () => {
       const response = await api.get<UserContribution[]>(
-        `/api/storage/${workspaceId}/user-contributions`,
+        `/api/v1/storage/${workspaceId}/user-contributions`,
       );
       return response?.data as UserContribution[];
     },
@@ -189,7 +189,7 @@ export function useLargestFiles(workspaceId: string, limit: number = 10) {
     queryKey: storageKeys.largestFiles(workspaceId, limit),
     queryFn: async () => {
       const response = await api.get<LargestFile[]>(
-        `/api/storage/${workspaceId}/largest-files?limit=${limit}`,
+        `/api/v1/storage/${workspaceId}/largest-files?limit=${limit}`,
       );
       return response?.data as LargestFile[];
     },
@@ -208,7 +208,7 @@ export function useBulkDeleteFiles(workspaceId: string) {
         deletedCount: number;
         freedMB: number;
       }>(
-        `/api/storage/${workspaceId}/bulk-delete`,
+        `/api/v1/storage/${workspaceId}/bulk-delete`,
         { fileIds },
         {
           showSuccessToast: true,
@@ -233,7 +233,7 @@ export function useDeleteFile(workspaceId: string) {
   return useMutation({
     mutationFn: async (fileId: string) => {
       const response = await api.delete<{ freedMB: number }>(
-              `/api/storage/files/${fileId}`,
+              `/api/v1/storage/files/${fileId}`,
         {
           showSuccessToast: true,
           showErrorToast: true,
@@ -255,7 +255,7 @@ export function useCheckUpload(workspaceId: string) {
   return useMutation({
     mutationFn: async (fileSize: number) => {
       const response = await api.post<{ allowed: boolean; reason?: string }>(
-        `/api/storage/${workspaceId}/check-upload`,
+        `/api/v1/storage/${workspaceId}/check-upload`,
         { fileSize },
         { showErrorToast: true },
       );

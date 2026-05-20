@@ -23,7 +23,7 @@ export function useUpdateComment() {
   return useMutation({
     mutationFn: async ({ commentId, taskId, content }: UpdateCommentInput) => {
       const res = await api.put<TaskComment>(
-        `/api/tasks/${taskId}/comments/${commentId}`,
+        `/api/v1/tasks/${taskId}/comments/${commentId}`,
         { content }
       );
       return res?.data;
@@ -43,7 +43,7 @@ export function useDeleteComment() {
 
   return useMutation({
     mutationFn: async ({ commentId, taskId }: DeleteCommentInput) => {
-      const response = await api.delete(`/api/tasks/${taskId}/comments/${commentId}`);
+      const response = await api.delete(`/api/v1/tasks/${taskId}/comments/${commentId}`);
       return response.data;
     },
     onSuccess: (_, { taskId }) => {

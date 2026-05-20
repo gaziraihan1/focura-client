@@ -72,7 +72,7 @@ describe('useWorkspaceSubscription', () => {
 
   it('enters error state when API fails', async () => {
     server.use(
-      http.get(`${BASE}/api/workspaces/:workspaceId/billing/subscription`, () =>
+      http.get(`${BASE}/api/v1/workspaces/:workspaceId/billing/subscription`, () =>
         new HttpResponse(null, { status: 500 })
       )
     )
@@ -142,7 +142,7 @@ describe('useWorkspaceInvoices', () => {
 
   it('enters error state when API fails', async () => {
     server.use(
-      http.get(`${BASE}/api/workspaces/:workspaceId/billing/invoices`, () =>
+      http.get(`${BASE}/api/v1/workspaces/:workspaceId/billing/invoices`, () =>
         new HttpResponse(null, { status: 500 })
       )
     )
@@ -190,7 +190,7 @@ describe('useCreateCheckout', () => {
   it('enters error state when checkout creation fails', async () => {
     server.use(
       http.post(
-        `${BASE}/api/workspaces/:workspaceId/billing/create-checkout-session`,
+        `${BASE}/api/v1/workspaces/:workspaceId/billing/create-checkout-session`,
         () => new HttpResponse(null, { status: 400 })
       )
     )
@@ -210,7 +210,7 @@ describe('useCreateCheckout', () => {
   it('returns undefined when API returns no url', async () => {
     server.use(
       http.post(
-        `${BASE}/api/workspaces/:workspaceId/billing/create-checkout-session`,
+        `${BASE}/api/v1/workspaces/:workspaceId/billing/create-checkout-session`,
         () => HttpResponse.json({ data: { url: null } })
       )
     )
@@ -250,7 +250,7 @@ describe('useCreatePortal', () => {
   it('enters error state when portal creation fails', async () => {
     server.use(
       http.post(
-        `${BASE}/api/workspaces/:workspaceId/billing/create-portal-session`,
+        `${BASE}/api/v1/workspaces/:workspaceId/billing/create-portal-session`,
         () => new HttpResponse(null, { status: 403 })
       )
     )
@@ -270,7 +270,7 @@ describe('useCreatePortal', () => {
   it('returns undefined when API returns no url', async () => {
     server.use(
       http.post(
-        `${BASE}/api/workspaces/:workspaceId/billing/create-portal-session`,
+        `${BASE}/api/v1/workspaces/:workspaceId/billing/create-portal-session`,
         () => HttpResponse.json({ data: { url: null } })
       )
     )
@@ -346,7 +346,7 @@ describe('useChangePlan', () => {
   it('rolls back optimistic update on error', async () => {
     server.use(
       http.post(
-        `${BASE}/api/workspaces/:workspaceId/billing/change-plan`,
+        `${BASE}/api/v1/workspaces/:workspaceId/billing/change-plan`,
         () => new HttpResponse(null, { status: 500 })
       )
     )
@@ -378,7 +378,7 @@ describe('useChangePlan', () => {
   it('enters error state when API fails', async () => {
     server.use(
       http.post(
-        `${BASE}/api/workspaces/:workspaceId/billing/change-plan`,
+        `${BASE}/api/v1/workspaces/:workspaceId/billing/change-plan`,
         () => new HttpResponse(null, { status: 422 })
       )
     )
@@ -428,7 +428,7 @@ describe('useCancelSubscription', () => {
   it('enters error state when cancellation fails', async () => {
     server.use(
       http.post(
-        `${BASE}/api/workspaces/:workspaceId/billing/cancel-subscription`,
+        `${BASE}/api/v1/workspaces/:workspaceId/billing/cancel-subscription`,
         () => new HttpResponse(null, { status: 500 })
       )
     )
@@ -465,7 +465,7 @@ describe('useReactivateSubscription', () => {
   it('enters error state when reactivation fails', async () => {
     server.use(
       http.post(
-        `${BASE}/api/workspaces/:workspaceId/billing/reactivate-subscription`,
+        `${BASE}/api/v1/workspaces/:workspaceId/billing/reactivate-subscription`,
         () => new HttpResponse(null, { status: 500 })
       )
     )

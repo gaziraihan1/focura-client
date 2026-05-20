@@ -275,69 +275,69 @@ const okMessage = (message = 'Success') =>
 // ── Handlers ──────────────────────────────────────────────────────────────────
 
 export const adminHandlers = [
-  // GET /api/admin/stats  → res.data
-  http.get(`${BASE}/api/admin/stats`, () =>
+  // GET /api/v1/admin/stats  → res.data
+  http.get(`${BASE}/api/v1/admin/stats`, () =>
     ok(mockAdminStats)
   ),
 
-  // GET /api/admin/workspaces  → flat AdminPaginatedResponse
-  http.get(`${BASE}/api/admin/workspaces`, () =>
+  // GET /api/v1/admin/workspaces  → flat AdminPaginatedResponse
+  http.get(`${BASE}/api/v1/admin/workspaces`, () =>
     HttpResponse.json(paginatedResponse([mockAdminWorkspace]))
   ),
 
-  // GET /api/admin/workspaces/:slug  → res.data
-  http.get(`${BASE}/api/admin/workspaces/:slug`, ({ params }) => {
+  // GET /api/v1/admin/workspaces/:slug  → res.data
+  http.get(`${BASE}/api/v1/admin/workspaces/:slug`, ({ params }) => {
     if (params.slug === 'not-found') {
       return HttpResponse.json({ success: false, message: 'Not found' }, { status: 404 })
     }
     return ok(mockAdminWorkspaceDetail)
   }),
 
-  // POST /api/admin/workspaces/:slug/delete  → { success, message }
-  http.post(`${BASE}/api/admin/workspaces/:slug/delete`, () =>
+  // POST /api/v1/admin/workspaces/:slug/delete  → { success, message }
+  http.post(`${BASE}/api/v1/admin/workspaces/:slug/delete`, () =>
     okMessage('Workspace deleted successfully')
   ),
 
-  // PATCH /api/admin/workspaces/:slug/restore  → { success, message }
-  http.patch(`${BASE}/api/admin/workspaces/:slug/restore`, () =>
+  // PATCH /api/v1/admin/workspaces/:slug/restore  → { success, message }
+  http.patch(`${BASE}/api/v1/admin/workspaces/:slug/restore`, () =>
     okMessage('Workspace restored successfully')
   ),
 
-  // GET /api/admin/users  → flat AdminPaginatedResponse
-  http.get(`${BASE}/api/admin/users`, () =>
+  // GET /api/v1/admin/users  → flat AdminPaginatedResponse
+  http.get(`${BASE}/api/v1/admin/users`, () =>
     HttpResponse.json(paginatedResponse([mockAdminUser]))
   ),
 
-  // GET /api/admin/users/:id  → res.data
-  http.get(`${BASE}/api/admin/users/:id`, ({ params }) => {
+  // GET /api/v1/admin/users/:id  → res.data
+  http.get(`${BASE}/api/v1/admin/users/:id`, ({ params }) => {
     if (params.id === 'not-found') {
       return HttpResponse.json({ success: false, message: 'Not found' }, { status: 404 })
     }
     return ok(mockAdminUserDetail)
   }),
 
-  // PATCH /api/admin/users/:id/ban  → { success, message }
-  http.patch(`${BASE}/api/admin/users/:id/ban`, () =>
+  // PATCH /api/v1/admin/users/:id/ban  → { success, message }
+  http.patch(`${BASE}/api/v1/admin/users/:id/ban`, () =>
     okMessage('User banned successfully')
   ),
 
-  // PATCH /api/admin/users/:id/unban  → { success, message }
-  http.patch(`${BASE}/api/admin/users/:id/unban`, () =>
+  // PATCH /api/v1/admin/users/:id/unban  → { success, message }
+  http.patch(`${BASE}/api/v1/admin/users/:id/unban`, () =>
     okMessage('User unbanned successfully')
   ),
 
-  // GET /api/admin/projects  → flat AdminPaginatedResponse
-  http.get(`${BASE}/api/admin/projects`, () =>
+  // GET /api/v1/admin/projects  → flat AdminPaginatedResponse
+  http.get(`${BASE}/api/v1/admin/projects`, () =>
     HttpResponse.json(paginatedResponse([mockAdminProject]))
   ),
 
-  // GET /api/admin/billing  → flat AdminPaginatedResponse
-  http.get(`${BASE}/api/admin/billing`, () =>
+  // GET /api/v1/admin/billing  → flat AdminPaginatedResponse
+  http.get(`${BASE}/api/v1/admin/billing`, () =>
     HttpResponse.json(paginatedResponse([mockAdminBilling]))
   ),
 
-  // GET /api/admin/activity  → flat AdminPaginatedResponse
-  http.get(`${BASE}/api/admin/activity`, () =>
+  // GET /api/v1/admin/activity  → flat AdminPaginatedResponse
+  http.get(`${BASE}/api/v1/admin/activity`, () =>
     HttpResponse.json(paginatedResponse([mockAdminActivity]))
   ),
 ]

@@ -813,7 +813,7 @@ const { data: session } = useSession();
 if (!session?.backendToken) return null;
 
 // Use api client which handles this automatically
-const response = await api.get('/api/tasks');
+const response = await api.get('/api/v1/tasks');
 ```
 
 ### **Issue: "Token expired" on every request**
@@ -1001,7 +1001,7 @@ export default function MyComponent() {
 import { api } from "@/lib/axios";
 
 // Token automatically attached
-const response = await api.get<TasksResponse>("/api/tasks");
+const response = await api.get<TasksResponse>("/api/v1/tasks");
 if (response?.success) {
   console.log(response.data);
 }

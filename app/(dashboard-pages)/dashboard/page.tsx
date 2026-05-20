@@ -14,7 +14,7 @@ export default async function DashboardPage() {
   if (!session) redirect("/authentication/login");
 
   // Only one lightweight fetch — no per-workspace data needed
-  const workspaces = await serverApi<Workspace[]>("/api/workspaces");
+  const workspaces = await serverApi<Workspace[]>("/api/v1/workspaces");
 
   return (
     <div className="space-y-6 py-2">

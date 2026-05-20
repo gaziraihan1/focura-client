@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 async function getOpenCount(): Promise<number> {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/jobs?limit=1`,
+      `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/jobs?limit=1`,
       { next: { revalidate: 60 } } // revalidate every 60 s
     );
     if (!res.ok) return 0;

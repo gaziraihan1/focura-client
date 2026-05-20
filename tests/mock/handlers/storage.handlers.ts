@@ -88,50 +88,50 @@ const ok = (data: unknown) => HttpResponse.json({ success: true, data })
 
 export const storageHandlers = [
   // Workspaces summary
-  http.get(`${BASE}/api/storage/workspaces`, () =>
+  http.get(`${BASE}/api/v1/storage/workspaces`, () =>
     ok([mockWorkspaceSummary])
   ),
 
   // Workspace overview
-  http.get(`${BASE}/api/storage/:workspaceId/overview`, () =>
+  http.get(`${BASE}/api/v1/storage/:workspaceId/overview`, () =>
     ok(mockStorageOverview)
   ),
 
   // Workspace info
-  http.get(`${BASE}/api/storage/:workspaceId/info`, () =>
+  http.get(`${BASE}/api/v1/storage/:workspaceId/info`, () =>
     ok(mockStorageInfo)
   ),
 
   // My contribution
-  http.get(`${BASE}/api/storage/:workspaceId/my-contribution`, () =>
+  http.get(`${BASE}/api/v1/storage/:workspaceId/my-contribution`, () =>
     ok(mockMyContribution)
   ),
 
   // User contributions
-  http.get(`${BASE}/api/storage/:workspaceId/user-contributions`, () =>
+  http.get(`${BASE}/api/v1/storage/:workspaceId/user-contributions`, () =>
     ok([mockUserContribution])
   ),
 
   // Largest files
-  http.get(`${BASE}/api/storage/:workspaceId/largest-files`, () =>
+  http.get(`${BASE}/api/v1/storage/:workspaceId/largest-files`, () =>
     ok([mockLargestFile])
   ),
 
   // Bulk delete
-  http.post(`${BASE}/api/storage/:workspaceId/bulk-delete`, async ({ request }) => {
+  http.post(`${BASE}/api/v1/storage/:workspaceId/bulk-delete`, async ({ request }) => {
     const body = await request.json() as { fileIds: string[] }
     return ok({ deletedCount: body.fileIds.length, freedMB: body.fileIds.length * 10 })
   }),
 
   // Check upload
-  http.post(`${BASE}/api/storage/:workspaceId/check-upload`, async ({ request }) => {
+  http.post(`${BASE}/api/v1/storage/:workspaceId/check-upload`, async ({ request }) => {
     const body = await request.json() as { fileSize: number }
     const allowed = body.fileSize < 50 * 1024 * 1024
     return ok({ allowed, reason: allowed ? undefined : 'File too large' })
   }),
 
   // Delete single file — must come AFTER /workspaces and /:workspaceId routes
-  http.delete(`${BASE}/api/storage/files/:fileId`, () =>
+  http.delete(`${BASE}/api/v1/storage/files/:fileId`, () =>
     ok({ freedMB: 10 })
   ),
 ]

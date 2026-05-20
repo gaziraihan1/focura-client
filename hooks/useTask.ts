@@ -212,7 +212,7 @@ export function useTasks(
       if (sort?.sortOrder) params.append("sortOrder", sort.sortOrder);
 
       const response = await api.get<TasksResponse | Task[]>(
-        `/api/tasks?${params.toString()}`,
+        `/api/v1/tasks?${params.toString()}`,
         { showErrorToast: true },
       );
 
@@ -282,7 +282,7 @@ export function useTaskOverview(taskId: string) {
     queryKey: taskOverviewKeys.detail(taskId),
     queryFn:  async (): Promise<TaskOverview> => {
       const res = await api.get<TaskOverview>(
-        `/api/tasks/${taskId}/overview`,
+        `/api/v1/tasks/${taskId}/overview`,
         { showErrorToast: true },
       );
       const overview = res?.data as TaskOverview;
@@ -311,7 +311,7 @@ export function useTaskStats(
       if (workspaceId) params.append("workspaceId", workspaceId);
       if (type && type !== "all") params.append("type", type);
 
-      const endpoint = `/api/tasks/stats${params.toString() ? `?${params.toString()}` : ""}`;
+      const endpoint = `/api/v1/tasks/stats${params.toString() ? `?${params.toString()}` : ""}`;
       const response = await api.get<TaskStats>(endpoint, {
         showErrorToast: true,
       });
@@ -325,7 +325,7 @@ export function useTask(taskId: string) {
   return useQuery({
     queryKey: taskKeys.detail(taskId),
     queryFn: async () => {
-      const response = await api.get<Task>(`/api/tasks/${taskId}`, {
+      const response = await api.get<Task>(`/api/v1/tasks/${taskId}`, {
         showErrorToast: true,
       });
       return response?.data;
@@ -356,7 +356,7 @@ export function usePersonalQuota() {
     queryKey: taskKeys.personalQuota(),
     queryFn: async (): Promise<PersonalQuotaInfo> => {
       const response = await api.get<PersonalQuotaInfo>(
-        "/api/tasks/quota/personal",
+        "/api/v1/tasks/quota/personal",
         {
           showErrorToast: true,
         },
@@ -398,7 +398,7 @@ export function useWorkspaceQuota(workspaceId: string | undefined) {
       : ["__disabled__"],
     queryFn: async (): Promise<WorkspaceQuotaInfo> => {
       const response = await api.get<WorkspaceQuotaInfo>(
-        `/api/tasks/quota/workspace/${workspaceId}`,
+        `/api/v1/tasks/quota/workspace/${workspaceId}`,
         { showErrorToast: true },
       );
       return response?.data as WorkspaceQuotaInfo;
@@ -415,7 +415,7 @@ export function useCreateTask() {
 
   return useMutation({
     mutationFn: async (newTask: CreateTaskDto) => {
-      const response = await api.post<Task>("/api/tasks", newTask, {
+      const response = await api.post<Task>("/api/v1/tasks", newTask, {
         showSuccessToast: true,
       });
       return response?.data;
@@ -482,7 +482,7 @@ export function useUpdateTask() {
 
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<Task> }) => {
-      const response = await api.put<Task>(`/api/tasks/${id}`, data, {
+      const response = await api.put<Task>(`/api/v1/tasks/${id}`, data, {
         showSuccessToast: true,
       });
       return response?.data;
@@ -505,7 +505,7 @@ export function useDeleteTask() {
 
   return useMutation({
     mutationFn: async (taskId: string) => {
-      const response = await api.delete(`/api/tasks/${taskId}`, {
+      const response = await api.delete(`/api/v1/tasks/${taskId}`, {
         showSuccessToast: true,
       });
       return response?.data;
@@ -530,7 +530,7 @@ export function useUpdateTaskStatus() {
       status: Task["status"];
     }) => {
       const response = await api.patch<Task>(
-        `/api/tasks/${id}/status`,
+        `/api/v1/tasks/${id}/status`,
         { status },
         { showSuccessToast: false },
       );
@@ -610,7 +610,7 @@ export function useTaskComments(taskId: string) {
     queryKey: commentKeys.byTask(taskId),
     queryFn: async () => {
       const response = await api.get<TaskComment[]>(
-        `/api/tasks/${taskId}/comments`,
+        `/api/v1/tasks/${taskId}/comments`,
       );
       return response?.data || [];
     },
@@ -633,7 +633,7 @@ export function useAddComment() {
       parentId?: string | null;
     }) => {
       const response = await api.post<TaskComment>(
-        `/api/tasks/${taskId}/comments`,
+        `/api/v1/tasks/${taskId}/comments`,
         { content, parentId: parentId ?? null },
         { showSuccessToast: false },
       );
@@ -659,7 +659,7 @@ export function useTaskActivity(taskId: string) {
     queryKey: activityKeys.task(taskId),
     queryFn: async () => {
       const response = await api.get<Activity[]>(
-        `/api/tasks/${taskId}/activity`,
+        `/api/v1/tasks/${taskId}/activity`,
       );
       return response?.data || [];
     },
@@ -677,7 +677,7 @@ export function useTaskAttachments(taskId: string) {
     queryKey: attachmentKeys.byTask(taskId),
     queryFn: async () => {
       const response = await api.get<Attachment[]>(
-        `/api/tasks/${taskId}/attachments`,
+        `/api/v1/tasks/${taskId}/attachments`,
       );
       return response?.data || [];
     },
@@ -695,7 +695,7 @@ export function useUploadAttachment() {
       formData.append("file", file);
 
       const response = await api.upload<Attachment>(
-        `/api/tasks/${taskId}/attachments`,
+        `/api/v1/tasks/${taskId}/attachments`,
         formData,
         { showSuccessToast: true },
       );
@@ -723,7 +723,7 @@ export function useDeleteAttachment() {
       attachmentId: string;
     }) => {
       const response = await api.delete(
-        `/api/tasks/${taskId}/attachments/${attachmentId}`,
+        `/api/v1/tasks/${taskId}/attachments/${attachmentId}`,
         { showSuccessToast: true },
       );
       return response?.data;

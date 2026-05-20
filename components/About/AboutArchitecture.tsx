@@ -161,7 +161,7 @@ export const AboutArchitecture = () => {
               <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed mb-3">
                 Each authenticated user holds a persistent{" "}
                 <span className="font-mono text-neutral-700 dark:text-neutral-300">
-                  GET /api/notifications/stream
+                  GET /api/v1/notifications/stream
                 </span>{" "}
                 connection. The backend pushes events in real-time — no
                 polling, no WebSocket infrastructure required.

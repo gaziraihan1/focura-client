@@ -32,7 +32,7 @@ const mockJob: JobPosting = {
 // ─── Handlers ─────────────────────────────────────────────────────────────────
 
 export const jobsHandlers = [
-  http.get(`${BASE}/api/jobs/admin/all`, () =>
+  http.get(`${BASE}/api/v1/jobs/admin/all`, () =>
     HttpResponse.json({
       success: true,
       data: {
@@ -42,26 +42,26 @@ export const jobsHandlers = [
     })
   ),
 
-  http.get(`${BASE}/api/jobs/admin/:id`, ({ params }) => {
+  http.get(`${BASE}/api/v1/jobs/admin/:id`, ({ params }) => {
     if (params.id === 'not-found') {
       return new HttpResponse(null, { status: 404 })
     }
     return HttpResponse.json({ success: true, data: mockJob })
   }),
 
-  http.post(`${BASE}/api/jobs/admin`, async () =>
+  http.post(`${BASE}/api/v1/jobs/admin`, async () =>
     HttpResponse.json({ success: true, data: mockJob })
   ),
 
-  http.put(`${BASE}/api/jobs/admin/:id`, async () =>
+  http.put(`${BASE}/api/v1/jobs/admin/:id`, async () =>
     HttpResponse.json({ success: true, data: mockJob })
   ),
 
-  http.delete(`${BASE}/api/jobs/admin/:id`, async () =>
+  http.delete(`${BASE}/api/v1/jobs/admin/:id`, async () =>
     HttpResponse.json({ success: true })
   ),
 
-  http.patch(`${BASE}/api/jobs/admin/:id/pin`, async () =>
+  http.patch(`${BASE}/api/v1/jobs/admin/:id/pin`, async () =>
     HttpResponse.json({
       success: true,
       data: { ...mockJob, isPinned: true },

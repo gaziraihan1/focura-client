@@ -65,8 +65,8 @@ npm install`}</CodeBlock>,
           title: "Configure environment variables",
           desc: <CodeBlock label=".env.local (client)">{`NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="your-shared-secret"  # same as backend
-NEXT_PUBLIC_API_URL="http://localhost:4000"   # client-side
-BACKEND_URL="http://localhost:4000"           # server-side only
+NEXT_PUBLIC_API_URL="http://localhost:5000"   # client-side
+BACKEND_URL="http://localhost:5000"           # server-side only
 GOOGLE_CLIENT_ID="..."
 GOOGLE_CLIENT_SECRET="..."`}</CodeBlock>,
         },

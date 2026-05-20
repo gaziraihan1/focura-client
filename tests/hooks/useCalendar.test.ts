@@ -84,7 +84,7 @@ describe('useCalendarAggregates', () => {
 
   it('sets error state when API fails', async () => {
     server.use(
-      http.get(`${BASE}/api/calendar/aggregates`, () =>
+      http.get(`${BASE}/api/v1/calendar/aggregates`, () =>
         new HttpResponse(null, { status: 500 })
       )
     )
@@ -102,7 +102,7 @@ describe('useCalendarAggregates', () => {
 
   it('sets error state when API returns success:false', async () => {
     server.use(
-      http.get(`${BASE}/api/calendar/aggregates`, () =>
+      http.get(`${BASE}/api/v1/calendar/aggregates`, () =>
         HttpResponse.json({ success: false, message: 'Unauthorized' })
       )
     )
@@ -167,7 +167,7 @@ describe('useCalendarInsights', () => {
 
   it('handles nullable timeAllocation gracefully', async () => {
     server.use(
-      http.get(`${BASE}/api/calendar/insights`, () =>
+      http.get(`${BASE}/api/v1/calendar/insights`, () =>
         HttpResponse.json({
           success: true,
           data: {
@@ -196,7 +196,7 @@ describe('useCalendarInsights', () => {
 
   it('sets error state when API fails', async () => {
     server.use(
-      http.get(`${BASE}/api/calendar/insights`, () =>
+      http.get(`${BASE}/api/v1/calendar/insights`, () =>
         new HttpResponse(null, { status: 500 })
       )
     )
@@ -214,7 +214,7 @@ describe('useCalendarInsights', () => {
 
   it('sets error from API message when success:false', async () => {
     server.use(
-      http.get(`${BASE}/api/calendar/insights`, () =>
+      http.get(`${BASE}/api/v1/calendar/insights`, () =>
         HttpResponse.json({ success: false, message: 'Failed to fetch insights' })
       )
     )
@@ -331,7 +331,7 @@ describe('useGoalCheckpoints', () => {
 
   it('throws with API message when createGoal returns success:false', async () => {
     server.use(
-      http.post(`${BASE}/api/calendar/goals`, () =>
+      http.post(`${BASE}/api/v1/calendar/goals`, () =>
         HttpResponse.json({ success: false, message: 'Quota exceeded' })
       )
     )
@@ -356,7 +356,7 @@ describe('useGoalCheckpoints', () => {
 
   it('sets error state when GET fails', async () => {
     server.use(
-      http.get(`${BASE}/api/calendar/goals`, () =>
+      http.get(`${BASE}/api/v1/calendar/goals`, () =>
         new HttpResponse(null, { status: 500 })
       )
     )
@@ -420,7 +420,7 @@ describe('useSystemEvents', () => {
 
   it('sets error state when API fails', async () => {
     server.use(
-      http.get(`${BASE}/api/calendar/system-events`, () =>
+      http.get(`${BASE}/api/v1/calendar/system-events`, () =>
         new HttpResponse(null, { status: 500 })
       )
     )
@@ -438,7 +438,7 @@ describe('useSystemEvents', () => {
 
   it('sets error from API message when success:false', async () => {
     server.use(
-      http.get(`${BASE}/api/calendar/system-events`, () =>
+      http.get(`${BASE}/api/v1/calendar/system-events`, () =>
         HttpResponse.json({ success: false, message: 'Failed to fetch system events' })
       )
     )
@@ -481,7 +481,7 @@ describe('initializeCalendar', () => {
 
   it('returns false when API returns success:false', async () => {
     server.use(
-      http.post(`${BASE}/api/calendar/initialize`, () =>
+      http.post(`${BASE}/api/v1/calendar/initialize`, () =>
         HttpResponse.json({ success: false, message: 'Already initialized' })
       )
     )
@@ -492,7 +492,7 @@ describe('initializeCalendar', () => {
 
   it('returns false when API throws', async () => {
     server.use(
-      http.post(`${BASE}/api/calendar/initialize`, () =>
+      http.post(`${BASE}/api/v1/calendar/initialize`, () =>
         new HttpResponse(null, { status: 500 })
       )
     )
@@ -517,7 +517,7 @@ describe('recalculateAggregate', () => {
 
   it('returns false when API returns success:false', async () => {
     server.use(
-      http.post(`${BASE}/api/calendar/recalculate`, () =>
+      http.post(`${BASE}/api/v1/calendar/recalculate`, () =>
         HttpResponse.json({ success: false, message: 'Failed to recalculate aggregate' })
       )
     )
@@ -528,7 +528,7 @@ describe('recalculateAggregate', () => {
 
   it('returns false when API throws', async () => {
     server.use(
-      http.post(`${BASE}/api/calendar/recalculate`, () =>
+      http.post(`${BASE}/api/v1/calendar/recalculate`, () =>
         new HttpResponse(null, { status: 500 })
       )
     )

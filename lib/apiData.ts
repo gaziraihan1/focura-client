@@ -59,7 +59,7 @@ export interface ApiSection {
 // ─── Base config ──────────────────────────────────────────────────────────────
 export const API_BASE_URL     = 'https://focura-backend.onrender.com';
 export const API_VERSION      = 'v1';
-export const API_PREFIX       = '/api';
+export const API_PREFIX       = '/api/v1';
 export const FULL_BASE        = `${API_BASE_URL}${API_PREFIX}`;
 
 // ─── Endpoint registry ────────────────────────────────────────────────────────
@@ -186,7 +186,7 @@ const token = data.data.accessToken;`,
       {
         id         : 'auth-refresh',
         method     : 'POST',
-        path       : '/api/auth/refresh',
+        path       : '/api/v1/auth/refresh',
         summary    : 'Refresh access token',
         description: 'Issues a new access token using the HTTP-only refresh token cookie. The old refresh token is rotated (revoked and a new one issued). Implement silent refresh 60 seconds before access token expiry.',
         auth       : 'public',
@@ -221,7 +221,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'auth-logout',
         method     : 'POST',
-        path       : '/api/auth/logout',
+        path       : '/api/v1/auth/logout',
         summary    : 'Logout current session',
         description: 'Revokes the current refresh token in Redis and clears the HTTP-only cookie. The access token remains valid until its 15-minute expiry.',
         auth       : 'auth',
@@ -241,7 +241,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'auth-me',
         method     : 'GET',
-        path       : '/api/auth/me',
+        path       : '/api/v1/auth/profile',
         summary    : 'Get current authenticated user',
         description: 'Returns the full user object for the authenticated caller. Use this to hydrate app state on boot.',
         auth       : 'auth',
@@ -325,7 +325,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'workspace-list',
         method     : 'GET',
-        path       : '/api/workspaces',
+        path       : '/api/v1/workspaces',
         summary    : 'List workspaces for current user',
         description: 'Returns all workspaces the authenticated user belongs to (owned or as a member).',
         auth       : 'auth',
@@ -347,7 +347,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'workspace-create',
         method     : 'POST',
-        path       : '/api/workspaces',
+        path       : '/api/v1/workspaces',
         summary    : 'Create a new workspace',
         description: 'Creates a new workspace. The authenticated user becomes the Owner automatically.',
         auth       : 'auth',
@@ -378,7 +378,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'workspace-get',
         method     : 'GET',
-        path       : '/api/workspaces/:workspaceId',
+        path       : '/api/v1/workspaces/:workspaceId',
         summary    : 'Get workspace by ID',
         description: 'Returns the full workspace object including member count, subscription status, and current plan limits.',
         auth       : 'auth',
@@ -398,7 +398,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'workspace-update',
         method     : 'PUT',
-        path       : '/api/workspaces/:workspaceId',
+        path       : '/api/v1/workspaces/:workspaceId',
         summary    : 'Update workspace settings',
         description: 'Updates workspace metadata. Requires OWNER or ADMIN role.',
         auth       : 'auth',
@@ -423,7 +423,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'workspace-delete',
         method     : 'DELETE',
-        path       : '/api/workspaces/:workspaceId',
+        path       : '/api/v1/workspaces/:workspaceId',
         summary    : 'Delete workspace',
         description: 'Permanently deletes the workspace and all its data — projects, tasks, files, members. Irreversible. OWNER only.',
         auth       : 'auth',
@@ -442,7 +442,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'workspace-members',
         method     : 'GET',
-        path       : '/api/workspaces/:workspaceId/members',
+        path       : '/api/v1/workspaces/:workspaceId/members',
         summary    : 'List workspace members',
         description: 'Returns all members with their roles, joined date, and basic profile info.',
         auth       : 'auth',
@@ -465,7 +465,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'workspace-invite',
         method     : 'POST',
-        path       : '/api/workspaces/:workspaceId/invitations',
+        path       : '/api/v1/workspaces/:workspaceId/invitations',
         summary    : 'Invite a member',
         description: 'Sends an email invitation to join the workspace. The link expires in 7 days. Requires OWNER or ADMIN.',
         auth       : 'auth',
@@ -482,7 +482,7 @@ axios.interceptors.response.use(null, async (error) => {
           { status: 409, description: 'Email already a member' },
         ],
         examples   : [
-          { label: 'Axios', code: `await axios.post(\`/api/workspaces/\${wsId}/invitations\`,\n  { email: 'new@example.com', role: 'MEMBER' },\n  { headers: { Authorization: \`Bearer \${token}\` } }\n);` },
+          { label: 'Axios', code: `await axios.post(\`/api/v1/workspaces/\${wsId}/invitations\`,\n  { email: 'new@example.com', role: 'MEMBER' },\n  { headers: { Authorization: \`Bearer \${token}\` } }\n);` },
         ],
         tags: ['workspaces', 'members'],
       },
@@ -498,7 +498,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'projects-list',
         method     : 'GET',
-        path       : '/api/projects',
+        path       : '/api/v1/projects',
         summary    : 'List projects',
         description: 'Returns all projects the caller has access to. Accepts optional workspaceId filter.',
         auth       : 'auth',
@@ -525,7 +525,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'projects-create',
         method     : 'POST',
-        path       : '/api/projects',
+        path       : '/api/v1/projects',
         summary    : 'Create a project',
         description: 'Creates a new project inside a workspace. Creator becomes Manager automatically.',
         auth       : 'auth',
@@ -543,14 +543,14 @@ axios.interceptors.response.use(null, async (error) => {
           { status: 403, description: 'Project limit reached for this workspace plan' },
         ],
         examples: [
-          { label: 'Axios', code: `const { data } = await axios.post('/api/projects', {\n  name: 'Q3 Launch',\n  workspaceId: 'cm_ws_abc123',\n  color: '#667eea',\n  priority: 'HIGH',\n}, { headers: { Authorization: \`Bearer \${token}\` } });` },
+          { label: 'Axios', code: `const { data } = await axios.post('/api/v1/projects', {\n  name: 'Q3 Launch',\n  workspaceId: 'cm_ws_abc123',\n  color: '#667eea',\n  priority: 'HIGH',\n}, { headers: { Authorization: \`Bearer \${token}\` } });` },
         ],
         tags: ['projects'],
       },
       {
         id         : 'projects-get',
         method     : 'GET',
-        path       : '/api/projects/:projectId',
+        path       : '/api/v1/projects/:projectId',
         summary    : 'Get project by ID',
         description: 'Returns the full project object including members, milestones count, and active views.',
         auth       : 'auth',
@@ -570,7 +570,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'projects-update',
         method     : 'PUT',
-        path       : '/api/projects/:projectId',
+        path       : '/api/v1/projects/:projectId',
         summary    : 'Update project',
         description: 'Updates project metadata. Requires MANAGER or workspace ADMIN/OWNER.',
         auth       : 'auth',
@@ -595,7 +595,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'projects-delete',
         method     : 'DELETE',
-        path       : '/api/projects/:projectId',
+        path       : '/api/v1/projects/:projectId',
         summary    : 'Delete project',
         description: 'Permanently deletes the project and all its tasks, files, and comments. Irreversible.',
         auth       : 'auth',
@@ -623,7 +623,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'tasks-list',
         method     : 'GET',
-        path       : '/api/tasks',
+        path       : '/api/v1/tasks',
         summary    : 'List tasks',
         description: 'Returns tasks with rich filtering. All filter parameters are combinable (AND logic).',
         auth       : 'auth',
@@ -652,15 +652,15 @@ axios.interceptors.response.use(null, async (error) => {
           ]},
         ],
         examples: [
-          { label: 'cURL', code: `curl "${FULL_BASE}/tasks?projectId=cm_proj_xyz&status=IN_PROGRESS&priority=HIGH" \\\n  -H "Authorization: Bearer <token>"` },
-          { label: 'Axios', code: `const { data } = await axios.get('/api/tasks', {\n  params: { projectId, status: 'IN_PROGRESS', overdue: true },\n  headers: { Authorization: \`Bearer \${token}\` },\n});` },
+          { label: 'cURL', code: `curl "${FULL_BASE}/v1/tasks?projectId=cm_proj_xyz&status=IN_PROGRESS&priority=HIGH" \\\n  -H "Authorization: Bearer <token>"` },
+          { label: 'Axios', code: `const { data } = await axios.get('/api/v1/tasks', {\n  params: { projectId, status: 'IN_PROGRESS', overdue: true },\n  headers: { Authorization: \`Bearer \${token}\` },\n});` },
         ],
         tags: ['tasks'],
       },
       {
         id         : 'tasks-create',
         method     : 'POST',
-        path       : '/api/tasks',
+        path       : '/api/v1/tasks',
         summary    : 'Create a task',
         description: 'Creates a new task. Triggers real-time notifications to assignees via SSE.',
         auth       : 'auth',
@@ -690,14 +690,14 @@ axios.interceptors.response.use(null, async (error) => {
           { status: 403, description: 'Not a project member' },
         ],
         examples: [
-          { label: 'Axios', code: `const { data } = await axios.post('/api/tasks', {\n  title       : 'Implement dark mode',\n  workspaceId : 'cm_ws_abc123',\n  projectId   : 'cm_proj_xyz',\n  priority    : 'HIGH',\n  assigneeIds : ['cm_user_123'],\n  dueDate     : '2026-05-01T00:00:00.000Z',\n  focusRequired: true,\n}, { headers: { Authorization: \`Bearer \${token}\` } });` },
+          { label: 'Axios', code: `const { data } = await axios.post('/api/v1/tasks', {\n  title       : 'Implement dark mode',\n  workspaceId : 'cm_ws_abc123',\n  projectId   : 'cm_proj_xyz',\n  priority    : 'HIGH',\n  assigneeIds : ['cm_user_123'],\n  dueDate     : '2026-05-01T00:00:00.000Z',\n  focusRequired: true,\n}, { headers: { Authorization: \`Bearer \${token}\` } });` },
         ],
         tags: ['tasks'],
       },
       {
         id         : 'tasks-get',
         method     : 'GET',
-        path       : '/api/tasks/:id',
+        path       : '/api/v1/tasks/:id',
         summary    : 'Get task by ID',
         description: 'Returns the full task object including subtasks, assignees, labels, time entries, dependencies, and comment count.',
         auth       : 'auth',
@@ -716,7 +716,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'tasks-update',
         method     : 'PUT',
-        path       : '/api/tasks/:id',
+        path       : '/api/v1/  tasks/:id',
         summary    : 'Update task',
         description: 'Full update of a task. All body fields are optional — send only what changes. Triggers SSE notification to assignees on significant changes.',
         auth       : 'auth',
@@ -744,7 +744,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'tasks-update-status',
         method     : 'PATCH',
-        path       : '/api/tasks/:id/status',
+        path       : '/api/v1/tasks/:id/status',
         summary    : 'Update task status only',
         description: 'Lightweight status-only update. Used by Kanban drag-and-drop and quick-status toggles.',
         auth       : 'auth',
@@ -758,14 +758,14 @@ axios.interceptors.response.use(null, async (error) => {
           { status: 200, description: 'Status updated' },
         ],
         examples: [
-          { label: 'Axios', code: `await axios.patch(\`/api/tasks/\${taskId}/status\`,\n  { status: 'IN_PROGRESS' },\n  { headers: { Authorization: \`Bearer \${token}\` } }\n);` },
+          { label: 'Axios', code: `await axios.patch(\`/api/v1/tasks/\${taskId}/status\`,\n  { status: 'IN_PROGRESS' },\n  { headers: { Authorization: \`Bearer \${token}\` } }\n);` },
         ],
         tags: ['tasks'],
       },
       {
         id         : 'tasks-delete',
         method     : 'DELETE',
-        path       : '/api/tasks/:id',
+        path       : '/api/v1/tasks/:id',
         summary    : 'Delete task',
         description: 'Permanently deletes a task, its subtasks, comments, attachments, and time entries.',
         auth       : 'auth',
@@ -793,7 +793,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'comments-list',
         method     : 'GET',
-        path       : '/api/tasks/:taskId/comments',
+        path       : '/api/v1/tasks/:taskId/comments',
         summary    : 'List comments on a task',
         description: 'Returns all top-level comments and their nested replies for the given task.',
         auth       : 'auth',
@@ -818,7 +818,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'comments-create',
         method     : 'POST',
-        path       : '/api/tasks/:taskId/comments',
+        path       : '/api/v1/tasks/:taskId/comments',
         summary    : 'Create a comment',
         description: 'Adds a comment to a task. Include mentionedUserIds to trigger @mention notifications via SSE.',
         auth       : 'auth',
@@ -834,7 +834,7 @@ axios.interceptors.response.use(null, async (error) => {
           { status: 201, description: 'Comment created' },
         ],
         examples: [
-          { label: 'Axios', code: `await axios.post(\`/api/tasks/\${taskId}/comments\`, {\n  content: 'Looks good to me! @raihan can you review?',\n  mentionedUserIds: ['cm_user_raihan'],\n}, { headers: { Authorization: \`Bearer \${token}\` } });` },
+          { label: 'Axios', code: `await axios.post(\`/api/v1/tasks/\${taskId}/comments\`, {\n  content: 'Looks good to me! @raihan can you review?',\n  mentionedUserIds: ['cm_user_raihan'],\n}, { headers: { Authorization: \`Bearer \${token}\` } });` },
         ],
         tags: ['comments'],
       },
@@ -850,7 +850,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'focus-list',
         method     : 'GET',
-        path       : '/api/focus',
+        path       : '/api/v1/focus',
         summary    : 'List focus sessions',
         description: 'Returns the caller\'s focus session history with optional date range filtering.',
         auth       : 'auth',
@@ -880,7 +880,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'focus-create',
         method     : 'POST',
-        path       : '/api/focus',
+        path       : '/api/v1/focus',
         summary    : 'Start a focus session',
         description: 'Logs the start of a focus session. Call PATCH /:id/complete when the session ends.',
         auth       : 'auth',
@@ -896,14 +896,14 @@ axios.interceptors.response.use(null, async (error) => {
           ]},
         ],
         examples: [
-          { label: 'Axios', code: `const { data } = await axios.post('/api/focus', {\n  type    : 'POMODORO',\n  duration: 1500,        // 25 minutes in seconds\n  taskId  : 'cm_task_abc',\n}, { headers: { Authorization: \`Bearer \${token}\` } });` },
+          { label: 'Axios', code: `const { data } = await axios.post('/api/v1/focus', {\n  type    : 'POMODORO',\n  duration: 1500,        // 25 minutes in seconds\n  taskId  : 'cm_task_abc',\n}, { headers: { Authorization: \`Bearer \${token}\` } });` },
         ],
         tags: ['focus'],
       },
       {
         id         : 'focus-complete',
         method     : 'PATCH',
-        path       : '/api/focus/:id/complete',
+        path       : '/api/v1/focus/:id/complete',
         summary    : 'Complete a focus session',
         description: 'Marks a session as completed and records the end time. If linked to a task, creates a time entry on that task automatically.',
         auth       : 'auth',
@@ -914,7 +914,7 @@ axios.interceptors.response.use(null, async (error) => {
           { status: 200, description: 'Session completed, time entry created if task was linked' },
         ],
         examples: [
-          { label: 'Axios', code: `await axios.patch(\`/api/focus/\${sessionId}/complete\`, {},\n  { headers: { Authorization: \`Bearer \${token}\` } }\n);` },
+          { label: 'Axios', code: `await axios.patch(\`/api/v1/focus/\${sessionId}/complete\`, {},\n  { headers: { Authorization: \`Bearer \${token}\` } }\n);` },
         ],
         tags: ['focus'],
       },
@@ -930,7 +930,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'notifications-stream',
         method     : 'GET',
-        path       : '/api/notifications/stream',
+        path       : '/api/v1/notifications/stream',
         summary    : 'Open SSE notification stream',
         description: 'Opens a persistent Server-Sent Events connection. The server pushes notification events in real-time. Reconnect automatically on disconnect with exponential backoff. Events are JSON-serialised notification objects preceded by "data: ".',
         auth       : 'auth',
@@ -952,7 +952,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'notifications-list',
         method     : 'GET',
-        path       : '/api/notifications',
+        path       : '/api/v1/notifications',
         summary    : 'List notifications',
         description: 'Returns paginated notification inbox for the authenticated user.',
         auth       : 'auth',
@@ -972,7 +972,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'notifications-read-all',
         method     : 'PATCH',
-        path       : '/api/notifications/read-all',
+        path       : '/api/v1/notifications/read-all',
         summary    : 'Mark all notifications as read',
         description: 'Marks every unread notification for the caller as read in a single operation.',
         auth       : 'auth',
@@ -980,7 +980,7 @@ axios.interceptors.response.use(null, async (error) => {
           { status: 200, description: 'All notifications marked as read' },
         ],
         examples: [
-          { label: 'Axios', code: `await axios.patch('/api/notifications/read-all', {},\n  { headers: { Authorization: \`Bearer \${token}\` } }\n);` },
+          { label: 'Axios', code: `await axios.patch('/api/v1/notifications/read-all', {},\n  { headers: { Authorization: \`Bearer \${token}\` } }\n);` },
         ],
         tags: ['notifications'],
       },
@@ -996,7 +996,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'files-upload',
         method     : 'POST',
-        path       : '/api/files/upload',
+        path       : '/api/v1/files/upload',
         summary    : 'Upload a file',
         description: 'Accepts multipart/form-data. File is stored on Cloudinary and a File record is created in the database. Rate-limited per user.',
         auth       : 'auth',
@@ -1021,14 +1021,14 @@ axios.interceptors.response.use(null, async (error) => {
         ],
         examples: [
           { label: 'cURL', code: `curl -X POST ${FULL_BASE}/files/upload \\\n  -H "Authorization: Bearer <token>" \\\n  -F "file=@report.pdf" \\\n  -F "workspaceId=cm_ws_abc123" \\\n  -F "taskId=cm_task_xyz"` },
-          { label: 'Axios', code: `const form = new FormData();\nform.append('file', fileInput.files[0]);\nform.append('workspaceId', wsId);\nform.append('taskId', taskId);\n\nconst { data } = await axios.post('/api/files/upload', form, {\n  headers: {\n    Authorization: \`Bearer \${token}\`,\n    'Content-Type': 'multipart/form-data',\n  },\n});` },
+          { label: 'Axios', code: `const form = new FormData();\nform.append('file', fileInput.files[0]);\nform.append('workspaceId', wsId);\nform.append('taskId', taskId);\n\nconst { data } = await axios.post('/api/v1/files/upload', form, {\n  headers: {\n    Authorization: \`Bearer \${token}\`,\n    'Content-Type': 'multipart/form-data',\n  },\n});` },
         ],
         tags: ['files'],
       },
       {
         id         : 'files-list',
         method     : 'GET',
-        path       : '/api/files',
+        path       : '/api/v1/files',
         summary    : 'List workspace files',
         description: 'Returns all files in a workspace with optional folder and task filters.',
         auth       : 'auth',
@@ -1051,7 +1051,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'files-delete',
         method     : 'DELETE',
-        path       : '/api/files/:fileId',
+        path       : '/api/v1/files/:fileId',
         summary    : 'Delete a file',
         description: 'Deletes the file record from the database and removes it from Cloudinary. Frees used storage immediately.',
         auth       : 'auth',
@@ -1079,7 +1079,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'contact-submit',
         method     : 'POST',
-        path       : '/api/contact',
+        path       : '/api/v1/contact',
         summary    : 'Submit contact form',
         description: 'Public endpoint — no authentication required. Rate-limited to 3 requests per IP per hour and 2 per email per 24 hours via Upstash Redis.',
         auth       : 'public',
@@ -1115,7 +1115,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'jobs-list',
         method     : 'GET',
-        path       : '/api/jobs',
+        path       : '/api/v1/jobs',
         summary    : 'List open job postings',
         description: 'Returns all OPEN job postings. Supports department, locationType, type, and search filtering.',
         auth       : 'public',
@@ -1139,7 +1139,7 @@ axios.interceptors.response.use(null, async (error) => {
       {
         id         : 'jobs-get',
         method     : 'GET',
-        path       : '/api/jobs/:slug',
+        path       : '/api/v1/jobs/:slug',
         summary    : 'Get single job posting by slug',
         description: 'Returns the full job posting including description, requirements, benefits, and application instructions.',
         auth       : 'public',

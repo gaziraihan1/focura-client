@@ -42,23 +42,23 @@ export const mockSecondaryTask: Task = {
 const ok = (data: unknown) => HttpResponse.json({ success: true, data })
 
 export const dailyTaskHandlers = [
-  http.get(`${BASE}/api/daily-tasks`, () =>
+  http.get(`${BASE}/api/v1/daily-tasks`, () =>
     ok({
       primaryTask: mockDailyTask,
       secondaryTasks: [mockSecondaryTask],
     })
   ),
 
-  http.post(`${BASE}/api/daily-tasks`, async ({ request }) => {
+  http.post(`${BASE}/api/v1/daily-tasks`, async ({ request }) => {
     const body = await request.json() as { taskId: string; type: string }
     return ok({ taskId: body.taskId, type: body.type })
   }),
 
-  http.delete(`${BASE}/api/daily-tasks/:taskId`, () => ok(null)),
+  http.delete(`${BASE}/api/v1/daily-tasks/:taskId`, () => ok(null)),
 ]
 
 export const emptyDailyTaskHandlers = [
-  http.get(`${BASE}/api/daily-tasks`, () =>
+  http.get(`${BASE}/api/v1/daily-tasks`, () =>
     ok({ primaryTask: null, secondaryTasks: [] })
   ),
 ]

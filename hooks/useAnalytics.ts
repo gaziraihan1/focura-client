@@ -158,7 +158,7 @@ export function useAnalyticsOverview(workspaceId: string) {
     queryKey: analyticsKeys.overview(workspaceId),
     queryFn: async () => {
       const response = await api.get<AnalyticsOverview>(
-        `/api/analytics/${workspaceId}/overview`
+        `/api/v1/analytics/${workspaceId}/overview`
       );
       return response?.data as AnalyticsOverview;
     },
@@ -174,7 +174,7 @@ export function useTaskTrends(workspaceId: string, days: number = 30, options?: 
     queryKey: analyticsKeys.taskTrends(workspaceId, days),
     queryFn: async () => {
       const response = await api.get<TaskTrends>(
-        `/api/analytics/${workspaceId}/tasks/trends?days=${days}`
+        `/api/v1/analytics/${workspaceId}/tasks/trends?days=${days}`
       );
       return response?.data as TaskTrends;
     },
@@ -190,7 +190,7 @@ export function useProjectHealth(workspaceId: string, options?: {enabled?: boole
     queryKey: analyticsKeys.projectHealth(workspaceId),
     queryFn: async () => {
       const response = await api.get<ProjectHealth[]>(
-        `/api/analytics/${workspaceId}/projects/health`
+        `/api/v1/analytics/${workspaceId}/projects/health`
       );
       return response?.data as ProjectHealth[];
     },
@@ -206,7 +206,7 @@ export function useMemberContribution(workspaceId: string, options?: {enabled?: 
     queryKey: analyticsKeys.memberContribution(workspaceId),
     queryFn: async () => {
       const response = await api.get<MemberContribution[]>(
-        `/api/analytics/${workspaceId}/members/contribution`
+        `/api/v1/analytics/${workspaceId}/members/contribution`
       );
       return response?.data as MemberContribution[];
     },
@@ -222,7 +222,7 @@ export function useTimeSummary(workspaceId: string, days: number = 7, options?: 
     queryKey: analyticsKeys.timeSummary(workspaceId, days),
     queryFn: async () => {
       const response = await api.get<TimeSummary>(
-        `/api/analytics/${workspaceId}/time/summary?days=${days}`
+        `/api/v1/analytics/${workspaceId}/time/summary?days=${days}`
       );
       return response?.data as TimeSummary;
     },
@@ -238,7 +238,7 @@ export function useActivityTrends(workspaceId: string, days: number = 30, option
     queryKey: analyticsKeys.activityTrends(workspaceId, days),
     queryFn: async () => {
       const response = await api.get<ActivityTrends>(
-        `/api/analytics/${workspaceId}/activity/trends?days=${days}`
+        `/api/v1/analytics/${workspaceId}/activity/trends?days=${days}`
       );
       return response?.data as ActivityTrends;
     },
@@ -254,7 +254,7 @@ export function useWorkload(workspaceId: string, options?: {enabled?: boolean}) 
     queryKey: analyticsKeys.workload(workspaceId),
     queryFn: async () => {
       const response = await api.get<WorkloadMember[]>(
-        `/api/analytics/${workspaceId}/workload`
+        `/api/v1/analytics/${workspaceId}/workload`
       );
       return response?.data as WorkloadMember[];
     },

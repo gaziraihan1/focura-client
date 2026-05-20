@@ -18,7 +18,7 @@ export function useSubtasks(parentTaskId: string) {
     queryKey: subtaskKeys.all(parentTaskId),
     queryFn:  async (): Promise<Subtask[]> => {
       const res = await api.get<Subtask[]>(
-        `/api/tasks/${parentTaskId}/subtasks`,
+        `/api/v1/tasks/${parentTaskId}/subtasks`,
       );
       return res?.data ?? [];
     },
@@ -32,7 +32,7 @@ export function useSubtaskStats(parentTaskId: string) {
     queryKey: subtaskKeys.stats(parentTaskId),
     queryFn:  async (): Promise<SubtaskStats> => {
       const res = await api.get<SubtaskStats>(
-        `/api/tasks/${parentTaskId}/subtasks/stats`,
+        `/api/v1/tasks/${parentTaskId}/subtasks/stats`,
       );
       return res?.data as SubtaskStats;
     },
@@ -47,7 +47,7 @@ export function useCreateSubtask(parentTaskId: string) {
   return useMutation({
     mutationFn: async (data: CreateSubtaskDto): Promise<Subtask> => {
       const res = await api.post<Subtask>(
-        `/api/tasks/${parentTaskId}/subtasks`,
+        `/api/v1/tasks/${parentTaskId}/subtasks`,
         data,
         { showSuccessToast: false },
       );
@@ -81,7 +81,7 @@ export function useUpdateSubtask(parentTaskId: string) {
       data:      UpdateSubtaskDto;
     }): Promise<Subtask> => {
       const res = await api.put<Subtask>(
-        `/api/tasks/${parentTaskId}/subtasks/${subtaskId}`,
+        `/api/v1/tasks/${parentTaskId}/subtasks/${subtaskId}`,
         data,
         { showSuccessToast: false },
       );
@@ -109,7 +109,7 @@ export function useUpdateSubtaskStatus(parentTaskId: string) {
       status:    SubtaskStatus;
     }): Promise<Subtask> => {
       const res = await api.patch<Subtask>(
-        `/api/tasks/${parentTaskId}/subtasks/${subtaskId}/status`,
+        `/api/v1/tasks/${parentTaskId}/subtasks/${subtaskId}/status`,
         { status },
         { showSuccessToast: false },
       );
@@ -142,7 +142,7 @@ export function useDeleteSubtask(parentTaskId: string) {
   return useMutation({
     mutationFn: async (subtaskId: string): Promise<void> => {
       await api.delete(
-        `/api/tasks/${parentTaskId}/subtasks/${subtaskId}`,
+        `/api/v1/tasks/${parentTaskId}/subtasks/${subtaskId}`,
         { showSuccessToast: false },
       );
     },

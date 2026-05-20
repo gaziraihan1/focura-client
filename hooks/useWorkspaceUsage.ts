@@ -19,7 +19,7 @@ export function useWorkspaceUsage(
       if (!workspaceId) throw new Error('Workspace ID is required');
 
       const response = await api.get<WorkspaceUsageData>(
-        `/api/workspace-usage/${workspaceId}/usage`
+        `/api/v1/workspace-usage/${workspaceId}/usage`
       );
 
       return response.data;

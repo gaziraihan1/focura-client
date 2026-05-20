@@ -22,7 +22,7 @@ export const metadata: Metadata = {
  * Sections:
  * 1. ContactHero    — headline, meta pills, response SLA badge
  * 2. ContactContent — 5-col grid:
- *    Left (3 cols):  ContactForm   — react-hook-form + zod + axios POST /api/contact
+ *    Left (3 cols):  ContactForm   — react-hook-form + zod + axios POST /api/v1/contact
  *    Right (2 cols): ContactInfo   — email cards, office hours, category list
  *                    ContactFAQ    — accordion FAQ (8 items, 4 categories)
  */

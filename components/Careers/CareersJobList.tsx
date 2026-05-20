@@ -36,7 +36,7 @@ const CareersJobList = () => {
     setError(null);
     try {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/jobs`, // ✅ Public endpoint
+        `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/jobs`, // ✅ Public endpoint
         { params: { limit: 50 } }
       );
       // Handle both wrapped { success: true, jobs: [] } and unwrapped responses
@@ -56,7 +56,7 @@ const CareersJobList = () => {
     setError(null);
     try {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/jobs/${slug}` // ✅ Public endpoint (NOT /admin/)
+        `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/jobs/${slug}` // ✅ Public endpoint (NOT /admin/)
       );
       
       // Handle response structure: { success: true,  JobPosting } OR just JobPosting

@@ -68,7 +68,7 @@ export const ApiDocsHero = () => {
               <div className='divide-y divide-neutral-100 dark:divide-neutral-800'>
                 {[
                   { label: 'Production',  url: FULL_BASE,     dot: 'bg-emerald-500' },
-                  { label: 'Local dev',   url: 'http://localhost:5000/api', dot: 'bg-blue-500' },
+                  { label: 'Local dev',   url: 'http://localhost:5000/api/v1', dot: 'bg-blue-500' },
                 ].map(({ label, url, dot }) => (
                   <div key={label} className='px-4 py-3 group'>
                     <div className='flex items-center gap-2 mb-1'>

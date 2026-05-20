@@ -76,7 +76,7 @@ const ok = (data: unknown) => HttpResponse.json({ success: true, data })
 
 export const taskHandlers = [
   // task.handlers.ts — fix the tasks list handler shape
-http.get(`${BASE}/api/tasks`, () =>
+http.get(`${BASE}/api/v1/tasks`, () =>
   HttpResponse.json({
     success: true,
     data: {
@@ -93,51 +93,51 @@ http.get(`${BASE}/api/tasks`, () =>
   })
 ),
 
-  http.get(`${BASE}/api/tasks/stats`, () => ok(mockTaskStats)),
+  http.get(`${BASE}/api/v1/tasks/stats`, () => ok(mockTaskStats)),
 
-  http.get(`${BASE}/api/tasks/quota/personal`, () => ok(mockPersonalQuota)),
+  http.get(`${BASE}/api/v1/tasks/quota/personal`, () => ok(mockPersonalQuota)),
 
-  http.get(`${BASE}/api/tasks/quota/workspace/:workspaceId`, () => ok(mockWorkspaceQuota)),
+  http.get(`${BASE}/api/v1/tasks/quota/workspace/:workspaceId`, () => ok(mockWorkspaceQuota)),
 
-  http.get(`${BASE}/api/tasks/:taskId`, ({ params }) => {
+  http.get(`${BASE}/api/v1/tasks/:taskId`, ({ params }) => {
     if (params.taskId === 'not-found') {
       return HttpResponse.json({ success: false, message: 'Not found' }, { status: 404 })
     }
     return ok(mockTask)
   }),
 
-  http.post(`${BASE}/api/tasks`, async ({ request }) => {
+  http.post(`${BASE}/api/v1/tasks`, async ({ request }) => {
     const body = await request.json() as Partial<Task>
     return ok({ ...mockTask, ...body, id: 'task-new' })
   }),
 
-  http.put(`${BASE}/api/tasks/:taskId`, async ({ request }) => {
+  http.put(`${BASE}/api/v1/tasks/:taskId`, async ({ request }) => {
     const body = await request.json() as Partial<Task>
     return ok({ ...mockTask, ...body })
   }),
 
-  http.patch(`${BASE}/api/tasks/:taskId/status`, async ({ request }) => {
+  http.patch(`${BASE}/api/v1/tasks/:taskId/status`, async ({ request }) => {
     const body = await request.json() as { status: Task['status'] }
     return ok({ ...mockTask, status: body.status })
   }),
 
-  http.delete(`${BASE}/api/tasks/:taskId`, () => ok(null)),
+  http.delete(`${BASE}/api/v1/tasks/:taskId`, () => ok(null)),
 
-  http.get(`${BASE}/api/tasks/:taskId/comments`, () => ok([])),
+  http.get(`${BASE}/api/v1/tasks/:taskId/comments`, () => ok([])),
 
-  http.post(`${BASE}/api/tasks/:taskId/comments`, async ({ request }) => {
+  http.post(`${BASE}/api/v1/tasks/:taskId/comments`, async ({ request }) => {
     const body = await request.json() as { content: string }
     return ok({ id: 'comment-1', content: body.content, taskId: 'task-1', createdAt: new Date().toISOString() })
   }),
 
-  http.get(`${BASE}/api/tasks/:taskId/activity`, () => ok([])),
+  http.get(`${BASE}/api/v1/tasks/:taskId/activity`, () => ok([])),
 
-  http.get(`${BASE}/api/tasks/:taskId/attachments`, () => ok([])),
+  http.get(`${BASE}/api/v1/tasks/:taskId/attachments`, () => ok([])),
 
-  http.delete(`${BASE}/api/tasks/:taskId/attachments/:attachmentId`, () => ok(null)),
+  http.delete(`${BASE}/api/v1/tasks/:taskId/attachments/:attachmentId`, () => ok(null)),
   // Add these to taskHandlers array in tests/mock/handlers/task.handlers.ts
 
-http.put(`${BASE}/api/tasks/:taskId/comments/:commentId`, async ({ request, params }) => {
+http.put(`${BASE}/api/v1/tasks/:taskId/comments/:commentId`, async ({ request, params }) => {
   const body = await request.json() as { content: string }
   return ok({
     id: params.commentId as string,
@@ -149,5 +149,5 @@ http.put(`${BASE}/api/tasks/:taskId/comments/:commentId`, async ({ request, para
   })
 }),
 
-http.delete(`${BASE}/api/tasks/:taskId/comments/:commentId`, () => ok(null)),
+http.delete(`${BASE}/api/v1/tasks/:taskId/comments/:commentId`, () => ok(null)),
 ]

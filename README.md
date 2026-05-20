@@ -201,7 +201,7 @@ useTask() hook triggered
     ↓
 Optimistic update: prepend to React Query cache
     ↓
-POST /api/tasks (with JWT token)
+POST /api/v1/tasks (with JWT token)
     ↓
 Axios interceptor attaches token
     ↓
@@ -221,7 +221,7 @@ UI reflects changes (already visible via optimistic update)
 ```
 useNotifications hook — browser opens SSE connection
     ↓
-GET /api/notifications/stream?token=<accessToken>
+GET /api/v1/notifications/stream?token=<accessToken>
     ↓
 Backend verifies token, extracts userId
     ↓
@@ -444,7 +444,7 @@ focura-client/
 
 2. **Token Exchange**
    - NextAuth generates HMAC-signed proof
-   - Proof sent to backend's `/api/auth/exchange`
+   - Proof sent to backend's `/api/v1/auth/exchange`
    - Backend validates proof and issues RS256 JWT tokens
 
 3. **Token Storage**
@@ -501,53 +501,53 @@ const response = await api.get<NotificationsResponse>('/api/notifications');
 const notifications = response?.data; // NotificationsResponse
 
 // POST / PATCH / DELETE follow the same pattern
-await api.post('/api/tasks', { title: 'New Task' });
+await api.post('/api/v1/tasks', { title: 'New Task' });
 ```
 
 ### **Backend API Endpoints**
 
-**Base URL:** `/api`
+**Base URL:** `/api/v1`
 
 #### Authentication
-- `POST /api/auth/exchange` - Exchange for RS256 tokens
-- `POST /api/auth/refresh` - Rotate refresh token
-- `POST /api/auth/logout` - Logout (single/all devices)
+- `POST /api/v1/auth/exchange` - Exchange for RS256 tokens
+- `POST /api/v1/auth/refresh` - Rotate refresh token
+- `POST /api/v1/auth/logout` - Logout (single/all devices)
 
 #### Workspaces
-- `GET /api/workspaces` - List user workspaces
-- `POST /api/workspaces` - Create workspace
-- `PATCH /api/workspaces/:id` - Update workspace
-- `DELETE /api/workspaces/:id` - Delete workspace
+- `GET /api/v1/workspaces` - List user workspaces
+- `POST /api/v1/workspaces` - Create workspace
+- `PATCH /api/v1/workspaces/:id` - Update workspace
+- `DELETE /api/v1/workspaces/:id` - Delete workspace
 
 #### Tasks
-- `GET /api/tasks` - List tasks (paginated)
-- `GET /api/tasks/stats` - Task statistics
-- `POST /api/tasks` - Create task
-- `PATCH /api/tasks/:id` - Update task
-- `DELETE /api/tasks/:id` - Delete task
-- `POST /api/tasks/:id/comments` - Add comment
+- `GET /api/v1/tasks` - List tasks (paginated)
+- `GET /api/v1/tasks/stats` - Task statistics
+- `POST /api/v1/tasks` - Create task
+- `PATCH /api/v1/tasks/:id` - Update task
+- `DELETE /api/v1/tasks/:id` - Delete task
+- `POST /api/v1/tasks/:id/comments` - Add comment
 
 #### Projects
-- `GET /api/projects` - List projects
-- `POST /api/projects` - Create project
-- `PATCH /api/projects/:id` - Update project
-- `DELETE /api/projects/:id` - Delete project
+- `GET /api/v1/projects` - List projects
+- `POST /api/v1/projects` - Create project
+- `PATCH /api/v1/projects/:id` - Update project
+- `DELETE /api/v1/projects/:id` - Delete project
 
 #### Notifications
-- `GET /api/notifications/stream` - SSE stream (token via query param, Redis-backed)
-- `GET /api/notifications` - Paginated list (cursor-based, read replica)
-- `GET /api/notifications/unread-count` - Badge count (primary DB)
-- `PATCH /api/notifications/:id/read` - Mark as read
-- `PATCH /api/notifications/read-all` - Mark all as read
-- `DELETE /api/notifications/:id` - Delete notification
-- `DELETE /api/notifications/read/all` - Delete all read
+- `GET /api/v1/notifications/stream` - SSE stream (token via query param, Redis-backed)
+- `GET /api/v1/notifications` - Paginated list (cursor-based, read replica)
+- `GET /api/v1/notifications/unread-count` - Badge count (primary DB)
+- `PATCH /api/v1/notifications/:id/read` - Mark as read
+- `PATCH /api/v1/notifications/read-all` - Mark all as read
+- `DELETE /api/v1/notifications/:id` - Delete notification
+- `DELETE /api/v1/notifications/read/all` - Delete all read
 
 #### More Endpoints
-- `GET /api/labels` - List labels
-- `GET /api/calendar` - Calendar events
-- `GET /api/analytics` - Workspace analytics
-- `GET /api/storage` - Storage usage
-- `POST /api/upload` - File upload
+- `GET /api/v1/labels` - List labels
+- `GET /api/v1/calendar` - Calendar events
+- `GET /api/v1/analytics` - Workspace analytics
+- `GET /api/v1/storage` - Storage usage
+- `POST /api/v1/upload` - File upload
 
 For complete API documentation, see backend [README](https://github.com/gaziraihan1/focura-backend)
 

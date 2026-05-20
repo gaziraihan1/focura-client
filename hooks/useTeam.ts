@@ -21,7 +21,7 @@ export function useTeamMembers(workspaceId?: string) {
       const params = new URLSearchParams();
       if (workspaceId) params.append('workspaceId', workspaceId);
 
-      const endpoint = `/api/user/workspace-members${params.toString() ? `?${params.toString()}` : ''}`;
+      const endpoint = `/api/v1/user/workspace-members${params.toString() ? `?${params.toString()}` : ''}`;
       const response = await api.get<TeamMember[]>(endpoint);
       return response.data || [];
     },

@@ -125,23 +125,23 @@ const ok = (data: unknown) => HttpResponse.json({ success: true, data })
 // ── Handlers ──────────────────────────────────────────────────────────────────
 
 export const calendarHandlers = [
-  // GET /api/calendar/aggregates
-  http.get(`${BASE}/api/calendar/aggregates`, () =>
+  // GET /api/v1/calendar/aggregates
+  http.get(`${BASE}/api/v1/calendar/aggregates`, () =>
     ok([mockAggregate, mockAggregateOverCapacity])
   ),
 
-  // GET /api/calendar/insights
-  http.get(`${BASE}/api/calendar/insights`, () =>
+  // GET /api/v1/calendar/insights
+  http.get(`${BASE}/api/v1/calendar/insights`, () =>
     ok(mockInsights)
   ),
 
-  // GET /api/calendar/goals
-  http.get(`${BASE}/api/calendar/goals`, () =>
+  // GET /api/v1/calendar/goals
+  http.get(`${BASE}/api/v1/calendar/goals`, () =>
     ok([mockGoalCheckpoint, mockGoalCheckpoint2])
   ),
 
-  // POST /api/calendar/goals  (createGoal)
-  http.post(`${BASE}/api/calendar/goals`, async ({ request }) => {
+  // POST /api/v1/calendar/goals  (createGoal)
+  http.post(`${BASE}/api/v1/calendar/goals`, async ({ request }) => {
     const body = await request.json() as {
       title: string
       type: string
@@ -161,18 +161,18 @@ export const calendarHandlers = [
     return ok(created)
   }),
 
-  // GET /api/calendar/system-events
-  http.get(`${BASE}/api/calendar/system-events`, () =>
+  // GET /api/v1/calendar/system-events
+  http.get(`${BASE}/api/v1/calendar/system-events`, () =>
     ok([mockSystemEvent, mockSystemEvent2])
   ),
 
-  // POST /api/calendar/initialize
-  http.post(`${BASE}/api/calendar/initialize`, () =>
+  // POST /api/v1/calendar/initialize
+  http.post(`${BASE}/api/v1/calendar/initialize`, () =>
     HttpResponse.json({ success: true })
   ),
 
-  // POST /api/calendar/recalculate
-  http.post(`${BASE}/api/calendar/recalculate`, () =>
+  // POST /api/v1/calendar/recalculate
+  http.post(`${BASE}/api/v1/calendar/recalculate`, () =>
     HttpResponse.json({ success: true })
   ),
 ]

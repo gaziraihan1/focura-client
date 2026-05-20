@@ -56,7 +56,7 @@ function mockContactList(
   pagination = defaultPagination
 ) {
   server.use(
-    http.get(`${BASE}/api/contact`, () =>
+    http.get(`${BASE}/api/v1/contact`, () =>
       HttpResponse.json({ success: true, messages, pagination })
     )
   )
@@ -130,7 +130,7 @@ describe('useContactMessages', () => {
 
   it('returns empty messages array when API returns null messages', async () => {
     server.use(
-      http.get(`${BASE}/api/contact`, () =>
+      http.get(`${BASE}/api/v1/contact`, () =>
         HttpResponse.json({
           success:    true,
           messages:   null,
@@ -151,7 +151,7 @@ describe('useContactMessages', () => {
 
   it('returns fallback response when API returns null', async () => {
     server.use(
-      http.get(`${BASE}/api/contact`, () =>
+      http.get(`${BASE}/api/v1/contact`, () =>
         HttpResponse.json(null)
       )
     )
@@ -168,7 +168,7 @@ describe('useContactMessages', () => {
 
   it('enters error state when API returns 500', async () => {
     server.use(
-      http.get(`${BASE}/api/contact`, () =>
+      http.get(`${BASE}/api/v1/contact`, () =>
         new HttpResponse(null, { status: 500 })
       )
     )
@@ -182,7 +182,7 @@ describe('useContactMessages', () => {
 
   it('enters error state when API returns 403', async () => {
     server.use(
-      http.get(`${BASE}/api/contact`, () =>
+      http.get(`${BASE}/api/v1/contact`, () =>
         new HttpResponse(null, { status: 403 })
       )
     )
@@ -200,7 +200,7 @@ describe('useContactMessages', () => {
     let capturedUrl: string | undefined
 
     server.use(
-      http.get(`${BASE}/api/contact`, ({ request }) => {
+      http.get(`${BASE}/api/v1/contact`, ({ request }) => {
         capturedUrl = request.url
         return HttpResponse.json({
           success:    true,
@@ -223,7 +223,7 @@ describe('useContactMessages', () => {
     let capturedUrl: string | undefined
 
     server.use(
-      http.get(`${BASE}/api/contact`, ({ request }) => {
+      http.get(`${BASE}/api/v1/contact`, ({ request }) => {
         capturedUrl = request.url
         return HttpResponse.json({
           success:    true,
@@ -246,7 +246,7 @@ describe('useContactMessages', () => {
     let capturedUrl: string | undefined
 
     server.use(
-      http.get(`${BASE}/api/contact`, ({ request }) => {
+      http.get(`${BASE}/api/v1/contact`, ({ request }) => {
         capturedUrl = request.url
         return HttpResponse.json({
           success:    true,
@@ -268,7 +268,7 @@ describe('useContactMessages', () => {
 
   it('reflects totalPages from the API response', async () => {
     server.use(
-      http.get(`${BASE}/api/contact`, () =>
+      http.get(`${BASE}/api/v1/contact`, () =>
         HttpResponse.json({
           success:  true,
           messages: defaultMessages,
@@ -293,7 +293,7 @@ describe('useContactMessages', () => {
     let capturedUrl: string | undefined
 
     server.use(
-      http.get(`${BASE}/api/contact`, ({ request }) => {
+      http.get(`${BASE}/api/v1/contact`, ({ request }) => {
         capturedUrl = request.url
         return HttpResponse.json({
           success:    true,
@@ -317,7 +317,7 @@ describe('useContactMessages', () => {
     let capturedUrl: string | undefined
 
     server.use(
-      http.get(`${BASE}/api/contact`, ({ request }) => {
+      http.get(`${BASE}/api/v1/contact`, ({ request }) => {
         capturedUrl = request.url
         return HttpResponse.json({
           success:    true,
@@ -391,7 +391,7 @@ describe('useContactMessages', () => {
     let capturedUrl: string | undefined
 
     server.use(
-      http.get(`${BASE}/api/contact`, ({ request }) => {
+      http.get(`${BASE}/api/v1/contact`, ({ request }) => {
         capturedUrl = request.url
         return HttpResponse.json({
           success:    true,
@@ -415,7 +415,7 @@ describe('useContactMessages', () => {
     let capturedUrl: string | undefined
 
     server.use(
-      http.get(`${BASE}/api/contact`, ({ request }) => {
+      http.get(`${BASE}/api/v1/contact`, ({ request }) => {
         capturedUrl = request.url
         return HttpResponse.json({
           success:    true,
@@ -454,7 +454,7 @@ describe('useContactMessages', () => {
     let capturedUrl: string | undefined
 
     server.use(
-      http.get(`${BASE}/api/contact`, ({ request }) => {
+      http.get(`${BASE}/api/v1/contact`, ({ request }) => {
         capturedUrl = request.url
         return HttpResponse.json({
           success:    true,
@@ -514,7 +514,7 @@ describe('useContactMessages', () => {
 
   it('handles empty messages array from API gracefully', async () => {
     server.use(
-      http.get(`${BASE}/api/contact`, () =>
+      http.get(`${BASE}/api/v1/contact`, () =>
         HttpResponse.json({
           success:    true,
           messages:   [],

@@ -144,31 +144,31 @@ export const mockWorkload: WorkloadMember[] = [
 const ok = (data: unknown) => HttpResponse.json({ success: true, data })
 
 export const analyticsHandlers = [
-  http.get(`${BASE}/api/analytics/:workspaceId/overview`, () =>
+  http.get(`${BASE}/api/v1/analytics/:workspaceId/overview`, () =>
     ok(mockAnalyticsOverview)
   ),
 
-  http.get(`${BASE}/api/analytics/:workspaceId/tasks/trends`, () =>
+  http.get(`${BASE}/api/v1/analytics/:workspaceId/tasks/trends`, () =>
     ok(mockTaskTrends)
   ),
 
-  http.get(`${BASE}/api/analytics/:workspaceId/projects/health`, () =>
+  http.get(`${BASE}/api/v1/analytics/:workspaceId/projects/health`, () =>
     ok(mockProjectHealth)
   ),
 
-  http.get(`${BASE}/api/analytics/:workspaceId/members/contribution`, () =>
+  http.get(`${BASE}/api/v1/analytics/:workspaceId/members/contribution`, () =>
     ok(mockMemberContribution)
   ),
 
-  http.get(`${BASE}/api/analytics/:workspaceId/time/summary`, () =>
+  http.get(`${BASE}/api/v1/analytics/:workspaceId/time/summary`, () =>
     ok(mockTimeSummary)
   ),
 
-  http.get(`${BASE}/api/analytics/:workspaceId/activity/trends`, () =>
+  http.get(`${BASE}/api/v1/analytics/:workspaceId/activity/trends`, () =>
     ok(mockActivityTrends)
   ),
 
-  http.get(`${BASE}/api/analytics/:workspaceId/workload`, () =>
+  http.get(`${BASE}/api/v1/analytics/:workspaceId/workload`, () =>
     ok(mockWorkload)
   ),
 ]

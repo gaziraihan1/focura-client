@@ -111,7 +111,7 @@ export function useActivities(filters?: ActivityFilters) {
       }
       
       const queryString = params.toString();
-      const endpoint = `/api/activities${queryString ? `?${queryString}` : ''}`;
+      const endpoint = `/api/v1/activities${queryString ? `?${queryString}` : ''}`;
       
       const response = await api.get<Activity[]>(endpoint, {
         showErrorToast: true,
@@ -146,7 +146,7 @@ export function useInfiniteActivities(filters?: Omit<ActivityFilters, 'offset'>)
       params.append('offset', pageParam.toString());
       
       const queryString = params.toString();
-      const endpoint = `/api/activities${queryString ? `?${queryString}` : ''}`;
+      const endpoint = `/api/v1/activities${queryString ? `?${queryString}` : ''}`;
       
       const response = await api.get<{ data: Activity[]; meta: ActivityMeta }>(endpoint);
       return response.data;
@@ -188,7 +188,7 @@ export function useWorkspaceActivities(
       }
       
       const queryString = params.toString();
-      const endpoint = `/api/activities/workspace/${workspaceId}${
+      const endpoint = `/api/v1/activities/workspace/${workspaceId}${
         queryString ? `?${queryString}` : ''
       }`;
       
@@ -222,7 +222,7 @@ export function useTaskActivities(
       }
       
       const queryString = params.toString();
-      const endpoint = `/api/activities/task/${taskId}${
+      const endpoint = `/api/v1/activities/task/${taskId}${
         queryString ? `?${queryString}` : ''
       }`;
       
@@ -250,7 +250,7 @@ export function useActivityStats(workspaceId?: string) {
       }
       
       const queryString = params.toString();
-      const endpoint = `/api/activities/stats${queryString ? `?${queryString}` : ''}`;
+      const endpoint = `/api/v1/activities/stats${queryString ? `?${queryString}` : ''}`;
       
       const response = await api.get<ActivityStats>(endpoint);
       return response.data || { total: 0, today: 0, byAction: {} };
@@ -267,7 +267,7 @@ export function useDeleteActivity() {
   
   return useMutation({
     mutationFn: async (activityId: string) => {
-      const response = await api.delete(`/api/activities/${activityId}`, {
+      const response = await api.delete(`/api/v1/activities/${activityId}`, {
         showSuccessToast: true,
       });
       return response.data;
@@ -297,7 +297,7 @@ export function useClearActivities() {
       }
       
       const queryString = params.toString();
-      const endpoint = `/api/activities/clear/all${
+      const endpoint = `/api/v1/activities/clear/all${
         queryString ? `?${queryString}` : ''
       }`;
       

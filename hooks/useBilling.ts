@@ -62,7 +62,7 @@ export function useWorkspaceSubscription(workspaceId: string) {
     queryKey: billingKeys.subscription(workspaceId),
     queryFn:  async () => {
       const res = await api.get<WorkspaceSubscription>(
-        `/api/workspaces/${workspaceId}/billing/subscription`,
+        `/api/v1/workspaces/${workspaceId}/billing/subscription`,
       );
         console.log('sub raw res:', res);  // ← add this
 
@@ -80,7 +80,7 @@ export function useWorkspaceInvoices(workspaceId: string) {
     queryKey: billingKeys.invoices(workspaceId),
     queryFn:  async () => {
       const res = await api.get<InvoiceData[]>(
-        `/api/workspaces/${workspaceId}/billing/invoices`,
+        `/api/v1/workspaces/${workspaceId}/billing/invoices`,
       );
         console.log('invoices raw res:', res);  // ← add this
 
@@ -99,7 +99,7 @@ export function useCreateCheckout(workspaceId: string) {
   return useMutation({
     mutationFn: async (vars: { planName: Exclude<PlanName, 'FREE'>; billingCycle: BillingCycle }) => {
       const res = await api.post<{ url: string }>(
-        `/api/workspaces/${workspaceId}/billing/create-checkout-session`,
+        `/api/v1/workspaces/${workspaceId}/billing/create-checkout-session`,
         vars,
       );
             console.log('checkout res:', res); // ← add this temporarily
@@ -120,7 +120,7 @@ export function useCreatePortal(workspaceId: string) {
   return useMutation<string | undefined, Error, void>({
     mutationFn: async () => {
       const res = await api.post<{ url: string }>(
-        `/api/workspaces/${workspaceId}/billing/create-portal-session`,
+        `/api/v1/workspaces/${workspaceId}/billing/create-portal-session`,
       );
       return res?.data?.url;
     },
@@ -140,7 +140,7 @@ export function useChangePlan(workspaceId: string) {
   return useMutation({
     mutationFn: async (vars: { newPlanName: PlanName; billingCycle?: BillingCycle }) => {
       const res = await api.post(
-        `/api/workspaces/${workspaceId}/billing/change-plan`,
+        `/api/v1/workspaces/${workspaceId}/billing/change-plan`,
         vars,
       );
       return res?.data;
@@ -177,7 +177,7 @@ export function useCancelSubscription(workspaceId: string) {
   >({
     mutationFn: async (vars) => {
       const res = await api.post<CancelSubscriptionResponse>(
-        `/api/workspaces/${workspaceId}/billing/cancel-subscription`,
+        `/api/v1/workspaces/${workspaceId}/billing/cancel-subscription`,
         vars ?? {}
       );
       return res!;
@@ -197,7 +197,7 @@ export function useReactivateSubscription(workspaceId: string) {
   return useMutation<ReactivateSubscriptionResponse, Error, void>({
     mutationFn: async () => {
       const res = await api.post<ReactivateSubscriptionResponse>(
-        `/api/workspaces/${workspaceId}/billing/reactivate-subscription`,
+        `/api/v1/workspaces/${workspaceId}/billing/reactivate-subscription`,
       );
       return res!;
     },

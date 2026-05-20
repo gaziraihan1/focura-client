@@ -52,12 +52,12 @@ const ok = (data: unknown) => HttpResponse.json({ success: true, data })
 
 export const featureHandlers = [
   // Admin check
-  http.get(`${BASE}/api/features/admin/me`, () =>
+  http.get(`${BASE}/api/v1/features/admin/me`, () =>
     ok({ isAdmin: false })
   ),
 
   // List features
-  http.get(`${BASE}/api/features`, () =>
+  http.get(`${BASE}/api/v1/features`, () =>
     // Hook reads res?.data and res?.pagination directly off the response
     HttpResponse.json({
       data: mockFeaturesResponse.data,
@@ -66,7 +66,7 @@ export const featureHandlers = [
   ),
 
   // Get single feature
-  http.get(`${BASE}/api/features/:id`, ({ params }) => {
+  http.get(`${BASE}/api/v1/features/:id`, ({ params }) => {
     if (params.id === 'not-found') {
       return HttpResponse.json({ success: false, message: 'Not found' }, { status: 404 })
     }
@@ -74,7 +74,7 @@ export const featureHandlers = [
   }),
 
   // Create feature
-  http.post(`${BASE}/api/features`, async ({ request }) => {
+  http.post(`${BASE}/api/v1/features`, async ({ request }) => {
     const body = await request.json() as Partial<FeatureRequest>
     return ok({
       ...mockFeature,
@@ -87,16 +87,16 @@ export const featureHandlers = [
   }),
 
   // Update status (admin)
-  http.patch(`${BASE}/api/features/:id/status`, async ({ request, params }) => {
+  http.patch(`${BASE}/api/v1/features/:id/status`, async ({ request, params }) => {
     const body = await request.json() as { status: string; adminNote?: string }
     return ok({ ...mockFeature, id: params.id as string, ...body })
   }),
 
   // Delete feature
-  http.delete(`${BASE}/api/features/:id`, () => ok(null)),
+  http.delete(`${BASE}/api/v1/features/:id`, () => ok(null)),
 
   // Vote
-  http.post(`${BASE}/api/features/:id/vote`, async ({ request, params }) => {
+  http.post(`${BASE}/api/v1/features/:id/vote`, async ({ request, params }) => {
     const body = await request.json() as { type: string }
     const feature = {
       ...mockFeature,
