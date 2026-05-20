@@ -306,7 +306,7 @@ describe('useGoalCheckpoints', () => {
 
   it('throws when createGoal fails', async () => {
     server.use(
-      http.post(`${BASE}/api/calendar/goals`, () =>
+      http.post(`${BASE}/api/v1/calendar/goals`, () =>
         new HttpResponse(null, { status: 400 })
       )
     )

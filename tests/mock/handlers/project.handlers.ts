@@ -99,7 +99,7 @@ export const projectHandlers = [
   }),
 
   // Update project
-  http.patch(`${BASE}/api/v1  /projects/:projectId`, async ({ request }) => {
+  http.patch(`${BASE}/api/v1/projects/:projectId`, async ({ request }) => {
     const body = await request.json() as Partial<ProjectDetails>
     return ok({ ...mockProjectDetails, ...body })
   }),
