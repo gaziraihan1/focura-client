@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import * as argon2 from "argon2";
 import crypto from "crypto";
-import { sendVerificationEmail } from "@/lib/email";
+import { EmailError, sendVerificationEmail } from "@/lib/email";
 import { Prisma } from "@prisma/client";
 import { limitLogin } from "@/lib/limiter";
 
@@ -111,10 +111,20 @@ export async function POST(req: Request) {
 
     // Send email
     try {
-      await sendVerificationEmail(email, verificationToken);
-    } catch (err) {
-      console.error("Failed to send verification email:", err);
-    }
+  await sendVerificationEmail(email, verificationToken);
+} catch (error) {
+  // Roll back: delete the created user and token
+  await prisma.verificationToken.deleteMany({ where: { identifier: email } });
+  await prisma.user.delete({ where: { email } });
+
+  if (error instanceof EmailError) {
+    return NextResponse.json(
+      { error: "Failed to send verification email. Please try again." },
+      { status: 500 }
+    );
+  }
+  throw error;
+}
 
     return NextResponse.json(
       {
@@ -128,6 +138,7 @@ export async function POST(req: Request) {
         },
       },
       { status: 201 }
+      
     );
   } catch (error) {
     console.error("Registration error:", error);

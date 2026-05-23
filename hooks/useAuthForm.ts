@@ -1,9 +1,10 @@
-import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-hot-toast"; // or: import toast from "react-hot-toast"
+import { useState } from "react";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email format"),
@@ -23,7 +24,6 @@ interface UseAuthFormProps {
 }
 
 export function useAuthForm({ mode }: UseAuthFormProps) {
-  const [error, setError] = useState("");
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const router = useRouter();
 
@@ -38,8 +38,6 @@ export function useAuthForm({ mode }: UseAuthFormProps) {
   });
 
   const onSubmit = async (values: AuthFormData) => {
-    setError("");
-
     try {
       if (mode === "login") {
         const result = await signIn("credentials", {
@@ -49,15 +47,17 @@ export function useAuthForm({ mode }: UseAuthFormProps) {
         });
 
         if (result?.error) {
-          setError("Invalid email or password. Please try again.");
+          toast.error("Invalid email or password. Please try again.");
           return;
         }
 
         if (result?.ok) {
+          toast.success("Welcome back!");
           router.push("/dashboard");
         }
       } else {
         const registerValues = values as RegisterFormData;
+
         const res = await fetch("/api/auth/register", {
           method: "POST",
           body: JSON.stringify({
@@ -71,31 +71,26 @@ export function useAuthForm({ mode }: UseAuthFormProps) {
         const data = await res.json();
 
         if (!res.ok) {
-          if (res.status === 400 && data.error?.includes("already exists")) {
-            setError(
-              "An account with this email already exists. Please login instead."
-            );
+          if (res.status === 429) {
+            toast.error("Too many attempts. Please try again later.");
+          } else if (data.error?.toLowerCase().includes("already exists")) {
+            toast.error("An account with this email already exists. Please login instead.");
           } else {
-            setError(data.error || "Registration failed. Please try again.");
+            toast.error(data.error || "Registration failed. Please try again.");
           }
           return;
         }
 
-        alert(
-          "Registration successful! Please check your email to verify your account."
-        );
+        toast.success("Registration successful! Please check your email to verify your account.");
         router.push("/authentication/login?verifyEmail=true");
       }
     } catch (err) {
       console.error("Auth error:", err);
-      setError(
-        "Something went wrong. Please check your connection and try again."
-      );
+      toast.error("Something went wrong. Please check your connection and try again.");
     }
   };
 
   const handleGoogle = async () => {
-    setError("");
     setIsGoogleLoading(true);
 
     try {
@@ -104,7 +99,7 @@ export function useAuthForm({ mode }: UseAuthFormProps) {
       });
     } catch (err) {
       console.error("Google sign-in error:", err);
-      setError("Google sign-in failed. Please try again.");
+      toast.error("Google sign-in failed. Please try again.");
       setIsGoogleLoading(false);
     }
   };
@@ -116,7 +111,6 @@ export function useAuthForm({ mode }: UseAuthFormProps) {
     handleSubmit,
     errors,
     isSubmitting,
-    error,
     isGoogleLoading,
     isLoading,
     onSubmit,
