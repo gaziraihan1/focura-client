@@ -6,19 +6,18 @@ interface AuthFormFooterProps {
 
 export function AuthFormFooter({ mode }: AuthFormFooterProps) {
   return (
-    <p className="text-center text-foreground/60 mt-6 text-sm">
-      {mode === "login"
-        ? "Don't have an account?"
-        : "Already have an account?"}
+    <p className="text-center text-xs text-muted-foreground mt-7">
+      {mode === "login" ? "No account yet?" : "Already have an account?"}
+      {" "}
       <Link
         href={
           mode === "login"
             ? "/authentication/registration"
             : "/authentication/login"
         }
-        className="text-primary ml-1 font-medium hover:underline"
+        className="text-primary font-semibold hover:underline underline-offset-2 transition-colors duration-150"
       >
-        {mode === "login" ? "Register" : "Login"}
+        {mode === "login" ? "Create one" : "Sign in"}
       </Link>
     </p>
   );

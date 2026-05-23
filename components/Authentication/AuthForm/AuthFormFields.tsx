@@ -3,7 +3,6 @@ import { Mail, Lock, User } from "lucide-react";
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 import { AuthFormInput } from "./AuthFormInput";
 
-// Define the exact form data types
 interface LoginFormData {
   email: string;
   password: string;
@@ -22,18 +21,13 @@ interface AuthFormFieldsProps {
   isLoading: boolean;
 }
 
-export function AuthFormFields({
-  mode,
-  register,
-  errors,
-  isLoading,
-}: AuthFormFieldsProps) {
+export function AuthFormFields({ mode, register, errors, isLoading }: AuthFormFieldsProps) {
   return (
-    <>
+    <div className="space-y-3">
       {mode === "register" && (
         <AuthFormInput<RegisterFormData>
           name="name"
-          placeholder="Full Name"
+          placeholder="Full name"
           icon={User}
           register={register as UseFormRegister<RegisterFormData>}
           errors={errors as FieldErrors<RegisterFormData>}
@@ -44,7 +38,7 @@ export function AuthFormFields({
       <AuthFormInput<AuthFormData>
         name="email"
         type="email"
-        placeholder="Email Address"
+        placeholder="Email address"
         icon={Mail}
         register={register}
         errors={errors}
@@ -62,15 +56,15 @@ export function AuthFormFields({
       />
 
       {mode === "login" && (
-        <div className="text-right -mt-2">
+        <div className="flex justify-end">
           <Link
             href="/authentication/forgot-password"
-            className="text-sm text-primary hover:underline"
+            className="text-xs text-muted-foreground hover:text-primary transition-colors duration-150 underline-offset-2 hover:underline"
           >
             Forgot password?
           </Link>
         </div>
       )}
-    </>
+    </div>
   );
 }

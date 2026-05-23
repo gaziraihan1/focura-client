@@ -16,38 +16,56 @@ export function AuthFormButtons({
   onGoogleClick,
 }: AuthFormButtonsProps) {
   return (
-    <>
+    <div className="space-y-3 pt-2">
+      {/* Primary CTA */}
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium hover:opacity-90 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="
+          group relative w-full py-3 rounded-xl
+          bg-primary text-primary-foreground text-sm font-semibold tracking-wide
+          overflow-hidden transition-all duration-200
+          hover:brightness-110 active:scale-[0.98]
+          disabled:opacity-50 disabled:cursor-not-allowed
+          flex items-center justify-center gap-2
+          shadow-md shadow-primary/30
+        "
       >
-        {isSubmitting && <Loader2 className="animate-spin" size={18} />}
-        {mode === "login" ? "Login" : "Register"}
+        {/* Shimmer sweep on hover */}
+        <span className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-linear-to-r from-transparent via-white/15 to-transparent" />
+        {isSubmitting && <Loader2 className="animate-spin" size={16} />}
+        {mode === "login" ? "Sign in" : "Create account"}
       </button>
 
-      <div className="relative flex items-center justify-center">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-border"></div>
-        </div>
-        <div className="relative bg-background/40 px-4">
-          <span className="text-foreground/50 text-sm">or</span>
-        </div>
+      {/* Divider */}
+      <div className="flex items-center gap-3">
+        <div className="flex-1 h-px bg-border/60" />
+        <span className="text-[11px] tracking-widest uppercase text-muted-foreground/60 font-medium">or</span>
+        <div className="flex-1 h-px bg-border/60" />
       </div>
 
+      {/* Google OAuth */}
       <button
         type="button"
         disabled={isLoading}
         onClick={onGoogleClick}
-        className="w-full py-3 rounded-xl bg-background text-foreground border border-border hover:bg-primary/10 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="
+          group w-full py-3 rounded-xl
+          bg-transparent text-foreground text-sm font-medium
+          border border-border/70
+          hover:border-primary/40 hover:bg-primary/5
+          transition-all duration-200 active:scale-[0.98]
+          disabled:opacity-50 disabled:cursor-not-allowed
+          flex items-center justify-center gap-2.5
+        "
       >
         {isGoogleLoading ? (
-          <Loader2 className="animate-spin" size={18} />
+          <Loader2 className="animate-spin" size={16} />
         ) : (
-          <Chrome size={18} />
+          <Chrome size={16} className="text-muted-foreground group-hover:text-primary transition-colors duration-150" />
         )}
         Continue with Google
       </button>
-    </>
+    </div>
   );
 }

@@ -4,13 +4,32 @@ interface AuthFormHeaderProps {
 
 export function AuthFormHeader({ mode }: AuthFormHeaderProps) {
   return (
-    <>
-      <h1 className="text-3xl font-bold text-foreground text-center">
-        {mode === "login" ? "Welcome Back" : "Create Your Account"}
-      </h1>
-      <p className="text-foreground/60 text-center mt-2">
-        {mode === "login" ? "Login to continue" : "Join Focura for free"}
+    <div className="space-y-1">
+      {/* Eyebrow label */}
+      <p className="text-xs font-semibold tracking-[0.2em] uppercase text-primary/80">
+        {mode === "login" ? "Welcome back" : "Get started"}
       </p>
-    </>
+
+      {/* Large display heading */}
+      <h1 className="text-4xl font-bold tracking-tight text-foreground leading-tight">
+        {mode === "login" ? (
+          <>
+            Sign in to <br />
+            <span className="text-primary">Focura</span>
+          </>
+        ) : (
+          <>
+            Create your <br />
+            <span className="text-primary">account</span>
+          </>
+        )}
+      </h1>
+
+      <p className="text-sm text-muted-foreground pt-1">
+        {mode === "login"
+          ? "Enter your credentials to continue."
+          : "Join Focura for free — no credit card required."}
+      </p>
+    </div>
   );
 }
