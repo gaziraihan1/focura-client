@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
-export default function AuthSuccess() {
+function AuthSuccessInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -22,5 +22,13 @@ export default function AuthSuccess() {
         <h2 className="text-xl font-semibold text-foreground">Success! Redirecting...</h2>
       </div>
     </div>
+  );
+}
+
+export default function AuthSuccess() {
+  return (
+    <Suspense>
+      <AuthSuccessInner />
+    </Suspense>
   );
 }

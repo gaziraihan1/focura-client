@@ -3,6 +3,7 @@ import AuthForm from "@/components/Authentication/AuthForm";
 import { authOptions } from "@/lib/auth/authOptions";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 export default async function LoginPage() {
   const session = await getServerSession(authOptions);
@@ -12,10 +13,11 @@ export default async function LoginPage() {
   }
   return (
     <>
-
-      <section className="min-h-screen flex items-center justify-center bg-background px-6 py-20">
-        <AuthForm mode="login" />
-      </section>
+      <Suspense>
+        <section className="min-h-screen flex items-center justify-center bg-background px-6 py-20">
+          <AuthForm mode="login" />
+        </section>
+      </Suspense>
     </>
   );
 }
