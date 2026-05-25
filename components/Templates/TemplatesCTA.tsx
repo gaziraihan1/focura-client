@@ -6,7 +6,7 @@ const links = [
     icon       : Zap,
     label      : 'Try Focura free',
     sublabel   : 'Start a workspace in 30 seconds',
-    href       : 'https://focura-client.vercel.app',
+    href       : '/dashboard/create-workspace',
     external   : true,
     primary    : true,
   },

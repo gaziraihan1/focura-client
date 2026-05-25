@@ -13,7 +13,7 @@ const PLAN_OPTIONS = [
     plan: "PRO" as Plan,
     label: "Pro",
     desc: "For growing teams",
-    price: "$12/mo",
+    price: "$19/mo",
   },
 ];
 

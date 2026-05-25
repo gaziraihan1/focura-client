@@ -1,5 +1,5 @@
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,6 +26,9 @@ interface UseAuthFormProps {
 export function useAuthForm({ mode }: UseAuthFormProps) {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
 
   const schema = mode === "login" ? loginSchema : registerSchema;
 
@@ -51,10 +54,13 @@ export function useAuthForm({ mode }: UseAuthFormProps) {
           return;
         }
 
-        if (result?.ok) {
-          toast.success("Welcome back!");
-          router.push("/dashboard");
-        }
+       if (result?.ok) {
+  toast.success("Welcome back!");
+  const successUrl = callbackUrl !== "/dashboard"
+    ? `/authentication/success?callbackUrl=${encodeURIComponent(callbackUrl)}`
+    : "/authentication/success";
+  router.push(successUrl);
+}
       } else {
         const registerValues = values as RegisterFormData;
 
@@ -90,20 +96,19 @@ export function useAuthForm({ mode }: UseAuthFormProps) {
     }
   };
 
-  const handleGoogle = async () => {
-    setIsGoogleLoading(true);
-
-    try {
-      await signIn("google", {
-        callbackUrl: "/authentication/success",
-      });
-    } catch (err) {
-      console.error("Google sign-in error:", err);
-      toast.error("Google sign-in failed. Please try again.");
-      setIsGoogleLoading(false);
-    }
-  };
-
+ const handleGoogle = async () => {
+  setIsGoogleLoading(true);
+  try {
+    const googleCallback = callbackUrl !== "/dashboard"
+      ? `/authentication/success?callbackUrl=${encodeURIComponent(callbackUrl)}`
+      : "/authentication/success";
+    await signIn("google", { callbackUrl: googleCallback });
+  } catch (err) {
+    console.error("Google sign-in error:", err);
+    toast.error("Google sign-in failed. Please try again.");
+    setIsGoogleLoading(false);
+  }
+};
   const isLoading = isSubmitting || isGoogleLoading;
 
   return {

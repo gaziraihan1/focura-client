@@ -33,14 +33,69 @@ npm install`}</CodeBlock>,
         },
         {
           title: "Configure environment variables",
-          desc: <CodeBlock label=".env (backend)">{`DATABASE_URL="postgresql://..."
-DIRECT_URL="postgresql://..."        # Supabase direct (no pooler)
-UPSTASH_REDIS_URL="rediss://..."
-UPSTASH_REDIS_TOKEN="..."
-JWT_PRIVATE_KEY="$(cat keys/private.pem | base64)"
-JWT_PUBLIC_KEY="$(cat keys/public.pem | base64)"
-NEXTAUTH_SECRET="your-shared-secret"  # same value as client
-PORT=4000`}</CodeBlock>,
+          desc: <CodeBlock label=".env (backend)">{`# Runtime (pooler)
+DATABASE_URL="postgresql://..."
+# Direct (for migrations / introspection)
+DIRECT_URL="postgresql://..."
+
+# Server
+NODE_ENV="development"
+PORT=5000
+CLIENT_URL="http://localhost:3000"
+
+ACCESS_TOKEN_SECRET="your secret here"   # use a secure random string
+NEXTAUTH_SECRET="your secret here"   # use a secure random string
+NEXTAUTH_URL="http://localhost:3000"
+NEXT_PUBLIC_API_URL=http://localhost:5000
+# NEXT_PUBLIC_API_URL="https://focura-backend-vr75.onrender.com"  # use this to connect to deployed backend
+
+# Development - load from files
+JWT_PRIVATE_KEY_PATH=./keys/private.pem
+JWT_PUBLIC_KEY_PATH=./keys/public.pem
+
+REDIS_URL=redis://127.0.0.1:6379
+
+EMAIL_SERVER_HOST="smtp.gmail.com"
+EMAIL_SERVER_PORT=587
+EMAIL_SERVER_USER="your email here"   
+EMAIL_SERVER_PASSWORD="your email password or app password"
+EMAIL_FROM="Focura <your email here>"
+UPSTASH_REDIS_REST_URL="https://us1-focura-redis.upstash.io"
+UPSTASH_REDIS_REST_TOKEN="your upstash rest token here"
+JWT_EXPIRES_IN="7d"
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME="your-cloud-name"
+CLOUDINARY_API_KEY="your-api-key"
+CLOUDINARY_API_SECRET="your-api-secret"
+
+# Set to 'paddle' to use Paddle. Set to 'stripe' to revert. No code changes.
+PAYMENT_PROVIDER=paddle
+
+# ── Paddle Billing ───────────────────────────────────────────────────────────
+# PADDLE_API_KEY="your paddle api key here"
+# PADDLE_WEBHOOK_SECRET="your paddle webhook secret here"
+# PADDLE_PRICE_PRO_MONTHLY="your paddle price id here"
+# PADDLE_PRICE_PRO_YEARLY="your paddle price id here"
+# PADDLE_PRICE_BUSINESS_MONTHLY="your paddle price id here"
+# PADDLE_PRICE_BUSINESS_YEARLY="your paddle price id here"
+
+# ── Stripe Billing (if needed) ───────────────────────────────────────────────────────────
+STRIPE_PRICE_PRO_MONTHLY="stripe price id here"
+STRIPE_PRICE_PRO_YEARLY="stripe price id here"
+STRIPE_PRICE_BUSINESS_MONTHLY="stripe price id here"
+STRIPE_PRICE_BUSINESS_YEARLY="stripe price id here"
+
+STRIPE_WEBHOOK_SECRET="stripe webhook secret here"
+STRIPE_SECRET_KEY="stripe secret key here"
+
+CACHE_TTL_WORKSPACE_METADATA=3600    # Workspace by ID/slug (default: 1 hour)
+CACHE_TTL_LABEL_LIST=1800            # Label lists (default: 30 minutes)
+CACHE_TTL_ANALYTICS=3600             # Analytics data (default: 1 hour)
+CACHE_TTL_WORKSPACE_OVERVIEW=3600    # Workspace overview (default: 1 hour)
+CACHE_TTL_WORKSPACE_STATS=1800  
+
+FOCURA_ADMIN_IDS="comma-separated list of user IDs that can access the admin dashboard"`}</CodeBlock>,
         },
         {
           title: "Run Prisma migrations and seed",
@@ -50,7 +105,7 @@ npx prisma db seed`}</CodeBlock>,
         {
           title: "Start the backend",
           desc: <CodeBlock label="focura-backend/">{`npm run dev
-# Server running on http://localhost:4000`}</CodeBlock>,
+# Server running on http://localhost:5000`}</CodeBlock>,
         },
       ]} />
 
@@ -63,12 +118,24 @@ npm install`}</CodeBlock>,
         },
         {
           title: "Configure environment variables",
-          desc: <CodeBlock label=".env.local (client)">{`NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-shared-secret"  # same as backend
-NEXT_PUBLIC_API_URL="http://localhost:5000"   # client-side
-BACKEND_URL="http://localhost:5000"           # server-side only
-GOOGLE_CLIENT_ID="..."
-GOOGLE_CLIENT_SECRET="..."`}</CodeBlock>,
+          desc: <CodeBlock label=".env.local (client)">{`DATABASE_URL="postgresql://..."
+DIRECT_URL="postgresql://..."
+NODE_ENV="development"
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your secreyt here"   # use a secure random string
+NEXT_PUBLIC_API_URL=http://localhost:5000
+# NEXT_PUBLIC_API_URL="https://focura-backend-vr75.onrender.com"  # use this to connect to deployed backend
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+EMAIL_SERVER_HOST="smtp.gmail.com"
+EMAIL_SERVER_PORT=587
+EMAIL_SERVER_USER="your email here"   
+EMAIL_SERVER_PASSWORD="your email password or app password"
+EMAIL_FROM="From <your email here></your>"
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="your-cloud-name"
+CLOUDINARY_API_KEY="your-api-key"
+CLOUDINARY_API_SECRET="your-api-secret"
+NODE_OPTIONS=--dns-result-order=ipv4first`}</CodeBlock>,
         },
         {
           title: "Start the frontend",

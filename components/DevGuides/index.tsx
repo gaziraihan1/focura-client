@@ -50,13 +50,13 @@ export function Warn({ children }: { children: ReactNode }) {
 
 export function CodeBlock({ children, label }: { children: string; label?: string }) {
   return (
-    <div className="mb-4">
+    <div className="mb-4 ">
       {label && (
         <div className="flex items-center gap-2 px-3 py-1.5 bg-muted border border-border border-b-0 rounded-t-lg">
           <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">{label}</span>
         </div>
       )}
-      <pre className={`bg-muted border border-border text-xs font-mono leading-relaxed p-4 overflow-x-auto ${label ? "rounded-b-lg rounded-tr-lg" : "rounded-lg"}`}>
+      <pre className={`bg-muted border border-border text-xs font-mono leading-relaxed text-wrap p-4 ${label ? "rounded-b-lg" : "rounded-lg"}`}>
         <code className="text-foreground">{children}</code>
       </pre>
     </div>

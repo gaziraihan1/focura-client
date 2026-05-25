@@ -3,15 +3,24 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronDown, Settings, LogOut, LucideIcon, Sparkles, Lock } from "lucide-react";
+import { ChevronDown, ChevronRight, Settings, LogOut, LucideIcon, Sparkles, Lock } from "lucide-react";
 import { Workspace } from "@/hooks/useWorkspace";
+import { useState } from "react";
 
-interface NavigationItem {
+interface NavigationChild {
   name: string;
   href: string;
   icon: LucideIcon;
   match: (path: string) => boolean;
-  locked?: boolean; // ← new
+}
+
+interface NavigationItem {
+  name: string;
+  href?: string;
+  icon: LucideIcon;
+  match: (path: string) => boolean;
+  locked?: boolean;
+  children?: NavigationChild[];
 }
 
 interface Member {
@@ -19,12 +28,6 @@ interface Member {
   role: string;
 }
 
-// interface Workspace {
-//   id: string;
-//   name: string;
-//   color?: string | null;
-//   logo?: string | null;
-// }
 
 interface WorkspaceSidebarProps {
   workspace: Workspace;
@@ -57,6 +60,19 @@ export function WorkspaceSidebar({
 
   const freeItems    = navigation.filter((i) => !i.locked);
   const lockedItems  = navigation.filter((i) => i.locked);
+  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>(() =>
+  // Auto-expand any parent whose child is currently active
+  navigation.reduce((acc, item) => {
+    if (item.children?.some((c) => c.match(pathname))) {
+      acc[item.name] = true;
+    }
+    return acc;
+  }, {} as Record<string, boolean>)
+);
+
+const toggleExpanded = (name: string) => {
+  setExpandedItems((prev) => ({ ...prev, [name]: !prev[name] }));
+};
 
   return (
     <>
@@ -110,24 +126,84 @@ export function WorkspaceSidebar({
   ) : (
     <>
       {freeItems.map((item) => {
-        const isActive = item.match(pathname);
-        return (
+  const isActive = item.match(pathname);
+  const hasChildren = !!item.children?.length;
+  const isExpanded = expandedItems[item.name] ?? false;
+
+  return (
+    <div key={item.name}>
+      <div
+        className={`flex items-center gap-3 px-3 py-2 rounded-lg transition ${
+          isActive
+            ? "bg-primary text-primary-foreground"
+            : "text-foreground hover:bg-accent"
+        }`}
+      >
+        {/* If no href, the whole row just toggles the dropdown */}
+        {item.href ? (
           <Link
-            key={item.name}
             href={item.href}
             onClick={onSidebarClose}
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition ${
+            className="flex items-center gap-3 flex-1 min-w-0 "
+          >
+            <item.icon size={18} className="shrink-0" />
+            <span className="truncate">{item.name}</span>
+          </Link>
+        ) : (
+          <button
+            onClick={() => hasChildren && toggleExpanded(item.name)}
+            className="flex items-center gap-3 flex-1 min-w-0 text-left"
+          >
+            <item.icon size={18} className="shrink-0" />
+            <span className="truncate">{item.name}</span>
+          </button>
+        )}
+
+        {/* Chevron — separate toggle, only when there are children */}
+        {hasChildren && (
+          <button
+            onClick={() => toggleExpanded(item.name)}
+            className={`shrink-0 p-0.5 rounded transition-colors  ${
               isActive
-                ? "bg-primary text-primary-foreground"
-                : "text-foreground hover:bg-accent"
+                ? "hover:bg-primary-foreground/20"
+                : "hover:bg-accent-foreground/10"
             }`}
           >
-            <item.icon size={18} />
-            <span>{item.name}</span>
-          </Link>
-        );
-      })}
+            {isExpanded ? (
+              <ChevronDown size={14} />
+            ) : (
+              <ChevronRight size={14} />
+            )}
+          </button>
+        )}
+      </div>
 
+      {/* Children dropdown */}
+      {hasChildren && isExpanded && (
+        <div className=" mt-1.5 flex flex-col gap-1 pl-3">
+          {item.children!.map((child) => {
+            const isChildActive = child.match(pathname);
+            return (
+              <Link
+                key={child.name}
+                href={child.href}
+                onClick={onSidebarClose}
+                className={`flex items-center gap-2.5 text-sm px-2.5 py-1.5 rounded-md transition ${
+                  isChildActive
+                    ? "bg-primary/15 text-primary font-medium"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                }`}
+              >
+                <child.icon size={15} className="shrink-0" />
+                <span>{child.name}</span>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+})}
       {lockedItems.length > 0 && (
         <div className="pt-3">
           <div className="space-y-1 opacity-45 pointer-events-none select-none">

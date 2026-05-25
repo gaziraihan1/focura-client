@@ -62,7 +62,18 @@ export function useCreateWorkspacePage() {
       return;
     }
 
-    createWorkspace.mutate(formData);
+    try {
+    const workspace = await createWorkspace.mutateAsync(formData);
+
+    if (formData.plan === "PRO") {
+      router.push(`/dashboard/workspaces/${workspace.slug}/billing/upgrade`);
+    } else {
+      router.push(`/dashboard/workspaces/${workspace.slug}`);
+    }
+  } catch {
+    console.error("Failed to create workspace");
+    setErrors({ form: "An error occurred while creating the workspace. Please try again." });
+  }
   };
 
   const handleCancel = () => {

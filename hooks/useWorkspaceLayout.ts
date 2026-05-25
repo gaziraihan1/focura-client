@@ -21,6 +21,9 @@ import {
   UserLock,
   CreditCard,
   Megaphone,
+  List,
+  Kanban,
+  CalendarDays,
 } from "lucide-react";
 
 type TabType = "overview" | "projects" | "members";
@@ -31,13 +34,13 @@ interface UseWorkspaceDetailPageProps {
 interface UseWorkspaceLayoutProps {
   slug: string;
   pathname: string;
-  isFree: boolean
+  isFree: boolean;
 }
 
 export function useWorkspaceLayout({
   slug,
   pathname,
-  isFree
+  isFree,
 }: UseWorkspaceLayoutProps) {
   const router = useRouter();
   const { data: session } = useSession();
@@ -74,10 +77,32 @@ export function useWorkspaceLayout({
     },
     {
       name: "Tasks",
-      href: `/dashboard/workspaces/${slug}/tasks`,
       icon: CheckSquare,
       match: (path: string) => path.includes(`/${slug}/tasks`),
+      children: [
+        {
+          name: "List",
+          href: `/dashboard/workspaces/${slug}/tasks`,
+          icon: List,
+          match: (path: string) =>
+            path === `/dashboard/workspaces/${slug}/tasks`,
+        },
+        {
+          name: "Kanban",
+          href: `/dashboard/workspaces/${slug}/tasks/kanban-view`,
+          icon: Kanban,
+          match: (path: string) => path.includes(`/${slug}/tasks/kanban-view`),
+        },
+        {
+          name: "Calendar",
+          href: `/dashboard/workspaces/${slug}/tasks/calendar-view`,
+          icon: CalendarDays,
+          match: (path: string) =>
+            path.includes(`/${slug}/tasks/calendar-view`),
+        },
+      ],
     },
+
     {
       name: "Projects",
       href: `/dashboard/workspaces/${slug}/projects`,
@@ -96,17 +121,15 @@ export function useWorkspaceLayout({
       icon: Users,
       match: (path: string) => path.includes(`/${slug}/team`),
     },
-{
-            name: "Labels",
-            href: `/dashboard/workspaces/${slug}/label`,
-            icon: Tags,
-            match: (path: string) =>
-              path === `/dashboard/workspaces/${slug}/label`,
-          },
+    {
+      name: "Labels",
+      href: `/dashboard/workspaces/${slug}/label`,
+      icon: Tags,
+      match: (path: string) => path === `/dashboard/workspaces/${slug}/label`,
+    },
     // ── Admin-only items ───────────────────────────────────────────────────
     ...(canManageWorkspace
       ? [
-          
           {
             name: "Files",
             href: `/dashboard/workspaces/${slug}/files`,
@@ -183,13 +206,13 @@ export function useWorkspaceDetailPage({ slug }: UseWorkspaceDetailPageProps) {
 
   const {
     data: overview,
-    isPending,   // ← true when no cached data exists and query hasn't resolved
+    isPending, // ← true when no cached data exists and query hasn't resolved
     isError,
   } = useWorkspaceOverview(slug);
 
   const workspace = overview?.workspace;
-  const stats     = overview?.stats;
-  const members   = (overview?.workspace.members ?? []) as WorkspaceMember[];
+  const stats = overview?.stats;
+  const members = (overview?.workspace.members ?? []) as WorkspaceMember[];
 
   const { isAdmin, isOwner, canCreateProjects } =
     useWorkspaceRoleFromWorkspace(slug);
@@ -199,7 +222,7 @@ export function useWorkspaceDetailPage({ slug }: UseWorkspaceDetailPageProps) {
     stats,
     members,
     isLoading: isPending,
-    isError: isError && !overview,  // suppress error if stale data is still available
+    isError: isError && !overview, // suppress error if stale data is still available
     activeTab,
     setActiveTab,
     showInviteModal,

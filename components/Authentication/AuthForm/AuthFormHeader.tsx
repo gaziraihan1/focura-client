@@ -14,13 +14,13 @@ export function AuthFormHeader({ mode }: AuthFormHeaderProps) {
       <h1 className="text-4xl font-bold tracking-tight text-foreground leading-tight">
         {mode === "login" ? (
           <>
-            Sign in to <br />
-            <span className="text-primary">Focura</span>
+            Sign in to
+            <span className="text-primary"> Focura</span>
           </>
         ) : (
           <>
-            Create your <br />
-            <span className="text-primary">account</span>
+            Create your 
+            <span className="text-primary"> account</span>
           </>
         )}
       </h1>

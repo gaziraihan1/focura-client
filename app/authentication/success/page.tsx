@@ -1,17 +1,19 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
 export default function AuthSuccess() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
+    const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
     setTimeout(() => {
-      router.push("/dashboard");
+      router.push(callbackUrl);
     }, 500);
-  }, [router]);
+  }, [router, searchParams]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-background">
