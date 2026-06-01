@@ -525,7 +525,7 @@ User fills form
    └─ Creates proof signed with NEXTAUTH_SECRET
    
 4. Token Exchange
-   └─ POST /api/auth/exchange to backend
+   └─ POST /api/v1/auth/exchange to backend
    
 5. JWT Issuance
    └─ Backend returns RS256 tokens

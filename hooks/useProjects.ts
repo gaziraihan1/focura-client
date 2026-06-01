@@ -52,6 +52,7 @@ export interface ProjectDetails {
       image?: string;
     };
     totalAnnouncement: number;
+    inProgressTasks: number;
   };
   isAdmin: boolean;
   workspaceId: string;
@@ -180,11 +181,14 @@ export const useProjectDetailsBySlug = (slug?: string) => {
     queryKey: [...projectKeys.details(), 'slug', slug],
     queryFn: async () => {
       const res = await api.get(`/api/v1/projects/slug/${slug}`);
-      return res.data as ProjectDetails;
+      return res?.data as ProjectDetails;
     },
     enabled: !!slug,
+    staleTime: 2 * 60 * 1000,
+    placeholderData: (prev: ProjectDetails | undefined) => prev,
   });
 };
+ 
 
 export const useCreateProject = () => {
   const qc = useQueryClient();
@@ -204,6 +208,8 @@ export const useCreateProject = () => {
   });
 };
 
+// Replace useUpdateProject in your useProjects.ts
+
 export const useUpdateProject = () => {
   const qc = useQueryClient();
   return useMutation({
@@ -212,12 +218,14 @@ export const useUpdateProject = () => {
         showSuccessToast: true,
         showErrorToast: true,
       });
-      return res.data;
+      return res?.data as ProjectDetails;
     },
-    onSuccess: (_, variables) => {
-      qc.invalidateQueries({
-        queryKey: projectKeys.detail(variables.projectId),
-      });
+    onSuccess: () => {
+      // Invalidate ALL detail queries (both id-keyed and slug-keyed) so every
+      // page that shows this project refetches fresh data from the server.
+      qc.invalidateQueries({ queryKey: projectKeys.details() });
+      // Also refresh project lists (sidebar/cards)
+      qc.invalidateQueries({ queryKey: projectKeys.lists() });
     },
   });
 };
@@ -239,7 +247,6 @@ export const useDeleteProject = () => {
     },
   });
 };
-
 export const useAddProjectMember = () => {
   const qc = useQueryClient();
   return useMutation({
@@ -248,16 +255,36 @@ export const useAddProjectMember = () => {
         showSuccessToast: true,
         showErrorToast: true,
       });
-      return res.data;
+      return res?.data as ProjectMember;
     },
-    onSuccess: (_, variables) => {
-      qc.invalidateQueries({
-        queryKey: projectKeys.detail(variables.projectId),
-      });
+    onSuccess: (newMember, variables) => {
+      // Update all cached detail entries (id-keyed + slug-keyed) in one pass
+      qc.setQueriesData<ProjectDetails>(
+        { queryKey: projectKeys.details(), exact: false },
+        (old) => {
+          if (!old || old.id !== variables.projectId) return old;
+          // Guard against duplicate if optimistic update already ran
+          const alreadyAdded = old.members.some((m) => m.userId === newMember?.userId);
+          if (alreadyAdded) return old;
+          return {
+            ...old,
+            members: [...old.members, newMember],
+            stats: {
+              ...old.stats,
+              totalMembers: old.stats.totalMembers + 1,
+            },
+            _count: {
+              ...old._count,
+              members: old._count.members + 1,
+            },
+          };
+        },
+      );
+      // Refresh lists (sidebar/project cards)
+      qc.invalidateQueries({ queryKey: projectKeys.lists() });
     },
   });
 };
-
 export const useUpdateProjectMemberRole = () => {
   const qc = useQueryClient();
   return useMutation({
@@ -273,20 +300,32 @@ export const useUpdateProjectMemberRole = () => {
       const res = await api.patch<ProjectMember>(
         `/api/v1/projects/${projectId}/members/${memberId}`,
         { role },
-        {
-          showSuccessToast: true,
-          showErrorToast: true,
-        }
+        { showSuccessToast: true, showErrorToast: true }
       );
       return res.data;
     },
-    onSuccess: (_, variables) => {
-      qc.invalidateQueries({
-        queryKey: projectKeys.detail(variables.projectId),
-      });
+    onSuccess: (updatedMember, variables) => {
+      // Optimistically update member role inside the cached project
+      const updater = (old: ProjectDetails | undefined) => {
+        if (!old) return old;
+        return {
+          ...old,
+          members: old.members.map((m) =>
+            m.userId === variables.memberId
+              ? { ...m, role: variables.role }
+              : m
+          ),
+        };
+      };
+
+      qc.setQueriesData<ProjectDetails>(
+        { queryKey: projectKeys.details() },
+        updater,
+      );
     },
   });
 };
+
 
 export const useRemoveProjectMember = () => {
   const qc = useQueryClient();
@@ -299,13 +338,30 @@ export const useRemoveProjectMember = () => {
       return res.data;
     },
     onSuccess: (_, variables) => {
-      qc.invalidateQueries({
-        queryKey: projectKeys.detail(variables.projectId),
-      });
+      // Optimistically remove the member from all cached project queries
+      const updater = (old: ProjectDetails | undefined) => {
+        if (!old) return old;
+        return {
+          ...old,
+          members: old.members.filter((m) => m.userId !== variables.memberId),
+          stats: {
+            ...old.stats,
+            totalMembers: Math.max(0, old.stats.totalMembers - 1),
+          },
+          _count: {
+            ...old._count,
+            members: Math.max(0, old._count.members - 1),
+          },
+        };
+      };
+
+      qc.setQueriesData<ProjectDetails>(
+        { queryKey: projectKeys.details() },
+        updater,
+      );
     },
   });
 };
-
 export function useProjectRole(
   projectId?: string | null,
   project?: ProjectDetails | null

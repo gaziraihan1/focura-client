@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { MessageSquare, Clock } from 'lucide-react';
 import Image from 'next/image';
-import { Task } from '@/types/task.types';
+import { Task } from '@/hooks/useTask';
 // import { Task } from '@/hooks/useProjects';
 
 interface TaskCardProps {

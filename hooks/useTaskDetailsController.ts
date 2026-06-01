@@ -98,8 +98,14 @@ export function useTaskDetailsController(taskId: string, workspaceSlug: string |
       handleEditClick,
       handleSaveEdit,
       handleDelete,
-      handleStatusChange: (status: Task["status"]) =>
-        updateStatus.mutateAsync({ id: taskId, status }),
+      handleStatusChange: (status: Task["status"]) => {
+    if (!permissions.canChangeStatus) return;
+    return updateStatus.mutateAsync({ id: taskId, status });
+  },
+  handleAddComment: async (content: string) => {
+    if (!permissions.canComment) return;
+    await addComment.mutateAsync({ taskId, content });
+  },
     },
     mutations: {
       addComment,

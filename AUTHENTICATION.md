@@ -199,7 +199,7 @@ Check: User exists in DB?
     ↓
 Exchange proof generated
     ↓
-POST /api/auth/exchange (to backend)
+POST /api/v1/auth/exchange (to backend)
     ↓
 Backend validates & issues tokens
     ↓

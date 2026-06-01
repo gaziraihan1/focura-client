@@ -27,6 +27,7 @@ export interface Project {
     name: string;
     slug: string
   };
+  status: "PLANNING" | "ACTIVE" | "ON_HOLD" | "COMPLETED" | "ARCHIVED"
 }
 
 export interface TaskAssignee {

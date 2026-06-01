@@ -57,6 +57,7 @@ export const mockProjectDetails: ProjectDetails = {
     totalMembers: 1,
     projectDays: 10,
     totalAnnouncement: 1,
+    inProgressTasks: 2
   },
   isAdmin: true,
   workspaceId: 'ws-1',

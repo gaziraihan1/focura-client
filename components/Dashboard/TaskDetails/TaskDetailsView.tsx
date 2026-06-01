@@ -55,6 +55,7 @@ export default function TaskDetailsView({
   workspaceSlug,
 }: TaskDetailsViewProps) {
   const router = useRouter();
+  const isArchived = task.project?.status === "ARCHIVED"
 
   const isPersonalTask = !task.projectId;
 
@@ -72,14 +73,23 @@ export default function TaskDetailsView({
       />
 
       
-      {permissions.canView && !permissions.canEdit && (
-        <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 p-3 flex items-start gap-2">
-          <Lock className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
-          <p className="text-sm text-amber-500">
-            {permissions.reason || "You have read-only access to this task"}
-          </p>
-        </div>
-      )}
+      {isArchived && (
+  <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 p-3 flex items-start gap-2">
+    <Lock className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+    <p className="text-sm text-amber-500 font-medium">
+      This project is archived. Tasks are read-only — editing, deleting and commenting are disabled.
+    </p>
+  </div>
+)}
+
+{!isArchived && permissions.canView && !permissions.canEdit && (
+  <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 p-3 flex items-start gap-2">
+    <Lock className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+    <p className="text-sm text-amber-500">
+      {permissions.reason || "You have read-only access to this task"}
+    </p>
+  </div>
+)}
 
      
       <div className="flex items-center gap-2 flex-wrap">
