@@ -1,15 +1,17 @@
 import { CheckCircle2 } from "lucide-react";
-
+import { WorkspaceRole } from "@/hooks/useWorkspace"
 interface EmptyStateProps {
   hasFilters: boolean;
   searchQuery: string;
   onCreateTask: () => void;
+  memberRole: WorkspaceRole | null;
 }
 
 export function EmptyState({
   hasFilters,
   searchQuery,
   onCreateTask,
+  memberRole,
 }: EmptyStateProps) {
   return (
     <div className="text-center py-12 rounded-xl bg-card border border-border">
@@ -22,7 +24,7 @@ export function EmptyState({
           ? "Try adjusting your search or filters"
           : "Create your first task to get started"}
       </p>
-      {!searchQuery && !hasFilters && (
+      {!searchQuery && !hasFilters && memberRole !== "GUEST" && (
         <button
           onClick={onCreateTask}
           className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"

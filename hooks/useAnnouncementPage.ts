@@ -117,10 +117,10 @@ export function useAnnouncementPage(
   // ── Announcement data + mutations
   const { filters, setVisibility, setIsPinned, setPage, resetFilters, activeFiltersCount } =
     useAnnouncementFilters();
-  const { data, isLoading: listLoading, isFetching }  = useAnnouncements(workspaceId, filters);
-  const createAnnouncement   = useCreateAnnouncement(workspaceId);
-  const deleteAnnouncement   = useDeleteAnnouncement(workspaceId);
-  const togglePin            = useTogglePinAnnouncement(workspaceId);
+  const { data, isLoading: listLoading, isFetching }  = useAnnouncements(workspaceSlug, filters);
+  const createAnnouncement   = useCreateAnnouncement(workspaceSlug);
+  const deleteAnnouncement   = useDeleteAnnouncement(workspaceSlug);
+  const togglePin            = useTogglePinAnnouncement(workspaceSlug);
 
   // ── Form field handlers
   const setTitle      = useCallback((v: string) =>
@@ -249,7 +249,7 @@ const EMPTY_FORM: AnnouncementFormState = {
 };
 
 export function useAnnouncementModal(
-  workspaceId:      string,
+  workspaceSlug:      string,
   lockedProjectId?: string | null,
 ) {
   const [isOpen, setIsOpen] = useState(false);
@@ -260,7 +260,7 @@ export function useAnnouncementModal(
     projectId: lockedProjectId ?? null,
   }));
 
-  const { mutateAsync, isPending } = useCreateAnnouncement(workspaceId);
+  const { mutateAsync, isPending } = useCreateAnnouncement(workspaceSlug);
 
   const resetForm = useCallback(() =>
     setForm({ ...EMPTY_FORM, projectId: lockedProjectId ?? null }),

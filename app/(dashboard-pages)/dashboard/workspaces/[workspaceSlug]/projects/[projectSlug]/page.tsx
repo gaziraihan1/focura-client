@@ -124,7 +124,7 @@ export default function ProjectOverviewPage() {
       
 <ProjectHeader project={project} accentColor={accentColor} completionPct={completionPct} isOverdue={isOverdue} dueLabel={dueLabel} totalMembers={totalMembers} />
       {/* ── Top stats ribbon ─────────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
         <StatPill
           icon={CheckSquare}
           label="Total Tasks"

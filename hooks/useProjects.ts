@@ -138,7 +138,9 @@ export const projectKeys = {
 
 export const useProjects = (workspaceId?: string) => {
   return useQuery({
-    queryKey: projectKeys.list(workspaceId || ''),
+    queryKey: workspaceId
+  ? projectKeys.list(workspaceId)
+  : ['projects', 'list', 'disabled'],
     queryFn: async () => {
       const res = await api.get(`/api/v1/projects/workspace/${workspaceId}`);
       return res.data as ProjectDetails[];

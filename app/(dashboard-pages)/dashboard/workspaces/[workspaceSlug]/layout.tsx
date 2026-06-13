@@ -1,6 +1,7 @@
 "use client";
 
-import { useParams, usePathname } from "next/navigation";
+import { useEffect } from "react";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { WorkspacePlanProvider, useWorkspacePlan } from "@/context/workspacePlan/WorkspacePlanContext";
 import EmptyState from "@/components/Dashboard/Workspaces/EmptyState";
 import { useWorkspaceLayout } from "@/hooks/useWorkspaceLayout";
@@ -9,7 +10,6 @@ import { WorkspaceLayoutHeader } from "@/components/Dashboard/Workspaces/Workspa
 import { WorkspaceSwitcherModal } from "@/components/Dashboard/Workspaces/WorkspaceSwitcherModal";
 import { Workspace } from "@/hooks/useWorkspace";
 
-// ── Inner layout — runs INSIDE the provider so useWorkspacePlan works ──────
 function WorkspaceLayoutInner({
   slug,
   pathname,
@@ -19,7 +19,8 @@ function WorkspaceLayoutInner({
   pathname: string;
   children: React.ReactNode;
 }) {
-  const { isFree } = useWorkspacePlan(); // ✅ safe — provider is already mounted
+  const router = useRouter();
+  const { isFree } = useWorkspacePlan();
 
   const {
     workspace,
@@ -34,15 +35,26 @@ function WorkspaceLayoutInner({
     session,
     handleWorkspaceSwitch,
     handleCreateWorkspace,
-  } = useWorkspaceLayout({ slug, pathname, isFree }); // ← pass it in
+    isAccessible,
+  } = useWorkspaceLayout({ slug, pathname, isFree });
 
-   const workspaceReady = !isLoading && !!workspace;
+  // Redirect only after loading is done and access is confirmed denied.
+  // During loading, isAccessible is false (workspace is undefined) — don't redirect yet.
+  useEffect(() => {
+    if (!isLoading && !isAccessible) {
+      router.push("/dashboard");
+    }
+  }, [isLoading, isAccessible, router]);
 
+  // While loading or during the redirect window, render nothing to avoid flicker.
+  if (isLoading || !isAccessible) return null;
+
+  const workspaceReady = !!workspace;
 
   return (
     <div className="flex h-screen overflow-hidden bg-background scroll-smooth">
       <WorkspaceSidebar
-        workspace={workspace as Workspace} // assert it's there, since sidebar should only render when workspace is ready
+        workspace={workspace as Workspace}
         currentMember={currentMember}
         navigation={navigation}
         pathname={pathname}
@@ -64,33 +76,30 @@ function WorkspaceLayoutInner({
         </main>
       </div>
 
-{
-  workspaceReady && (
+      {workspaceReady && (
+        <WorkspaceSwitcherModal
+          isOpen={switcherOpen}
+          allWorkspaces={allWorkspaces}
+          currentSlug={slug}
+          onClose={() => setSwitcherOpen(false)}
+          onWorkspaceSwitch={handleWorkspaceSwitch}
+          onCreateWorkspace={handleCreateWorkspace}
+        />
+      )}
 
-    <WorkspaceSwitcherModal
-      isOpen={switcherOpen}
-      allWorkspaces={allWorkspaces}
-      currentSlug={slug}
-      onClose={() => setSwitcherOpen(false)}
-      onWorkspaceSwitch={handleWorkspaceSwitch}
-      onCreateWorkspace={handleCreateWorkspace}
-    />
-
-  )
-}
-{!isLoading && !workspace && <EmptyState />}
+      {/* Only show EmptyState if access is confirmed but workspace truly doesn't exist */}
+      {workspaceReady === false && <EmptyState />}
     </div>
   );
 }
 
-// ── Outer layout — mounts the provider first, then renders inner ───────────
 export default function WorkspaceLayout({ children }: { children: React.ReactNode }) {
   const params   = useParams();
   const pathname = usePathname();
   const slug     = params.workspaceSlug as string;
 
   return (
-    <WorkspacePlanProvider slug={slug}>         {/* ← provider is first */}
+    <WorkspacePlanProvider slug={slug}>
       <WorkspaceLayoutInner slug={slug} pathname={pathname}>
         {children}
       </WorkspaceLayoutInner>

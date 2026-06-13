@@ -29,7 +29,7 @@ const formatDate = (date?: string | null) => {
 interface ProjectCardProps {
   project: Details;
   workspaceSlug: string;
-  haveAccess: boolean;
+  haveAccess?: boolean;
   joined?: boolean;
   currentUserId?: string;
   onClick?: (e: React.MouseEvent) => void;

@@ -88,7 +88,8 @@ export default function AnnouncementsPage() {
   // Data
   const { data: project } = useProjectDetailsBySlug(projectSlug);
  
-  const workspaceId = project?.workspaceId ?? "";
+  const workspaceSlug = project?.workspace?.slug ?? "";
+  const workspaceId   = project?.workspace?.id ?? "";
   const projectId   = project?.id          ?? "";
  
   const { filters, setPage } = useAnnouncementFilters();
@@ -97,12 +98,12 @@ export default function AnnouncementsPage() {
     data:       announcementData,
     isLoading: announcementsLoading,
     isFetching,
-  } = useProjectAnnouncements(workspaceId, projectId, filters);
+  } = useProjectAnnouncements(workspaceSlug, projectId, filters);
   const isLoading = !project || announcementsLoading
  
   // Modal
   const { open: openModal, modalProps } = useAnnouncementModal(
-    workspaceId,
+    workspaceSlug,
     projectId || null,
   );
  
@@ -125,8 +126,8 @@ export default function AnnouncementsPage() {
   const { data: members = [] } = useTeamMembers(workspaceId || undefined);
  
   // Mutations
-  const deleteMutation = useDeleteAnnouncement(workspaceId);
-  const pinMutation    = useTogglePinAnnouncement(workspaceId);
+  const deleteMutation = useDeleteAnnouncement(workspaceSlug);
+  const pinMutation    = useTogglePinAnnouncement(workspaceSlug);
  
   const handleDelete = async (id: string) => {
     setDeletingId(id);

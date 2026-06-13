@@ -3,6 +3,7 @@ import { Task, TaskPagination } from "@/hooks/useTask";
 import { EmptyState } from "@/components/Dashboard/AllTasks/WorkspaceTasks/EmptyState";
 import { TaskList } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskList";
 import { Pagination } from "@/components/Shared/Pagination";
+import { WorkspaceRole } from "@/hooks/useWorkspace";
 
 interface TasksContentAreaProps {
   tasks: Task[];
@@ -23,6 +24,7 @@ interface TasksContentAreaProps {
   loadingType?: "primary" | "secondary" | null;
   primaryTaskId?: string | null;
   secondaryTaskIds?: string[];
+  memberRole: WorkspaceRole | null;
 }
 
 export function TasksContentArea({
@@ -42,7 +44,8 @@ export function TasksContentArea({
   loadingTaskId,
   loadingType,
   primaryTaskId,
-  secondaryTaskIds
+  secondaryTaskIds,
+  memberRole,
 
 }: TasksContentAreaProps) {
   if (isLoading) {
@@ -74,6 +77,7 @@ export function TasksContentArea({
         hasFilters={searchQuery !== "" || activeFiltersCount > 0}
         searchQuery={searchQuery}
         onCreateTask={onCreateTask}
+        memberRole={memberRole}
       />
     );
   }

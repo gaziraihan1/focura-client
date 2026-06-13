@@ -1,3 +1,5 @@
+// workspace.hooks.ts — updated for public workspace viewer support
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -7,6 +9,7 @@ import {
   useWorkspaceRoleFromWorkspace,
   useWorkspaceOverview,
   WorkspaceMember,
+  useWorkspaceStats,
 } from "@/hooks/useWorkspace";
 import {
   LayoutDashboard,
@@ -31,6 +34,7 @@ type TabType = "overview" | "projects" | "members";
 interface UseWorkspaceDetailPageProps {
   slug: string;
 }
+
 interface UseWorkspaceLayoutProps {
   slug: string;
   pathname: string;
@@ -51,6 +55,18 @@ export function useWorkspaceLayout({
   const { data: allWorkspaces = [] } = useWorkspaces();
   const { canManageWorkspace } = useWorkspaceRoleFromWorkspace(slug);
 
+  // Derive membership and access from workspace data —
+  // backend already enforces public-or-member on read, so if we got data we can view.
+  const currentMember = workspace?.members.find(
+    (m: WorkspaceMember) => m.user.id === session?.user?.id,
+  );
+  const isMember = Boolean(currentMember);
+  const isPublic = Boolean(workspace?.isPublic);
+
+  // Accessible = public workspace OR an active member.
+  // Backend enforces this too; this flag drives UI gating only.
+  const isAccessible = isPublic || isMember;
+
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
@@ -62,6 +78,8 @@ export function useWorkspaceLayout({
     return () => document.removeEventListener("keydown", down);
   }, []);
 
+  // Routes visible to everyone who can view the workspace (members + public viewers).
+  // Routes that mutate data or expose private info are member-only.
   const navigation = [
     {
       name: "Overview",
@@ -79,6 +97,9 @@ export function useWorkspaceLayout({
       name: "Tasks",
       icon: CheckSquare,
       match: (path: string) => path.includes(`/${slug}/tasks`),
+      // Tasks are member-only — non-members can see the nav item but will hit a
+      // backend 403 if they navigate there. Hide entirely for cleaner UX.
+      memberOnly: true,
       children: [
         {
           name: "List",
@@ -102,32 +123,38 @@ export function useWorkspaceLayout({
         },
       ],
     },
-
     {
       name: "Projects",
       href: `/dashboard/workspaces/${slug}/projects`,
       icon: FolderKanban,
       match: (path: string) => path.includes(`/${slug}/projects`),
+      // Projects list is public-readable on public workspaces (overview endpoint includes it).
     },
     {
       name: "Meetings",
       href: `/dashboard/workspaces/${slug}/meetings`,
       icon: Calendar,
       match: (path: string) => path.includes(`/${slug}/meetings`),
+      memberOnly: true,
     },
     {
       name: "Team",
       href: `/dashboard/workspaces/${slug}/team`,
       icon: Users,
       match: (path: string) => path.includes(`/${slug}/team`),
+      // Member list is private per backend — assertMember guards it.
+      memberOnly: true,
     },
     {
       name: "Labels",
       href: `/dashboard/workspaces/${slug}/label`,
       icon: Tags,
       match: (path: string) => path === `/dashboard/workspaces/${slug}/label`,
+      memberOnly: true,
     },
-    // ── Admin-only items ───────────────────────────────────────────────────
+
+    // Admin-only items — only shown when user has OWNER or ADMIN role.
+    // canManageWorkspace is already false for non-members, so no extra guard needed.
     ...(canManageWorkspace
       ? [
           {
@@ -142,8 +169,6 @@ export function useWorkspaceLayout({
             icon: CreditCard,
             match: (path: string) => path.includes(`/${slug}/billing`),
           },
-
-          // ── Paid-only items — visible but locked on FREE plan ────────────────
           {
             name: "Analytics",
             href: `/dashboard/workspaces/${slug}/analytics`,
@@ -169,9 +194,10 @@ export function useWorkspaceLayout({
       : []),
   ];
 
-  const currentMember = workspace?.members.find(
-    (m) => m.user.id === session?.user?.id,
-  );
+  // Filter member-only nav items for public viewers who aren't members.
+  const visibleNavigation = isMember
+    ? navigation
+    : navigation.filter((item) => !item.memberOnly);
 
   const handleWorkspaceSwitch = (workspaceSlug: string) => {
     router.push(`/dashboard/workspaces/${workspaceSlug}`);
@@ -186,8 +212,11 @@ export function useWorkspaceLayout({
   return {
     workspace,
     allWorkspaces,
-    navigation,
+    navigation: visibleNavigation,
     currentMember,
+    isMember,
+    isPublic,
+    isAccessible,
     sidebarOpen,
     setSidebarOpen,
     switcherOpen,
@@ -200,29 +229,42 @@ export function useWorkspaceLayout({
     handleCreateWorkspace,
   };
 }
+
+// useWorkspaceDetailPage
 export function useWorkspaceDetailPage({ slug }: UseWorkspaceDetailPageProps) {
+  const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState<TabType>("overview");
   const [showInviteModal, setShowInviteModal] = useState(false);
 
   const {
     data: overview,
-    isPending, // ← true when no cached data exists and query hasn't resolved
+    isPending,
     isError,
   } = useWorkspaceOverview(slug);
 
   const workspace = overview?.workspace;
-  const stats = overview?.stats;
-  const members = (overview?.workspace.members ?? []) as WorkspaceMember[];
+  const members = (overview?.workspace?.members ?? []) as WorkspaceMember[];
+
+  // ✅ Fetch stats independently — shorter staleTime, updates without waiting
+  // for the overview cache to expire
+  const { data: stats } = useWorkspaceStats(workspace?.id ?? "");
 
   const { isAdmin, isOwner, canCreateProjects } =
     useWorkspaceRoleFromWorkspace(slug);
 
+  const currentMember = workspace?.members?.find(
+    (m: WorkspaceMember) => m.user.id === session?.user?.id,
+  );
+  const isMember = Boolean(currentMember);
+  const isPublic = Boolean(workspace?.isPublic);
+  const isAccessible = isPublic || isMember;
+
   return {
     workspace,
-    stats,
+    stats,  // now from useWorkspaceStats, not overview
     members,
     isLoading: isPending,
-    isError: isError && !overview, // suppress error if stale data is still available
+    isError: isError && !overview,
     activeTab,
     setActiveTab,
     showInviteModal,
@@ -231,5 +273,8 @@ export function useWorkspaceDetailPage({ slug }: UseWorkspaceDetailPageProps) {
     isAdmin,
     isOwner,
     canCreateProjects,
+    isMember,
+    isPublic,
+    isAccessible,
   };
 }

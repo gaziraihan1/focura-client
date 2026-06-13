@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import { useWorkspace, useWorkspaceRole } from "@/hooks/useWorkspace";
+import { useWorkspace, useWorkspaceRole, useWorkspaceRoleFromWorkspace } from "@/hooks/useWorkspace";
 import { CreateProjectDto, ProjectDetails, useCreateProject } from "@/hooks/useProjects";
 import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -343,19 +343,23 @@ export function useWorkspaceProjectsPage({
 }: UseWorkspaceProjectsPageProps) {
   const { data: session } = useSession();
 
-  const {
-    data: workspace,
-    isLoading: workspaceLoading,
-    isError: workspaceError,
-  } = useWorkspace(workspaceSlug);
+  const { data: workspace, isLoading: workspaceLoading, isError: workspaceError } =
+    useWorkspace(workspaceSlug);
 
-  const {
-    data: projectsData,
-    isLoading: projectsLoading,
-    isError: projectsError,
-  } = useProjects(workspace?.id);
+  const { data: projectsData, isLoading: projectsLoading, isError: projectsError } =
+    useProjects(workspace?.id);
+    console.log('[projects debug]', {
+  workspaceSlug,
+  workspaceId: workspace?.id,
+  workspaceLoading,
+  projectsLoading,
+  projectsData,
+  projectsDataLength: Array.isArray(projectsData) ? projectsData.length : 'not array',
+});
 
-  const { canCreateProjects, canManageWorkspace } = useWorkspaceRole(workspace?.id);
+  // ✅ reads from workspace.members — no separate /members fetch, no extra loading state
+  const { canCreateProjects, canManageWorkspace } =
+    useWorkspaceRoleFromWorkspace(workspaceSlug);
 
   const [searchQuery, setSearchQuery] = useState("");
 

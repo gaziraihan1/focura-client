@@ -23,13 +23,24 @@ export const featureKeys = {
 };
 
 
+// hooks/useFeatures.ts  — only the admin hook changes
+
 export function useIsFocuraAdmin() {
   return useQuery({
     queryKey:  featureKeys.admin,
     staleTime: Infinity,
+    retry:     false,
+    throwOnError: false,
     queryFn: async () => {
-      const res = await api.get<{ isAdmin: boolean }>('/api/v1/features/admin/me');
-      return (res as unknown as { isAdmin: boolean })?.isAdmin ?? false;
+      try {
+        const res = await api.get<{ isAdmin: boolean }>(
+          '/api/v1/features/admin/me',
+          { showErrorToast: false }, // ← suppress the 401 toast
+        );
+        return (res as unknown as { isAdmin: boolean })?.isAdmin ?? false;
+      } catch {
+        return false;
+      }
     },
   });
 }

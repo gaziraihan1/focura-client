@@ -172,22 +172,27 @@ export function useWorkspaceOverview(slug: string) {
 
   return useQuery({
     queryKey: [...workspaceKeys.detail(slug), "overview"] as const,
-    queryFn:  async (): Promise<WorkspaceOverview> => {
+    queryFn: async (): Promise<WorkspaceOverview> => {
       const res = await api.get<WorkspaceOverview>(
         `/api/v1/workspaces/${slug}/overview`,
         { showErrorToast: true },
       );
       const overview = res.data as WorkspaceOverview;
 
-      // Seed individual caches so no extra fetches fire anywhere
-      qc.setQueryData(workspaceKeys.detail(slug),                   overview.workspace);
-      qc.setQueryData(workspaceKeys.stats(overview.workspace.id),   overview.stats);
+      qc.setQueryData(workspaceKeys.detail(slug), overview.workspace);
+      qc.setQueryData(workspaceKeys.stats(overview.workspace.id), overview.stats);
       qc.setQueryData(workspaceKeys.members(overview.workspace.id), overview.workspace.members);
-      qc.setQueryData(projectKeys.list(overview.workspace.id),      overview.projects);
+
+      // ✅ Never overwrite an existing list with a potentially partial one
+      const existingProjects = qc.getQueryData(projectKeys.list(overview.workspace.id));
+      if (!existingProjects) {
+        qc.setQueryData(projectKeys.list(overview.workspace.id), overview.projects);
+      }
 
       return overview;
     },
-    staleTime: 3 * 60 * 1000,
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
     retry: 1,
   });
 }
@@ -357,6 +362,7 @@ export function useUpdateMemberRole() {
   });
 }
 
+// useWorkspace.ts
 export function useWorkspaceStats(workspaceId: string) {
   return useQuery({
     queryKey: workspaceKeys.stats(workspaceId),
@@ -367,8 +373,9 @@ export function useWorkspaceStats(workspaceId: string) {
       );
       return response.data;
     },
-    enabled:   !!workspaceId,
-    staleTime: 2 * 60 * 1000,
+    enabled: !!workspaceId,
+    staleTime: 30 * 1000,       // ✅ 30 seconds — stale quickly
+    refetchOnWindowFocus: true,  // ✅ refetch when user tabs back in
   });
 }
 

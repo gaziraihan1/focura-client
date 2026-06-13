@@ -4,11 +4,13 @@ import { useRouter } from "next/navigation";
 interface ProjectsEmptyStateProps {
   hasSearchQuery: boolean;
   workspaceSlug: string;
+  canCreateProjects: boolean;
 }
 
 export function ProjectsEmptyState({
   hasSearchQuery,
   workspaceSlug,
+  canCreateProjects,
 }: ProjectsEmptyStateProps) {
   const router = useRouter();
 
@@ -23,7 +25,7 @@ export function ProjectsEmptyState({
           ? "Try a different search"
           : "Create your first project to get started"}
       </p>
-      {!hasSearchQuery && (
+      {!hasSearchQuery && canCreateProjects && (
         <button
           onClick={() =>
             router.push(

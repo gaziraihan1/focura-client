@@ -5,7 +5,6 @@ import { ProjectsSearchBar } from "@/components/Dashboard/Projects/WorkspaceProj
 import { WorkspaceProjectCard } from "@/components/Dashboard/Projects/WorkspaceProjects/WorkspaceProjectCard";
 import { WorkspaceProjectsErrorState } from "@/components/Dashboard/Projects/WorkspaceProjects/WorkspaceProjectsErrorState";
 import { WorkspaceProjectsPageHeader } from "@/components/Dashboard/Projects/WorkspaceProjects/WorkspaceProjectsPageHeader";
-import { useProjects } from "@/hooks/useProjects";
 import { useWorkspaceProjectsPage } from "@/hooks/useProjectsPage";
 import { useParams } from "next/navigation";
 import { LoadingState } from "@/components/Shared/LoadingState";
@@ -15,18 +14,21 @@ export default function WorkspaceProjectsPage() {
   const workspaceSlug = params.workspaceSlug as string;
 
   const {
-    workspace,
-    searchQuery,
-    setSearchQuery,
-    canCreateProjects,
-    isLoading,
-    hasError,
-    currentUserId,
-  } = useWorkspaceProjectsPage({ workspaceSlug });
+  workspace,
+  projects,
+  searchQuery,
+  setSearchQuery,
+  canCreateProjects,
+  isLoading,
+  hasError,
+  currentUserId,
+} = useWorkspaceProjectsPage({ workspaceSlug });
+  console.log({
+  workspaceId: workspace?.id,
+  projects,
+});
 
-  const {data: projects, isLoading: projectLoading} = useProjects(workspace?.id);
-
-  if (isLoading || projectLoading) {
+  if (isLoading) {
     return <LoadingState />;
   }
 
@@ -51,15 +53,18 @@ export default function WorkspaceProjectsPage() {
         <ProjectsEmptyState
           hasSearchQuery={!!searchQuery}
           workspaceSlug={workspaceSlug}
+          canCreateProjects={canCreateProjects}
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {projects?.map((project) => (
             <WorkspaceProjectCard
               key={project.id}
-              projectSlug={project.slug}
+              project={project}
               workspaceSlug={workspaceSlug}
               currentUserId={currentUserId}
+                  canCreateProjects={canCreateProjects} // ← pass down
+
             />
           ))}
         </div>

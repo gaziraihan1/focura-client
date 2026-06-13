@@ -1,36 +1,28 @@
 // WorkspaceProjectCard.tsx
-import { useWorkspaceProjectsPage } from "@/hooks/useProjectsPage";
-import { useProjectDetailsBySlug } from "@/hooks/useProjects";
+import { ProjectDetails } from "@/hooks/useProjects";
 import { useState } from "react";
 import { ProjectCard } from "./ProjectCard";
 import { AccessDeniedModal } from "./AceessDeniedModal";
-import { CardLoadingState } from "@/components/Shared/CardLoadingState";
 
 interface WorkspaceProjectCardProps {
-  projectSlug: string;
+  project: ProjectDetails;
   workspaceSlug: string;
   currentUserId?: string;
+  canCreateProjects?: boolean
 }
 
 export function WorkspaceProjectCard({
-  projectSlug,
+  project,
   workspaceSlug,
   currentUserId,
+  canCreateProjects,
 }: WorkspaceProjectCardProps) {
   const [showAccessModal, setShowAccessModal] = useState(false);
-  const { data: project, isLoading } = useProjectDetailsBySlug(projectSlug);
-  const { canCreateProjects } = useWorkspaceProjectsPage({ workspaceSlug });
 
   const joined = project?.members?.some((m) => m.user?.id === currentUserId);
   const haveAccess = joined || canCreateProjects;
 
-  if (isLoading || !project) {
-    return (
-      <div className="w-full h-full flex items-center justify-center p-14">
-        <CardLoadingState />
-      </div>
-    )
-  }
+  
 
   const handleClick = (e: React.MouseEvent) => {
     if (!haveAccess) {

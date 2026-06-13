@@ -90,36 +90,36 @@ async function fetchAnnouncements(url: string): Promise<AnnouncementsResponse> {
 
 
 export function useAnnouncements(
-  workspaceId: string,
+  workspaceSlug: string,
   filters: AnnouncementFilters = {},
 ) {
   return useQuery({
-    queryKey:        announcementKeys.list(workspaceId, filters),
-    enabled:         !!workspaceId,
+    queryKey:        announcementKeys.list(workspaceSlug, filters),
+    enabled:         !!workspaceSlug,
     staleTime:       5 * 60 * 1000,
     gcTime:          10 * 60 * 1000,
     placeholderData: (prev) => prev,
     queryFn: () =>
       fetchAnnouncements(
-        `/api/v1/workspaces/${workspaceId}/announcements?${buildParams(filters)}`,
+        `/api/v1/workspaces/${workspaceSlug}/announcements?${buildParams(filters)}`,
       ),
   });
 }
 
 
 export function useProjectAnnouncements(
-  workspaceId: string,
+  workspaceSlug: string,
   projectId:   string,
   filters:     AnnouncementFilters = {},
 ) {
   return useQuery({
-    queryKey:        announcementKeys.projectList(workspaceId, projectId, filters),
-    enabled:         !!workspaceId && !!projectId,
+    queryKey:        announcementKeys.projectList(workspaceSlug, projectId, filters),
+    enabled:         !!workspaceSlug && !!projectId,
     staleTime:       2 * 60 * 1000,
     placeholderData: (prev) => prev,
     queryFn: () =>
       fetchAnnouncements(
-        `/api/v1/workspaces/${workspaceId}/projects/${projectId}/announcements?${buildParams(filters)}`,
+        `/api/v1/workspaces/${workspaceSlug}/projects/${projectId}/announcements?${buildParams(filters)}`,
       ),
   });
 }
@@ -138,31 +138,31 @@ export function useAnnouncement(id: string) {
 }
 
 
-export function useCreateAnnouncement(workspaceId: string) {
+export function useCreateAnnouncement(workspaceSlug: string) {
   const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: CreateAnnouncementDto) => {
       const res = await api.post<Announcement>(
-        `/api/v1/workspaces/${workspaceId}/announcements`,
+        `/api/v1/workspaces/${workspaceSlug}/announcements`,
         data,
       );
       return res?.data as Announcement;
     },
     onSuccess: (created) => {
-      qc.invalidateQueries({ queryKey: announcementKeys.all(workspaceId) });
+      qc.invalidateQueries({ queryKey: announcementKeys.all(workspaceSlug) });
 
       // Also invalidate project list if scoped
       if (created.projectId) {
         qc.invalidateQueries({
-          queryKey: announcementKeys.projectAll(workspaceId, created.projectId),
+          queryKey: announcementKeys.projectAll(workspaceSlug, created.projectId),
         });
       }
     },
   });
 }
 
-export function useTogglePinAnnouncement(workspaceId: string) {
+export function useTogglePinAnnouncement(workspaceSlug: string) {
   const qc = useQueryClient();
 
   return useMutation({
@@ -185,24 +185,24 @@ export function useTogglePinAnnouncement(workspaceId: string) {
       };
 
       qc.setQueriesData<AnnouncementsResponse>(
-        { queryKey: ['announcements', workspaceId, 'list'] },
+        { queryKey: ['announcements', workspaceSlug, 'list'] },
         syncAndSort,
       );
       qc.setQueriesData<AnnouncementsResponse>(
-        { queryKey: ['announcements', workspaceId, 'project'] },
+        { queryKey: ['announcements', workspaceSlug, 'project'] },
         syncAndSort,
       );
 
       qc.setQueryData(announcementKeys.detail(updated.id), updated);
 
       // Refetch to get server-authoritative sort across all pages
-      qc.invalidateQueries({ queryKey: announcementKeys.all(workspaceId) });
+      qc.invalidateQueries({ queryKey: announcementKeys.all(workspaceSlug) });
     },
   });
 }
 
 
-export function useDeleteAnnouncement(workspaceId: string) {
+export function useDeleteAnnouncement(workspaceSlug: string) {
   const qc = useQueryClient();
 
   return useMutation({
@@ -211,10 +211,10 @@ export function useDeleteAnnouncement(workspaceId: string) {
       return id;
     },
     onMutate: async (id) => {
-      await qc.cancelQueries({ queryKey: announcementKeys.all(workspaceId) });
+      await qc.cancelQueries({ queryKey: announcementKeys.all(workspaceSlug) });
 
       const snapshots = qc.getQueriesData<AnnouncementsResponse>({
-        queryKey: ['announcements', workspaceId],
+        queryKey: ['announcements', workspaceSlug],
       });
 
       const removeFromList = (old?: AnnouncementsResponse) => {
@@ -230,12 +230,12 @@ export function useDeleteAnnouncement(workspaceId: string) {
       };
 
       qc.setQueriesData<AnnouncementsResponse>(
-        { queryKey: ['announcements', workspaceId, 'list'] },
+        { queryKey: ['announcements', workspaceSlug, 'list'] },
         removeFromList,
       );
 
       qc.setQueriesData<AnnouncementsResponse>(
-        { queryKey: ['announcements', workspaceId, 'project'] },
+        { queryKey: ['announcements', workspaceSlug, 'project'] },
         removeFromList,
       );
 
@@ -245,7 +245,7 @@ export function useDeleteAnnouncement(workspaceId: string) {
       ctx?.snapshots.forEach(([key, value]) => qc.setQueryData(key, value));
     },
     onSettled: () => {
-      qc.invalidateQueries({ queryKey: announcementKeys.all(workspaceId) });
+      qc.invalidateQueries({ queryKey: announcementKeys.all(workspaceSlug) });
     },
   });
 }

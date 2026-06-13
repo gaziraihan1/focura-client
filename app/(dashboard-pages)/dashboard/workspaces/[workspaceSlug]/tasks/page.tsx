@@ -53,38 +53,39 @@ export default function WorkspaceTasksPage() {
     timeRemaining,
     activeSession,
     completeSession,
-  primaryTask,
-  secondaryTasks,
-  hasPrimaryTask,
-  dailyTasksLoading,
-  handleAddToPrimary,
-  handleAddToSecondary,
-  handleRemoveDailyTask,
-  loadingTaskId,
-  loadingType,
-
+    primaryTask,
+    secondaryTasks,
+    hasPrimaryTask,
+    dailyTasksLoading,
+    handleAddToPrimary,
+    handleAddToSecondary,
+    handleRemoveDailyTask,
+    loadingTaskId,
+    loadingType,
+    role,
   } = useWorkspaceTasksPage({ workspaceSlug });
 
-  if(!workspace) return <LoadingState />;
-
+  if (!workspace) return <LoadingState />;
 
   const handleCreateTask = () => {
     router.push(`/dashboard/workspaces/${workspaceSlug}/tasks/new-task`);
   };
-
 
   return (
     <div className="space-y-6 px-2 sm:px-4 lg:px-6">
       <TasksPageHeader
         workspaceName={workspace.name}
         onCreateTask={handleCreateTask}
+        memberRole={role}
       />
       <TaskQuotaDetails qouta={qouta} />
-      {
-        focusedTask && activeSession && (
-          <FocusModeBanner task={focusedTask} timeRemaining={timeRemaining} onEndFocus={completeSession} />
-        )
-      }
+      {focusedTask && activeSession && (
+        <FocusModeBanner
+          task={focusedTask}
+          timeRemaining={timeRemaining}
+          onEndFocus={completeSession}
+        />
+      )}
 
       {stats && <TaskStatsGrid stats={stats} />}
       <TaskSearchAndFilters
@@ -128,11 +129,11 @@ export default function WorkspaceTasksPage() {
             onAddToPrimary={handleAddToPrimary}
             onAddToSecondary={handleAddToSecondary}
             isPrimaryDisabled={hasPrimaryTask}
-              loadingTaskId={loadingTaskId}
-  loadingType={loadingType}
-  primaryTaskId={primaryTask?.id}
-  secondaryTaskIds={secondaryTasks.map((t) => t.id)}
-
+            loadingTaskId={loadingTaskId}
+            loadingType={loadingType}
+            primaryTaskId={primaryTask?.id}
+            secondaryTaskIds={secondaryTasks.map((t) => t.id)}
+            memberRole={role}
           />
         }
         primaryTasksContent={
@@ -145,8 +146,7 @@ export default function WorkspaceTasksPage() {
               primaryTask={primaryTask}
               secondaryTasks={secondaryTasks}
               workspaceSlug={workspaceSlug}
-                onRemove={handleRemoveDailyTask}  // ✅ now wired up
-
+              onRemove={handleRemoveDailyTask} // ✅ now wired up
             />
           )
         }

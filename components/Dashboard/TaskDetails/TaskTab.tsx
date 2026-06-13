@@ -49,6 +49,7 @@ export const TaskTabs = ({
 
   const { data: activities = [], isLoading: activitiesLoading } =
     useTaskActivities(taskId);
+    console.log(taskId, "", activities)
 
   const [activeTab, setActiveTab] = useState<
     "comments" | "activity" | "attachments"

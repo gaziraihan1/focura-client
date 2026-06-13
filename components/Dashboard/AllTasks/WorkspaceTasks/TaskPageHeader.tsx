@@ -1,13 +1,16 @@
+import { WorkspaceRole } from "@/hooks/useWorkspace";
 import { Plus } from "lucide-react";
 
 interface TasksPageHeaderProps {
   workspaceName: string;
   onCreateTask: () => void;
+  memberRole: WorkspaceRole | null;
 }
 
 export function TasksPageHeader({
   workspaceName,
   onCreateTask,
+  memberRole,
 }: TasksPageHeaderProps) {
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -17,13 +20,18 @@ export function TasksPageHeader({
           Manage tasks across all projects in {workspaceName}
         </p>
       </div>
-      <button
-        onClick={onCreateTask}
-        className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2"
-      >
-        <Plus size={18} />
-        New Task
-      </button>
+      {
+        memberRole !== "GUEST" && (
+          <button
+            onClick={onCreateTask}
+            className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2"
+          >
+            <Plus size={18} />
+            New Task
+          </button>
+        )
+      }
+      
     </div>
   );
 }
