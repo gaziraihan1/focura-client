@@ -221,7 +221,7 @@ describe('useAddComment', () => {
     const { result } = renderHook(() => useAddComment(), { wrapper: createWrapper() })
 
     await act(async () => {
-      await result.current.mutateAsync({ taskId: 'task-1', content: 'Great work!' })
+      await result.current.mutateAsync({ taskId: 'task-1', content: 'Great work!', workspaceSlug: 'ws-1' })
     })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))

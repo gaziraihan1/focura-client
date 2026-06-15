@@ -16,7 +16,7 @@ import { useUpdateComment, useDeleteComment } from "@/hooks/useComment";
 import { useTaskPermissions } from "@/hooks/useTaskPermissions";
 import { Task } from "@/types/task.types";
 
-export function useTaskDetailsController(taskId: string, workspaceSlug: string | undefined) {
+export function useTaskDetailsController(taskId: string, workspaceSlug: string ) {
   const router = useRouter();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -104,7 +104,7 @@ export function useTaskDetailsController(taskId: string, workspaceSlug: string |
   },
   handleAddComment: async (content: string) => {
     if (!permissions.canComment) return;
-    await addComment.mutateAsync({ taskId, content });
+    await addComment.mutateAsync({ taskId, content, workspaceSlug });
   },
     },
     mutations: {

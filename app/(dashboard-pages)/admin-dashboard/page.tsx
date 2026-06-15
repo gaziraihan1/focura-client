@@ -422,7 +422,7 @@ export default function AdminOverviewPage() {
           <GlassPanel className="lg:col-span-2">
             <SectionTitle sub="Newest members">Recent Signups</SectionTitle>
             <div className="space-y-3">
-              {stats.recentSignups.map((u: { id: string; name: string; image?: string; email: string; createdAt: string }) => (
+              {stats.recentSignups.map((u: { id: string; name: string; image: string | null; email: string; createdAt: string }) => (
                 <div key={u.id} className="flex items-center gap-3 p-2.5 rounded-xl transition-colors hover:bg-accent/50">
                   <Avatar name={u.name} image={u.image} size="sm" />
                   <div className="flex-1 min-w-0">
