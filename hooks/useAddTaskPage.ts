@@ -42,42 +42,11 @@ export function useAddTaskPage() {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.title.trim()) {
-      newErrors.title = "Task title is required";
-    }
-    if (formData.title.length > 200) {
-      newErrors.title = "Title must be under 200 characters";
-    }
-
-    if (
-      formData.startDate &&
-      formData.dueDate &&
-      new Date(formData.startDate) > new Date(formData.dueDate)
-    ) {
-      newErrors.dueDate = "Due date must be after start date";
-    }
-
-    if (
-      formData.estimatedHours !== undefined &&
-      (isNaN(formData.estimatedHours) || formData.estimatedHours < 0)
-    ) {
-      newErrors.estimatedHours = "Invalid estimated hours";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) {
-      toast.error("Please fix the errors");
-      return;
-    }
 
     try {
       await createTaskMutation.mutateAsync({
@@ -108,7 +77,6 @@ export function useAddTaskPage() {
     });
 
     setErrors(mapped);
-    toast.error("Please fix the errors before submitting");
   } else {
     toast.error(error.response?.data?.message ?? "Failed to create task");
   }

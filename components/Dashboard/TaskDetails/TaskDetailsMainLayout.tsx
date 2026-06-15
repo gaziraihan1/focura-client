@@ -91,6 +91,7 @@ export default function TaskDetailsMainLayout({
             uploadAttachment={mutations.uploadAttachment}
             deleteAttachment={mutations.deleteAttachment}
             canComment={permissions.canComment}
+            workspaceSlug={workspaceSlug}
           />
         )}
       </div>

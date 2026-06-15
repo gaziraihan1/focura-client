@@ -21,6 +21,7 @@ export default function ProfilePage() {
     handleCancel,
     handleFormChange,
   } = useProfilePage();
+  console.log("Profile data:", profile);
 
   if (loading) {
     return <ProfileLoadingState />;

@@ -627,14 +627,16 @@ export function useAddComment() {
       taskId,
       content,
       parentId,
+      workspaceSlug,
     }: {
       taskId: string;
       content: string;
       parentId?: string | null;
+      workspaceSlug: string;
     }) => {
       const response = await api.post<TaskComment>(
         `/api/v1/tasks/${taskId}/comments`,
-        { content, parentId: parentId ?? null },
+        { content, parentId: parentId ?? null, workspaceSlug },
         { showSuccessToast: false },
       );
       return response?.data;

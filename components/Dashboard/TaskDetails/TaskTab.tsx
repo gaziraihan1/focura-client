@@ -25,6 +25,7 @@ interface TaskTabsProps {
   uploadAttachment: ReturnType<typeof useUploadAttachment>;
   deleteAttachment: ReturnType<typeof useDeleteAttachment>;
   canComment?: boolean;
+  workspaceSlug: string;
 }
 
 export type TabCounts = {
@@ -43,6 +44,7 @@ export const TaskTabs = ({
   uploadAttachment,
   deleteAttachment,
   canComment = true,
+  workspaceSlug = ""
 }: TaskTabsProps) => {
   const { data: session } = useSession();
   const currentUserId = session?.user?.id;
@@ -63,7 +65,8 @@ export const TaskTabs = ({
       await addComment.mutateAsync({
         taskId,
         content: commentText,
-        parentId
+        parentId,
+        workspaceSlug,
       });
       setCommentText("");
     } catch (error) {

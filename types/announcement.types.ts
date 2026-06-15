@@ -58,6 +58,7 @@ export interface CreateAnnouncementDto {
   title:      string;
   content:    string;
   visibility: AnnouncementVisibility;
+  workspaceSlug: string;
   isPinned?:  boolean;
   targetIds?: string[];
   projectId?: string | null;

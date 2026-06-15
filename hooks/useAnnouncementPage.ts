@@ -170,10 +170,11 @@ export function useAnnouncementPage(
       isPinned:   form.isPinned,
       targetIds:  form.visibility === 'PRIVATE' ? form.targetIds : [],
       projectId:  form.projectId,
+      workspaceSlug,
     });
     resetForm();
     setShowModal(false);
-  }, [form, createAnnouncement, resetForm]);
+  }, [form, createAnnouncement, resetForm, workspaceSlug]);
 
   // ── Delete
   const handleDelete = useCallback(async (id: string) => {
@@ -286,10 +287,11 @@ export function useAnnouncementModal(
       // Always use the latest lockedProjectId at submit time, not form state
       // This handles the case where projectId resolved after initial render
       projectId:  lockedProjectId ?? form.projectId,
+      workspaceSlug,
     });
     resetForm();
     setIsOpen(false);
-  }, [form, mutateAsync, resetForm, lockedProjectId]);
+  }, [form, mutateAsync, resetForm, lockedProjectId, workspaceSlug]);
 
   const onTitleChange = useCallback(
     (v: string) => setForm((f) => ({ ...f, title: v })), []);

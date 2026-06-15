@@ -20,31 +20,38 @@ export default function FeatureComparison() {
         "Unlimited Projects": false,
         "Advanced Analytics": false,
         "Priority Support": false,
+        "More Features": false,
+        "API Access": false,
       },
     },
     {
       name: "Pro",
-      price: "$19/mo",
+      price: "$12/mo",
       highlighted: true,
       features: {
-        "Real-time Collaboration": true,
+        "Real-time Collaboration": false,
         "Task Management": true,
         "Unlimited Projects": true,
         "Advanced Analytics": true,
         "Priority Support": false,
+        "More Features": false,
+        "API Access": false,
       },
     },
     {
-      name: "Enterprise",
-      price: "Custom",
+      name: "Business",
+      price: "$49/mo",
       features: {
         "Real-time Collaboration": true,
         "Task Management": true,
         "Unlimited Projects": true,
         "Advanced Analytics": true,
         "Priority Support": true,
+        "More Features": true,
+        "API Access": true,
       },
     },
+    
   ];
 
   const featureList = [
@@ -53,6 +60,8 @@ export default function FeatureComparison() {
     "Unlimited Projects",
     "Advanced Analytics",
     "Priority Support",
+    "More Features",
+    "API Access",
   ];
 
   return (

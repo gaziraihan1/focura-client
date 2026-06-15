@@ -82,8 +82,9 @@ export default function ProjectOverviewPage() {
       </div>
     );
   }
+  console.log("Project details:", project);
 
-  if (!isMember && !project.isAdmin) {
+  if (!isMember && !project.isAdmin ) {
     return (
       <AccessDeniedProject
         projectName={project.name}

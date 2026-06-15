@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Loader2, Menu, X, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import ThemeToggle from '@/components/Themes/ThemeSwitcher';
 
 const NAV_LINKS = [
   { href: '/admin-dashboard',            label: 'Overview'    },
@@ -57,6 +58,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 Focura Admin
               </span>
             </div>
+            <ThemeToggle />
 
             {/* Desktop links */}
             <nav className="hidden md:flex items-center gap-1">
