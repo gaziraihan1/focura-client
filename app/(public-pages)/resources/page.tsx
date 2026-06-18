@@ -1,9 +1,9 @@
+import ResourcePopularList from '@/components/Resources/ResourcePopularList'
 import ResourcesCategories from '@/components/Resources/ResourcesCategories'
 import ResourcesCTA from '@/components/Resources/ResourcesCTA'
 import ResourcesFeaturedGuides from '@/components/Resources/ResourcesFeaturedGuides'
 import ResourcesHero from '@/components/Resources/ResourcesHero'
-import ResourcesPopular from '@/components/Resources/ResourcesPopular'
-import ResourcesUpdates from '@/components/Resources/ResourcesUpdates'
+import ResourceUpdateList from '@/components/Resources/ResourceUpdateList'
 import React from 'react'
 
 export const metadata = {
@@ -36,14 +36,15 @@ export const metadata = {
 };
 
 
+
 export default function ResourcesPage() {
   return (
     <div>
         <ResourcesHero />
-        <ResourcesPopular />
+        <ResourcePopularList />
         <ResourcesFeaturedGuides />
         <ResourcesCategories />
-        <ResourcesUpdates />
+        <ResourceUpdateList />
         <ResourcesCTA />
     </div>
   )

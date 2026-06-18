@@ -14,10 +14,11 @@ const NAV_LINKS = [
   { href: '/admin-dashboard/users',      label: 'Users'       },
   { href: '/admin-dashboard/projects',   label: 'Projects'    },
   { href: '/admin-dashboard/billing',    label: 'Billing'     },
-  { href: '/admin-dashboard/activity',   label: 'Activity'    },
-  { href: '/admin-dashboard/contact',   label: 'Messages'    },
-  { href: '/admin-dashboard/careers',   label: 'Careers'     },
-  { href: '/admin-dashboard/templates',   label: 'Templates'    },
+  { href: '/admin-dashboard/activity',   label: 'Activities'    },
+  { href: '/admin-dashboard/contact',    label: 'Messages'    },
+  { href: '/admin-dashboard/careers',    label: 'Careers'     },
+  { href: '/admin-dashboard/templates',  label: 'Templates'   },
+  { href: '/admin-dashboard/resource',   label: 'Resources'   }
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

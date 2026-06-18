@@ -1,35 +1,19 @@
 "use client";
 
+import { PaginatedResult, PopularResourceDTO } from "@/types/resource.types";
+// import { fetchPublicPopularResources } from "@/hooks/useResource";
 import { motion } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-type Items = {
-  title: string;
-  desc: string;
-  category: string;
-  image: string;
-};
+import Link from "next/link";
 
-export default function ResourcesPopular() {
-  const items: Items[] = [
-    {
-      title: "Getting Started with Focura",
-      desc: "A simple guide to help new teams onboard quickly and understand the workflow structure.",
-      category: "Guide",
-      image: "/resources/getting-started.png",
-    },
-    {
-      title: "Boost Productivity with Workflow Automation",
-      desc: "Learn how automation removes repetitive steps and keeps your team aligned.",
-      category: "Tutorial",
-      image: "/resources/automation.png",
-    },
-    {
-      title: "Focura v1.4 Product Update",
-      desc: "New improvements, bug fixes, and UX upgrades to make your workspace smoother.",
-      category: "Product Update",
-      image: "/resources/update.png",
-    },
-  ];
+interface ResourcesPopularProps {
+  data: PaginatedResult<PopularResourceDTO>
+}
+
+export default function ResourcesPopular({data}: ResourcesPopularProps) {
+  
+  console.log(data)
 
   return (
     <section className="py-24 bg-background">
@@ -49,7 +33,7 @@ export default function ResourcesPopular() {
           </p>
         </motion.div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {items.map((item, i) => (
+          {data?.items.map((item, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 20 }}
@@ -63,6 +47,7 @@ export default function ResourcesPopular() {
                 transition-all cursor-pointer
               "
             >
+              <Link href={`/resources/popular/${item.slug}`}>
               <div className="relative w-full h-44 rounded-xl overflow-hidden mb-4">
                 <Image
                   src={item.image}
@@ -78,12 +63,77 @@ export default function ResourcesPopular() {
                 {item.title}
               </h3>
               <p className="text-sm text-foreground/60 mt-1 leading-relaxed">
-                {item.desc}
+                {item.description}
               </p>
+              </Link>
             </motion.div>
           ))}
         </div>
       </div>
+      {
+  data.totalPages > 1 && (
+    <div className="flex items-center justify-center gap-2 mt-12">
+      {/* Previous */}
+      <Link
+        href={`?page=${Math.max(1, data.page - 1)}`}
+        className={`
+          flex items-center justify-center
+          h-11 w-11 rounded-xl border
+          transition-all duration-200
+          ${
+            data.page === 1
+              ? "pointer-events-none opacity-40"
+              : "hover:bg-primary hover:text-primary-foreground"
+          }
+        `}
+      >
+        <ChevronLeft size={18} />
+      </Link>
+
+      {/* Page Numbers */}
+      {Array.from({ length: data.totalPages }, (_, i) => i + 1)
+        .slice(
+          Math.max(0, data.page - 3),
+          Math.min(data.totalPages, data.page + 2)
+        )
+        .map((page) => (
+          <Link
+            key={page}
+            href={`?page=${page}`}
+            className={`
+              h-11 min-w-11 px-4
+              flex items-center justify-center
+              rounded-xl border text-sm font-medium
+              transition-all duration-200
+              ${
+                page === data.page
+                  ? "bg-primary text-primary-foreground shadow-lg scale-105"
+                  : "hover:bg-muted"
+              }
+            `}
+          >
+            {page}
+          </Link>
+        ))}
+
+      {/* Next */}
+      <Link
+        href={`?page=${Math.min(data.totalPages, data.page + 1)}`}
+        className={`
+          flex items-center justify-center
+          h-11 w-11 rounded-xl border
+          transition-all duration-200
+          ${
+            data.page === data.totalPages
+              ? "pointer-events-none opacity-40"
+              : "hover:bg-primary hover:text-primary-foreground"
+          }
+        `}
+      >
+        <ChevronRight size={18} />
+      </Link>
+    </div>
+  )}
     </section>
   );
 }

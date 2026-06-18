@@ -10,6 +10,7 @@ export interface PopularResourceDTO {
   image: string;
   category: string;
   status: ResourceStatus;
+  createdById: string
   createdAt: string;
   updatedAt: string;
 }
@@ -59,3 +60,4 @@ export interface PaginatedResult<T> {
 }
 
 export type ResourceFormKind = "popular" | "update";
+

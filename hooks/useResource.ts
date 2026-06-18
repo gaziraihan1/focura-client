@@ -11,10 +11,9 @@ import type {
   PaginatedResult,
   ResourceStatus,
 } from "@/types/resource.types";
-import { api, ApiResponse } from "@/lib/axios";
+import { api } from "@/lib/axios";
 
 const ADMIN_BASE = "/api/v1/admin/resources";
-const PUBLIC_BASE = "/api/v1/resources";
 
 interface ListParams {
   status?: ResourceStatus;
@@ -71,36 +70,6 @@ export const adminListProductUpdates = (params: ListParams = {}) =>
 // These are plain fetch so they also work from Server Components (RSC/ISR).
 // ════════════════════════════════════════════════════════════════════════
 
-const PUBLIC_API_BASE_URL =
-  process.env.NODE_ENV === "development" ? "http://localhost:5000" : process.env.NEXT_PUBLIC_API_URL;
-
-async function publicFetch<T>(path: string, revalidateSeconds = 60): Promise<T> {
-  const res = await fetch(`${PUBLIC_API_BASE_URL}${path}`, {
-    next: { revalidate: revalidateSeconds },
-  });
-  if (!res.ok) throw new Error(`Request failed with ${res.status}`);
-  const json: ApiResponse<T> = await res.json();
-  if (!json.data) throw new Error(json.message ?? "Empty response");
-  return json.data;
-}
-
-export const fetchPublicPopularResources = (params: Omit<ListParams, "status"> = {}) =>
-  publicFetch<PaginatedResult<PopularResourceDTO>>(
-    `${PUBLIC_BASE}/popular${toQueryString(params)}`,
-  );
-
-export const fetchPublicPopularResource = (id: string) =>
-  publicFetch<PopularResourceDTO>(`${PUBLIC_BASE}/popular/${id}`);
-
-export const fetchPublicProductUpdates = (
-  params: Omit<ListParams, "status" | "category"> = {},
-) =>
-  publicFetch<PaginatedResult<ProductUpdateDTO>>(
-    `${PUBLIC_BASE}/product-updates${toQueryString(params)}`,
-  );
-
-export const fetchPublicProductUpdate = (id: string) =>
-  publicFetch<ProductUpdateDTO>(`${PUBLIC_BASE}/product-updates/${id}`);
 
 // ════════════════════════════════════════════════════════════════════════
 // QUERY KEY FACTORY
