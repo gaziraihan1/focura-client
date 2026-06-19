@@ -66,7 +66,7 @@ export const plans = [
   },
   {
     name: "Pro",
-    price: "$19",
+    price: "$12",
     tagline: "Best for fast-moving teams who need more control.",
     features: [
       "Unlimited projects",
@@ -78,8 +78,8 @@ export const plans = [
     highlighted: true,
   },
   {
-    name: "Enterprise",
-    price: "Custom",
+    name: "Business",
+    price: "$49",
     tagline: "For organizations who need full visibility and power.",
     features: [
       "Unlimited workspaces",

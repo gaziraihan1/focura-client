@@ -166,7 +166,7 @@ export function getPlanLimits(plan: string) {
       features: ['Enhanced storage', 'Up to 25 MB per file', 'Weekly backups', '20 team members'],
     },
     BUSINESS: {
-      storage: 102400, // 100 GB
+      storage: 51200, // 100 GB
       maxFileSize: 100,
       features: [
         'Large storage',

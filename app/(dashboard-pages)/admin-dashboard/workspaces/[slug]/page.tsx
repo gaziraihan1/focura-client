@@ -2,7 +2,7 @@
 
 import { useParams, useRouter }           from 'next/navigation';
 import { useState } from 'react';
-import { ArrowLeft, Building2, CreditCard, CheckCircle, XCircle } from 'lucide-react';
+import { ArrowLeft, Building2, CreditCard, CheckCircle, XCircle, Pencil } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import { useAdminWorkspaceDetail, useRestoreWorkspace }     from '@/hooks/useAdmin';
 import { Avatar }              from '@/components/Shared/Avatar';
@@ -10,6 +10,7 @@ import { StorageBar }          from '@/components/AdminDashboard/StorageBar';
 import { DeleteWorkspaceModal } from '@/components/AdminDashboard/Workspace/DeleteWorkspaceModal';
 import { cn }                  from '@/lib/utils';
 import Link from 'next/link';
+import { EditWorkspaceLimitsModal } from '@/components/AdminDashboard/Workspace/EditWorkspaceLimitsModal';
 
 function StatPill({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -24,6 +25,9 @@ export default function AdminWorkspaceDetailPage() {
   const { slug }  = useParams();
   const { data: ws, isLoading } = useAdminWorkspaceDetail(slug as string);
   const { mutate: restore, isPending: restoring } = useRestoreWorkspace();
+
+  const [editLimitsOpen, setEditLimitsOpen] = useState(false);
+
 
 
   const [ deleteModalOpen, setDeleteModalOpen ] = useState(false);
@@ -55,8 +59,15 @@ export default function AdminWorkspaceDetailPage() {
         <h1 className="text-xl font-bold text-foreground">{ws.name}</h1>
         <span className="text-xs text-muted-foreground">{ws.slug}</span>
         <span className="px-2 py-0.5 rounded-full bg-muted border border-border text-[10px] font-semibold uppercase">
-          {ws.plan}
-        </span>
+  {ws.plan}
+</span>
+<button
+  onClick={() => setEditLimitsOpen(true)}
+  className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+  title="Edit plan & limits"
+>
+  <Pencil className="w-3.5 h-3.5" />
+</button>
 <div className="ml-auto flex items-center gap-2">
   {ws.deletedAt ? (
     <div className="flex items-center gap-2">
@@ -254,6 +265,15 @@ export default function AdminWorkspaceDetailPage() {
       onClose={() => setDeleteModalOpen(false)}
       onSuccess={() => router.push('/admin-dashboard/workspaces')}
       />
+      <EditWorkspaceLimitsModal
+  workspaceSlug={ws.slug}
+  workspaceName={ws.name}
+  currentPlan={ws.plan as 'FREE' | 'PRO' | 'BUSINESS' | 'ENTERPRISE'}
+  currentMaxMembers={ws.maxMembers}
+  currentMaxStorage={ws.maxStorageMb}
+  isOpen={editLimitsOpen}
+  onClose={() => setEditLimitsOpen(false)}
+/>
     </div>
   );
 }

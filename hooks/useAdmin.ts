@@ -93,6 +93,28 @@ export function useAdminWorkspaces(params: {
   });
 }
 
+export function useUpdateWorkspaceLimits() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      slug, plan, maxMembers, maxStorage,
+    }: { slug: string; plan: string; maxMembers: number; maxStorage: number }) => {
+      const res = await api.patch(`/api/v1/admin/workspaces/${slug}/limits`, {
+        plan, maxMembers, maxStorage,
+      });
+      return res as unknown as {
+        success: boolean;
+        message: string;
+        data: { id: string; slug: string; plan: string; maxMembers: number; maxStorage: number };
+      };
+    },
+    onSuccess: (_, { slug }) => {
+      qc.invalidateQueries({ queryKey: ['admin', 'workspaces'] });
+      qc.invalidateQueries({ queryKey: adminKeys.workspaceDetail(slug) });
+    },
+  });
+}
+
 export function useAdminWorkspaceDetail(slug: string) {
   return useQuery({
     queryKey: adminKeys.workspaceDetail(slug),
