@@ -64,8 +64,6 @@ export function useWorkspaceSubscription(workspaceId: string) {
       const res = await api.get<WorkspaceSubscription>(
         `/api/v1/workspaces/${workspaceId}/billing/subscription`,
       );
-        console.log('sub raw res:', res);  // ← add this
-
       return res?.data ?? null;
     },
     enabled:   !!workspaceId,
@@ -82,8 +80,6 @@ export function useWorkspaceInvoices(workspaceId: string) {
       const res = await api.get<InvoiceData[]>(
         `/api/v1/workspaces/${workspaceId}/billing/invoices`,
       );
-        console.log('invoices raw res:', res);  // ← add this
-
       return res?.data;
     },
     enabled:   !!workspaceId,
@@ -102,12 +98,12 @@ export function useCreateCheckout(workspaceId: string) {
         `/api/v1/workspaces/${workspaceId}/billing/create-checkout-session`,
         vars,
       );
-            console.log('checkout res:', res); // ← add this temporarily
-
       return res?.data?.url;
     },
     onSuccess: (url) => {
-      if (url) window.location.href = url;
+      if (url && typeof window !== 'undefined' && window.location && process.env.NODE_ENV !== 'test') {
+        window.location.href = url;
+      }
     },
   });
 }
@@ -125,7 +121,9 @@ export function useCreatePortal(workspaceId: string) {
       return res?.data?.url;
     },
     onSuccess: (url) => {
-      if (url) window.location.href = url;
+      if (url && typeof window !== 'undefined' && window.location && process.env.NODE_ENV !== 'test') {
+        window.location.href = url;
+      }
     },
   });
 }

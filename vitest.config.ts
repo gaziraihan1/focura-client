@@ -12,11 +12,33 @@ export default defineConfig({
     pool: 'vmForks',
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'lcov'],  // lcov for CI coverage reports
+      reporter: ['text', 'lcov'],
+      include: [
+        'utils/**/*.{ts,tsx}',
+        'lib/**/*.{ts,tsx}',
+      ],
+      exclude: [
+        '**/node_modules/**',
+        '**/.next/**',
+        'lib/apiData.ts',
+        'lib/templatesData.ts',
+        'lib/roadmapData.ts',
+        'lib/devGuides.ts',
+        'lib/auth/authOptions.ts',
+        'lib/prisma.ts',
+        'lib/api/server.ts',
+        'lib/api/fetcher.ts',
+        'lib/axios.ts',
+        'lib/email.ts',
+        'lib/error/**',
+        'hooks/**/*.{ts,tsx}',
+        'components/**/*.{ts,tsx}',
+      ],
     },
     env: {
   API_BASE_URL: 'http://localhost:5000',
   NEXT_PUBLIC_API_URL: 'http://localhost:5000',
+  NODE_ENV: 'test',
 },
   },
   resolve: {

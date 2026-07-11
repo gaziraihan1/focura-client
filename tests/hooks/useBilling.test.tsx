@@ -18,16 +18,9 @@ import {
 
 const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
-// ── window.location mock ──────────────────────────────────────────────────────
-// jsdom seals window.location as non-configurable. Rather than fighting it,
-// we capture redirects by spying on window.location.assign. The hooks use
-// `window.location.href = url` which jsdom silently ignores in test env,
-// so we verify redirect intent via the returned url value from the mutation.
-
-
 afterEach(() => {
-  vi.restoreAllMocks()
-})
+  vi.restoreAllMocks();
+});
 
 // ── useWorkspaceSubscription ──────────────────────────────────────────────────
 
@@ -225,8 +218,7 @@ describe('useCreateCheckout', () => {
     })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
-    // url was null → mutationFn returns null/undefined, no redirect fires
-    expect(result.current.data).toBeFalsy()
+    expect(result.current.data).toBeNull()
   })
 })
 

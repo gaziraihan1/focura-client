@@ -9,6 +9,7 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+FRONTEND-ENGINEER.md
 
 # testing
 /coverage

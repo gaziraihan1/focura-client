@@ -944,8 +944,8 @@ axios.interceptors.response.use(null, async (error) => {
           ]},
         ],
         examples: [
-          { label: 'EventSource (JS)', code: `const es = new EventSource(\n  '${FULL_BASE}/notifications/stream',\n  { withCredentials: true }\n);\n\nes.addEventListener('notification', (e) => {\n  const notification = JSON.parse(e.data);\n  console.log(notification.title);\n});\n\nes.onerror = () => {\n  // Browser auto-reconnects with backoff\n};` },
-          { label: 'React hook', code: `useEffect(() => {\n  const es = new EventSource(\`\${API_BASE}/notifications/stream\`, {\n    withCredentials: true,\n  });\n  es.addEventListener('notification', handler);\n  return () => es.close();\n}, []);` },
+          { label: 'EventSource (JS)', code: `// Per FRONTEND_AUTH_GUIDE.md §8: SSE is authenticated via a\n// query-param token (EventSource can't send custom headers).\nconst token = '<accessToken>'; // from session.backendToken\nconst es = new EventSource(\n  \`${FULL_BASE}/notifications/stream?token=\${token}\`\n);\n\nes.addEventListener('notification', (e) => {\n  const notification = JSON.parse(e.data);\n  console.log(notification.title);\n});\n\nes.onerror = () => {\n  // Browser auto-reconnects with backoff\n};` },
+          { label: 'React hook', code: `useEffect(() => {\n  // No withCredentials: auth is via ?token=, not cookies.\n  const es = new EventSource(\n    \`\${API_BASE}/notifications/stream?token=\${accessToken}\`\n  );\n  es.addEventListener('notification', handler);\n  return () => es.close();\n}, [accessToken]);` },
         ],
         tags: ['notifications', 'sse'],
       },

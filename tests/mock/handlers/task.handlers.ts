@@ -134,6 +134,10 @@ http.get(`${BASE}/api/v1/tasks`, () =>
 
   http.get(`${BASE}/api/v1/tasks/:taskId/attachments`, () => ok([])),
 
+  http.post(`${BASE}/api/v1/tasks/:taskId/attachments`, async ({ request }) => {
+    return ok({ id: 'att-1', fileName: 'test.txt', taskId: 'task-1', size: 1024 })
+  }),
+
   http.delete(`${BASE}/api/v1/tasks/:taskId/attachments/:attachmentId`, () => ok(null)),
   // Add these to taskHandlers array in tests/mock/handlers/task.handlers.ts
 

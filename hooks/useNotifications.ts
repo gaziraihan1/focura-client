@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { useSession } from "next-auth/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
 export interface Notification {
   id: string;
@@ -47,11 +47,9 @@ export function useNotifications() {
   const { data: session } = useSession();
   const backendToken = session?.backendToken ?? null;
   const eventSourceRef = useRef<EventSource | null>(null);
+  const currentTokenRef = useRef<string | null>(null);
 
   // ── Paginated list ────────────────────────────────────────────────────────
-  // api.get<T> returns ApiResponse<T> = { success, data?: T, message? }
-  // so response IS { success, data: NotificationsResponse } — read response.data
-
   const {
     data,
     isLoading,
@@ -75,7 +73,7 @@ export function useNotifications() {
           : "/api/v1/notifications";
         const response = await api.get<NotificationsResponse>(url);
         console.log("[notifications] raw response:", response);
-        return response?.data?? EMPTY_PAGE;
+        return response?.data ?? EMPTY_PAGE;
       } catch (err) {
         console.error("Failed to fetch notifications:", err);
         return EMPTY_PAGE;
@@ -121,88 +119,144 @@ export function useNotifications() {
   // The only field that distinguishes the handshake from a real notification
   // is that the handshake has `type === "connected"` and no `id` field.
 
+  // Helper to connect with current token
+  const connect = useCallback(() => {
+    if (!backendToken) return;
+
+    const backendUrl =
+      process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+    // Close existing connection if any
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+      eventSourceRef.current = null;
+    }
+
+    const es = new EventSource(
+      `${backendUrl}/api/v1/notifications/stream?token=${backendToken}`
+    );
+    eventSourceRef.current = es;
+    currentTokenRef.current = backendToken;
+
+    es.onmessage = (event: MessageEvent) => {
+      try {
+        const parsed = JSON.parse(event.data as string) as
+          | { type: "connected"; userId: string }
+          | Notification;
+
+        // Skip the handshake — it has type "connected" and no id
+        if ("type" in parsed && parsed.type === "connected") return;
+
+        // Everything else is a Notification object
+        const notification = parsed as Notification;
+        if (!notification.id) return;
+
+        // Prepend to first page — prevents duplicates on refetch
+        qc.setQueryData<InfiniteData<NotificationsResponse>>(
+          ["notifications"],
+          (old) => {
+            if (!old) {
+              return {
+                pages: [
+                  { items: [notification], nextCursor: null, hasMore: false },
+                ],
+                pageParams: [undefined],
+              };
+            }
+            // Guard: don't prepend if it already exists (e.g. reconnect replay)
+            const alreadyExists = old.pages.some((p) =>
+              p.items.some((n) => n.id === notification.id)
+            );
+            if (alreadyExists) return old;
+
+            return {
+              ...old,
+              pages: old.pages.map((page, i) =>
+                i === 0
+                  ? { ...page, items: [notification, ...page.items] }
+                  : page
+              ),
+            };
+          }
+        );
+
+        // Increment badge count
+        qc.setQueryData<UnreadCountResponse>(
+          ["notifications", "unread-count"],
+          (old) => ({ count: (old?.count ?? 0) + 1 })
+        );
+      } catch (err) {
+        console.error("[SSE] Failed to parse message:", err);
+      }
+    };
+
+    es.onerror = (err: Event) => {
+      // Check if error is due to token expiry (401/403)
+      // EventSource doesn't expose status code, but we can detect
+      // by checking if the token was refreshed
+      es.close();
+      eventSourceRef.current = null;
+
+      // If token was refreshed, reconnect immediately with new token
+      // Otherwise use exponential backoff
+      const wasTokenRefreshed = currentTokenRef.current !== backendToken;
+      
+      if (!backendToken) return; // logged out
+      
+      if (wasTokenRefreshed) {
+        console.log("[SSE] Token refreshed, reconnecting with new token");
+        // Small delay to ensure session is updated
+        setTimeout(connect, 100);
+      } else {
+        // Regular reconnect with backoff
+        setTimeout(() => {
+          if (backendToken) connect();
+        }, 5_000);
+      }
+    };
+  }, [backendToken, qc]);
+
+  // Establish connection when token is available
   useEffect(() => {
     if (!backendToken) return;
     let cancelled = false;
 
-    function connect() {
-      const backendUrl =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-
-      const es = new EventSource(
-        `${backendUrl}/api/v1/notifications/stream?token=${backendToken}`
-      );
-      eventSourceRef.current = es;
-
-      es.onmessage = (event: MessageEvent) => {
-        try {
-          const parsed = JSON.parse(event.data as string) as
-            | { type: "connected"; userId: string }
-            | Notification;
-
-          // Skip the handshake — it has type "connected" and no id
-          if ("type" in parsed && parsed.type === "connected") return;
-
-          // Everything else is a Notification object
-          const notification = parsed as Notification;
-          if (!notification.id) return;
-
-          // Prepend to first page — prevents duplicates on refetch
-          qc.setQueryData<InfiniteData<NotificationsResponse>>(
-            ["notifications"],
-            (old) => {
-              if (!old) {
-                return {
-                  pages: [{ items: [notification], nextCursor: null, hasMore: false }],
-                  pageParams: [undefined],
-                };
-              }
-              // Guard: don't prepend if it already exists (e.g. reconnect replay)
-              const alreadyExists = old.pages.some((p) =>
-                p.items.some((n) => n.id === notification.id)
-              );
-              if (alreadyExists) return old;
-
-              return {
-                ...old,
-                pages: old.pages.map((page, i) =>
-                  i === 0
-                    ? { ...page, items: [notification, ...page.items] }
-                    : page
-                ),
-              };
-            }
-          );
-
-          // Increment badge count
-          qc.setQueryData<UnreadCountResponse>(
-            ["notifications", "unread-count"],
-            (old) => ({ count: (old?.count ?? 0) + 1 })
-          );
-        } catch (err) {
-          console.error("[SSE] Failed to parse message:", err);
-        }
-      };
-
-      es.onerror = () => {
-        es.close();
-        eventSourceRef.current = null;
-        if (!cancelled) {
-          setTimeout(() => {
-            if (!cancelled) connect();
-          }, 5_000);
-        }
-      };
+    function connectIfNeeded() {
+      if (cancelled || !backendToken) return;
+      // Only connect if we don't already have a connection for this token
+      if (currentTokenRef.current !== backendToken) {
+        connect();
+      }
     }
 
-    connect();
+    connectIfNeeded();
 
+    // Also reconnect when token changes (due to refresh)
+    // We use a separate effect with backendToken as dependency to trigger reconnect
+    // when the token is refreshed (NextAuth updates session.backendToken)
+    
     return () => {
       cancelled = true;
       eventSourceRef.current?.close();
       eventSourceRef.current = null;
+      currentTokenRef.current = null;
     };
-  }, [backendToken, qc]);
+  }, [backendToken, connect, qc]);
+
+  // Separate effect to handle token refresh - triggers reconnect when backendToken changes
+  useEffect(() => {
+    if (!backendToken) return;
+    
+    // If we have an existing connection with a different token, reconnect
+    if (eventSourceRef.current && currentTokenRef.current !== backendToken) {
+      console.log("[SSE] Token changed, reconnecting...");
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+        eventSourceRef.current = null;
+      }
+      connect();
+    }
+  }, [backendToken, connect]);
 
   // ── Mutations ─────────────────────────────────────────────────────────────
 

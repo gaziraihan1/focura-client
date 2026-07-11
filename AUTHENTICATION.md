@@ -232,7 +232,7 @@ Redirect to dashboard
   "type": "access",
   "version": 1,
   "jti": "uuid-v4-for-revocation",
-  "sid": "session-id",
+  "sessionId": "session-id",
   "iat": 1704067200,
   "exp": 1704068100
 }
@@ -257,7 +257,7 @@ Redirect to dashboard
   "type": "refresh",
   "version": 1,
   "jti": "unique-per-token",
-  "sid": "session-id",
+  "sessionId": "session-id",
   "iat": 1704067200,
   "exp": 1704672000
 }

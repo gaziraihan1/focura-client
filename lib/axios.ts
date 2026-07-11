@@ -15,6 +15,7 @@ export interface ApiResponse<T = unknown> {
 
 interface AppSession extends Session {
   backendToken: string;
+  backendTokenExpiry: number;
 }
 
 export interface AppError {
@@ -38,6 +39,9 @@ interface ApiErrorResponse {
   code?: string;
   reason?: string;
   bannedAt?: string;
+  retryAfter?: number;
+  errors?: { field: string; message: string }[];
+  required?: string[];
 }
 
 // ─── Error codes ──────────────────────────────────────────────────────────────
@@ -49,15 +53,20 @@ const TERMINAL_AUTH_CODES = new Set([
   "INVALID_TOKEN_TYPE",
   "TOKEN_VERSION_MISMATCH",
   "TOKEN_REVOKED",
+  "TOKEN_REPLAY_DETECTED",
   "SESSION_HIJACK_DETECTED",
   "USER_NOT_FOUND",
+  "PROOF_EXPIRED",
+  "INVALID_PROOF",
+  "SESSION_TIMEOUT",
+  "NOT_AUTHENTICATED",
 ]);
 
 /** Codes the interceptor handles internally — don't show a toast for these */
 const INTERCEPTOR_HANDLED_CODES = new Set([
   "TOKEN_EXPIRED",
   "CSRF_VALIDATION_FAILED",
-  "TOKEN_REPLAY_DETECTED",
+  "REFRESH_IN_PROGRESS",
 ]);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -84,8 +93,79 @@ async function getFreshSession(): Promise<AppSession | null> {
   return sessionPromise;
 }
 
+// ─── BroadcastChannel for Multi-Tab Coordination ──────────────────────────────────
+// Per FRONTEND_AUTH_GUIDE.md Pitfall 6: coordinate refresh across tabs
+
+interface AuthBroadcastEvent {
+  type: "refresh-start" | "refresh-complete" | "logout-all";
+  tokenExpiry?: number;
+  timestamp?: number;
+}
+
+const authChannel = typeof BroadcastChannel !== "undefined"
+  ? new BroadcastChannel("focura-auth")
+  : null;
+
+function broadcastAuthEvent(event: AuthBroadcastEvent): void {
+  if (authChannel) {
+    authChannel.postMessage({ ...event, timestamp: Date.now() });
+  }
+}
+
+// Listen for events from other tabs
+if (authChannel) {
+  authChannel.onmessage = (ev: MessageEvent<AuthBroadcastEvent>) => {
+    const { type, tokenExpiry } = ev.data;
+    
+    switch (type) {
+      case "refresh-start": {
+        // Another tab started refresh - wait for completion
+        if (isRefreshing) return; // Already refreshing
+        break;
+      }
+      case "refresh-complete": {
+        if (tokenExpiry) {
+          // Another tab completed refresh - update our token and reschedule
+          invalidateTokenCache();
+          if (tokenExpiry) {
+            scheduleBackgroundRefresh(tokenExpiry);
+          }
+        }
+        break;
+      }
+      case "logout-all": {
+        // Another tab requested logout
+        stopBackgroundRefresh();
+        stopSessionTimers();
+        invalidateTokenCache();
+        // Force logout will be handled by the tab that initiated it
+        break;
+      }
+    }
+  };
+}
+
+// Initialize tab ID
+// const refreshTabId = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+
+// Cleanup on page unload
+if (typeof window !== "undefined") {
+  window.addEventListener("beforeunload", () => {
+    if (authChannel) {
+      authChannel.close();
+    }
+  });
+}
+
+// ─── Helper functions ──────────────────────────────────────────────────────────────
+
 /** Awaits both NextAuth sign-out and backend logout, then redirects */
 async function forceLogout(reason = "Session expired. Please login again."): Promise<never> {
+  // Broadcast logout to other tabs before cleaning up
+  broadcastAuthEvent({ type: "logout-all" });
+  
+  stopBackgroundRefresh();
+  stopSessionTimers();
   toast.error(reason);
   await Promise.allSettled([
     logout(),
@@ -108,8 +188,194 @@ export const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
   headers: { "Content-Type": "application/json" },
-  withCredentials: true,
+  // Per FRONTEND_AUTH_GUIDE.md §13: use Authorization header, not cookies.
+  // withCredentials must stay false so the NextAuth session cookie is not
+  // sent on API calls (backend authenticates via Bearer token only).
+  withCredentials: false,
 });
+
+// ─── Proactive Background Token Refresh ─────────────────────────────────────────
+
+// ─── Session Timeout Management (Inactivity + Absolute) ──────────────────────────
+// Per guide: 30 min inactivity timeout, 7 days absolute timeout
+
+const INACTIVITY_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+const INACTIVITY_WARNING_TIME = 5 * 60 * 1000; // Warn 5 min before logout (25 min mark)
+const ABSOLUTE_TIMEOUT = 7 * 24 * 60 * 60 * 1000; // 7 days
+const ABSOLUTE_WARNING_TIME = 60 * 60 * 1000; // Warn 1 hour before absolute timeout
+
+let inactivityTimer: ReturnType<typeof setTimeout> | null = null;
+let inactivityWarningTimer: ReturnType<typeof setTimeout> | null = null;
+let absoluteTimeoutTimer: ReturnType<typeof setTimeout> | null = null;
+let absoluteWarningTimer: ReturnType<typeof setTimeout> | null = null;
+
+function clearInactivityTimers(): void {
+  if (inactivityTimer) {
+    clearTimeout(inactivityTimer);
+    inactivityTimer = null;
+  }
+  if (inactivityWarningTimer) {
+    clearTimeout(inactivityWarningTimer);
+    inactivityWarningTimer = null;
+  }
+}
+
+function clearAbsoluteTimers(): void {
+  if (absoluteTimeoutTimer) {
+    clearTimeout(absoluteTimeoutTimer);
+    absoluteTimeoutTimer = null;
+  }
+  if (absoluteWarningTimer) {
+    clearTimeout(absoluteWarningTimer);
+    absoluteWarningTimer = null;
+  }
+}
+
+function clearAllSessionTimers(): void {
+  clearInactivityTimers();
+  clearAbsoluteTimers();
+}
+
+function scheduleInactivityLogout(): void {
+  clearInactivityTimers();
+
+  // Warning at 25 minutes (5 min before logout)
+  inactivityWarningTimer = setTimeout(() => {
+    toast.error("Your session will expire in 5 minutes due to inactivity.", { duration: 10000 });
+  }, INACTIVITY_TIMEOUT - INACTIVITY_WARNING_TIME);
+
+  // Actual logout at 30 minutes
+  inactivityTimer = setTimeout(() => {
+    forceLogout("Session expired due to inactivity. Please login again.");
+  }, INACTIVITY_TIMEOUT);
+}
+
+function scheduleAbsoluteTimeout(): void {
+  clearAbsoluteTimers();
+
+  // Warning at 6 days 23 hours (1 hour before absolute timeout)
+  absoluteWarningTimer = setTimeout(() => {
+    toast.error("Your session will expire in 1 hour. Please log in again to continue.", { duration: 15000 });
+  }, ABSOLUTE_TIMEOUT - ABSOLUTE_WARNING_TIME);
+
+  // Actual logout at 7 days
+  absoluteTimeoutTimer = setTimeout(() => {
+    forceLogout("Session expired (7-day limit reached). Please login again.");
+  }, ABSOLUTE_TIMEOUT);
+}
+
+function resetActivityTimers(): void {
+  scheduleInactivityLogout();
+}
+
+function initializeSessionTimers(tokenExpiry: number): void {
+  // Initialize absolute timeout based on session start
+  // We estimate session start from token expiry (access token = 15 min, so session started ~15 min ago)
+  const estimatedSessionStart = tokenExpiry - 15 * 60 * 1000;
+
+  // Store for potential future use (e.g., debugging, session analytics)
+  void estimatedSessionStart;
+
+  scheduleInactivityLogout();
+  scheduleAbsoluteTimeout();
+}
+
+export function updateActivity(): void {
+  resetActivityTimers();
+}
+
+export function stopSessionTimers(): void {
+  clearAllSessionTimers();
+}
+
+// ─── Proactive Background Token Refresh ─────────────────────────────────────────
+
+let refreshTimer: ReturnType<typeof setTimeout> | null = null;
+let isRefreshing = false;
+
+function clearRefreshTimer(): void {
+  if (refreshTimer) {
+    clearTimeout(refreshTimer);
+    refreshTimer = null;
+  }
+}
+
+function scheduleBackgroundRefresh(tokenExpiry: number): void {
+  clearRefreshTimer();
+
+  // Refresh 90 seconds before expiry (guide recommends 1 minute, we use 90s for safety)
+  const refreshAt = tokenExpiry - 90_000;
+  const delay = Math.max(0, refreshAt - Date.now());
+
+  if (delay <= 0) {
+    // Token already expired or expiring very soon, trigger immediate refresh
+    attemptBackgroundRefresh();
+    return;
+  }
+
+  refreshTimer = setTimeout(() => {
+    attemptBackgroundRefresh();
+  }, delay);
+}
+
+async function attemptBackgroundRefresh(): Promise<void> {
+  if (isRefreshing) return;
+  isRefreshing = true;
+
+  // Broadcast refresh start to other tabs
+  broadcastAuthEvent({ type: "refresh-start" });
+
+  try {
+    const session = await getFreshSession();
+    if (!session?.backendToken || !session?.backendTokenExpiry) {
+      return;
+    }
+
+    // Only refresh if within 2 minutes of expiry (avoid unnecessary refreshes)
+    const timeUntilExpiry = session.backendTokenExpiry - Date.now();
+    if (timeUntilExpiry > 120_000) {
+      // Reschedule for later
+      scheduleBackgroundRefresh(session.backendTokenExpiry);
+      return;
+    }
+
+    const refreshed = await doBackgroundRefresh();
+    if (refreshed) {
+      // Successfully refreshed, schedule next refresh
+      const newSession = await getFreshSession();
+      if (newSession?.backendTokenExpiry) {
+        scheduleBackgroundRefresh(newSession.backendTokenExpiry);
+        // Broadcast completion to other tabs
+        broadcastAuthEvent({ type: "refresh-complete", tokenExpiry: newSession.backendTokenExpiry });
+      }
+    }
+  } finally {
+    isRefreshing = false;
+  }
+}
+
+async function doBackgroundRefresh(): Promise<boolean> {
+  try {
+    // Force a session refresh by invalidating cache and getting fresh session
+    invalidateTokenCache();
+    const session = await getFreshSession();
+    return !!session?.backendToken;
+  } catch {
+    return false;
+  }
+}
+
+// Call this when we have a valid session with token expiry
+export function initializeBackgroundRefresh(tokenExpiry: number): void {
+  scheduleBackgroundRefresh(tokenExpiry);
+  initializeSessionTimers(tokenExpiry);
+}
+
+export function stopBackgroundRefresh(): void {
+  clearRefreshTimer();
+  isRefreshing = false;
+  stopSessionTimers();
+}
 
 // ─── Token cache ──────────────────────────────────────────────────────────────
 
@@ -132,7 +398,15 @@ axiosInstance.interceptors.request.use(
       const session = await getFreshSession();
       cachedBackendToken = session?.backendToken ?? null;
       cachedTokenExpiry = cachedBackendToken ? now + TOKEN_CACHE_TTL : 0;
+
+      // Initialize background refresh & session timers if we have token expiry info
+      if (session?.backendTokenExpiry) {
+        initializeBackgroundRefresh(session.backendTokenExpiry);
+      }
     }
+
+    // Update activity timestamp on each request
+    updateActivity();
 
     if (cachedBackendToken) {
       config.headers.Authorization = `Bearer ${cachedBackendToken}`;
@@ -155,7 +429,6 @@ axiosInstance.interceptors.request.use(
 type RetryConfig = InternalAxiosRequestConfig & {
   _retried?: boolean;
   _csrfRetried?: boolean;
-  _replayRetried?: boolean;
 };
 
 axiosInstance.interceptors.response.use(
@@ -176,6 +449,12 @@ axiosInstance.interceptors.response.use(
         cachedBackendToken = token;
         cachedTokenExpiry = Date.now() + TOKEN_CACHE_TTL;
         config.headers.Authorization = `Bearer ${token}`;
+
+        // Reinitialize background refresh with new expiry
+        if (session?.backendTokenExpiry) {
+          initializeBackgroundRefresh(session.backendTokenExpiry);
+        }
+
         return axiosInstance(config);
       }
 
@@ -194,25 +473,6 @@ axiosInstance.interceptors.response.use(
         config.headers["X-CSRF-Token"] = csrfToken;
         return axiosInstance(config);
       }
-    }
-
-    // ── TOKEN_REPLAY_DETECTED: refresh session then retry once ────────────────
-    if (code === "TOKEN_REPLAY_DETECTED" && config && !config._replayRetried) {
-      config._replayRetried = true;
-      invalidateTokenCache();
-
-      const session = await getFreshSession();
-      const token = session?.backendToken;
-
-      if (token) {
-        cachedBackendToken = token;
-        cachedTokenExpiry = Date.now() + TOKEN_CACHE_TTL;
-        config.headers.Authorization = `Bearer ${token}`;
-        return axiosInstance(config);
-      }
-
-      // No token after replay detection — terminal, fall through
-      return Promise.reject(error);
     }
 
     return Promise.reject(error);
@@ -237,18 +497,52 @@ const handleAxiosError = async (
     return forceLogout(
       code === "ACCOUNT_BANNED"
         ? `Your account has been suspended${data?.reason ? `: ${data.reason}` : ""}.`
-        : "Session expired. Please login again.",
+        : code === "EMAIL_NOT_VERIFIED"
+          ? "Please verify your email address before continuing."
+          : "Session expired. Please login again.",
     );
   }
 
-  // ── Account / access errors with dedicated messages ───────────────────────
+  // ── Dedicated handling for specific error codes ─────────────────────────────
+  if (code === "EMAIL_NOT_VERIFIED") {
+    toast.error("Please verify your email address before continuing.");
+    return Promise.reject(error);
+  }
+
+  if (code === "FORBIDDEN") {
+    const required = data?.required?.join(", ") || "required permissions";
+    toast.error(`You don't have permission to perform this action. ${required}`);
+    return Promise.reject(error);
+  }
+
   if (code === "ACCOUNT_BANNED") {
     return forceLogout(`Your account has been suspended${data?.reason ? `: ${data.reason}` : ""}.`);
   }
 
-  if (code === "EMAIL_NOT_VERIFIED") {
-    toast.error("Please verify your email address before continuing.");
+  if (code === "CONFLICT") {
+    toast.error(message || "A resource with this identifier already exists.");
     return Promise.reject(error);
+  }
+
+  if (code === "REFRESH_IN_PROGRESS") {
+    // Interceptor will handle retry - don't toast
+    return Promise.reject(error);
+  }
+
+  if (code === "RATE_LIMIT_EXCEEDED") {
+    const retryAfter = data?.retryAfter || 60;
+    toast.error(`Rate limit exceeded. Please wait ${retryAfter} seconds before trying again.`);
+    return Promise.reject(error);
+  }
+
+  if (code === "SESSION_ERROR") {
+    toast.error("Server session error. Please try again.");
+    return Promise.reject(error);
+  }
+
+  if (code === "PROOF_EXPIRED" || code === "INVALID_PROOF") {
+    // These are terminal but have specific meaning
+    return forceLogout("Authentication proof invalid. Please login again.");
   }
 
   // ── Skip toast for: interceptor-handled codes, analytics, or caller opt-out
@@ -262,14 +556,37 @@ const handleAxiosError = async (
 
   // ── Status-based toast messages ───────────────────────────────────────────
   switch (status) {
+    case 400:
+      // Validation errors with field details
+      if (data?.errors?.length) {
+        toast.error(data.errors.map((e: any) => `${e.field}: ${e.message}`).join("; "));
+      } else {
+        toast.error(message || "Invalid request. Please check your input.");
+      }
+      break;
     case 403:
-      toast.error(message || "You don't have permission to do that.");
+      // Already handled FORBIDDEN, EMAIL_NOT_VERIFIED, ACCOUNT_BANNED above
+      if (!["FORBIDDEN", "EMAIL_NOT_VERIFIED", "ACCOUNT_BANNED"].includes(code || "")) {
+        toast.error(message || "You don't have permission to do that.");
+      }
       break;
     case 404:
       // 404s are usually handled inline by the caller — don't toast by default
       break;
+    case 409:
+      // CONFLICT handled above
+      if (code !== "CONFLICT") {
+        toast.error(message || "A resource with this identifier already exists.");
+      }
+      break;
+    case 413:
+      toast.error("Request too large. Please reduce the payload size.");
+      break;
     case 429:
-      toast.error(message || "Too many requests. Please try again later.");
+      // RATE_LIMIT_EXCEEDED handled above
+      if (code !== "RATE_LIMIT_EXCEEDED") {
+        toast.error(message || "Too many requests. Please try again later.");
+      }
       break;
     case 500:
     default:

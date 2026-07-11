@@ -24,7 +24,7 @@ interface WrapperOptions {
 function makeQueryClient(options?: WrapperOptions) {
   const qc = new QueryClient({
     defaultOptions: {
-      queries: { retry: false, gcTime: 0 },
+      queries: { retry: false, gcTime: 1000 * 60 },
       mutations: { retry: false },
     },
   })

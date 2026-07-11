@@ -54,6 +54,7 @@ vi.mock('@/lib/axios', () => {
     put:    <T>(endpoint: string, data?: unknown)  => axiosInstance.put<T>(endpoint, data).then(r => r.data),
     patch:  <T>(endpoint: string, data?: unknown)  => axiosInstance.patch<T>(endpoint, data).then(r => r.data),
     delete: <T>(endpoint: string)                  => axiosInstance.delete<T>(endpoint).then(r => r.data),
+    upload: <T>(endpoint: string, data?: unknown)  => axiosInstance.post<T>(endpoint, data).then(r => r.data),
   };
 
   return { api, axiosInstance, default: axiosInstance };
