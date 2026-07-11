@@ -48,3 +48,6 @@ next-env.d.ts
 keys/private.pem
 keys/*.pem
 !keys/public.pem
+
+FRONTEND_AUTH_GUIDE.md
+FRONTEND_ANALYSIS.md

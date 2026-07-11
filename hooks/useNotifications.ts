@@ -48,6 +48,7 @@ export function useNotifications() {
   const backendToken = session?.backendToken ?? null;
   const eventSourceRef = useRef<EventSource | null>(null);
   const currentTokenRef = useRef<string | null>(null);
+  const connectRef = useRef<(() => void) | null>(null);
 
   // ── Paginated list ────────────────────────────────────────────────────────
   const {
@@ -206,15 +207,19 @@ export function useNotifications() {
       if (wasTokenRefreshed) {
         console.log("[SSE] Token refreshed, reconnecting with new token");
         // Small delay to ensure session is updated
-        setTimeout(connect, 100);
+        setTimeout(() => connectRef.current?.(), 100);
       } else {
         // Regular reconnect with backoff
         setTimeout(() => {
-          if (backendToken) connect();
+          if (backendToken) connectRef.current?.();
         }, 5_000);
       }
     };
   }, [backendToken, qc]);
+
+  useEffect(() => {
+    connectRef.current = connect;
+  });
 
   // Establish connection when token is available
   useEffect(() => {
