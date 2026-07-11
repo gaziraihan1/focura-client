@@ -6,6 +6,9 @@ import ResourcesHero from '@/components/Resources/ResourcesHero'
 import ResourceUpdateList from '@/components/Resources/ResourceUpdateList'
 import React from 'react'
 
+// Force dynamic rendering to avoid build-time API calls to unavailable backend
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: "Focura Resources – Guides, Tutorials & Insights",
   description:
