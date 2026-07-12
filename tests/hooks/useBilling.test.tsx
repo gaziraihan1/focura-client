@@ -1,11 +1,14 @@
 // tests/hooks/useBilling.test.tsx
 import { renderHook, waitFor, act } from '@testing-library/react'
+import { renderHookWithProviders } from '../utils/renderWithProviders'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { server } from '../mock/server'
 import { http, HttpResponse } from 'msw'
 import { createWrapper } from '../utils/renderWithProviders'
 
+import type { WorkspaceSubscription } from '@/hooks/useBilling'
 import {
+  billingKeys,
   useWorkspaceSubscription,
   useWorkspaceInvoices,
   useCreateCheckout,
@@ -311,28 +314,27 @@ describe('useChangePlan', () => {
   })
 
   it('applies optimistic update to subscription cache', async () => {
-    const wrapper = createWrapper()
-    const { result: subResult } = renderHook(
-      () => useWorkspaceSubscription('ws-1'),
-      { wrapper }
-    )
+    const { result, qc } = renderHookWithProviders(() => {
+      const sub = useWorkspaceSubscription('ws-1')
+      const mut = useChangePlan('ws-1')
+      return { sub, mut }
+    })
 
-    await waitFor(() => expect(subResult.current.isSuccess).toBe(true))
-    expect(subResult.current.data?.planName).toBe('PRO')
+    await waitFor(() => expect(result.current.sub.isSuccess).toBe(true))
+    expect(result.current.sub.data?.planName).toBe('PRO')
 
-    const { result: mutResult } = renderHook(
-      () => useChangePlan('ws-1'),
-      { wrapper }
-    )
+    const key = billingKeys.subscription('ws-1')
+    expect((qc.getQueryData(key) as WorkspaceSubscription)?.planName).toBe('PRO')
 
     act(() => {
-      mutResult.current.mutate({ newPlanName: 'BUSINESS', billingCycle: 'YEARLY' })
+      result.current.mut.mutate({ newPlanName: 'BUSINESS', billingCycle: 'YEARLY' })
     })
 
-    // Optimistic update fires synchronously in onMutate
-    await waitFor(() => {
-      expect(subResult.current.data?.planName).toBe('BUSINESS')
-    })
+    // onMutate updates the cache synchronously
+    expect((qc.getQueryData(key) as WorkspaceSubscription)?.planName).toBe('BUSINESS')
+
+    // Mutation succeeds
+    await waitFor(() => expect(result.current.mut.isSuccess).toBe(true))
   })
 
   it('rolls back optimistic update on error', async () => {

@@ -145,8 +145,8 @@ export function useChangePlan(workspaceId: string, workspaceSlug?: string) {
       );
       return res?.data;
     },
-    onMutate: async (vars) => {
-      await qc.cancelQueries({ queryKey: billingKeys.subscription(workspaceId) });
+    onMutate: (vars) => {
+      qc.cancelQueries({ queryKey: billingKeys.subscription(workspaceId) });
       const previous = qc.getQueryData(billingKeys.subscription(workspaceId));
       qc.setQueryData(billingKeys.subscription(workspaceId), (old: WorkspaceSubscription | null) => {
         if (!old) return old;
