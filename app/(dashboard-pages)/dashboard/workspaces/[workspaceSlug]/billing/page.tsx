@@ -1,8 +1,11 @@
 "use client";
 
+import { useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { useWorkspaceBilling } from "@/hooks/useWorkspaceUpgrade";
+import { useQueryClient } from "@tanstack/react-query";
+import { billingKeys } from "@/hooks/useBilling";
 import {
   InvoiceTableSkeleton,
   PlanCardSkeleton,
@@ -14,6 +17,12 @@ export default function WorkspaceBillingPage() {
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: workspace } = useWorkspace(workspaceSlug);
   const workspaceId = workspace?.id as string;
+  const qc = useQueryClient();
+
+  // Invalidate billing queries on mount to get fresh subscription data
+  useEffect(() => {
+    qc.invalidateQueries({ queryKey: billingKeys.all(workspaceId) });
+  }, [qc, workspaceId]);
 
   const {
     sub,
@@ -27,6 +36,7 @@ export default function WorkspaceBillingPage() {
     handleCancelSubscription,
     handleReactivateSubscription,
   } = useWorkspaceBilling(workspaceId);
+  console.log(sub)
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10 space-y-6">

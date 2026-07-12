@@ -1,8 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { api } from '@/lib/axios';
 import { useRouter } from 'next/navigation';
+import { api } from '@/lib/axios';
 import { useSession } from 'next-auth/react';
 import { useMemo } from 'react';
+import { analyticsKeys } from './useAnalytics';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -124,6 +125,7 @@ export const workspaceKeys = {
   lists:   () => [...workspaceKeys.all, 'list'] as const,
   details: () => [...workspaceKeys.all, 'detail'] as const,
   detail:  (slug: string) => [...workspaceKeys.details(), slug] as const,
+  overview:(slug: string) => [...workspaceKeys.detail(slug), 'overview'] as const,
   members: (id: string)   => [...workspaceKeys.all, id, 'members'] as const,
   stats:   (id: string)   => [...workspaceKeys.all, id, 'stats'] as const,
   storage: (id: string)   => [...workspaceKeys.all, id, 'storage'] as const,
@@ -232,6 +234,8 @@ export function useUpdateWorkspace() {
         qc.setQueryData(workspaceKeys.detail(workspace.slug), workspace);
       }
       qc.invalidateQueries({ queryKey: workspaceKeys.lists() });
+      qc.invalidateQueries({ queryKey: workspaceKeys.overview(workspace.slug) });
+      qc.invalidateQueries({ queryKey: analyticsKeys.all(workspace.id) });
     },
   });
 }

@@ -184,9 +184,11 @@ export function useTasks(
   page: number = 1,
   pageSize: number = 10,
   sort?: TaskSort,
+  enabled: boolean = true,
 ) {
   return useQuery({
     queryKey: taskKeys.list(filters, page, pageSize, sort),
+    enabled,
     queryFn: async (): Promise<TasksResponse> => {
       const params = new URLSearchParams();
 

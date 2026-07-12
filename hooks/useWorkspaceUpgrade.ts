@@ -11,16 +11,21 @@ import {
 } from "@/hooks/useBilling";
 import type { PlanName, BillingCycle } from "@/types/billing.upgrade.types";
 
-export function useWorkspaceUpgrade(workspaceId: string) {
+const UPGRADE_PLAN_KEY = "focura:upgrade-plan";
+
+export function useWorkspaceUpgrade(workspaceId: string, workspaceSlug?: string) {
   const [cycle, setCycle] = useState<BillingCycle>("monthly");
 
-  const { data: sub, isPending } = useWorkspaceSubscription(workspaceId);
+  const { data: sub, isPending, isFetching } = useWorkspaceSubscription(workspaceId);
   const checkout = useCreateCheckout(workspaceId);
-  const changePlan = useChangePlan(workspaceId);
+  const changePlan = useChangePlan(workspaceId, workspaceSlug);
 
   const currentPlan = (sub?.planName ?? "FREE") as PlanName;
   const hasActiveSub = currentPlan !== "FREE";
   const isLoading = checkout.isPending || changePlan.isPending;
+
+  // Track both initial load and refetches
+  const isPendingOrFetching = isPending || isFetching;
 
   const handleSelect = useCallback(
     (planName: PlanName) => {
@@ -41,6 +46,11 @@ export function useWorkspaceUpgrade(workspaceId: string) {
         return;
       }
 
+      // Store selected plan for success page (in case backend doesn't pass it in success_url)
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem(UPGRADE_PLAN_KEY, planName);
+      }
+
       checkout.mutate({
         planName,
         billingCycle,
@@ -55,14 +65,14 @@ export function useWorkspaceUpgrade(workspaceId: string) {
     currentPlan,
     hasActiveSub,
     isLoading,
-    isPending,
+    isPending: isPendingOrFetching,
     handleSelect,
   };
 }
 
 
 export function useWorkspaceBilling(workspaceId: string) {
-  const { data: sub, isPending: subLoading } =
+  const { data: sub, isPending: subLoading, isFetching: subFetching } =
     useWorkspaceSubscription(workspaceId);
   const { data: invoices, isPending: invoicesLoading } =
     useWorkspaceInvoices(workspaceId);
@@ -89,7 +99,7 @@ export function useWorkspaceBilling(workspaceId: string) {
     invoices: invoices ?? [],
 
     // Loading states
-    subLoading,
+    subLoading: subLoading || subFetching,
     invoicesLoading,
 
     // Mutation states

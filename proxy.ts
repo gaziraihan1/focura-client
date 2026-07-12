@@ -4,27 +4,25 @@ import type { NextRequest } from "next/server";
 
 export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  
-  if (process.env.NODE_ENV === 'development') {
-  }
-  
+
   // Get NextAuth token
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  if (process.env.NODE_ENV === 'development' && token) {
-  }
-
   const isAuthPage = path.startsWith("/authentication");
-  const isProtectedRoute = path.startsWith("/dashboard") || 
-                          path.startsWith("/workspace") ||
-                          path.startsWith("/project") ||
-                          path.startsWith("/task");
+  // Post-auth pages (success / verified) must render for authenticated users
+  // so they can read the `callbackUrl` and continue to the intended page.
+  const isPostAuthPage =
+    path.startsWith("/authentication/success") ||
+    path.startsWith("/authentication/verified") ||
+    path.startsWith("/authentication/verify-email");
+  const isProtectedRoute =
+    path.startsWith("/dashboard") || path.startsWith("/admin-dashboard");
 
-  // Redirect authenticated users away from auth pages
-  if (isAuthPage && token) {
+  // Redirect authenticated users away from auth entry pages (login, register, etc.)
+  if (isAuthPage && !isPostAuthPage && token) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
@@ -38,7 +36,7 @@ export async function proxy(request: NextRequest) {
 
   // All authentication is now handled via Authorization header in axios
   // No need to manage cookies in the proxy
-  
+
   const response = NextResponse.next();
   
   // Optional: Add debug headers in development
@@ -51,5 +49,9 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/authentication/:path*", "/dashboard/:path*"],
+  matcher: [
+    "/authentication/:path*",
+    "/dashboard/:path*",
+    "/admin-dashboard/:path*",
+  ],
 };

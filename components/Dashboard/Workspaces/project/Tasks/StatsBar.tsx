@@ -3,7 +3,7 @@ import { COLUMNS } from "./ListRow";
 import { cn } from "@/lib/utils";
 import { Task } from "@/hooks/useTask";
 
-export function StatsBar({ tasks }: { tasks: Task[] }) {
+export function StatsBar({ tasks, isLoading }: { tasks: Task[]; isLoading?: boolean }) {
   const counts = useMemo(() => {
     const map = { TODO: 0, IN_PROGRESS: 0, IN_REVIEW: 0, COMPLETED: 0 } as Record<string, number>;
     tasks.forEach((t) => { if (t.status in map) map[t.status]++; });
@@ -12,6 +12,20 @@ export function StatsBar({ tasks }: { tasks: Task[] }) {
 
   const total = tasks.length;
   const pct   = total > 0 ? Math.round((counts.COMPLETED / total) * 100) : 0;
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-2 rounded-xl border border-border bg-card px-4 py-3 animate-pulse">
+        <div className="h-3 w-24 rounded bg-muted" />
+        <div className="h-1.5 rounded-full bg-muted" />
+        <div className="flex flex-wrap gap-3 pt-0.5">
+          <div className="h-3 w-16 rounded bg-muted" />
+          <div className="h-3 w-16 rounded bg-muted" />
+          <div className="h-3 w-16 rounded bg-muted" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-2 rounded-xl border border-border bg-card px-4 py-3">

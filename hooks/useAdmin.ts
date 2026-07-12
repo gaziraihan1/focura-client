@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import type {
   AdminStats,
@@ -14,6 +14,8 @@ import type {
   AdminActivity,
   AdminPaginatedResponse,
 } from "@/types/admin.types";
+import { workspaceKeys } from "./useWorkspace";
+import { analyticsKeys } from "./useAnalytics";
 
 export const adminKeys = {
   stats: ["admin", "stats"] as const,
@@ -108,9 +110,38 @@ export function useUpdateWorkspaceLimits() {
         data: { id: string; slug: string; plan: string; maxMembers: number; maxStorage: number };
       };
     },
-    onSuccess: (_, { slug }) => {
+    onSuccess: (_, { slug, plan, maxMembers, maxStorage }) => {
+      const updatedPlan = plan as 'FREE' | 'PRO' | 'BUSINESS' | 'ENTERPRISE';
+      
+      // Update the workspace detail cache immediately
+      qc.setQueryData(workspaceKeys.detail(slug), (old: any) => {
+        if (!old) return old;
+        return { ...old, plan: updatedPlan, maxMembers, maxStorage };
+      });
+
+      // Update the workspace overview cache immediately (this is what useWorkspaceOverview uses)
+      qc.setQueryData([...workspaceKeys.detail(slug), "overview"], (old: any) => {
+        if (!old) return old;
+        return {
+          ...old,
+          workspace: {
+            ...old.workspace,
+            plan: updatedPlan,
+            maxMembers,
+            maxStorage,
+          },
+        };
+      });
+
+      // Invalidate queries to ensure fresh data on next fetch
       qc.invalidateQueries({ queryKey: ['admin', 'workspaces'] });
       qc.invalidateQueries({ queryKey: adminKeys.workspaceDetail(slug) });
+      qc.invalidateQueries({ queryKey: workspaceKeys.lists() });
+      qc.invalidateQueries({ queryKey: workspaceKeys.detail(slug) });
+      qc.invalidateQueries({ queryKey: workspaceKeys.overview(slug) });
+      qc.invalidateQueries({ queryKey: workspaceKeys.stats(slug) });
+      qc.invalidateQueries({ queryKey: workspaceKeys.members(slug) });
+      qc.invalidateQueries({ queryKey: analyticsKeys.all(slug) });
     },
   });
 }
@@ -203,8 +234,6 @@ export function useAdminActivity(params: { page?: number; pageSize?: number }) {
       ),
   });
 }
-
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export function useBanUser() {
   const qc = useQueryClient();

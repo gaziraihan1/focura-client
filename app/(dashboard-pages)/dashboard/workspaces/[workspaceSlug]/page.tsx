@@ -30,7 +30,7 @@ export default function WorkspaceDetailPage() {
     canCreateProjects,
   } = useWorkspaceDetailPage({ slug });
 
-   console.log("RENDER:", { isLoading, isError, hasWorkspace: !!workspace, slug });
+  
 
   if (isLoading) return <LoadingState />;
   if (isError) return <WorkspaceDetailErrorState />;

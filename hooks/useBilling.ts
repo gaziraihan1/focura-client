@@ -2,6 +2,8 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
+import { workspaceKeys } from '@/hooks/useWorkspace';
+import { analyticsKeys } from '@/hooks/useAnalytics';
 
 // ---------------------------------------------------------------------------
 // Query key factory — scoped per workspace (independent cache per workspace)
@@ -67,7 +69,7 @@ export function useWorkspaceSubscription(workspaceId: string) {
       return res?.data ?? null;
     },
     enabled:   !!workspaceId,
-    staleTime: 0,   // 5 min — matches backend Redis TTL
+    staleTime: 0,
     retry:     false,            // 404 = FREE workspace, not an error
   });
 }
@@ -133,7 +135,7 @@ export function useCreatePortal(workspaceId: string) {
  * Downgrading to FREE cancels at period end.
  * Upgrading is prorated and invoiced immediately.
  */
-export function useChangePlan(workspaceId: string) {
+export function useChangePlan(workspaceId: string, workspaceSlug?: string) {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (vars: { newPlanName: PlanName; billingCycle?: BillingCycle }) => {
@@ -157,11 +159,20 @@ export function useChangePlan(workspaceId: string) {
         qc.setQueryData(billingKeys.subscription(workspaceId), context.previous);
       }
     },
-   onSuccess: () => {
-  setTimeout(() => {
-    qc.invalidateQueries({ queryKey: billingKeys.all(workspaceId) });
-  }, 3000);
-},
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: billingKeys.all(workspaceId) });
+      qc.invalidateQueries({ queryKey: workspaceKeys.lists() });
+      qc.invalidateQueries({ queryKey: workspaceKeys.detail(workspaceId) });
+      if (workspaceSlug) {
+        qc.invalidateQueries({ queryKey: workspaceKeys.detail(workspaceSlug), exact: true });
+        qc.invalidateQueries({ queryKey: workspaceKeys.overview(workspaceSlug) });
+        qc.refetchQueries({ queryKey: workspaceKeys.detail(workspaceSlug), exact: true });
+        qc.refetchQueries({ queryKey: workspaceKeys.overview(workspaceSlug) });
+      }
+      qc.invalidateQueries({ queryKey: workspaceKeys.stats(workspaceId) });
+      qc.invalidateQueries({ queryKey: workspaceKeys.members(workspaceId) });
+      qc.invalidateQueries({ queryKey: analyticsKeys.all(workspaceId) });
+    },
   });
 }
 /** Cancel the workspace subscription. Defaults to cancel at period end. */

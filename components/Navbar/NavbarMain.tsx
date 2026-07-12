@@ -22,13 +22,13 @@ export default function NavbarMain() {
   const { data: isAdmin = false } = useIsFocuraAdmin();
   const [open, setOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
-  // IMPROVED: Check both session status AND token presence with length validation
-  const isAuthenticated =
-    status === "authenticated" &&
-    !!session?.backendToken &&
-    session.backendToken.length > 10; // RSA JWT tokens are always >100 chars, 10 is safety minimum
+  const isLoading = status === "loading";
+  // A user is logged in once NextAuth reports an authenticated session.
+  // The backend token is only required for API calls (handled elsewhere),
+  // so it must not gate navbar link visibility.
+  const isAuthenticated = status === "authenticated";
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -70,7 +70,9 @@ export default function NavbarMain() {
               </Link>
             )}
 
-            {isAuthenticated ? (
+            {isLoading ? (
+              <Loader2 size={18} className="animate-spin text-muted-foreground" />
+            ) : isAuthenticated ? (
               <>
                 <Link
                   href="/dashboard"
@@ -143,7 +145,9 @@ export default function NavbarMain() {
               </Link>
             )}
 
-            {isAuthenticated ? (
+            {isLoading ? (
+              <Loader2 size={18} className="animate-spin text-muted-foreground" />
+            ) : isAuthenticated ? (
               <>
                 <Link
                   href="/dashboard"

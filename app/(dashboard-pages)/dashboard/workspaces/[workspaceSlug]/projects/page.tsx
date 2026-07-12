@@ -23,11 +23,7 @@ export default function WorkspaceProjectsPage() {
   hasError,
   currentUserId,
 } = useWorkspaceProjectsPage({ workspaceSlug });
-  console.log({
-  workspaceId: workspace?.id,
-  projects,
-});
-
+ 
   if (isLoading) {
     return <LoadingState />;
   }

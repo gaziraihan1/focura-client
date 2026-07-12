@@ -33,6 +33,7 @@ export default function BillingSuccessPage() {
     workspaceSlug,
   );
 
+  console.log(planName, meta, prevMeta, gainedFeatures, isTrialing, trialDays, daysLeft, billingCycle, subscriptionDetails, sub);
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-2xl mx-auto px-4 py-16">

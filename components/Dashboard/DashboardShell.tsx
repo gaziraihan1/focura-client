@@ -37,7 +37,10 @@ export default function DashboardShell({
 
     if (status === "unauthenticated") {
       console.log("🔴 DashboardShell: Unauthenticated - redirecting to login");
-      router.replace("/authentication/login");
+      const loginUrl = `/authentication/login?callbackUrl=${encodeURIComponent(
+        pathname
+      )}`;
+      router.replace(loginUrl);
       return;
     }
 
@@ -56,7 +59,7 @@ export default function DashboardShell({
         signOut({ callbackUrl: "/authentication/login" });
       }
     }
-  }, [status, session?.backendToken, router]);
+  }, [status, session?.backendToken, router, pathname]);
 
   const {
     data: profile,

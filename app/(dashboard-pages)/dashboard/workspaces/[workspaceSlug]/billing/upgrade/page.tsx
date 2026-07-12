@@ -1,8 +1,11 @@
 "use client";
 
+import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { useWorkspaceUpgrade } from "@/hooks/useWorkspaceUpgrade";
+import { useQueryClient } from "@tanstack/react-query";
+import { billingKeys } from "@/hooks/useBilling";
 import { calculateYearlyDiscount } from "@/utils/billing.upgrade.utils";
 import { PLANS } from "@/constants/billing.upgrade.constants";
 import { LoadingPlanInfo } from "@/components/Dashboard/Workspaces/billing/Upgrade/LoadingPlanInfo";
@@ -16,6 +19,12 @@ export default function WorkspaceUpgradePage() {
   const { data: workspace } = useWorkspace(workspaceSlug);
   const workspaceId = workspace?.id as string;
   const router = useRouter();
+  const qc = useQueryClient();
+
+  // Invalidate billing queries on mount to get fresh subscription data
+  useEffect(() => {
+    qc.invalidateQueries({ queryKey: billingKeys.all(workspaceId) });
+  }, [qc, workspaceId]);
 
   const {
     cycle,
@@ -25,7 +34,7 @@ export default function WorkspaceUpgradePage() {
     isLoading,
     isPending,
     handleSelect,
-  } = useWorkspaceUpgrade(workspaceId);
+  } = useWorkspaceUpgrade(workspaceId, workspaceSlug);
 
   const discount = calculateYearlyDiscount(
     PLANS[1].price.monthly,
