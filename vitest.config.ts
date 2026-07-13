@@ -16,6 +16,7 @@ export default defineConfig({
       include: [
         'utils/**/*.{ts,tsx}',
         'lib/**/*.{ts,tsx}',
+        'components/**/*.{ts,tsx}',
       ],
       exclude: [
         '**/node_modules/**',
@@ -32,7 +33,6 @@ export default defineConfig({
         'lib/email.ts',
         'lib/error/**',
         'hooks/**/*.{ts,tsx}',
-        'components/**/*.{ts,tsx}',
       ],
     },
     env: {

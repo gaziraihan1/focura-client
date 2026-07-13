@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { useProjectDetailsBySlug, useProjectRole } from '@/hooks/useProjects';
 import { useUserProfile }          from '@/hooks/useUser';
-import { Task, useTasks }          from '@/hooks/useTask';
+import { Task, useTasks, TaskSort } from '@/hooks/useTask';
 import { AccessDeniedProject }     from '@/components/Dashboard/ProjectDetails/AccessDeniedProject';
 import LoadingState                from '@/components/Dashboard/ProjectDetails/LoadingState';
 import CreateTaskModal             from '@/components/Dashboard/ProjectDetails/CreateTaskModal';
@@ -44,11 +44,12 @@ export default function ProjectTasksPage() {
   // ── Real task data for this project ───────────────────────────────────────
   // Tasks are fetched from the dedicated tasks endpoint filtered by projectId
   // (project.tasks from the detail response is not guaranteed to be populated).
+  const taskSort = useMemo<TaskSort>(() => ({ sortBy: "priority", sortOrder: "asc" }), []);
   const { data: tasksData, isLoading: tasksLoading } = useTasks(
     { projectId: project?.id, workspaceId: project?.workspaceId },
     1,
     100,
-    undefined,
+    taskSort,
     !!(project?.id && project?.workspaceId),
   );
   const tasks = useMemo<Task[]>(

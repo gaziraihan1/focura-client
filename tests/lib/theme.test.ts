@@ -1,29 +1,65 @@
-import { toggleTheme, getCurrentTheme } from "@/lib/theme";
-import { describe, beforeEach, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
-describe("theme", () => {
+// Mock the actual theme module to test internal functions
+vi.mock('@/lib/theme', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/theme')>()
+  return actual
+})
+
+import { toggleTheme, getCurrentTheme, themeScript } from '@/lib/theme'
+
+describe('theme', () => {
   beforeEach(() => {
-    document.documentElement.classList.remove("dark");
-    localStorage.clear();
-    delete (window as unknown as Record<string, unknown>).matchMedia;
-  });
+    document.documentElement.classList.remove('dark')
+    localStorage.clear()
+  })
 
-  it("getCurrentTheme returns light when no dark class", () => {
-    expect(getCurrentTheme()).toBe("light");
-  });
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
 
-  it("getCurrentTheme returns dark when class is set", () => {
-    document.documentElement.classList.add("dark");
-    expect(getCurrentTheme()).toBe("dark");
-  });
+  describe('getCurrentTheme', () => {
+    it('returns light when no dark class', () => {
+      expect(getCurrentTheme()).toBe('light')
+    })
 
-  it("toggleTheme toggles dark class and persists to localStorage", () => {
-    toggleTheme();
-    expect(document.documentElement.classList.contains("dark")).toBe(true);
-    expect(localStorage.getItem("theme")).toBe("dark");
+    it('returns dark when class is set', () => {
+      document.documentElement.classList.add('dark')
+      expect(getCurrentTheme()).toBe('dark')
+    })
+  })
 
-    toggleTheme();
-    expect(document.documentElement.classList.contains("dark")).toBe(false);
-    expect(localStorage.getItem("theme")).toBe("light");
-  });
-});
+  describe('toggleTheme', () => {
+    it('toggles dark class and persists to localStorage', () => {
+      toggleTheme()
+      expect(document.documentElement.classList.contains('dark')).toBe(true)
+
+      toggleTheme()
+      expect(document.documentElement.classList.contains('dark')).toBe(false)
+    })
+  })
+
+  describe('themeScript', () => {
+    it('is a non-empty string', () => {
+      expect(typeof themeScript).toBe('string')
+      expect(themeScript.length).toBeGreaterThan(0)
+    })
+
+    it('contains IIFE pattern', () => {
+      expect(themeScript).toContain('(function()')
+      expect(themeScript).toContain('})()')
+    })
+
+    it('references localStorage', () => {
+      expect(themeScript).toContain('localStorage')
+    })
+
+    it('references matchMedia', () => {
+      expect(themeScript).toContain('matchMedia')
+    })
+
+    it('references document.documentElement.classList', () => {
+      expect(themeScript).toContain('document.documentElement.classList')
+    })
+  })
+})

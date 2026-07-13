@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Bell,
   Brush,
@@ -13,10 +14,13 @@ import {
   Shield,
   User2,
   Wrench,
+  Brain,
+  Clock,
+  CheckCircle2,
 } from "lucide-react";
+import { CapacityScheduleForm } from "@/components/Settings/CapacityScheduleForm";
 
 const globalSettings = [
-  
   {
     title: "Account",
     description:
@@ -46,6 +50,13 @@ const globalSettings = [
     description:
       "Generate personal API tokens and manage developer access securely.",
     icon: KeyRound,
+  },
+  {
+    title: "Capacity & Schedule",
+    description:
+      "Set your work hours, capacity, and schedule for accurate workload insights and burnout detection.",
+    icon: Clock,
+    active: true,
   },
 ];
 
@@ -92,15 +103,20 @@ function SettingsCard({
   title,
   description,
   icon: Icon,
+  active,
+  onClick,
 }: {
   title: string;
   description: string;
   icon: React.ElementType;
+  active?: boolean;
+  onClick?: () => void;
 }) {
   return (
-    <div
+    <button
+      onClick={onClick}
       className="
-        group relative overflow-hidden rounded-2xl border border-border
+        w-full text-left group relative overflow-hidden rounded-2xl border border-border
         bg-card p-5 transition-all duration-200
         hover:border-primary/20 hover:bg-accent/30
       "
@@ -131,16 +147,29 @@ function SettingsCard({
               {title}
             </h3>
 
-            <span
-              className="
-                rounded-full border border-border
-                bg-muted px-2 py-0.5 text-[10px]
-                font-medium uppercase tracking-wide
-                text-muted-foreground
-              "
-            >
-              Soon
-            </span>
+            {active ? (
+              <span
+                className="
+                  inline-flex items-center gap-1 rounded-full
+                  bg-green-500/10 border border-green-500/20
+                  px-2 py-0.5 text-[10px] font-medium text-green-600 dark:text-green-400
+                "
+              >
+                <CheckCircle2 className="w-3 h-3" />
+                Live
+              </span>
+            ) : (
+              <span
+                className="
+                  rounded-full border border-border
+                  bg-muted px-2 py-0.5 text-[10px]
+                  font-medium uppercase tracking-wide
+                  text-muted-foreground
+                "
+              >
+                Soon
+              </span>
+            )}
           </div>
 
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -148,7 +177,7 @@ function SettingsCard({
           </p>
         </div>
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -156,6 +185,8 @@ function SettingsSection({
   title,
   description,
   items,
+  activeItem,
+  onItemClick,
 }: {
   title: string;
   description: string;
@@ -163,7 +194,10 @@ function SettingsSection({
     title: string;
     description: string;
     icon: React.ElementType;
+    active?: boolean;
   }[];
+  activeItem?: string | null;
+  onItemClick?: (title: string) => void;
 }) {
   return (
     <section className="space-y-6">
@@ -188,6 +222,8 @@ function SettingsSection({
             title={item.title}
             description={item.description}
             icon={item.icon}
+            active={item.active}
+            onClick={item.active ? () => onItemClick?.(item.title) : undefined}
           />
         ))}
       </div>
@@ -196,6 +232,8 @@ function SettingsSection({
 }
 
 export default function SettingsOverviewPage() {
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-12 p-6 lg:p-8">
@@ -210,7 +248,7 @@ export default function SettingsOverviewPage() {
             "
           >
             <Monitor className="h-3.5 w-3.5" />
-            Settings Preview
+            Settings
           </div>
 
           <div className="space-y-3">
@@ -220,73 +258,82 @@ export default function SettingsOverviewPage() {
                 sm:text-4xl
               "
             >
-              Settings
+              {activeSection || "Settings"}
             </h1>
 
-            <p
-              className="
-                max-w-3xl text-sm leading-7
-                text-muted-foreground sm:text-base
-              "
-            >
-              Focura settings and customization features are currently under
-              development. These sections preview the upcoming account,
-              workspace, security, integrations, and personalization controls
-              that will be added in future updates.
-            </p>
+            {!activeSection && (
+              <p
+                className="
+                  max-w-3xl text-sm leading-7
+                  text-muted-foreground sm:text-base
+                "
+              >
+                Manage your account, workspace, and personal preferences.
+              </p>
+            )}
           </div>
         </div>
 
-        {/* Global */}
-        <SettingsSection
-          title="Global Settings"
-          description="
-          Personal account preferences and settings that apply across all
-          workspaces and experiences inside Focura.
-          "
-          items={globalSettings}
-        />
+        {activeSection === "Capacity & Schedule" ? (
+          <div className="space-y-6">
+            <button
+              onClick={() => setActiveSection(null)}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              &larr; Back to settings
+            </button>
+            <CapacityScheduleForm />
+          </div>
+        ) : (
+          <>
+            {/* Global */}
+            <SettingsSection
+              title="Global Settings"
+              description="Personal account preferences and settings that apply across all workspaces and experiences inside Focura."
+              items={globalSettings}
+              activeItem={activeSection}
+              onItemClick={setActiveSection}
+            />
 
-        {/* Workspace */}
-        <SettingsSection
-          title="Workspace Settings"
-          description="
-          Team and workspace-level management controls for collaboration,
-          permissions, billing, integrations, and organization customization.
-          "
-          items={workspaceSettings}
-        />
+            {/* Workspace */}
+            <SettingsSection
+              title="Workspace Settings"
+              description="Team and workspace-level management controls for collaboration, permissions, billing, integrations, and organization customization."
+              items={workspaceSettings}
+            />
 
-        {/* Footer Notice */}
-        <div
-          className="
-            rounded-2xl border border-dashed border-border
-            bg-card/50 p-6
-          "
-        >
-          <div className="flex items-start gap-4">
+            {/* Footer Notice */}
             <div
               className="
-                flex h-11 w-11 shrink-0 items-center justify-center
-                rounded-xl bg-primary text-primary-foreground
+                rounded-2xl border border-dashed border-border
+                bg-card/50 p-6
               "
             >
-              <Settings2 className="h-5 w-5" />
-            </div>
+              <div className="flex items-start gap-4">
+                <div
+                  className="
+                    flex h-11 w-11 shrink-0 items-center justify-center
+                    rounded-xl bg-primary text-primary-foreground
+                  "
+                >
+                  <Settings2 className="h-5 w-5" />
+                </div>
 
-            <div className="space-y-2">
-              <h3 className="text-sm font-semibold tracking-tight">
-                More settings are coming soon
-              </h3>
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold tracking-tight">
+                    More settings are coming soon
+                  </h3>
 
-              <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-                Upcoming updates will include advanced permissions, audit logs,
-                workspace branding, API management, notifications, accessibility
-                controls, enterprise security, and automation tools.
-              </p>
+                  <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+                    Upcoming updates will include advanced permissions, audit logs,
+                    workspace branding, API management, notifications, accessibility
+                    controls, enterprise security, and automation tools.
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

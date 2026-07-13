@@ -21,7 +21,7 @@ export function useTeamTasksPage({ workspaceId }: UseTeamTasksPageProps) {
   const [priority, setPriority] = useState("all");
   const [attentionOnly, setAttentionOnly] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState<TaskSort['sortBy']>('dueDate');
+  const [sortBy, setSortBy] = useState<TaskSort['sortBy']>('priority');
   const [sortOrder, setSortOrder] = useState<TaskSort['sortOrder']>('asc');
 
   // Build backend filters
@@ -116,7 +116,7 @@ export function useTeamTasksPage({ workspaceId }: UseTeamTasksPageProps) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     } else {
       setSortBy(newSortBy);
-      setSortOrder('desc');
+      setSortOrder(newSortBy === 'priority' ? 'asc' : 'desc');
     }
     setCurrentPage(1);
   };

@@ -7,6 +7,7 @@ import { QuickActions } from "@/components/Dashboard/QuickActions";
 import { WorkspaceList } from "@/components/Dashboard/WorkspaceList";
 import { RecentActivity } from "@/components/Dashboard/RecentActivity";
 import { FocuraTips } from "@/components/Dashboard/FocuraTips";
+import { WellnessRecommendations } from "@/components/Dashboard/WellnessRecommendations";
 import type { Workspace } from "@/hooks/useWorkspace";
 
 export default async function DashboardPage() {
@@ -24,7 +25,10 @@ export default async function DashboardPage() {
         <WorkspaceList workspaces={workspaces ?? []} />
         <RecentActivity />
       </div>
-      <FocuraTips />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <FocuraTips />
+        <WellnessRecommendations />
+      </div>
     </div>
   );
 }

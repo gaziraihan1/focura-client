@@ -210,8 +210,6 @@ export const useCreateProject = () => {
   });
 };
 
-// Replace useUpdateProject in your useProjects.ts
-
 export const useUpdateProject = () => {
   const qc = useQueryClient();
   return useMutation({
@@ -222,11 +220,29 @@ export const useUpdateProject = () => {
       });
       return res?.data as ProjectDetails;
     },
-    onSuccess: () => {
-      // Invalidate ALL detail queries (both id-keyed and slug-keyed) so every
-      // page that shows this project refetches fresh data from the server.
+    onSuccess: (updatedProject) => {
+      // 1. Directly update slug-based cache (used by overview / settings / layout)
+      if (updatedProject.slug) {
+        qc.setQueryData<ProjectDetails>(
+          [...projectKeys.details(), 'slug', updatedProject.slug],
+          (old) => (old ? { ...old, ...updatedProject } : updatedProject),
+        );
+      }
+      // 2. Directly update ID-based cache (used by useProjectDetails)
+      qc.setQueryData<ProjectDetails>(
+        projectKeys.detail(updatedProject.id),
+        (old) => (old ? { ...old, ...updatedProject } : updatedProject),
+      );
+      // 3. Update project-list caches (sidebar / cards)
+      qc.setQueriesData<ProjectDetails[]>(
+        { queryKey: projectKeys.lists(), exact: false },
+        (old) => {
+          if (!old) return old;
+          return old.map((p) => (p.id === updatedProject.id ? { ...p, ...updatedProject } : p));
+        },
+      );
+      // 4. Background refetch – won't delay the UI update above
       qc.invalidateQueries({ queryKey: projectKeys.details() });
-      // Also refresh project lists (sidebar/cards)
       qc.invalidateQueries({ queryKey: projectKeys.lists() });
     },
   });

@@ -29,7 +29,8 @@ export interface CalendarInsights {
     meetings: number;
     admin: number;
     learning: number;
-  } | null; // ✅ Made nullable
+    other: number;
+  } | null;
 }
 
 export interface GoalCheckpoint {
@@ -97,3 +98,58 @@ export interface CalendarFilters {
 }
 
 export type BurnoutRisk = 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
+
+export interface BurnoutTrend {
+  weekStart: string;
+  riskLevel: string;
+  consecutiveHeavyDays: number;
+  avgDailyLoad: number;
+}
+
+export interface WellnessRecommendation {
+  id: string;
+  userId: string;
+  type: 'WORKLOAD_ALERT' | 'BURNOUT_PREVENTION' | 'ENERGY_INSIGHT' | 'FOCUS_SUGGESTION' | 'CAPACITY_TIP' | 'SCHEDULE_ADVICE' | 'BREAK_REMINDER';
+  message: string;
+  priority: number;
+  dismissed: boolean;
+  createdAt: string;
+  expiresAt: string | null;
+}
+
+export interface UpdateCapacityInput {
+  weeklyHours?: number;
+  dailyCapacityHours?: number;
+  deepWorkHours?: number;
+}
+
+export interface UpdateScheduleInput {
+  workDays?: string[];
+  workStartHour?: number;
+  workEndHour?: number;
+  timezone?: string;
+}
+
+export interface EnergyLevel {
+  id: string;
+  userId: string;
+  date: string;
+  energyLevel: number;
+  note?: string;
+  createdAt: string;
+}
+
+export interface LogEnergyInput {
+  date: Date;
+  energyLevel: number;
+  note?: string;
+}
+
+export interface PaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}

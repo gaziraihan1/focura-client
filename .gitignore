@@ -44,6 +44,11 @@ next-env.d.ts
 /lib/generated/prisma
 
 .vercel
+.devin
+.mimocode
+.swc
+_distill*
+tmp_query*
 
 keys/private.pem
 keys/*.pem

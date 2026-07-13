@@ -59,6 +59,7 @@ export const mockInsights: CalendarInsights = {
     meetings: 20,
     admin: 10,
     learning: 10,
+    other: 0,
   },
 }
 

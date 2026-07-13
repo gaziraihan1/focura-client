@@ -34,8 +34,8 @@ export function useTasksPage() {
   const [selectedPriority, setSelectedPriority] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(DEFAULT_PAGE_SIZE);
-  const [sortBy, setSortBy] = useState<TaskSort["sortBy"]>("createdAt");
-  const [sortOrder, setSortOrder] = useState<TaskSort["sortOrder"]>("desc");
+  const [sortBy, setSortBy] = useState<TaskSort["sortBy"]>("priority");
+  const [sortOrder, setSortOrder] = useState<TaskSort["sortOrder"]>("asc");
 
   // Build filters for API
   const filters: TaskFilters = useMemo(
@@ -99,7 +99,7 @@ export function useTasksPage() {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
       setSortBy(newSortBy);
-      setSortOrder("desc");
+      setSortOrder(newSortBy === "priority" ? "asc" : "desc");
     }
     setCurrentPage(1);
   };
@@ -224,7 +224,7 @@ export function useWorkspaceTasksPage({
 
   const [timeRemaining, setTimeRemaining] = useState(0);
 
-  const [sortBy, setSortBy] = useState<TaskSort["sortBy"]>("dueDate");
+  const [sortBy, setSortBy] = useState<TaskSort["sortBy"]>("priority");
   const [sortOrder, setSortOrder] = useState<TaskSort["sortOrder"]>("asc");
 
   const toggleLabel = (labelId: string) => {
@@ -394,7 +394,7 @@ export function useWorkspaceTasksPage({
     } else {
       setSortBy(newSortBy);
       setSortOrder(
-        newSortBy === "dueDate" || newSortBy === "createdAt" ? "asc" : "desc",
+        newSortBy === "dueDate" || newSortBy === "createdAt" || newSortBy === "priority" ? "asc" : "desc",
       );
     }
     setCurrentPage(1);

@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useTasks, Task } from "@/hooks/useTask";
+import { useTasks, Task, TaskSort } from "@/hooks/useTask";
 
 export type KanbanScope = "personal" | "assigned" | "team";
 export type KanbanSort = "priority" | "aging" | "recent" | "comments";
@@ -23,7 +23,8 @@ export function useKanbanPage() {
   const [showInsights, setShowInsights] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  const { data, isLoading } = useTasks();
+  const taskSort = useMemo<TaskSort>(() => ({ sortBy: "priority", sortOrder: "asc" }), []);
+  const { data, isLoading } = useTasks(undefined, 1, 100, taskSort);
   
   const allTasks = useMemo(() => {
     return data?.data || [];
