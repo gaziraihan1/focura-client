@@ -52,7 +52,7 @@ describe('react-query/query-client', () => {
 
   it('onError calls invalidateCsrfToken for CSRF errors', () => {
     const defaults = qc.getDefaultOptions().mutations
-    const onError = defaults?.onError as Function
+    const onError = defaults?.onError as (error: unknown) => void
 
     const csrfError = {
       response: {
@@ -66,7 +66,7 @@ describe('react-query/query-client', () => {
 
   it('onError does not call invalidateCsrfToken for non-CSRF errors', () => {
     const defaults = qc.getDefaultOptions().mutations
-    const onError = defaults?.onError as Function
+    const onError = defaults?.onError as (error: unknown) => void
 
     const regularError = {
       response: {
@@ -80,7 +80,7 @@ describe('react-query/query-client', () => {
 
   it('onError does not throw for errors without response', () => {
     const defaults = qc.getDefaultOptions().mutations
-    const onError = defaults?.onError as Function
+    const onError = defaults?.onError as (error: unknown) => void
 
     expect(() => {
       onError({ message: 'Network error' })
