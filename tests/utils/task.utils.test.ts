@@ -9,6 +9,7 @@ import {
   formatFileSize,
   formatHoursSinceCreation,
 } from '@/utils/task.utils'
+import { TaskPriority, TaskStatus } from '@/types/task.types'
 
 describe('formatTimeDuration', () => {
   it('formats minutes for hours < 1', () => {
@@ -107,7 +108,7 @@ describe('getStatusColor', () => {
   })
 
   it('returns default for unknown status', () => {
-    expect(getStatusColor('UNKNOWN' as any)).toBe('bg-gray-500/10 text-gray-500')
+    expect(getStatusColor('UNKNOWN' as TaskStatus)).toBe('bg-gray-500/10 text-gray-500')
   })
 })
 
@@ -120,7 +121,7 @@ describe('getPriorityColor', () => {
   })
 
   it('returns default for unknown priority', () => {
-    expect(getPriorityColor('UNKNOWN' as any)).toBe('bg-gray-500/10 text-gray-500')
+    expect(getPriorityColor('UNKNOWN' as TaskPriority)).toBe('bg-gray-500/10 text-gray-500')
   })
 })
 

@@ -7,6 +7,7 @@ import {
   getProgressBarColor,
   calculateTimeProgress,
 } from '@/utils/taskcard.utils'
+import { TaskPriority } from '@/types/task.types'
 
 describe('getPriorityColor', () => {
   it('returns correct colors for all priorities', () => {
@@ -17,7 +18,7 @@ describe('getPriorityColor', () => {
   })
 
   it('returns default for unknown priority', () => {
-    expect(getPriorityColor('UNKNOWN' as any)).toBe('text-gray-500')
+    expect(getPriorityColor('UNKNOWN' as TaskPriority)).toBe('text-gray-500')
   })
 })
 
