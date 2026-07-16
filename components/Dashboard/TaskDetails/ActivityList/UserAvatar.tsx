@@ -1,30 +1,22 @@
-// components/TaskActivity/UserAvatar.tsx
-import Image from 'next/image';
+// Thin wrapper over the shared Avatar primitive so the activity feed keeps its
+// exact h-8 w-8 gray fallback look while reusing one implementation.
 import type { ActivityUser } from '@/types/task-activity.types';
-import { getUserInitials } from '@/utils/task-activity.utils';
+import { Avatar } from '@/components/Shared/Avatar';
 
 interface UserAvatarProps {
   user: ActivityUser;
 }
 
 export function UserAvatar({ user }: UserAvatarProps) {
-  const initials = getUserInitials(user.name);
-
   return (
     <div className="shrink-0">
-      <div className="flex items-center justify-center h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300">
-        {user.image ? (
-          <Image
-            width={32}
-            height={32}
-            src={user.image}
-            alt={user.name || ''}
-            className="h-full w-full rounded-full object-cover"
-          />
-        ) : (
-          initials
-        )}
-      </div>
+      <Avatar
+        name={user.name}
+        image={user.image}
+        variant="gray"
+        twoLetterInitials
+        className="h-8 w-8 text-sm"
+      />
     </div>
   );
 }
