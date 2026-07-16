@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Pencil, Trash2, AlertTriangle, X } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DeleteConfirmModal } from "./DeleteConfirmationModal";
 

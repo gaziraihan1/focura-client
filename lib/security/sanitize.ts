@@ -31,3 +31,26 @@ export function isValidUrl(url: string): boolean {
     return false;
   }
 }
+
+/**
+ * Validate a post-login redirect target to prevent open redirects.
+ * Only allows relative, same-origin paths. Rejects absolute URLs,
+ * protocol-relative URLs (//evil.com), and non-path values.
+ */
+export function safeCallbackUrl(url: string | null | undefined): string {
+  if (!url || typeof url !== "string") return "/dashboard";
+
+  const trimmed = url.trim();
+
+  // Reject protocol-relative and absolute URLs (http:, https:, javascript:, etc.)
+  if (trimmed.startsWith("//") || /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(trimmed)) {
+    return "/dashboard";
+  }
+
+  // Must be a path starting with a single slash.
+  if (!trimmed.startsWith("/") || trimmed.startsWith("//")) {
+    return "/dashboard";
+  }
+
+  return trimmed;
+}

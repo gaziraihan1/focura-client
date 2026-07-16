@@ -14,7 +14,6 @@ import {
   Shield,
   User2,
   Wrench,
-  Brain,
   Clock,
   CheckCircle2,
 } from "lucide-react";
@@ -185,7 +184,7 @@ function SettingsSection({
   title,
   description,
   items,
-  activeItem,
+  // activeItem,
   onItemClick,
 }: {
   title: string;

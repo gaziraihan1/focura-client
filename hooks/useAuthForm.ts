@@ -5,6 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast"; // or: import toast from "react-hot-toast"
 import { useState } from "react";
+import { safeCallbackUrl } from "@/lib/security/sanitize";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email format"),
@@ -28,7 +29,7 @@ export function useAuthForm({ mode }: UseAuthFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+  const callbackUrl = safeCallbackUrl(searchParams.get("callbackUrl"));
 
   const schema = mode === "login" ? loginSchema : registerSchema;
 

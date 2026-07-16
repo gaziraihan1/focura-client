@@ -1,7 +1,7 @@
 // components/Calendar/DayDetailsPanel.tsx
 import { useState } from 'react';
 import { X, Clock, Zap, Target, Flame, Calendar as CalendarIcon, CheckCircle2, Brain, ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react';
-import type { CalendarDayAggregate, GoalCheckpoint, SystemCalendarEvent, EnergyLevel } from '@/types/calendar.types';
+import type { CalendarDayAggregate, GoalCheckpoint, SystemCalendarEvent } from '@/types/calendar.types';
 import { useEnergyLevel, useEnergyHistory } from '@/hooks/useEnergyLevel';
 
 interface DayDetailsPanelProps {
@@ -210,7 +210,7 @@ export function DayDetailsPanel({
 
   return (
     <div className="border-t border-border bg-card">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-400 mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
