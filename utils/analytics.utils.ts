@@ -105,7 +105,7 @@ export function getRelativeTime(date: Date | string): string {
   const diff = d.getTime() - now.getTime();
   const days = Math.floor(diff / (24 * 60 * 60 * 1000));
 
-  if (days < 0) return `${Math.abs(days)}d overdue`;
+  if (days < 0) return `${Math.abs(Math.ceil(diff / (24 * 60 * 60 * 1000)))}d overdue`;
   if (days === 0) return "Due today";
   if (days === 1) return "Due tomorrow";
   if (days <= 7) return `Due in ${days}d`;
