@@ -122,7 +122,7 @@ describe('useKanbanBoard', () => {
 describe('useKanbanInsightFooter', () => {
   it('calculates completed this week', () => {
     const recentDate = new Date()
-    recentDate.setDate(recentDate.getDate() - 1)
+    recentDate.setHours(recentDate.getHours() - 2)
 
     const tasks = [
       makeTask({ id: 't1', status: 'COMPLETED', updatedAt: recentDate.toISOString() }),
