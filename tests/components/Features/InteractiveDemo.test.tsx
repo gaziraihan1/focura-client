@@ -8,7 +8,7 @@ beforeAll(() => {
     unobserve() {}
     disconnect() {}
   }
-  // @ts-ignore
+  // @ts-expect-error jsdom does not support IntersectionObserver
   globalThis.IntersectionObserver = MockIntersectionObserver
 })
 

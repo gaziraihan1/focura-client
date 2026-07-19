@@ -60,7 +60,11 @@ vi.mock('date-fns', () => ({
 }))
 
 vi.mock('lucide-react', () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={`icon-${name}`} {...props} />
+  const icon = (name: string) => {
+    const Component = (props: any) => <svg data-testid={`icon-${name}`} {...props} />
+    Component.displayName = name
+    return Component
+  }
   return {
     Clock: icon('Clock'),
     Calendar: icon('Calendar'),
