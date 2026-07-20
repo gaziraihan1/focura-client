@@ -11,9 +11,17 @@ interface FocusModeBannerProps {
   task: Task;
   timeRemaining: number; // seconds
   onEndFocus: () => void;
+  sessionDuration?: number; // minutes
+  workspaceSlug?: string;
 }
 
-export function FocusModeBanner({ task, timeRemaining, onEndFocus }: FocusModeBannerProps) {
+export function FocusModeBanner({
+  task,
+  timeRemaining,
+  onEndFocus,
+  sessionDuration = 25,
+  workspaceSlug,
+}: FocusModeBannerProps) {
   const router = useRouter();
 
   const formatTime = (seconds: number): string => {
@@ -23,10 +31,21 @@ export function FocusModeBanner({ task, timeRemaining, onEndFocus }: FocusModeBa
   };
 
   const getProgress = (): number => {
-    // Estimate total duration (you'll get this from the active session)
-    const totalSeconds = 25 * 60; // Default 25 min, update based on actual session
+    const totalSeconds = Math.max(1, sessionDuration * 60);
     const elapsed = totalSeconds - timeRemaining;
     return Math.min(100, (elapsed / totalSeconds) * 100);
+  };
+
+  const goToTask = () => {
+    if (task.project?.slug && workspaceSlug) {
+      router.push(
+        `/dashboard/workspaces/${workspaceSlug}/projects/${task.project.slug}/tasks/${task.id}`,
+      );
+    } else if (workspaceSlug) {
+      router.push(`/dashboard/workspaces/${workspaceSlug}/tasks`);
+    } else {
+      router.push(`/dashboard/tasks/${task.id}`);
+    }
   };
 
   return (
@@ -83,7 +102,7 @@ export function FocusModeBanner({ task, timeRemaining, onEndFocus }: FocusModeBa
             </div>
 
             <button
-              onClick={() => router.push(`/dashboard/tasks/${task.id}`)}
+              onClick={goToTask}
               className="group text-left w-full"
             >
               <h3 className="text-xl font-bold text-foreground group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors line-clamp-1">
@@ -158,8 +177,8 @@ export function FocusModeBanner({ task, timeRemaining, onEndFocus }: FocusModeBa
             <span>🎯 Stay focused on one task</span>
             <span>⏰ Take breaks regularly</span>
           </div>
-          <button
-            onClick={() => router.push(`/dashboard/tasks/${task.id}`)}
+           <button
+            onClick={goToTask}
             className="text-purple-600 dark:text-purple-400 hover:underline font-medium"
           >
             View Details →

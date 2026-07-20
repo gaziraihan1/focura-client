@@ -121,6 +121,8 @@ export function useFocusSession() {
   const { mutate: completeSession, isPending: isCompleting } = useMutation({
     mutationFn: async () => {
       if (!activeSession) throw new Error('No active session to complete');
+      // Guard against double completion (e.g. timer + manual click, or poll refetch)
+      if (activeSession.completed) return;
       await api.post(
         `/api/v1/focus-sessions/${activeSession.id}/complete`,
         {},

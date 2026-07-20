@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { useWorkspace, useWorkspaceRoleFromWorkspace } from "@/hooks/useWorkspace";
 import { useProjects } from "@/hooks/useProjects";
 import { useLabels } from "@/hooks/useLabels";
@@ -36,6 +36,7 @@ export function useTasksPage() {
   const [pageSize] = useState(DEFAULT_PAGE_SIZE);
   const [sortBy, setSortBy] = useState<TaskSort["sortBy"]>("priority");
   const [sortOrder, setSortOrder] = useState<TaskSort["sortOrder"]>("asc");
+  const [focusRequired, setFocusRequired] = useState(false);
 
   // Build filters for API
   const filters: TaskFilters = useMemo(
@@ -45,8 +46,9 @@ export function useTasksPage() {
       priority: selectedPriority !== "all" ? selectedPriority : undefined,
       search: searchQuery.trim() || undefined,
       userId: userId,
+      focusRequired: focusRequired || undefined,
     }),
-    [activeTab, selectedStatus, selectedPriority, searchQuery, userId],
+    [activeTab, selectedStatus, selectedPriority, searchQuery, userId, focusRequired],
   );
 
   // Build sort params
@@ -88,6 +90,11 @@ export function useTasksPage() {
     setCurrentPage(1);
   };
 
+  const handleFocusRequiredChange = (value: boolean) => {
+    setFocusRequired(value);
+    setCurrentPage(1);
+  };
+
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
     setCurrentPage(1);
@@ -115,6 +122,12 @@ export function useTasksPage() {
   };
 
   const { activeSession, completeSession } = useFocusSession();
+  const autoCompletedRef = useRef(false);
+
+  // Reset the auto-complete guard whenever a new session starts
+  useEffect(() => {
+    autoCompletedRef.current = false;
+  }, [activeSession?.id]);
 
   // Calculate initial time remaining
   const calculateTimeRemaining = () => {
@@ -144,8 +157,9 @@ export function useTasksPage() {
       const remaining = Math.max(0, activeSession.duration * 60 - elapsed);
       setTimeRemaining(remaining);
 
-      // Auto-complete when time runs out
-      if (remaining === 0 && !activeSession.completed) {
+      // Auto-complete when time runs out (fire at most once per session)
+      if (remaining === 0 && !activeSession.completed && !autoCompletedRef.current) {
+        autoCompletedRef.current = true;
         completeSession();
       }
     };
@@ -186,6 +200,8 @@ export function useTasksPage() {
     activeSession,
     completeSession,
     qouta,
+    focusRequired,
+    setFocusRequired: handleFocusRequiredChange,
   };
 }
 
@@ -221,6 +237,7 @@ export function useWorkspaceTasksPage({
   const [selectedProject, setSelectedProject] = useState<string>("all");
   const [selectedAssignee, setSelectedAssignee] = useState<string>("all");
   const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
+  const [focusRequired, setFocusRequired] = useState(false);
 
   const [timeRemaining, setTimeRemaining] = useState(0);
 
@@ -242,6 +259,7 @@ export function useWorkspaceTasksPage({
     setSelectedProject("all");
     setSelectedAssignee("all");
     setSelectedLabels([]);
+    setFocusRequired(false);
     setCurrentPage(1);
   };
 
@@ -253,6 +271,7 @@ export function useWorkspaceTasksPage({
         selectedProject !== "all",
         selectedAssignee !== "all",
         selectedLabels.length > 0,
+        focusRequired,
       ].filter(Boolean).length,
     [
       selectedStatus,
@@ -260,6 +279,7 @@ export function useWorkspaceTasksPage({
       selectedProject,
       selectedAssignee,
       selectedLabels,
+      focusRequired,
     ],
   );
 
@@ -272,6 +292,7 @@ export function useWorkspaceTasksPage({
       assigneeId: selectedAssignee !== "all" ? selectedAssignee : undefined,
       labelIds: selectedLabels.length > 0 ? selectedLabels : undefined,
       search: searchQuery.trim() || undefined,
+      focusRequired: focusRequired || undefined,
     }),
     [
       workspace?.id,
@@ -281,6 +302,7 @@ export function useWorkspaceTasksPage({
       selectedAssignee,
       selectedLabels,
       searchQuery,
+      focusRequired,
     ],
   );
 
@@ -307,6 +329,11 @@ export function useWorkspaceTasksPage({
 
   const { activeSession, completeSession } = useFocusSession();
   const { data: focusedTask = null } = useTask(activeSession?.taskId as string);
+  const workspaceAutoCompletedRef = useRef(false);
+
+  useEffect(() => {
+    workspaceAutoCompletedRef.current = false;
+  }, [activeSession?.id]);
 
   useEffect(() => {
     if (!activeSession?.taskId) return;
@@ -316,7 +343,12 @@ export function useWorkspaceTasksPage({
       const elapsed = Math.floor((Date.now() - startTime) / 1000);
       const remaining = Math.max(0, activeSession.duration * 60 - elapsed);
       setTimeRemaining(remaining);
-      if (remaining === 0 && !!activeSession.completed) {
+      if (
+        remaining === 0 &&
+        !activeSession.completed &&
+        !workspaceAutoCompletedRef.current
+      ) {
+        workspaceAutoCompletedRef.current = true;
         completeSession();
       }
     };
@@ -425,6 +457,11 @@ export function useWorkspaceTasksPage({
     setCurrentPage(1);
   };
 
+  const handleFocusRequiredChange = (value: boolean) => {
+    setFocusRequired(value);
+    setCurrentPage(1);
+  };
+
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
     setCurrentPage(1);
@@ -459,6 +496,8 @@ export function useWorkspaceTasksPage({
     selectedLabels,
     toggleLabel,
     clearFilters,
+    focusRequired,
+    setFocusRequired: handleFocusRequiredChange,
     handlePageChange,
     handleAddToSecondary,
     handleAddToPrimary,

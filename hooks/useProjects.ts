@@ -125,6 +125,16 @@ export interface ProjectRoleResult {
 
 
 
+// The backend wraps every response as { success, data, message } but some
+// responses/older behaviour return the payload directly. Normalize so the
+// hooks always receive the inner payload regardless of which shape arrives.
+function unwrap<T>(response: any): T {
+  if (response && typeof response === 'object' && 'success' in response && 'data' in response) {
+    return response.data as T;
+  }
+  return response as T;
+}
+
 export const projectKeys = {
   all: ['projects'] as const,
   lists: () => [...projectKeys.all, 'list'] as const,
@@ -143,7 +153,7 @@ export const useProjects = (workspaceId?: string) => {
   : ['projects', 'list', 'disabled'],
     queryFn: async () => {
       const res = await api.get(`/api/v1/projects/workspace/${workspaceId}`);
-      return res.data as ProjectDetails[];
+      return unwrap<ProjectDetails[]>(res);
     },
     enabled: !!workspaceId,
         staleTime: 3 * 60 * 1000, // reads from overview-seeded cache for 3 min
@@ -159,7 +169,7 @@ export const useAllUserProjects = () => {
       const res = await api.get('/api/v1/projects/user/all', {
         showErrorToast: true,
       });
-      return res.data as ProjectDetails[];
+      return unwrap<ProjectDetails[]>(res);
     },
     staleTime: 2 * 60 * 1000, // 2 minutes
     gcTime: 10 * 60 * 1000, // 5 minutes
@@ -171,7 +181,7 @@ export const useProjectDetails = (projectId?: string) => {
     queryKey: projectKeys.detail(projectId || ''),
     queryFn: async () => {
       const res = await api.get(`/api/v1/projects/${projectId}`);
-      return res.data as ProjectDetails;
+      return unwrap<ProjectDetails>(res);
     },
     enabled: !!projectId,
     staleTime: 2 * 60 * 1000, // 5 minutes
@@ -183,7 +193,7 @@ export const useProjectDetailsBySlug = (slug?: string) => {
     queryKey: [...projectKeys.details(), 'slug', slug],
     queryFn: async () => {
       const res = await api.get(`/api/v1/projects/slug/${slug}`);
-      return res?.data as ProjectDetails;
+      return unwrap<ProjectDetails>(res);
     },
     enabled: !!slug,
     staleTime: 2 * 60 * 1000,
@@ -200,7 +210,7 @@ export const useCreateProject = () => {
         showSuccessToast: true,
         showErrorToast: true,
       });
-      return res.data;
+      return unwrap<ProjectDetails>(res);
     },
     onSuccess: (_, variables) => {
       qc.invalidateQueries({
@@ -218,7 +228,7 @@ export const useUpdateProject = () => {
         showSuccessToast: true,
         showErrorToast: true,
       });
-      return res?.data as ProjectDetails;
+      return unwrap<ProjectDetails>(res);
     },
     onSuccess: (updatedProject) => {
       // 1. Directly update slug-based cache (used by overview / settings / layout)
@@ -256,7 +266,7 @@ export const useDeleteProject = () => {
         showSuccessToast: true,
         showErrorToast: true,
       });
-      return res.data;
+      return unwrap(res);
     },
     onSuccess: () => {
       qc.invalidateQueries({
@@ -273,7 +283,7 @@ export const useAddProjectMember = () => {
         showSuccessToast: true,
         showErrorToast: true,
       });
-      return res?.data as ProjectMember;
+      return unwrap<ProjectMember>(res);
     },
     onSuccess: (newMember, variables) => {
       // Update all cached detail entries (id-keyed + slug-keyed) in one pass
@@ -320,7 +330,7 @@ export const useUpdateProjectMemberRole = () => {
         { role },
         { showSuccessToast: true, showErrorToast: true }
       );
-      return res.data;
+      return unwrap<ProjectMember>(res);
     },
     onSuccess: (updatedMember, variables) => {
       // Optimistically update member role inside the cached project
@@ -353,7 +363,7 @@ export const useRemoveProjectMember = () => {
         showSuccessToast: true,
         showErrorToast: true,
       });
-      return res.data;
+      return unwrap(res);
     },
     onSuccess: (_, variables) => {
       // Optimistically remove the member from all cached project queries

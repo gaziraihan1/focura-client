@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Users, AlertTriangle } from "lucide-react";
+import { Search, Users, AlertTriangle, Brain } from "lucide-react";
 
 export type TeamTaskScope =
   | "all"
@@ -23,6 +23,8 @@ interface TeamTaskFiltersBarProps {
 
   attentionOnly: boolean;
   onAttentionToggle: () => void;
+  focusOnly: boolean;
+  onFocusToggle: () => void;
 }
 
 export function TeamTaskFiltersBar({
@@ -36,6 +38,8 @@ export function TeamTaskFiltersBar({
   onPriorityChange,
   attentionOnly,
   onAttentionToggle,
+  focusOnly,
+  onFocusToggle,
 }: TeamTaskFiltersBarProps) {
   return (
     <div className="rounded-xl bg-card border border-border p-4 space-y-4">
@@ -116,6 +120,19 @@ export function TeamTaskFiltersBar({
         >
           <AlertTriangle size={16} />
           Needs Attention
+        </button>
+
+        {/* Focus Needed */}
+        <button
+          onClick={onFocusToggle}
+          className={`text-xs sm:text-sm px-4 py-2 rounded-lg border flex items-center gap-2 transition ${
+            focusOnly
+              ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/30"
+              : "border-border text-muted-foreground hover:bg-accent"
+          }`}
+        >
+          <Brain size={16} />
+          Focus Needed
         </button>
       </div>
     </div>

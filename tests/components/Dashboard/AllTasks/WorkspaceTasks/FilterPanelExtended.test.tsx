@@ -4,6 +4,7 @@ import { FilterPanel } from "@/components/Dashboard/AllTasks/WorkspaceTasks/Filt
 
 vi.mock("lucide-react", () => ({
   Tag: (props: any) => <svg data-testid="Tag" {...props} />,
+  Brain: (props: any) => <svg data-testid="Brain" {...props} />,
 }));
 
 const defaultProps = {
@@ -29,6 +30,8 @@ const defaultProps = {
     { id: "m1", name: "Alice" },
     { id: "m2", name: "Bob" },
   ],
+  focusRequired: false,
+  onFocusRequiredChange: vi.fn(),
 };
 
 describe("FilterPanel - extended", () => {

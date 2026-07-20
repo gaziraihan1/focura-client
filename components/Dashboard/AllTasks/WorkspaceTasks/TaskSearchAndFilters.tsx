@@ -43,6 +43,8 @@ interface TaskSearchAndFiltersProps {
   labels: Label[];
   members: Member[];
   sortOrder?: "asc" | "desc";
+  focusRequired: boolean;
+  onFocusRequiredChange: (value: boolean) => void;
 }
 
 export function TaskSearchAndFilters({
@@ -68,6 +70,8 @@ export function TaskSearchAndFilters({
   labels,
   members,
   sortOrder,
+  focusRequired,
+  onFocusRequiredChange,
 }: TaskSearchAndFiltersProps) {
   const getSortIcon = () => {
     if (!sortOrder) return <ArrowUpDown size={18} />;
@@ -156,6 +160,8 @@ export function TaskSearchAndFilters({
             projects={projects}
             labels={labels}
             members={members}
+            focusRequired={focusRequired}
+            onFocusRequiredChange={onFocusRequiredChange}
           />
 
           {activeFiltersCount > 0 && (

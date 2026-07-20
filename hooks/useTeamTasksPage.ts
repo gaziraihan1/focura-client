@@ -20,6 +20,7 @@ export function useTeamTasksPage({ workspaceId }: UseTeamTasksPageProps) {
   const [status, setStatus] = useState("all");
   const [priority, setPriority] = useState("all");
   const [attentionOnly, setAttentionOnly] = useState(false);
+  const [focusOnly, setFocusOnly] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState<TaskSort['sortBy']>('priority');
   const [sortOrder, setSortOrder] = useState<TaskSort['sortOrder']>('asc');
@@ -81,9 +82,14 @@ export function useTeamTasksPage({ workspaceId }: UseTeamTasksPageProps) {
         }
       }
 
+      // Focus Needed filter (client-side only)
+      if (focusOnly && !task.focusRequired) {
+        return false;
+      }
+
       return true;
     });
-  }, [tasks, scope, attentionOnly, userId]);
+  }, [tasks, scope, attentionOnly, focusOnly, userId]);
 
   // Reset to page 1 when filters change
   const handleScopeChange = (newScope: TeamTaskScope) => {
@@ -108,6 +114,11 @@ export function useTeamTasksPage({ workspaceId }: UseTeamTasksPageProps) {
 
   const handleAttentionToggle = () => {
     setAttentionOnly((v) => !v);
+    setCurrentPage(1);
+  };
+
+  const handleFocusToggle = () => {
+    setFocusOnly((v) => !v);
     setCurrentPage(1);
   };
 
@@ -154,6 +165,8 @@ export function useTeamTasksPage({ workspaceId }: UseTeamTasksPageProps) {
     setPriority: handlePriorityChange,
     attentionOnly,
     setAttentionOnly: handleAttentionToggle,
+    focusOnly,
+    setFocusOnly: handleFocusToggle,
     sortBy,
     sortOrder,
     setSortBy: handleSortChange,

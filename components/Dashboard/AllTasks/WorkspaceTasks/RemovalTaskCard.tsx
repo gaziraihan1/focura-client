@@ -40,7 +40,7 @@ export function RemovableTaskCard({
           absolute top-3 right-12
           p-1.5 rounded-lg
           bg-background border border-border text-muted-foreground
-          md:opacity-0 group-hover/removable:opacity-100
+          opacity-100 md:opacity-0 group-hover/removable:opacity-100
           transition-all disabled:cursor-not-allowed disabled:opacity-50
           ${hoverColor}
         `}

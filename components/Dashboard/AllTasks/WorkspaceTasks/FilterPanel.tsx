@@ -1,4 +1,4 @@
-import { Tag } from "lucide-react";
+import { Tag, Brain } from "lucide-react";
 
 interface Project {
   id: string;
@@ -30,6 +30,8 @@ interface FilterPanelProps {
   projects: Project[];
   labels: Label[];
   members: Member[];
+  focusRequired: boolean;
+  onFocusRequiredChange: (value: boolean) => void;
 }
 
 export function FilterPanel({
@@ -46,6 +48,8 @@ export function FilterPanel({
   projects,
   labels,
   members,
+  focusRequired,
+  onFocusRequiredChange,
 }: FilterPanelProps) {
   return (
     <div className="space-y-4">
@@ -155,6 +159,38 @@ export function FilterPanel({
           </div>
         </div>
       )}
+
+      {/* Focus Required Filter */}
+      <div>
+        <label className="block text-sm font-medium text-foreground mb-2">
+          <Brain size={16} className="inline mr-2 text-purple-500" />
+          Focus Needed
+        </label>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={focusRequired}
+          onClick={() => onFocusRequiredChange(!focusRequired)}
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium transition ${
+            focusRequired
+              ? "bg-purple-500/10 border-purple-500/30 text-purple-600 dark:text-purple-400"
+              : "bg-background border-border text-muted-foreground hover:bg-accent"
+          }`}
+        >
+          <span
+            className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
+              focusRequired ? "bg-purple-500" : "bg-muted"
+            }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                focusRequired ? "translate-x-4" : "translate-x-0.5"
+              }`}
+            />
+          </span>
+          {focusRequired ? "Showing focus-required only" : "Include all tasks"}
+        </button>
+      </div>
     </div>
   );
 }

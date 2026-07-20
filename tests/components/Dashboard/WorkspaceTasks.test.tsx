@@ -307,6 +307,8 @@ describe('WorkspaceTasks/FilterPanel', () => {
     projects: [{ id: 'proj-1', name: 'Project 1' }],
     labels: [{ id: 'label-1', name: 'Bug', color: '#ef4444' }],
     members: [{ id: 'user-1', name: 'John Doe' }],
+    focusRequired: false,
+    onFocusRequiredChange: vi.fn(),
   }
 
   it('renders status filter', () => {
@@ -466,6 +468,8 @@ describe('WorkspaceTasks/TaskSearchAndFilters', () => {
     projects: [],
     labels: [],
     members: [],
+    focusRequired: false,
+    onFocusRequiredChange: vi.fn(),
   }
 
   it('renders search input', () => {

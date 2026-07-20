@@ -49,7 +49,10 @@ export function PrimaryTasksView({
       {primaryTask && (
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-purple-500 opacity-75" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-purple-500" />
+            </span>
             <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
               <Sparkles size={20} className="text-purple-500" />
               Primary Task
@@ -83,7 +86,7 @@ export function PrimaryTasksView({
       {secondaryTasks.length > 0 && (
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-amber-500" />
+            <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
             <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
               <ListChecks size={20} className="text-amber-500" />
               Secondary Tasks ({secondaryTasks.length})

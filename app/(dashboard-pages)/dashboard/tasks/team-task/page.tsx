@@ -33,7 +33,9 @@ export default function TeamTasksPage({
     isLoading,
     handlePageChange,
     getSectionTitle,
-    setAttentionOnly
+    setAttentionOnly,
+    focusOnly,
+    setFocusOnly
     
   } = useTeamTasksPage({ workspaceId });
 
@@ -56,6 +58,8 @@ export default function TeamTasksPage({
         onPriorityChange={setPriority}
         attentionOnly={attentionOnly}
         onAttentionToggle={setAttentionOnly}
+        focusOnly={focusOnly}
+        onFocusToggle={setFocusOnly}
       />
 
       <TeamTasksContent

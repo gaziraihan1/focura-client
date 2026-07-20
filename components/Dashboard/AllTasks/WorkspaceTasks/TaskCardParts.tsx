@@ -90,9 +90,9 @@ export function TaskCardHeader({
           className={`${getPriorityColor(task.priority)} shrink-0`}
         />
 
-        {/* Action buttons — reveal on hover (or always visible on mobile) */}
+        {/* Action buttons — always visible on touch, hover-reveal on desktop */}
         {showButtons && (
-          <div className="flex gap-1.5 md:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div className="flex gap-1.5 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             {/* Primary */}
             <button
               onClick={handlePrimaryClick}

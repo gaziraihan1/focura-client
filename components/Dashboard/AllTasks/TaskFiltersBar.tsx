@@ -1,4 +1,4 @@
-import { Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Search, ArrowUpDown, ArrowUp, ArrowDown, Brain } from "lucide-react";
 
 type Sorting = "title" | "status" | "priority" | "dueDate" | "createdAt" | undefined;
 
@@ -18,6 +18,8 @@ interface TaskFiltersBarProps {
   sortBy: Sorting;
   sortOrder?: "asc" | "desc";
   onSortChange: (v: Sorting) => void;
+  focusRequired: boolean;
+  onFocusRequiredChange: (value: boolean) => void;
 }
 
 export function TaskFiltersBar({
@@ -32,6 +34,8 @@ export function TaskFiltersBar({
   sortBy,
   sortOrder,
   onSortChange,
+  focusRequired,
+  onFocusRequiredChange,
 }: TaskFiltersBarProps) {
   const tabs = [
     { value: "all", label: "All Tasks" },
@@ -105,6 +109,20 @@ export function TaskFiltersBar({
           <option value="MEDIUM">Medium</option>
           <option value="LOW">Low</option>
         </select>
+
+        {/* Focus Needed */}
+        <button
+          type="button"
+          onClick={() => onFocusRequiredChange(!focusRequired)}
+          className={`text-xs sm:text-sm px-4 py-2 rounded-lg border flex items-center gap-2 transition ${
+            focusRequired
+              ? "bg-purple-500/10 border-purple-500/30 text-purple-600 dark:text-purple-400"
+              : "border-border text-muted-foreground hover:bg-accent"
+          }`}
+        >
+          <Brain size={16} />
+          Focus Needed
+        </button>
 
         {/* Sort Dropdown */}
         <div className="flex items-center gap-2">

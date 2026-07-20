@@ -42,6 +42,8 @@ const defaultProps = {
   projects: [],
   labels: [],
   members: [],
+  focusRequired: false,
+  onFocusRequiredChange: vi.fn(),
 }
 
 describe('TaskSearchAndFilters', () => {

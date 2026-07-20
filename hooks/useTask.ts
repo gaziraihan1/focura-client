@@ -48,6 +48,10 @@ export interface Task {
   };
   createdAt: string;
   updatedAt: string;
+  focusRequired?: boolean;
+  focusLevel?: number;
+  energyType?: "LOW" | "MEDIUM" | "HIGH";
+  distractionCost?: number;
   timeTracking?: {
     hoursSinceCreation: number;
     hoursUntilDue: number | null;
@@ -130,6 +134,7 @@ export interface TaskFilters {
   assigneeId?: string;
   labelIds?: string[];
   userId?: string;
+  focusRequired?: boolean;
 }
 
 export interface TaskPagination {
@@ -206,6 +211,7 @@ export function useTasks(
       if (filters?.labelIds?.length)
         params.append("labelIds", filters.labelIds.join(","));
       if (filters?.userId) params.append("userId", filters.userId);
+      if (filters?.focusRequired) params.append("focusRequired", "true");
 
       params.append("page", page.toString());
       params.append("pageSize", pageSize.toString());

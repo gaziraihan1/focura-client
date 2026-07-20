@@ -34,7 +34,9 @@ export default function TasksPage() {
     timeRemaining,
     activeSession,
     completeSession,
-    qouta
+    qouta,
+    focusRequired,
+    setFocusRequired,
   } = useTasksPage();
 
   return (
@@ -46,6 +48,7 @@ export default function TasksPage() {
           task={focusedTask}
           timeRemaining={timeRemaining}
           onEndFocus={completeSession}
+          sessionDuration={activeSession.duration}
         />
       )}
       
@@ -63,6 +66,8 @@ export default function TasksPage() {
         sortBy={sortBy}
         sortOrder={sortOrder}
         onSortChange={handleSortChange}
+        focusRequired={focusRequired}
+        onFocusRequiredChange={setFocusRequired}
       />
       
       <TasksContent

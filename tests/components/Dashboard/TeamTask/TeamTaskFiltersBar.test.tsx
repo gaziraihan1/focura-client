@@ -101,6 +101,7 @@ vi.mock("lucide-react", () => {
     User: icon("User"),
     Users: icon("Users"),
     Wifi: icon("Wifi"),
+    Brain: icon("Brain"),
     Zap: icon("Zap"),
     X: icon("X"),
     XCircle: icon("XCircle"),
@@ -320,6 +321,8 @@ describe("TeamTaskFiltersBar", () => {
         onPriorityChange={vi.fn()}
         attentionOnly={false}
         onAttentionToggle={vi.fn()}
+        focusOnly={false}
+        onFocusToggle={vi.fn()}
       />
     );
     expect(screen.getByText("All")).toBeInTheDocument();
@@ -345,6 +348,8 @@ describe("TeamTaskFiltersBar", () => {
         onPriorityChange={vi.fn()}
         attentionOnly={false}
         onAttentionToggle={vi.fn()}
+        focusOnly={false}
+        onFocusToggle={vi.fn()}
       />
     );
     fireEvent.click(screen.getByText("Assigned to Me"));

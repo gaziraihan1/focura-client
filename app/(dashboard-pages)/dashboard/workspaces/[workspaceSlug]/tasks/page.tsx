@@ -44,6 +44,8 @@ export default function WorkspaceTasksPage() {
     selectedLabels,
     toggleLabel,
     clearFilters,
+    focusRequired,
+    setFocusRequired,
     handlePageChange,
     projects,
     labels,
@@ -84,6 +86,8 @@ export default function WorkspaceTasksPage() {
           task={focusedTask}
           timeRemaining={timeRemaining}
           onEndFocus={completeSession}
+          sessionDuration={activeSession.duration}
+          workspaceSlug={workspaceSlug}
         />
       )}
 
@@ -108,6 +112,8 @@ export default function WorkspaceTasksPage() {
         selectedLabels={selectedLabels}
         onToggleLabel={toggleLabel}
         onClearFilters={clearFilters}
+        focusRequired={focusRequired}
+        onFocusRequiredChange={setFocusRequired}
         projects={projects}
         labels={labels}
         members={members}

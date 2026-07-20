@@ -34,26 +34,29 @@ export function FocusSessionCard({ taskId }: FocusSessionCardProps) {
 
   // Update timer and handle auto-complete
   const completeSessionRef = useRef(completeSession);
-useEffect(() => { completeSessionRef.current = completeSession; }, [completeSession]);
+  useEffect(() => { completeSessionRef.current = completeSession; }, [completeSession]);
+  const autoCompletedRef = useRef(false);
+  useEffect(() => { autoCompletedRef.current = false; }, [activeSession?.id]);
 
-useEffect(() => {
-  if (!activeSession || activeSession.taskId !== taskId) return;
+  useEffect(() => {
+    if (!activeSession || activeSession.taskId !== taskId) return;
 
-  const updateTimer = () => {
-    const startTime = new Date(activeSession.startedAt).getTime();
-    const elapsed = Math.floor((Date.now() - startTime) / 1000);
-    const remaining = Math.max(0, activeSession.duration * 60 - elapsed);
-    setTimeRemaining(remaining);
+    const updateTimer = () => {
+      const startTime = new Date(activeSession.startedAt).getTime();
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const remaining = Math.max(0, activeSession.duration * 60 - elapsed);
+      setTimeRemaining(remaining);
 
-    if (remaining === 0 && !activeSession.completed) {
-      completeSessionRef.current();
-    }
-  };
+      if (remaining === 0 && !activeSession.completed && !autoCompletedRef.current) {
+        autoCompletedRef.current = true;
+        completeSessionRef.current();
+      }
+    };
 
-  updateTimer();
-  const interval = setInterval(updateTimer, 1000);
-  return () => clearInterval(interval);
-}, [activeSession, taskId]); // completeSession no longer a dep
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [activeSession, taskId]); // completeSession no longer a dep
 
   const isActiveForThisTask = activeSession?.taskId === taskId && !activeSession.completed;
 

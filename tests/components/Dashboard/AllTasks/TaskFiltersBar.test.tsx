@@ -32,6 +32,7 @@ vi.mock('lucide-react', () => {
     ArrowUpDown: mock('arrow-up-down'),
     ArrowUp: mock('arrow-up'),
     ArrowDown: mock('arrow-down'),
+    Brain: mock('brain'),
   }
 })
 
@@ -50,6 +51,8 @@ describe('TaskFiltersBar', () => {
     sortBy: 'createdAt' as const,
     sortOrder: undefined as 'asc' | 'desc' | undefined,
     onSortChange: vi.fn(),
+    focusRequired: false,
+    onFocusRequiredChange: vi.fn(),
   }
 
   beforeEach(() => {
