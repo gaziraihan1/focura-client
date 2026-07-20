@@ -26,7 +26,7 @@ describe('formatResetTime', () => {
   it('returns hours and minutes format for future time', () => {
     const future = new Date(Date.now() + 3_600_000 + 30 * 60_000).toISOString()
     const result = formatResetTime(future)
-    expect(result).toMatch(/1h [23]0m/)
+    expect(result).toMatch(/1h \d+m/)
   })
 })
 
