@@ -5,19 +5,19 @@ import { ProjectStats } from '@/components/Dashboard/AllProjects/ProjectStats'
 import { WorkspaceQuickFilter } from '@/components/Dashboard/AllProjects/WorkspaceQuickFilter'
 
 vi.mock('lucide-react', () => ({
-  FolderKanban: (props: any) => <svg data-testid="folder-icon" {...props} />,
-  Sparkles: (props: any) => <svg data-testid="sparkles-icon" {...props} />,
-  CheckCircle2: (props: any) => <svg data-testid="check-icon" {...props} />,
-  TrendingUp: (props: any) => <svg data-testid="trending-icon" {...props} />,
-  Building2: (props: any) => <svg data-testid="building-icon" {...props} />,
+  FolderKanban: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="folder-icon" {...props} />,
+  Sparkles: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="sparkles-icon" {...props} />,
+  CheckCircle2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-icon" {...props} />,
+  TrendingUp: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="trending-icon" {...props} />,
+  Building2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="building-icon" {...props} />,
 }))
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...props}>{children}</button>,
   },
-  AnimatePresence: ({ children }: any) => children,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => children,
 }))
 
 describe('EmptyState', () => {

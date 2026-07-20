@@ -3,13 +3,13 @@ import { render, screen } from '@testing-library/react'
 import { Toolbar } from '@/components/Dashboard/Workspaces/project/Tasks/ToolBar'
 
 vi.mock('lucide-react', () => ({
-  ChevronDown: (props: any) => <svg data-testid="chevron" {...props} />,
-  Filter: (props: any) => <svg data-testid="filter" {...props} />,
-  LayoutGrid: (props: any) => <svg data-testid="layout-grid" {...props} />,
-  List: (props: any) => <svg data-testid="list" {...props} />,
-  Search: (props: any) => <svg data-testid="search" {...props} />,
-  SlidersHorizontal: (props: any) => <svg data-testid="sliders" {...props} />,
-  X: (props: any) => <svg data-testid="x" {...props} />,
+  ChevronDown: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="chevron" {...props} />,
+  Filter: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="filter" {...props} />,
+  LayoutGrid: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="layout-grid" {...props} />,
+  List: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="list" {...props} />,
+  Search: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="search" {...props} />,
+  SlidersHorizontal: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="sliders" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x" {...props} />,
 }))
 
 vi.mock('@/components/Dashboard/Workspaces/project/Tasks/PriorityBadge', () => ({
@@ -31,7 +31,7 @@ vi.mock('@/components/Dashboard/Workspaces/project/Tasks/ListRow', () => ({
 }))
 
 vi.mock('@/lib/utils', () => ({
-  cn: (...args: any[]) => args.filter(Boolean).join(' '),
+  cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(' '),
 }))
 
 const defaultProps = {

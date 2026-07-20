@@ -17,17 +17,17 @@ const defaultData = [
 describe('BurnoutTrendsChart', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockUseBurnoutTrends.mockReturnValue({ data: defaultData, loading: false } as any)
+    mockUseBurnoutTrends.mockReturnValue({ data: defaultData, loading: false } as any as Record<string, unknown>)
   })
 
   it('returns null when loading', () => {
-    mockUseBurnoutTrends.mockReturnValue({ data: [], loading: true } as any)
+    mockUseBurnoutTrends.mockReturnValue({ data: [], loading: true } as any as Record<string, unknown>)
     const { container } = render(<BurnoutTrendsChart />, { wrapper: createWrapper() })
     expect(container.innerHTML).toBe('')
   })
 
   it('returns null when no data', () => {
-    mockUseBurnoutTrends.mockReturnValue({ data: [], loading: false } as any)
+    mockUseBurnoutTrends.mockReturnValue({ data: [], loading: false } as any as Record<string, unknown>)
     const { container } = render(<BurnoutTrendsChart />, { wrapper: createWrapper() })
     expect(container.innerHTML).toBe('')
   })

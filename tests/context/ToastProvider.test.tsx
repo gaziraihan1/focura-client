@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import ToastProvider from '@/context/providers/ToastProvider'
 
 vi.mock('react-hot-toast', () => ({
-  Toaster: (props: any) => <div data-testid="toaster" data-position={props.position} />,
+  Toaster: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="toaster" data-position={props.position} />,
 }))
 
 describe('ToastProvider', () => {

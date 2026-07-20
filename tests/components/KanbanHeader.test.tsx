@@ -3,9 +3,9 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { KanbanHeader } from '@/components/Dashboard/KanbanView/KanbanHeader'
 
 vi.mock('lucide-react', () => ({
-  Target: (props: any) => <svg data-testid="target-icon" {...props} />,
-  Zap: (props: any) => <svg data-testid="zap-icon" {...props} />,
-  Settings: (props: any) => <svg data-testid="settings-icon" {...props} />,
+  Target: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="target-icon" {...props} />,
+  Zap: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="zap-icon" {...props} />,
+  Settings: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="settings-icon" {...props} />,
 }))
 
 const defaultProps = {

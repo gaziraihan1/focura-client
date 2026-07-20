@@ -6,11 +6,11 @@ import { WorkspaceSearch } from '@/components/Dashboard/Workspaces/Workspaces/Wo
 import { WorkspacesContent } from '@/components/Dashboard/Workspaces/Workspaces/WorkspacesContent'
 
 vi.mock('framer-motion', () => ({
-  motion: { div: (p: any) => <div {...p} /> },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  motion: { div: (p: Record<string, unknown>) => <div {...p} /> },
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => <a href={href} {...props}>{children}</a>,
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => <a href={href} {...props}>{children}</a>,
 }))
 vi.mock('@/hooks/useWorkspacePage', () => ({
   useWorkspacesPage: () => ({

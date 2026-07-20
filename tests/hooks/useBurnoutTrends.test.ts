@@ -5,7 +5,7 @@ import { server } from '../mock/server'
 import { http, HttpResponse } from 'msw'
 
 const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
-const ok = (data: unknown) => HttpResponse.json({ success: true, data })
+const ok = (data: any) => HttpResponse.json({ success: true, data })
 
 import { useBurnoutTrends, useRecommendations } from '@/hooks/useBurnoutTrends'
 

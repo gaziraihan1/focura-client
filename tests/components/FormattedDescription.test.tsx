@@ -8,7 +8,7 @@ vi.mock('@/utils/resources.utils', () => ({
 
 vi.mock('framer-motion', () => ({
   motion: {
-    p: (props: any) => <p {...props}>{props.children}</p>,
+    p: (props: React.HTMLAttributes<HTMLParagraphElement>) => <p {...props}>{props.children}</p>,
   },
 }))
 

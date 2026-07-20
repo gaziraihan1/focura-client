@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { TaskTimeDetails } from '@/components/Dashboard/CalendarView/TaskModal/TaskTimeDetails'
 
 vi.mock('lucide-react', () => ({
-  Clock: (props: any) => <svg {...props} />,
+  Clock: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
 }))
 
 describe('TaskTimeDetails', () => {

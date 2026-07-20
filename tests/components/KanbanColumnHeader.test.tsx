@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import KanbanColumnHeader from '@/components/Dashboard/KanbanView/KanbanColumn/KanbanColumnHeader'
 
 vi.mock('lucide-react', () => ({
-  AlertTriangle: (props: any) => <svg data-testid="alert-icon" {...props} />,
+  AlertTriangle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-icon" {...props} />,
 }))
 
 const defaultColumn = {

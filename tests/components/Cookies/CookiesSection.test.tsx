@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
 
 // Polyfill IntersectionObserver for jsdom
 beforeAll(() => {
@@ -13,13 +13,13 @@ beforeAll(() => {
 })
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))
 
 vi.mock('next/image', () => ({
-  default: (props: any) => {
+  default: (props: Record<string, unknown>) => {
     const { fill, ...rest } = props
     return <img {...rest} data-fill={fill} />
   },
@@ -27,15 +27,15 @@ vi.mock('next/image', () => ({
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...props}>{children}</button>,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 
 vi.mock('lucide-react', () => {
   const icon = (name: string) => {
-    const Component = (props: any) => <svg data-testid={`${name}-icon`} {...props} />
+    const Component = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={`${name}-icon`} {...props} />
     Component.displayName = name
     return Component
   }
@@ -109,7 +109,7 @@ vi.mock('lucide-react', () => {
 })
 
 vi.mock('@/lib/utils', () => ({
-  cn: (...args: any[]) => args.filter(Boolean).join(' '),
+  cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(' '),
 }))
 
 
@@ -118,7 +118,7 @@ import { CookiesSection } from '@/components/Cookies/CookiesSection'
 describe('CookiesSection', () => {
   it('renders section with id, title, and content', () => {
     render(
-      <CookiesSection id="sec" title="My Cookie Section" icon={({ ...p }: any) => <svg {...p} />} index={2}>
+      <CookiesSection id="sec" title="My Cookie Section" icon={({ ...p }: Record<string, unknown>) => <svg {...p} />} index={2}>
         <p>Cookie content</p>
       </CookiesSection>
     )

@@ -19,7 +19,7 @@ describe('POST /api/auth/verify-email', () => {
     vi.clearAllMocks()
   })
 
-  function createRequest(body: any) {
+  function createRequest(body: Record<string, unknown>) {
     return new Request('http://localhost:3000/api/auth/verify-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -54,8 +54,8 @@ describe('POST /api/auth/verify-email', () => {
       token: 'expired-token',
       identifier: 'user@test.com',
       expires: new Date('2020-01-01'), // Already expired
-    } as any)
-    vi.mocked(prisma.verificationToken.delete).mockResolvedValue({} as any)
+    } as any as Record<string, unknown>)
+    vi.mocked(prisma.verificationToken.delete).mockResolvedValue({} as any as Record<string, unknown>)
 
     const req = createRequest({ token: 'expired-token' })
     const response = await POST(req)
@@ -75,9 +75,9 @@ describe('POST /api/auth/verify-email', () => {
       token: 'valid-token',
       identifier: 'user@test.com',
       expires: futureDate,
-    } as any)
-    vi.mocked(prisma.user.update).mockResolvedValue({} as any)
-    vi.mocked(prisma.verificationToken.delete).mockResolvedValue({} as any)
+    } as any as Record<string, unknown>)
+    vi.mocked(prisma.user.update).mockResolvedValue({} as any as Record<string, unknown>)
+    vi.mocked(prisma.verificationToken.delete).mockResolvedValue({} as any as Record<string, unknown>)
 
     const req = createRequest({ token: 'valid-token' })
     const response = await POST(req)

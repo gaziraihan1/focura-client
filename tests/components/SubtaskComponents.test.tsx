@@ -5,18 +5,18 @@ import { SubtaskProgress } from '@/components/Dashboard/TaskDetails/SubtasksSect
 import { SubtaskForm } from '@/components/Dashboard/TaskDetails/SubtasksSection/SubtaskForm'
 
 vi.mock('lucide-react', () => ({
-  ListTodo: (props: any) => <svg data-testid="list-icon" {...props} />,
-  Plus: (props: any) => <svg data-testid="plus-icon" {...props} />,
-  Check: (props: any) => <svg data-testid="check-icon" {...props} />,
-  Loader2: (props: any) => <svg data-testid="loader-icon" {...props} />,
+  ListTodo: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="list-icon" {...props} />,
+  Plus: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="plus-icon" {...props} />,
+  Check: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-icon" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader-icon" {...props} />,
 }))
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...props}>{children}</button>,
   },
-  AnimatePresence: ({ children }: any) => children,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => children,
 }))
 
 describe('SubtaskEmptyState', () => {

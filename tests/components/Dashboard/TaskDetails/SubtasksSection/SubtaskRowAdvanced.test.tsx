@@ -4,14 +4,14 @@ import { userEvent } from '@testing-library/user-event'
 import { SubtaskRow } from '@/components/Dashboard/TaskDetails/SubtasksSection/SubtaskRow'
 
 vi.mock('framer-motion', () => ({
-  motion: { div: (p: any) => <div {...p} />, button: (p: any) => <button {...p} /> },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  motion: { div: (p: Record<string, unknown>) => <div {...p} />, button: (p: Record<string, unknown>) => <button {...p} /> },
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 vi.mock('@/components/Shared/Avatar', () => ({
-  Avatar: ({ name }: any) => <div data-testid="avatar">{name}</div>,
+  Avatar: ({ name }: { name: string }) => <div data-testid="avatar">{name}</div>,
 }))
 vi.mock('@/components/Dashboard/TaskDetails/SubtasksSection/InlineEditor', () => ({
-  InlineEditor: ({ value, onSave, onCancel }: any) => (
+  InlineEditor: ({ value, onSave, onCancel }: Record<string, unknown>) => (
     <div>
       <input data-testid="editor" defaultValue={value} />
       <button onClick={() => onSave()}>Save</button>
@@ -79,19 +79,19 @@ describe('SubtaskRow', () => {
 
   it('shows due date when provided', () => {
     const subtask = { ...mockSubtask, dueDate: '2024-12-31T00:00:00Z' }
-    render(<SubtaskRow {...defaultProps} subtask={subtask as any} />)
+    render(<SubtaskRow {...defaultProps} subtask={subtask as any as Record<string, unknown>} />)
     expect(screen.getByText(/Due/)).toBeInTheDocument()
   })
 
   it('shows assignee avatars when present', () => {
     const subtask = { ...mockSubtask, assignees: [{ user: { id: 'u-2', name: 'Bob', image: null } }] }
-    render(<SubtaskRow {...defaultProps} subtask={subtask as any} />)
+    render(<SubtaskRow {...defaultProps} subtask={subtask as any as Record<string, unknown>} />)
     expect(screen.getByText('Bob')).toBeInTheDocument()
   })
 
   it('applies opacity for completed subtask', () => {
     const subtask = { ...mockSubtask, status: 'COMPLETED' }
-    const { container } = render(<SubtaskRow {...defaultProps} subtask={subtask as any} />)
+    const { container } = render(<SubtaskRow {...defaultProps} subtask={subtask as any as Record<string, unknown>} />)
     expect(container.firstChild).toHaveClass('opacity-60')
   })
 })

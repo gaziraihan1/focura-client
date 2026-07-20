@@ -1,9 +1,9 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { render, screen } from "@testing-library/react";
 
 // ─── Global Mocks ────────────────────────────────────────────────────────────
 vi.mock("next/link", () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>
       {children}
     </a>
@@ -11,7 +11,7 @@ vi.mock("next/link", () => ({
 }));
 
 vi.mock("next/image", () => ({
-  default: (props: any) => {
+  default: (props: Record<string, unknown>) => {
     const { fill, priority, ...rest } = props;
     return <img {...rest} data-fill={fill} />;
   },
@@ -25,15 +25,15 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("framer-motion", () => ({
   motion: {
-    div: (props: any) => <div {...props} />,
-    button: (props: any) => <button {...props} />,
+    div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props} />,
+    button: (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props} />,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }));
 
 vi.mock("lucide-react", () => {
   const icon = (name: string) => {
-    const C = (props: any) => <svg data-testid={`icon-${name}`} {...props} />;
+    const C = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={`icon-${name}`} {...props} />;
     C.displayName = name;
     return C;
   };
@@ -108,7 +108,7 @@ vi.mock("lucide-react", () => {
 });
 
 vi.mock("@/lib/utils", () => ({
-  cn: (...classes: any[]) => classes.filter(Boolean).join(" "),
+  cn: (...classes: (string | boolean | undefined | null)[]) => classes.filter(Boolean).join(" "),
 }));
 
 vi.mock("@/lib/apiData", () => ({
@@ -287,7 +287,7 @@ vi.mock("@/components/Themes/ThemeSwitcher", () => ({
 }));
 
 vi.mock("@/components/Shared/Pagination", () => ({
-  Pagination: ({ currentPage, totalPages, onPageChange }: any) => (
+  Pagination: ({ currentPage, totalPages, onPageChange }: Record<string, unknown>) => (
     <div data-testid="pagination">
       <span>Page {currentPage} of {totalPages}</span>
       <button onClick={() => onPageChange(currentPage + 1)}>Next</button>

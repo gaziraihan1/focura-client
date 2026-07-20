@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react'
 import AddMemberModal from '@/components/Dashboard/ProjectDetails/AddMemberModal'
 
 vi.mock('lucide-react', () => ({
-  X: (props: any) => <svg data-testid="x-icon" {...props} />,
-  Loader2: (props: any) => <svg data-testid="loader" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader" {...props} />,
 }))
 
 vi.mock('@/hooks/useProjects', () => ({

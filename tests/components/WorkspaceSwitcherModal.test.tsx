@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react'
 import { WorkspaceSwitcherModal } from '@/components/Dashboard/Workspaces/WorkspaceSwitcherModal'
 
 vi.mock('lucide-react', () => ({
-  Command: (props: any) => <svg {...props} />,
-  Plus: (props: any) => <svg {...props} />,
+  Command: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Plus: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
 }))
 
 const mockWorkspaces = [

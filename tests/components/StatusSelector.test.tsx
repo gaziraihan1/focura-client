@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { StatusSelector } from '@/components/Dashboard/TaskDetails/TaskSidebar/StatusSelector'
 
 vi.mock('lucide-react', () => ({
-  Lock: (props: any) => <svg data-testid="lock-icon" {...props} />,
+  Lock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="lock-icon" {...props} />,
 }))
 
 vi.mock('@/utils/task.utils', () => ({

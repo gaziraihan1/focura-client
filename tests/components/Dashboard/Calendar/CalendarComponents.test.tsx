@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest';
 import { CalendarLegend } from '@/components/Dashboard/Calendar/CalendarLegend'
 import { InsightCard } from '@/components/Dashboard/Calendar/InsightCard'
 import { LoadingState } from '@/components/Dashboard/Calendar/LoadingStateCalendar'

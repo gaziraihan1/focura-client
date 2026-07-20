@@ -5,7 +5,7 @@ import { HelpContactCard } from '@/components/Help/HelpContactCard'
 import { HelpCategories, HELP_CATEGORIES } from '@/components/Help/HelpCategories'
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))

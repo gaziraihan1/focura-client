@@ -6,11 +6,11 @@ vi.mock("react-hook-form", () => ({
 }));
 
 vi.mock("lucide-react", () => ({
-  AlertCircle: (props: any) => <svg data-testid="icon-AlertCircle" {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="icon-AlertCircle" {...props} />,
 }));
 
 vi.mock("@/lib/utils", () => ({
-  cn: (...args: any[]) => args.filter(Boolean).join(" "),
+  cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(" "),
 }));
 
 import { FieldWrap, ContactFields } from "@/components/Contact/ContactFormFields";

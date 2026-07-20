@@ -3,15 +3,15 @@ import { render, screen } from '@testing-library/react'
 import { CareersJobDetailModal } from '@/components/Careers/CareersJobDetailModal'
 
 vi.mock('lucide-react', () => ({
-  X: (props: any) => <svg data-testid="x-icon" {...props} />,
-  MapPin: (props: any) => <svg data-testid="map-pin" {...props} />,
-  Clock: (props: any) => <svg data-testid="clock" {...props} />,
-  Briefcase: (props: any) => <svg data-testid="briefcase" {...props} />,
-  Pin: (props: any) => <svg data-testid="pin" {...props} />,
-  DollarSign: (props: any) => <svg data-testid="dollar" {...props} />,
-  Calendar: (props: any) => <svg data-testid="calendar" {...props} />,
-  Link: (props: any) => <svg data-testid="link" {...props} />,
-  Mail: (props: any) => <svg data-testid="mail" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
+  MapPin: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="map-pin" {...props} />,
+  Clock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="clock" {...props} />,
+  Briefcase: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="briefcase" {...props} />,
+  Pin: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="pin" {...props} />,
+  DollarSign: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="dollar" {...props} />,
+  Calendar: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="calendar" {...props} />,
+  Link: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="link" {...props} />,
+  Mail: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="mail" {...props} />,
 }))
 
 const mockJob = {

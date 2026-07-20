@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import React from 'react'
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))
@@ -26,39 +26,39 @@ const mockWorkspaces = [
 
 describe('WorkspaceList', () => {
   it('renders the heading', () => {
-    render(<WorkspaceList workspaces={mockWorkspaces as any} />)
+    render(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />)
     expect(screen.getByText('Your workspaces')).toBeInTheDocument()
   })
 
   it('renders workspace names', () => {
-    render(<WorkspaceList workspaces={mockWorkspaces as any} />)
+    render(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />)
     expect(screen.getByText('Test Workspace')).toBeInTheDocument()
     expect(screen.getByText('Second Workspace')).toBeInTheDocument()
   })
 
   it('renders project and member counts', () => {
-    render(<WorkspaceList workspaces={mockWorkspaces as any} />)
+    render(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />)
     expect(screen.getByText(/3 projects · 5 members/)).toBeInTheDocument()
     expect(screen.getByText(/1 project · 2 members/)).toBeInTheDocument()
   })
 
   it('renders owner badge for owner', () => {
-    render(<WorkspaceList workspaces={mockWorkspaces as any} />)
+    render(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />)
     expect(screen.getAllByText('Owner').length).toBeGreaterThanOrEqual(1)
   })
 
   it('renders create new workspace link', () => {
-    render(<WorkspaceList workspaces={mockWorkspaces as any} />)
+    render(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />)
     expect(screen.getByText('Create new workspace')).toBeInTheDocument()
   })
 
   it('renders view all link', () => {
-    render(<WorkspaceList workspaces={mockWorkspaces as any} />)
+    render(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />)
     expect(screen.getByText('View all →')).toBeInTheDocument()
   })
 
   it('renders workspace logo initial', () => {
-    render(<WorkspaceList workspaces={mockWorkspaces as any} />)
+    render(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />)
     expect(screen.getAllByText('T').length).toBeGreaterThanOrEqual(1)
   })
 
@@ -68,7 +68,7 @@ describe('WorkspaceList', () => {
       logo: null, ownerId: 'u1', owner: { id: 'u1', name: 'Owner' },
       _count: { projects: 1, members: 1 },
     }))
-    render(<WorkspaceList workspaces={many as any} />)
+    render(<WorkspaceList workspaces={many as any as Record<string, unknown>} />)
     expect(screen.queryByText('WS 5')).not.toBeInTheDocument()
   })
 })

@@ -3,11 +3,11 @@ import { describe, it, expect, vi } from 'vitest'
 import { TaskCard } from '@/components/Dashboard/AllTasks/TaskCard'
 
 vi.mock('framer-motion', () => ({
-  motion: { div: (p: any) => <div {...p} /> },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  motion: { div: (p: Record<string, unknown>) => <div {...p} /> },
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => <a href={href} {...props}>{children}</a>,
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => <a href={href} {...props}>{children}</a>,
 }))
 vi.mock('@/utils/task.utils', () => ({
   getStatusColor: () => 'bg-green-100',
@@ -19,7 +19,7 @@ vi.mock('@/utils/taskcard.utils', () => ({
   formatHoursSinceCreation: (h: number) => h + 'h',
 }))
 vi.mock('@/components/Shared/Avatar', () => ({
-  Avatar: ({ name }: any) => <div data-testid="avatar">{name}</div>,
+  Avatar: ({ name }: { name: string }) => <div data-testid="avatar">{name}</div>,
 }))
 
 const baseTask = {
@@ -41,27 +41,27 @@ const baseTask = {
 
 describe('TaskCard', () => {
   it('renders task title', () => {
-    render(<TaskCard task={baseTask as any} index={0} />)
+    render(<TaskCard task={baseTask as any as Record<string, unknown>} index={0} />)
     expect(screen.getByText('Test Task')).toBeInTheDocument()
   })
 
   it('shows description when provided', () => {
-    render(<TaskCard task={baseTask as any} index={0} />)
+    render(<TaskCard task={baseTask as any as Record<string, unknown>} index={0} />)
     expect(screen.getByText('A test description')).toBeInTheDocument()
   })
 
   it('shows project badge when task has project', () => {
-    render(<TaskCard task={baseTask as any} index={0} />)
+    render(<TaskCard task={baseTask as any as Record<string, unknown>} index={0} />)
     expect(screen.getByText('Project Alpha')).toBeInTheDocument()
   })
 
   it('shows status pill', () => {
-    render(<TaskCard task={baseTask as any} index={0} />)
+    render(<TaskCard task={baseTask as any as Record<string, unknown>} index={0} />)
     expect(screen.getByText('TODO')).toBeInTheDocument()
   })
 
   it('shows assignee avatars', () => {
-    render(<TaskCard task={baseTask as any} index={0} />)
+    render(<TaskCard task={baseTask as any as Record<string, unknown>} index={0} />)
     expect(screen.getAllByTestId('avatar')).toHaveLength(2)
   })
 })

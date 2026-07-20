@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react';
 import {
   ActiveUserCards,
   DailyActiveUsersChart,
@@ -9,8 +9,8 @@ import {
 } from '@/components/Dashboard/Analytics/WorkspaceUsage/EngagementSectionParts'
 
 vi.mock('recharts', () => ({
-  ResponsiveContainer: ({ children }: any) => <div>{children}</div>,
-  LineChart: ({ children }: any) => <div data-testid="line-chart">{children}</div>,
+  ResponsiveContainer: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
+  LineChart: ({ children }: { children?: React.ReactNode }) => <div data-testid="line-chart">{children}</div>,
   Line: () => null,
   XAxis: () => null,
   YAxis: () => null,
@@ -19,7 +19,7 @@ vi.mock('recharts', () => ({
 }))
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }))
 
 const mockStats = [

@@ -2,11 +2,11 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 
 vi.mock('lucide-react', () => ({
-  Plus: (props: any) => <svg data-testid="plus-icon" {...props} />,
+  Plus: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="plus-icon" {...props} />,
 }));
 
 vi.mock('@/components/Dashboard/AllTasks/WorkspaceTasks/TaskTab/TaskTabHeader', () => ({
-  default: ({ activeTab, onActiveTab }: any) => (
+  default: ({ activeTab, onActiveTab }: Record<string, unknown>) => (
     <div data-testid="tab-header">
       <button data-testid="btn-all" onClick={() => onActiveTab('all')}>All</button>
       <button data-testid="btn-primary" onClick={() => onActiveTab('primary')}>Primary</button>
@@ -16,12 +16,12 @@ vi.mock('@/components/Dashboard/AllTasks/WorkspaceTasks/TaskTab/TaskTabHeader', 
 }));
 
 vi.mock('@/components/Dashboard/AllTasks/WorkspaceTasks/TaskTab/AllTaskTab', () => ({
-  default: ({ activeTab, allTasksContent }: any) =>
+  default: ({ activeTab, allTasksContent }: Record<string, unknown>) =>
     activeTab === 'all' ? <div data-testid="all-tab">{allTasksContent}</div> : null,
 }));
 
 vi.mock('@/components/Dashboard/AllTasks/WorkspaceTasks/TaskTab/PrimaryTaskTab', () => ({
-  default: ({ activeTab, primaryTasksContent }: any) =>
+  default: ({ activeTab, primaryTasksContent }: Record<string, unknown>) =>
     activeTab === 'primary' ? <div data-testid="primary-tab">{primaryTasksContent}</div> : null,
 }));
 

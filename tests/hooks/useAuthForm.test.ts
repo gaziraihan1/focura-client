@@ -42,7 +42,7 @@ describe('useAuthForm', () => {
         await result.current.onSubmit({
           email: 'test@example.com',
           password: 'password123',
-        } as any);
+        } as any as Record<string, unknown>);
       });
 
       expect(signIn).toHaveBeenCalledWith('credentials', expect.objectContaining({
@@ -64,7 +64,7 @@ describe('useAuthForm', () => {
         await result.current.onSubmit({
           email: 'test@example.com',
           password: 'password123',
-        } as any);
+        } as any as Record<string, unknown>);
       });
 
       expect(toast.error).toHaveBeenCalledWith('Invalid email or password. Please try again.');
@@ -80,7 +80,7 @@ describe('useAuthForm', () => {
         await result.current.onSubmit({
           email: 'test@example.com',
           password: 'password123',
-        } as any);
+        } as any as Record<string, unknown>);
       });
 
       expect(toast.error).toHaveBeenCalledWith('Something went wrong. Please check your connection and try again.');
@@ -96,7 +96,7 @@ describe('useAuthForm', () => {
         await result.current.onSubmit({
           email: 'test@example.com',
           password: 'password123',
-        } as any);
+        } as any as Record<string, unknown>);
       });
 
       expect(mockPush).toHaveBeenCalledWith(
@@ -119,7 +119,7 @@ describe('useAuthForm', () => {
           name: 'Test User',
           email: 'test@example.com',
           password: 'password123',
-        } as any);
+        } as any as Record<string, unknown>);
       });
 
       expect(global.fetch).toHaveBeenCalledWith('/api/auth/register', expect.objectContaining({
@@ -143,7 +143,7 @@ describe('useAuthForm', () => {
           name: 'Test User',
           email: 'test@example.com',
           password: 'password123',
-        } as any);
+        } as any as Record<string, unknown>);
       });
 
       expect(toast.error).toHaveBeenCalledWith('Too many attempts. Please try again later.');
@@ -163,7 +163,7 @@ describe('useAuthForm', () => {
           name: 'Test User',
           email: 'test@example.com',
           password: 'password123',
-        } as any);
+        } as any as Record<string, unknown>);
       });
 
       expect(toast.error).toHaveBeenCalledWith('An account with this email already exists. Please login instead.');
@@ -183,7 +183,7 @@ describe('useAuthForm', () => {
           name: 'Test User',
           email: 'test@example.com',
           password: 'password123',
-        } as any);
+        } as any as Record<string, unknown>);
       });
 
       expect(toast.error).toHaveBeenCalledWith('Some other error');
@@ -199,7 +199,7 @@ describe('useAuthForm', () => {
           name: 'Test User',
           email: 'test@example.com',
           password: 'password123',
-        } as any);
+        } as any as Record<string, unknown>);
       });
 
       expect(toast.error).toHaveBeenCalledWith('Something went wrong. Please check your connection and try again.');

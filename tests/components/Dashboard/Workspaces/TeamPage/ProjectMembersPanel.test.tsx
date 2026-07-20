@@ -4,7 +4,7 @@ import { ProjectMembersPanel } from "@/components/Dashboard/Workspaces/TeamPage/
 
 vi.mock("lucide-react", () => {
   const icon = (name: string) => {
-    const C = (props: any) => <svg data-testid={`icon-${name}`} {...props} />;
+    const C = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={`icon-${name}`} {...props} />;
     C.displayName = name;
     return C;
   };
@@ -16,19 +16,19 @@ vi.mock("@/hooks/useProjects", () => ({
 }));
 
 vi.mock("@/components/Dashboard/Workspaces/TeamPage/RoleDropdown", () => ({
-  RoleDropdown: (props: any) => <div data-testid="role-dropdown">{props.currentRole}</div>,
+  RoleDropdown: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="role-dropdown">{props.currentRole}</div>,
 }));
 
 vi.mock("@/components/Dashboard/Workspaces/TeamPage/EmptyState", () => ({
-  EmptyState: ({ title }: any) => <div data-testid="empty-state">{title}</div>,
+  EmptyState: ({ title }: { title: string }) => <div data-testid="empty-state">{title}</div>,
 }));
 
 vi.mock("@/components/Shared/Avatar", () => ({
-  Avatar: (props: any) => <div data-testid="avatar">{props.name}</div>,
+  Avatar: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="avatar">{props.name}</div>,
 }));
 
 vi.mock("@/components/Dashboard/Workspaces/TeamPage/RoleBadge", () => ({
-  RoleBadge: ({ role }: any) => <span data-testid="role-badge">{role}</span>,
+  RoleBadge: ({ role }: { role: string }) => <span data-testid="role-badge">{role}</span>,
 }));
 
 import { useProjectDetails } from "@/hooks/useProjects";
@@ -40,19 +40,19 @@ const mockMembers = [
 
 describe("ProjectMembersPanel", () => {
   it("shows loading state", () => {
-    vi.mocked(useProjectDetails).mockReturnValue({ data: null, isLoading: true } as any);
+    vi.mocked(useProjectDetails).mockReturnValue({ data: null, isLoading: true } as any as Record<string, unknown>);
     render(<ProjectMembersPanel projectId="p1" currentUserId="u1" canManage={false} onRoleChange={vi.fn()} />);
     expect(screen.getByText("Project Members")).toBeInTheDocument();
   });
 
   it("shows empty state when no members", () => {
-    vi.mocked(useProjectDetails).mockReturnValue({ data: { members: [] }, isLoading: false } as any);
+    vi.mocked(useProjectDetails).mockReturnValue({ data: { members: [] }, isLoading: false } as any as Record<string, unknown>);
     render(<ProjectMembersPanel projectId="p1" currentUserId="u1" canManage={false} onRoleChange={vi.fn()} />);
     expect(screen.getByTestId("empty-state")).toHaveTextContent("No members yet");
   });
 
   it("renders member names and emails", () => {
-    vi.mocked(useProjectDetails).mockReturnValue({ data: { members: mockMembers }, isLoading: false } as any);
+    vi.mocked(useProjectDetails).mockReturnValue({ data: { members: mockMembers }, isLoading: false } as any as Record<string, unknown>);
     render(<ProjectMembersPanel projectId="p1" currentUserId="u1" canManage={false} onRoleChange={vi.fn()} />);
     expect(screen.getAllByText("Alice").length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("alice@test.com")).toBeInTheDocument();
@@ -61,7 +61,7 @@ describe("ProjectMembersPanel", () => {
   });
 
   it("shows role badge when cannot manage", () => {
-    vi.mocked(useProjectDetails).mockReturnValue({ data: { members: mockMembers }, isLoading: false } as any);
+    vi.mocked(useProjectDetails).mockReturnValue({ data: { members: mockMembers }, isLoading: false } as any as Record<string, unknown>);
     render(<ProjectMembersPanel projectId="p1" currentUserId="u3" canManage={false} onRoleChange={vi.fn()} />);
     expect(screen.getAllByTestId("role-badge").length).toBe(2);
   });

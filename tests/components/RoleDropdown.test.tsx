@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { RoleDropdown } from '@/components/Dashboard/Workspaces/TeamPage/RoleDropdown'
 
 vi.mock('lucide-react', () => ({
-  ChevronDown: (props: any) => <svg data-testid="chevron-icon" {...props} />,
+  ChevronDown: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="chevron-icon" {...props} />,
 }))
 
 describe('RoleDropdown', () => {

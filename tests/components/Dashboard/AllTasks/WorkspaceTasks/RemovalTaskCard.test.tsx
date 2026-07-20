@@ -2,11 +2,11 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 
 vi.mock('lucide-react', () => ({
-  X: (props: any) => <svg data-testid="x-icon" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
 }));
 
 vi.mock('@/components/Dashboard/AllTasks/WorkspaceTasks/TaskCard', () => ({
-  TaskCard: ({ task }: any) => <div data-testid="task-card">{task.title}</div>,
+  TaskCard: ({ task }: { task: unknown }) => <div data-testid="task-card">{task.title}</div>,
 }));
 
 import { RemovableTaskCard } from '@/components/Dashboard/AllTasks/WorkspaceTasks/RemovalTaskCard';

@@ -3,12 +3,12 @@ import { render, screen } from '@testing-library/react';
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }));
 
 vi.mock('lucide-react', () => ({
-  Zap: (props: any) => <svg data-testid="zap-icon" {...props} />,
+  Zap: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="zap-icon" {...props} />,
 }));
 
 vi.mock('@/utils/taskcard.utils', () => ({

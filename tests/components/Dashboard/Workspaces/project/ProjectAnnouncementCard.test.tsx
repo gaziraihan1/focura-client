@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))
@@ -14,10 +14,10 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...props}>{children}</button>,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 
 vi.mock('date-fns', () => ({
@@ -28,7 +28,7 @@ vi.mock('date-fns', () => ({
 vi.mock('lucide-react', () => {
   const React = require('react')
   const mock = (name: string) => {
-    const Cmp = (props: any) => React.createElement('svg', { 'data-testid': `${name}-icon`, ...props })
+    const Cmp = (props: Record<string, unknown>) => React.createElement('svg', { 'data-testid': `${name}-icon`, ...props })
     Cmp.displayName = name
     return Cmp
   }
@@ -82,7 +82,7 @@ vi.mock('lucide-react', () => {
 })
 
 vi.mock('@/components/Dashboard/Workspaces/project/Announcements/AuthorAvatar', () => ({
-  AuthorAvatar: ({ author }: any) => <div data-testid="author-avatar">{author?.name ?? 'Unknown'}</div>,
+  AuthorAvatar: ({ author }: Record<string, unknown>) => <div data-testid="author-avatar">{author?.name ?? 'Unknown'}</div>,
 }))
 
 vi.mock('@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/announcements/page', () => ({

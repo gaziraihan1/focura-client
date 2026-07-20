@@ -3,14 +3,14 @@ import { render, screen } from '@testing-library/react'
 import { ContactForm } from '@/components/Contact/ContactForm'
 
 vi.mock('lucide-react', () => ({
-  Send: (props: any) => <svg data-testid="send-icon" {...props} />,
-  CheckCircle2: (props: any) => <svg data-testid="check-circle" {...props} />,
-  AlertCircle: (props: any) => <svg data-testid="alert-circle" {...props} />,
-  Loader2: (props: any) => <svg data-testid="loader" {...props} />,
+  Send: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="send-icon" {...props} />,
+  CheckCircle2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-circle" {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-circle" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader" {...props} />,
 }))
 
 vi.mock('@/components/Contact/ContactFormFields', () => ({
-  ContactFields: (props: any) => <div data-testid="contact-fields" />,
+  ContactFields: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="contact-fields" />,
 }))
 
 describe('ContactForm', () => {

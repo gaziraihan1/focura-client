@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { createWrapper } from '../../utils/renderWithProviders'
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }))
 
 import { QuickActions } from '@/components/Dashboard/QuickActions'

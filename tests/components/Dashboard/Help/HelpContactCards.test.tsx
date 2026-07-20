@@ -4,7 +4,7 @@ import { HelpContactCards } from "@/components/Dashboard/help/HelpContactCards";
 
 vi.mock("lucide-react", () => {
   const icon = (name: string) => {
-    const C = (props: any) => <svg data-testid={`icon-${name}`} {...props} />;
+    const C = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={`icon-${name}`} {...props} />;
     C.displayName = name;
     return C;
   };
@@ -12,7 +12,7 @@ vi.mock("lucide-react", () => {
 });
 
 vi.mock("@/lib/utils", () => ({
-  cn: (...classes: any[]) => classes.filter(Boolean).join(" "),
+  cn: (...classes: (string | boolean | undefined | null)[]) => classes.filter(Boolean).join(" "),
 }));
 
 describe("HelpContactCards", () => {

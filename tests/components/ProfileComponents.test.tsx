@@ -8,24 +8,24 @@ import { ProfilePlanCard } from '@/components/Dashboard/Profile/ProfilePlanCard'
 import { ProfileSidebar } from '@/components/Dashboard/Profile/ProfileSidebar'
 
 vi.mock('lucide-react', () => ({
-  X: (props: any) => <svg data-testid="x-icon" {...props} />,
-  Save: (props: any) => <svg data-testid="save-icon" {...props} />,
-  Loader2: (props: any) => <svg data-testid="loader-icon" {...props} />,
-  Shield: (props: any) => <svg data-testid="shield-icon" {...props} />,
-  Calendar: (props: any) => <svg data-testid="calendar-icon" {...props} />,
-  HardDrive: (props: any) => <svg data-testid="harddrive-icon" {...props} />,
-  Crown: (props: any) => <svg data-testid="crown-icon" {...props} />,
-  Check: (props: any) => <svg data-testid="check-icon" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
+  Save: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="save-icon" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader-icon" {...props} />,
+  Shield: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="shield-icon" {...props} />,
+  Calendar: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="calendar-icon" {...props} />,
+  HardDrive: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="harddrive-icon" {...props} />,
+  Crown: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="crown-icon" {...props} />,
+  Check: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-icon" {...props} />,
 }))
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }))
 
 vi.mock('next/link', () => ({
-  default: ({ href, children, ...props }: any) => (
+  default: ({ href, children, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))

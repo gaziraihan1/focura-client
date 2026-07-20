@@ -3,8 +3,8 @@ import { describe, it, expect, vi } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
 
 vi.mock('framer-motion', () => ({
-  motion: { div: (p: any) => <div {...p} /> },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  motion: { div: (p: Record<string, unknown>) => <div {...p} /> },
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 
 import { CreateWorkspacePageHeader } from '@/components/Dashboard/CreateWorkspacePage/CreateWorkspacePageHeader'

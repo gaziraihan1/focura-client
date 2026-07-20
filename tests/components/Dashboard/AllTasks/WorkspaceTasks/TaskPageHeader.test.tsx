@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 
 vi.mock('lucide-react', () => ({
-  Plus: (props: any) => <svg data-testid="plus-icon" {...props} />,
+  Plus: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="plus-icon" {...props} />,
 }));
 
 import { TasksPageHeader } from '@/components/Dashboard/AllTasks/WorkspaceTasks/TaskPageHeader';

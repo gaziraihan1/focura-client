@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { NotificationsContent } from '@/components/Dashboard/Notifications/NotificationsContent'
 
 vi.mock('@/components/Dashboard/Notifications/NotificationsList', () => ({
-  NotificationsList: (props: any) => (
+  NotificationsList: (props: Record<string, unknown>) => (
     <div data-testid="notifications-list">
       {props.notifications?.length || 0} notifications
     </div>
@@ -19,8 +19,8 @@ vi.mock('@/components/Dashboard/Notifications/NotificationsLoadingState', () => 
 }))
 
 vi.mock('lucide-react', () => ({
-  Bell: (props: any) => <svg {...props} />,
-  Trash2: (props: any) => <svg {...props} />,
+  Bell: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Trash2: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
 }))
 
 describe('NotificationsContent', () => {

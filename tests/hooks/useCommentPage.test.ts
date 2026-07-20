@@ -136,7 +136,7 @@ describe('useCommentPage', () => {
       result.current.handleKeyDown({
         key: 'ArrowDown',
         preventDefault: vi.fn(),
-      } as any)
+      } as any as Record<string, unknown>)
     })
 
     expect(result.current.activeIndex).toBe(1)
@@ -160,7 +160,7 @@ describe('useCommentPage', () => {
       result.current.handleKeyDown({
         key: 'ArrowDown',
         preventDefault: vi.fn(),
-      } as any)
+      } as any as Record<string, unknown>)
     })
 
     // ArrowUp
@@ -168,7 +168,7 @@ describe('useCommentPage', () => {
       result.current.handleKeyDown({
         key: 'ArrowUp',
         preventDefault: vi.fn(),
-      } as any)
+      } as any as Record<string, unknown>)
     })
 
     expect(result.current.activeIndex).toBe(0)
@@ -191,7 +191,7 @@ describe('useCommentPage', () => {
       result.current.handleKeyDown({
         key: 'Escape',
         preventDefault: vi.fn(),
-      } as any)
+      } as any as Record<string, unknown>)
     })
 
     expect(result.current.mentionQuery).toBeNull()

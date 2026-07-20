@@ -7,10 +7,10 @@ import { InvitationExpiredState } from '@/components/Dashboard/Invitation/Invita
 import { InvitationAlreadyUsedState } from '@/components/Dashboard/Invitation/InvitationAlreadyUsedState'
 
 vi.mock('lucide-react', () => ({
-  Loader2: (props: any) => <svg data-testid="loader-icon" {...props} />,
-  Check: (props: any) => <svg data-testid="check-icon" {...props} />,
-  X: (props: any) => <svg data-testid="x-icon" {...props} />,
-  Clock: (props: any) => <svg data-testid="clock-icon" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader-icon" {...props} />,
+  Check: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-icon" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
+  Clock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="clock-icon" {...props} />,
 }))
 
 describe('InvitationLoadingState', () => {

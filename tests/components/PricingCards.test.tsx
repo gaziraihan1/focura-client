@@ -4,8 +4,8 @@ import PricingCards from '@/components/Pricing/PricingCards'
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: (props: any) => <div {...props}>{props.children}</div>,
-    span: (props: any) => <span {...props}>{props.children}</span>,
+    div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props}>{props.children}</div>,
+    span: (props: React.HTMLAttributes<HTMLSpanElement>) => <span {...props}>{props.children}</span>,
   },
 }))
 

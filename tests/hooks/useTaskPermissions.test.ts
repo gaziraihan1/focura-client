@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi } from 'vitest';
 import { renderHook } from '@testing-library/react'
 import { useTaskPermissions } from '@/hooks/useTaskPermissions'
 import type { Task } from '@/types/task.types'
@@ -36,7 +36,7 @@ const makeTask = (overrides: Partial<Task> = {}): Task =>
     _count: { subtasks: 0, comments: 0, attachments: 0 },
     project: mockProject,
     ...overrides,
-  } as unknown as Task)
+  } as any as Task)
 
 // Mock the dependent hooks
 vi.mock('@/hooks/useProjects', () => ({

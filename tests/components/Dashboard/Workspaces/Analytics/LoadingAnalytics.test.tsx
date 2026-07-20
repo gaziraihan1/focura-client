@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react'
 vi.mock('lucide-react', () => {
   const React = require('react')
   const mock = (name: string) => {
-    const Cmp = (props: any) => React.createElement('svg', { 'data-testid': `${name}-icon`, ...props })
+    const Cmp = (props: Record<string, unknown>) => React.createElement('svg', { 'data-testid': `${name}-icon`, ...props })
     Cmp.displayName = name
     return Cmp
   }

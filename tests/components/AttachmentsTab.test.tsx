@@ -3,15 +3,15 @@ import { render, screen } from '@testing-library/react'
 import { AttachmentsTab } from '@/components/Dashboard/TaskDetails/TaskTab/AttachmentsTab'
 
 vi.mock('lucide-react', () => ({
-  Paperclip: (props: any) => <svg data-testid="paperclip-icon" {...props} />,
-  Download: (props: any) => <svg data-testid="download-icon" {...props} />,
-  X: (props: any) => <svg data-testid="x-icon" {...props} />,
-  Loader2: (props: any) => <svg data-testid="loader-icon" {...props} />,
-  Lock: (props: any) => <svg data-testid="lock-icon" {...props} />,
+  Paperclip: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="paperclip-icon" {...props} />,
+  Download: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="download-icon" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader-icon" {...props} />,
+  Lock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="lock-icon" {...props} />,
 }))
 
 vi.mock('next/link', () => ({
-  default: ({ href, children, ...props }: any) => (
+  default: ({ href, children, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))

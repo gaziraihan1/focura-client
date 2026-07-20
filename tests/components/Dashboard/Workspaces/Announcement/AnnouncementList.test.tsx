@@ -2,21 +2,21 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }))
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...props}>{children}</button>,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 
 vi.mock('date-fns', () => ({
@@ -27,7 +27,7 @@ vi.mock('date-fns', () => ({
 vi.mock('lucide-react', () => {
   const React = require('react')
   const mock = (name: string) => {
-    const Cmp = (props: any) => React.createElement('svg', { 'data-testid': `${name}-icon`, ...props })
+    const Cmp = (props: Record<string, unknown>) => React.createElement('svg', { 'data-testid': `${name}-icon`, ...props })
     Cmp.displayName = name
     return Cmp
   }
@@ -40,15 +40,15 @@ vi.mock('lucide-react', () => {
 })
 
 vi.mock('@/components/Dashboard/Workspaces/Announcement/AnnouncementCard', () => ({
-  AnnouncementCard: (props: any) => <div data-testid="announcement-card" {...props} />,
+  AnnouncementCard: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="announcement-card" {...props} />,
 }))
 
 vi.mock('@/components/Dashboard/Workspaces/Announcement/AnnouncementDetailModal', () => ({
-  AnnouncementDetailModal: (props: any) => <div data-testid="announcement-detail-modal" {...props} />,
+  AnnouncementDetailModal: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="announcement-detail-modal" {...props} />,
 }))
 
 vi.mock('@/components/Shared/Pagination', () => ({
-  Pagination: (props: any) => <div data-testid="pagination" {...props} />,
+  Pagination: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="pagination" {...props} />,
 }))
 
 import { AnnouncementList } from '@/components/Dashboard/Workspaces/Announcement/AnnouncementList'

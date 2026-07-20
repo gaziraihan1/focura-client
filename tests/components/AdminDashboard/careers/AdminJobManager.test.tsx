@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 vi.mock("lucide-react", () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={`icon-${name}`} {...props} />;
+  const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={`icon-${name}`} {...props} />;
   return {
     Plus: icon("Plus"),
     X: icon("X"),
@@ -29,7 +29,7 @@ vi.mock("@/components/AdminDashboard/careers/AdminJobForm", () => ({
 }));
 
 vi.mock("@/lib/utils", () => ({
-  cn: (...args: any[]) => args.filter(Boolean).join(" "),
+  cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(" "),
 }));
 
 import AdminJobManager from "@/components/AdminDashboard/careers/AdminJobManager";

@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import EmptyState from '@/components/Dashboard/Workspaces/EmptyState'
 
 vi.mock('next/link', () => ({
-  default: ({ href, children, ...props }: any) => (
+  default: ({ href, children, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))

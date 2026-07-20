@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { NotificationsEmptyState } from '@/components/Dashboard/Notifications/NotificationsEmptyState'
 
 vi.mock('lucide-react', () => ({
-  Bell: (props: any) => <svg {...props} />,
+  Bell: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
 }))
 
 describe('NotificationsEmptyState', () => {

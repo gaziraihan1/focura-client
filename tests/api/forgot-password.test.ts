@@ -23,7 +23,7 @@ describe('POST /api/auth/forgot-password', () => {
     vi.clearAllMocks()
   })
 
-  function createRequest(body: any) {
+  function createRequest(body: Record<string, unknown>) {
     return new Request('http://localhost:3000/api/auth/forgot-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -58,9 +58,9 @@ describe('POST /api/auth/forgot-password', () => {
     vi.mocked(prisma.user.findUnique).mockResolvedValue({
       id: 'user-1',
       email: 'user@test.com',
-    } as any)
-    vi.mocked(prisma.passwordResetToken.deleteMany).mockResolvedValue({} as any)
-    vi.mocked(prisma.passwordResetToken.create).mockResolvedValue({} as any)
+    } as any as Record<string, unknown>)
+    vi.mocked(prisma.passwordResetToken.deleteMany).mockResolvedValue({} as any as Record<string, unknown>)
+    vi.mocked(prisma.passwordResetToken.create).mockResolvedValue({} as any as Record<string, unknown>)
 
     const { sendPasswordResetEmail } = await import('@/lib/email')
     vi.mocked(sendPasswordResetEmail).mockResolvedValue(undefined)

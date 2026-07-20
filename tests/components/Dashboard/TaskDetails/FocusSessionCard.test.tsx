@@ -13,7 +13,7 @@ vi.mock('@/hooks/useFocusSession', () => ({
 }));
 
 vi.mock('lucide-react', () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={name} {...props} />;
+  const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={name} {...props} />;
   return {
     Play: icon('play'),
     Clock: icon('clock'),

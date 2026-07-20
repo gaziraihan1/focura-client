@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { InsightCard } from '@/components/Dashboard/Calendar/InsightCard'
 
-const MockIcon = (props: any) => <svg data-testid="mock-icon" {...props} />
+const MockIcon = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="mock-icon" {...props} />
 
 describe('InsightCard', () => {
   it('renders label and value', () => {

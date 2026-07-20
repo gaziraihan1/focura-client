@@ -1,18 +1,17 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import { userEvent } from '@testing-library/user-event'
 import { MembersTab } from '@/components/Dashboard/Workspaces/project/Settings/MembersTab'
 import { createWrapper } from '@/tests/utils/renderWithProviders'
 
 vi.mock('framer-motion', () => ({
-  motion: { div: (p: any) => <div {...p} /> },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  motion: { div: (p: Record<string, unknown>) => <div {...p} /> },
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 vi.mock('@/components/Dashboard/ProjectDetails/AddMemberModal', () => ({
   default: () => <div data-testid="add-member-modal">Add Member Modal</div>,
 }))
 vi.mock('@/components/Dashboard/Workspaces/project/Settings/RoleDropdown', () => ({
-  RoleDropdown: ({ role, onChange }: any) => (
+  RoleDropdown: ({ role, onChange }: Record<string, unknown>) => (
     <select data-testid="role-dropdown" value={role} onChange={(e) => onChange(e.target.value)}>
       <option value="VIEWER">Viewer</option>
       <option value="COLLABORATOR">Collaborator</option>
@@ -21,7 +20,7 @@ vi.mock('@/components/Dashboard/Workspaces/project/Settings/RoleDropdown', () =>
   ),
 }))
 vi.mock('@/components/Dashboard/Workspaces/project/Settings/Avatar', () => ({
-  Avatar: ({ name }: any) => <div data-testid="avatar">{name}</div>,
+  Avatar: ({ name }: { name: string }) => <div data-testid="avatar">{name}</div>,
 }))
 vi.mock('@/hooks/useProjects', () => ({
   useUpdateProjectMemberRole: () => ({ mutateAsync: vi.fn() }),
@@ -42,23 +41,23 @@ const mockProject = {
 
 describe('MembersTab', () => {
   it('renders member names', () => {
-    render(<MembersTab project={mockProject as any} canManage={true} userId="u-1" />, { wrapper: createWrapper() })
+    render(<MembersTab project={mockProject as any as Record<string, unknown>} canManage={true} userId="u-1" />, { wrapper: createWrapper() })
     expect(screen.getAllByText('Alice').length).toBeGreaterThanOrEqual(1)
     expect(screen.getAllByText('Bob').length).toBeGreaterThanOrEqual(1)
   })
 
   it('renders search input', () => {
-    render(<MembersTab project={mockProject as any} canManage={true} userId="u-1" />, { wrapper: createWrapper() })
+    render(<MembersTab project={mockProject as any as Record<string, unknown>} canManage={true} userId="u-1" />, { wrapper: createWrapper() })
     expect(screen.getByPlaceholderText(/search/i)).toBeInTheDocument()
   })
 
   it('renders add member button when canManage', () => {
-    render(<MembersTab project={mockProject as any} canManage={true} userId="u-1" />, { wrapper: createWrapper() })
+    render(<MembersTab project={mockProject as any as Record<string, unknown>} canManage={true} userId="u-1" />, { wrapper: createWrapper() })
     expect(screen.getByText(/add member/i)).toBeInTheDocument()
   })
 
   it('hides add member button when cannot manage', () => {
-    render(<MembersTab project={mockProject as any} canManage={false} userId="u-1" />, { wrapper: createWrapper() })
+    render(<MembersTab project={mockProject as any as Record<string, unknown>} canManage={false} userId="u-1" />, { wrapper: createWrapper() })
     expect(screen.queryByText(/add member/i)).not.toBeInTheDocument()
   })
 })

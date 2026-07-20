@@ -3,10 +3,10 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { TaskHeader } from '@/components/Dashboard/TaskDetails/TaskHeader'
 
 vi.mock('lucide-react', () => ({
-  ArrowLeft: (props: any) => <svg data-testid="arrow-left" {...props} />,
-  Edit: (props: any) => <svg data-testid="edit-icon" {...props} />,
-  Trash: (props: any) => <svg data-testid="trash-icon" {...props} />,
-  Loader2: (props: any) => <svg data-testid="loader-icon" {...props} />,
+  ArrowLeft: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="arrow-left" {...props} />,
+  Edit: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="edit-icon" {...props} />,
+  Trash: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="trash-icon" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader-icon" {...props} />,
 }))
 
 describe('TaskHeader', () => {

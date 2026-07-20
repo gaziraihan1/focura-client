@@ -3,11 +3,11 @@ import { render, screen } from '@testing-library/react';
 import { TasksContent } from '@/components/Dashboard/AllTasks/TasksContent';
 
 vi.mock('@/components/Dashboard/AllTasks/TaskList', () => ({
-  TaskList: (props: any) => <div data-testid="task-list">{props.tasks.length} tasks</div>,
+  TaskList: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-list">{props.tasks.length} tasks</div>,
 }));
 
 vi.mock('@/components/Shared/Pagination', () => ({
-  Pagination: (props: any) => (
+  Pagination: (props: Record<string, unknown>) => (
     <div data-testid="pagination">
       Page {props.currentPage} of {props.totalPages}
     </div>

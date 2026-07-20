@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { WorkspaceStorageOverviewPage } from '@/components/Dashboard/Storage/WorkspaceStorageOverviewPage';
 
 vi.mock('lucide-react', () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={name} {...props} />;
+  const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={name} {...props} />;
   return {
     HardDrive: icon('hard-drive'),
     AlertTriangle: icon('alert-triangle'),

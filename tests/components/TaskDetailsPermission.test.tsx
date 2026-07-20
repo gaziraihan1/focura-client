@@ -3,12 +3,12 @@ import { render, screen } from '@testing-library/react'
 import TaskDetailsPermission from '@/components/Dashboard/TaskDetails/TaskDetailsPermission'
 
 vi.mock('lucide-react', () => ({
-  Link: (props: any) => <svg data-testid="link-icon" {...props} />,
-  Lock: (props: any) => <svg data-testid="lock-icon" {...props} />,
+  Link: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="link-icon" {...props} />,
+  Lock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="lock-icon" {...props} />,
 }))
 
 vi.mock('next/link', () => ({
-  default: ({ href, children, ...props }: any) => (
+  default: ({ href, children, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))

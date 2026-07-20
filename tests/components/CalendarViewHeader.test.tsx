@@ -3,10 +3,10 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { CalendarHeader } from '@/components/Dashboard/CalendarView/CalendarHeader'
 
 vi.mock('lucide-react', () => ({
-  ChevronLeft: (props: any) => <svg data-testid="chevron-left" {...props} />,
-  ChevronRight: (props: any) => <svg data-testid="chevron-right" {...props} />,
-  Calendar: (props: any) => <svg {...props} />,
-  Clock: (props: any) => <svg {...props} />,
+  ChevronLeft: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="chevron-left" {...props} />,
+  ChevronRight: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="chevron-right" {...props} />,
+  Calendar: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Clock: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
 }))
 
 const defaultProps = {

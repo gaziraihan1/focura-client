@@ -4,12 +4,12 @@ import { StorageTrendChart } from '@/components/Dashboard/Storage/StorageTrendCh
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }))
 
 vi.mock('lucide-react', () => ({
-  TrendingUp: (props: any) => <svg data-testid="trending-up" {...props} />,
+  TrendingUp: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="trending-up" {...props} />,
 }))
 
 vi.mock('@/hooks/useStoragePage', () => ({

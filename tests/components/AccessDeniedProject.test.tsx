@@ -3,9 +3,9 @@ import { render, screen } from '@testing-library/react'
 import { AccessDeniedProject } from '@/components/Dashboard/ProjectDetails/AccessDeniedProject'
 
 vi.mock('lucide-react', () => ({
-  ShieldX: (props: any) => <svg data-testid="shield-icon" {...props} />,
-  ArrowLeft: (props: any) => <svg {...props} />,
-  Home: (props: any) => <svg {...props} />,
+  ShieldX: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="shield-icon" {...props} />,
+  ArrowLeft: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Home: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
 }))
 
 vi.mock('next/navigation', () => ({

@@ -22,7 +22,7 @@ const mockLabels = {
 describe('LabelPicker', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockUseLabels.mockReturnValue({ data: mockLabels, isLoading: false } as any)
+    mockUseLabels.mockReturnValue({ data: mockLabels, isLoading: false } as any as Record<string, unknown>)
   })
 
   it('renders Labels label', () => {
@@ -45,7 +45,7 @@ describe('LabelPicker', () => {
   })
 
   it('shows loading state in dropdown', async () => {
-    mockUseLabels.mockReturnValue({ data: undefined, isLoading: true } as any)
+    mockUseLabels.mockReturnValue({ data: undefined, isLoading: true } as any as Record<string, unknown>)
     const user = userEvent.setup()
     render(<LabelPicker selectedLabelIds={[]} onChange={vi.fn()} />, { wrapper: createWrapper() })
     
@@ -54,7 +54,7 @@ describe('LabelPicker', () => {
   })
 
   it('shows no labels message when labels array is empty', async () => {
-    mockUseLabels.mockReturnValue({ data: { data: [] }, isLoading: false } as any)
+    mockUseLabels.mockReturnValue({ data: { data: [] }, isLoading: false } as any as Record<string, unknown>)
     const user = userEvent.setup()
     render(<LabelPicker selectedLabelIds={[]} onChange={vi.fn()} />, { wrapper: createWrapper() })
     

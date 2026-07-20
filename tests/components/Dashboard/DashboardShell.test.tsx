@@ -27,11 +27,11 @@ vi.mock('@/hooks/useUserProfile', () => ({
 }))
 
 vi.mock('@/components/Dashboard/Sidebar', () => ({
-  default: (props: any) => <div data-testid="Sidebar">Sidebar</div>,
+  default: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="Sidebar">Sidebar</div>,
 }))
 
 vi.mock('@/components/Dashboard/TopNavbar', () => ({
-  default: (props: any) => <div data-testid="TopNavbar">TopNavbar</div>,
+  default: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="TopNavbar">TopNavbar</div>,
 }))
 
 describe('DashboardShell', () => {

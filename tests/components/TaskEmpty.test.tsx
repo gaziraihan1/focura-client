@@ -3,11 +3,11 @@ import { render, screen } from '@testing-library/react'
 import TaskEmpty from '@/components/Dashboard/TaskDetails/TaskEmpty'
 
 vi.mock('lucide-react', () => ({
-  AlertCircle: (props: any) => <svg data-testid="alert-icon" {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-icon" {...props} />,
 }))
 
 vi.mock('next/link', () => ({
-  default: ({ href, children, ...props }: any) => (
+  default: ({ href, children, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))

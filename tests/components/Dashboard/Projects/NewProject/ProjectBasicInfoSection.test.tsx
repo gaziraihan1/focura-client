@@ -4,13 +4,13 @@ import { ProjectBasicInfoSection } from '@/components/Dashboard/Projects/NewProj
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }))
 
 vi.mock('lucide-react', () => ({
-  AlertCircle: (props: any) => <svg data-testid="alert-circle" {...props} />,
-  Palette: (props: any) => <svg data-testid="palette" {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-circle" {...props} />,
+  Palette: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="palette" {...props} />,
 }))
 
 const defaultForm = {

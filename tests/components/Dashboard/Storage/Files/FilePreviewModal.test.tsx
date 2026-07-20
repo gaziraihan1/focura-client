@@ -4,7 +4,7 @@ import { FilePreviewModal } from "@/components/Dashboard/Storage/Files/FilePrevi
 
 vi.mock("lucide-react", () => {
   const icon = (name: string) => {
-    const C = (props: any) => <svg data-testid={`icon-${name}`} {...props} />;
+    const C = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={`icon-${name}`} {...props} />;
     C.displayName = name;
     return C;
   };
@@ -12,7 +12,7 @@ vi.mock("lucide-react", () => {
 });
 
 vi.mock("next/image", () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }));
 
 vi.mock("@/hooks/useFileManagement", () => ({
@@ -20,7 +20,7 @@ vi.mock("@/hooks/useFileManagement", () => ({
 }));
 
 vi.mock("@/components/Dashboard/Storage/Files/FilePreviewModalHeader", () => ({
-  default: ({ file, onClose }: any) => (
+  default: ({ file, onClose }: Record<string, unknown>) => (
     <div data-testid="modal-header">
       <span>{file.originalName}</span>
       <button onClick={onClose}>Close</button>
@@ -40,26 +40,26 @@ const baseFile = {
 
 describe("FilePreviewModal", () => {
   it("renders the modal with file name in header", () => {
-    render(<FilePreviewModal file={baseFile as any} onClose={vi.fn()} />);
+    render(<FilePreviewModal file={baseFile as any as Record<string, unknown>} onClose={vi.fn()} />);
     expect(screen.getByText("test-file.txt")).toBeInTheDocument();
   });
 
   it("shows fallback for unsupported file types", () => {
-    render(<FilePreviewModal file={baseFile as any} onClose={vi.fn()} />);
+    render(<FilePreviewModal file={baseFile as any as Record<string, unknown>} onClose={vi.fn()} />);
     expect(screen.getByText("Preview not available for this file type")).toBeInTheDocument();
     expect(screen.getByText("Download File")).toBeInTheDocument();
   });
 
   it("renders image preview for image mime types", () => {
     const imageFile = { ...baseFile, mimeType: "image/png", originalName: "photo.png" };
-    render(<FilePreviewModal file={imageFile as any} onClose={vi.fn()} />);
+    render(<FilePreviewModal file={imageFile as any as Record<string, unknown>} onClose={vi.fn()} />);
     const img = screen.getByRole("img", { name: "photo.png" });
     expect(img).toBeInTheDocument();
   });
 
   it("renders audio preview for audio mime types", () => {
     const audioFile = { ...baseFile, mimeType: "audio/mp3", originalName: "sound.mp3" };
-    render(<FilePreviewModal file={audioFile as any} onClose={vi.fn()} />);
+    render(<FilePreviewModal file={audioFile as any as Record<string, unknown>} onClose={vi.fn()} />);
     expect(screen.getByText("Your browser does not support audio playback.")).toBeInTheDocument();
   });
 });

@@ -1,10 +1,9 @@
 import { describe, it, expect, vi } from 'vitest'
-import { AppError } from '@/lib/axios'
 
 const mockNormalize = vi.fn()
 vi.mock('@/lib/axios', () => ({
   normalizeError: mockNormalize,
-  AppError: {} as any,
+  AppError: {} as unknown,
 }))
 
 const { getErrorMessage } = await import('@/lib/error/error')
@@ -21,7 +20,7 @@ describe('getErrorMessage', () => {
   })
 
   it('returns fallback when normalized message is undefined', () => {
-    mockNormalize.mockReturnValueOnce({ message: undefined as any })
+    mockNormalize.mockReturnValueOnce({ message: undefined as unknown })
     expect(getErrorMessage({}, 'fallback msg')).toBe('fallback msg')
   })
 

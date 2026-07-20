@@ -5,9 +5,9 @@ import PricingFAQ from '@/components/Pricing/PricingFaq'
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: (props: any) => <div {...props}>{props.children}</div>,
+    div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props}>{props.children}</div>,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 
 describe('PricingFAQ', () => {

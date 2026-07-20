@@ -3,13 +3,13 @@ import { render, screen } from '@testing-library/react'
 import { TaskStatsCards } from '@/components/Dashboard/AllTasks/TaskStatsCards'
 
 vi.mock('lucide-react', () => ({
-  User: (props: any) => <svg {...props} />,
-  CheckCircle2: (props: any) => <svg {...props} />,
-  Clock: (props: any) => <svg {...props} />,
-  AlertCircle: (props: any) => <svg {...props} />,
-  ListTodo: (props: any) => <svg {...props} />,
-  TrendingUp: (props: any) => <svg {...props} />,
-  Users: (props: any) => <svg {...props} />,
+  User: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  CheckCircle2: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Clock: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  ListTodo: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  TrendingUp: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Users: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
 }))
 
 const defaultStats = {

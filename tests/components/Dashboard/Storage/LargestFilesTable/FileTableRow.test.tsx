@@ -4,17 +4,17 @@ import { FileTableRow } from '@/components/Dashboard/Storage/LargestFilesTable/F
 
 vi.mock('framer-motion', () => ({
   motion: {
-    tr: ({ children, ...props }: any) => <tr {...props}>{children}</tr>,
+    tr: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <tr {...props}>{children}</tr>,
   },
 }))
 
 vi.mock('lucide-react', () => ({
-  File: (props: any) => <svg data-testid="file-icon" {...props} />,
-  CheckSquare: (props: any) => <svg data-testid="check-square" {...props} />,
-  Square: (props: any) => <svg data-testid="square" {...props} />,
-  ExternalLink: (props: any) => <svg data-testid="external-link" {...props} />,
-  Trash2: (props: any) => <svg data-testid="trash" {...props} />,
-  Loader2: (props: any) => <svg data-testid="loader" {...props} />,
+  File: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="file-icon" {...props} />,
+  CheckSquare: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-square" {...props} />,
+  Square: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="square" {...props} />,
+  ExternalLink: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="external-link" {...props} />,
+  Trash2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="trash" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader" {...props} />,
 }))
 
 vi.mock('@/hooks/useStoragePage', () => ({

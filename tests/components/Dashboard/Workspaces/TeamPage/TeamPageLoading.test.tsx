@@ -3,7 +3,7 @@ import { render } from '@testing-library/react'
 
 // ─── Global mocks ────────────────────────────────────────────────────────────
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))
@@ -14,17 +14,17 @@ vi.mock('next/navigation', () => ({
 }))
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }))
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }))
 
 vi.mock('date-fns', () => ({
-  format: (_date: any, fmt: string) => 'Jan 15',
+  format: (_date: Date | string, fmt: string) => 'Jan 15',
 }))
 
 vi.mock('next-auth/react', () => ({
@@ -35,7 +35,7 @@ vi.mock('next-auth/react', () => ({
 }))
 
 vi.mock('@/components/Shared/Avatar', () => ({
-  Avatar: ({ name }: any) => <div data-testid="avatar">{name}</div>,
+  Avatar: ({ name }: { name: string }) => <div data-testid="avatar">{name}</div>,
 }))
 
 vi.mock('@/hooks/useWorkspacePage', () => ({
@@ -71,66 +71,66 @@ vi.mock('@/hooks/useLargestFileTable', () => ({
 }))
 
 vi.mock('@/components/Dashboard/Storage/LargestFilesTable/TableHeader', () => ({
-  TableHeader: (props: any) => <div data-testid="table-header" {...props} />,
+  TableHeader: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="table-header" {...props} />,
 }))
 vi.mock('@/components/Dashboard/Storage/LargestFilesTable/AdminBadge', () => ({
   AdminBadge: () => <div data-testid="admin-badge" />,
 }))
 vi.mock('@/components/Dashboard/Storage/LargestFilesTable/BulkActionsBar', () => ({
-  BulkActionsBar: (props: any) => <div data-testid="bulk-actions-bar" {...props} />,
+  BulkActionsBar: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="bulk-actions-bar" {...props} />,
 }))
 vi.mock('@/components/Dashboard/Storage/LargestFilesTable/FileTableRow', () => ({
-  FileTableRow: (props: any) => <tr data-testid="file-table-row" {...props} />,
+  FileTableRow: (props: React.HTMLAttributes<HTMLTableRowElement>) => <tr data-testid="file-table-row" {...props} />,
 }))
 vi.mock('@/components/Dashboard/Storage/LargestFilesTable/EmptyState', () => ({
   EmptyState: () => <div data-testid="empty-state" />,
 }))
 
 vi.mock('@/components/Dashboard/AllTasks/FocusTaskCard/FocusBadge', () => ({
-  FocusBadge: (props: any) => <div data-testid="focus-badge" {...props} />,
+  FocusBadge: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="focus-badge" {...props} />,
 }))
 vi.mock('@/components/Dashboard/AllTasks/FocusTaskCard/TaskStatusIcon', () => ({
-  TaskStatusIcon: (props: any) => <div data-testid="task-status-icon" {...props} />,
+  TaskStatusIcon: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-status-icon" {...props} />,
 }))
 vi.mock('@/components/Dashboard/AllTasks/FocusTaskCard/TaskHeader', () => ({
-  TaskHeader: (props: any) => <div data-testid="task-header" {...props} />,
+  TaskHeader: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-header" {...props} />,
 }))
 vi.mock('@/components/Dashboard/AllTasks/FocusTaskCard/TaskProgressBar', () => ({
-  TaskProgressBar: (props: any) => <div data-testid="task-progress-bar" {...props} />,
+  TaskProgressBar: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-progress-bar" {...props} />,
 }))
 vi.mock('@/components/Dashboard/AllTasks/FocusTaskCard/TaskMetadata', () => ({
-  TaskMetadata: (props: any) => <div data-testid="task-metadata" {...props} />,
+  TaskMetadata: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-metadata" {...props} />,
 }))
 
 vi.mock('@/components/Dashboard/AllTasks/WorkspaceTasks/TaskCardParts', () => ({
-  TaskCardHeader: (props: any) => <div data-testid="task-card-header" {...props} />,
-  TaskCardMetaChips: (props: any) => <div data-testid="task-card-meta-chips" {...props} />,
-  TaskCardProgressAssignees: (props: any) => <div data-testid="task-card-progress-assignees" {...props} />,
+  TaskCardHeader: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-card-header" {...props} />,
+  TaskCardMetaChips: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-card-meta-chips" {...props} />,
+  TaskCardProgressAssignees: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-card-progress-assignees" {...props} />,
 }))
 
 vi.mock('@/components/Dashboard/Workspaces/TeamPage/ProjectMembersPanel', () => ({
-  ProjectMembersPanel: (props: any) => <div data-testid="project-members-panel" {...props} />,
+  ProjectMembersPanel: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="project-members-panel" {...props} />,
 }))
 
 vi.mock('lucide-react', () => ({
-  Users: (props: any) => <svg data-testid="users-icon" {...props} />,
-  FolderOpen: (props: any) => <svg data-testid="folder-icon" {...props} />,
-  ShieldCheck: (props: any) => <svg data-testid="shield-icon" {...props} />,
-  Award: (props: any) => <svg data-testid="award-icon" {...props} />,
-  ChevronDown: (props: any) => <svg data-testid="chevron-icon" {...props} />,
-  CheckCircle2: (props: any) => <svg data-testid="check-icon" {...props} />,
-  Circle: (props: any) => <svg data-testid="circle-icon" {...props} />,
-  Search: (props: any) => <svg data-testid="search-icon" {...props} />,
-  MoreVertical: (props: any) => <svg data-testid="more-vertical-icon" {...props} />,
-  Calendar: (props: any) => <svg data-testid="calendar-icon" {...props} />,
-  AlertCircle: (props: any) => <svg data-testid="alert-icon" {...props} />,
-  Plus: (props: any) => <svg data-testid="plus-icon" {...props} />,
-  Loader2: (props: any) => <svg data-testid="loader-icon" {...props} />,
-  Crown: (props: any) => <svg data-testid="crown-icon" {...props} />,
-  FolderKanban: (props: any) => <svg data-testid="folder-kanban-icon" {...props} />,
-  Settings: (props: any) => <svg data-testid="settings-icon" {...props} />,
-  CheckSquare: (props: any) => <svg data-testid="check-square-icon" {...props} />,
-  Square: (props: any) => <svg data-testid="square-icon" {...props} />,
+  Users: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="users-icon" {...props} />,
+  FolderOpen: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="folder-icon" {...props} />,
+  ShieldCheck: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="shield-icon" {...props} />,
+  Award: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="award-icon" {...props} />,
+  ChevronDown: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="chevron-icon" {...props} />,
+  CheckCircle2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-icon" {...props} />,
+  Circle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="circle-icon" {...props} />,
+  Search: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="search-icon" {...props} />,
+  MoreVertical: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="more-vertical-icon" {...props} />,
+  Calendar: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="calendar-icon" {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-icon" {...props} />,
+  Plus: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="plus-icon" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader-icon" {...props} />,
+  Crown: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="crown-icon" {...props} />,
+  FolderKanban: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="folder-kanban-icon" {...props} />,
+  Settings: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="settings-icon" {...props} />,
+  CheckSquare: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-square-icon" {...props} />,
+  Square: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="square-icon" {...props} />,
 }))
 
 // ─── Imports under test ──────────────────────────────────────────────────────

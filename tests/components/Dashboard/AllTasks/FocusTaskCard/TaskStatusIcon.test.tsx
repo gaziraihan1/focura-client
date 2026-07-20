@@ -2,8 +2,8 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 vi.mock('lucide-react', () => ({
-  CheckCircle2: (props: any) => <svg data-testid="check-icon" {...props} />,
-  Clock: (props: any) => <svg data-testid="clock-icon" {...props} />,
+  CheckCircle2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-icon" {...props} />,
+  Clock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="clock-icon" {...props} />,
 }));
 
 vi.mock('@/utils/task.utils', () => ({

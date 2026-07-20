@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { NotificationDropdown } from '@/components/Notifications/NotificationDropdown'
 
 vi.mock('@/components/Notifications/NotificationDropdownHeader', () => ({
-  NotificationDropdownHeader: (props: any) => (
+  NotificationDropdownHeader: (props: Record<string, unknown>) => (
     <div data-testid="dropdown-header">
       <span>Header</span>
       <span>Unread: {props.unreadCount}</span>
@@ -20,7 +20,7 @@ vi.mock('@/components/Notifications/NotificationEmptyState', () => ({
 }))
 
 vi.mock('@/components/Notifications/NotificationListItem', () => ({
-  NotificationListItem: (props: any) => (
+  NotificationListItem: (props: Record<string, unknown>) => (
     <div data-testid="notification-item">
       <span>{props.notification.title}</span>
     </div>
@@ -28,7 +28,7 @@ vi.mock('@/components/Notifications/NotificationListItem', () => ({
 }))
 
 vi.mock('@/components/Notifications/NotificationDropdownFooter', () => ({
-  NotificationDropdownFooter: (props: any) => (
+  NotificationDropdownFooter: (props: Record<string, unknown>) => (
     <div data-testid="dropdown-footer">Footer</div>
   ),
 }))

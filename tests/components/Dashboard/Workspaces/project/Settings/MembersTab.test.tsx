@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { MembersTab } from '@/components/Dashboard/Workspaces/project/Settings/MembersTab';
 
 vi.mock('lucide-react', () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={name} {...props} />;
+  const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={name} {...props} />;
   return {
     Loader2: icon('loader2'),
     Users: icon('users'),
@@ -33,14 +33,14 @@ vi.mock('@/components/Dashboard/Workspaces/project/Settings/RoleDropdown', () =>
 }));
 
 vi.mock('@/components/Dashboard/Workspaces/project/Settings/Avatar', () => ({
-  Avatar: ({ name, ...props }: any) => <div data-testid="avatar" data-name={name} />,
+  Avatar: ({ name, ...props }: Record<string, unknown>) => <div data-testid="avatar" data-name={name} />,
 }));
 
 vi.mock('@/components/Dashboard/Workspaces/project/Settings/RoleBadge', () => ({
-  RoleBadge: ({ role }: any) => <span data-testid="role-badge">{role}</span>,
+  RoleBadge: ({ role }: { role: string }) => <span data-testid="role-badge">{role}</span>,
 }));
 
-function makeProject(overrides: any = {}) {
+function makeProject(overrides: Record<string, unknown> = {}) {
   return {
     id: 'p-1',
     workspaceId: 'ws-1',

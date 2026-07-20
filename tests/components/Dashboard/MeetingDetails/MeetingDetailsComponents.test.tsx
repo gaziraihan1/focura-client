@@ -7,7 +7,7 @@ import { InfoRow } from '@/components/Dashboard/MeetingDetails/InfoRow'
 import { DetailCard } from '@/components/Dashboard/MeetingDetails/DetailCard'
 import { MeetingDetailsSkeleton } from '@/components/Dashboard/MeetingDetails/MeetingDetailsSkeleton'
 
-vi.mock('next/image', () => ({ default: (p: any) => <img {...p} /> }))
+vi.mock('next/image', () => ({ default: (p: Record<string, unknown>) => <img {...p} /> }))
 vi.mock('@/utils/meetingDetails.utils', () => ({
   getInitials: (name: string) => name?.charAt(0) || 'U',
   avatarColor: () => 'bg-blue-500',
@@ -67,7 +67,7 @@ describe('HostChip', () => {
 describe('InfoRow', () => {
   it('renders label', () => {
     render(
-      <InfoRow icon={({ className }: any) => <svg className={className} />} label="Date">
+      <InfoRow icon={({ className }: { className?: string }) => <svg className={className} />} label="Date">
         Jan 1, 2025
       </InfoRow>
     )
@@ -76,7 +76,7 @@ describe('InfoRow', () => {
 
   it('renders children content', () => {
     render(
-      <InfoRow icon={({ className }: any) => <svg className={className} />} label="Date">
+      <InfoRow icon={({ className }: { className?: string }) => <svg className={className} />} label="Date">
         Jan 1, 2025
       </InfoRow>
     )

@@ -4,7 +4,7 @@ import { Avatar } from '@/components/Shared/Avatar'
 
 // Mock next/image
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }))
 
 describe('Avatar', () => {

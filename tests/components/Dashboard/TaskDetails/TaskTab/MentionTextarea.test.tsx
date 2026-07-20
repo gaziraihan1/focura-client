@@ -3,11 +3,11 @@ import { render, screen } from "@testing-library/react";
 import MentionTextarea from "@/components/Dashboard/TaskDetails/TaskTab/MentionTextarea";
 
 vi.mock("framer-motion", () => ({
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }));
 
 vi.mock("@/lib/utils", () => ({
-  cn: (...classes: any[]) => classes.filter(Boolean).join(" "),
+  cn: (...classes: (string | boolean | undefined | null)[]) => classes.filter(Boolean).join(" "),
 }));
 
 vi.mock("@/components/Dashboard/TaskDetails/TaskTab/MentionDropdown", () => ({

@@ -7,11 +7,11 @@ import TaskDetailsPermission from '@/components/Dashboard/TaskDetails/TaskDetail
 import { FocusRequirementsCard } from '@/components/Dashboard/TaskDetails/FocusRequirementsCard'
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => <a href={href} {...props}>{children}</a>,
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => <a href={href} {...props}>{children}</a>,
 }))
 vi.mock('framer-motion', () => ({
-  motion: { div: (p: any) => <div {...p} /> },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  motion: { div: (p: Record<string, unknown>) => <div {...p} /> },
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 vi.mock('@/utils/task.utils', () => ({
   getFocusLevelColor: () => 'text-purple-500',

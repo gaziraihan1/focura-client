@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 vi.mock("lucide-react", () => ({
-  Loader2: (props: any) => <svg data-testid="icon-Loader2" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="icon-Loader2" {...props} />,
 }));
 
 vi.mock("@/hooks/useResource", () => ({

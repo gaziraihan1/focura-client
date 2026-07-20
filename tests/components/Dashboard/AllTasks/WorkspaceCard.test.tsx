@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))
@@ -14,10 +14,10 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...props}>{children}</button>,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 
 vi.mock('date-fns', () => ({
@@ -28,7 +28,7 @@ vi.mock('date-fns', () => ({
 vi.mock('lucide-react', () => {
   const React = require('react')
   const mock = (name: string) => {
-    const Cmp = (props: any) => React.createElement('svg', { 'data-testid': `${name}-icon`, ...props })
+    const Cmp = (props: Record<string, unknown>) => React.createElement('svg', { 'data-testid': `${name}-icon`, ...props })
     Cmp.displayName = name
     return Cmp
   }
@@ -82,15 +82,15 @@ vi.mock('lucide-react', () => {
 })
 
 vi.mock('@/components/Dashboard/AllTasks/TaskQouta/StartPill', () => ({
-  StatPill: (props: any) => <div data-testid="stat-pill" {...props} />,
+  StatPill: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="stat-pill" {...props} />,
 }))
 
 vi.mock('@/components/Dashboard/AllTasks/TaskQouta/ProgressRing', () => ({
-  ProgressRing: (props: any) => <div data-testid="progress-ring" {...props} />,
+  ProgressRing: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="progress-ring" {...props} />,
 }))
 
 vi.mock('@/components/Dashboard/AllTasks/TaskQouta/MemberRow', () => ({
-  MemberRow: (props: any) => <div data-testid="member-row" {...props} />,
+  MemberRow: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="member-row" {...props} />,
 }))
 
 vi.mock('@/components/Dashboard/AllTasks/TaskQouta/QoutaSkeleton', () => ({
@@ -98,7 +98,7 @@ vi.mock('@/components/Dashboard/AllTasks/TaskQouta/QoutaSkeleton', () => ({
 }))
 
 vi.mock('@/components/Shared/Avatar', () => ({
-  Avatar: ({ name }: any) => <div data-testid="avatar">{name}</div>,
+  Avatar: ({ name }: { name: string }) => <div data-testid="avatar">{name}</div>,
 }))
 
 import { WorkspaceCard } from '@/components/Dashboard/AllTasks/TaskQouta/WorkspaceCard'

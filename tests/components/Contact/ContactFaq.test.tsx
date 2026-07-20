@@ -1,13 +1,13 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react';
 import { ContactFAQ } from '@/components/Contact/ContactFaq'
 
 vi.mock('lucide-react', () => ({
-  ChevronDown: (props: any) => <svg data-testid="chevron-down" {...props} />,
+  ChevronDown: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="chevron-down" {...props} />,
 }))
 
 vi.mock('@/lib/utils', () => ({
-  cn: (...args: any[]) => args.filter(Boolean).join(' '),
+  cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(' '),
 }))
 
 describe('ContactFAQ', () => {

@@ -5,15 +5,15 @@ import { ActivityIcon } from '@/components/Dashboard/TaskDetails/ActivityList/Ac
 import { ActivityItem } from '@/components/Dashboard/TaskDetails/ActivityList/ActivityItem'
 
 vi.mock('lucide-react', () => ({
-  Clock: (props: any) => <svg data-testid="clock-icon" {...props} />,
-  CheckCircle2: (props: any) => <svg data-testid="check-circle-icon" {...props} />,
-  Circle: (props: any) => <svg data-testid="circle-icon" {...props} />,
-  Pencil: (props: any) => <svg data-testid="pencil-icon" {...props} />,
-  Plus: (props: any) => <svg data-testid="plus-icon" {...props} />,
-  Trash2: (props: any) => <svg data-testid="trash-icon" {...props} />,
-  Users: (props: any) => <svg data-testid="users-icon" {...props} />,
-  MessageSquare: (props: any) => <svg data-testid="message-icon" {...props} />,
-  AlertCircle: (props: any) => <svg data-testid="alert-icon" {...props} />,
+  Clock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="clock-icon" {...props} />,
+  CheckCircle2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-circle-icon" {...props} />,
+  Circle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="circle-icon" {...props} />,
+  Pencil: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="pencil-icon" {...props} />,
+  Plus: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="plus-icon" {...props} />,
+  Trash2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="trash-icon" {...props} />,
+  Users: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="users-icon" {...props} />,
+  MessageSquare: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="message-icon" {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-icon" {...props} />,
 }))
 
 vi.mock('date-fns', () => ({
@@ -21,7 +21,7 @@ vi.mock('date-fns', () => ({
 }))
 
 vi.mock('@/components/Dashboard/TaskDetails/ActivityList/UserAvatar', () => ({
-  UserAvatar: ({ user }: any) => <div data-testid="user-avatar">{user.name}</div>,
+  UserAvatar: ({ user }: { user: unknown }) => <div data-testid="user-avatar">{user.name}</div>,
 }))
 
 vi.mock('@/utils/task-activity.utils', () => ({

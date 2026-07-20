@@ -9,16 +9,16 @@ import { HostChip } from '@/components/Dashboard/MeetingDetails/HostChip'
 import { AttendeeAvatar } from '@/components/Dashboard/MeetingDetails/AttendeeAvatar'
 
 vi.mock('lucide-react', () => ({
-  CalendarClock: (props: any) => <svg data-testid="calendar-clock-icon" {...props} />,
-  CheckCircle2: (props: any) => <svg data-testid="check-circle-icon" {...props} />,
-  Radio: (props: any) => <svg data-testid="radio-icon" {...props} />,
-  XCircle: (props: any) => <svg data-testid="x-circle-icon" {...props} />,
-  Globe: (props: any) => <svg data-testid="globe-icon" {...props} />,
-  Lock: (props: any) => <svg data-testid="lock-icon" {...props} />,
+  CalendarClock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="calendar-clock-icon" {...props} />,
+  CheckCircle2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-circle-icon" {...props} />,
+  Radio: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="radio-icon" {...props} />,
+  XCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-circle-icon" {...props} />,
+  Globe: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="globe-icon" {...props} />,
+  Lock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="lock-icon" {...props} />,
 }))
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img data-testid="next-image" {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img data-testid="next-image" {...props} />,
 }))
 
 vi.mock('@/utils/meetingDetails.utils', () => ({
@@ -28,7 +28,7 @@ vi.mock('@/utils/meetingDetails.utils', () => ({
 }))
 
 vi.mock('@/lib/utils', () => ({
-  cn: (...args: any[]) => args.filter(Boolean).join(' '),
+  cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(' '),
 }))
 
 describe('StatusBadge', () => {
@@ -68,7 +68,7 @@ describe('VisibilityBadge', () => {
 describe('InfoRow', () => {
   it('renders label and children', () => {
     render(
-      <InfoRow icon={(props: any) => <svg data-testid="test-icon" {...props} />} label="Date">
+      <InfoRow icon={(props: React.SVGProps<SVGSVGElement>) => <svg data-testid="test-icon" {...props} />} label="Date">
         January 15, 2026
       </InfoRow>
     )
@@ -78,7 +78,7 @@ describe('InfoRow', () => {
 
   it('renders icon', () => {
     render(
-      <InfoRow icon={(props: any) => <svg data-testid="test-icon" {...props} />} label="Time">
+      <InfoRow icon={(props: React.SVGProps<SVGSVGElement>) => <svg data-testid="test-icon" {...props} />} label="Time">
         2:00 PM
       </InfoRow>
     )

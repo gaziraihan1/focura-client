@@ -1,14 +1,10 @@
 import { renderHook, waitFor, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createWrapper } from '../utils/renderWithProviders'
-import { server } from '../mock/server'
-import { http, HttpResponse } from 'msw'
-
-const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
 import { useMeetingPage } from '@/hooks/useMeetingPage'
 
-function waitForMeetings(result: any) {
+function waitForMeetings(result: Record<string, unknown>) {
   return waitFor(() => {
     expect(result.current.meetings.length).toBeGreaterThan(0)
   }, { timeout: 5000 })

@@ -4,7 +4,7 @@ import { AuthFormButtons } from '@/components/Authentication/AuthForm/AuthFormBu
 import { AuthFormFields } from '@/components/Authentication/AuthForm/AuthFormFields'
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))
@@ -53,27 +53,27 @@ describe('AuthFormButtons', () => {
 describe('AuthFormFields', () => {
   it('renders email and password for login mode', () => {
     const register = vi.fn()
-    render(<AuthFormFields mode="login" register={register as any} errors={{}} isLoading={false} />)
+    render(<AuthFormFields mode="login" register={register as any as Record<string, unknown>} errors={{}} isLoading={false} />)
     expect(screen.getByPlaceholderText('Email address')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Password')).toBeInTheDocument()
   })
 
   it('renders name field for register mode', () => {
     const register = vi.fn()
-    render(<AuthFormFields mode="register" register={register as any} errors={{}} isLoading={false} />)
+    render(<AuthFormFields mode="register" register={register as any as Record<string, unknown>} errors={{}} isLoading={false} />)
     expect(screen.getByPlaceholderText('Full name')).toBeInTheDocument()
   })
 
   it('renders forgot password link for login mode', () => {
     const register = vi.fn()
-    render(<AuthFormFields mode="login" register={register as any} errors={{}} isLoading={false} />)
+    render(<AuthFormFields mode="login" register={register as any as Record<string, unknown>} errors={{}} isLoading={false} />)
     const link = screen.getByText('Forgot password?')
     expect(link).toHaveAttribute('href', '/authentication/forgot-password')
   })
 
   it('does not render forgot password link for register mode', () => {
     const register = vi.fn()
-    render(<AuthFormFields mode="register" register={register as any} errors={{}} isLoading={false} />)
+    render(<AuthFormFields mode="register" register={register as any as Record<string, unknown>} errors={{}} isLoading={false} />)
     expect(screen.queryByText('Forgot password?')).not.toBeInTheDocument()
   })
 })

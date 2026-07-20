@@ -6,10 +6,10 @@ import { Stat } from '@/components/Dashboard/TeamTask/Stat'
 import { Section } from '@/components/Dashboard/TeamTask/Section'
 
 vi.mock('lucide-react', () => ({
-  Users: (props: any) => <svg data-testid="users-icon" {...props} />,
-  Clock: (props: any) => <svg data-testid="clock-icon" {...props} />,
-  CheckCircle2: (props: any) => <svg data-testid="check-icon" {...props} />,
-  AlertTriangle: (props: any) => <svg data-testid="alert-icon" {...props} />,
+  Users: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="users-icon" {...props} />,
+  Clock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="clock-icon" {...props} />,
+  CheckCircle2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-icon" {...props} />,
+  AlertTriangle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-icon" {...props} />,
 }))
 
 vi.mock('@/utils/task.utils', () => ({

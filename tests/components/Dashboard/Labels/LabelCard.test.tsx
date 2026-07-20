@@ -3,16 +3,16 @@ import { render, screen } from '@testing-library/react';
 import LabelCard from '@/components/Dashboard/Labels/LabelCard';
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }));
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: (props: any) => <div {...props} />,
+    div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props} />,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }));
 
 vi.mock('@/components/Shared/PermissionModal', () => ({

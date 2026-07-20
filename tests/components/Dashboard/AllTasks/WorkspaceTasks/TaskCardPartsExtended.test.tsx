@@ -8,7 +8,7 @@ import {
 import type { Task } from "@/hooks/useTask";
 
 vi.mock("lucide-react", () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={name} {...props} />;
+  const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={name} {...props} />;
   return {
     CheckCircle2: icon("CheckCircle2"),
     TrendingUp: icon("TrendingUp"),

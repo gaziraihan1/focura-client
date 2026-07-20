@@ -3,10 +3,10 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { NotificationsPageHeader } from '@/components/Dashboard/Notifications/NotificationsPageHeader'
 
 vi.mock('lucide-react', () => ({
-  Bell: (props: any) => <svg {...props} />,
-  CheckCheck: (props: any) => <svg {...props} />,
-  Trash2: (props: any) => <svg {...props} />,
-  Loader2: (props: any) => <svg {...props} />,
+  Bell: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  CheckCheck: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Trash2: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
 }))
 
 describe('NotificationsPageHeader', () => {

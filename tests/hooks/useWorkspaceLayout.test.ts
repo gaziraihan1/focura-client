@@ -5,7 +5,7 @@ import { server } from '../mock/server'
 import { http, HttpResponse } from 'msw'
 
 const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
-const ok = (data: unknown) => HttpResponse.json({ success: true, data })
+const ok = (data: any) => HttpResponse.json({ success: true, data })
 
 import { useWorkspaceLayout, useWorkspaceDetailPage } from '@/hooks/useWorkspaceLayout'
 
@@ -32,7 +32,7 @@ describe('useWorkspaceLayout', () => {
 
     await waitFor(() => expect(result.current.isLoading).toBe(false))
 
-    const overview = result.current.navigation.find((n: any) => n.name === 'Overview')
+    const overview = result.current.navigation.find((n: Record<string, unknown>) => n.name === 'Overview')
     expect(overview).toBeDefined()
     expect(overview?.href).toContain('test-ws')
   })
@@ -45,7 +45,7 @@ describe('useWorkspaceLayout', () => {
 
     await waitFor(() => expect(result.current.isLoading).toBe(false))
 
-    const tasks = result.current.navigation.find((n: any) => n.name === 'Tasks')
+    const tasks = result.current.navigation.find((n: Record<string, unknown>) => n.name === 'Tasks')
     expect(tasks).toBeDefined()
     expect(tasks.children).toHaveLength(3)
   })

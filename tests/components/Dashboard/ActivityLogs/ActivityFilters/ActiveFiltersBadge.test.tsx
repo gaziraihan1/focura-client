@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 
 vi.mock('lucide-react', () => ({
-  X: (props: any) => <svg data-testid="x-icon" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
 }));
 
 import { ActiveFiltersBadge } from '@/components/Dashboard/ActivityLogs/ActivityFilters/ActiveFiltersBadge';

@@ -1,31 +1,31 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 
 // ─── Global mocks ────────────────────────────────────────────────────────────
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }));
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }));
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: (props: any) => <div {...props}>{props.children}</div>,
-    button: (props: any) => <button {...props}>{props.children}</button>,
+    div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props}>{props.children}</div>,
+    button: (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{props.children}</button>,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }));
 
 vi.mock('@/lib/utils', () => ({
-  cn: (...args: any[]) => args.filter(Boolean).join(' '),
+  cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(' '),
 }));
 
 vi.mock('@/components/Shared/Avatar', () => ({
-  Avatar: ({ name, image, size }: any) => (
+  Avatar: ({ name, image, size }: Record<string, unknown>) => (
     <span data-testid="avatar" data-name={name} data-size={size}>
       {image ? <img src={image} alt={name} /> : name?.[0] ?? '?'}
     </span>
@@ -33,7 +33,7 @@ vi.mock('@/components/Shared/Avatar', () => ({
 }));
 
 vi.mock('@/components/Shared/Pagination', () => ({
-  Pagination: ({ currentPage, totalPages, onPageChange }: any) => (
+  Pagination: ({ currentPage, totalPages, onPageChange }: Record<string, unknown>) => (
     <div data-testid="pagination">
       <span>Page {currentPage} of {totalPages}</span>
       <button onClick={() => onPageChange(currentPage + 1)}>Next</button>
@@ -42,13 +42,13 @@ vi.mock('@/components/Shared/Pagination', () => ({
 }));
 
 vi.mock('@/components/Dashboard/Workspaces/billing/Billing/BillingStatusBadge', () => ({
-  BillingStatusBadge: ({ status }: any) => (
+  BillingStatusBadge: ({ status }: { status: string }) => (
     <span data-testid="status-badge">{status}</span>
   ),
 }));
 
 vi.mock('@/components/Dashboard/Workspaces/billing/Billing/BillingCancelConfirmation', () => ({
-  BillingCancelConfirmation: ({ onConfirm, onCancel, isLoading }: any) => (
+  BillingCancelConfirmation: ({ onConfirm, onCancel, isLoading }: Record<string, unknown>) => (
     <div data-testid="cancel-confirmation">
       <span>{isLoading ? 'Canceling…' : 'Ready'}</span>
       <button onClick={onConfirm}>Confirm</button>
@@ -58,13 +58,13 @@ vi.mock('@/components/Dashboard/Workspaces/billing/Billing/BillingCancelConfirma
 }));
 
 vi.mock('@/components/Dashboard/Workspaces/Announcement/AnnouncementContentEditor', () => ({
-  AnnouncementContentEditor: ({ value, onChange, disabled }: any) => (
+  AnnouncementContentEditor: ({ value, onChange, disabled }: Record<string, unknown>) => (
     <textarea data-testid="content-editor" value={value} onChange={(e) => onChange(e.target.value)} disabled={disabled} />
   ),
 }));
 
 vi.mock('@/components/Dashboard/Workspaces/Announcement/DeleteConfirmModal', () => ({
-  DeleteConfirmModal: ({ title, isDeleting, onConfirm, onCancel }: any) => (
+  DeleteConfirmModal: ({ title, isDeleting, onConfirm, onCancel }: Record<string, unknown>) => (
     <div data-testid="delete-confirm-modal">
       <span>Delete {title}?</span>
       <button onClick={onConfirm}>Confirm</button>
@@ -78,31 +78,31 @@ vi.mock('@/components/Dashboard/Workspaces/Announcement/AnnouncementEmptyState',
 }));
 
 vi.mock('@/components/Dashboard/Workspaces/Announcement/RenderedContent', () => ({
-  RenderedContent: ({ raw }: any) => <div data-testid="rendered-content">{raw}</div>,
+  RenderedContent: ({ raw }: Record<string, unknown>) => <div data-testid="rendered-content">{raw}</div>,
 }));
 
 vi.mock('@/components/Dashboard/CalendarView/TaskModal/TaskDescription', () => ({
-  TaskDescription: ({ description }: any) => <div data-testid="task-description">{description}</div>,
+  TaskDescription: ({ description }: { description: string }) => <div data-testid="task-description">{description}</div>,
 }));
 
 vi.mock('@/components/Dashboard/CalendarView/TaskModal/TaskTimeDetails', () => ({
-  TaskTimeDetails: (props: any) => <div data-testid="task-time-details" data-props={JSON.stringify(props)} />,
+  TaskTimeDetails: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-time-details" data-props={JSON.stringify(props)} />,
 }));
 
 vi.mock('@/components/Dashboard/CalendarView/TaskModal/TaskPeopleSection', () => ({
-  TaskPeopleSection: (props: any) => <div data-testid="task-people-section" />,
+  TaskPeopleSection: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-people-section" />,
 }));
 
 vi.mock('@/components/Dashboard/CalendarView/TaskModal/TaskProjectSection', () => ({
-  TaskProjectSection: (props: any) => <div data-testid="task-project-section" />,
+  TaskProjectSection: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-project-section" />,
 }));
 
 vi.mock('@/components/Dashboard/CalendarView/TaskModal/TaskActivityStats', () => ({
-  TaskActivityStats: (props: any) => <div data-testid="task-activity-stats" />,
+  TaskActivityStats: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-activity-stats" />,
 }));
 
 vi.mock('@/components/Dashboard/Workspaces/Meeting/MeetingStatusBadge', () => ({
-  MeetingStatusBadge: ({ status }: any) => <span data-testid="meeting-status-badge">{status}</span>,
+  MeetingStatusBadge: ({ status }: { status: string }) => <span data-testid="meeting-status-badge">{status}</span>,
 }));
 
 vi.mock('@/components/Dashboard/Calendar/DayDetailsPanelParts', () => ({
@@ -160,7 +160,7 @@ vi.mock('@/hooks/useProjects', () => ({
 }));
 
 vi.mock('@/components/Dashboard/Workspaces/project/Settings/Section', () => ({
-  Section: ({ title, description, children }: any) => (
+  Section: ({ title, description, children }: Record<string, unknown>) => (
     <div data-testid="section" data-title={title}>
       <h3>{title}</h3>
       <p>{description}</p>
@@ -175,8 +175,8 @@ vi.mock('date-fns', () => ({
 }));
 
 vi.mock('lucide-react', () => {
-  const identity = (props: any) => <svg data-testid="icon" {...props} />;
-  const icons: Record<string, any> = {};
+  const identity = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="icon" {...props} />;
+  const icons: Record<string, unknown> = {};
   const iconNames = [
     'Check', 'Globe', 'Lock', 'Calendar', 'Clock', 'MapPin', 'Link2', 'MoreVertical',
     'ChevronRight', 'CreditCard', 'ExternalLink', 'X', 'Brain', 'ChevronLeft',
@@ -203,40 +203,40 @@ describe('GeneralTab', () => {
   };
 
   it('renders project name input with value', () => {
-    render(<GeneralTab project={baseProject as any} canManage={true} />);
+    render(<GeneralTab project={baseProject as any as Record<string, unknown>} canManage={true} />);
     expect(screen.getByDisplayValue('Test Project')).toBeInTheDocument();
   });
 
   it('renders description textarea with value', () => {
-    render(<GeneralTab project={baseProject as any} canManage={true} />);
+    render(<GeneralTab project={baseProject as any as Record<string, unknown>} canManage={true} />);
     expect(screen.getByDisplayValue('A test description')).toBeInTheDocument();
   });
 
   it('shows save button when canManage', () => {
-    render(<GeneralTab project={baseProject as any} canManage={true} />);
+    render(<GeneralTab project={baseProject as any as Record<string, unknown>} canManage={true} />);
     expect(screen.getByText('Save Changes')).toBeInTheDocument();
   });
 
   it('hides save button when cannot manage', () => {
-    render(<GeneralTab project={baseProject as any} canManage={false} />);
+    render(<GeneralTab project={baseProject as any as Record<string, unknown>} canManage={false} />);
     expect(screen.queryByText('Save Changes')).not.toBeInTheDocument();
   });
 
   it('disables inputs when cannot manage', () => {
-    render(<GeneralTab project={baseProject as any} canManage={false} />);
+    render(<GeneralTab project={baseProject as any as Record<string, unknown>} canManage={false} />);
     expect(screen.getByDisplayValue('Test Project')).toBeDisabled();
     expect(screen.getByDisplayValue('A test description')).toBeDisabled();
   });
 
   it('updates name when input changes', () => {
-    render(<GeneralTab project={baseProject as any} canManage={true} />);
+    render(<GeneralTab project={baseProject as any as Record<string, unknown>} canManage={true} />);
     const input = screen.getByDisplayValue('Test Project');
     fireEvent.change(input, { target: { value: 'New Name' } });
     expect(input).toHaveValue('New Name');
   });
 
   it('shows description length counter', () => {
-    render(<GeneralTab project={baseProject as any} canManage={true} />);
+    render(<GeneralTab project={baseProject as any as Record<string, unknown>} canManage={true} />);
     // The counter renders "18" and "/500" as separate text nodes
     const counterEl = document.querySelector('.text-\\[10px\\]');
     if (counterEl) {
@@ -245,18 +245,18 @@ describe('GeneralTab', () => {
   });
 
   it('renders project info section', () => {
-    render(<GeneralTab project={baseProject as any} canManage={true} />);
+    render(<GeneralTab project={baseProject as any as Record<string, unknown>} canManage={true} />);
     expect(screen.getByText('Project Info')).toBeInTheDocument();
   });
 
   it('renders visibility section', () => {
-    render(<GeneralTab project={baseProject as any} canManage={true} />);
+    render(<GeneralTab project={baseProject as any as Record<string, unknown>} canManage={true} />);
     expect(screen.getByText('Project Visibility')).toBeInTheDocument();
     expect(screen.getByText(/inherited from the workspace/)).toBeInTheDocument();
   });
 
   it('renders section descriptions', () => {
-    render(<GeneralTab project={baseProject as any} canManage={true} />);
+    render(<GeneralTab project={baseProject as any as Record<string, unknown>} canManage={true} />);
     expect(screen.getByText("Update the project's name and description.")).toBeInTheDocument();
   });
 });

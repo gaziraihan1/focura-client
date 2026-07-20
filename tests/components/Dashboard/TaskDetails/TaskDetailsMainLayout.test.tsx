@@ -4,7 +4,7 @@ import TaskDetailsMainLayout from "@/components/Dashboard/TaskDetails/TaskDetail
 
 vi.mock("framer-motion", () => ({
   motion: {
-    div: (props: any) => <div {...props} />,
+    div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props} />,
   },
 }));
 
@@ -63,23 +63,23 @@ const mockTask = {
 
 describe("TaskDetailsMainLayout", () => {
   it("renders the task title", () => {
-    render(<TaskDetailsMainLayout id="t1" isPersonalTask={false} task={mockTask as any} workspaceSlug="ws1" />);
+    render(<TaskDetailsMainLayout id="t1" isPersonalTask={false} task={mockTask as any as Record<string, unknown>} workspaceSlug="ws1" />);
     expect(screen.getByText("Test Task")).toBeInTheDocument();
   });
 
   it("renders the task description", () => {
-    render(<TaskDetailsMainLayout id="t1" isPersonalTask={false} task={mockTask as any} workspaceSlug="ws1" />);
+    render(<TaskDetailsMainLayout id="t1" isPersonalTask={false} task={mockTask as any as Record<string, unknown>} workspaceSlug="ws1" />);
     expect(screen.getByText("Test description")).toBeInTheDocument();
   });
 
   it("shows 'No description' when description is empty", () => {
     const taskNoDesc = { ...mockTask, description: "" };
-    render(<TaskDetailsMainLayout id="t1" isPersonalTask={false} task={taskNoDesc as any} workspaceSlug="ws1" />);
+    render(<TaskDetailsMainLayout id="t1" isPersonalTask={false} task={taskNoDesc as any as Record<string, unknown>} workspaceSlug="ws1" />);
     expect(screen.getByText("No description provided")).toBeInTheDocument();
   });
 
   it("renders the task sidebar", () => {
-    render(<TaskDetailsMainLayout id="t1" isPersonalTask={false} task={mockTask as any} workspaceSlug="ws1" />);
+    render(<TaskDetailsMainLayout id="t1" isPersonalTask={false} task={mockTask as any as Record<string, unknown>} workspaceSlug="ws1" />);
     expect(screen.getByTestId("task-sidebar")).toBeInTheDocument();
   });
 });

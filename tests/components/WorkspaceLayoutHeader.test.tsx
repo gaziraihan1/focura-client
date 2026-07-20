@@ -3,12 +3,12 @@ import { render, screen } from '@testing-library/react'
 import { WorkspaceLayoutHeader } from '@/components/Dashboard/Workspaces/WorkspaceLayoutHeader'
 
 vi.mock('lucide-react', () => ({
-  Menu: (props: any) => <svg {...props} />,
-  Search: (props: any) => <svg {...props} />,
+  Menu: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Search: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
 }))
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }))
 
 vi.mock('@/components/Themes/ThemeSwitcher', () => ({

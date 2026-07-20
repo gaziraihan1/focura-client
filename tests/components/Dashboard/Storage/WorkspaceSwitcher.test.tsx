@@ -4,14 +4,14 @@ import { WorkspaceSwitcher } from '@/components/Dashboard/Storage/WorkspaceSwitc
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: (props: any) => <div {...filterProps(props)}>{props.children}</div>,
-    button: (props: any) => <button {...filterProps(props)}>{props.children}</button>,
+    div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...filterProps(props)}>{props.children}</div>,
+    button: (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...filterProps(props)}>{props.children}</button>,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }));
 
 vi.mock('lucide-react', () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={name} {...props} />;
+  const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={name} {...props} />;
   return {
     Check: icon('check'),
     ChevronDown: icon('chevron-down'),
@@ -31,8 +31,8 @@ vi.mock('@/hooks/useStorage', () => ({
   })),
 }));
 
-function filterProps(props: Record<string, any>) {
-  const out: Record<string, any> = {};
+function filterProps(props: Record<string, unknown>) {
+  const out: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(props)) {
     if (['children', 'initial', 'animate', 'exit', 'transition'].includes(k)) continue;
     if (k.startsWith('on') || k === 'className' || k === 'type' || k === 'style') out[k] = v;

@@ -3,16 +3,16 @@ import { render, screen } from '@testing-library/react'
 import { TimeTrackingCard } from '@/components/Dashboard/TaskDetails/TimeTrackingCard'
 
 vi.mock('lucide-react', () => ({
-  Timer: (props: any) => <svg data-testid="timer-icon" {...props} />,
-  Hourglass: (props: any) => <svg data-testid="hourglass-icon" {...props} />,
-  TrendingUp: (props: any) => <svg data-testid="trending-icon" {...props} />,
-  AlertCircle: (props: any) => <svg data-testid="alert-icon" {...props} />,
-  Clock: (props: any) => <svg data-testid="clock-icon" {...props} />,
+  Timer: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="timer-icon" {...props} />,
+  Hourglass: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="hourglass-icon" {...props} />,
+  TrendingUp: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="trending-icon" {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-icon" {...props} />,
+  Clock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="clock-icon" {...props} />,
 }))
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }))
 

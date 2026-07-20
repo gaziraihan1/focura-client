@@ -4,20 +4,20 @@ import { render, screen } from '@testing-library/react'
 // Mock framer-motion
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...filterDomProps(props)}>{children}</div>,
-    button: ({ children, ...props }: any) => <button {...filterDomProps(props)}>{children}</button>,
-    span: ({ children, ...props }: any) => <span {...filterDomProps(props)}>{children}</span>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...filterDomProps(props)}>{children}</div>,
+    button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...filterDomProps(props)}>{children}</button>,
+    span: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <span {...filterDomProps(props)}>{children}</span>,
   },
-  AnimatePresence: ({ children }: any) => children,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => children,
   useInView: () => true,
 }))
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }))
 
-function filterDomProps(props: Record<string, any>) {
-  const domProps: Record<string, any> = {}
+function filterDomProps(props: Record<string, unknown>) {
+  const domProps: Record<string, unknown> = {}
   for (const key of Object.keys(props)) {
     if (!key.startsWith('initial') && !key.startsWith('animate') && !key.startsWith('while') && !key.startsWith('exit') && !key.startsWith('transition') && !key.startsWith('viewport') && !key.startsWith('layout')) {
       domProps[key] = props[key]

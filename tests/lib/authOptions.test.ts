@@ -11,11 +11,11 @@ vi.mock('@/lib/prisma', () => ({
 }))
 
 vi.mock('next-auth/providers/credentials', () => ({
-  default: (opts: any) => ({ id: opts.id, name: opts.name, type: 'credentials' }),
+  default: (opts: Record<string, unknown>) => ({ id: opts.id, name: opts.name, type: 'credentials' }),
 }))
 
 vi.mock('next-auth/providers/google', () => ({
-  default: (opts: any) => ({ id: 'google', name: 'Google', type: 'oauth' }),
+  default: (opts: Record<string, unknown>) => ({ id: 'google', name: 'Google', type: 'oauth' }),
 }))
 
 vi.mock('@next-auth/prisma-adapter', () => ({
@@ -58,13 +58,13 @@ describe('lib/auth/authOptions', () => {
 
   it('has credentials provider', async () => {
     const { authOptions } = await import('@/lib/auth/authOptions')
-    const creds = authOptions.providers.find((p: any) => p.id === 'credentials')
+    const creds = authOptions.providers.find((p: Record<string, unknown>) => p.id === 'credentials')
     expect(creds).toBeDefined()
   })
 
   it('has google provider', async () => {
     const { authOptions } = await import('@/lib/auth/authOptions')
-    const google = authOptions.providers.find((p: any) => p.id === 'google')
+    const google = authOptions.providers.find((p: Record<string, unknown>) => p.id === 'google')
     expect(google).toBeDefined()
   })
 

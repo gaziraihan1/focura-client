@@ -24,7 +24,7 @@ vi.mock('@/hooks/useNotificationBell', () => ({
 
 // Mock child components
 vi.mock('@/components/Notifications/NotificationBellButton', () => ({
-  NotificationBellButton: ({ badge, onClick }: any) => (
+  NotificationBellButton: ({ badge, onClick }: Record<string, unknown>) => (
     <button data-testid="bell-button" onClick={onClick}>
       Bell {badge ? `(${badge})` : ''}
     </button>

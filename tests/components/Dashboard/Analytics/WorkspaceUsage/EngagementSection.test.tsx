@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react'
 import { EngagementSection } from '@/components/Dashboard/Analytics/WorkspaceUsage/EngagementSection'
 
 vi.mock('recharts', () => ({
-  ResponsiveContainer: ({ children }: any) => <div data-testid="responsive-container">{children}</div>,
-  LineChart: ({ children }: any) => <div data-testid="line-chart">{children}</div>,
+  ResponsiveContainer: ({ children }: { children?: React.ReactNode }) => <div data-testid="responsive-container">{children}</div>,
+  LineChart: ({ children }: { children?: React.ReactNode }) => <div data-testid="line-chart">{children}</div>,
   Line: () => null,
   XAxis: () => null,
   YAxis: () => null,
@@ -13,7 +13,7 @@ vi.mock('recharts', () => ({
 }))
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }))
 
 const mockUserEngagement = {
@@ -33,25 +33,25 @@ const mockUserEngagement = {
 
 describe('EngagementSection', () => {
   it('renders section heading', () => {
-    render(<EngagementSection userEngagement={mockUserEngagement as any} projectActivity={{} as any} />)
+    render(<EngagementSection userEngagement={mockUserEngagement as any as Record<string, unknown>} projectActivity={{} as any} />)
     expect(screen.getByText('User Engagement')).toBeInTheDocument()
   })
 
   it('renders active user stats', () => {
-    render(<EngagementSection userEngagement={mockUserEngagement as any} projectActivity={{} as any} />)
+    render(<EngagementSection userEngagement={mockUserEngagement as any as Record<string, unknown>} projectActivity={{} as any} />)
     expect(screen.getByText('Online Now')).toBeInTheDocument()
     expect(screen.getByText('This Week')).toBeInTheDocument()
     expect(screen.getByText('This Month')).toBeInTheDocument()
   })
 
   it('renders inactive members badge count', () => {
-    render(<EngagementSection userEngagement={mockUserEngagement as any} projectActivity={{} as any} />)
+    render(<EngagementSection userEngagement={mockUserEngagement as any as Record<string, unknown>} projectActivity={{} as any} />)
     expect(screen.getByText('1')).toBeInTheDocument()
     expect(screen.getByText('Inactive Members')).toBeInTheDocument()
   })
 
   it('renders collaboration leaderboard', () => {
-    render(<EngagementSection userEngagement={mockUserEngagement as any} projectActivity={{} as any} />)
+    render(<EngagementSection userEngagement={mockUserEngagement as any as Record<string, unknown>} projectActivity={{} as any} />)
     expect(screen.getByText('Collaboration Leaderboard')).toBeInTheDocument()
     expect(screen.getByText('Alice')).toBeInTheDocument()
   })

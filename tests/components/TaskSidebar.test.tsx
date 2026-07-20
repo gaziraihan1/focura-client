@@ -3,28 +3,28 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { TaskSidebar } from '@/components/Dashboard/TaskDetails/TaskSidebar'
 
 vi.mock('lucide-react', () => ({
-  Clock: (props: any) => <svg data-testid="clock-icon" {...props} />,
-  Calendar: (props: any) => <svg data-testid="calendar-icon" {...props} />,
-  User: (props: any) => <svg data-testid="user-icon" {...props} />,
-  Folder: (props: any) => <svg data-testid="folder-icon" {...props} />,
-  Check: (props: any) => <svg data-testid="check-icon" {...props} />,
-  Lock: (props: any) => <svg data-testid="lock-icon" {...props} />,
+  Clock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="clock-icon" {...props} />,
+  Calendar: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="calendar-icon" {...props} />,
+  User: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="user-icon" {...props} />,
+  Folder: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="folder-icon" {...props} />,
+  Check: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-icon" {...props} />,
+  Lock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="lock-icon" {...props} />,
 }))
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }))
 
 vi.mock('next/link', () => ({
-  default: ({ href, children, ...props }: any) => (
+  default: ({ href, children, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))
 
 vi.mock('@/components/Shared/Avatar', () => ({
-  Avatar: ({ name }: any) => <div data-testid="avatar">{name}</div>,
+  Avatar: ({ name }: { name: string }) => <div data-testid="avatar">{name}</div>,
 }))
 
 const createMockTask = (overrides = {}) => ({

@@ -20,20 +20,20 @@ import { render, screen, fireEvent } from '@testing-library/react'
 
 // ─── Global mocks ──────────────────────────────────────────────────────────
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))
 
 vi.mock('next/image', () => ({
-  default: (props: any) => {
+  default: (props: Record<string, unknown>) => {
     const { fill, ...rest } = props
     return <img {...rest} data-fill={fill} />
   },
 }))
 
 vi.mock('framer-motion', () => {
-  const identity = (c: any) => c
+  const identity = (c: Record<string, unknown>) => c
   const m = {
     div: 'div',
     button: 'button',
@@ -45,14 +45,14 @@ vi.mock('framer-motion', () => {
       span: 'span',
       p: 'p',
     },
-    AnimatePresence: ({ children }: any) => children,
+    AnimatePresence: ({ children }: { children?: React.ReactNode }) => children,
   }
   return { __esModule: true, ...m, default: m }
 })
 
 vi.mock('date-fns', () => ({
   formatDistanceToNow: () => '2 hours ago',
-  format: (_date: any, fmt: string) => {
+  format: (_date: Date | string, fmt: string) => {
     if (fmt === 'MMM d, yyyy') return 'Jan 1, 2025'
     return '2025-01-01'
   },
@@ -61,7 +61,7 @@ vi.mock('date-fns', () => ({
 
 vi.mock('lucide-react', () => {
   const icon = (name: string) => {
-    const Component = (props: any) => <svg data-testid={`icon-${name}`} {...props} />
+    const Component = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={`icon-${name}`} {...props} />
     Component.displayName = name
     return Component
   }
@@ -151,7 +151,7 @@ vi.mock('@/utils/task-activity.utils', () => ({
     return map[action] || 'performed an action'
   },
   groupActivitiesByDate: (activities: any[]) => {
-    const grouped: Record<string, any[]> = {}
+    const grouped: Record<string, unknown[]> = {}
     activities.forEach((a) => {
       const key = 'January 1, 2025'
       if (!grouped[key]) grouped[key] = []
@@ -194,13 +194,13 @@ vi.mock('@/utils/comments.utils', () => ({
 }))
 
 vi.mock('@/components/Shared/Avatar', () => ({
-  Avatar: ({ name, ...props }: any) => (
+  Avatar: ({ name, ...props }: Record<string, unknown>) => (
     <div data-testid="avatar" data-name={name}>{name?.charAt(0) || '?'}</div>
   ),
 }))
 
 vi.mock('@/components/Shared/StatCard', () => ({
-  default: ({ label, value }: any) => (
+  default: ({ label, value }: Record<string, unknown>) => (
     <div data-testid="stat-card"><span>{label}</span><span>{value}</span></div>
   ),
 }))
@@ -319,11 +319,11 @@ vi.mock('@/constants/task.constants', () => ({
 
 vi.mock('@/constants/intent.constants', () => ({
   INTENT_OPTIONS: [
-    { value: 'EXECUTION', label: 'Do Work', icon: (p: any) => <svg data-testid="intent-icon-exec" {...p} />, description: 'Active implementation', activeClass: 'border-blue-500 bg-blue-500/10' },
-    { value: 'PLANNING', label: 'Think & Plan', icon: (p: any) => <svg data-testid="intent-icon-plan" {...p} />, description: 'Strategy and organization', activeClass: 'border-purple-500 bg-purple-500/10' },
-    { value: 'REVIEW', label: 'Review', icon: (p: any) => <svg data-testid="intent-icon-review" {...p} />, description: 'Check and validate', activeClass: 'border-green-500 bg-green-500/10' },
-    { value: 'LEARNING', label: 'Learn', icon: (p: any) => <svg data-testid="intent-icon-learn" {...p} />, description: 'Research and education', activeClass: 'border-amber-500 bg-amber-500/10' },
-    { value: 'COMMUNICATION', label: 'Communicate', icon: (p: any) => <svg data-testid="intent-icon-comm" {...p} />, description: 'Meetings and discussions', activeClass: 'border-pink-500 bg-pink-500/10' },
+    { value: 'EXECUTION', label: 'Do Work', icon: (p: Record<string, unknown>) => <svg data-testid="intent-icon-exec" {...p} />, description: 'Active implementation', activeClass: 'border-blue-500 bg-blue-500/10' },
+    { value: 'PLANNING', label: 'Think & Plan', icon: (p: Record<string, unknown>) => <svg data-testid="intent-icon-plan" {...p} />, description: 'Strategy and organization', activeClass: 'border-purple-500 bg-purple-500/10' },
+    { value: 'REVIEW', label: 'Review', icon: (p: Record<string, unknown>) => <svg data-testid="intent-icon-review" {...p} />, description: 'Check and validate', activeClass: 'border-green-500 bg-green-500/10' },
+    { value: 'LEARNING', label: 'Learn', icon: (p: Record<string, unknown>) => <svg data-testid="intent-icon-learn" {...p} />, description: 'Research and education', activeClass: 'border-amber-500 bg-amber-500/10' },
+    { value: 'COMMUNICATION', label: 'Communicate', icon: (p: Record<string, unknown>) => <svg data-testid="intent-icon-comm" {...p} />, description: 'Meetings and discussions', activeClass: 'border-pink-500 bg-pink-500/10' },
   ],
   ENERGY_OPTIONS: [
     { value: 'LOW', label: 'Low Energy', className: 'bg-green-500 text-white' },
@@ -352,11 +352,11 @@ vi.mock('@/components/Dashboard/Calendar/DayDetailsPanelParts', () => ({
 }))
 
 vi.mock('@/lib/utils', () => ({
-  cn: (...args: any[]) => args.filter(Boolean).join(' '),
+  cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(' '),
 }))
 
 // ─── Helper ────────────────────────────────────────────────────────────────
-const makeTask = (overrides: any = {}) => ({
+const makeTask = (overrides: Record<string, unknown> = {}) => ({
   id: 'task-1',
   title: 'Test Task',
   description: 'Test description',

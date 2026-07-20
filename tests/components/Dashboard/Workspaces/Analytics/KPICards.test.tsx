@@ -2,13 +2,13 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }))
 
 vi.mock('next/navigation', () => ({
@@ -18,16 +18,16 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...props}>{children}</button>,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 
 vi.mock('lucide-react', () => {
   const React = require('react')
   const mock = (name: string) => {
-    const Cmp = (props: any) => React.createElement('svg', { 'data-testid': `${name}-icon`, ...props })
+    const Cmp = (props: Record<string, unknown>) => React.createElement('svg', { 'data-testid': `${name}-icon`, ...props })
     Cmp.displayName = name
     return Cmp
   }
@@ -81,22 +81,22 @@ vi.mock('lucide-react', () => {
 })
 
 vi.mock('recharts', () => ({
-  ResponsiveContainer: ({ children }: any) => <div>{children}</div>,
-  BarChart: (props: any) => <div data-testid="bar-chart" {...props} />,
+  ResponsiveContainer: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
+  BarChart: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="bar-chart" {...props} />,
   Bar: () => null,
   XAxis: () => null,
   YAxis: () => null,
   Tooltip: () => null,
   CartesianGrid: () => null,
-  PieChart: (props: any) => <div data-testid="pie-chart" {...props} />,
+  PieChart: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="pie-chart" {...props} />,
   Pie: () => null,
   Cell: () => null,
-  LineChart: (props: any) => <div data-testid="line-chart" {...props} />,
+  LineChart: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="line-chart" {...props} />,
   Line: () => null,
   Legend: () => null,
-  AreaChart: (props: any) => <div data-testid="area-chart" {...props} />,
+  AreaChart: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="area-chart" {...props} />,
   Area: () => null,
-  RadarChart: (props: any) => <div data-testid="radar-chart" {...props} />,
+  RadarChart: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="radar-chart" {...props} />,
   Radar: () => null,
   PolarGrid: () => null,
   PolarAngleAxis: () => null,

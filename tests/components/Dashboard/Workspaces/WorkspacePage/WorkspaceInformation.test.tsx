@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 
 vi.mock('date-fns', () => ({
-  format: (date: any, fmt: string) => `2024-01-15`,
+  format: (date: Date | string, fmt: string) => `2024-01-15`,
 }))
 
 import WorkspaceInformation from '@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceInformation'

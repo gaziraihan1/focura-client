@@ -1,5 +1,5 @@
 import { renderHook, waitFor, act } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { createWrapper, renderHookWithProviders } from '../utils/renderWithProviders'
 import {
   useAnnouncements,
@@ -8,7 +8,6 @@ import {
   useDeleteAnnouncement,
   useTogglePinAnnouncement,
   useAnnouncementFilters,
-  announcementKeys,
 } from '@/hooks/useAnnouncement'
 import { server } from '@/tests/mock/server'
 import { http, HttpResponse } from 'msw'

@@ -3,9 +3,9 @@ import { describe, it, expect, vi } from 'vitest'
 import { ActivityFeed } from '@/components/Dashboard/ActivityLogs/ActivityFeed'
 import { createWrapper } from '@/tests/utils/renderWithProviders'
 
-vi.mock('next/image', () => ({ default: (p: any) => <img {...p} /> }))
+vi.mock('next/image', () => ({ default: (p: Record<string, unknown>) => <img {...p} /> }))
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => <a href={href} {...props}>{children}</a>,
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => <a href={href} {...props}>{children}</a>,
 }))
 vi.mock('date-fns', () => ({
   formatDistanceToNow: () => '2 hours ago',
@@ -13,7 +13,7 @@ vi.mock('date-fns', () => ({
 
 const mockUseActivities = vi.fn()
 vi.mock('@/hooks/useActivity', () => ({
-  useActivities: (...args: any[]) => mockUseActivities(...args),
+  useActivities: (...args: (string | boolean | undefined | null)[]) => mockUseActivities(...args),
 }))
 
 const mockActivity = {

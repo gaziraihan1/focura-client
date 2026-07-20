@@ -3,9 +3,9 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import TaskTabHeader from '@/components/Dashboard/TaskDetails/TaskTab/TaskTabHeader'
 
 vi.mock('lucide-react', () => ({
-  Activity: (props: any) => <svg data-testid="activity-icon" {...props} />,
-  MessageSquare: (props: any) => <svg data-testid="message-icon" {...props} />,
-  Paperclip: (props: any) => <svg data-testid="paperclip-icon" {...props} />,
+  Activity: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="activity-icon" {...props} />,
+  MessageSquare: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="message-icon" {...props} />,
+  Paperclip: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="paperclip-icon" {...props} />,
 }))
 
 describe('TaskTabHeader', () => {

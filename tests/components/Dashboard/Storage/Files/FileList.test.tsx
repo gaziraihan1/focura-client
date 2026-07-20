@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { FileList } from '@/components/Dashboard/Storage/Files/FileList';
 
 vi.mock('lucide-react', () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={name} {...props} />;
+  const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={name} {...props} />;
   return {
     Download: icon('download'),
     Trash2: icon('trash2'),
@@ -18,7 +18,7 @@ vi.mock('lucide-react', () => {
 });
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }));
 
 vi.mock('@/hooks/useFileManagement', () => ({
@@ -39,7 +39,7 @@ vi.mock('@/components/Dashboard/Storage/Files/FilePreviewModal', () => ({
   FilePreviewModal: () => <div data-testid="preview-modal" />,
 }));
 
-function makeFile(overrides: any = {}) {
+function makeFile(overrides: Record<string, unknown> = {}) {
   return {
     id: 'f-1',
     originalName: 'report.pdf',

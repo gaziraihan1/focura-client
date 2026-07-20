@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { TaskStatsCards } from '@/components/Dashboard/AllTasks/TaskStatsCards'
 
 vi.mock('@/components/Shared/StatCard', () => ({
-  default: (p: any) => <div data-testid="stat-card" data-label={p.label}>{p.label}: {p.value}</div>,
+  default: (p: Record<string, unknown>) => <div data-testid="stat-card" data-label={p.label}>{p.label}: {p.value}</div>,
 }))
 
 describe('TaskStatsCards', () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react';
 import { LabelManager } from '@/components/Labels/LabelManager'
 import { createWrapper } from '../utils/renderWithProviders'
 
@@ -39,9 +39,9 @@ vi.mock('@/lib/error/error', () => ({
 }))
 
 vi.mock('lucide-react', () => ({
-  Plus: (props: any) => <svg data-testid="plus-icon" {...props} />,
-  X: (props: any) => <svg data-testid="x-icon" {...props} />,
-  Tag: (props: any) => <svg data-testid="tag-icon" {...props} />,
+  Plus: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="plus-icon" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
+  Tag: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="tag-icon" {...props} />,
 }))
 
 describe('LabelManager', () => {

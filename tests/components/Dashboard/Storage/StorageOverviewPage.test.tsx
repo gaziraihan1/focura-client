@@ -7,7 +7,7 @@ vi.mock("@/hooks/useStorageOverview", () => ({
 }));
 
 vi.mock("@/components/Dashboard/Storage/StorageOverviewPage/LoadingState", () => ({
-  LoadingState: ({ message }: any) => <div data-testid="loading-state">{message}</div>,
+  LoadingState: ({ message }: { message: string }) => <div data-testid="loading-state">{message}</div>,
 }));
 
 vi.mock("@/components/Dashboard/Storage/StorageOverviewPage/EmptyState", () => ({
@@ -15,43 +15,43 @@ vi.mock("@/components/Dashboard/Storage/StorageOverviewPage/EmptyState", () => (
 }));
 
 vi.mock("@/components/Dashboard/Storage/StorageOverviewPage/ErrorState", () => ({
-  ErrorState: ({ error }: any) => <div data-testid="error-state">{error}</div>,
+  ErrorState: ({ error }: { error: unknown }) => <div data-testid="error-state">{error}</div>,
 }));
 
 vi.mock("@/components/Dashboard/Storage/StorageOverviewPage/PageHeader", () => ({
-  PageHeader: (props: any) => <div data-testid="page-header" />,
+  PageHeader: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="page-header" />,
 }));
 
 vi.mock("@/components/Dashboard/Storage/StorageOverviewPage/StorageWarningBanner", () => ({
-  StorageWarningBanner: (props: any) => <div data-testid="warning-banner" />,
+  StorageWarningBanner: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="warning-banner" />,
 }));
 
 vi.mock("@/components/Dashboard/Storage/StorageSummaryCards", () => ({
-  StorageSummaryCards: (props: any) => <div data-testid="summary-cards" />,
+  StorageSummaryCards: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="summary-cards" />,
 }));
 
 vi.mock("@/components/Dashboard/Storage/MyContributionCard", () => ({
-  MyContributionCard: (props: any) => <div data-testid="my-contribution" />,
+  MyContributionCard: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="my-contribution" />,
 }));
 
 vi.mock("@/components/Dashboard/Storage/UserContributionsTable", () => ({
-  UserContributionsTable: (props: any) => <div data-testid="user-contributions" />,
+  UserContributionsTable: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="user-contributions" />,
 }));
 
 vi.mock("@/components/Dashboard/Storage/StorageBreakdownChart", () => ({
-  StorageBreakdownChart: (props: any) => <div data-testid="breakdown-chart" />,
+  StorageBreakdownChart: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="breakdown-chart" />,
 }));
 
 vi.mock("@/components/Dashboard/Storage/StorageTrendChart", () => ({
-  StorageTrendChart: (props: any) => <div data-testid="trend-chart" />,
+  StorageTrendChart: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="trend-chart" />,
 }));
 
 vi.mock("@/components/Dashboard/Storage/LargestFilesTable", () => ({
-  LargestFilesTable: (props: any) => <div data-testid="largest-files" />,
+  LargestFilesTable: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="largest-files" />,
 }));
 
 vi.mock("@/components/Dashboard/Storage/PlanComparison", () => ({
-  PlanComparison: (props: any) => <div data-testid="plan-comparison" />,
+  PlanComparison: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="plan-comparison" />,
 }));
 
 import { useStorageOverview } from "@/hooks/useStorageOverview";
@@ -68,7 +68,7 @@ describe("StorageOverviewPage", () => {
       isLoading: false,
       error: null,
       warning: null,
-    } as any);
+    } as any as Record<string, unknown>);
 
     render(<StorageOverviewPage />);
     expect(screen.getByTestId("loading-state")).toHaveTextContent("Loading workspaces...");
@@ -85,7 +85,7 @@ describe("StorageOverviewPage", () => {
       isLoading: false,
       error: null,
       warning: null,
-    } as any);
+    } as any as Record<string, unknown>);
 
     render(<StorageOverviewPage />);
     expect(screen.getByTestId("empty-state")).toBeInTheDocument();
@@ -102,7 +102,7 @@ describe("StorageOverviewPage", () => {
       isLoading: false,
       error: "Something went wrong",
       warning: null,
-    } as any);
+    } as any as Record<string, unknown>);
 
     render(<StorageOverviewPage />);
     expect(screen.getByTestId("error-state")).toHaveTextContent("Something went wrong");

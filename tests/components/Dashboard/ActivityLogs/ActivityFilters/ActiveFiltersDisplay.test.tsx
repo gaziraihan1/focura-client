@@ -2,12 +2,12 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 vi.mock('lucide-react', () => ({
-  Filter: (props: any) => <svg data-testid="filter-icon" {...props} />,
-  X: (props: any) => <svg data-testid="x-icon" {...props} />,
+  Filter: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="filter-icon" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
 }));
 
 vi.mock('@/components/Dashboard/ActivityLogs/ActivityFilters/ActiveFiltersBadge', () => ({
-  ActiveFiltersBadge: ({ label, value, onClear }: any) => (
+  ActiveFiltersBadge: ({ label, value, onClear }: Record<string, unknown>) => (
     <span data-testid={`badge-${label}`}>
       {label}: {value}
     </span>

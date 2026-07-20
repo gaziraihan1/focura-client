@@ -4,8 +4,8 @@ import { LabelBadge } from '@/components/Labels/LabelBadge'
 
 // Mock lucide-react
 vi.mock('lucide-react', () => ({
-  Tag: (props: any) => <svg data-testid="tag-icon" {...props} />,
-  X: (props: any) => <svg data-testid="x-icon" {...props} />,
+  Tag: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="tag-icon" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
 }))
 
 const mockLabel = {

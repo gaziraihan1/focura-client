@@ -7,27 +7,27 @@ vi.mock('next/navigation', () => ({
 }))
 
 vi.mock('next/link', () => ({
-  default: ({ href, children, ...props }: any) => (
+  default: ({ href, children, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }))
 
 vi.mock('lucide-react', () => ({
-  LayoutDashboard: (props: any) => <svg data-testid="layout-icon" {...props} />,
-  CheckSquare: (props: any) => <svg data-testid="check-icon" {...props} />,
-  FolderOpen: (props: any) => <svg data-testid="folder-icon" {...props} />,
-  Users: (props: any) => <svg data-testid="users-icon" {...props} />,
-  Calendar: (props: any) => <svg data-testid="calendar-icon" {...props} />,
-  Settings: (props: any) => <svg data-testid="settings-icon" {...props} />,
-  HelpCircle: (props: any) => <svg data-testid="help-icon" {...props} />,
-  ChevronDown: (props: any) => <svg data-testid="chevron-icon" {...props} />,
-  X: (props: any) => <svg data-testid="x-icon" {...props} />,
-  Box: (props: any) => <svg data-testid="box-icon" {...props} />,
-  Activity: (props: any) => <svg data-testid="activity-icon" {...props} />,
+  LayoutDashboard: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="layout-icon" {...props} />,
+  CheckSquare: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-icon" {...props} />,
+  FolderOpen: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="folder-icon" {...props} />,
+  Users: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="users-icon" {...props} />,
+  Calendar: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="calendar-icon" {...props} />,
+  Settings: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="settings-icon" {...props} />,
+  HelpCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="help-icon" {...props} />,
+  ChevronDown: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="chevron-icon" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
+  Box: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="box-icon" {...props} />,
+  Activity: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="activity-icon" {...props} />,
 }))
 
 describe('Sidebar', () => {

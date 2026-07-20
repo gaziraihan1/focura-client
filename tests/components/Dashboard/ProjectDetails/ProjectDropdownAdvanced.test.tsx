@@ -7,7 +7,7 @@ vi.mock('next/navigation', () => ({
   useParams: () => ({ workspaceSlug: 'test-ws' }),
 }))
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => <a href={href} {...props}>{children}</a>,
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => <a href={href} {...props}>{children}</a>,
 }))
 vi.mock('react-hot-toast', () => ({
   default: { error: vi.fn() },
@@ -16,10 +16,10 @@ vi.mock('react-hot-toast', () => ({
 const mockUseProjects = vi.fn()
 const mockUseWorkspaceProjectsPage = vi.fn()
 vi.mock('@/hooks/useProjects', () => ({
-  useProjects: (...args: any[]) => mockUseProjects(...args),
+  useProjects: (...args: (string | boolean | undefined | null)[]) => mockUseProjects(...args),
 }))
 vi.mock('@/hooks/useProjectsPage', () => ({
-  useWorkspaceProjectsPage: (...args: any[]) => mockUseWorkspaceProjectsPage(...args),
+  useWorkspaceProjectsPage: (...args: (string | boolean | undefined | null)[]) => mockUseWorkspaceProjectsPage(...args),
 }))
 
 describe('ProjectDropdown', () => {

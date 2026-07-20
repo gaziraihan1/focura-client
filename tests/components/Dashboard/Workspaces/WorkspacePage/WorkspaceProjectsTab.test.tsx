@@ -3,12 +3,12 @@ import { render, screen, fireEvent } from '@testing-library/react'
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }))
 
 vi.mock('@/components/Shared/Avatar', () => ({
-  Avatar: ({ name, image, size }: any) => (
+  Avatar: ({ name, image, size }: Record<string, unknown>) => (
     <div data-testid="avatar" data-name={name} data-image={image} data-size={size}>
       {name}
     </div>
@@ -16,25 +16,25 @@ vi.mock('@/components/Shared/Avatar', () => ({
 }))
 
 vi.mock('@/components/Dashboard/Workspaces/ProjectCard/ProjectCardHeader', () => ({
-  ProjectCardHeader: (props: any) => (
+  ProjectCardHeader: (props: Record<string, unknown>) => (
     <div data-testid="project-card-header" data-name={props.name} data-status={props.status} data-priority={props.priority} />
   ),
 }))
 
 vi.mock('@/components/Dashboard/Workspaces/ProjectCard/ProjectCardDescription', () => ({
-  ProjectCardDescription: (props: any) => (
+  ProjectCardDescription: (props: Record<string, unknown>) => (
     <div data-testid="project-card-description" data-desc={props.description} />
   ),
 }))
 
 vi.mock('@/components/Dashboard/Workspaces/ProjectCard/ProjectCardStats', () => ({
-  ProjectCardStats: (props: any) => (
+  ProjectCardStats: (props: Record<string, unknown>) => (
     <div data-testid="project-card-stats" data-completed={props.completedTasks} data-total={props.totalTasks} />
   ),
 }))
 
 vi.mock('@/components/Dashboard/Workspaces/ProjectCard/ProjectCardFooter', () => ({
-  ProjectCardFooter: (props: any) => (
+  ProjectCardFooter: (props: Record<string, unknown>) => (
     <div data-testid="project-card-footer" data-members={JSON.stringify(props.members)} />
   ),
 }))

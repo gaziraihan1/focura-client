@@ -3,15 +3,15 @@ import { render, screen } from '@testing-library/react'
 import { FocusRequirementsCard } from '@/components/Dashboard/TaskDetails/FocusRequirementsCard'
 
 vi.mock('lucide-react', () => ({
-  Brain: (props: any) => <svg data-testid="brain-icon" {...props} />,
-  Zap: (props: any) => <svg data-testid="zap-icon" {...props} />,
-  Shield: (props: any) => <svg data-testid="shield-icon" {...props} />,
-  AlertCircle: (props: any) => <svg data-testid="alert-icon" {...props} />,
+  Brain: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="brain-icon" {...props} />,
+  Zap: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="zap-icon" {...props} />,
+  Shield: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="shield-icon" {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-icon" {...props} />,
 }))
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }))
 

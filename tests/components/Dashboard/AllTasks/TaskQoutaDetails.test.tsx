@@ -10,11 +10,11 @@ vi.mock('@/components/Dashboard/AllTasks/TaskQouta/QoutaSkeleton', () => ({
 }))
 
 vi.mock('@/components/Dashboard/AllTasks/TaskQouta/WorkspaceCard', () => ({
-  WorkspaceCard: (props: any) => <div data-testid="WorkspaceCard">Workspace</div>,
+  WorkspaceCard: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="WorkspaceCard">Workspace</div>,
 }))
 
 vi.mock('@/components/Dashboard/AllTasks/TaskQouta/PersonalCard', () => ({
-  PersonalCard: (props: any) => <div data-testid="PersonalCard">Personal</div>,
+  PersonalCard: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="PersonalCard">Personal</div>,
 }))
 
 describe('formatResetTime', () => {

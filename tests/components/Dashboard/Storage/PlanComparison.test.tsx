@@ -4,12 +4,12 @@ import { PlanComparison } from '@/components/Dashboard/Storage/PlanComparison'
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }))
 
 vi.mock('lucide-react', () => ({
-  Check: (props: any) => <svg data-testid="check" {...props} />,
+  Check: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check" {...props} />,
 }))
 
 vi.mock('@/hooks/useStoragePage', () => ({
@@ -22,9 +22,9 @@ vi.mock('@/hooks/useStoragePage', () => ({
 
 vi.mock('@/constants/storage.constants', () => ({
   plans: [
-    { name: 'FREE', icon: (props: any) => <svg {...props} />, description: 'For small teams' },
-    { name: 'PRO', icon: (props: any) => <svg {...props} />, description: 'For growing teams', popular: true },
-    { name: 'BUSINESS', icon: (props: any) => <svg {...props} />, description: 'For organizations' },
+    { name: 'FREE', icon: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />, description: 'For small teams' },
+    { name: 'PRO', icon: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />, description: 'For growing teams', popular: true },
+    { name: 'BUSINESS', icon: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />, description: 'For organizations' },
   ],
 }))
 

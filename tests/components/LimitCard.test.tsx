@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { LimitCard } from '@/components/Dashboard/Analytics/WorkspaceUsage/LimitCard'
 
-const MockIcon = (props: any) => <svg data-testid="mock-icon" {...props} />
+const MockIcon = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="mock-icon" {...props} />
 
 describe('LimitCard', () => {
   it('renders label and current value', () => {

@@ -4,9 +4,9 @@ import LabelManagementMain from '@/components/Dashboard/Labels/LabelManagementMa
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: (props: any) => <div {...props} />,
+    div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props} />,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }));
 
 vi.mock('@/hooks/useLabelPage', () => ({
@@ -42,7 +42,7 @@ vi.mock('@/hooks/useLabelPage', () => ({
 }));
 
 vi.mock('@/components/Dashboard/Labels/LabelCard', () => ({
-  default: ({ label }: any) => <div data-testid="label-card">{label.name}</div>,
+  default: ({ label }: { label: string }) => <div data-testid="label-card">{label.name}</div>,
 }));
 
 vi.mock('@/components/Dashboard/Labels/LabelFormModal', () => ({

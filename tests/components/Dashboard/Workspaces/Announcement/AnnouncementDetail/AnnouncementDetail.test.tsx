@@ -3,11 +3,11 @@ import { render, screen } from '@testing-library/react';
 import { AnnouncementDetail } from '@/components/Dashboard/Workspaces/Announcement/AnnouncementDetail/AnnouncementDetail';
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => <a href={href} {...props}>{children}</a>,
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => <a href={href} {...props}>{children}</a>,
 }));
 
 vi.mock('lucide-react', () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={name} {...props} />;
+  const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={name} {...props} />;
   return {
     ArrowLeft: icon('arrow-left'),
     Pin: icon('pin'),
@@ -19,7 +19,7 @@ vi.mock('lucide-react', () => {
   };
 });
 
-vi.mock('@/lib/utils', () => ({ cn: (...c: any[]) => c.filter(Boolean).join(' ') }));
+vi.mock('@/lib/utils', () => ({ cn: (...c: (string | boolean | undefined | null)[]) => c.filter(Boolean).join(' ') }));
 vi.mock('@/hooks/useAnnouncement', () => ({
   useAnnouncement: vi.fn(() => ({
     data: null,

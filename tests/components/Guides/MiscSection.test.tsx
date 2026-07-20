@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 vi.mock("lucide-react", () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={`icon-${name}`} {...props} />;
+  const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={`icon-${name}`} {...props} />;
   return {
     Shield: icon("Shield"),
     Settings2: icon("Settings2"),
@@ -12,7 +12,7 @@ vi.mock("lucide-react", () => {
 });
 
 vi.mock("@/lib/utils", () => ({
-  cn: (...args: any[]) => args.filter(Boolean).join(" "),
+  cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(" "),
 }));
 
 vi.mock("@/constants/guides.constants", () => ({

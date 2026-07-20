@@ -1,12 +1,11 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import PricingCard from '@/components/Pricing/PricingCard'
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: (props: any) => <div {...props}>{props.children}</div>,
-    span: (props: any) => <span {...props}>{props.children}</span>,
+    div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props}>{props.children}</div>,
+    span: (props: React.HTMLAttributes<HTMLSpanElement>) => <span {...props}>{props.children}</span>,
   },
 }))
 

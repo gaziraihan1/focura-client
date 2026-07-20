@@ -4,24 +4,24 @@ import { AnnouncementModal } from '@/components/Dashboard/Workspaces/Announcemen
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...props}>{children}</button>,
   },
-  AnimatePresence: ({ children }: any) => children,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => children,
 }))
 
 vi.mock('lucide-react', () => ({
-  X: (props: any) => <svg data-testid="x-icon" {...props} />,
-  Megaphone: (props: any) => <svg data-testid="megaphone" {...props} />,
-  Loader2: (props: any) => <svg data-testid="loader" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
+  Megaphone: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="megaphone" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader" {...props} />,
 }))
 
 vi.mock('@/lib/utils', () => ({
-  cn: (...args: any[]) => args.filter(Boolean).join(' '),
+  cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(' '),
 }))
 
 vi.mock('@/components/Dashboard/Workspaces/Announcement/AnnouncementForm', () => ({
-  AnnouncementForm: (props: any) => <div data-testid="announcement-form" />,
+  AnnouncementForm: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="announcement-form" />,
 }))
 
 const defaultProps = {

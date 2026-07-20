@@ -3,8 +3,8 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { MobileColumnNavigator } from '@/components/Dashboard/KanbanView/KanbanBoard/MobileColumnNavigator'
 
 vi.mock('lucide-react', () => ({
-  ChevronLeft: (props: any) => <svg data-testid="chevron-left" {...props} />,
-  ChevronRight: (props: any) => <svg data-testid="chevron-right" {...props} />,
+  ChevronLeft: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="chevron-left" {...props} />,
+  ChevronRight: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="chevron-right" {...props} />,
 }))
 
 describe('MobileColumnNavigator', () => {

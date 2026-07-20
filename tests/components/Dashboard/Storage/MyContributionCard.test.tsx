@@ -3,8 +3,8 @@ import { describe, it, expect, vi } from 'vitest'
 import { MyContributionCard } from '@/components/Dashboard/Storage/MyContributionCard'
 
 vi.mock('framer-motion', () => ({
-  motion: { div: (p: any) => <div {...p} /> },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  motion: { div: (p: Record<string, unknown>) => <div {...p} /> },
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 vi.mock('@/hooks/useStoragePage', () => ({
   formatStorageSize: (mb: number) => mb + ' MB',

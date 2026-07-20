@@ -27,7 +27,7 @@ describe('WorkspacePlanContext', () => {
     vi.mocked(useWorkspace).mockReturnValue({
       data: { plan: 'FREE' },
       isLoading: false,
-    } as any)
+    } as any as Record<string, unknown>)
 
     render(
       <WorkspacePlanProvider slug="test">
@@ -45,7 +45,7 @@ describe('WorkspacePlanContext', () => {
     vi.mocked(useWorkspace).mockReturnValue({
       data: { plan: 'PRO' },
       isLoading: false,
-    } as any)
+    } as any as Record<string, unknown>)
 
     render(
       <WorkspacePlanProvider slug="test">
@@ -63,7 +63,7 @@ describe('WorkspacePlanContext', () => {
     vi.mocked(useWorkspace).mockReturnValue({
       data: { plan: 'BUSINESS' },
       isLoading: false,
-    } as any)
+    } as any as Record<string, unknown>)
 
     render(
       <WorkspacePlanProvider slug="test">
@@ -79,7 +79,7 @@ describe('WorkspacePlanContext', () => {
     vi.mocked(useWorkspace).mockReturnValue({
       data: undefined,
       isLoading: true,
-    } as any)
+    } as any as Record<string, unknown>)
 
     render(
       <WorkspacePlanProvider slug="test">
@@ -95,7 +95,7 @@ describe('WorkspacePlanContext', () => {
     vi.mocked(useWorkspace).mockReturnValue({
       data: { plan: 'PRO' },
       isLoading: false,
-    } as any)
+    } as any as Record<string, unknown>)
 
     render(
       <WorkspacePlanProvider slug="test">

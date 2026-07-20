@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import PricingSupportCTA from '@/components/Pricing/PricingSupportCTA'
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))

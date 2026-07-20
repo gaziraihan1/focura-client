@@ -3,11 +3,11 @@ import { render, screen } from '@testing-library/react'
 import { IntentBadge, IntentCard, INTENT_CONFIG } from '@/components/Dashboard/TaskDetails/IntentBadge'
 
 vi.mock('lucide-react', () => ({
-  Zap: (props: any) => <svg data-testid="zap-icon" {...props} />,
-  Lightbulb: (props: any) => <svg data-testid="lightbulb-icon" {...props} />,
-  Eye: (props: any) => <svg data-testid="eye-icon" {...props} />,
-  BookOpen: (props: any) => <svg data-testid="book-icon" {...props} />,
-  MessageSquare: (props: any) => <svg data-testid="message-icon" {...props} />,
+  Zap: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="zap-icon" {...props} />,
+  Lightbulb: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="lightbulb-icon" {...props} />,
+  Eye: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="eye-icon" {...props} />,
+  BookOpen: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="book-icon" {...props} />,
+  MessageSquare: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="message-icon" {...props} />,
 }))
 
 describe('IntentBadge', () => {

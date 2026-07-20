@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import TaskSection from '@/components/Dashboard/CalendarView/TaskSection'
 
 vi.mock('lucide-react', () => ({
-  Users: (props: any) => <svg {...props} />,
+  Users: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
 }))
 
 const mockTasks = [

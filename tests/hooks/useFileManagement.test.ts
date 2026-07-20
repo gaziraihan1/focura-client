@@ -1,12 +1,11 @@
 import { renderHook, waitFor, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { createWrapper, renderHookWithProviders } from '../utils/renderWithProviders'
+import { createWrapper } from '../utils/renderWithProviders'
 import {
   useFiles,
   useFileStats,
   useUploaders,
   useDeleteFile,
-  fileManagementKeys,
 } from '@/hooks/useFileManagement'
 import { server } from '@/tests/mock/server'
 import { http, HttpResponse } from 'msw'

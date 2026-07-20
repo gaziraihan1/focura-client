@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react';
 import { RecentActivity } from '@/components/Dashboard/RecentActivity'
 
 vi.mock('@/hooks/useWorkspace', () => ({
@@ -19,8 +19,8 @@ describe('RecentActivity', () => {
   })
 
   it('renders heading', () => {
-    vi.mocked(useWorkspaces).mockReturnValue({ data: [], isLoading: false } as any)
-    vi.mocked(useQuery).mockReturnValue({ data: [], isLoading: false } as any)
+    vi.mocked(useWorkspaces).mockReturnValue({ data: [], isLoading: false } as any as Record<string, unknown>)
+    vi.mocked(useQuery).mockReturnValue({ data: [], isLoading: false } as any as Record<string, unknown>)
 
     render(<RecentActivity />)
 
@@ -28,8 +28,8 @@ describe('RecentActivity', () => {
   })
 
   it('shows loading skeleton when loading', () => {
-    vi.mocked(useWorkspaces).mockReturnValue({ data: [], isLoading: true } as any)
-    vi.mocked(useQuery).mockReturnValue({ data: [], isLoading: false } as any)
+    vi.mocked(useWorkspaces).mockReturnValue({ data: [], isLoading: true } as any as Record<string, unknown>)
+    vi.mocked(useQuery).mockReturnValue({ data: [], isLoading: false } as any as Record<string, unknown>)
 
     const { container } = render(<RecentActivity />)
 
@@ -38,8 +38,8 @@ describe('RecentActivity', () => {
   })
 
   it('shows empty state when no activities', () => {
-    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any)
-    vi.mocked(useQuery).mockReturnValue({ data: [], isLoading: false } as any)
+    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any as Record<string, unknown>)
+    vi.mocked(useQuery).mockReturnValue({ data: [], isLoading: false } as any as Record<string, unknown>)
 
     render(<RecentActivity />)
 
@@ -48,7 +48,7 @@ describe('RecentActivity', () => {
   })
 
   it('renders activity items', () => {
-    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any)
+    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any as Record<string, unknown>)
     vi.mocked(useQuery).mockReturnValue({
       data: [
         {
@@ -67,7 +67,7 @@ describe('RecentActivity', () => {
         },
       ],
       isLoading: false,
-    } as any)
+    } as any as Record<string, unknown>)
 
     render(<RecentActivity />)
 
@@ -76,7 +76,7 @@ describe('RecentActivity', () => {
   })
 
   it('renders workspace name with activity', () => {
-    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any)
+    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any as Record<string, unknown>)
     vi.mocked(useQuery).mockReturnValue({
       data: [
         {
@@ -88,7 +88,7 @@ describe('RecentActivity', () => {
         },
       ],
       isLoading: false,
-    } as any)
+    } as any as Record<string, unknown>)
 
     render(<RecentActivity />)
 
@@ -96,7 +96,7 @@ describe('RecentActivity', () => {
   })
 
   it('renders correct icon for TASK_COMPLETED', () => {
-    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any)
+    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any as Record<string, unknown>)
     vi.mocked(useQuery).mockReturnValue({
       data: [
         {
@@ -108,7 +108,7 @@ describe('RecentActivity', () => {
         },
       ],
       isLoading: false,
-    } as any)
+    } as any as Record<string, unknown>)
 
     const { container } = render(<RecentActivity />)
 
@@ -117,7 +117,7 @@ describe('RecentActivity', () => {
   })
 
   it('renders correct icon for MEMBER_JOINED', () => {
-    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any)
+    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any as Record<string, unknown>)
     vi.mocked(useQuery).mockReturnValue({
       data: [
         {
@@ -129,7 +129,7 @@ describe('RecentActivity', () => {
         },
       ],
       isLoading: false,
-    } as any)
+    } as any as Record<string, unknown>)
 
     const { container } = render(<RecentActivity />)
 
@@ -138,7 +138,7 @@ describe('RecentActivity', () => {
   })
 
   it('renders correct icon for PROJECT_CREATED', () => {
-    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any)
+    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any as Record<string, unknown>)
     vi.mocked(useQuery).mockReturnValue({
       data: [
         {
@@ -150,7 +150,7 @@ describe('RecentActivity', () => {
         },
       ],
       isLoading: false,
-    } as any)
+    } as any as Record<string, unknown>)
 
     const { container } = render(<RecentActivity />)
 
@@ -159,7 +159,7 @@ describe('RecentActivity', () => {
   })
 
   it('renders correct icon for MEETING_SCHEDULED', () => {
-    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any)
+    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any as Record<string, unknown>)
     vi.mocked(useQuery).mockReturnValue({
       data: [
         {
@@ -171,7 +171,7 @@ describe('RecentActivity', () => {
         },
       ],
       isLoading: false,
-    } as any)
+    } as any as Record<string, unknown>)
 
     const { container } = render(<RecentActivity />)
 
@@ -180,7 +180,7 @@ describe('RecentActivity', () => {
   })
 
   it('renders fallback icon for unknown type', () => {
-    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any)
+    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any as Record<string, unknown>)
     vi.mocked(useQuery).mockReturnValue({
       data: [
         {
@@ -192,7 +192,7 @@ describe('RecentActivity', () => {
         },
       ],
       isLoading: false,
-    } as any)
+    } as any as Record<string, unknown>)
 
     const { container } = render(<RecentActivity />)
 
@@ -201,7 +201,7 @@ describe('RecentActivity', () => {
   })
 
   it('shows time ago text', () => {
-    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any)
+    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any as Record<string, unknown>)
     vi.mocked(useQuery).mockReturnValue({
       data: [
         {
@@ -213,7 +213,7 @@ describe('RecentActivity', () => {
         },
       ],
       isLoading: false,
-    } as any)
+    } as any as Record<string, unknown>)
 
     render(<RecentActivity />)
 
@@ -221,7 +221,7 @@ describe('RecentActivity', () => {
   })
 
   it('shows "just now" for very recent items', () => {
-    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any)
+    vi.mocked(useWorkspaces).mockReturnValue({ data: [{ id: 'ws-1' }], isLoading: false } as any as Record<string, unknown>)
     vi.mocked(useQuery).mockReturnValue({
       data: [
         {
@@ -233,7 +233,7 @@ describe('RecentActivity', () => {
         },
       ],
       isLoading: false,
-    } as any)
+    } as any as Record<string, unknown>)
 
     render(<RecentActivity />)
 

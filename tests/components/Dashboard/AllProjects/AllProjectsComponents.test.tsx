@@ -5,8 +5,8 @@ import { EmptyState } from '@/components/Dashboard/AllProjects/EmptyState'
 import { ProjectCard } from '@/components/Dashboard/AllProjects/ProjectCard'
 
 vi.mock('framer-motion', () => ({
-  motion: { div: (p: any) => <div {...p} />, button: (p: any) => <button {...p} /> },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  motion: { div: (p: Record<string, unknown>) => <div {...p} />, button: (p: Record<string, unknown>) => <button {...p} /> },
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 vi.mock('@/components/Projects/WorkspaceProjects/AceessDeniedModal', () => ({
   AccessDeniedModal: () => null,

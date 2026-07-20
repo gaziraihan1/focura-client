@@ -4,7 +4,7 @@ import { ApiDocsErrors } from "@/components/ApiDocs/ApiDocsError";
 
 vi.mock("lucide-react", () => {
   const icon = (name: string) => {
-    const C = (props: any) => <svg data-testid={`icon-${name}`} {...props} />;
+    const C = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={`icon-${name}`} {...props} />;
     C.displayName = name;
     return C;
   };

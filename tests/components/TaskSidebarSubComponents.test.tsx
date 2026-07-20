@@ -6,10 +6,10 @@ import { TaskAssigneesList } from '@/components/Dashboard/TaskDetails/TaskSideba
 import { TaskTimestamps } from '@/components/Dashboard/TaskDetails/TaskSidebar/TaskTimeStamps'
 
 vi.mock('lucide-react', () => ({
-  Clock: (props: any) => <svg data-testid="clock-icon" {...props} />,
-  Calendar: (props: any) => <svg data-testid="calendar-icon" {...props} />,
-  User: (props: any) => <svg data-testid="user-icon" {...props} />,
-  Check: (props: any) => <svg data-testid="check-icon" {...props} />,
+  Clock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="clock-icon" {...props} />,
+  Calendar: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="calendar-icon" {...props} />,
+  User: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="user-icon" {...props} />,
+  Check: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-icon" {...props} />,
 }))
 
 vi.mock('@/utils/task.utils', () => ({
@@ -17,7 +17,7 @@ vi.mock('@/utils/task.utils', () => ({
 }))
 
 vi.mock('@/components/Shared/Avatar', () => ({
-  Avatar: ({ name }: any) => <div data-testid="avatar">{name}</div>,
+  Avatar: ({ name }: { name: string }) => <div data-testid="avatar">{name}</div>,
 }))
 
 describe('PriorityDisplay', () => {
@@ -47,7 +47,7 @@ describe('TaskDetailItem', () => {
   it('renders label and value', () => {
     render(
       <TaskDetailItem
-        icon={(props: any) => <svg data-testid="test-icon" {...props} />}
+        icon={(props: React.SVGProps<SVGSVGElement>) => <svg data-testid="test-icon" {...props} />}
         label="Estimated Hours"
         value="8h"
       />
@@ -59,7 +59,7 @@ describe('TaskDetailItem', () => {
   it('renders icon', () => {
     render(
       <TaskDetailItem
-        icon={(props: any) => <svg data-testid="test-icon" {...props} />}
+        icon={(props: React.SVGProps<SVGSVGElement>) => <svg data-testid="test-icon" {...props} />}
         label="Status"
         value="Active"
       />
@@ -70,7 +70,7 @@ describe('TaskDetailItem', () => {
   it('renders ReactNode value', () => {
     render(
       <TaskDetailItem
-        icon={(props: any) => <svg {...props} />}
+        icon={(props: React.SVGProps<SVGSVGElement>) => <svg {...props} />}
         label="Custom"
         value={<span data-testid="custom-value">Custom Value</span>}
       />

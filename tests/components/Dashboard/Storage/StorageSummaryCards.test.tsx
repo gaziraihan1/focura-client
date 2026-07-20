@@ -4,16 +4,16 @@ import { StorageSummaryCards } from '@/components/Dashboard/Storage/StorageSumma
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }))
 
 vi.mock('lucide-react', () => ({
-  Database: (props: any) => <svg {...props} />,
-  HardDrive: (props: any) => <svg {...props} />,
-  AlertCircle: (props: any) => <svg data-testid="alert" {...props} />,
-  CheckCircle: (props: any) => <svg data-testid="check" {...props} />,
-  Building2: (props: any) => <svg {...props} />,
+  Database: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  HardDrive: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert" {...props} />,
+  CheckCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check" {...props} />,
+  Building2: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
 }))
 
 vi.mock('@/hooks/useStoragePage', () => ({

@@ -3,8 +3,8 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { TaskModalHeader } from '@/components/Dashboard/CalendarView/TaskModal/TaskModalHeader'
 
 vi.mock('lucide-react', () => ({
-  X: (props: any) => <svg data-testid="x-icon" {...props} />,
-  AlertCircle: (props: any) => <svg {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
 }))
 
 describe('TaskModalHeader', () => {

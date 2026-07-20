@@ -92,7 +92,7 @@ describe('useAddTaskPage', () => {
     })
 
     await act(async () => {
-      await result.current.handleSubmit({ preventDefault: vi.fn() } as any)
+      await result.current.handleSubmit({ preventDefault: vi.fn() } as any as Record<string, unknown>)
     })
 
     await waitFor(() => {
@@ -133,7 +133,7 @@ describe('useAddTaskPage', () => {
 
     await act(async () => {
       try {
-        await result.current.handleSubmit({ preventDefault: vi.fn() } as any)
+        await result.current.handleSubmit({ preventDefault: vi.fn() } as any as Record<string, unknown>)
       } catch (e) {}
     })
 

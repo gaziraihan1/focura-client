@@ -3,12 +3,12 @@ import { render, screen, fireEvent } from '@testing-library/react';
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }));
 
 vi.mock('lucide-react', () => ({
-  Building2: (props: any) => <svg data-testid="building-icon" {...props} />,
+  Building2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="building-icon" {...props} />,
 }));
 
 import { WorkspaceQuickFilter } from '@/components/Dashboard/AllProjects/WorkspaceQuickFilter';

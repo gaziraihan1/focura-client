@@ -1,9 +1,8 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest';
 import { renderHook } from '@testing-library/react'
 import { useKanbanCard } from '@/hooks/useKanbanCard'
-import { parseISO } from 'date-fns'
 
-const makeTask = (overrides: Record<string, any> = {}) => ({
+const makeTask = (overrides: Record<string, unknown> = {}) => ({
   id: 'task-1',
   title: 'Test Task',
   description: '',

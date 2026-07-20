@@ -14,14 +14,14 @@ beforeAll(() => {
 // Mock framer-motion to avoid viewport animation issues
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...filterDomProps(props)}>{children}</div>,
-    span: ({ children, ...props }: any) => <span {...filterDomProps(props)}>{children}</span>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...filterDomProps(props)}>{children}</div>,
+    span: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <span {...filterDomProps(props)}>{children}</span>,
   },
-  AnimatePresence: ({ children }: any) => children,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => children,
 }))
 
-function filterDomProps(props: Record<string, any>) {
-  const domProps: Record<string, any> = {}
+function filterDomProps(props: Record<string, unknown>) {
+  const domProps: Record<string, unknown> = {}
   for (const key of Object.keys(props)) {
     if (!key.startsWith('initial') && !key.startsWith('animate') && !key.startsWith('while') && !key.startsWith('exit') && !key.startsWith('transition') && !key.startsWith('viewport') && !key.startsWith('layout')) {
       domProps[key] = props[key]

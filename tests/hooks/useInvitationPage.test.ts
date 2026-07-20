@@ -13,7 +13,7 @@ vi.mock('@/lib/axios', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/axios')>()
   return {
     ...actual,
-    normalizeError: (err: any) => ({
+    normalizeError: (err: Record<string, unknown>) => ({
       message: err?.message || 'Unknown error',
       status: err?.response?.status,
       code: err?.response?.data?.code,

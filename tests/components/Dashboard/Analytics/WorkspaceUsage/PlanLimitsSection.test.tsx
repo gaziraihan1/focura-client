@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { PlanLimitsSection } from '@/components/Dashboard/Analytics/WorkspaceUsage/PlanLimitsSection'
 
 vi.mock('next/link', () => ({
-  default: ({ children, ...props }: any) => <a {...props}>{children}</a>,
+  default: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <a {...props}>{children}</a>,
 }))
 
 const mockPlanLimits = {
@@ -20,12 +20,12 @@ const mockPlanLimits = {
 
 describe('PlanLimitsSection', () => {
   it('renders plan name badge', () => {
-    render(<PlanLimitsSection planLimits={mockPlanLimits as any} workspaceSlug="test-ws" />)
+    render(<PlanLimitsSection planLimits={mockPlanLimits as any as Record<string, unknown>} workspaceSlug="test-ws" />)
     expect(screen.getByText('FREE')).toBeInTheDocument()
   })
 
   it('renders all four limit cards', () => {
-    render(<PlanLimitsSection planLimits={mockPlanLimits as any} workspaceSlug="test-ws" />)
+    render(<PlanLimitsSection planLimits={mockPlanLimits as any as Record<string, unknown>} workspaceSlug="test-ws" />)
     expect(screen.getByText('Members')).toBeInTheDocument()
     expect(screen.getByText('Storage')).toBeInTheDocument()
     expect(screen.getByText('Projects')).toBeInTheDocument()
@@ -33,12 +33,12 @@ describe('PlanLimitsSection', () => {
   })
 
   it('shows upgrade button when nearing limits', () => {
-    render(<PlanLimitsSection planLimits={mockPlanLimits as any} workspaceSlug="test-ws" />)
+    render(<PlanLimitsSection planLimits={mockPlanLimits as any as Record<string, unknown>} workspaceSlug="test-ws" />)
     expect(screen.getByText('Upgrade')).toBeInTheDocument()
   })
 
   it('shows warning banner when limits are near', () => {
-    render(<PlanLimitsSection planLimits={mockPlanLimits as any} workspaceSlug="test-ws" />)
+    render(<PlanLimitsSection planLimits={mockPlanLimits as any as Record<string, unknown>} workspaceSlug="test-ws" />)
     expect(screen.getByText("You're approaching your plan limits")).toBeInTheDocument()
   })
 })

@@ -7,17 +7,17 @@ vi.mock('@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[
 }))
 
 vi.mock('@/components/Dashboard/Workspaces/project/MemberAvatars', () => ({
-  MemberAvatars: ({ members }: any) => <div data-testid="member-avatars" />,
+  MemberAvatars: ({ members }: { members: any[] }) => <div data-testid="member-avatars" />,
 }))
 
 vi.mock('@/components/Dashboard/Workspaces/project/ProgressRing', () => ({
-  ProgressRing: ({ pct }: any) => <svg data-testid="progress-ring" data-pct={pct} />,
+  ProgressRing: ({ pct }: Record<string, unknown>) => <svg data-testid="progress-ring" data-pct={pct} />,
 }))
 
 vi.mock('lucide-react', () => ({
-  Activity: (props: any) => <svg data-testid="activity" {...props} />,
-  Calendar: (props: any) => <svg data-testid="calendar" {...props} />,
-  Target: (props: any) => <svg data-testid="target" {...props} />,
+  Activity: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="activity" {...props} />,
+  Calendar: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="calendar" {...props} />,
+  Target: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="target" {...props} />,
 }))
 
 const mockProject = {
@@ -38,7 +38,7 @@ describe('ProjectHeader', () => {
   it('renders project name', () => {
     render(
       <ProjectHeader
-        project={mockProject as any}
+        project={mockProject as any as Record<string, unknown>}
         accentColor="#667eea"
         completionPct={75}
         isOverdue={false}
@@ -52,7 +52,7 @@ describe('ProjectHeader', () => {
   it('renders project description', () => {
     render(
       <ProjectHeader
-        project={mockProject as any}
+        project={mockProject as any as Record<string, unknown>}
         accentColor="#667eea"
         completionPct={75}
         isOverdue={false}
@@ -66,7 +66,7 @@ describe('ProjectHeader', () => {
   it('renders the completion percentage', () => {
     render(
       <ProjectHeader
-        project={mockProject as any}
+        project={mockProject as any as Record<string, unknown>}
         accentColor="#667eea"
         completionPct={75}
         isOverdue={false}
@@ -80,7 +80,7 @@ describe('ProjectHeader', () => {
   it('renders member count', () => {
     render(
       <ProjectHeader
-        project={mockProject as any}
+        project={mockProject as any as Record<string, unknown>}
         accentColor="#667eea"
         completionPct={75}
         isOverdue={false}

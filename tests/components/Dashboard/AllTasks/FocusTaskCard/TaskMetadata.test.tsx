@@ -4,7 +4,7 @@ import { TaskMetadata } from '@/components/Dashboard/AllTasks/FocusTaskCard/Task
 import type { Task } from '@/hooks/useTask'
 
 vi.mock('lucide-react', () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={name} {...props} />
+  const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={name} {...props} />
   return {
     Folder: icon('Folder'),
     Timer: icon('Timer'),
@@ -15,7 +15,7 @@ vi.mock('lucide-react', () => {
 })
 
 vi.mock('@/components/Shared/Avatar', () => ({
-  Avatar: (props: any) => <div data-testid="Avatar">{props.name}</div>,
+  Avatar: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="Avatar">{props.name}</div>,
 }))
 
 vi.mock('@/utils/taskcard.utils', () => ({

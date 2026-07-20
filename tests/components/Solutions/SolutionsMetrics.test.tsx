@@ -4,15 +4,15 @@ import SolutionsMetrics from "@/components/Solutions/SolutionsMetrics";
 
 vi.mock("framer-motion", () => ({
   motion: {
-    div: (props: any) => <div {...props} />,
-    span: (props: any) => <span {...props} />,
+    div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props} />,
+    span: (props: React.HTMLAttributes<HTMLSpanElement>) => <span {...props} />,
   },
   useMotionValue: (val: number) => ({
     on: () => vi.fn(),
     current: val,
   }),
   animate: () => ({ stop: vi.fn() }),
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }));
 
 describe("SolutionsMetrics", () => {

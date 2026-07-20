@@ -6,7 +6,7 @@ import { NotificationDropdownFooter } from '@/components/Notifications/Notificat
 import { NotificationDropdownHeader } from '@/components/Notifications/NotificationDropdownHeader'
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))

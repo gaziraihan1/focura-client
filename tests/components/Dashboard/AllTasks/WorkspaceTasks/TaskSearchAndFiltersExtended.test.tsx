@@ -1,15 +1,15 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { TaskSearchAndFilters } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskSearchAndFilters";
 
 vi.mock("framer-motion", () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }));
 
 vi.mock("lucide-react", () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={name} {...props} />;
+  const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={name} {...props} />;
   return {
     Search: icon("Search"),
     Filter: icon("Filter"),
@@ -21,7 +21,7 @@ vi.mock("lucide-react", () => {
 });
 
 vi.mock("@/components/Dashboard/AllTasks/WorkspaceTasks/FilterPanel", () => ({
-  FilterPanel: (props: any) => <div data-testid="filter-panel" />,
+  FilterPanel: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="filter-panel" />,
 }));
 
 const defaultProps = {

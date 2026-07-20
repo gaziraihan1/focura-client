@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 vi.mock("lucide-react", () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={`icon-${name}`} {...props} />;
+  const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={`icon-${name}`} {...props} />;
   return {
     X: icon("X"),
     MapPin: icon("MapPin"),

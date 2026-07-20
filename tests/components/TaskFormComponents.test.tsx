@@ -6,17 +6,17 @@ import { TaskStatusPrioritySection } from '@/components/Tasks/form/TaskStatusPri
 import { TaskDetailsSection } from '@/components/Tasks/form/TaskDetailsSection'
 
 vi.mock('lucide-react', () => ({
-  ArrowLeft: (props: any) => <svg data-testid="arrow-left-icon" {...props} />,
-  X: (props: any) => <svg data-testid="x-icon" {...props} />,
-  Save: (props: any) => <svg data-testid="save-icon" {...props} />,
-  Loader2: (props: any) => <svg data-testid="loader-icon" {...props} />,
-  CheckCircle2: (props: any) => <svg data-testid="check-icon" {...props} />,
-  AlertCircle: (props: any) => <svg data-testid="alert-icon" {...props} />,
+  ArrowLeft: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="arrow-left-icon" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
+  Save: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="save-icon" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader-icon" {...props} />,
+  CheckCircle2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-icon" {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-icon" {...props} />,
 }))
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }))
 

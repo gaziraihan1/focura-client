@@ -21,7 +21,7 @@ vi.mock('@/lib/auth/logout', () => ({
 }))
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }))
 
 // Import after mocking
@@ -34,7 +34,7 @@ describe('NavbarMain', () => {
   })
 
   it('renders all nav links', () => {
-    mockUseSession.mockReturnValue({ data: null, status: 'unauthenticated' } as any)
+    mockUseSession.mockReturnValue({ data: null, status: 'unauthenticated' } as any as Record<string, unknown>)
     render(<NavbarMain />, { wrapper: createWrapper() })
     expect(screen.getByText('Home')).toBeInTheDocument()
     expect(screen.getByText('Features')).toBeInTheDocument()
@@ -48,13 +48,13 @@ describe('NavbarMain', () => {
     mockUseSession.mockReturnValue({
       data: { user: { id: '1', name: 'Test', email: 'test@test.com' } },
       status: 'authenticated',
-    } as any)
+    } as any as Record<string, unknown>)
     render(<NavbarMain />, { wrapper: createWrapper() })
     expect(screen.getByText('Dashboard')).toBeInTheDocument()
   })
 
   it('shows Login and Get Started when not authenticated', () => {
-    mockUseSession.mockReturnValue({ data: null, status: 'unauthenticated' } as any)
+    mockUseSession.mockReturnValue({ data: null, status: 'unauthenticated' } as any as Record<string, unknown>)
     render(<NavbarMain />, { wrapper: createWrapper() })
     expect(screen.getByText('Login')).toBeInTheDocument()
     expect(screen.getByText('Get Started')).toBeInTheDocument()
@@ -64,13 +64,13 @@ describe('NavbarMain', () => {
     mockUseSession.mockReturnValue({
       data: { user: { id: '1', name: 'Test', email: 'test@test.com' } },
       status: 'authenticated',
-    } as any)
+    } as any as Record<string, unknown>)
     render(<NavbarMain />, { wrapper: createWrapper() })
     expect(screen.getByText('Logout')).toBeInTheDocument()
   })
 
   it('toggles mobile menu', async () => {
-    mockUseSession.mockReturnValue({ data: null, status: 'unauthenticated' } as any)
+    mockUseSession.mockReturnValue({ data: null, status: 'unauthenticated' } as any as Record<string, unknown>)
     const user = userEvent.setup()
     render(<NavbarMain />, { wrapper: createWrapper() })
     
@@ -85,7 +85,7 @@ describe('NavbarMain', () => {
   })
 
   it('shows logo', () => {
-    mockUseSession.mockReturnValue({ data: null, status: 'unauthenticated' } as any)
+    mockUseSession.mockReturnValue({ data: null, status: 'unauthenticated' } as any as Record<string, unknown>)
     render(<NavbarMain />, { wrapper: createWrapper() })
     expect(screen.getByText('Focura')).toBeInTheDocument()
   })

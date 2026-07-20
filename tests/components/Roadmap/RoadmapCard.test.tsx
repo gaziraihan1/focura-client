@@ -4,18 +4,18 @@ import RoadmapCard from '@/components/Roadmap/RoadmapCard'
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...props}>{children}</button>,
   },
   useInView: () => true,
 }))
 
 vi.mock('@/lib/utils', () => ({
-  cn: (...args: any[]) => args.filter(Boolean).join(' '),
+  cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(' '),
 }))
 
 vi.mock('lucide-react', () => ({
-  ArrowRight: (props: any) => <svg data-testid="arrow-right" {...props} />,
+  ArrowRight: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="arrow-right" {...props} />,
 }))
 
 const mockItem = {

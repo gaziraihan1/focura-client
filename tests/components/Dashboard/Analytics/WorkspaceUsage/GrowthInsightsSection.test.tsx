@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react'
 import { GrowthInsightsSection } from '@/components/Dashboard/Analytics/WorkspaceUsage/GrowthInsightsSection'
 
 vi.mock('recharts', () => ({
-  ResponsiveContainer: ({ children }: any) => <div>{children}</div>,
-  BarChart: ({ children }: any) => <div data-testid="bar-chart">{children}</div>,
+  ResponsiveContainer: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
+  BarChart: ({ children }: { children?: React.ReactNode }) => <div data-testid="bar-chart">{children}</div>,
   Bar: () => null,
   XAxis: () => null,
   YAxis: () => null,
@@ -24,12 +24,12 @@ const mockWorkspaceGrowth = {
 
 describe('GrowthInsightsSection', () => {
   it('renders section heading', () => {
-    render(<GrowthInsightsSection workspaceGrowth={mockWorkspaceGrowth as any} />)
+    render(<GrowthInsightsSection workspaceGrowth={mockWorkspaceGrowth as any as Record<string, unknown>} />)
     expect(screen.getByText('Growth Insights')).toBeInTheDocument()
   })
 
   it('renders growth metric cards', () => {
-    render(<GrowthInsightsSection workspaceGrowth={mockWorkspaceGrowth as any} />)
+    render(<GrowthInsightsSection workspaceGrowth={mockWorkspaceGrowth as any as Record<string, unknown>} />)
     expect(screen.getByText('New Tasks')).toBeInTheDocument()
     expect(screen.getByText('New Members')).toBeInTheDocument()
     expect(screen.getByText('New Projects')).toBeInTheDocument()
@@ -37,13 +37,13 @@ describe('GrowthInsightsSection', () => {
   })
 
   it('renders key insights panel', () => {
-    render(<GrowthInsightsSection workspaceGrowth={mockWorkspaceGrowth as any} />)
+    render(<GrowthInsightsSection workspaceGrowth={mockWorkspaceGrowth as any as Record<string, unknown>} />)
     expect(screen.getByText('Key Insights')).toBeInTheDocument()
     expect(screen.getByText(/Task creation increased significantly/)).toBeInTheDocument()
   })
 
   it('renders project lifecycle stats', () => {
-    render(<GrowthInsightsSection workspaceGrowth={mockWorkspaceGrowth as any} />)
+    render(<GrowthInsightsSection workspaceGrowth={mockWorkspaceGrowth as any as Record<string, unknown>} />)
     expect(screen.getByText('Project Lifecycle')).toBeInTheDocument()
   })
 })

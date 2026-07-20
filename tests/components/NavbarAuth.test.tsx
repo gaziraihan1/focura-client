@@ -1,6 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import NavbarAuth from '@/components/Navbar/NavbarAuth'
 
 vi.mock('next/navigation', () => ({
@@ -9,7 +8,7 @@ vi.mock('next/navigation', () => ({
 }))
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }))
 
 vi.mock('@/components/Themes/ThemeSwitcher', () => ({

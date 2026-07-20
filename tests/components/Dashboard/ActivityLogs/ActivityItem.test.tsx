@@ -2,15 +2,15 @@ import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { ActivityItem } from '@/components/Dashboard/ActivityLogs/ActivityItem'
 
-vi.mock('next/image', () => ({ default: (p: any) => <img {...p} /> }))
+vi.mock('next/image', () => ({ default: (p: Record<string, unknown>) => <img {...p} /> }))
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => <a href={href} {...props}>{children}</a>,
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => <a href={href} {...props}>{children}</a>,
 }))
 vi.mock('date-fns', () => ({
   formatDistanceToNow: () => '2 hours ago',
 }))
 
-const createMockActivity = (overrides: Record<string, any> = {}) => ({
+const createMockActivity = (overrides: Record<string, unknown> = {}) => ({
   id: 'act-1',
   action: 'CREATED' as const,
   entityType: 'TASK' as const,

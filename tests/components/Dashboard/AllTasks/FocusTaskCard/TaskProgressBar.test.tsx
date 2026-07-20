@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, animate, ...props }: any) => (
+    div: ({ children, animate, ...props }: Record<string, unknown>) => (
       <div {...props} animate-width={animate?.width}>{children}</div>
     ),
   },

@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { NotificationBellButton } from '@/components/Notifications/NotificationBellButton'
 
 vi.mock('lucide-react', () => ({
-  Bell: (props: any) => <svg data-testid="bell-icon" {...props} />,
+  Bell: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="bell-icon" {...props} />,
 }))
 
 describe('NotificationBellButton', () => {

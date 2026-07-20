@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }))
 
@@ -12,9 +12,9 @@ vi.mock('@/hooks/useActivity', () => ({
 }))
 
 vi.mock('@/components/Dashboard/TaskDetails/TaskActivityList', () => ({
-  TaskActivityList: ({ activities }: any) => (
+  TaskActivityList: ({ activities }: { activities: any[] }) => (
     <div data-testid="task-activity-list" data-count={activities.length}>
-      {activities.map((a: any) => <div key={a.id}>{a.id}</div>)}
+      {activities.map((a: Record<string, unknown>) => <div key={a.id}>{a.id}</div>)}
     </div>
   ),
 }))

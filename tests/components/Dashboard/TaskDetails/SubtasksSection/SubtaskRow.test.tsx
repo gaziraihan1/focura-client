@@ -4,29 +4,29 @@ import { SubtaskRow } from '@/components/Dashboard/TaskDetails/SubtasksSection/S
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: (props: any) => <div {...filterDomProps(props)}>{props.children}</div>,
-    button: (props: any) => <button {...filterDomProps(props)}>{props.children}</button>,
+    div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...filterDomProps(props)}>{props.children}</div>,
+    button: (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...filterDomProps(props)}>{props.children}</button>,
   },
 }));
 
 vi.mock('@/lib/utils', () => ({
-  cn: (...classes: any[]) => classes.filter(Boolean).join(' '),
+  cn: (...classes: (string | boolean | undefined | null)[]) => classes.filter(Boolean).join(' '),
 }));
 
 vi.mock('@/components/Shared/Avatar', () => ({
-  Avatar: ({ name, ...props }: any) => <div data-testid="avatar" data-name={name} />,
+  Avatar: ({ name, ...props }: Record<string, unknown>) => <div data-testid="avatar" data-name={name} />,
 }));
 
 vi.mock('@/components/Dashboard/TaskDetails/SubtasksSection/StatusButton', () => ({
-  StatusButton: (props: any) => <div data-testid="status-button" data-status={props.status} />,
+  StatusButton: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="status-button" data-status={props.status} />,
 }));
 
 vi.mock('@/components/Dashboard/TaskDetails/SubtasksSection/InlineEditor', () => ({
-  InlineEditor: (props: any) => <div data-testid="inline-editor" />,
+  InlineEditor: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="inline-editor" />,
 }));
 
-function filterDomProps(props: Record<string, any>) {
-  const dom: Record<string, any> = {};
+function filterDomProps(props: Record<string, unknown>) {
+  const dom: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(props)) {
     if (k === 'children' || k === 'initial' || k === 'animate' || k === 'exit' || k === 'transition' || k === 'whileTap' || k === 'layout') continue;
     if (k.startsWith('on') || k === 'className' || k === 'disabled' || k === 'title' || k === 'type' || k === 'style') dom[k] = v;
@@ -34,7 +34,7 @@ function filterDomProps(props: Record<string, any>) {
   return dom;
 }
 
-function makeSubtask(overrides: any = {}) {
+function makeSubtask(overrides: Record<string, unknown> = {}) {
   return {
     id: 'st-1',
     title: 'Test subtask',

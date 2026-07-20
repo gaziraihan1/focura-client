@@ -3,10 +3,10 @@ import { describe, it, expect, vi } from 'vitest'
 import { TaskList } from '@/components/Dashboard/AllTasks/TaskList'
 
 vi.mock('@/components/Dashboard/AllTasks/TaskCard', () => ({
-  TaskCard: ({ task }: any) => <div data-testid="task-card">{task.title}</div>,
+  TaskCard: ({ task }: { task: unknown }) => <div data-testid="task-card">{task.title}</div>,
 }))
 vi.mock('@/components/Dashboard/AllTasks/FocusTaskCard', () => ({
-  FocusTaskCard: ({ task }: any) => <div data-testid="focus-task-card">{task.title}</div>,
+  FocusTaskCard: ({ task }: { task: unknown }) => <div data-testid="focus-task-card">{task.title}</div>,
 }))
 
 const mockTasks = [

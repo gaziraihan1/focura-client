@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 const mockSignOut = vi.fn()
 vi.mock('next-auth/react', () => ({
-  signOut: (...args: any[]) => mockSignOut(...args),
+  signOut: (...args: (string | boolean | undefined | null)[]) => mockSignOut(...args),
 }))
 
 const { apiFetch } = await import('@/lib/api/fetcher')

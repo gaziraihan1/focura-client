@@ -27,7 +27,7 @@ describe('lib/api/server', () => {
   it('returns null when no backendToken', async () => {
     vi.mocked(getServerSession).mockResolvedValue({
       backendToken: null,
-    } as any)
+    } as any as Record<string, unknown>)
 
     const result = await serverApi('/test')
     expect(result).toBeNull()
@@ -36,7 +36,7 @@ describe('lib/api/server', () => {
   it('returns null when backendToken is empty', async () => {
     vi.mocked(getServerSession).mockResolvedValue({
       backendToken: '',
-    } as any)
+    } as any as Record<string, unknown>)
 
     const result = await serverApi('/test')
     expect(result).toBeNull()
@@ -45,12 +45,12 @@ describe('lib/api/server', () => {
   it('makes fetch request with correct headers', async () => {
     vi.mocked(getServerSession).mockResolvedValue({
       backendToken: 'test-token-12345',
-    } as any)
+    } as any as Record<string, unknown>)
 
     vi.mocked(fetch).mockResolvedValue({
       ok: true,
       json: async () => ({ data: { id: 1 } }),
-    } as any)
+    } as any as Record<string, unknown>)
 
     await serverApi('/api/v1/test')
 
@@ -69,12 +69,12 @@ describe('lib/api/server', () => {
   it('returns data from response', async () => {
     vi.mocked(getServerSession).mockResolvedValue({
       backendToken: 'test-token-12345',
-    } as any)
+    } as any as Record<string, unknown>)
 
     vi.mocked(fetch).mockResolvedValue({
       ok: true,
       json: async () => ({ data: { id: 1, name: 'Test' } }),
-    } as any)
+    } as any as Record<string, unknown>)
 
     const result = await serverApi('/test')
     expect(result).toEqual({ id: 1, name: 'Test' })
@@ -83,12 +83,12 @@ describe('lib/api/server', () => {
   it('returns json directly when no data wrapper', async () => {
     vi.mocked(getServerSession).mockResolvedValue({
       backendToken: 'test-token-12345',
-    } as any)
+    } as any as Record<string, unknown>)
 
     vi.mocked(fetch).mockResolvedValue({
       ok: true,
       json: async () => ({ id: 1 }),
-    } as any)
+    } as any as Record<string, unknown>)
 
     const result = await serverApi('/test')
     expect(result).toEqual({ id: 1 })
@@ -97,12 +97,12 @@ describe('lib/api/server', () => {
   it('returns null when response is not ok', async () => {
     vi.mocked(getServerSession).mockResolvedValue({
       backendToken: 'test-token-12345',
-    } as any)
+    } as any as Record<string, unknown>)
 
     vi.mocked(fetch).mockResolvedValue({
       ok: false,
       status: 500,
-    } as any)
+    } as any as Record<string, unknown>)
 
     const result = await serverApi('/test')
     expect(result).toBeNull()
@@ -111,7 +111,7 @@ describe('lib/api/server', () => {
   it('returns null on fetch error', async () => {
     vi.mocked(getServerSession).mockResolvedValue({
       backendToken: 'test-token-12345',
-    } as any)
+    } as any as Record<string, unknown>)
 
     vi.mocked(fetch).mockRejectedValue(new Error('Network error'))
 

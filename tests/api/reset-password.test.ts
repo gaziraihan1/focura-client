@@ -23,7 +23,7 @@ describe('POST /api/auth/reset-password', () => {
     vi.clearAllMocks()
   })
 
-  function createRequest(body: any) {
+  function createRequest(body: Record<string, unknown>) {
     return new Request('http://localhost:3000/api/auth/reset-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -76,8 +76,8 @@ describe('POST /api/auth/reset-password', () => {
       token: 'expired-token',
       email: 'user@test.com',
       expires: new Date('2020-01-01'), // Already expired
-    } as any)
-    vi.mocked(prisma.passwordResetToken.delete).mockResolvedValue({} as any)
+    } as any as Record<string, unknown>)
+    vi.mocked(prisma.passwordResetToken.delete).mockResolvedValue({} as any as Record<string, unknown>)
 
     const req = createRequest({ token: 'expired-token', password: 'password123' })
     const response = await POST(req)
@@ -97,9 +97,9 @@ describe('POST /api/auth/reset-password', () => {
       token: 'valid-token',
       email: 'user@test.com',
       expires: futureDate,
-    } as any)
-    vi.mocked(prisma.user.update).mockResolvedValue({} as any)
-    vi.mocked(prisma.passwordResetToken.delete).mockResolvedValue({} as any)
+    } as any as Record<string, unknown>)
+    vi.mocked(prisma.user.update).mockResolvedValue({} as any as Record<string, unknown>)
+    vi.mocked(prisma.passwordResetToken.delete).mockResolvedValue({} as any as Record<string, unknown>)
 
     const { hash } = await import('argon2')
     vi.mocked(hash).mockResolvedValue('hashed-password')

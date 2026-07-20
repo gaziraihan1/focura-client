@@ -4,15 +4,15 @@ import { SubtaskSection } from '@/components/Dashboard/TaskDetails/SubtasksSecti
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: (props: any) => <div {...filterProps(props)}>{props.children}</div>,
-    button: (props: any) => <button {...filterProps(props)}>{props.children}</button>,
-    span: (props: any) => <span {...filterProps(props)}>{props.children}</span>,
+    div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...filterProps(props)}>{props.children}</div>,
+    button: (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...filterProps(props)}>{props.children}</button>,
+    span: (props: React.HTMLAttributes<HTMLSpanElement>) => <span {...filterProps(props)}>{props.children}</span>,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }));
 
 vi.mock('lucide-react', () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={name} {...props} />;
+  const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={name} {...props} />;
   return {
     Plus: icon('plus'),
     ChevronDown: icon('chevron-down'),
@@ -24,7 +24,7 @@ vi.mock('lucide-react', () => {
   };
 });
 
-vi.mock('@/lib/utils', () => ({ cn: (...c: any[]) => c.filter(Boolean).join(' ') }));
+vi.mock('@/lib/utils', () => ({ cn: (...c: (string | boolean | undefined | null)[]) => c.filter(Boolean).join(' ') }));
 vi.mock('@/hooks/useSubtasks', () => ({
   useSubtasks: vi.fn(() => ({ data: [], isLoading: false })),
   useSubtaskStats: vi.fn(() => ({ data: null })),
@@ -38,8 +38,8 @@ vi.mock('@/components/Dashboard/TaskDetails/SubtasksSection/SubtaskForm', () => 
 vi.mock('@/components/Dashboard/TaskDetails/SubtasksSection/SubtaskList', () => ({ SubtaskList: () => <div data-testid="subtask-list" /> }));
 vi.mock('@/components/Dashboard/TaskDetails/SubtasksSection/SubtaskEmptyState', () => ({ SubtaskEmptyState: () => <div data-testid="subtask-empty" /> }));
 
-function filterProps(props: Record<string, any>) {
-  const out: Record<string, any> = {};
+function filterProps(props: Record<string, unknown>) {
+  const out: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(props)) {
     if (['children', 'initial', 'animate', 'exit', 'transition', 'whileTap', 'layout'].includes(k)) continue;
     if (k.startsWith('on') || k === 'className' || k === 'type') out[k] = v;

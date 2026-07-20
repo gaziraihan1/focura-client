@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react'
 import {
   useStoragePage,
@@ -12,7 +12,7 @@ import {
   getStorageStatusColor,
 } from '@/hooks/useStoragePage'
 
-const makeFile = (overrides: Record<string, any> = {}) => ({
+const makeFile = (overrides: Record<string, unknown> = {}) => ({
   id: 'file-1',
   name: 'test.pdf',
   originalName: 'test.pdf',
@@ -159,7 +159,7 @@ describe('useStoragePage', () => {
 describe('useStorageWarning', () => {
   it('returns normal for low usage', () => {
     const { result } = renderHook(() =>
-      useStorageWarning({ percentage: 50, workspaceName: 'Ws' } as any)
+      useStorageWarning({ percentage: 50, workspaceName: 'Ws' } as any as Record<string, unknown>)
     )
     expect(result.current.level).toBe('normal')
     expect(result.current.message).toBeNull()
@@ -167,7 +167,7 @@ describe('useStorageWarning', () => {
 
   it('returns warning for 80%+', () => {
     const { result } = renderHook(() =>
-      useStorageWarning({ percentage: 85, workspaceName: 'Ws' } as any)
+      useStorageWarning({ percentage: 85, workspaceName: 'Ws' } as any as Record<string, unknown>)
     )
     expect(result.current.level).toBe('warning')
     expect(result.current.message).toContain('high')
@@ -175,7 +175,7 @@ describe('useStorageWarning', () => {
 
   it('returns critical for 95%+', () => {
     const { result } = renderHook(() =>
-      useStorageWarning({ percentage: 96, workspaceName: 'Ws' } as any)
+      useStorageWarning({ percentage: 96, workspaceName: 'Ws' } as any as Record<string, unknown>)
     )
     expect(result.current.level).toBe('critical')
     expect(result.current.message).toContain('almost full')

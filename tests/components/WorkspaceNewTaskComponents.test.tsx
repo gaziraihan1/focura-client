@@ -4,11 +4,11 @@ import { IntentSelector } from '@/components/Dashboard/WorkspaceNewTask/IntentSe
 import { EnergySelector } from '@/components/Dashboard/WorkspaceNewTask/EnergySelector'
 
 vi.mock('lucide-react', () => ({
-  Zap: (props: any) => <svg data-testid="zap-icon" {...props} />,
-  Brain: (props: any) => <svg data-testid="brain-icon" {...props} />,
-  AlertCircle: (props: any) => <svg data-testid="alert-icon" {...props} />,
-  Clock: (props: any) => <svg data-testid="clock-icon" {...props} />,
-  Users: (props: any) => <svg data-testid="users-icon" {...props} />,
+  Zap: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="zap-icon" {...props} />,
+  Brain: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="brain-icon" {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-icon" {...props} />,
+  Clock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="clock-icon" {...props} />,
+  Users: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="users-icon" {...props} />,
 }))
 
 describe('IntentSelector', () => {

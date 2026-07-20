@@ -9,21 +9,21 @@ import { GeneralSettingsTab } from '@/components/Dashboard/Workspaces/WorkspaceS
 import { DangerZoneTab } from '@/components/Dashboard/Workspaces/WorkspaceSettings/DangerZoneTab'
 
 vi.mock('lucide-react', () => ({
-  Users: (props: any) => <svg data-testid="users-icon" {...props} />,
-  FolderOpen: (props: any) => <svg data-testid="folder-icon" {...props} />,
-  ShieldCheck: (props: any) => <svg data-testid="shield-icon" {...props} />,
-  Award: (props: any) => <svg data-testid="award-icon" {...props} />,
-  ChevronDown: (props: any) => <svg data-testid="chevron-icon" {...props} />,
-  CheckCircle2: (props: any) => <svg data-testid="check-icon" {...props} />,
-  Circle: (props: any) => <svg data-testid="circle-icon" {...props} />,
-  AlertCircle: (props: any) => <svg data-testid="alert-icon" {...props} />,
-  Save: (props: any) => <svg data-testid="save-icon" {...props} />,
-  Loader2: (props: any) => <svg data-testid="loader-icon" {...props} />,
+  Users: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="users-icon" {...props} />,
+  FolderOpen: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="folder-icon" {...props} />,
+  ShieldCheck: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="shield-icon" {...props} />,
+  Award: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="award-icon" {...props} />,
+  ChevronDown: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="chevron-icon" {...props} />,
+  CheckCircle2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-icon" {...props} />,
+  Circle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="circle-icon" {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-icon" {...props} />,
+  Save: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="save-icon" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader-icon" {...props} />,
 }))
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }))
 
@@ -33,7 +33,7 @@ vi.mock('next/navigation', () => ({
 }))
 
 vi.mock('@/components/Shared/Avatar', () => ({
-  Avatar: ({ name }: any) => <div data-testid="avatar">{name}</div>,
+  Avatar: ({ name }: { name: string }) => <div data-testid="avatar">{name}</div>,
 }))
 
 vi.mock('@/hooks/useWorkspaceSettings', () => ({
@@ -103,17 +103,17 @@ describe('StatsCards', () => {
 
 describe('EmptyState', () => {
   it('renders title', () => {
-    render(<EmptyState icon={(props: any) => <svg {...props} />} title="No members" />)
+    render(<EmptyState icon={(props: React.SVGProps<SVGSVGElement>) => <svg {...props} />} title="No members" />)
     expect(screen.getByText('No members')).toBeInTheDocument()
   })
 
   it('renders description when provided', () => {
-    render(<EmptyState icon={(props: any) => <svg {...props} />} title="No members" description="Invite people to join" />)
+    render(<EmptyState icon={(props: React.SVGProps<SVGSVGElement>) => <svg {...props} />} title="No members" description="Invite people to join" />)
     expect(screen.getByText('Invite people to join')).toBeInTheDocument()
   })
 
   it('hides description when not provided', () => {
-    render(<EmptyState icon={(props: any) => <svg {...props} />} title="No members" />)
+    render(<EmptyState icon={(props: React.SVGProps<SVGSVGElement>) => <svg {...props} />} title="No members" />)
     expect(screen.queryByText(/Invite/)).not.toBeInTheDocument()
   })
 })

@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import MembersTab from '@/components/Dashboard/ProjectDetails/MembersTab';
 
 vi.mock('lucide-react', () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={name} {...props} />;
+  const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={name} {...props} />;
   return {
     UserPlus: icon('user-plus'),
     Users: icon('users'),
@@ -14,7 +14,7 @@ vi.mock('lucide-react', () => {
 });
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }));
 
 vi.mock('@/hooks/useProjects', () => ({
@@ -30,7 +30,7 @@ vi.mock('@/components/Dashboard/ProjectDetails/AddMemberModal', () => ({
   default: () => <div data-testid="add-member-modal" />,
 }));
 
-function makeProject(overrides: any = {}) {
+function makeProject(overrides: Record<string, unknown> = {}) {
   return {
     id: 'p-1',
     isAdmin: true,

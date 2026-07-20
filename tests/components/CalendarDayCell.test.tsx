@@ -7,10 +7,10 @@ vi.mock('@/utils/calendar.utils', () => ({
 }))
 
 vi.mock('lucide-react', () => ({
-  Zap: (props: any) => <svg data-testid="zap-icon" {...props} />,
-  Circle: (props: any) => <svg data-testid="circle-icon" {...props} />,
-  Target: (props: any) => <svg data-testid="target-icon" {...props} />,
-  CheckCircle2: (props: any) => <svg data-testid="check-icon" {...props} />,
+  Zap: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="zap-icon" {...props} />,
+  Circle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="circle-icon" {...props} />,
+  Target: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="target-icon" {...props} />,
+  CheckCircle2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-icon" {...props} />,
 }))
 
 const defaultProps = {

@@ -1,6 +1,4 @@
 import { describe, it, expect, vi } from 'vitest'
-import { renderHook } from '@testing-library/react'
-import { createWrapper } from '../utils/renderWithProviders'
 import { useNotificationsPage } from '@/hooks/useNotificationsPage'
 
 vi.mock('next/navigation', () => ({

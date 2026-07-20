@@ -4,7 +4,7 @@ import { useActivityFilters } from '@/hooks/useActivityFilters'
 import { ActivityFilterValues } from '@/types/activityFilter.types'
 
 describe('useActivityFilters', () => {
-  let mockOnFiltersChange: any
+  let mockOnFiltersChange: Record<string, unknown>
   const defaultFilters: ActivityFilterValues = {}
 
   beforeEach(() => {

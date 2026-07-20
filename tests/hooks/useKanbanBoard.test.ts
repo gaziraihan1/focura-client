@@ -3,7 +3,7 @@ import { renderHook } from '@testing-library/react'
 import { useKanbanBoard, COLUMNS } from '@/hooks/useKanbanBoard'
 import { useKanbanInsightFooter } from '@/hooks/useKanbanInsightFooter'
 
-const makeTask = (overrides: Record<string, any> = {}) => ({
+const makeTask = (overrides: Record<string, unknown> = {}) => ({
   id: 'task-1',
   title: 'Test Task',
   description: '',

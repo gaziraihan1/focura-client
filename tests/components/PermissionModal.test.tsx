@@ -3,9 +3,9 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { PermissionModal } from '@/components/Shared/PermissionModal'
 
 vi.mock('lucide-react', () => ({
-  X: (props: any) => <svg data-testid="x-icon" {...props} />,
-  ShieldCheck: (props: any) => <svg data-testid="shield-icon" {...props} />,
-  Lock: (props: any) => <svg data-testid="lock-icon" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
+  ShieldCheck: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="shield-icon" {...props} />,
+  Lock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="lock-icon" {...props} />,
 }))
 
 describe('PermissionModal', () => {

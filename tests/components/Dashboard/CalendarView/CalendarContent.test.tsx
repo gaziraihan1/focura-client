@@ -3,11 +3,11 @@ import { describe, it, expect, vi } from 'vitest'
 import { CalendarContent } from '@/components/Dashboard/CalendarView/CalendarContent'
 
 vi.mock('@/components/Dashboard/CalendarView/CalendarGrid', () => ({
-  CalendarGrid: (props: any) => <div data-testid="calendar-grid" />,
+  CalendarGrid: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="calendar-grid" />,
 }))
 
 vi.mock('@/components/Dashboard/CalendarView/ResponsiveSidebar', () => ({
-  ResponsiveSidebar: (props: any) => <div data-testid="responsive-sidebar" />,
+  ResponsiveSidebar: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="responsive-sidebar" />,
 }))
 
 describe('CalendarContent', () => {

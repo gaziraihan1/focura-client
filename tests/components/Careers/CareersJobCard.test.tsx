@@ -3,15 +3,15 @@ import { render, screen } from '@testing-library/react'
 import { CareersJobCard } from '@/components/Careers/CareersJobCard'
 
 vi.mock('lucide-react', () => ({
-  MapPin: (props: any) => <svg data-testid="map-pin" {...props} />,
-  Clock: (props: any) => <svg data-testid="clock" {...props} />,
-  Briefcase: (props: any) => <svg data-testid="briefcase" {...props} />,
-  Pin: (props: any) => <svg data-testid="pin" {...props} />,
-  DollarSign: (props: any) => <svg data-testid="dollar" {...props} />,
+  MapPin: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="map-pin" {...props} />,
+  Clock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="clock" {...props} />,
+  Briefcase: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="briefcase" {...props} />,
+  Pin: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="pin" {...props} />,
+  DollarSign: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="dollar" {...props} />,
 }))
 
 vi.mock('@/lib/utils', () => ({
-  cn: (...args: any[]) => args.filter(Boolean).join(' '),
+  cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(' '),
 }))
 
 const mockJob = {

@@ -2,18 +2,15 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import {
   PlannedHoursCard,
-  FocusSessionsCard,
   GoalsCard,
   BurnoutCard,
-  EventsCard,
-  DaySummaryBar,
   getBurnoutColor,
   getBurnoutLabel,
 } from '@/components/Dashboard/Calendar/DayDetailsPanelParts';
 
 vi.mock('lucide-react', () => {
   const icon = (name: string) => {
-    const Component = (props: any) => <svg data-testid={`${name}-icon`} {...props} />;
+    const Component = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={`${name}-icon`} {...props} />;
     Component.displayName = name;
     return Component;
   };

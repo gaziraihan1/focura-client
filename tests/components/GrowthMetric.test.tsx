@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { GrowthMetric } from '@/components/Dashboard/Analytics/WorkspaceUsage/GrowthMetric'
 
-const MockIcon = (props: any) => <svg data-testid="mock-icon" {...props} />
+const MockIcon = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="mock-icon" {...props} />
 
 describe('GrowthMetric', () => {
   it('renders label and value', () => {

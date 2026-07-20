@@ -1,4 +1,4 @@
-import { renderHook, waitFor, act } from '@testing-library/react'
+import { waitFor, act } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { renderHookWithProviders } from '../utils/renderWithProviders'
 import { useActivityPage } from '@/hooks/useActivityPage'

@@ -4,14 +4,14 @@ import { CommentItem } from '@/components/Dashboard/TaskDetails/TaskTab/Comments
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: (props: any) => <div {...filterProps(props)}>{props.children}</div>,
-    span: (props: any) => <span {...filterProps(props)}>{props.children}</span>,
+    div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...filterProps(props)}>{props.children}</div>,
+    span: (props: React.HTMLAttributes<HTMLSpanElement>) => <span {...filterProps(props)}>{props.children}</span>,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }));
 
 vi.mock('lucide-react', () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={name} {...props} />;
+  const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={name} {...props} />;
   return {
     Trash2: icon('trash2'),
     CornerDownRight: icon('corner-down-right'),
@@ -24,19 +24,19 @@ vi.mock('lucide-react', () => {
   };
 });
 
-vi.mock('@/lib/utils', () => ({ cn: (...c: any[]) => c.filter(Boolean).join(' ') }));
+vi.mock('@/lib/utils', () => ({ cn: (...c: (string | boolean | undefined | null)[]) => c.filter(Boolean).join(' ') }));
 vi.mock('@/components/Shared/Avatar', () => ({
-  Avatar: ({ name, ...p }: any) => <div data-testid="avatar" data-name={name} />,
+  Avatar: ({ name, ...p }: Record<string, unknown>) => <div data-testid="avatar" data-name={name} />,
 }));
 vi.mock('@/components/Dashboard/TaskDetails/TaskTab/CommentsList/CommentContent', () => ({
-  CommentContent: ({ content }: any) => <div data-testid="comment-content">{content}</div>,
+  CommentContent: ({ content }: { content: string }) => <div data-testid="comment-content">{content}</div>,
 }));
 vi.mock('@/components/Dashboard/TaskDetails/TaskTab/CommentsList/RelativeTime', () => ({
-  RelativeTime: ({ date }: any) => <span data-testid="relative-time">{date}</span>,
+  RelativeTime: ({ date }: { date: string }) => <span data-testid="relative-time">{date}</span>,
 }));
 
-function filterProps(props: Record<string, any>) {
-  const out: Record<string, any> = {};
+function filterProps(props: Record<string, unknown>) {
+  const out: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(props)) {
     if (k === 'children' || k.startsWith('initial') || k.startsWith('animate') || k.startsWith('exit') || k.startsWith('transition') || k === 'layout') continue;
     if (k.startsWith('on') || k === 'className' || k === 'disabled' || k === 'type' || k === 'style') out[k] = v;
@@ -44,7 +44,7 @@ function filterProps(props: Record<string, any>) {
   return out;
 }
 
-function makeComment(overrides: any = {}) {
+function makeComment(overrides: Record<string, unknown> = {}) {
   return {
     id: 'c-1',
     content: 'Hello world',

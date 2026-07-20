@@ -3,14 +3,14 @@ import { render, screen } from '@testing-library/react'
 import { StorageSection } from '@/components/Dashboard/Analytics/WorkspaceUsage/StorageSection'
 
 vi.mock('recharts', () => ({
-  ResponsiveContainer: ({ children }: any) => <div>{children}</div>,
-  BarChart: ({ children }: any) => <div data-testid="bar-chart">{children}</div>,
+  ResponsiveContainer: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
+  BarChart: ({ children }: { children?: React.ReactNode }) => <div data-testid="bar-chart">{children}</div>,
   Bar: () => null,
   XAxis: () => null,
   YAxis: () => null,
   CartesianGrid: () => null,
   Tooltip: () => null,
-  PieChart: ({ children }: any) => <div data-testid="pie-chart">{children}</div>,
+  PieChart: ({ children }: { children?: React.ReactNode }) => <div data-testid="pie-chart">{children}</div>,
   Pie: () => null,
   Cell: () => null,
 }))
@@ -28,17 +28,17 @@ const mockResourceUsage = {
 
 describe('StorageSection', () => {
   it('renders section heading', () => {
-    render(<StorageSection resourceUsage={mockResourceUsage as any} />)
+    render(<StorageSection resourceUsage={mockResourceUsage as any as Record<string, unknown>} />)
     expect(screen.getByText('Storage & Resources')).toBeInTheDocument()
   })
 
   it('renders storage used card', () => {
-    render(<StorageSection resourceUsage={mockResourceUsage as any} />)
+    render(<StorageSection resourceUsage={mockResourceUsage as any as Record<string, unknown>} />)
     expect(screen.getByText('Storage Used')).toBeInTheDocument()
   })
 
   it('renders file count card', () => {
-    render(<StorageSection resourceUsage={mockResourceUsage as any} />)
+    render(<StorageSection resourceUsage={mockResourceUsage as any as Record<string, unknown>} />)
     expect(screen.getByText('Total Files')).toBeInTheDocument()
   })
 
@@ -47,7 +47,7 @@ describe('StorageSection', () => {
       ...mockResourceUsage,
       totalStorage: { usedMB: 1900, totalMB: 2048, percentage: 93 },
     }
-    render(<StorageSection resourceUsage={nearLimit as any} />)
+    render(<StorageSection resourceUsage={nearLimit as any as Record<string, unknown>} />)
     expect(screen.getByText(/Storage usage is high/)).toBeInTheDocument()
   })
 })

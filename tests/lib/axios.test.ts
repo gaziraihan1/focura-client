@@ -13,7 +13,7 @@ describe('normalizeError', () => {
         status: 400,
         data: { message: 'Invalid input', code: 'VALIDATION_ERROR' },
       },
-    } as any
+    } as unknown
 
     const result = normalizeError(error)
     expect(result.message).toBe('Invalid input')
@@ -26,7 +26,7 @@ describe('normalizeError', () => {
       isAxiosError: true,
       message: 'Network Error',
       response: undefined,
-    } as any
+    } as unknown
 
     const result = normalizeError(error)
     expect(result.message).toBe('Network Error')

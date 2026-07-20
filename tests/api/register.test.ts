@@ -39,7 +39,7 @@ describe('POST /api/auth/register', () => {
     vi.clearAllMocks()
   })
 
-  function createRequest(body: any) {
+  function createRequest(body: Record<string, unknown>) {
     return new Request('http://localhost:3000/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -94,7 +94,7 @@ describe('POST /api/auth/register', () => {
 
   it('returns 400 for existing user', async () => {
     const { prisma } = await import('@/lib/prisma')
-    vi.mocked(prisma.user.findUnique).mockResolvedValue({ id: 'existing-user' } as any)
+    vi.mocked(prisma.user.findUnique).mockResolvedValue({ id: 'existing-user' } as any as Record<string, unknown>)
 
     const req = createRequest({ name: 'Test User', email: 'existing@test.com', password: 'password123' })
     const response = await POST(req)
@@ -111,8 +111,8 @@ describe('POST /api/auth/register', () => {
       id: 'new-user',
       name: 'Test User',
       email: 'test@test.com',
-    } as any)
-    vi.mocked(prisma.verificationToken.create).mockResolvedValue({} as any)
+    } as any as Record<string, unknown>)
+    vi.mocked(prisma.verificationToken.create).mockResolvedValue({} as any as Record<string, unknown>)
 
     const { sendVerificationEmail } = await import('@/lib/email')
     vi.mocked(sendVerificationEmail).mockResolvedValue(undefined)
@@ -148,8 +148,8 @@ describe('POST /api/auth/register', () => {
       id: 'new-user',
       name: 'Test User',
       email: 'test@test.com',
-    } as any)
-    vi.mocked(prisma.verificationToken.create).mockResolvedValue({} as any)
+    } as any as Record<string, unknown>)
+    vi.mocked(prisma.verificationToken.create).mockResolvedValue({} as any as Record<string, unknown>)
 
     const { sendVerificationEmail, EmailError } = await import('@/lib/email')
     vi.mocked(sendVerificationEmail).mockRejectedValue(new EmailError('SMTP error'))

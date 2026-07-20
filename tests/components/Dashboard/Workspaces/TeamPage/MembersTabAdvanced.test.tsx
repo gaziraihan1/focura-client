@@ -4,10 +4,10 @@ import { userEvent } from '@testing-library/user-event'
 import { MembersTab } from '@/components/Dashboard/Workspaces/TeamPage/MembersTab'
 
 vi.mock('@/components/Dashboard/Workspaces/TeamPage/MemberRow', () => ({
-  MemberRow: ({ member }: any) => <tr><td>{member.displayName}</td><td>{member.role}</td></tr>,
+  MemberRow: ({ member }: { member: unknown }) => <tr><td>{member.displayName}</td><td>{member.role}</td></tr>,
 }))
 vi.mock('@/components/Dashboard/Workspaces/TeamPage/EmptyState', () => ({
-  EmptyState: ({ title }: any) => <div>{title}</div>,
+  EmptyState: ({ title }: { title: string }) => <div>{title}</div>,
 }))
 vi.mock('@/components/Dashboard/Workspaces/TeamPage/RoleDropdown', () => ({
   WorkspaceRoleOption: {},

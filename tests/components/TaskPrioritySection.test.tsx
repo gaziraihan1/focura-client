@@ -3,12 +3,12 @@ import { render, screen } from '@testing-library/react'
 import { TaskPrioritySection } from '@/components/Dashboard/CalendarView/CalendarDayView/TaskPrioritySection'
 
 vi.mock('lucide-react', () => ({
-  AlertCircle: (props: any) => <svg {...props} />,
-  Flag: (props: any) => <svg {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Flag: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
 }))
 
 vi.mock('@/components/Dashboard/CalendarView/DetailedTaskCard', () => ({
-  default: ({ task, onClick }: any) => (
+  default: ({ task, onClick }: Record<string, unknown>) => (
     <button onClick={onClick} data-testid="detailed-card">{task.title}</button>
   ),
 }))

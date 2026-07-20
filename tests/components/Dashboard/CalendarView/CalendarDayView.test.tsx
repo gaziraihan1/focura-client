@@ -19,7 +19,7 @@ vi.mock('@/components/Dashboard/CalendarView/CalendarDayView/DayViewStats', () =
 }))
 
 vi.mock('@/components/Dashboard/CalendarView/CalendarDayView/TaskPrioritySection', () => ({
-  TaskPrioritySection: ({ priority }: any) => <div data-testid={`priority-${priority}`}>{priority}</div>,
+  TaskPrioritySection: ({ priority }: { priority: string }) => <div data-testid={`priority-${priority}`}>{priority}</div>,
 }))
 
 vi.mock('@/components/Dashboard/CalendarView/CalendarDayView/DayViewEmptyState', () => ({

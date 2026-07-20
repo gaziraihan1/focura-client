@@ -4,15 +4,15 @@ import { DeleteConfirmModal } from '@/components/Dashboard/Storage/Files/DeleteC
 import { FileTypeStats } from '@/components/Dashboard/Storage/Files/FileTypeStats'
 
 vi.mock('lucide-react', () => ({
-  AlertTriangle: (props: any) => <svg data-testid="alert-icon" {...props} />,
-  X: (props: any) => <svg data-testid="x-icon" {...props} />,
-  Loader2: (props: any) => <svg data-testid="loader-icon" {...props} />,
-  FileText: (props: any) => <svg data-testid="file-text-icon" {...props} />,
-  Image: (props: any) => <svg data-testid="image-icon" {...props} />,
-  Film: (props: any) => <svg data-testid="film-icon" {...props} />,
-  Music: (props: any) => <svg data-testid="music-icon" {...props} />,
-  Archive: (props: any) => <svg data-testid="archive-icon" {...props} />,
-  HardDrive: (props: any) => <svg data-testid="harddrive-icon" {...props} />,
+  AlertTriangle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-icon" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader-icon" {...props} />,
+  FileText: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="file-text-icon" {...props} />,
+  Image: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="image-icon" {...props} />,
+  Film: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="film-icon" {...props} />,
+  Music: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="music-icon" {...props} />,
+  Archive: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="archive-icon" {...props} />,
+  HardDrive: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="harddrive-icon" {...props} />,
 }))
 
 vi.mock('@/utils/file.utils', () => ({

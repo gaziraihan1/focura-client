@@ -4,7 +4,7 @@ import { VerifyEmailContainer } from '@/components/VerifyEmail/VerifyEmailContai
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: (props: any) => <div {...props}>{props.children}</div>,
+    div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props}>{props.children}</div>,
   },
 }))
 

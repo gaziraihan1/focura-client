@@ -1,11 +1,8 @@
-import { renderHook, waitFor, act } from '@testing-library/react'
+import { renderHook, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createWrapper } from '../utils/renderWithProviders'
-import { server } from '../mock/server'
-import { http, HttpResponse } from 'msw'
 import type { LargestFile } from '@/hooks/useStorage'
 
-const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
 import { useLargestFilesTable } from '@/hooks/useLargestFileTable'
 

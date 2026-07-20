@@ -3,8 +3,8 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { FilterPanel } from '@/components/Dashboard/AllTasks/WorkspaceTasks/FilterPanel'
 
 vi.mock('lucide-react', () => ({
-  Tag: (props: any) => <svg data-testid="Tag" {...props} />,
-  Brain: (props: any) => <svg data-testid="Brain" {...props} />,
+  Tag: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="Tag" {...props} />,
+  Brain: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="Brain" {...props} />,
 }))
 
 const defaultProps = {

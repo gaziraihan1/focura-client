@@ -4,20 +4,20 @@ import { TasksContentArea } from '@/components/Dashboard/AllTasks/WorkspaceTasks
 import type { Task } from '@/hooks/useTask'
 
 vi.mock('lucide-react', () => ({
-  Loader2: (props: any) => <svg data-testid="Loader2" {...props} />,
-  AlertCircle: (props: any) => <svg data-testid="AlertCircle" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="Loader2" {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="AlertCircle" {...props} />,
 }))
 
 vi.mock('@/components/Dashboard/AllTasks/WorkspaceTasks/EmptyState', () => ({
-  EmptyState: (props: any) => <div data-testid="EmptyState">Empty</div>,
+  EmptyState: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="EmptyState">Empty</div>,
 }))
 
 vi.mock('@/components/Dashboard/AllTasks/WorkspaceTasks/TaskList', () => ({
-  TaskList: (props: any) => <div data-testid="TaskList">TaskList</div>,
+  TaskList: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="TaskList">TaskList</div>,
 }))
 
 vi.mock('@/components/Shared/Pagination', () => ({
-  Pagination: (props: any) => <div data-testid="Pagination">Pagination</div>,
+  Pagination: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="Pagination">Pagination</div>,
 }))
 
 const baseTask: Task = {

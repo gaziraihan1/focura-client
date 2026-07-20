@@ -4,19 +4,19 @@ import { CalendarSidebar } from '@/components/Dashboard/CalendarView/CalendarSid
 
 vi.mock('@/components/Dashboard/CalendarView/StatCard', () => ({
   __esModule: true,
-  default: ({ label, value }: any) => (
+  default: ({ label, value }: Record<string, unknown>) => (
     <div data-testid="stat-card">{label}: {value}</div>
   ),
 }))
 
 vi.mock('@/components/Dashboard/CalendarView/TaskSection', () => ({
   __esModule: true,
-  default: ({ title, count }: any) => (
+  default: ({ title, count }: Record<string, unknown>) => (
     <div data-testid="task-section">{title} ({count})</div>
   ),
 }))
 
-const makeTask = (overrides: Record<string, any> = {}) => ({
+const makeTask = (overrides: Record<string, unknown> = {}) => ({
   id: 'task-1',
   title: 'Test Task',
   priority: 'MEDIUM',

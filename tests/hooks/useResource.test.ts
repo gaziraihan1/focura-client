@@ -1,6 +1,6 @@
 import { renderHook, waitFor, act } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { createWrapper, renderHookWithProviders } from '../utils/renderWithProviders'
+import { describe, it, expect } from 'vitest'
+import { createWrapper } from '../utils/renderWithProviders'
 import {
   useAdminPopularResources,
   useCreatePopularResource,
@@ -10,7 +10,6 @@ import {
   useCreateProductUpdate,
   useUpdateProductUpdate,
   useDeleteProductUpdate,
-  RESOURCE_QUERY_KEYS,
 } from '@/hooks/useResource'
 import { server } from '@/tests/mock/server'
 import { http, HttpResponse } from 'msw'

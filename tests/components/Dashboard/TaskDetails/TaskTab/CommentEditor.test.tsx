@@ -4,11 +4,11 @@ import React from 'react';
 import { CommentEditor } from '@/components/Dashboard/TaskDetails/TaskTab/CommentEditor';
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }));
 
 vi.mock('@/components/Dashboard/TaskDetails/TaskTab/MentionTextarea', () => ({
-  default: React.forwardRef(({ value, onChange, onSubmit, placeholder, ...props }: any, ref: any) => (
+  default: React.forwardRef(({ value, onChange, onSubmit, placeholder, ...props }: Record<string, unknown>, ref: Record<string, unknown>) => (
     <textarea
       ref={ref}
       value={value}
@@ -22,10 +22,10 @@ vi.mock('@/components/Dashboard/TaskDetails/TaskTab/MentionTextarea', () => ({
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: (props: any) => <div {...props} />,
-    button: (props: any) => <button {...props} />,
+    div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props} />,
+    button: (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props} />,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }));
 
 const mockTask = {

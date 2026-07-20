@@ -4,15 +4,14 @@ import {
   StorageBar,
   StorageUsageCard,
   TotalFilesCard,
-  StorageGrowthChart,
   FileTypeDistribution,
 } from '@/components/Dashboard/Analytics/WorkspaceUsage/StorageResourcesSectionParts'
 
 vi.mock('recharts', () => ({
-  ResponsiveContainer: ({ children }: any) => <div>{children}</div>,
-  LineChart: ({ children }: any) => <div data-testid="line-chart">{children}</div>,
+  ResponsiveContainer: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
+  LineChart: ({ children }: { children?: React.ReactNode }) => <div data-testid="line-chart">{children}</div>,
   Line: () => null,
-  PieChart: ({ children }: any) => <div data-testid="pie-chart">{children}</div>,
+  PieChart: ({ children }: { children?: React.ReactNode }) => <div data-testid="pie-chart">{children}</div>,
   Pie: () => null,
   Cell: () => null,
   XAxis: () => null,

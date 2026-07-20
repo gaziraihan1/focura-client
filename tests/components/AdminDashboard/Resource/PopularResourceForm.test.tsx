@@ -16,7 +16,7 @@ vi.mock('@/hooks/useResource', () => ({
 }))
 
 vi.mock('@/components/AdminDashboard/Resource/StatusSelect', () => ({
-  StatusSelect: (props: any) => <select data-testid="status-select" {...props} />,
+  StatusSelect: (props: Record<string, unknown>) => <select data-testid="status-select" {...props} />,
 }))
 
 describe('PopularResourceForm', () => {

@@ -7,11 +7,11 @@ vi.mock('@/utils/calendar.utils', () => ({
 }))
 
 vi.mock('lucide-react', () => ({
-  TrendingUp: (props: any) => <svg data-testid="trending-icon" {...props} />,
-  Flame: (props: any) => <svg data-testid="flame-icon" {...props} />,
-  Zap: (props: any) => <svg data-testid="zap-icon" {...props} />,
-  BarChart3: (props: any) => <svg data-testid="chart-icon" {...props} />,
-  AlertTriangle: (props: any) => <svg data-testid="alert-icon" {...props} />,
+  TrendingUp: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="trending-icon" {...props} />,
+  Flame: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="flame-icon" {...props} />,
+  Zap: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="zap-icon" {...props} />,
+  BarChart3: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="chart-icon" {...props} />,
+  AlertTriangle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-icon" {...props} />,
 }))
 
 const mockInsights = {

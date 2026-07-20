@@ -3,11 +3,11 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { CapacityScheduleForm } from '@/components/Settings/CapacityScheduleForm'
 
 vi.mock('lucide-react', () => ({
-  Clock: (props: any) => <svg data-testid="clock-icon" {...props} />,
-  Calendar: (props: any) => <svg data-testid="calendar-icon" {...props} />,
-  Brain: (props: any) => <svg data-testid="brain-icon" {...props} />,
-  Save: (props: any) => <svg data-testid="save-icon" {...props} />,
-  Loader2: (props: any) => <svg data-testid="loader-icon" {...props} />,
+  Clock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="clock-icon" {...props} />,
+  Calendar: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="calendar-icon" {...props} />,
+  Brain: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="brain-icon" {...props} />,
+  Save: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="save-icon" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader-icon" {...props} />,
 }))
 
 const mockUpdateCapacity = vi.fn()

@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { MeetingDetailModal } from '@/components/Dashboard/Workspaces/Meeting/MeetingDetailModal';
 
 vi.mock('lucide-react', () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={name} {...props} />;
+  const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={name} {...props} />;
   return {
     X: icon('x'),
     Calendar: icon('calendar'),
@@ -14,11 +14,11 @@ vi.mock('lucide-react', () => {
 });
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }));
 
 vi.mock('@/components/Dashboard/Workspaces/Meeting/MeetingStatusBadge', () => ({
-  MeetingStatusBadge: ({ status }: any) => <span data-testid="status-badge">{status}</span>,
+  MeetingStatusBadge: ({ status }: { status: string }) => <span data-testid="status-badge">{status}</span>,
 }));
 
 vi.mock('@/utils/meeting.utils', () => ({
@@ -30,7 +30,7 @@ vi.mock('@/utils/meeting.utils', () => ({
   STATUS_LABELS: {},
 }));
 
-function makeMeeting(overrides: any = {}) {
+function makeMeeting(overrides: Record<string, unknown> = {}) {
   return {
     id: 'm-1',
     title: 'Team Standup',

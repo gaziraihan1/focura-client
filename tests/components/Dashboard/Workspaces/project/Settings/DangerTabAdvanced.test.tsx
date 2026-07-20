@@ -4,8 +4,8 @@ import { DangerTab } from '@/components/Dashboard/Workspaces/project/Settings/Da
 import { createWrapper } from '@/tests/utils/renderWithProviders'
 
 vi.mock('framer-motion', () => ({
-  motion: { div: (p: any) => <div {...p} /> },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  motion: { div: (p: Record<string, unknown>) => <div {...p} /> },
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 
 describe('DangerTab', () => {

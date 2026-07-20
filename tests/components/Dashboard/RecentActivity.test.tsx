@@ -12,7 +12,7 @@ vi.mock('@tanstack/react-query', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@tanstack/react-query')>()
   return {
     ...actual,
-    useQuery: (options: any) => {
+    useQuery: (options: Record<string, unknown>) => {
       if (options.queryKey[0] === 'dashboard-activities') {
         return { data: options.enabled === false ? undefined : [], isLoading: false }
       }

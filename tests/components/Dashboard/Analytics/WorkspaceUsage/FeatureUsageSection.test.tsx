@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react'
 import { FeatureUsageSection } from '@/components/Dashboard/Analytics/WorkspaceUsage/FeatureUsageSection'
 
 vi.mock('recharts', () => ({
-  ResponsiveContainer: ({ children }: any) => <div>{children}</div>,
-  BarChart: ({ children }: any) => <div data-testid="bar-chart">{children}</div>,
+  ResponsiveContainer: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
+  BarChart: ({ children }: { children?: React.ReactNode }) => <div data-testid="bar-chart">{children}</div>,
   Bar: () => null,
   XAxis: () => null,
   YAxis: () => null,
@@ -23,12 +23,12 @@ const mockFeatureUsage = {
 
 describe('FeatureUsageSection', () => {
   it('renders section heading', () => {
-    render(<FeatureUsageSection featureUsage={mockFeatureUsage as any} />)
+    render(<FeatureUsageSection featureUsage={mockFeatureUsage as any as Record<string, unknown>} />)
     expect(screen.getByText('Feature Usage')).toBeInTheDocument()
   })
 
   it('renders all six feature cards', () => {
-    render(<FeatureUsageSection featureUsage={mockFeatureUsage as any} />)
+    render(<FeatureUsageSection featureUsage={mockFeatureUsage as any as Record<string, unknown>} />)
     expect(screen.getByText('Tasks Created')).toBeInTheDocument()
     expect(screen.getByText('Comments Added')).toBeInTheDocument()
     expect(screen.getByText('Time Entries')).toBeInTheDocument()
@@ -38,13 +38,13 @@ describe('FeatureUsageSection', () => {
   })
 
   it('displays formatted feature counts', () => {
-    render(<FeatureUsageSection featureUsage={mockFeatureUsage as any} />)
+    render(<FeatureUsageSection featureUsage={mockFeatureUsage as any as Record<string, unknown>} />)
     expect(screen.getByText('150')).toBeInTheDocument()
     expect(screen.getByText('320')).toBeInTheDocument()
   })
 
   it('renders distribution chart', () => {
-    render(<FeatureUsageSection featureUsage={mockFeatureUsage as any} />)
+    render(<FeatureUsageSection featureUsage={mockFeatureUsage as any as Record<string, unknown>} />)
     expect(screen.getByText('Feature Usage Distribution')).toBeInTheDocument()
   })
 })

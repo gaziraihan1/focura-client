@@ -3,18 +3,18 @@ import { render, screen } from '@testing-library/react'
 import { BackLink } from '@/components/Shared/BackLink'
 
 vi.mock('next/link', () => ({
-  default: ({ href, children, ...props }: any) => (
+  default: ({ href, children, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))
 
 vi.mock('lucide-react', () => ({
-  ArrowLeft: (props: any) => <svg data-testid="arrow-left" {...props} />,
+  ArrowLeft: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="arrow-left" {...props} />,
 }))
 
 vi.mock('framer-motion', () => ({
   motion: {
-    span: (props: any) => <span {...props}>{props.children}</span>,
+    span: (props: React.HTMLAttributes<HTMLSpanElement>) => <span {...props}>{props.children}</span>,
   },
 }))
 

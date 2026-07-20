@@ -76,7 +76,7 @@ describe('useInvitation', () => {
 
     await waitFor(() => expect(result.current.isLoading).toBe(false))
 
-    let workspace: any
+    let workspace: Record<string, unknown>
     await act(async () => {
       workspace = await result.current.acceptInvitation()
     })

@@ -3,13 +3,13 @@ import { render, screen } from '@testing-library/react'
 import { ActivityDateGroup } from '@/components/Dashboard/ActivityLogs/ActivityDateGroup'
 
 vi.mock('next/link', () => ({
-  default: ({ href, children, ...props }: any) => (
+  default: ({ href, children, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }))
 
 vi.mock('date-fns', () => ({
@@ -17,18 +17,18 @@ vi.mock('date-fns', () => ({
 }))
 
 vi.mock('lucide-react', () => ({
-  Plus: (props: any) => <svg {...props} />,
-  Pencil: (props: any) => <svg {...props} />,
-  Trash2: (props: any) => <svg {...props} />,
-  CheckCircle2: (props: any) => <svg {...props} />,
-  Users: (props: any) => <svg {...props} />,
-  MessageSquare: (props: any) => <svg {...props} />,
-  ArrowRightLeft: (props: any) => <svg {...props} />,
-  AlertCircle: (props: any) => <svg {...props} />,
-  Circle: (props: any) => <svg {...props} />,
-  FileText: (props: any) => <svg {...props} />,
-  FolderKanban: (props: any) => <svg {...props} />,
-  Clock: (props: any) => <svg {...props} />,
+  Plus: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Pencil: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Trash2: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  CheckCircle2: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Users: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  MessageSquare: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  ArrowRightLeft: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Circle: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  FileText: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  FolderKanban: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Clock: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
 }))
 
 const mockActivity = {
@@ -48,7 +48,7 @@ describe('ActivityDateGroup', () => {
     render(
       <ActivityDateGroup
         date="Today"
-        activities={[mockActivity as any]}
+        activities={[mockActivity as any as Record<string, unknown>]}
       />
     )
     expect(screen.getByText('Today')).toBeInTheDocument()
@@ -58,7 +58,7 @@ describe('ActivityDateGroup', () => {
     render(
       <ActivityDateGroup
         date="Today"
-        activities={[mockActivity as any]}
+        activities={[mockActivity as any as Record<string, unknown>]}
       />
     )
     expect(screen.getByText('1 activity')).toBeInTheDocument()
@@ -78,7 +78,7 @@ describe('ActivityDateGroup', () => {
     render(
       <ActivityDateGroup
         date="Today"
-        activities={[mockActivity as any]}
+        activities={[mockActivity as any as Record<string, unknown>]}
       />
     )
     expect(screen.getByText('John')).toBeInTheDocument()

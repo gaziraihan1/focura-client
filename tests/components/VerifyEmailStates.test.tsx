@@ -5,7 +5,7 @@ import SuccessState from '@/components/VerifyEmail/SuccessState'
 import LoadingState from '@/components/VerifyEmail/LoadingState'
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))

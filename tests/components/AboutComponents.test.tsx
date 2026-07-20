@@ -4,7 +4,7 @@ import { AboutHero } from '@/components/About/AboutHero'
 import { AboutCTA } from '@/components/About/AboutCTA'
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))

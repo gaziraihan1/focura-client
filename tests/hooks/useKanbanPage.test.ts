@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { createWrapper } from '../utils/renderWithProviders'
-import { useKanbanPage, useExecutionControlBar, DEFAULT_PAGE_SIZE } from '@/hooks/useKanbanPage'
+import { useKanbanPage, useExecutionControlBar } from '@/hooks/useKanbanPage'
 
 vi.mock('next/navigation', () => ({
   useParams: () => ({ workspaceSlug: 'test-ws' }),

@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { CalendarDay } from '@/components/Dashboard/CalendarView/CalendarDay';
 
 vi.mock('@/components/Dashboard/CalendarView/TaskPill', () => ({
-  default: ({ task, onClick }: any) => (
+  default: ({ task, onClick }: Record<string, unknown>) => (
     <div data-testid="task-pill" onClick={() => onClick(task)}>
       {task.title}
     </div>

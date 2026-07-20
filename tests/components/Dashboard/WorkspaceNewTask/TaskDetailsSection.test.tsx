@@ -4,7 +4,7 @@ import { TaskDetailsSection } from '@/components/Dashboard/WorkspaceNewTask/Task
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: (props: any) => <div {...props} />,
+    div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props} />,
   },
 }));
 

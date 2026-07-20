@@ -3,8 +3,8 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import TaskPill from '@/components/Dashboard/CalendarView/TaskPill'
 
 vi.mock('lucide-react', () => ({
-  Clock: (props: any) => <svg {...props} />,
-  Users: (props: any) => <svg {...props} />,
+  Clock: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Users: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
 }))
 
 const mockTask = {

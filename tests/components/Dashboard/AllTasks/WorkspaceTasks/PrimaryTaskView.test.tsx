@@ -4,12 +4,12 @@ import { PrimaryTasksView } from '@/components/Dashboard/AllTasks/WorkspaceTasks
 import type { Task } from '@/hooks/useTask'
 
 vi.mock('lucide-react', () => ({
-  Sparkles: (props: any) => <svg data-testid="Sparkles" {...props} />,
-  ListChecks: (props: any) => <svg data-testid="ListChecks" {...props} />,
+  Sparkles: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="Sparkles" {...props} />,
+  ListChecks: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="ListChecks" {...props} />,
 }))
 
 vi.mock('@/components/Dashboard/AllTasks/WorkspaceTasks/RemovalTaskCard', () => ({
-  RemovableTaskCard: (props: any) => <div data-testid="RemovableTaskCard">{props.task.title}</div>,
+  RemovableTaskCard: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="RemovableTaskCard">{props.task.title}</div>,
 }))
 
 const baseTask: Task = {

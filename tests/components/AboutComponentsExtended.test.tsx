@@ -4,16 +4,16 @@ import React from 'react'
 
 // Mock next/link
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))
 
 // Mock next/image
 vi.mock('next/image', () => ({
-  default: (props: any) => {
-    const { fill, ...rest } = props
-    return <img {...rest} data-fill={fill} />
+  default: (props: Record<string, unknown>) => {
+    const { fill, ...imgProps } = props
+    return <img {...imgProps} data-fill={fill} />
   },
 }))
 

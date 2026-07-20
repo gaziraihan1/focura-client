@@ -3,9 +3,9 @@ import { render, screen } from '@testing-library/react'
 import { AppearanceTab } from '@/components/Dashboard/Workspaces/project/Settings/AppearanceTab'
 
 vi.mock('lucide-react', () => ({
-  Check: (props: any) => <svg data-testid="check" {...props} />,
-  Loader2: (props: any) => <svg data-testid="loader" {...props} />,
-  Palette: (props: any) => <svg data-testid="palette" {...props} />,
+  Check: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader" {...props} />,
+  Palette: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="palette" {...props} />,
 }))
 
 vi.mock('@/hooks/useProjects', () => ({
@@ -29,22 +29,22 @@ const mockProject = {
 
 describe('AppearanceTab', () => {
   it('renders the Project Color heading', () => {
-    render(<AppearanceTab project={mockProject as any} canManage={true} />)
+    render(<AppearanceTab project={mockProject as any as Record<string, unknown>} canManage={true} />)
     expect(screen.getByText('Project Color')).toBeInTheDocument()
   })
 
   it('shows the project preview name', () => {
-    render(<AppearanceTab project={mockProject as any} canManage={true} />)
+    render(<AppearanceTab project={mockProject as any as Record<string, unknown>} canManage={true} />)
     expect(screen.getByText('Test Project')).toBeInTheDocument()
   })
 
   it('shows the default hex color', () => {
-    render(<AppearanceTab project={mockProject as any} canManage={true} />)
+    render(<AppearanceTab project={mockProject as any as Record<string, unknown>} canManage={true} />)
     expect(screen.getByText('#667eea')).toBeInTheDocument()
   })
 
   it('shows the Apply Color button when canManage is true', () => {
-    render(<AppearanceTab project={mockProject as any} canManage={true} />)
+    render(<AppearanceTab project={mockProject as any as Record<string, unknown>} canManage={true} />)
     expect(screen.getByText('Apply Color')).toBeInTheDocument()
   })
 })

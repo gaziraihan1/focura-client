@@ -4,7 +4,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { Calendar } from 'lucide-react'
 import TaskSection from '@/components/Dashboard/CalendarView/TaskSection'
 
-const makeTask = (overrides: Record<string, any> = {}) => ({
+const makeTask = (overrides: Record<string, unknown> = {}) => ({
   id: 'task-1',
   title: 'Test Task',
   priority: 'MEDIUM',

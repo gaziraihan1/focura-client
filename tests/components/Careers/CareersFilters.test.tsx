@@ -3,12 +3,12 @@ import { render, screen } from '@testing-library/react'
 import { CareersFilters } from '@/components/Careers/CareersFilters'
 
 vi.mock('lucide-react', () => ({
-  Search: (props: any) => <svg data-testid="search" {...props} />,
-  X: (props: any) => <svg data-testid="x" {...props} />,
+  Search: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="search" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x" {...props} />,
 }))
 
 vi.mock('@/lib/utils', () => ({
-  cn: (...args: any[]) => args.filter(Boolean).join(' '),
+  cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(' '),
 }))
 
 const defaultProps = {

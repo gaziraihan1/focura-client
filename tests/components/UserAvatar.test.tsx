@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { UserAvatar } from '@/components/Dashboard/Analytics/WorkspaceUsage/UserAvatar'
 
 vi.mock('next/image', () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
 }))
 
 describe('UserAvatar', () => {

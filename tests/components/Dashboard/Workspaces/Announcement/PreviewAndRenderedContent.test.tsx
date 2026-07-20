@@ -1,11 +1,10 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import { userEvent } from '@testing-library/user-event'
 import { PreviewContent } from '@/components/Dashboard/Workspaces/Announcement/PreviewContent'
 import { RenderedContent } from '@/components/Dashboard/Workspaces/Announcement/RenderedContent'
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => <a href={href} {...props}>{children}</a>,
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => <a href={href} {...props}>{children}</a>,
 }))
 
 // Mock navigator.clipboard

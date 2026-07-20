@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { TaskDetailsForm } from '@/components/Dashboard/TaskDetails/TaskDetailsForm'
 
 vi.mock('lucide-react', () => ({
-  Loader2: (props: any) => <svg data-testid="loader-icon" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader-icon" {...props} />,
 }))
 
 describe('TaskDetailsForm', () => {

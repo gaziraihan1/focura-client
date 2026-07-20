@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import CreateTaskModal from '@/components/Dashboard/ProjectDetails/CreateTaskModal';
 
 vi.mock('lucide-react', () => {
-  const icon = (name: string) => (props: any) => <svg data-testid={name} {...props} />;
+  const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={name} {...props} />;
   return {
     X: icon('x'),
     Loader2: icon('loader2'),

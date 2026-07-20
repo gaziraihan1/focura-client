@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 
 vi.mock('@/components/Shared/Avatar', () => ({
-  Avatar: ({ name, image, size }: any) => (
+  Avatar: ({ name, image, size }: Record<string, unknown>) => (
     <div data-testid="avatar" data-name={name} data-image={image} data-size={size}>
       {name}
     </div>

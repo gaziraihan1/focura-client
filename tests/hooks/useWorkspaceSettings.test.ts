@@ -1,6 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderHook } from '@testing-library/react'
-import { createWrapper } from '../utils/renderWithProviders'
 import { useWorkspaceSettings, PREDEFINED_COLORS } from '@/hooks/useWorkspaceSettings'
 
 vi.mock('next-auth/react', () => ({

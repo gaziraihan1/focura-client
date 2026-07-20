@@ -3,8 +3,8 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import LabelItem from '@/components/Labels/LabelItem'
 
 vi.mock('lucide-react', () => ({
-  Edit2: (props: any) => <svg data-testid="edit-icon" {...props} />,
-  Trash2: (props: any) => <svg data-testid="trash-icon" {...props} />,
+  Edit2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="edit-icon" {...props} />,
+  Trash2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="trash-icon" {...props} />,
 }))
 
 const mockLabel = {

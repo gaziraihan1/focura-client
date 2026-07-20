@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { CalendarWeekView } from '@/components/Dashboard/CalendarView/CalendarWeekView'
 
 vi.mock('@/components/Dashboard/CalendarView/CalendarDay', () => ({
-  CalendarDay: (props: any) => <div data-testid="calendar-day" />,
+  CalendarDay: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="calendar-day" />,
 }))
 
 describe('CalendarWeekView', () => {
