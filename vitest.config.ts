@@ -10,6 +10,11 @@ export default defineConfig({
     setupFiles: ['./tests/polyfill.js', './tests/setup.ts'],
     exclude: ['**/node_modules/**', '**/.next/**'],
     pool: 'vmForks',
+    poolOptions: {
+      vmForks: {
+        maxForks: 2,
+      },
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],
