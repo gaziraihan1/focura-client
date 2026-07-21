@@ -9,7 +9,8 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./tests/polyfill.js', './tests/setup.ts'],
     exclude: ['**/node_modules/**', '**/.next/**'],
-    pool: 'vmForks',
+    pool: 'forks',
+    maxWorkers: '50%',
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],
