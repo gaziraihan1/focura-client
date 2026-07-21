@@ -21,6 +21,7 @@ const eslintConfig = defineConfig([
     files: ["**/*.test.tsx", "**/*.test.ts"],
     rules: {
       "react/display-name": "off",
+      "@next/next/no-img-element": "off",
     },
   },
 ]);

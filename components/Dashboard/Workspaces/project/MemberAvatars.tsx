@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export function MemberAvatars({
   members,
   max = 5,
@@ -17,8 +19,13 @@ export function MemberAvatars({
           title={m.user?.name ?? "Member"}
         >
           {m.user?.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={m.user.image} alt={m.user.name ?? ""} className="w-full h-full object-cover" />
+            <Image
+              src={m.user.image}
+              alt={m.user.name ?? ""}
+              width={28}
+              height={28}
+              className="w-full h-full object-cover"
+            />
           ) : (
             (m.user?.name?.charAt(0) ?? "?").toUpperCase()
           )}
