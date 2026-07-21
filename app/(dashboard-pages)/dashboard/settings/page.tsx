@@ -3,21 +3,22 @@
 import { useState } from "react";
 import {
   Bell,
-  Brush,
-  CreditCard,
   Globe,
   KeyRound,
   Lock,
   Monitor,
   Palette,
-  Settings2,
   Shield,
-  User2,
-  Wrench,
   Clock,
   CheckCircle2,
 } from "lucide-react";
 import { CapacityScheduleForm } from "@/components/Settings/CapacityScheduleForm";
+import { AccountSettingsForm } from "@/components/Settings/AccountSettingsForm";
+import { AppearanceSettingsForm } from "@/components/Settings/AppearanceSettingsForm";
+import { NotificationsSettingsForm } from "@/components/Settings/NotificationsSettingsForm";
+import { IntegrationsSettingsForm } from "@/components/Settings/IntegrationsSettingsForm";
+import { ApiTokensSettingsForm } from "@/components/Settings/ApiTokensSettingsForm";
+import { SecuritySettingsForm } from "@/components/Settings/SecuritySettingsForm";
 
 const globalSettings = [
   {
@@ -25,30 +26,35 @@ const globalSettings = [
     description:
       "Update login credentials, connected accounts, sessions, and security preferences.",
     icon: Shield,
+    active: true,
   },
   {
     title: "Appearance",
     description:
       "Customize theme, sidebar behavior, density, and visual preferences across Focura.",
     icon: Palette,
+    active: true,
   },
   {
     title: "Notifications",
     description:
       "Configure email, push, mentions, reminders, and activity notifications.",
     icon: Bell,
+    active: true,
   },
   {
     title: "Integrations",
     description:
       "Connect GitHub, Slack, Google Calendar, Discord, and external tools.",
     icon: Globe,
+    active: true,
   },
   {
     title: "API & Tokens",
     description:
       "Generate personal API tokens and manage developer access securely.",
     icon: KeyRound,
+    active: true,
   },
   {
     title: "Capacity & Schedule",
@@ -57,46 +63,24 @@ const globalSettings = [
     icon: Clock,
     active: true,
   },
-];
-
-const workspaceSettings = [
-  {
-    title: "Workspace General",
-    description:
-      "Manage workspace name, logo, slug, branding, and visibility settings.",
-    icon: Settings2,
-  },
-  {
-    title: "Members & Roles",
-    description:
-      "Invite teammates, manage permissions, roles, and collaboration access.",
-    icon: User2,
-  },
-  {
-    title: "Billing",
-    description:
-      "Manage subscriptions, invoices, seat limits, and workspace plans.",
-    icon: CreditCard,
-  },
   {
     title: "Security",
     description:
-      "Configure workspace-level security rules, policies, and protections.",
+      "Change your password, enable two-factor authentication, and manage active sessions.",
     icon: Lock,
-  },
-  {
-    title: "Workspace Integrations",
-    description:
-      "Connect shared integrations and automation tools for your workspace.",
-    icon: Wrench,
-  },
-  {
-    title: "Appearance & Branding",
-    description:
-      "Customize workspace visuals, colors, and future branding capabilities.",
-    icon: Brush,
+    active: true,
   },
 ];
+
+const GLOBAL_FORM_MAP: Record<string, React.ComponentType> = {
+  "Account": AccountSettingsForm,
+  "Appearance": AppearanceSettingsForm,
+  "Notifications": NotificationsSettingsForm,
+  "Integrations": IntegrationsSettingsForm,
+  "API & Tokens": ApiTokensSettingsForm,
+  "Capacity & Schedule": CapacityScheduleForm,
+  "Security": SecuritySettingsForm,
+};
 
 function SettingsCard({
   title,
@@ -184,7 +168,6 @@ function SettingsSection({
   title,
   description,
   items,
-  // activeItem,
   onItemClick,
 }: {
   title: string;
@@ -195,26 +178,18 @@ function SettingsSection({
     icon: React.ElementType;
     active?: boolean;
   }[];
-  activeItem?: string | null;
   onItemClick?: (title: string) => void;
 }) {
   return (
     <section className="space-y-6">
       <div className="space-y-2">
         <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
-
         <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
           {description}
         </p>
       </div>
 
-      <div
-        className="
-          grid gap-4
-          sm:grid-cols-2
-          xl:grid-cols-3
-        "
-      >
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {items.map((item) => (
           <SettingsCard
             key={item.title}
@@ -232,6 +207,12 @@ function SettingsSection({
 
 export default function SettingsOverviewPage() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
+
+  const renderGlobalForm = (section: string) => {
+    const FormComponent = GLOBAL_FORM_MAP[section];
+    if (!FormComponent) return null;
+    return <FormComponent />;
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -267,13 +248,14 @@ export default function SettingsOverviewPage() {
                   text-muted-foreground sm:text-base
                 "
               >
-                Manage your account, workspace, and personal preferences.
+                Manage your account and personal preferences.
               </p>
             )}
           </div>
         </div>
 
-        {activeSection === "Capacity & Schedule" ? (
+        {/* Active Section Form */}
+        {activeSection ? (
           <div className="space-y-6">
             <button
               onClick={() => setActiveSection(null)}
@@ -281,57 +263,15 @@ export default function SettingsOverviewPage() {
             >
               &larr; Back to settings
             </button>
-            <CapacityScheduleForm />
+            {renderGlobalForm(activeSection)}
           </div>
         ) : (
-          <>
-            {/* Global */}
-            <SettingsSection
-              title="Global Settings"
-              description="Personal account preferences and settings that apply across all workspaces and experiences inside Focura."
-              items={globalSettings}
-              activeItem={activeSection}
-              onItemClick={setActiveSection}
-            />
-
-            {/* Workspace */}
-            <SettingsSection
-              title="Workspace Settings"
-              description="Team and workspace-level management controls for collaboration, permissions, billing, integrations, and organization customization."
-              items={workspaceSettings}
-            />
-
-            {/* Footer Notice */}
-            <div
-              className="
-                rounded-2xl border border-dashed border-border
-                bg-card/50 p-6
-              "
-            >
-              <div className="flex items-start gap-4">
-                <div
-                  className="
-                    flex h-11 w-11 shrink-0 items-center justify-center
-                    rounded-xl bg-primary text-primary-foreground
-                  "
-                >
-                  <Settings2 className="h-5 w-5" />
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className="text-sm font-semibold tracking-tight">
-                    More settings are coming soon
-                  </h3>
-
-                  <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-                    Upcoming updates will include advanced permissions, audit logs,
-                    workspace branding, API management, notifications, accessibility
-                    controls, enterprise security, and automation tools.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </>
+          <SettingsSection
+            title="Account Settings"
+            description="Personal preferences and settings that apply across all workspaces inside Focura. Workspace settings are managed under each workspace."
+            items={globalSettings}
+            onItemClick={setActiveSection}
+          />
         )}
       </div>
     </div>
