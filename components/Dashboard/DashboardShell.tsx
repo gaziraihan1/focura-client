@@ -36,7 +36,6 @@ export default function DashboardShell({
     if (status === "loading") return;
 
     if (status === "unauthenticated") {
-      console.log("🔴 DashboardShell: Unauthenticated - redirecting to login");
       const loginUrl = `/authentication/login?callbackUrl=${encodeURIComponent(
         pathname
       )}`;

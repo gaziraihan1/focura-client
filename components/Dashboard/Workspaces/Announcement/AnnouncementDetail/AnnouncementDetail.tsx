@@ -18,7 +18,6 @@ interface AnnouncementDetailProps {
  * Wires useAnnouncement → AnnouncementAuthor, AnnouncementTargets, and inline content.
  */
 export function AnnouncementDetail({ id, workspaceSlug }: AnnouncementDetailProps) {
-    console.log(id)
   const { data: announcement, isLoading, isError } = useAnnouncement(id);
 
   if (isLoading) return <AnnouncementDetailSkeleton />;

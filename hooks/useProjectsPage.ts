@@ -348,14 +348,6 @@ export function useWorkspaceProjectsPage({
 
   const { data: projectsData, isLoading: projectsLoading, isError: projectsError } =
     useProjects(workspace?.id);
-    console.log('[projects debug]', {
-  workspaceSlug,
-  workspaceId: workspace?.id,
-  workspaceLoading,
-  projectsLoading,
-  projectsData,
-  projectsDataLength: Array.isArray(projectsData) ? projectsData.length : 'not array',
-});
 
   // ✅ reads from workspace.members — no separate /members fetch, no extra loading state
   const { canCreateProjects, canManageWorkspace } =

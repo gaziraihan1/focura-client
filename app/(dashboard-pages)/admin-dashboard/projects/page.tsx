@@ -20,7 +20,6 @@ export default function AdminProjectsPage() {
   const { page, setPage, search, handleSearch } = useAdminPagination();
   const [input, setInput] = useState('');
   const { data, isLoading } = useAdminProjects({ page, search, pageSize: 20 });
-  console.log('Admin Projects data:', data);
 
   return (
     <div className="space-y-6">

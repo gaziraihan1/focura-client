@@ -82,7 +82,6 @@ export default function ProjectOverviewPage() {
       </div>
     );
   }
-  console.log("Project details:", project);
 
   if (!isMember && !project.isAdmin ) {
     return (
@@ -92,7 +91,7 @@ export default function ProjectOverviewPage() {
       />
     );
   }
-  console.log(project, isMember)
+
   // ── Derived stats ──────────────────────────────────────────────────────────
   const stats         = project.stats ?? {};
   const totalTasks    = stats.totalTasks        ?? 0;

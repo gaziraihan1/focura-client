@@ -73,7 +73,6 @@ export function useNotifications() {
           ? `/api/v1/notifications?cursor=${pageParam}`
           : "/api/v1/notifications";
         const response = await api.get<NotificationsResponse>(url);
-        console.log("[notifications] raw response:", response);
         return response?.data ?? EMPTY_PAGE;
       } catch (err) {
         console.error("Failed to fetch notifications:", err);
@@ -205,7 +204,6 @@ export function useNotifications() {
       if (!backendToken) return; // logged out
       
       if (wasTokenRefreshed) {
-        console.log("[SSE] Token refreshed, reconnecting with new token");
         // Small delay to ensure session is updated
         setTimeout(() => connectRef.current?.(), 100);
       } else {
@@ -254,7 +252,6 @@ export function useNotifications() {
     
     // If we have an existing connection with a different token, reconnect
     if (eventSourceRef.current && currentTokenRef.current !== backendToken) {
-      console.log("[SSE] Token changed, reconnecting...");
       if (eventSourceRef.current) {
         eventSourceRef.current.close();
         eventSourceRef.current = null;

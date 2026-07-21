@@ -12,9 +12,6 @@ interface ResourcesPopularProps {
 }
 
 export default function ResourcesPopular({data}: ResourcesPopularProps) {
-  
-  console.log(data)
-
   return (
     <section className="py-24 bg-background">
       <div className="max-w-6xl mx-auto px-6">

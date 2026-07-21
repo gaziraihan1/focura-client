@@ -4,7 +4,6 @@ import Image from "next/image";
 import { avatarColor, getInitials } from "@/utils/meetingDetails.utils";
 
 export function HostChip({ user }: { user: MeetingUser }) {
-  console.log("Rendering HostChip for user:", user);
   const initials = getInitials(user.name, user.email);
   const colorClass = avatarColor(user.id);
 
