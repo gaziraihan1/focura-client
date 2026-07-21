@@ -26,6 +26,11 @@ vi.mock('@/components/Notifications/NotificationBell', () => ({
   default: () => <div data-testid="notification-bell" />,
 }))
 
+vi.mock('@/components/Shared/SearchModal', () => ({
+  SearchModal: ({ isOpen }: { isOpen: boolean; onClose: () => void }) =>
+    isOpen ? <div data-testid="search-modal">Search Modal</div> : null,
+}))
+
 describe('TopNavbar', () => {
   const defaultProps = {
     onMenuClick: vi.fn(),
@@ -53,10 +58,10 @@ describe('TopNavbar', () => {
     expect(screen.getByText('User')).toBeInTheDocument()
   })
 
-  it('renders search input with placeholder', () => {
+  it('renders search bar with placeholder', () => {
     render(<TopNavbar {...defaultProps} />)
 
-    expect(screen.getByPlaceholderText('Search tasks, projects, files…')).toBeInTheDocument()
+    expect(screen.getByText('Search tasks, projects, files…')).toBeInTheDocument()
   })
 
   it('renders "New Task" link', () => {
@@ -168,7 +173,7 @@ describe('TopNavbar', () => {
     expect(img).toHaveAttribute('src', 'https://example.com/avatar.jpg')
   })
 
-  it('opens mobile search overlay', async () => {
+  it('opens search modal when mobile search button clicked', async () => {
     const user = userEvent.setup()
 
     render(<TopNavbar {...defaultProps} />)
@@ -180,31 +185,18 @@ describe('TopNavbar', () => {
 
     if (mobileSearchBtn) {
       await user.click(mobileSearchBtn)
-      expect(screen.getByText('Start typing to search…')).toBeInTheDocument()
+      expect(screen.getByTestId('search-modal')).toBeInTheDocument()
     }
   })
 
-  it('closes mobile search when X clicked', async () => {
+  it('opens search modal when desktop search bar clicked', async () => {
     const user = userEvent.setup()
 
     render(<TopNavbar {...defaultProps} />)
 
-    const searchButtons = screen.getAllByRole('button')
-    const mobileSearchBtn = searchButtons.find(btn =>
-      btn.querySelector('svg') && btn.className.includes('md:hidden')
-    )
+    const searchBar = screen.getByText('Search tasks, projects, files…').closest('button')!
+    await user.click(searchBar)
 
-    if (mobileSearchBtn) {
-      await user.click(mobileSearchBtn)
-      expect(screen.getByText('Start typing to search…')).toBeInTheDocument()
-
-      const closeBtn = screen.getAllByRole('button').find(btn =>
-        btn.className.includes('rounded-lg') && btn.className.includes('hover:bg-accent')
-      )
-      if (closeBtn) {
-        await user.click(closeBtn)
-        expect(screen.queryByText('Start typing to search…')).not.toBeInTheDocument()
-      }
-    }
+    expect(screen.getByTestId('search-modal')).toBeInTheDocument()
   })
 })

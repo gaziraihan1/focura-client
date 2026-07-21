@@ -3,7 +3,7 @@ import { useWorkspace, useWorkspaceRoleFromWorkspace } from "@/hooks/useWorkspac
 import { useProjects } from "@/hooks/useProjects";
 import { useLabels } from "@/hooks/useLabels";
 import { useTeamMembers } from "@/hooks/useTeam";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   useTasks,
   useTaskStats,
@@ -26,10 +26,11 @@ export const DEFAULT_PAGE_SIZE = 10;
 export function useTasksPage() {
   const { userId } = useUserProfile();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<"all" | "personal" | "assigned">(
     "all",
   );
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") ?? "");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedPriority, setSelectedPriority] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);

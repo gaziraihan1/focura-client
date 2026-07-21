@@ -6,6 +6,7 @@ import { useTasksPage } from '@/hooks/useTasksPage'
 vi.mock('next/navigation', () => ({
   useParams: () => ({ workspaceSlug: 'test-ws' }),
   useRouter: () => ({ push: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
 }))
 
 vi.mock('next-auth/react', () => ({

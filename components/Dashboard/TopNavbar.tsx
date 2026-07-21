@@ -1,7 +1,7 @@
 "use client";
 
 import { logout } from "@/lib/auth/logout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Menu,
@@ -13,12 +13,12 @@ import {
   LogOut,
   FileText,
   Loader2,
-  X,
 } from "lucide-react";
 
 import ThemeSwitcher from "../Themes/ThemeSwitcher";
 import Image from "next/image";
 import NotificationBell from "../Notifications/NotificationBell";
+import { SearchModal } from "../Shared/SearchModal";
 import type { UserProfile } from "@/hooks/useUserProfile";
 
 interface TopNavbarProps {
@@ -35,8 +35,20 @@ export default function TopNavbar({
   isLoadingProfile,
 }: TopNavbarProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+
+  // Cmd+K / Ctrl+K to open search
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setShowSearch(true);
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, []);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -61,22 +73,23 @@ export default function TopNavbar({
               <Menu size={20} className="text-foreground" />
             </button>
 
-            <div className="hidden md:flex flex-1 max-w-sm items-center gap-2 rounded-xl border border-border bg-muted/40 px-3.5 py-2 hover:border-primary/30 hover:bg-muted/60 transition-all duration-200 group">
+            <button
+              onClick={() => setShowSearch(true)}
+              className="hidden md:flex flex-1 max-w-sm items-center gap-2 rounded-xl border border-border bg-muted/40 px-3.5 py-2 hover:border-primary/30 hover:bg-muted/60 transition-all duration-200 group cursor-text"
+            >
               <Search size={15} className="text-muted-foreground shrink-0" />
-              <input
-                type="text"
-                placeholder="Search tasks, projects, files…"
-                className="flex-1 border-none bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground min-w-0"
-              />
+              <span className="flex-1 text-sm text-muted-foreground text-left min-w-0">
+                Search tasks, projects, files…
+              </span>
               <kbd className="hidden lg:inline-flex h-5 select-none items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground shrink-0">
                 <span className="text-xs">⌘</span>K
               </kbd>
-            </div>
+            </button>
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
             <button
-              onClick={() => setShowMobileSearch(true)}
+              onClick={() => setShowSearch(true)}
               className="md:hidden rounded-xl p-2 transition hover:bg-accent"
             >
               <Search size={19} className="text-foreground" />
@@ -198,28 +211,7 @@ export default function TopNavbar({
         </div>
       </header>
 
-      {showMobileSearch && (
-        <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm md:hidden flex flex-col">
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
-            <Search size={18} className="text-muted-foreground shrink-0" />
-            <input
-              autoFocus
-              type="text"
-              placeholder="Search tasks, projects, files…"
-              className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
-            />
-            <button
-              onClick={() => setShowMobileSearch(false)}
-              className="p-1.5 rounded-lg hover:bg-accent transition"
-            >
-              <X size={18} className="text-muted-foreground" />
-            </button>
-          </div>
-          <div className="flex-1 flex items-center justify-center text-sm text-muted-foreground">
-            Start typing to search…
-          </div>
-        </div>
-      )}
+      <SearchModal isOpen={showSearch} onClose={() => setShowSearch(false)} />
     </>
   );
 }
