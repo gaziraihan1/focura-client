@@ -61,7 +61,7 @@ describe('TopNavbar', () => {
   it('renders search bar with placeholder', () => {
     render(<TopNavbar {...defaultProps} />)
 
-    expect(screen.getByText('Search tasks, projects, files…')).toBeInTheDocument()
+    expect(screen.getByText('Search workspaces, projects, files…')).toBeInTheDocument()
   })
 
   it('renders "New Task" link', () => {
@@ -194,7 +194,7 @@ describe('TopNavbar', () => {
 
     render(<TopNavbar {...defaultProps} />)
 
-    const searchBar = screen.getByText('Search tasks, projects, files…').closest('button')!
+    const searchBar = screen.getByText('Search workspaces, projects, files…').closest('button')!
     await user.click(searchBar)
 
     expect(screen.getByTestId('search-modal')).toBeInTheDocument()

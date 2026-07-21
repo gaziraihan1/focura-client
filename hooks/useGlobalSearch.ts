@@ -2,59 +2,27 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
+import { useWorkspaces, type Workspace } from "./useWorkspace";
 import type { ProjectDetails } from "./useProjects";
 
 export interface SearchResult {
   id: string;
   title: string;
-  type: "task" | "project" | "file";
+  type: "project" | "file" | "workspace";
   subtitle: string;
   href: string;
-  status?: string;
   color?: string;
 }
 
-interface TaskSearchResult {
-  id: string;
-  title: string;
-  status: string;
-  priority: string;
-  project?: { id: string; slug: string; name: string; color: string; workspace: { id: string; name: string; slug: string } };
-}
+// ─── Project search (server-side) ────────────────────────────────────────────
 
-interface FileSearchResult {
-  id: string;
-  name: string;
-  originalName: string;
-  mimeType: string;
-  project?: { id: string; name: string } | null;
-  task?: { id: string; title: string } | null;
-}
-
-async function searchTasks(query: string): Promise<SearchResult[]> {
+async function searchProjectsFromAPI(
+  query: string
+): Promise<SearchResult[]> {
   try {
-    const params = new URLSearchParams({ search: query, limit: "5" });
-    const result = await api.get<{ tasks: TaskSearchResult[] }>(`/api/v1/tasks?${params}`);
-    const tasks = result?.data?.tasks ?? [];
-    return tasks.map((t) => ({
-      id: t.id,
-      title: t.title,
-      type: "task" as const,
-      subtitle: t.project?.name ?? "Personal task",
-      href: t.project?.workspace?.slug
-        ? `/dashboard/workspaces/${t.project.workspace.slug}/projects/${t.project.slug}/tasks/${t.id}`
-        : `/dashboard/tasks/${t.id}`,
-      status: t.status,
-      color: t.project?.color,
-    }));
-  } catch {
-    return [];
-  }
-}
-
-async function searchProjects(query: string): Promise<SearchResult[]> {
-  try {
-    const result = await api.get<ProjectDetails[]>("/api/v1/projects/user/all");
+    const result = await api.get<ProjectDetails[]>(
+      "/api/v1/projects/user/all"
+    );
     const projects = result?.data ?? [];
     const lower = query.toLowerCase();
     return projects
@@ -79,51 +47,103 @@ async function searchProjects(query: string): Promise<SearchResult[]> {
   }
 }
 
-async function searchFiles(query: string): Promise<SearchResult[]> {
+// ─── File search ─────────────────────────────────────────────────────────────
+
+interface FileSearchResult {
+  id: string;
+  name: string;
+  originalName: string;
+  mimeType: string;
+  project?: { id: string; name: string } | null;
+  task?: { id: string; title: string } | null;
+}
+
+async function searchFilesForWorkspace(
+  query: string,
+  workspaceId: string
+): Promise<SearchResult[]> {
   try {
     const params = new URLSearchParams({ search: query, limit: "5" });
-    const result = await api.get<{ files: FileSearchResult[] }>(`/api/v1/files?${params}`);
+    const result = await api.get<{ files: FileSearchResult[] }>(
+      `/api/v1/file-management/${workspaceId}/files?${params}`
+    );
     const files = result?.data?.files ?? [];
     return files.map((f) => ({
       id: f.id,
       title: f.name,
       type: "file" as const,
       subtitle: f.project?.name ?? f.task?.title ?? "Uploaded file",
-      href: f.project
-        ? `/dashboard/storage`
-        : `/dashboard/storage`,
+      href: `/dashboard/workspaces/${workspaceId}/files`,
     }));
   } catch {
     return [];
   }
 }
 
+// ─── Workspace search (client-side filter) ───────────────────────────────────
+
+function searchWorkspaces(
+  query: string,
+  workspaces: Workspace[] | undefined
+): SearchResult[] {
+  if (!query.trim() || !workspaces) return [];
+  const lower = query.toLowerCase();
+  return workspaces
+    .filter(
+      (w) =>
+        w.name.toLowerCase().includes(lower) ||
+        w.description?.toLowerCase().includes(lower)
+    )
+    .slice(0, 5)
+    .map((w) => ({
+      id: w.id,
+      title: w.name,
+      type: "workspace" as const,
+      subtitle: `${w.plan} plan`,
+      href: `/dashboard/workspaces/${w.slug}`,
+      color: w.color ?? undefined,
+    }));
+}
+
+// ─── Main hook ───────────────────────────────────────────────────────────────
+
 export function useGlobalSearch(query: string) {
   const trimmed = query.trim();
+  const hasQuery = trimmed.length >= 2;
 
-  const { data: tasks = [], isLoading: tasksLoading } = useQuery({
-    queryKey: ["global-search", "tasks", trimmed],
-    queryFn: () => searchTasks(trimmed),
-    enabled: trimmed.length >= 2,
-    staleTime: 30_000,
-  });
+  const { data: workspaces } = useWorkspaces();
 
+  // Projects — fetch all, filter client-side
   const { data: projects = [], isLoading: projectsLoading } = useQuery({
     queryKey: ["global-search", "projects", trimmed],
-    queryFn: () => searchProjects(trimmed),
-    enabled: trimmed.length >= 2,
+    queryFn: () => searchProjectsFromAPI(trimmed),
+    enabled: hasQuery,
     staleTime: 60_000,
   });
 
+  // Files — search across all user workspaces
+  const workspaceIds = workspaces?.map((w) => w.id) ?? [];
   const { data: files = [], isLoading: filesLoading } = useQuery({
-    queryKey: ["global-search", "files", trimmed],
-    queryFn: () => searchFiles(trimmed),
-    enabled: trimmed.length >= 2,
+    queryKey: ["global-search", "files", trimmed, ...workspaceIds],
+    queryFn: async () => {
+      const results = await Promise.all(
+        workspaceIds.map((wid) => searchFilesForWorkspace(trimmed, wid))
+      );
+      return results.flat().slice(0, 5);
+    },
+    enabled: hasQuery && workspaceIds.length > 0,
     staleTime: 30_000,
   });
 
-  const results: SearchResult[] = [...tasks, ...projects, ...files];
-  const isLoading = tasksLoading || projectsLoading || filesLoading;
+  // Workspaces — filter from cache
+  const workspacesResults = searchWorkspaces(trimmed, workspaces);
 
-  return { results, isLoading, hasQuery: trimmed.length >= 2 };
+  const results: SearchResult[] = [
+    ...workspacesResults,
+    ...projects,
+    ...files,
+  ];
+  const isLoading = projectsLoading || filesLoading;
+
+  return { results, isLoading, hasQuery };
 }

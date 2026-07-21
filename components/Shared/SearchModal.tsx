@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Search, FileText, Folder, File, Loader2, Command } from "lucide-react";
+import { Search, Folder, File, Loader2, Command, Briefcase } from "lucide-react";
 import { useGlobalSearch, type SearchResult } from "@/hooks/useGlobalSearch";
 
 interface SearchModalProps {
@@ -10,22 +10,16 @@ interface SearchModalProps {
   onClose: () => void;
 }
 
-const TYPE_ICON: Record<SearchResult["type"], typeof FileText> = {
-  task: FileText,
+const TYPE_ICON: Record<SearchResult["type"], typeof Folder> = {
+  workspace: Briefcase,
   project: Folder,
   file: File,
 };
 
 const TYPE_LABEL: Record<SearchResult["type"], string> = {
-  task: "Task",
+  workspace: "Workspace",
   project: "Project",
   file: "File",
-};
-
-const TYPE_HREF: Record<SearchResult["type"], string> = {
-  task: "/dashboard/tasks",
-  project: "/dashboard/projects",
-  file: "/dashboard/storage",
 };
 
 export function SearchModal({ isOpen, onClose }: SearchModalProps) {
@@ -85,7 +79,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]">
+    <div className="fixed inset-0 z-100 flex items-start justify-center pt-[15vh]">
       {/* Backdrop */}
       <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" onClick={onClose} />
 
@@ -117,7 +111,14 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
           {!hasQuery && (
             <div className="px-4 py-8 text-center text-sm text-muted-foreground">
               <Command size={20} className="mx-auto mb-2 opacity-50" />
-              Type to search across tasks, projects, and files
+              Type to search across workspaces, projects, tasks, and files
+            </div>
+          )}
+
+          {hasQuery && isLoading && (
+            <div className="px-4 py-8 text-center text-sm text-muted-foreground">
+              <Loader2 size={18} className="mx-auto mb-2 animate-spin" />
+              Searching…
             </div>
           )}
 
@@ -164,11 +165,6 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         {item.subtitle}
                       </p>
                     </div>
-                    {item.status && (
-                      <span className="text-[10px] font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded shrink-0">
-                        {item.status.replace("_", " ")}
-                      </span>
-                    )}
                   </button>
                 );
               })}

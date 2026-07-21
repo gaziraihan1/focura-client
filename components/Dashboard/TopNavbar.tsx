@@ -79,7 +79,7 @@ export default function TopNavbar({
             >
               <Search size={15} className="text-muted-foreground shrink-0" />
               <span className="flex-1 text-sm text-muted-foreground text-left min-w-0">
-                Search tasks, projects, files…
+                Search workspaces, projects, files…
               </span>
               <kbd className="hidden lg:inline-flex h-5 select-none items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground shrink-0">
                 <span className="text-xs">⌘</span>K
