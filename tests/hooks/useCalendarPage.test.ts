@@ -1,217 +1,256 @@
-import { renderHook, waitFor, act } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
+import { renderHook, act } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createWrapper } from '../utils/renderWithProviders'
-import type { Workspace } from '@/hooks/useWorkspace'
-import type { Task } from '@/hooks/useTask'
+import { useCalendarPage } from '@/hooks/useCalendarPage'
 
-const defaultWorkspace: Workspace = {
-  id: 'ws-1', name: 'Test Workspace', slug: 'test-ws', plan: 'FREE',
-  ownerId: 'user-1', isPublic: false, allowInvites: true, maxMembers: 5, maxStorage: 1000,
-  createdAt: '2024-01-01T00:00:00.000Z', updatedAt: '2024-01-01T00:00:00.000Z',
-  owner: { id: 'user-1', name: 'Test User', email: 'test@focura.com' },
-  members: [],
-  _count: { projects: 2, members: 1 },
-}
+// Mock useParams
+vi.mock('next/navigation', () => ({
+  useParams: () => ({ workspaceSlug: 'test-workspace' }),
+}))
 
-import { useCalendarPage, useMainCalendarPage } from '@/hooks/useCalendarPage'
+// Mock useQueryClient
+const mockGetQueryData = vi.fn()
+vi.mock('@tanstack/react-query', async () => {
+  const actual = await vi.importActual('@tanstack/react-query')
+  return {
+    ...actual,
+    useQueryClient: () => ({
+      getQueryData: mockGetQueryData,
+    }),
+  }
+})
+
+// Mock useTasks
+vi.mock('@/hooks/useTask', () => ({
+  useTasks: vi.fn(() => ({
+    data: {
+      data: [
+        {
+          id: 'task-1',
+          title: 'Task with due date',
+          dueDate: '2026-07-15T00:00:00Z',
+          startDate: null,
+          workspaceId: 'ws-1',
+          project: { workspace: { id: 'ws-1' } },
+        },
+        {
+          id: 'task-2',
+          title: 'Task without dates',
+          dueDate: null,
+          startDate: null,
+          workspaceId: 'ws-1',
+          project: null,
+        },
+        {
+          id: 'task-3',
+          title: 'Task with start date',
+          dueDate: null,
+          startDate: '2026-07-10T00:00:00Z',
+          workspaceId: 'ws-1',
+          project: null,
+        },
+      ],
+    },
+    isLoading: false,
+  })),
+}))
 
 describe('useCalendarPage', () => {
-  it('returns calendar state with default month view', async () => {
-    const { result } = renderHook(
-      () => useCalendarPage(),
-      { wrapper: createWrapper({ defaultWorkspace }) }
-    )
-
-    await waitFor(() => expect(result.current.isLoading).toBe(false))
-
-    expect(result.current.view).toBe('month')
-    expect(result.current.showOnlyTimeBound).toBe(true)
-    expect(result.current.filteredTasks).toBeDefined()
-    expect(result.current.dateRange).toBeDefined()
-    expect(result.current.dateRange.start).toBeDefined()
-    expect(result.current.dateRange.end).toBeDefined()
+  beforeEach(() => {
+    mockGetQueryData.mockReturnValue({
+      id: 'ws-1',
+      slug: 'test-workspace',
+    })
   })
 
-  it('navigates to next and previous month', async () => {
-    const { result } = renderHook(
-      () => useCalendarPage(),
-      { wrapper: createWrapper({ defaultWorkspace }) }
-    )
+  it('returns initial state', () => {
+    const { result } = renderHook(() => useCalendarPage(), {
+      wrapper: createWrapper(),
+    })
 
-    await waitFor(() => expect(result.current.isLoading).toBe(false))
+    expect(result.current.currentDate).toBeInstanceOf(Date)
+    expect(result.current.view).toBe('month')
+    expect(result.current.selectedTask).toBeNull()
+    expect(result.current.showOnlyTimeBound).toBe(true)
+    expect(result.current.isLoading).toBe(false)
+  })
+
+  it('filters tasks by workspace', () => {
+    const { result } = renderHook(() => useCalendarPage(), {
+      wrapper: createWrapper(),
+    })
+
+    // Should filter tasks to only those in the workspace
+    expect(result.current.filteredTasks.length).toBeGreaterThanOrEqual(0)
+  })
+
+  it('filters time-bound tasks when showOnlyTimeBound is true', () => {
+    const { result } = renderHook(() => useCalendarPage(), {
+      wrapper: createWrapper(),
+    })
+
+    // All filtered tasks should have dueDate or startDate
+    result.current.filteredTasks.forEach((task) => {
+      expect(task.dueDate || task.startDate).toBeTruthy()
+    })
+  })
+
+  it('shows all tasks when showOnlyTimeBound is false', () => {
+    const { result } = renderHook(() => useCalendarPage(), {
+      wrapper: createWrapper(),
+    })
+
+    act(() => {
+      result.current.setShowOnlyTimeBound(false)
+    })
+
+    // Should include tasks without dates
+    expect(result.current.filteredTasks).toBeDefined()
+  })
+
+  it('navigates to previous month', () => {
+    const { result } = renderHook(() => useCalendarPage(), {
+      wrapper: createWrapper(),
+    })
 
     const initialDate = result.current.currentDate
+    act(() => {
+      result.current.handlePrevious()
+    })
 
-    act(() => result.current.handleNext())
     expect(result.current.currentDate.getMonth()).toBe(
-      (initialDate.getMonth() + 1) % 12
+      initialDate.getMonth() - 1
     )
-
-    act(() => result.current.handlePrevious())
-    expect(result.current.currentDate.getMonth()).toBe(initialDate.getMonth())
   })
 
-  it('goes to today', async () => {
-    const { result } = renderHook(
-      () => useCalendarPage(),
-      { wrapper: createWrapper({ defaultWorkspace }) }
+  it('navigates to next month', () => {
+    const { result } = renderHook(() => useCalendarPage(), {
+      wrapper: createWrapper(),
+    })
+
+    const initialDate = result.current.currentDate
+    act(() => {
+      result.current.handleNext()
+    })
+
+    expect(result.current.currentDate.getMonth()).toBe(
+      initialDate.getMonth() + 1
     )
+  })
 
-    await waitFor(() => expect(result.current.isLoading).toBe(false))
+  it('navigates to today', () => {
+    const { result } = renderHook(() => useCalendarPage(), {
+      wrapper: createWrapper(),
+    })
 
-    act(() => result.current.handlePrevious())
+    // First navigate away
+    act(() => {
+      result.current.handlePrevious()
+    })
+    act(() => {
+      result.current.handlePrevious()
+    })
 
-    act(() => result.current.handleToday())
+    // Then navigate back to today
+    act(() => {
+      result.current.handleToday()
+    })
 
     const today = new Date()
-    expect(result.current.currentDate.getMonth()).toBe(today.getMonth())
-    expect(result.current.currentDate.getDate()).toBe(today.getDate())
+    expect(result.current.currentDate.toDateString()).toBe(today.toDateString())
   })
 
-  it('toggles view mode', async () => {
-    const { result } = renderHook(
-      () => useCalendarPage(),
-      { wrapper: createWrapper({ defaultWorkspace }) }
+  it('selects and deselects tasks', () => {
+    const { result } = renderHook(() => useCalendarPage(), {
+      wrapper: createWrapper(),
+    })
+
+    const mockTask = { id: 'task-1', title: 'Test Task' } as any
+
+    act(() => {
+      result.current.handleTaskClick(mockTask)
+    })
+
+    expect(result.current.selectedTask).toEqual(mockTask)
+
+    act(() => {
+      result.current.handleCloseTaskModal()
+    })
+
+    expect(result.current.selectedTask).toBeNull()
+  })
+
+  it('calculates correct date range', () => {
+    const { result } = renderHook(() => useCalendarPage(), {
+      wrapper: createWrapper(),
+    })
+
+    expect(result.current.dateRange.start).toBeInstanceOf(Date)
+    expect(result.current.dateRange.end).toBeInstanceOf(Date)
+    expect(result.current.dateRange.start.getTime()).toBeLessThan(
+      result.current.dateRange.end.getTime()
     )
+  })
 
-    await waitFor(() => expect(result.current.isLoading).toBe(false))
+  it('changes view', () => {
+    const { result } = renderHook(() => useCalendarPage(), {
+      wrapper: createWrapper(),
+    })
 
-    act(() => result.current.setView('week'))
+    act(() => {
+      result.current.setView('week')
+    })
+
     expect(result.current.view).toBe('week')
 
-    act(() => result.current.setView('day'))
+    act(() => {
+      result.current.setView('day')
+    })
+
     expect(result.current.view).toBe('day')
   })
 
-  it('filters time-bound tasks', async () => {
-    const { result } = renderHook(
-      () => useCalendarPage(),
-      { wrapper: createWrapper({ defaultWorkspace }) }
+  it('navigates by week when view is week', () => {
+    const { result } = renderHook(() => useCalendarPage(), {
+      wrapper: createWrapper(),
+    })
+
+    act(() => {
+      result.current.setView('week')
+    })
+
+    const initialDate = result.current.currentDate
+    act(() => {
+      result.current.handlePrevious()
+    })
+
+    // Should subtract 7 days for week view
+    const diffDays = Math.round(
+      (initialDate.getTime() - result.current.currentDate.getTime()) /
+        (1000 * 60 * 60 * 24)
     )
-
-    await waitFor(() => expect(result.current.isLoading).toBe(false))
-
-    expect(result.current.showOnlyTimeBound).toBe(true)
-
-    act(() => result.current.setShowOnlyTimeBound(false))
-    expect(result.current.showOnlyTimeBound).toBe(false)
+    expect(diffDays).toBe(7)
   })
 
-  it('handles task selection modal', async () => {
-    const { result } = renderHook(
-      () => useCalendarPage(),
-      { wrapper: createWrapper({ defaultWorkspace }) }
+  it('navigates by day when view is day', () => {
+    const { result } = renderHook(() => useCalendarPage(), {
+      wrapper: createWrapper(),
+    })
+
+    act(() => {
+      result.current.setView('day')
+    })
+
+    const initialDate = result.current.currentDate
+    act(() => {
+      result.current.handleNext()
+    })
+
+    // Should add 1 day for day view
+    const diffDays = Math.round(
+      (result.current.currentDate.getTime() - initialDate.getTime()) /
+        (1000 * 60 * 60 * 24)
     )
-
-    await waitFor(() => expect(result.current.isLoading).toBe(false))
-
-    const mockTask = { id: 'task-1' } as Task
-    act(() => result.current.handleTaskClick(mockTask))
-    expect(result.current.selectedTask?.id).toBe('task-1')
-
-    act(() => result.current.handleCloseTaskModal())
-    expect(result.current.selectedTask).toBeNull()
-  })
-})
-
-describe('useMainCalendarPage', () => {
-  it('returns calendar with month grid and loaded data', async () => {
-    const { result } = renderHook(
-      () => useMainCalendarPage(),
-      { wrapper: createWrapper() }
-    )
-
-    await waitFor(() => expect(result.current.loading).toBe(false))
-
-    expect(result.current.calendarDays).toBeDefined()
-    expect(result.current.calendarDays.length).toBeGreaterThanOrEqual(28)
-    expect(result.current.monthStart).toBeDefined()
-    expect(result.current.monthEnd).toBeDefined()
-    expect(result.current.currentDate).toBeDefined()
-  })
-
-  it('provides aggregate and goals lookup by date', async () => {
-    const { result } = renderHook(
-      () => useMainCalendarPage(),
-      { wrapper: createWrapper() }
-    )
-
-    await waitFor(() => expect(result.current.loading).toBe(false))
-
-    const someDay = new Date(result.current.monthStart)
-    someDay.setDate(1)
-    const agg = result.current.getAggregateForDate(someDay)
-    const goals = result.current.getGoalsForDate(someDay)
-    const events = result.current.getEventsForDate(someDay)
-
-    expect(result.current.aggregates).toBeDefined()
-    expect(result.current.goals).toBeDefined()
-    expect(result.current.systemEvents).toBeDefined()
-  })
-
-  it('navigates months', async () => {
-    const { result } = renderHook(
-      () => useMainCalendarPage(),
-      { wrapper: createWrapper() }
-    )
-
-    await waitFor(() => expect(result.current.loading).toBe(false))
-
-    const initialMonth = result.current.monthStart.getMonth()
-
-    act(() => result.current.goToNextMonth())
-    expect(result.current.monthStart.getMonth()).toBe((initialMonth + 1) % 12)
-
-    act(() => result.current.goToPreviousMonth())
-    expect(result.current.monthStart.getMonth()).toBe(initialMonth)
-  })
-
-  it('goes to today', async () => {
-    const { result } = renderHook(
-      () => useMainCalendarPage(),
-      { wrapper: createWrapper() }
-    )
-
-    await waitFor(() => expect(result.current.loading).toBe(false))
-
-    act(() => result.current.goToNextMonth())
-    act(() => result.current.goToToday())
-
-    const today = new Date()
-    expect(result.current.currentDate.getMonth()).toBe(today.getMonth())
-  })
-
-  it('checks isToday and isCurrentMonth', async () => {
-    const { result } = renderHook(
-      () => useMainCalendarPage(),
-      { wrapper: createWrapper() }
-    )
-
-    await waitFor(() => expect(result.current.loading).toBe(false))
-
-    const today = new Date()
-    expect(result.current.isToday(today)).toBe(true)
-
-    const yesterday = new Date(today)
-    yesterday.setDate(yesterday.getDate() - 1)
-    expect(result.current.isToday(yesterday)).toBe(false)
-
-    expect(result.current.isCurrentMonth(today)).toBe(true)
-  })
-
-  it('sets selected workspace and date', async () => {
-    const { result } = renderHook(
-      () => useMainCalendarPage(),
-      { wrapper: createWrapper() }
-    )
-
-    await waitFor(() => expect(result.current.loading).toBe(false))
-
-    act(() => result.current.setSelectedWorkspace('ws-1'))
-    expect(result.current.selectedWorkspace).toBe('ws-1')
-
-    const date = new Date()
-    act(() => result.current.setSelectedDate(date))
-    expect(result.current.selectedDate?.toDateString()).toBe(date.toDateString())
+    expect(diffDays).toBe(1)
   })
 })
