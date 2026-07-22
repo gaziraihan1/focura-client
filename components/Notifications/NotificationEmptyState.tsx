@@ -1,15 +1,12 @@
 import { Bell } from "lucide-react";
+import { EmptyState as SharedEmptyState } from "@/components/Shared/EmptyState";
 
 export function NotificationEmptyState() {
   return (
-    <div className="text-center py-12">
-      <Bell className="w-12 h-12 mx-auto text-muted-foreground mb-3 opacity-50" />
-      <p className="text-sm font-medium text-muted-foreground">
-        No notifications yet
-      </p>
-      <p className="text-xs text-muted-foreground mt-1">
-        We&apos;ll notify you when something happens
-      </p>
-    </div>
+    <SharedEmptyState
+      icon={Bell}
+      title="No notifications yet"
+      description="We'll notify you when something happens"
+    />
   );
 }

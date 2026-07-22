@@ -1,5 +1,7 @@
 import { CheckCircle2 } from "lucide-react";
 import { WorkspaceRole } from "@/hooks/useWorkspace"
+import { EmptyState as SharedEmptyState } from "@/components/Shared/EmptyState";
+
 interface EmptyStateProps {
   hasFilters: boolean;
   searchQuery: string;
@@ -13,25 +15,24 @@ export function EmptyState({
   onCreateTask,
   memberRole,
 }: EmptyStateProps) {
+  const showCreate = !searchQuery && !hasFilters && memberRole !== "GUEST";
+
   return (
     <div className="text-center py-12 rounded-xl bg-card border border-border">
-      <CheckCircle2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-      <h3 className="text-xl font-semibold text-foreground mb-2">
-        {hasFilters ? "No tasks match your filters" : "No tasks yet"}
-      </h3>
-      <p className="text-muted-foreground mb-6">
-        {hasFilters
-          ? "Try adjusting your search or filters"
-          : "Create your first task to get started"}
-      </p>
-      {!searchQuery && !hasFilters && memberRole !== "GUEST" && (
-        <button
-          onClick={onCreateTask}
-          className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
-        >
-          Create Task
-        </button>
-      )}
+      <SharedEmptyState
+        icon={CheckCircle2}
+        title={hasFilters ? "No tasks match your filters" : "No tasks yet"}
+        description={
+          hasFilters
+            ? "Try adjusting your search or filters"
+            : "Create your first task to get started"
+        }
+        action={
+          showCreate
+            ? { label: "Create Task", onClick: onCreateTask }
+            : undefined
+        }
+      />
     </div>
   );
 }

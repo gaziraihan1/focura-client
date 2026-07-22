@@ -20,6 +20,7 @@ export async function proxy(request: NextRequest) {
     path.startsWith("/authentication/verify-email");
   const isProtectedRoute =
     path.startsWith("/dashboard") || path.startsWith("/admin-dashboard");
+  const isAdminRoute = path.startsWith("/admin-dashboard");
 
   // Redirect authenticated users away from auth entry pages (login, register, etc.)
   if (isAuthPage && !isPostAuthPage && token) {
@@ -34,11 +35,13 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // All authentication is now handled via Authorization header in axios
-  // No need to manage cookies in the proxy
+  // Enforce admin role for admin routes
+  if (isAdminRoute && token && token.role !== "ADMIN" && token.role !== "SUPER_ADMIN") {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
 
   const response = NextResponse.next();
-  
+
   // Optional: Add debug headers in development
   if (token && process.env.NODE_ENV === 'development') {
     response.headers.set('X-User-Email', token.email || '');

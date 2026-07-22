@@ -1,4 +1,4 @@
-import { metrics } from "@/constants/features.costants";
+import { metrics } from "@/constants/features.constants";
 
 export default function Metrics() {
   return (

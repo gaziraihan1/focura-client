@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { features, metrics, cases } from '@/constants/features.costants'
+import { features, metrics, cases } from '@/constants/features.constants'
 
 describe('features.constants', () => {
   describe('features', () => {

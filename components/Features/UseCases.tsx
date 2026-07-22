@@ -1,6 +1,6 @@
 "use client";
 
-import { cases } from "@/constants/features.costants";
+import { cases } from "@/constants/features.constants";
 import Image from "next/image";
 
 export default function UseCases() {
