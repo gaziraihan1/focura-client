@@ -1,3 +1,4 @@
+import React from 'react'
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { DueDateBadge, DueDateIndicator } from '@/components/Shared/DueDateBadge'
@@ -6,7 +7,7 @@ import type { Task } from '@/hooks/useTask'
 // ─── Mocks ─────────────────────────────────────────────────────────────────────
 
 vi.mock('lucide-react', () => {
-  const React = require('react')
+
   const mock = (name: string) => {
     const Cmp = (props: Record<string, unknown>) =>
       React.createElement('svg', { 'data-testid': `${name}-icon`, ...props })

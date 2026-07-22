@@ -115,14 +115,14 @@ describe('GeneralSettingsTab', () => {
 
   it('calls onSave when save button is clicked', () => {
     const onSave = vi.fn()
-    render(<GeneralSettingsTab {...defaultProps} onSave={onSave} />)
+    render(<GeneralSettingsTab {...defaultProps} initialData={{ ...defaultProps.formData, name: 'Old Name' }} onSave={onSave} />)
     fireEvent.click(screen.getByText('Save Changes'))
     expect(onSave).toHaveBeenCalledOnce()
   })
 
   it('shows loading state when updating', () => {
     render(<GeneralSettingsTab {...defaultProps} isUpdating={true} />)
-    const btn = screen.getByText('Save Changes').closest('button')
+    const btn = screen.getByText('Saving...').closest('button')
     expect(btn).toBeDisabled()
   })
 

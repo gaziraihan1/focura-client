@@ -27,8 +27,16 @@ vi.mock('next-themes', () => ({
 }))
 
 vi.mock('react-hot-toast', () => ({
+  __esModule: true,
+  default: {
+    success: vi.fn(),
+    error: vi.fn(),
+    loading: vi.fn(),
+  },
   toast: {
     success: vi.fn(),
+    error: vi.fn(),
+    loading: vi.fn(),
   },
 }))
 

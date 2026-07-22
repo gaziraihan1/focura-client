@@ -28,7 +28,7 @@ describe('DeleteWorkspaceModal', () => {
 
   it('displays workspace name in warning text', () => {
     render(<DeleteWorkspaceModal {...defaultProps} />)
-    expect(screen.getByText('My Workspace')).toBeInTheDocument()
+    expect(screen.getAllByText('My Workspace').length).toBeGreaterThanOrEqual(1)
   })
 
   it('displays delete warning text', () => {
@@ -39,6 +39,7 @@ describe('DeleteWorkspaceModal', () => {
 
   it('calls onDelete when delete button is clicked', () => {
     render(<DeleteWorkspaceModal {...defaultProps} />)
+    fireEvent.change(screen.getByPlaceholderText('My Workspace'), { target: { value: 'My Workspace' } })
     const deleteBtn = screen.getByText('Delete Permanently').closest('button')!
     fireEvent.click(deleteBtn)
     expect(defaultProps.onDelete).toHaveBeenCalledTimes(1)
@@ -83,6 +84,7 @@ describe('DeleteWorkspaceModal', () => {
 
   it('delete button is not disabled when isDeleting is false', () => {
     render(<DeleteWorkspaceModal {...defaultProps} isDeleting={false} />)
+    fireEvent.change(screen.getByPlaceholderText('My Workspace'), { target: { value: 'My Workspace' } })
     const deleteBtn = screen.getByText('Delete Permanently').closest('button')!
     expect(deleteBtn).not.toBeDisabled()
   })

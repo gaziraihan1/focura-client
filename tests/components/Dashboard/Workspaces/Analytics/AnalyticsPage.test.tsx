@@ -1,3 +1,4 @@
+import React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 
@@ -30,7 +31,7 @@ vi.mock('date-fns', () => ({
 }))
 
 vi.mock('lucide-react', () => {
-  const React = require('react')
+
   const mock = (name: string) => {
     const Cmp = (props: Record<string, unknown>) => React.createElement('svg', { 'data-testid': `${name}-icon`, ...props })
     Cmp.displayName = name

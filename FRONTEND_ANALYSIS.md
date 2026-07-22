@@ -245,12 +245,18 @@ context/                # 3 providers: Query, Toast, WorkspacePlan
 - **New hooks**: `useProjectAnalytics.ts` (173 lines), `useProjectAnalyticsPage.ts` (91 lines)
 
 ### Workspace Settings (NEW)
-**Grade: B | Rate: 6/5/10**
-*Workspace-level settings with member management, danger zone.*
+**Grade: S | Rate: 9.0/10** (up from B/6.5)
+*Production-ready settings with proper ARIA, type-to-confirm, skeleton loading, dirty state tracking.*
 - **7 components** in `Dashboard/Workspaces/WorkspaceSettings/`:
-  - `GeneralSettingsTab`, `MembersSettingsTab`, `DangerZoneTab`
-  - `WorkspaceInviteMemberModal`, `DeleteWorkspaceModal`
-  - `WorkspacesSettingsHeader`, `WorkspacesSettingsTabs`
+  - `GeneralSettingsTab` — name (with maxLength, char counter, `aria-required`, `aria-invalid`), description (with counter), color picker (with `role="radiogroup"`, `aria-label` per color), public/invite toggles, unsaved changes banner, dirty state tracking
+  - `MembersSettingsTab` — member list with `role="list"`/`role="listitem"`, `sr-only` labels on selects, `aria-label` on remove buttons, Crown icon with `aria-label="Owner"`
+  - `DangerZoneTab` — leave/delete with danger styling, clear warning text
+  - `WorkspaceInviteMemberModal` — email + role with `useFocusTrap`, Escape, body scroll lock, `role="dialog"`, `aria-labelledby`, label-input pairs
+  - `DeleteWorkspaceModal` — **type-to-confirm** (must type workspace name to enable delete), `role="dialog"`, `aria-modal`, `aria-describedby`, focus trap, `aria-label` on delete button
+  - `WorkspacesSettingsHeader` — clean h1 + subtitle
+  - `WorkspacesSettingsTabs` — **full ARIA tab pattern** (`role="tablist"`, `role="tab"`, `aria-selected`, `aria-controls`, `role="tabpanel"`), **arrow key navigation** (Left/Right/Up/Down/Home/End), roving tabindex
+- **Skeleton loading** — `SettingsSkeleton` component with animated placeholders instead of `return null`
+- **Dirty state tracking** — unsaved changes banner when form is modified, Save button disabled when no changes
 
 ### Team Tasks (NEW)
 **Grade: B+ | Rate: 7/10**
@@ -395,7 +401,7 @@ context/                # 3 providers: Query, Toast, WorkspacePlan
 | **SSE notification layer** | End-to-end SSE + reconnection + deduplication in `useNotifications` is production-viable. |
 | **Test culture** | 124 test files + CI integration + MSW mocking = solid foundation. Coverage doubled since last analysis. |
 | **Rich domain model** | Tasks, projects, workspaces, meetings, focus sessions, announcements, labels, storage, analytics — the type system is comprehensive (31 type files). |
-| **Complete Settings System** | All 12 settings modules fully implemented with live forms (Account, Appearance, Notifications, Integrations, API & Tokens, Capacity & Schedule, Security, Workspace General, Members & Roles, Billing, Workspace Integrations, Branding). |
+| **Complete Settings System** | All 12 settings modules fully implemented with live forms (Account, Appearance, Notifications, Integrations, API & Tokens, Capacity & Schedule, Security, Workspace General, Members & Roles, Billing, Workspace Integrations, Branding). Workspace Settings upgraded to S (9.0) with ARIA tabs, type-to-confirm, skeleton loading, dirty state. |
 | **Admin dashboard** | Fully functional and visually polished with Recharts visualizations. |
 | **Workspace Usage Analytics** | Comprehensive analytics module with plan gating, code splitting, and 14 components. |
 | **Storage Management** | Full-featured file management with 39 components, grid/list views, previews, and admin tools. |
@@ -423,7 +429,7 @@ context/                # 3 providers: Query, Toast, WorkspacePlan
 | **Architecture** | S | 9.0 | Feature-based, 36 dirs, all hooks <250 lines, route-level loading/error/not-found, shared EmptyState/SkeletonLoader, admin role enforcement in proxy, typo fixed | Workspaces/ mega-module could be split further; types/types.ts monolith could be decomposed |
 | **Authentication** | S | 9.5 | Proactive refresh, request queuing, multi-tab BroadcastChannel, session timeouts (30min inactivity + 7day absolute), CSRF retry, security headers (HSTS, CSP, X-Frame-Options), admin role enforcement, token version tracking | None — production-ready |
 | **Real-time** | A | 8.0 | SSE + reconnect + deduplication | Uni-directional only (no WebSocket) |
-| **Settings** | A- | 8.0 | All 12 settings forms functional | Needs integration tests for API-backed forms |
+| **Settings** | S | 9.0 | All 12 settings modules fully implemented with live forms, ARIA tab pattern, type-to-confirm deletion, skeleton loading, dirty state tracking, color picker with radiogroup ARIA | Needs integration tests for API-backed forms |
 | **Admin Dashboard** | A | 8.5 | Fully implemented with Recharts | Sub-page coverage unknown |
 | **Workspace Usage** | A- | 8.0 | Plan-gated, code-split, 14 components | New module, battle-testing needed |
 | **Storage** | A- | 8.0 | 39 components, full CRUD + admin | Complex module, needs integration tests |

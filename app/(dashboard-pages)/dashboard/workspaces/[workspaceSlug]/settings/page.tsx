@@ -10,6 +10,36 @@ import { WorkspaceSettingsTabs } from "@/components/Dashboard/Workspaces/Workspa
 import { GeneralSettingsTab } from "@/components/Dashboard/Workspaces/WorkspaceSettings/GeneralSettingsTab";
 import { WorkspaceInviteMemberModal } from "@/components/Dashboard/Workspaces/WorkspaceSettings/WorkspaceInviteMemberModal";
 
+function SettingsSkeleton() {
+  return (
+    <div className="max-w-4xl mx-auto p-3 space-y-6 animate-pulse">
+      {/* Header skeleton */}
+      <div className="space-y-2">
+        <div className="h-8 w-48 rounded-lg bg-muted" />
+        <div className="h-4 w-64 rounded bg-muted" />
+      </div>
+
+      {/* Tabs skeleton */}
+      <div className="flex gap-2 border-b border-border">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-10 w-24 rounded bg-muted" />
+        ))}
+      </div>
+
+      {/* Content skeleton */}
+      <div className="rounded-xl bg-card border border-border p-6 space-y-4">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="space-y-2">
+            <div className="h-4 w-32 rounded bg-muted" />
+            <div className="h-10 w-full rounded-lg bg-muted" />
+          </div>
+        ))}
+        <div className="h-10 w-32 rounded-lg bg-muted" />
+      </div>
+    </div>
+  );
+}
+
 export default function WorkspaceSettingsPage() {
   const params = useParams();
   const slug = params.workspaceSlug as string;
@@ -18,6 +48,7 @@ export default function WorkspaceSettingsPage() {
     workspace,
     members,
     formData,
+    initialFormData,
     errors,
     activeTab,
     setActiveTab,
@@ -41,7 +72,7 @@ export default function WorkspaceSettingsPage() {
     mutations,
   } = useWorkspaceSettings({ slug });
 
-  if (!workspace) return null;
+  if (!workspace) return <SettingsSkeleton />;
 
   return (
     <div className="max-w-4xl mx-auto p-3 space-y-6">
@@ -50,34 +81,53 @@ export default function WorkspaceSettingsPage() {
       <WorkspaceSettingsTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
       {activeTab === "general" && (
-        <GeneralSettingsTab
-          formData={formData}
-          errors={errors}
-          isAdmin={isAdmin}
-          isUpdating={mutations.updateWorkspace.isPending}
-          onUpdateField={updateFormField}
-          onSave={handleSaveGeneral}
-        />
+        <div
+          role="tabpanel"
+          id="tabpanel-general"
+          aria-labelledby="tab-general"
+        >
+          <GeneralSettingsTab
+            formData={formData}
+            initialData={initialFormData}
+            errors={errors}
+            isAdmin={isAdmin}
+            isUpdating={mutations.updateWorkspace.isPending}
+            onUpdateField={updateFormField}
+            onSave={handleSaveGeneral}
+          />
+        </div>
       )}
 
       {activeTab === "members" && (
-        <MembersSettingsTab
-          members={members}
-          isAdmin={isAdmin}
-          isRemovingMember={mutations.removeMember.isPending}
-          onInviteClick={() => setShowInviteModal(true)}
-          onRemoveMember={handleRemoveMember}
-          onUpdateRole={handleUpdateRole}
-        />
+        <div
+          role="tabpanel"
+          id="tabpanel-members"
+          aria-labelledby="tab-members"
+        >
+          <MembersSettingsTab
+            members={members}
+            isAdmin={isAdmin}
+            isRemovingMember={mutations.removeMember.isPending}
+            onInviteClick={() => setShowInviteModal(true)}
+            onRemoveMember={handleRemoveMember}
+            onUpdateRole={handleUpdateRole}
+          />
+        </div>
       )}
 
       {activeTab === "danger" && (
-        <DangerZoneTab
-          isOwner={isOwner}
-          isLeavingWorkspace={mutations.leaveWorkspace.isPending}
-          onLeaveWorkspace={handleLeave}
-          onDeleteWorkspace={() => setShowDeleteModal(true)}
-        />
+        <div
+          role="tabpanel"
+          id="tabpanel-danger"
+          aria-labelledby="tab-danger"
+        >
+          <DangerZoneTab
+            isOwner={isOwner}
+            isLeavingWorkspace={mutations.leaveWorkspace.isPending}
+            onLeaveWorkspace={handleLeave}
+            onDeleteWorkspace={() => setShowDeleteModal(true)}
+          />
+        </div>
       )}
 
       <WorkspaceInviteMemberModal

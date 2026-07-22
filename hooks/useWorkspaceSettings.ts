@@ -191,6 +191,7 @@ export function useWorkspaceSettings({ slug }: UseWorkspaceSettingsProps) {
     workspace,
     members,
     formData,
+    initialFormData,
     errors,
     activeTab,
     setActiveTab,
