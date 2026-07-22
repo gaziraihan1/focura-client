@@ -32,7 +32,15 @@ export function useWorkspaceKanbanPage({
 
   const { data, isLoading } = useTasks(taskFilters);
 
-  const allTasks = useMemo(() => data?.data || [], [data]);
+  // Client-side guard: only show tasks that actually belong to this workspace.
+  const allTasks = useMemo(() => {
+    if (!workspace?.id) return data?.data || [];
+    return (data?.data || []).filter(
+      (t) =>
+        t.workspaceId === workspace.id ||
+        t.project?.workspace?.id === workspace.id,
+    );
+  }, [data, workspace?.id]);
 
   // Scope filtering — identical logic to the global hook
   const scopedTasks = useMemo(() => {

@@ -14,6 +14,7 @@ export interface Task {
   createdBy: { id: string; name: string; image?: string };
   assignees: Array<{ user: { id: string; name: string; image?: string } }>;
   project?: { id: string; slug: string; name: string; color: string; workspace: { id: string; name: string } };
+  workspaceId?: string;
   _count: { comments: number; subtasks: number; files: number };
   createdAt: string;
   updatedAt: string;

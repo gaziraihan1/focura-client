@@ -70,7 +70,17 @@ export function useWorkspaceTasksPage({ workspaceSlug }: UseWorkspaceTasksPagePr
   const sort: TaskSort = useMemo(() => ({ sortBy, sortOrder }), [sortBy, sortOrder]);
 
   const { data: tasksResponse, isLoading, isError } = useTasks(filters, currentPage, pageSize, sort);
-  const tasks = tasksResponse?.data || [];
+  // Client-side guard: only show tasks that actually belong to this workspace.
+  // A task belongs to the workspace if it has workspaceId matching,
+  // or if it's in a project whose workspace matches.
+  const tasks = useMemo(() => {
+    if (!workspace?.id) return tasksResponse?.data || [];
+    return (tasksResponse?.data || []).filter(
+      (t) =>
+        t.workspaceId === workspace.id ||
+        t.project?.workspace?.id === workspace.id,
+    );
+  }, [tasksResponse?.data, workspace?.id]);
   const pagination = tasksResponse?.pagination;
   const { data: stats } = useTaskStats(workspace?.id);
   const { data: qouta } = useWorkspaceQuota(workspace?.id);

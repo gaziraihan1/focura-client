@@ -34,10 +34,14 @@ export function useCalendarPage() {
   const [showOnlyTimeBound, setShowOnlyTimeBound] = useState(true);
 
 
-  const tasks = useMemo(
-    () => tasksResponse?.data ?? [],
-    [tasksResponse?.data],
-  );
+  const tasks = useMemo(() => {
+    if (!workspaceId) return tasksResponse?.data ?? [];
+    return (tasksResponse?.data ?? []).filter(
+      (t) =>
+        t.workspaceId === workspaceId ||
+        t.project?.workspace?.id === workspaceId,
+    );
+  }, [tasksResponse?.data, workspaceId]);
 
   const filteredTasks = useMemo(() => {
     if (!showOnlyTimeBound) return tasks;
