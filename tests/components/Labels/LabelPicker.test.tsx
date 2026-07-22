@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { LabelPicker } from '@/components/Labels/LabelPicker'
-import { createWrapper } from '../utils/renderWithProviders'
+import { createWrapper } from '../../utils/renderWithProviders'
 
 const mockLabels = [
   { id: '1', name: 'Bug', color: '#EF4444', description: 'Bug label', workspaceId: 'ws-1', createdById: 'user-1', createdAt: new Date(), _count: { tasks: 5 } },

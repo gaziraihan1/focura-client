@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { BurnoutTrendsChart } from '@/components/Dashboard/Calendar/BurnoutTrendsChart'
-import { createWrapper } from '../utils/renderWithProviders'
+import { createWrapper } from '../../utils/renderWithProviders'
 import { useBurnoutTrends } from '@/hooks/useBurnoutTrends'
 
 vi.mock('@/hooks/useBurnoutTrends')

@@ -1,5 +1,5 @@
 import { renderHook, waitFor, act } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { createWrapper } from '../utils/renderWithProviders'
 import { useNotifications } from '@/hooks/useNotifications'
 import { server } from '@/tests/mock/server'
@@ -12,13 +12,32 @@ vi.mock('next-auth/react', () => ({
 class MockEventSource {
   static instances: MockEventSource[] = []
   url: string
+  onopen: (() => void) | null = null
   onmessage: ((event: MessageEvent) => void) | null = null
   onerror: ((event: Event) => void) | null = null
   close = vi.fn()
+  readyState = 0
+
+  static CONNECTING = 0
+  static OPEN = 1
+  static CLOSED = 2
 
   constructor(url: string) {
     this.url = url
     MockEventSource.instances.push(this)
+  }
+
+  simulateOpen() {
+    this.readyState = 1
+    this.onopen?.(new Event('open'))
+  }
+
+  simulateMessage(data: unknown) {
+    this.onmessage?.(new MessageEvent('message', { data: JSON.stringify(data) }))
+  }
+
+  simulateError() {
+    this.onerror?.(new Event('error'))
   }
 }
 
@@ -210,6 +229,231 @@ describe('useNotifications', () => {
     await waitFor(() => {
       expect(result.current.notifications).toHaveLength(1)
       expect(result.current.notifications[0].id).toBe('notif-1')
+    })
+  })
+
+  describe('SSE connection management', () => {
+    it('establishes SSE connection when token is available', async () => {
+      server.use(
+        http.get('*/api/v1/notifications', () => {
+          return HttpResponse.json({ data: emptyNotificationsResponse })
+        }),
+        http.get('*/api/v1/notifications/unread-count', () => {
+          return HttpResponse.json({ data: { count: 0 } })
+        })
+      )
+
+      renderHook(() => useNotifications(), {
+        wrapper: createWrapper(),
+      })
+
+      await waitFor(() => {
+        expect(MockEventSource.instances.length).toBeGreaterThan(0)
+      })
+
+      const es = MockEventSource.instances[0]
+      expect(es.url).toContain('/api/v1/notifications/stream')
+      expect(es.url).toContain('token=test-token')
+    })
+
+    it('updates connection status on open', async () => {
+      server.use(
+        http.get('*/api/v1/notifications', () => {
+          return HttpResponse.json({ data: emptyNotificationsResponse })
+        }),
+        http.get('*/api/v1/notifications/unread-count', () => {
+          return HttpResponse.json({ data: { count: 0 } })
+        })
+      )
+
+      const { result } = renderHook(() => useNotifications(), {
+        wrapper: createWrapper(),
+      })
+
+      await waitFor(() => {
+        expect(MockEventSource.instances.length).toBeGreaterThan(0)
+      })
+
+      const es = MockEventSource.instances[0]
+      act(() => {
+        es.simulateOpen()
+      })
+
+      expect(result.current.connectionStatus).toBe('connected')
+    })
+
+    it('receives notification via SSE and updates cache', async () => {
+      server.use(
+        http.get('*/api/v1/notifications', () => {
+          return HttpResponse.json({ data: emptyNotificationsResponse })
+        }),
+        http.get('*/api/v1/notifications/unread-count', () => {
+          return HttpResponse.json({ data: { count: 0 } })
+        })
+      )
+
+      const { result } = renderHook(() => useNotifications(), {
+        wrapper: createWrapper(),
+      })
+
+      await waitFor(() => {
+        expect(MockEventSource.instances.length).toBeGreaterThan(0)
+      })
+
+      const es = MockEventSource.instances[0]
+      act(() => {
+        es.simulateOpen()
+      })
+
+      const newNotification = {
+        id: 'notif-new',
+        type: 'TASK_ASSIGNED',
+        title: 'New Task',
+        message: 'You have a new task',
+        read: false,
+        createdAt: new Date().toISOString(),
+      }
+
+      act(() => {
+        es.simulateMessage(newNotification)
+      })
+
+      await waitFor(() => {
+        expect(result.current.notifications).toHaveLength(1)
+        expect(result.current.notifications[0].id).toBe('notif-new')
+        expect(result.current.unreadCount).toBe(1)
+      })
+    })
+
+    it('deduplicates notifications on reconnect', async () => {
+      server.use(
+        http.get('*/api/v1/notifications', () => {
+          return HttpResponse.json({ data: notificationsResponse })
+        }),
+        http.get('*/api/v1/notifications/unread-count', () => {
+          return HttpResponse.json({ data: { count: 1 } })
+        })
+      )
+
+      const { result } = renderHook(() => useNotifications(), {
+        wrapper: createWrapper(),
+      })
+
+      await waitFor(() => expect(result.current.isLoading).toBe(false))
+      expect(result.current.notifications).toHaveLength(1)
+
+      const es = MockEventSource.instances[0]
+      act(() => {
+        es.simulateOpen()
+      })
+
+      // Simulate receiving the same notification again
+      act(() => {
+        es.simulateMessage(mockNotification)
+      })
+
+      // Should not duplicate
+      await waitFor(() => {
+        expect(result.current.notifications).toHaveLength(1)
+      })
+    })
+
+    it('sets reconnecting status on error', async () => {
+      server.use(
+        http.get('*/api/v1/notifications', () => {
+          return HttpResponse.json({ data: emptyNotificationsResponse })
+        }),
+        http.get('*/api/v1/notifications/unread-count', () => {
+          return HttpResponse.json({ data: { count: 0 } })
+        })
+      )
+
+      const { result } = renderHook(() => useNotifications(), {
+        wrapper: createWrapper(),
+      })
+
+      await waitFor(() => {
+        expect(MockEventSource.instances.length).toBeGreaterThan(0)
+      })
+
+      // Open the connection first
+      act(() => {
+        MockEventSource.instances[0].simulateOpen()
+      })
+
+      expect(result.current.connectionStatus).toBe('connected')
+
+      // Now trigger an error
+      act(() => {
+        MockEventSource.instances[0].simulateError()
+      })
+
+      expect(result.current.connectionStatus).toBe('reconnecting')
+    })
+  })
+
+  describe('connection status', () => {
+    it('exposes connection status', async () => {
+      server.use(
+        http.get('*/api/v1/notifications', () => {
+          return HttpResponse.json({ data: emptyNotificationsResponse })
+        }),
+        http.get('*/api/v1/notifications/unread-count', () => {
+          return HttpResponse.json({ data: { count: 0 } })
+        })
+      )
+
+      const { result } = renderHook(() => useNotifications(), {
+        wrapper: createWrapper(),
+      })
+
+      expect(result.current.connectionStatus).toBeDefined()
+      expect(['connecting', 'connected', 'reconnecting', 'disconnected']).toContain(
+        result.current.connectionStatus
+      )
+    })
+  })
+
+  describe('notification preferences', () => {
+    it('exposes default preferences', async () => {
+      server.use(
+        http.get('*/api/v1/notifications', () => {
+          return HttpResponse.json({ data: emptyNotificationsResponse })
+        }),
+        http.get('*/api/v1/notifications/unread-count', () => {
+          return HttpResponse.json({ data: { count: 0 } })
+        })
+      )
+
+      const { result } = renderHook(() => useNotifications(), {
+        wrapper: createWrapper(),
+      })
+
+      expect(result.current.preferences).toEqual({
+        browserNotifications: false,
+        soundEnabled: true,
+      })
+    })
+
+    it('can update preferences', async () => {
+      server.use(
+        http.get('*/api/v1/notifications', () => {
+          return HttpResponse.json({ data: emptyNotificationsResponse })
+        }),
+        http.get('*/api/v1/notifications/unread-count', () => {
+          return HttpResponse.json({ data: { count: 0 } })
+        })
+      )
+
+      const { result } = renderHook(() => useNotifications(), {
+        wrapper: createWrapper(),
+      })
+
+      act(() => {
+        result.current.updatePreferences({ soundEnabled: false })
+      })
+
+      expect(result.current.preferences.soundEnabled).toBe(false)
     })
   })
 })

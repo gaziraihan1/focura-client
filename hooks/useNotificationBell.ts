@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useNotifications } from "@/hooks/useNotifications";
+import { useNotifications, ConnectionStatus } from "@/hooks/useNotifications";
 
 interface Notification {
   id: string;
@@ -11,6 +11,11 @@ interface Notification {
   createdAt: string;
 }
 
+interface NotificationPreferences {
+  browserNotifications: boolean;
+  soundEnabled: boolean;
+}
+
 export function useNotificationBell() {
   const [showDropdown, setShowDropdown] = useState(false);
   const router = useRouter();
@@ -19,9 +24,13 @@ export function useNotificationBell() {
     notifications,
     unreadCount,
     isLoading,
+    connectionStatus,
+    preferences,
     markAsRead,
     markAllAsRead,
     isMarkingAllAsRead,
+    updatePreferences,
+    enableBrowserNotifications,
   } = useNotifications();
 
   const recentNotifications = notifications.slice(0, 5);
@@ -67,6 +76,21 @@ export function useNotificationBell() {
     return date.toLocaleDateString();
   };
 
+  const getConnectionStatusLabel = (status: ConnectionStatus): string => {
+    switch (status) {
+      case "connected":
+        return "Connected";
+      case "connecting":
+        return "Connecting...";
+      case "reconnecting":
+        return "Reconnecting...";
+      case "disconnected":
+        return "Disconnected";
+    }
+  };
+
+  const isConnected = connectionStatus === "connected";
+
   return {
     showDropdown,
     notifications,
@@ -75,10 +99,16 @@ export function useNotificationBell() {
     badge,
     isLoading,
     isMarkingAllAsRead,
+    connectionStatus,
+    isConnected,
+    connectionStatusLabel: getConnectionStatusLabel(connectionStatus),
+    preferences,
     handleToggleDropdown,
     handleCloseDropdown,
     handleNotificationClick,
     handleMarkAllAsRead,
     formatTimeAgo,
+    updatePreferences,
+    enableBrowserNotifications,
   };
 }

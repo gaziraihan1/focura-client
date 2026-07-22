@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import { createWrapper } from '../utils/renderWithProviders'
+import { createWrapper } from '../../utils/renderWithProviders'
 import AuthForm from '@/components/Authentication/AuthForm'
 import { signIn } from 'next-auth/react'
 

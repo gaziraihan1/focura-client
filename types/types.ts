@@ -493,19 +493,19 @@ export enum NotificationType {
   DEADLINE_REMINDER = "DEADLINE_REMINDER",
 }
 
-export interface Notification {
-  id: string;
-  type: NotificationType;
-  title: string;
-  message: string;
-  read: boolean;
-  actionUrl: string | null;
-  createdAt: Date;
-  readAt: Date | null;
-  userId: string;
-  senderId: string | null;
-  sender?: User;
-}
+// export interface Notification {
+//   id: string;
+//   type: NotificationType;
+//   title: string;
+//   message: string;
+//   read: boolean;
+//   actionUrl: string | null;
+//   createdAt: Date;
+//   readAt: Date | null;
+//   userId: string;
+//   senderId: string | null;
+//   sender?: User;
+// }
 
 
 export interface Integration {

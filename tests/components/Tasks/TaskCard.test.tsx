@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
-import { createWrapper } from '../utils/renderWithProviders'
+import { createWrapper } from '../../utils/renderWithProviders'
 import TaskCard from '@/components/Tasks/TaskCard'
 
 const mockTask = {

@@ -130,5 +130,5 @@ export interface TaskOverview {
 
 export { taskKeys, commentKeys, attachmentKeys, taskOverviewKeys } from "./taskKeys";
 export { useTasks, useTaskOverview, useTaskStats, useTask, useTaskComments, useTaskActivity, useTaskAttachments } from "./useTaskQueries";
-export { useCreateTask, useUpdateTask, useDeleteTask, useUpdateTaskStatus, useAddComment, useUploadAttachment, useDeleteAttachment } from "./useTaskMutations";
-export { usePersonalQuota, useWorkspaceQuota } from "./useTaskQuotas";
+export { useCreateTask, useUpdateTask, useDeleteTask, useUpdateTaskStatus, useUpdateTaskPriority, useAddComment, useUploadAttachment, useDeleteAttachment, useBatchUpdateTaskStatus, useBatchDeleteTasks } from "./useTaskMutations";
+export { usePersonalQuota, useWorkspaceQuota, useInvalidateQuotaOnTaskCreate } from "./useTaskQuotas";

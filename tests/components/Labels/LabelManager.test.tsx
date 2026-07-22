@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react';
 import { LabelManager } from '@/components/Labels/LabelManager'
-import { createWrapper } from '../utils/renderWithProviders'
+import { createWrapper } from '../../utils/renderWithProviders'
 
 vi.mock('next-auth/react', () => ({
   useSession: () => ({

@@ -13,6 +13,9 @@ export default function NotificationBell() {
     badge,
     isLoading,
     isMarkingAllAsRead,
+    connectionStatus,
+    isConnected,
+    connectionStatusLabel,
     handleToggleDropdown,
     handleCloseDropdown,
     handleNotificationClick,
@@ -23,6 +26,15 @@ export default function NotificationBell() {
   return (
     <div className="relative">
       <NotificationBellButton badge={badge} onClick={handleToggleDropdown} />
+
+      {/* Connection status indicator */}
+      {!isConnected && connectionStatus !== "connecting" && (
+        <span
+          className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-amber-500"
+          aria-label={connectionStatusLabel}
+          title={connectionStatusLabel}
+        />
+      )}
 
       {showDropdown && (
         <div className="fixed inset-0 z-30" onClick={handleCloseDropdown} />

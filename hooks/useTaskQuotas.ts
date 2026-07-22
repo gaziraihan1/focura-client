@@ -11,6 +11,15 @@ function msUntilMidnight(): number {
   return midnight.getTime() - now.getTime();
 }
 
+function getSmartRefetchInterval(hasChanges: boolean): number {
+  // If there are recent changes, poll more frequently
+  // Otherwise, use a longer interval to reduce network traffic
+  if (hasChanges) {
+    return 15 * 1000; // 15 seconds when actively using tasks
+  }
+  return 60 * 1000; // 60 seconds when idle
+}
+
 export function usePersonalQuota() {
   const qc = useQueryClient();
 
@@ -32,9 +41,27 @@ export function usePersonalQuota() {
       const response = await api.get<PersonalQuotaInfo>("/api/v1/tasks/quota/personal", { showErrorToast: true });
       return response?.data as PersonalQuotaInfo;
     },
-    staleTime: 0,
-    refetchInterval: 30 * 1000,
-    refetchIntervalInBackground: false,
+    staleTime: 30 * 1000, // Consider data fresh for 30 seconds
+    refetchInterval: (query) => {
+      // Smart polling: check if quota was recently used
+      const data = query.state.data;
+      if (!data) return 30 * 1000;
+
+      // If user has used tasks recently (within last 5 minutes), poll more frequently
+      const resetTime = new Date(data.resetAt).getTime();
+      const now = Date.now();
+      const hoursUntilReset = (resetTime - now) / (1000 * 60 * 60);
+
+      // If reset is within 2 hours, poll more frequently
+      if (hoursUntilReset < 2) {
+        return 10 * 1000;
+      }
+
+      // Normal polling interval
+      return 60 * 1000;
+    },
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 }
 
@@ -62,8 +89,43 @@ export function useWorkspaceQuota(workspaceId: string | undefined) {
       return response?.data as WorkspaceQuotaInfo;
     },
     enabled: !!workspaceId,
-    staleTime: 0,
-    refetchInterval: 20 * 1000,
-    refetchIntervalInBackground: false,
+    staleTime: 30 * 1000, // Consider data fresh for 30 seconds
+    refetchInterval: (query) => {
+      const data = query.state.data;
+      if (!data) return 20 * 1000;
+
+      // If workspace is near quota limit, poll more frequently
+      if (data.isNearLimit) {
+        return 10 * 1000;
+      }
+
+      // If quota is unlimited, poll less frequently
+      if (data.isUnlimited) {
+        return 120 * 1000; // 2 minutes
+      }
+
+      // Normal polling based on remaining quota
+      const remainingPct = data.workspaceRemaining !== null && data.dailyWorkspaceLimit
+        ? data.workspaceRemaining / data.dailyWorkspaceLimit
+        : 1;
+
+      if (remainingPct < 0.2) {
+        // Less than 20% remaining - poll more frequently
+        return 15 * 1000;
+      }
+
+      return 60 * 1000;
+    },
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
+}
+
+export function useInvalidateQuotaOnTaskCreate() {
+  const qc = useQueryClient();
+
+  return () => {
+    qc.invalidateQueries({ queryKey: taskKeys.personalQuota() });
+    qc.invalidateQueries({ queryKey: taskKeys.quotas() });
+  };
 }
