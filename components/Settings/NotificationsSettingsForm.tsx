@@ -11,6 +11,7 @@ interface NotificationPreferences {
   taskCompleted: boolean;
   taskComments: boolean;
   taskDueSoon: boolean;
+  taskOverdue: boolean;
   mentions: boolean;
   workspaceInvites: boolean;
   projectUpdates: boolean;
@@ -23,6 +24,7 @@ const DEFAULT_PREFS: NotificationPreferences = {
   taskCompleted: true,
   taskComments: true,
   taskDueSoon: true,
+  taskOverdue: true,
   mentions: true,
   workspaceInvites: true,
   projectUpdates: true,
@@ -125,7 +127,8 @@ export function NotificationsSettingsForm() {
             { key: 'taskAssigned' as const, label: 'Task assigned to you', desc: 'When someone assigns you a task' },
             { key: 'taskCompleted' as const, label: 'Task completed', desc: 'When a task you created or are assigned to is completed' },
             { key: 'taskComments' as const, label: 'New comments', desc: 'When someone comments on your tasks' },
-            { key: 'taskDueSoon' as const, label: 'Due date reminders', desc: 'Reminders when tasks are due soon' },
+            { key: 'taskDueSoon' as const, label: 'Due date reminders', desc: 'Reminders when tasks are due soon (e.g., 3h, 6h before)' },
+            { key: 'taskOverdue' as const, label: 'Overdue alerts', desc: 'Alerts when tasks pass their due date without completion' },
           ].map(({ key, label, desc }) => (
             <label key={key} className="flex items-center gap-3 cursor-pointer">
               <input

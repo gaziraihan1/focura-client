@@ -185,6 +185,18 @@ export function useNotifications() {
           ["notifications", "unread-count"],
           (old) => ({ count: (old?.count ?? 0) + 1 })
         );
+
+        // Invalidate task-related queries when due date notifications arrive
+        const taskNotificationTypes = [
+          "TASK_DUE_SOON",
+          "TASK_OVERDUE",
+          "DEADLINE_REMINDER",
+          "TASK_ASSIGNED",
+          "TASK_COMPLETED",
+        ];
+        if (taskNotificationTypes.includes(notification.type)) {
+          qc.invalidateQueries({ queryKey: ["tasks"] });
+        }
       } catch (err) {
         console.error("[SSE] Failed to parse message:", err);
       }
