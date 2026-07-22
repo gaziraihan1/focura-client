@@ -3,7 +3,7 @@ import { api } from "@/lib/axios";
 import { Task, CreateTaskDto } from "./useTask";
 import { taskKeys, commentKeys, attachmentKeys } from "./taskKeys";
 import { ProjectDetails, projectKeys } from "./useProjects";
-import { Activity, activityKeys } from "./useActivity";
+import { activityKeys } from "./useActivity";
 import { TaskComment } from "@/types/task.types";
 import { Attachment } from "@/types/task.types";
 
@@ -82,7 +82,7 @@ export function useUpdateTask() {
 
       // Update task in all list caches
       qc.getQueriesData({ queryKey: taskKeys.lists() }).forEach(([queryKey, listData]) => {
-        if (!listData || !("data" in listData)) return;
+        if (!listData || typeof listData !== "object" || !("data" in listData)) return;
         const tasks = (listData as { data: Task[] }).data;
         const updatedTasks = tasks.map((t) => (t.id === id ? { ...t, ...data } : t));
         qc.setQueryData(queryKey, { ...listData, data: updatedTasks });
@@ -126,7 +126,7 @@ export function useDeleteTask() {
       const listSnapshots: Array<{ queryKey: readonly unknown[]; data: unknown }> = [];
       qc.getQueriesData({ queryKey: taskKeys.lists() }).forEach(([queryKey, data]) => {
         listSnapshots.push({ queryKey, data });
-        if (data && "data" in data) {
+        if (data && typeof data === "object" && "data" in data) {
           const tasks = (data as { data: Task[] }).data;
           qc.setQueryData(queryKey, { ...data, data: tasks.filter((t) => t.id !== taskId) });
         }
@@ -219,7 +219,7 @@ export function useUpdateTaskPriority() {
 
       // Update in all list caches
       qc.getQueriesData({ queryKey: taskKeys.lists() }).forEach(([queryKey, listData]) => {
-        if (!listData || !("data" in listData)) return;
+        if (!listData || typeof listData !== "object" || !("data" in listData)) return;
         const tasks = (listData as { data: Task[] }).data;
         const updatedTasks = tasks.map((t) => (t.id === id ? { ...t, priority } : t));
         qc.setQueryData(queryKey, { ...listData, data: updatedTasks });
@@ -256,11 +256,10 @@ export function useAddComment() {
       const optimisticComment: TaskComment = {
         id: `optimistic-comment-${Date.now()}`,
         content,
-        taskId,
-        parentId: parentId ?? null,
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        author: { id: "current-user", name: "You", email: "" },
+        user: { id: "current-user", name: "You", email: "" },
+        parentId: parentId ?? null,
+        edited: false,
       };
 
       qc.setQueryData<TaskComment[]>(commentKeys.byTask(taskId), (old) => {
@@ -372,7 +371,7 @@ export function useBatchUpdateTaskStatus() {
       // Update task lists
       qc.getQueriesData({ queryKey: taskKeys.lists() }).forEach(([queryKey, listData]) => {
         listSnapshots.push({ queryKey, data: listData });
-        if (listData && "data" in listData) {
+        if (listData && typeof listData === "object" && "data" in listData) {
           const tasks = (listData as { data: Task[] }).data;
           const updatedTasks = tasks.map((t) =>
             taskIds.includes(t.id) ? { ...t, status } : t
@@ -427,7 +426,7 @@ export function useBatchDeleteTasks() {
       const listSnapshots: Array<{ queryKey: readonly unknown[]; data: unknown }> = [];
       qc.getQueriesData({ queryKey: taskKeys.lists() }).forEach(([queryKey, data]) => {
         listSnapshots.push({ queryKey, data });
-        if (data && "data" in data) {
+        if (typeof data === "object" && data !== null && "data" in data) {
           const tasks = (data as { data: Task[] }).data;
           qc.setQueryData(queryKey, {
             ...data,

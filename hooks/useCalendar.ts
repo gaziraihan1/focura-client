@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import type {
   CalendarDayAggregate,
@@ -9,16 +9,22 @@ import type {
   CreateGoalCheckpointInput,
 } from '@/types/calendar.types';
 
+export const calendarKeys = {
+  all: ['calendar'] as const,
+  aggregates: (filters: CalendarFilters) =>
+    [...calendarKeys.all, 'aggregates', filters.startDate.toISOString(), filters.endDate.toISOString(), filters.workspaceId] as const,
+  insights: (filters: CalendarFilters) =>
+    [...calendarKeys.all, 'insights', filters.startDate.toISOString(), filters.endDate.toISOString(), filters.workspaceId] as const,
+  goals: (filters: CalendarFilters) =>
+    [...calendarKeys.all, 'goals', filters.startDate.toISOString(), filters.endDate.toISOString(), filters.workspaceId] as const,
+  systemEvents: (filters: CalendarFilters) =>
+    [...calendarKeys.all, 'systemEvents', filters.startDate.toISOString(), filters.endDate.toISOString(), filters.workspaceId] as const,
+};
+
 export function useCalendarAggregates(filters: CalendarFilters) {
-  const [data, setData] = useState<CalendarDayAggregate[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
+  return useQuery({
+    queryKey: calendarKeys.aggregates(filters),
+    queryFn: async () => {
       const params = new URLSearchParams({
         startDate: filters.startDate.toISOString(),
         endDate: filters.endDate.toISOString(),
@@ -30,35 +36,16 @@ export function useCalendarAggregates(filters: CalendarFilters) {
         { showErrorToast: false }
       );
 
-      if (result?.success && result.data) {
-        setData(result.data);
-      } else {
-        setError(result?.message || 'Failed to fetch aggregates');
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  }, [filters.startDate, filters.endDate, filters.workspaceId]);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  return { data, loading, error, refetch: fetchData };
+      return result?.data ?? [];
+    },
+    staleTime: 5 * 60 * 1000,
+  });
 }
 
 export function useCalendarInsights(filters: CalendarFilters) {
-  const [data, setData] = useState<CalendarInsights | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
+  return useQuery({
+    queryKey: calendarKeys.insights(filters),
+    queryFn: async () => {
       const params = new URLSearchParams({
         startDate: filters.startDate.toISOString(),
         endDate: filters.endDate.toISOString(),
@@ -70,35 +57,18 @@ export function useCalendarInsights(filters: CalendarFilters) {
         { showErrorToast: false }
       );
 
-      if (result?.success && result.data) {
-        setData(result.data);
-      } else {
-        setError(result?.message || 'Failed to fetch insights');
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  }, [filters.startDate, filters.endDate, filters.workspaceId]);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  return { data, loading, error, refetch: fetchData };
+      return result?.data ?? null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
 }
 
 export function useGoalCheckpoints(filters: CalendarFilters) {
-  const [data, setData] = useState<GoalCheckpoint[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const qc = useQueryClient();
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
+  const query = useQuery({
+    queryKey: calendarKeys.goals(filters),
+    queryFn: async () => {
       const params = new URLSearchParams({
         startDate: filters.startDate.toISOString(),
         endDate: filters.endDate.toISOString(),
@@ -110,54 +80,36 @@ export function useGoalCheckpoints(filters: CalendarFilters) {
         { showErrorToast: false }
       );
 
-      if (result?.success && result.data) {
-        setData(result.data);
-      } else {
-        setError(result?.message || 'Failed to fetch goals');
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  }, [filters.startDate, filters.endDate, filters.workspaceId]);
+      return result?.data ?? [];
+    },
+    staleTime: 5 * 60 * 1000,
+  });
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  const createGoal = async (input: CreateGoalCheckpointInput) => {
-    try {
+  const createGoalMutation = useMutation({
+    mutationFn: async (input: CreateGoalCheckpointInput) => {
       const result = await api.post<GoalCheckpoint>(
         '/api/v1/calendar/goals',
         input,
         { showSuccessToast: true }
       );
+      return result?.data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: calendarKeys.goals(filters) });
+    },
+  });
 
-      if (result?.success) {
-        await fetchData();
-        return result.data;
-      } else {
-        throw new Error(result?.message || 'Failed to create goal');
-      }
-    } catch (err) {
-      throw err;
-    }
+  return {
+    ...query,
+    createGoal: createGoalMutation.mutateAsync,
+    isCreating: createGoalMutation.isPending,
   };
-
-  return { data, loading, error, refetch: fetchData, createGoal };
 }
 
 export function useSystemEvents(filters: CalendarFilters) {
-  const [data, setData] = useState<SystemCalendarEvent[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
+  return useQuery({
+    queryKey: calendarKeys.systemEvents(filters),
+    queryFn: async () => {
       const params = new URLSearchParams({
         startDate: filters.startDate.toISOString(),
         endDate: filters.endDate.toISOString(),
@@ -169,59 +121,44 @@ export function useSystemEvents(filters: CalendarFilters) {
         { showErrorToast: false }
       );
 
-      if (result?.success && result.data) {
-        setData(result.data);
-      } else {
-        setError(result?.message || 'Failed to fetch system events');
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  }, [filters.startDate, filters.endDate, filters.workspaceId]);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  return { data, loading, error, refetch: fetchData };
+      return result?.data ?? [];
+    },
+    staleTime: 5 * 60 * 1000,
+  });
 }
 
-export async function initializeCalendar() {
-  try {
-    const result = await api.post<void>(
-      '/api/v1/calendar/initialize',
-      {},
-      { showSuccessToast: false }
-    );
+export function useInitializeCalendar() {
+  const qc = useQueryClient();
 
-    if (!result?.success) {
-      throw new Error(result?.message || 'Failed to initialize calendar');
-    }
-
-    return true;
-  } catch (err) {
-    console.error('Failed to initialize calendar:', err);
-    return false;
-  }
+  return useMutation({
+    mutationFn: async () => {
+      const result = await api.post<void>(
+        '/api/v1/calendar/initialize',
+        {},
+        { showSuccessToast: false }
+      );
+      return result?.success;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: calendarKeys.all });
+    },
+  });
 }
 
-export async function recalculateAggregate(date: Date, workspaceId?: string) {
-  try {
-    const result = await api.post<void>(
-      '/api/v1/calendar/recalculate',
-      { date, workspaceId },
-      { showSuccessToast: false }
-    );
+export function useRecalculateAggregate(filters: CalendarFilters) {
+  const qc = useQueryClient();
 
-    if (!result?.success) {
-      throw new Error(result?.message || 'Failed to recalculate aggregate');
-    }
-
-    return true;
-  } catch (err) {
-    console.error('Failed to recalculate aggregate:', err);
-    return false;
-  }
+  return useMutation({
+    mutationFn: async ({ date, workspaceId }: { date: Date; workspaceId?: string }) => {
+      const result = await api.post<void>(
+        '/api/v1/calendar/recalculate',
+        { date, workspaceId },
+        { showSuccessToast: false }
+      );
+      return result?.success;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: calendarKeys.aggregates(filters) });
+    },
+  });
 }
