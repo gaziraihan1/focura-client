@@ -22,11 +22,6 @@ export function DeleteWorkspaceModal({
   const trapRef = useFocusTrap(isOpen);
   const [confirmText, setConfirmText] = useState("");
 
-  // Reset confirm text when modal opens/closes
-  useEffect(() => {
-    if (!isOpen) setConfirmText("");
-  }, [isOpen]);
-
   // Close on Escape
   useEffect(() => {
     if (!isOpen) return;

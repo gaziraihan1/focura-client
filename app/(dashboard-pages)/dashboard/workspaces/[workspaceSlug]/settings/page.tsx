@@ -142,6 +142,7 @@ export default function WorkspaceSettingsPage() {
       />
 
       <DeleteWorkspaceModal
+        key={showDeleteModal ? "open" : "closed"}
         isOpen={showDeleteModal}
         workspaceName={workspace.name}
         isDeleting={mutations.deleteWorkspace.isPending}

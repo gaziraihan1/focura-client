@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { renderHook } from '@testing-library/react'
 import {
   useTaskDueDate,
@@ -6,6 +6,10 @@ import {
   getUrgencyClasses,
 } from '@/hooks/useTaskDueDate'
 import type { Task } from '@/hooks/useTask'
+
+afterEach(() => {
+  vi.useRealTimers()
+})
 
 // ─── Test Helpers ──────────────────────────────────────────────────────────────
 
@@ -169,13 +173,15 @@ describe('useTaskDueDate', () => {
 
   describe('task due today', () => {
     it('isDueToday true', () => {
-      const task = createTask({ dueDate: hoursFromNow(5) })
+      vi.setSystemTime(new Date('2026-07-22T12:00:00'))
+      const task = createTask({ dueDate: '2026-07-22T17:00:00' })
       const { result } = renderHook(() => useTaskDueDate(task))
       expect(result.current.isDueToday).toBe(true)
     })
 
     it('urgency is "due-today"', () => {
-      const task = createTask({ dueDate: hoursFromNow(5) })
+      vi.setSystemTime(new Date('2026-07-22T12:00:00'))
+      const task = createTask({ dueDate: '2026-07-22T17:00:00' })
       const { result } = renderHook(() => useTaskDueDate(task))
       expect(result.current.urgency).toBe('due-today')
     })

@@ -1,5 +1,5 @@
 import React from 'react'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { DueDateBadge, DueDateIndicator } from '@/components/Shared/DueDateBadge'
 import type { Task } from '@/hooks/useTask'
@@ -56,6 +56,10 @@ function hoursAgo(hours: number): string {
 }
 
 // ─── DueDateBadge Tests ────────────────────────────────────────────────────────
+
+afterEach(() => {
+  vi.useRealTimers()
+})
 
 describe('DueDateBadge', () => {
   // ── Rendering ──────────────────────────────────────────────────────────────
@@ -125,7 +129,8 @@ describe('DueDateBadge', () => {
     })
 
     it('applies urgency classes for due-today', () => {
-      const task = createTask({ dueDate: hoursFromNow(5) })
+      vi.setSystemTime(new Date('2026-07-22T12:00:00'))
+      const task = createTask({ dueDate: '2026-07-22T17:00:00' })
       const { container } = render(<DueDateBadge task={task} />)
       const badge = container.firstChild as HTMLElement
       expect(badge.className).toContain('text-orange-600')
@@ -232,7 +237,8 @@ describe('DueDateIndicator', () => {
   })
 
   it('shows orange dot for due-today', () => {
-    const task = createTask({ dueDate: hoursFromNow(5) })
+    vi.setSystemTime(new Date('2026-07-22T12:00:00'))
+    const task = createTask({ dueDate: '2026-07-22T17:00:00' })
     const { container } = render(<DueDateIndicator task={task} />)
     const spans = container.querySelectorAll('span')
     const dot = Array.from(spans).find((s) =>
