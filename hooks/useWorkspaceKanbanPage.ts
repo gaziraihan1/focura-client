@@ -40,7 +40,7 @@ export function useWorkspaceKanbanPage({
         t.workspaceId === workspace.id ||
         t.project?.workspace?.id === workspace.id,
     );
-  }, [data, workspace?.id]);
+  }, [data, workspace]);
 
   // Scope filtering — identical logic to the global hook
   const scopedTasks = useMemo(() => {
