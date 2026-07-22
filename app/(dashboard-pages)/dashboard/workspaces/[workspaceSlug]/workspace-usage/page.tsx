@@ -8,6 +8,8 @@ import { useWorkspaceUsage } from "@/hooks/useWorkspaceUsage";
 import { WorkspaceUsageHeader } from "@/components/Dashboard/Analytics/WorkspaceUsage/WorkspaceUsageHeader";
 import { UsageSnapshot } from "@/components/Dashboard/Analytics/WorkspaceUsage/UsageSnapshot";
 import { PlanLimitsSection } from "@/components/Dashboard/Analytics/WorkspaceUsage/PlanLimitsSection";
+import { SectionErrorBoundary } from "@/components/Dashboard/Analytics/WorkspaceUsage/SectionErrorBoundary";
+import { SectionSkeleton } from "@/components/Dashboard/Analytics/WorkspaceUsage/SectionSkeleton";
 import type { DateRangeFilter } from "@/types/workspace-usage.types";
 import { useWorkspaces } from "@/hooks/useWorkspace";
 import { useWorkspacePlan } from "@/context/workspacePlan/WorkspacePlanContext";
@@ -15,19 +17,31 @@ import { UpgradePlanCard } from "@/components/Shared/UpgradePlanCard";
 
 const EngagementSection = dynamic(
   () => import("@/components/Dashboard/Analytics/WorkspaceUsage/EngagementSection").then((m) => m.EngagementSection),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => <SectionSkeleton rows={4} />,
+  }
 );
 const StorageResourcesSection = dynamic(
   () => import("@/components/Dashboard/Analytics/WorkspaceUsage/StorageResourcesSection").then((m) => m.StorageResourcesSection),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => <SectionSkeleton rows={3} />,
+  }
 );
 const FeatureUsageSection = dynamic(
   () => import("@/components/Dashboard/Analytics/WorkspaceUsage/FeatureUsageSection").then((m) => m.FeatureUsageSection),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => <SectionSkeleton rows={6} />,
+  }
 );
 const GrowthInsightsSection = dynamic(
   () => import("@/components/Dashboard/Analytics/WorkspaceUsage/GrowthInsightsSection").then((m) => m.GrowthInsightsSection),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => <SectionSkeleton rows={3} />,
+  }
 );
 
 export default function WorkspaceUsagePage() {
@@ -41,11 +55,11 @@ export default function WorkspaceUsagePage() {
   const [dateRange, setDateRange]     = useState<DateRangeFilter>("30d");
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const { data, isLoading, isError, refetch } = useWorkspaceUsage(
+  const { data, isLoading, isError, error, refetch } = useWorkspaceUsage(
     workspaceId as string,
-    { enabled: !isFree } // ← skip the fetch entirely when locked
+    { enabled: !isFree, dateRange }
   );
-  
+
   const handleRefresh = async () => {
     setIsRefreshing(true);
     await refetch?.();
@@ -68,24 +82,24 @@ export default function WorkspaceUsagePage() {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-3">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        <p className="text-sm text-muted-foreground">Loading workspace data…</p>
+        <Loader2 className="w-8 h-8 animate-spin text-primary" aria-hidden="true" />
+        <p className="text-sm text-muted-foreground" role="status">Loading workspace data…</p>
       </div>
     );
   }
 
   if (isError || !data) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4" role="alert">
         <div className="p-4 rounded-2xl bg-destructive/10 border border-destructive/20">
-          <AlertCircle className="w-8 h-8 text-destructive" />
+          <AlertCircle className="w-8 h-8 text-destructive" aria-hidden="true" />
         </div>
         <div className="text-center">
           <h2 className="text-base font-semibold text-foreground">
             Failed to load workspace usage
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Please try again or contact support if the issue persists.
+            {error?.message || "Please try again or contact support if the issue persists."}
           </p>
         </div>
         <button
@@ -103,7 +117,7 @@ export default function WorkspaceUsagePage() {
       <WorkspaceUsageHeader
         dateRange={dateRange}
         onDateRangeChange={setDateRange}
-        onExport={() => console.log("Exporting CSV…")}
+        workspaceId={workspaceId!}
         isRefreshing={isRefreshing}
         onRefresh={handleRefresh}
       />
@@ -111,16 +125,29 @@ export default function WorkspaceUsagePage() {
       <UsageSnapshot data={data} />
 
       {data.isAdmin && (
-        <EngagementSection
-          userEngagement={data.userEngagement}
-          projectActivity={data.projectActivity}
-        />
+        <SectionErrorBoundary sectionName="Engagement">
+          <EngagementSection
+            userEngagement={data.userEngagement}
+            projectActivity={data.projectActivity}
+          />
+        </SectionErrorBoundary>
       )}
 
-      <StorageResourcesSection resourceUsage={data.resourceUsage} />
-      <FeatureUsageSection featureUsage={data.featureUsage} />
-      <PlanLimitsSection planLimits={data.planLimits} workspaceSlug={workspaceSlug as string} />
-      <GrowthInsightsSection workspaceGrowth={data.workspaceGrowth} />
+      <SectionErrorBoundary sectionName="Storage & Resources">
+        <StorageResourcesSection resourceUsage={data.resourceUsage} />
+      </SectionErrorBoundary>
+
+      <SectionErrorBoundary sectionName="Feature Usage">
+        <FeatureUsageSection featureUsage={data.featureUsage} />
+      </SectionErrorBoundary>
+
+      <SectionErrorBoundary sectionName="Plan Limits">
+        <PlanLimitsSection planLimits={data.planLimits} workspaceSlug={workspaceSlug as string} />
+      </SectionErrorBoundary>
+
+      <SectionErrorBoundary sectionName="Growth Insights">
+        <GrowthInsightsSection workspaceGrowth={data.workspaceGrowth} />
+      </SectionErrorBoundary>
     </div>
   );
 }

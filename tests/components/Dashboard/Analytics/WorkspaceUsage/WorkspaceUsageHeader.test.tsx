@@ -2,10 +2,18 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { WorkspaceUsageHeader } from '@/components/Dashboard/Analytics/WorkspaceUsage/WorkspaceUsageHeader'
 
+vi.mock('@/hooks/useWorkspaceUsage', () => ({
+  useExportWorkspaceUsage: () => ({
+    exportToCSV: vi.fn().mockResolvedValue(undefined),
+  }),
+}))
+
 const defaultProps = {
   dateRange: '7d' as const,
   onDateRangeChange: vi.fn(),
-  onExport: vi.fn(),
+  workspaceId: 'ws-1',
+  isRefreshing: false,
+  onRefresh: vi.fn(),
 }
 
 describe('WorkspaceUsageHeader', () => {
@@ -30,10 +38,19 @@ describe('WorkspaceUsageHeader', () => {
     expect(onChange).toHaveBeenCalledWith('30d')
   })
 
-  it('calls onExport when export button is clicked', () => {
-    const onExport = vi.fn()
-    render(<WorkspaceUsageHeader {...defaultProps} onExport={onExport} />)
-    fireEvent.click(screen.getByText('Export CSV'))
-    expect(onExport).toHaveBeenCalledTimes(1)
+  it('renders export button', () => {
+    render(<WorkspaceUsageHeader {...defaultProps} />)
+    expect(screen.getByText('Export CSV')).toBeInTheDocument()
+  })
+
+  it('renders refresh button when onRefresh is provided', () => {
+    render(<WorkspaceUsageHeader {...defaultProps} />)
+    expect(screen.getByText('Refresh')).toBeInTheDocument()
+  })
+
+  it('shows spinning icon when refreshing', () => {
+    render(<WorkspaceUsageHeader {...defaultProps} isRefreshing={true} />)
+    const refreshIcon = screen.getByLabelText('Refreshing data')
+    expect(refreshIcon).toBeInTheDocument()
   })
 })

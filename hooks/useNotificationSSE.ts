@@ -271,7 +271,9 @@ export function useNotificationSSE({
     if (eventSourceRef.current && currentTokenRef.current !== backendToken) {
       eventSourceRef.current.close();
       eventSourceRef.current = null;
-      connect();
+      // Defer connect to avoid calling setState synchronously within an effect
+      const timer = setTimeout(() => connect(), 0);
+      return () => clearTimeout(timer);
     }
   }, [backendToken, connect]);
 
