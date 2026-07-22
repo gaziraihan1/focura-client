@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { X, ShieldCheck, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -55,6 +56,7 @@ export function PermissionModal({
   className,
 }: PermissionModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const trapRef    = useFocusTrap(isOpen);
   const config     = operationConfig[operation];
 
   // Close on Escape
@@ -87,6 +89,7 @@ export function PermissionModal({
 
       {/* Panel */}
       <div
+        ref={trapRef}
         className={cn(
           "relative z-10 w-full max-w-md rounded-xl border border-border bg-card shadow-xl",
           "animate-in fade-in-0 zoom-in-95 duration-200",

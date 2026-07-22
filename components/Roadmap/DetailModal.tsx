@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect } from "react";
 import { X } from "lucide-react";
 import { CATEGORY_COLORS, CATEGORY_LABELS, RoadmapItem, STATUS_CONFIG } from "@/lib/roadmapData";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 export default function DetailModal({
   item,
@@ -14,11 +16,22 @@ export default function DetailModal({
 }) {
   const status   = STATUS_CONFIG[item.status];
   const catColor = CATEGORY_COLORS[item.category];
+  const trapRef  = useFocusTrap(true);
 
   // Close on Escape
-  const handleKey = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') onClose();
-  };
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose]);
+
+  // Lock body scroll
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, []);
 
   return (
     <AnimatePresence>
@@ -29,15 +42,16 @@ export default function DetailModal({
         transition={{ duration: 0.18 }}
         className='fixed inset-0 z-50 flex items-center justify-center p-4'
         onClick={onClose}
-        onKeyDown={handleKey}
         role='dialog'
         aria-modal='true'
+        aria-labelledby='roadmap-detail-title'
       >
         {/* Backdrop */}
         <div className='absolute inset-0 bg-neutral-900/50 dark:bg-neutral-950/70 backdrop-blur-sm' />
 
         {/* Panel */}
         <motion.div
+          ref={trapRef}
           initial={{ opacity: 0, scale: 0.95, y: 14 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.97, y: 8 }}
@@ -65,7 +79,7 @@ export default function DetailModal({
                   >
                     {CATEGORY_LABELS[item.category]} · {item.quarter}
                   </p>
-                  <h2 className='text-lg font-bold text-neutral-900 dark:text-neutral-100 leading-tight'>
+                  <h2 id='roadmap-detail-title' className='text-lg font-bold text-neutral-900 dark:text-neutral-100 leading-tight'>
                     {item.title}
                   </h2>
                 </div>

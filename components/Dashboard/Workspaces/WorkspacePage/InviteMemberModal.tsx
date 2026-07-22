@@ -1,6 +1,9 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import { Mail, Loader2 } from "lucide-react";
 import { useInviteMember } from "@/hooks/useWorkspace";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface InviteMemberModalProps {
   workspaceId: string;
@@ -15,8 +18,23 @@ export function InviteMemberModal({
 }: InviteMemberModalProps) {
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<"ADMIN" | "MEMBER" | "GUEST">("MEMBER");
-  
+  const trapRef = useFocusTrap(isOpen);
   const inviteMember = useInviteMember();
+
+  // Close on Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isOpen, onClose]);
+
+  // Lock body scroll
+  useEffect(() => {
+    if (!isOpen) return;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
 
   const handleInvite = async () => {
     if (!inviteEmail) return;
@@ -41,21 +59,26 @@ export function InviteMemberModal({
     <div
       className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-3 sm:p-4"
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="invite-member-page-title"
     >
       <div
+        ref={trapRef}
         className="bg-card rounded-lg sm:rounded-xl border border-border w-full max-w-md p-4 sm:p-6 max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-3 sm:mb-4">
+        <h3 id="invite-member-page-title" className="text-lg sm:text-xl font-semibold text-foreground mb-3 sm:mb-4">
           Invite Team Member
         </h3>
 
         <div className="space-y-3 sm:space-y-4">
           <div>
-            <label className="block text-xs sm:text-sm font-medium text-foreground mb-1.5 sm:mb-2">
+            <label htmlFor="invite-email-page" className="block text-xs sm:text-sm font-medium text-foreground mb-1.5 sm:mb-2">
               Email Address
             </label>
             <input
+              id="invite-email-page"
               type="email"
               value={inviteEmail}
               onChange={(e) => setInviteEmail(e.target.value)}
@@ -65,10 +88,11 @@ export function InviteMemberModal({
           </div>
 
           <div>
-            <label className="block text-xs sm:text-sm font-medium text-foreground mb-1.5 sm:mb-2">
+            <label htmlFor="invite-role-page" className="block text-xs sm:text-sm font-medium text-foreground mb-1.5 sm:mb-2">
               Role
             </label>
             <select
+              id="invite-role-page"
               value={inviteRole}
               onChange={(e) =>
                 setInviteRole(e.target.value as "ADMIN" | "MEMBER" | "GUEST")

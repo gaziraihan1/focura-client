@@ -19,7 +19,7 @@ export default function LayoutWrapper({
     <>
       {!hideLayout && <NavbarMain />}
       {pathname.startsWith("/authentication") && <NavbarAuth />}
-      <main className="min-h-screen">{children}</main>
+      <main id="main-content" className="min-h-screen" tabIndex={-1}>{children}</main>
       {!hideLayout && <FooterMain />}
     </>
   );

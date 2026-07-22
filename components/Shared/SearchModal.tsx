@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Search, Folder, File, Loader2, Command, Briefcase } from "lucide-react";
 import { useGlobalSearch, type SearchResult } from "@/hooks/useGlobalSearch";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const trapRef = useFocusTrap(isOpen);
   const router = useRouter();
   const { results, isLoading, hasQuery } = useGlobalSearch(query);
 
@@ -53,6 +55,13 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   useEffect(() => {
     setSelectedIndex(0);
   }, [flatResults.length]);
+
+  // Lock body scroll
+  useEffect(() => {
+    if (!isOpen) return;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
 
   const navigate = useCallback(
     (href: string) => {
@@ -84,7 +93,13 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
       <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" onClick={onClose} />
 
       {/* Modal */}
-      <div className="relative w-full max-w-lg mx-4 rounded-2xl border border-border bg-popover shadow-2xl shadow-black/20 overflow-hidden">
+      <div
+        ref={trapRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Search"
+        className="relative w-full max-w-lg mx-4 rounded-2xl border border-border bg-popover shadow-2xl shadow-black/20 overflow-hidden"
+      >
         {/* Search input */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
           {isLoading ? (
@@ -99,6 +114,12 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
+            role="combobox"
+            aria-expanded={flatResults.length > 0}
+            aria-controls="search-results-list"
+            aria-activedescendant={flatResults[selectedIndex] ? `search-result-${selectedIndex}` : undefined}
+            aria-label="Search"
+            aria-autocomplete="list"
             className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
           />
           <kbd className="hidden sm:inline-flex h-5 select-none items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
@@ -107,7 +128,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
         </div>
 
         {/* Results */}
-        <div className="max-h-80 overflow-y-auto">
+        <div id="search-results-list" className="max-h-80 overflow-y-auto" role="listbox" aria-label="Search results">
           {!hasQuery && (
             <div className="px-4 py-8 text-center text-sm text-muted-foreground">
               <Command size={20} className="mx-auto mb-2 opacity-50" />
@@ -118,7 +139,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
           {hasQuery && isLoading && (
             <div className="px-4 py-8 text-center text-sm text-muted-foreground">
               <Loader2 size={18} className="mx-auto mb-2 animate-spin" />
-              Searching…
+              <span role="status">Searching…</span>
             </div>
           )}
 
@@ -129,7 +150,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
           )}
 
           {Object.entries(grouped).map(([type, items]) => (
-            <div key={type}>
+            <div key={type} role="group" aria-label={`${TYPE_LABEL[type as SearchResult["type"]]}s`}>
               <div className="px-4 py-1.5 text-[11px] font-medium text-muted-foreground uppercase tracking-wider bg-muted/30">
                 {TYPE_LABEL[type as SearchResult["type"]]}s
               </div>
@@ -139,6 +160,9 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 return (
                   <button
                     key={`${item.type}-${item.id}`}
+                    id={`search-result-${globalIndex}`}
+                    role="option"
+                    aria-selected={globalIndex === selectedIndex}
                     onClick={() => navigate(item.href)}
                     onMouseEnter={() => setSelectedIndex(globalIndex)}
                     className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors ${

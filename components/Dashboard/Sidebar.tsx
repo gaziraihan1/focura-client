@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
@@ -74,6 +74,7 @@ const bottomNavigation: NavItem[] = [
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const navRef = useRef<HTMLElement>(null);
 
   const toggleExpand = (name: string) => {
     setExpandedItems((prev) =>
@@ -91,6 +92,39 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     if (item.children) return item.children.some((c) => pathname === c.href);
     return false;
   };
+
+  // Arrow key roving within sidebar nav
+  const handleNavKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (!navRef.current) return;
+    const focusable = Array.from(
+      navRef.current.querySelectorAll<HTMLElement>("a[href], button[aria-expanded]")
+    );
+    const currentIndex = focusable.indexOf(document.activeElement as HTMLElement);
+    if (currentIndex === -1) return;
+
+    let nextIndex = currentIndex;
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        nextIndex = (currentIndex + 1) % focusable.length;
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        nextIndex = (currentIndex - 1 + focusable.length) % focusable.length;
+        break;
+      case "Home":
+        e.preventDefault();
+        nextIndex = 0;
+        break;
+      case "End":
+        e.preventDefault();
+        nextIndex = focusable.length - 1;
+        break;
+    }
+    if (nextIndex !== currentIndex) {
+      focusable[nextIndex].focus();
+    }
+  }, []);
 
   return (
     <aside
@@ -114,13 +148,19 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         </Link>
         <button
           onClick={onClose}
-          className="lg:hidden p-1.5 rounded-lg hover:bg-sidebar-accent transition text-sidebar-foreground/60 hover:text-sidebar-foreground"
+          aria-label="Close sidebar"
+          className="lg:hidden p-1.5 rounded-lg hover:bg-sidebar-accent transition text-sidebar-foreground/60 hover:text-sidebar-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <X size={18} />
         </button>
       </div>
 
-      <nav className="flex-1 overflow-y-auto scrollbar-hide px-3 py-4 space-y-0.5">
+      <nav
+        ref={navRef}
+        className="flex-1 overflow-y-auto scrollbar-hide px-3 py-4 space-y-0.5"
+        aria-label="Main navigation"
+        onKeyDown={handleNavKeyDown}
+      >
         {navigation.map((item) => {
           const active = isGroupActive(item);
 
@@ -130,9 +170,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <>
                   <button
                     onClick={() => toggleExpand(item.name)}
+                    aria-expanded={expandedItems.includes(item.name)}
                     className={`
                       w-full flex items-center justify-between px-3 py-2.5 rounded-xl
                       text-sm font-medium transition-all duration-150 group
+                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
                       ${active
                         ? "bg-sidebar-accent text-sidebar-accent-foreground"
                         : "text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
@@ -156,7 +198,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                   </button>
 
                   {expandedItems.includes(item.name) && (
-                    <div className="ml-8 mt-0.5 mb-1 space-y-0.5 border-l border-sidebar-border/60 pl-3">
+                    <div className="ml-8 mt-0.5 mb-1 space-y-0.5 border-l border-sidebar-border/60 pl-3" role="group" aria-label={`${item.name} submenu`}>
                       {item.children.map((child) => {
                         const childActive = pathname === child.href;
                         return (
@@ -164,8 +206,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                             key={child.href}
                             href={child.href}
                             onClick={onClose}
+                            aria-current={childActive ? "page" : undefined}
                             className={`
                               block px-2.5 py-2 rounded-lg text-[13px] transition-all duration-150
+                              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
                               ${childActive
                                 ? "text-sidebar-primary font-semibold bg-sidebar-primary/8"
                                 : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/60"
@@ -183,9 +227,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <Link
                   href={item.href || ""}
                   onClick={onClose}
+                  aria-current={isActive(item.href || "") ? "page" : undefined}
                   className={`
                     flex items-center gap-3 px-3 py-2.5 rounded-xl
                     text-sm font-medium transition-all duration-150
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
                     ${item.href && isActive(item.href)
                       ? "bg-sidebar-accent text-sidebar-accent-foreground"
                       : "text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
@@ -216,9 +262,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             key={item.name}
             href={item.href || ""}
             onClick={onClose}
+            aria-current={isActive(item.href || "") ? "page" : undefined}
             className={`
               flex items-center gap-3 px-3 py-2.5 rounded-xl
               text-sm font-medium transition-all duration-150
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
               ${isActive(item.href || "")
                 ? "bg-sidebar-accent text-sidebar-accent-foreground"
                 : "text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"

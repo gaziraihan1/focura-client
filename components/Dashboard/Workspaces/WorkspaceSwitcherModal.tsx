@@ -1,4 +1,8 @@
+"use client";
+
+import { useEffect } from "react";
 import { Command, Plus } from "lucide-react";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface Workspace {
   id: string;
@@ -30,14 +34,35 @@ export function WorkspaceSwitcherModal({
   onWorkspaceSwitch,
   onCreateWorkspace,
 }: WorkspaceSwitcherModalProps) {
+  const trapRef = useFocusTrap(isOpen);
+
+  // Close on Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isOpen, onClose]);
+
+  // Lock body scroll
+  useEffect(() => {
+    if (!isOpen) return;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
     <div
       className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center pt-20"
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Switch workspace"
     >
       <div
+        ref={trapRef}
         className="bg-card rounded-xl border border-border w-full max-w-md max-h-[80vh] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
@@ -50,14 +75,17 @@ export function WorkspaceSwitcherModal({
             type="text"
             placeholder="Search workspaces..."
             autoFocus
+            aria-label="Search workspaces"
             className="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground outline-none focus:ring-2 ring-primary"
           />
         </div>
 
-        <div className="overflow-y-auto max-h-64">
+        <div className="overflow-y-auto max-h-64" role="listbox" aria-label="Workspaces">
           {allWorkspaces.map((ws) => (
             <button
               key={ws.id}
+              role="option"
+              aria-selected={ws.workspaceSlug === currentSlug || ws.slug === currentSlug}
               onClick={() => onWorkspaceSwitch(ws.slug)}
               className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition ${
                 ws.workspaceSlug === currentSlug || ws.slug === currentSlug

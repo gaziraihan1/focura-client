@@ -84,5 +84,14 @@ export function ProjectCard({
     );
   }
 
-  return <div onClick={onClick}>{CardContent}</div>;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full text-left"
+      aria-label={`Open project ${project?.name}`}
+    >
+      {CardContent}
+    </button>
+  );
 }

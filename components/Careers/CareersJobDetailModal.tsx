@@ -1,9 +1,11 @@
 'use client';
 
+import { useEffect } from 'react';
 import { X, MapPin, Clock, Briefcase, Pin, DollarSign, Calendar, Link as LinkIcon, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { JobPosting } from '@/types/job.types'; // ✅ Changed from JobListItem
 import { DEPARTMENT_LABELS, LOCATION_LABELS, TYPE_LABELS, EXPERIENCE_LABELS } from '@/types/job.types';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 interface CareersJobDetailModalProps {
   job: JobPosting | null; // ✅ Changed from JobListItem | null
@@ -11,6 +13,15 @@ interface CareersJobDetailModalProps {
 }
 
 export const CareersJobDetailModal = ({ job, onClose }: CareersJobDetailModalProps) => {
+  const trapRef = useFocusTrap(!!job);
+
+  // Lock body scroll
+  useEffect(() => {
+    if (!job) return;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, [job]);
+
   if (!job) return null;
 
   const formatSalary = (min: number | null, max: number | null, currency: string): string | null => {
@@ -53,7 +64,7 @@ export const CareersJobDetailModal = ({ job, onClose }: CareersJobDetailModalPro
       <div className='absolute inset-0 bg-neutral-900/50 dark:bg-neutral-950/60 backdrop-blur-sm' />
 
       {/* Modal Content */}
-      <div className='relative z-10 w-full max-w-3xl max-h-[90vh] flex flex-col rounded-2xl bg-background border border-border shadow-2xl overflow-hidden'>
+      <div ref={trapRef} className='relative z-10 w-full max-w-3xl max-h-[90vh] flex flex-col rounded-2xl bg-background border border-border shadow-2xl overflow-hidden'>
         {/* Header */}
         <div className='flex items-start justify-between gap-4 px-5 py-4 sm:px-6 sm:py-5 border-b border-border shrink-0'>
           <div className='min-w-0'>

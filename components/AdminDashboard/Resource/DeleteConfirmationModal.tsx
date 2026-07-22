@@ -1,4 +1,8 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import { AlertTriangle, X } from "lucide-react";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface DeleteConfirmModalProps {
   title: string;
@@ -8,20 +12,36 @@ interface DeleteConfirmModalProps {
 }
 
 export function DeleteConfirmModal({ title, isDeleting, onCancel, onConfirm }: DeleteConfirmModalProps) {
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const trapRef = useFocusTrap(true);
+
+  // Close on Escape
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !isDeleting) onCancel();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isDeleting, onCancel]);
+
+  // Lock body scroll
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
   return (
     <div
+      ref={overlayRef}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="delete-confirm-title"
       onClick={(e) => {
-        if (e.target === e.currentTarget && !isDeleting) onCancel();
-      }}
-      onKeyDown={(e) => {
-        if (e.key === "Escape" && !isDeleting) onCancel();
+        if (e.target === overlayRef.current && !isDeleting) onCancel();
       }}
     >
-      <div className="w-full max-w-sm rounded-lg border border-border bg-card p-5 shadow-lg">
+      <div ref={trapRef} className="w-full max-w-sm rounded-lg border border-border bg-card p-5 shadow-lg">
         <div className="flex items-start gap-3">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-destructive/10">
             <AlertTriangle

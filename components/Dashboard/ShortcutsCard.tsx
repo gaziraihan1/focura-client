@@ -16,8 +16,13 @@ export function ShortcutsCard({ inner }: { inner: ReactNode }) {
   };
 
   return (
-    <div onClick={triggerSwitcher} className="block">
+    <button
+      type="button"
+      onClick={triggerSwitcher}
+      className="block w-full text-left"
+      aria-label="Open workspace switcher (Cmd+K or Ctrl+K)"
+    >
       {inner}
-    </div>
+    </button>
   );
 }

@@ -1,4 +1,8 @@
+"use client";
+
+import { useEffect } from "react";
 import { AlertCircle, Trash2, Loader2 } from "lucide-react";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface DeleteWorkspaceModalProps {
   isOpen: boolean;
@@ -15,14 +19,35 @@ export function DeleteWorkspaceModal({
   onDelete,
   onClose,
 }: DeleteWorkspaceModalProps) {
+  const trapRef = useFocusTrap(isOpen);
+
+  // Close on Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isOpen, onClose]);
+
+  // Lock body scroll
+  useEffect(() => {
+    if (!isOpen) return;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
     <div
       className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="delete-workspace-title"
     >
       <div
+        ref={trapRef}
         className="bg-card rounded-xl border border-border w-full max-w-md p-6"
         onClick={(e) => e.stopPropagation()}
       >
@@ -30,7 +55,7 @@ export function DeleteWorkspaceModal({
           <div className="p-3 rounded-lg bg-red-500/10">
             <AlertCircle className="text-red-500" size={24} />
           </div>
-          <h3 className="text-xl font-semibold text-foreground">
+          <h3 id="delete-workspace-title" className="text-xl font-semibold text-foreground">
             Delete Workspace?
           </h3>
         </div>

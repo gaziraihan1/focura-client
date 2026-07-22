@@ -5,6 +5,7 @@ import { User, Mail, Save, Loader2, Camera, ExternalLink } from 'lucide-react';
 import { useUserProfile, useInvalidateProfile } from '@/hooks/useUserProfile';
 import { api } from '@/lib/axios';
 import toast from 'react-hot-toast';
+import { announce } from '@/lib/a11y';
 
 export function AccountSettingsForm() {
   const { data: profile, isLoading } = useUserProfile();
@@ -30,8 +31,10 @@ export function AccountSettingsForm() {
       await api.put('/api/v1/user/profile', { name, bio, timezone });
       invalidateProfile();
       toast.success('Profile updated successfully');
+      announce('Profile updated successfully');
     } catch {
       toast.error('Failed to update profile');
+      announce('Failed to update profile');
     } finally {
       setSaving(false);
     }
@@ -40,7 +43,7 @@ export function AccountSettingsForm() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" role="status" aria-label="Loading profile" />
       </div>
     );
   }
@@ -61,7 +64,7 @@ export function AccountSettingsForm() {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center text-xl font-semibold text-foreground">
+          <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center text-xl font-semibold text-foreground" aria-hidden="true">
             {name?.charAt(0)?.toUpperCase() || 'U'}
           </div>
           <div>
@@ -87,10 +90,11 @@ export function AccountSettingsForm() {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-2">
+            <label htmlFor="account-display-name" className="block text-xs font-medium text-muted-foreground mb-2">
               Display Name
             </label>
             <input
+              id="account-display-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -100,25 +104,28 @@ export function AccountSettingsForm() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-2">
+            <label htmlFor="account-email" className="block text-xs font-medium text-muted-foreground mb-2">
               Email
             </label>
             <div className="flex items-center gap-2">
               <input
+                id="account-email"
                 type="email"
                 value={email}
                 disabled
                 className="flex-1 rounded-lg border border-border bg-muted px-3 py-2.5 text-sm opacity-60"
+                aria-describedby="account-email-hint"
               />
-              <span className="text-xs text-muted-foreground">Cannot be changed</span>
+              <span id="account-email-hint" className="text-xs text-muted-foreground">Cannot be changed</span>
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-2">
+            <label htmlFor="account-bio" className="block text-xs font-medium text-muted-foreground mb-2">
               Bio
             </label>
             <textarea
+              id="account-bio"
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               rows={3}
@@ -128,10 +135,11 @@ export function AccountSettingsForm() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-2">
+            <label htmlFor="account-timezone" className="block text-xs font-medium text-muted-foreground mb-2">
               Timezone
             </label>
             <select
+              id="account-timezone"
               value={timezone}
               onChange={(e) => setTimezone(e.target.value)}
               className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm"

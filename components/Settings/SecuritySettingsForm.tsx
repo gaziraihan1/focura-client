@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import { Lock, Shield, Save, Loader2, Eye, EyeOff, Smartphone, Monitor, Laptop, SmartphoneIcon, LogOut } from 'lucide-react';
-import { 
-  useChangePassword, 
-  useActiveSessions, 
-  useRevokeSession, 
+import {
+  useChangePassword,
+  useActiveSessions,
+  useRevokeSession,
   useRevokeAllSessions,
-  validatePasswordStrength 
+  validatePasswordStrength
 } from '@/hooks/useSecurity';
+import { announce } from '@/lib/a11y';
 
 export function SecuritySettingsForm() {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -43,6 +44,7 @@ export function SecuritySettingsForm() {
           setCurrentPassword('');
           setNewPassword('');
           setConfirmPassword('');
+          announce('Password updated successfully');
         },
       }
     );
@@ -86,21 +88,24 @@ export function SecuritySettingsForm() {
 
         <div className="space-y-4 max-w-md">
           <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-2">
+            <label htmlFor="current-password" className="block text-xs font-medium text-muted-foreground mb-2">
               Current Password
             </label>
             <div className="relative">
               <input
+                id="current-password"
                 type={showCurrent ? 'text' : 'password'}
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 className="w-full rounded-lg border border-border bg-background px-3 py-2.5 pr-10 text-sm"
                 placeholder="Enter current password"
+                aria-required="true"
               />
               <button
                 type="button"
                 onClick={() => setShowCurrent(!showCurrent)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                aria-label={showCurrent ? 'Hide current password' : 'Show current password'}
               >
                 {showCurrent ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -108,29 +113,33 @@ export function SecuritySettingsForm() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-2">
+            <label htmlFor="new-password" className="block text-xs font-medium text-muted-foreground mb-2">
               New Password
             </label>
             <div className="relative">
               <input
+                id="new-password"
                 type={showNew ? 'text' : 'password'}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="w-full rounded-lg border border-border bg-background px-3 py-2.5 pr-10 text-sm"
                 placeholder="Enter new password"
+                aria-required="true"
+                aria-describedby="password-strength"
               />
               <button
                 type="button"
                 onClick={() => setShowNew(!showNew)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                aria-label={showNew ? 'Hide new password' : 'Show new password'}
               >
                 {showNew ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
             {/* Password Strength Indicator */}
             {newPassword.length > 0 && (
-              <div className="mt-2 space-y-2">
-                <div className="flex gap-1">
+              <div className="mt-2 space-y-2" id="password-strength" aria-live="polite" aria-atomic="true">
+                <div className="flex gap-1" aria-hidden="true">
                   {[1, 2, 3, 4, 5].map((level) => (
                     <div
                       key={level}
@@ -157,10 +166,11 @@ export function SecuritySettingsForm() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-2">
+            <label htmlFor="confirm-password" className="block text-xs font-medium text-muted-foreground mb-2">
               Confirm New Password
             </label>
             <input
+              id="confirm-password"
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -170,9 +180,12 @@ export function SecuritySettingsForm() {
                   : 'border-border'
               }`}
               placeholder="Confirm new password"
+              aria-required="true"
+              aria-invalid={confirmPassword.length > 0 && !passwordsMatch}
+              aria-describedby={confirmPassword.length > 0 && !passwordsMatch ? 'password-match-error' : undefined}
             />
             {confirmPassword.length > 0 && !passwordsMatch && (
-              <p className="text-xs text-red-500 mt-1">Passwords do not match</p>
+              <p id="password-match-error" className="text-xs text-red-500 mt-1" role="alert">Passwords do not match</p>
             )}
           </div>
 
@@ -246,7 +259,7 @@ export function SecuritySettingsForm() {
 
         {sessionsLoading ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" role="status" aria-label="Loading sessions" />
           </div>
         ) : sessions.length === 0 ? (
           <div className="text-center py-8">
@@ -254,12 +267,13 @@ export function SecuritySettingsForm() {
             <p className="text-sm text-muted-foreground">No active sessions found</p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-3" role="list" aria-label="Active sessions">
             {sessions.map((session) => {
               const DeviceIcon = getDeviceIcon(session.device);
               return (
                 <div
                   key={session.id}
+                  role="listitem"
                   className={`flex items-center justify-between p-3 rounded-xl border ${
                     session.isCurrent
                       ? 'border-primary/30 bg-primary/5'
@@ -294,7 +308,7 @@ export function SecuritySettingsForm() {
                       onClick={() => handleRevokeSession(session.id)}
                       disabled={revokeSession.isPending}
                       className="p-2 rounded-lg text-red-500 hover:bg-red-500/10 transition-colors"
-                      title="Revoke session"
+                      aria-label={`Revoke ${session.browser} session`}
                     >
                       {revokeSession.isPending ? (
                         <Loader2 className="w-4 h-4 animate-spin" />

@@ -1,5 +1,9 @@
+"use client";
+
+import { useEffect } from "react";
 import { Mail, Loader2 } from "lucide-react";
 import { WorkspaceRole } from "@/hooks/useWorkspaceSettings";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface InviteMemberModalProps {
   isOpen: boolean;
@@ -22,27 +26,49 @@ export function WorkspaceInviteMemberModal({
   onInvite,
   onClose,
 }: InviteMemberModalProps) {
+  const trapRef = useFocusTrap(isOpen);
+
+  // Close on Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isOpen, onClose]);
+
+  // Lock body scroll
+  useEffect(() => {
+    if (!isOpen) return;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
     <div
       className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="invite-member-title"
     >
       <div
+        ref={trapRef}
         className="bg-card rounded-xl border border-border w-full max-w-md p-6"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-xl font-semibold text-foreground mb-4">
+        <h3 id="invite-member-title" className="text-xl font-semibold text-foreground mb-4">
           Invite Team Member
         </h3>
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
+            <label htmlFor="invite-email" className="block text-sm font-medium text-foreground mb-2">
               Email Address
             </label>
             <input
+              id="invite-email"
               type="email"
               value={email}
               onChange={(e) => onEmailChange(e.target.value)}
@@ -52,10 +78,11 @@ export function WorkspaceInviteMemberModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
+            <label htmlFor="invite-role" className="block text-sm font-medium text-foreground mb-2">
               Role
             </label>
             <select
+              id="invite-role"
               value={role}
               onChange={(e) => onRoleChange(e.target.value as WorkspaceRole)}
               className="w-full px-4 py-3 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"

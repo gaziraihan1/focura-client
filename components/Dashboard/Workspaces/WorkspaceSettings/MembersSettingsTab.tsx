@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { Users, UserPlus, Crown, X } from "lucide-react";
 import { WorkspaceRole } from "@/hooks/useWorkspaceSettings";
@@ -57,10 +59,11 @@ export function MembersSettingsTab({
           </h3>
         </div>
 
-        <div className="divide-y divide-border">
+        <div className="divide-y divide-border" role="list" aria-label="Team members">
           {members.map((member) => (
             <div
               key={member.id}
+              role="listitem"
               className="p-4 sm:p-6 flex sm:items-center justify-between"
             >
               <div className="flex flex-wrap items-center gap-3">
@@ -71,7 +74,7 @@ export function MembersSettingsTab({
                   <p className="font-medium text-foreground flex items-center gap-2">
                     {member.user.name}
                     {member.role === "OWNER" && (
-                      <Crown size={14} className="text-yellow-500" />
+                      <Crown size={14} className="text-yellow-500" aria-label="Owner" />
                     )}
                   </p>
                   <p className="text-sm text-muted-foreground">
@@ -83,17 +86,23 @@ export function MembersSettingsTab({
 
               <div className="flex items-start gap-3">
                 {member.role !== "OWNER" && isAdmin ? (
-                  <select
-                    value={member.role}
-                    onChange={(e) =>
-                      onUpdateRole(member.id, e.target.value as WorkspaceRole)
-                    }
-                    className="px-3 py-1.5 rounded-lg bg-background border border-border text-sm text-foreground focus:ring-2 ring-primary outline-none"
-                  >
-                    <option value="ADMIN">Admin</option>
-                    <option value="MEMBER">Member</option>
-                    <option value="GUEST">Guest</option>
-                  </select>
+                  <>
+                    <label htmlFor={`role-${member.id}`} className="sr-only">
+                      Role for {member.user.name}
+                    </label>
+                    <select
+                      id={`role-${member.id}`}
+                      value={member.role}
+                      onChange={(e) =>
+                        onUpdateRole(member.id, e.target.value as WorkspaceRole)
+                      }
+                      className="px-3 py-1.5 rounded-lg bg-background border border-border text-sm text-foreground focus:ring-2 ring-primary outline-none"
+                    >
+                      <option value="ADMIN">Admin</option>
+                      <option value="MEMBER">Member</option>
+                      <option value="GUEST">Guest</option>
+                    </select>
+                  </>
                 ) : (
                   <span className="px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-sm font-medium">
                     {member.role}
@@ -105,6 +114,7 @@ export function MembersSettingsTab({
                     onClick={() => onRemoveMember(member.id)}
                     disabled={isRemovingMember}
                     className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 transition"
+                    aria-label={`Remove ${member.user.name} from workspace`}
                   >
                     <X size={16} />
                   </button>

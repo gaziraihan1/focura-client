@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { User2, Mail, Trash2, Shield, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import { User2, Mail, Trash2,  Loader2 } from 'lucide-react';
 import { useWorkspace, useWorkspaceMembers, useInviteMember, useRemoveMember, useUpdateMemberRole } from '@/hooks/useWorkspace';
 import toast from 'react-hot-toast';
+import { announce } from '@/lib/a11y';
 
 interface MembersRolesFormProps {
   workspaceSlug: string;
@@ -33,8 +34,10 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
       });
       setInviteEmail('');
       toast.success('Invitation sent');
+      announce('Invitation sent successfully');
     } catch {
       toast.error('Failed to send invitation');
+      announce('Failed to send invitation');
     } finally {
       setInviting(false);
     }
@@ -48,8 +51,10 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
         memberId,
       });
       toast.success('Member removed');
+      announce('Member removed from workspace');
     } catch {
       toast.error('Failed to remove member');
+      announce('Failed to remove member');
     }
   };
 
@@ -62,15 +67,17 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
         role: role as any,
       });
       toast.success('Role updated');
+      announce('Member role updated');
     } catch {
       toast.error('Failed to update role');
+      announce('Failed to update role');
     }
   };
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" role="status" aria-label="Loading members" />
       </div>
     );
   }
@@ -93,10 +100,11 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
 
         <div className="flex items-end gap-3">
           <div className="flex-1">
-            <label className="block text-xs font-medium text-muted-foreground mb-2">
+            <label htmlFor="member-invite-email" className="block text-xs font-medium text-muted-foreground mb-2">
               Email Address
             </label>
             <input
+              id="member-invite-email"
               type="email"
               value={inviteEmail}
               onChange={(e) => setInviteEmail(e.target.value)}
@@ -105,10 +113,11 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
             />
           </div>
           <div className="w-32">
-            <label className="block text-xs font-medium text-muted-foreground mb-2">
+            <label htmlFor="member-invite-role" className="block text-xs font-medium text-muted-foreground mb-2">
               Role
             </label>
             <select
+              id="member-invite-role"
               value={inviteRole}
               onChange={(e) => setInviteRole(e.target.value)}
               className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm"
@@ -143,9 +152,9 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
           </div>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-3" role="list" aria-label="Team members">
           {members.map((member) => (
-            <div key={member.id} className="flex items-center justify-between p-3 rounded-xl border border-border">
+            <div key={member.id} role="listitem" className="flex items-center justify-between p-3 rounded-xl border border-border">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center text-sm font-semibold">
                   {member.user?.name?.charAt(0)?.toUpperCase() || '?'}
@@ -157,7 +166,11 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
               </div>
 
               <div className="flex items-center gap-2">
+                <label htmlFor={`member-role-${member.id}`} className="sr-only">
+                  Role for {member.user?.name}
+                </label>
                 <select
+                  id={`member-role-${member.id}`}
                   value={member.role}
                   onChange={(e) => handleRoleChange(member.id, e.target.value)}
                   className="rounded-lg border border-border bg-background px-2 py-1.5 text-xs"
@@ -172,6 +185,7 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
                   <button
                     onClick={() => handleRemove(member.id)}
                     className="p-1.5 rounded-lg text-red-500 hover:bg-red-500/10 transition-colors"
+                    aria-label={`Remove ${member.user?.name} from workspace`}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

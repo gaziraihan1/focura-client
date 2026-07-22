@@ -3,6 +3,7 @@
 import { logout } from "@/lib/auth/logout";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Menu,
   Search,
@@ -34,6 +35,7 @@ export default function TopNavbar({
   isRefreshing,
   isLoadingProfile,
 }: TopNavbarProps) {
+  const pathname = usePathname();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -68,6 +70,7 @@ export default function TopNavbar({
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <button
               onClick={onMenuClick}
+              aria-label="Open sidebar"
               className="shrink-0 rounded-xl p-2 transition hover:bg-accent lg:hidden"
             >
               <Menu size={20} className="text-foreground" />
@@ -75,6 +78,7 @@ export default function TopNavbar({
 
             <button
               onClick={() => setShowSearch(true)}
+              aria-label="Open search"
               className="hidden md:flex flex-1 max-w-sm items-center gap-2 rounded-xl border border-border bg-muted/40 px-3.5 py-2 hover:border-primary/30 hover:bg-muted/60 transition-all duration-200 group cursor-text"
             >
               <Search size={15} className="text-muted-foreground shrink-0" />
@@ -90,6 +94,7 @@ export default function TopNavbar({
           <div className="flex items-center gap-1.5 shrink-0">
             <button
               onClick={() => setShowSearch(true)}
+              aria-label="Open search"
               className="md:hidden rounded-xl p-2 transition hover:bg-accent"
             >
               <Search size={19} className="text-foreground" />
@@ -110,6 +115,9 @@ export default function TopNavbar({
             <div className="relative">
               <button
                 onClick={() => setShowUserMenu((prev) => !prev)}
+                aria-label="User menu"
+                aria-expanded={showUserMenu}
+                aria-haspopup="true"
                 className="flex items-center gap-2 rounded-xl px-2 py-1.5 transition hover:bg-accent"
               >
                 <div
@@ -180,6 +188,7 @@ export default function TopNavbar({
                           key={href}
                           href={href}
                           onClick={() => setShowUserMenu(false)}
+                          aria-current={pathname === href ? "page" : undefined}
                           className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground transition hover:bg-accent"
                         >
                           <Icon size={16} className="text-muted-foreground" />

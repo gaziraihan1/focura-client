@@ -19,7 +19,10 @@ export default function ThemeToggle() {
   };
 
   return (
-    <button onClick={handleToggle}>
+    <button
+      onClick={handleToggle}
+      aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+    >
       {theme === "dark" ? (
         <Sun size={18} />
       ) : (

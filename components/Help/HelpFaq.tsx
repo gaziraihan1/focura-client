@@ -40,23 +40,15 @@ const FAQ_GROUPS: FAQGroup[] = [
     group: 'Workspaces & Teams',
     items: [
       {
-        q: 'How many workspaces can I create?',
-        a: 'Free plan: up to 3 workspaces owned by you. You can be a member of unlimited workspaces owned by others. Paid plans increase the ownership limit.',
+        q: 'What is the difference between a workspace and a project?',
+        a: 'A workspace is the top-level container for your team. It holds members, billing, and settings. Projects live inside workspaces and group related tasks together. You can have multiple projects per workspace.',
       },
       {
-        q: 'Can I move tasks between workspaces?',
-        a: 'Not directly — tasks belong to a workspace and cannot be transferred. You can duplicate a task\'s details manually. Cross-workspace task migration is a planned feature.',
+        q: 'Can I be a member of multiple workspaces?',
+        a: 'Yes. You can join as many workspaces as you are invited to. Use the workspace switcher in the sidebar to move between them. Each workspace has its own tasks, projects, members, and billing.',
       },
       {
-        q: 'What is the difference between workspace roles?',
-        a: 'Owner: full control — billing, delete workspace, all settings. Admin: manage members, create/delete projects, all task operations. Member: create and manage tasks, view projects they are added to, upload files, use focus sessions. Guests have limited read access.',
-      },
-      {
-        q: 'Can a workspace have multiple owners?',
-        a: 'No — one workspace can have exactly one Owner. The Owner can transfer ownership to another member from Settings → Workspace → Transfer Ownership. After transfer, the previous Owner becomes an Admin.',
-      },
-      {
-        q: 'What happens to tasks when a member is removed?',
+        q: 'What happens when I remove a member from a workspace?',
         a: 'Tasks assigned to the removed member remain in the workspace and retain the assignment in the audit log, but the person can no longer access or act on them. You should manually reassign their tasks before or after removal.',
       },
     ],
@@ -163,41 +155,62 @@ export const HelpFAQ = () => {
         </div>
 
         <div className='space-y-4'>
-          {FAQ_GROUPS.map((group) => (
-            <div key={group.group}>
-              <p className='text-xs font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-3 px-1'>
-                {group.group}
-              </p>
-              <div className='rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-5 divide-y divide-neutral-100 dark:divide-neutral-800'>
-                {group.items.map((item, i) => {
-                  const key = `${group.group}::${i}`;
-                  const isOpen = openKey === key;
-                  return (
-                    <div key={key}>
-                      <button
-                        onClick={() => setOpenKey(isOpen ? null : key)}
-                        aria-expanded={isOpen}
-                        className='w-full flex items-start justify-between gap-4 py-4 text-left group'
-                      >
-                        <span className='text-sm font-semibold text-neutral-800 dark:text-neutral-200 group-hover:text-neutral-600 dark:group-hover:text-neutral-400 transition-colors leading-snug'>
-                          {item.q}
-                        </span>
-                        <ChevronDown
-                          className={cn(
-                            'w-4 h-4 shrink-0 text-neutral-400 transition-transform duration-200 mt-0.5',
-                            isOpen && 'rotate-180'
-                          )}
-                        />
-                      </button>
-                      <div className={cn('overflow-hidden transition-all duration-200', isOpen ? 'max-h-96 pb-4' : 'max-h-0')}>
-                        <p className='text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed'>{item.a}</p>
+          {FAQ_GROUPS.map((group) => {
+            const groupId = `faq-group-${group.group.toLowerCase().replace(/\s+/g, '-')}`;
+            return (
+              <div key={group.group}>
+                <p
+                  id={groupId}
+                  className='text-xs font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-3 px-1'
+                >
+                  {group.group}
+                </p>
+                <div
+                  className='rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-5 divide-y divide-neutral-100 dark:divide-neutral-800'
+                  role="group"
+                  aria-labelledby={groupId}
+                >
+                  {group.items.map((item, i) => {
+                    const key = `${group.group}::${i}`;
+                    const isOpen = openKey === key;
+                    const panelId = `faq-panel-${key}`;
+                    const buttonId = `faq-button-${key}`;
+                    return (
+                      <div key={key}>
+                        <button
+                          id={buttonId}
+                          onClick={() => setOpenKey(isOpen ? null : key)}
+                          aria-expanded={isOpen}
+                          aria-controls={panelId}
+                          className='w-full flex items-start justify-between gap-4 py-4 text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded'
+                        >
+                          <span className='text-sm font-semibold text-neutral-800 dark:text-neutral-200 group-hover:text-neutral-600 dark:group-hover:text-neutral-400 transition-colors leading-snug'>
+                            {item.q}
+                          </span>
+                          <ChevronDown
+                            className={cn(
+                              'w-4 h-4 shrink-0 text-neutral-400 transition-transform duration-200 mt-0.5',
+                              isOpen && 'rotate-180'
+                            )}
+                            aria-hidden="true"
+                          />
+                        </button>
+                        <div
+                          id={panelId}
+                          role="region"
+                          aria-labelledby={buttonId}
+                          className={cn('overflow-hidden transition-all duration-200', isOpen ? 'max-h-96 pb-4' : 'max-h-0')}
+                          hidden={!isOpen}
+                        >
+                          <p className='text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed'>{item.a}</p>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

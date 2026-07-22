@@ -3,6 +3,7 @@
 import { useEffect, useRef }    from 'react';
 import { X, MapPin, Clock, Briefcase, ExternalLink, Mail, ChevronRight } from 'lucide-react';
 import { DEPARTMENT_LABELS, LOCATION_LABELS, TYPE_LABELS, EXPERIENCE_LABELS,JobListItem  } from '@/types/job.types';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 interface CareersApplyModalProps {
   job    : JobListItem | null;
@@ -12,6 +13,7 @@ interface CareersApplyModalProps {
 export const CareersApplyModal = ({ job, onClose }: CareersApplyModalProps) => {
   const overlayRef = useRef<HTMLDivElement>(null);
   const closeRef   = useRef<HTMLButtonElement>(null);
+  const trapRef    = useFocusTrap(!!job);
 
   // Close on Escape
   useEffect(() => {
@@ -42,7 +44,7 @@ export const CareersApplyModal = ({ job, onClose }: CareersApplyModalProps) => {
       aria-modal='true'
       aria-label={`Apply for ${job.title}`}
     >
-      <div className='relative w-full sm:max-w-lg max-h-[92dvh] sm:max-h-[85dvh] overflow-y-auto rounded-t-3xl sm:rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-2xl'>
+      <div ref={trapRef} className='relative w-full sm:max-w-lg max-h-[92dvh] sm:max-h-[85dvh] overflow-y-auto rounded-t-3xl sm:rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-2xl'>
         {/* Header */}
         <div className='sticky top-0 flex items-start justify-between gap-3 px-5 pt-5 pb-4 border-b border-neutral-100 dark:border-neutral-800 bg-white dark:bg-neutral-900 z-10'>
           <div className='min-w-0'>

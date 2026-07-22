@@ -12,8 +12,8 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 function FullPageSpinner() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="flex flex-col items-center gap-4">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted border-t-primary" />
+      <div className="flex flex-col items-center gap-4" role="status" aria-label="Loading dashboard">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted border-t-primary" aria-hidden="true" />
         <p className="text-xs text-muted-foreground animate-pulse">Loading…</p>
       </div>
     </div>
@@ -107,7 +107,7 @@ export default function DashboardShell({
           isRefreshing={isFetching && !!profile}
         />
 
-        <main className="flex-1 px-4 py-5 lg:px-6 lg:py-7 max-w-screen-2xl w-full mx-auto">
+        <main id="main-content" className="flex-1 px-4 py-5 lg:px-6 lg:py-7 max-w-screen-2xl w-full mx-auto" tabIndex={-1}>
           {children}
         </main>
       </div>

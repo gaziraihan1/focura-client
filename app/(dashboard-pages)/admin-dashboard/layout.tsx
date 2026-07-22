@@ -35,8 +35,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+      <div className="flex items-center justify-center min-h-screen" role="status" aria-label="Loading admin dashboard">
+        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" aria-hidden="true" />
       </div>
     );
   }
@@ -119,7 +119,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </header>
 
       {/* ── Page content ──────────────────────────────────────── */}
-      <main className="px-4 sm:px-6 lg:px-8 py-6 max-w-7xl mx-auto">
+      <main id="main-content" className="px-4 sm:px-6 lg:px-8 py-6 max-w-7xl mx-auto" tabIndex={-1}>
         {children}
       </main>
     </div>

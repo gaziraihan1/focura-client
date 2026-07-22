@@ -24,7 +24,14 @@ export function AnnouncementCard({
 }) {
   
   return (
-    <article onClick={() => onOpen(a)} className="group relative rounded-2xl border border-border bg-card overflow-hidden hover:border-border/70 hover:shadow-md transition-all duration-200">
+    <article
+      role="button"
+      tabIndex={0}
+      onClick={() => onOpen(a)}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(a); } }}
+      aria-label={`Open announcement: ${a.title}`}
+      className="group relative rounded-2xl border border-border bg-card overflow-hidden hover:border-border/70 hover:shadow-md transition-all duration-200 cursor-pointer"
+    >
       {/*Top meta bar */}
       <div className="flex items-center justify-between gap-3 px-5 pt-4 pb-0">
         <div className="flex items-center gap-2.5 min-w-0">
@@ -66,7 +73,7 @@ export function AnnouncementCard({
               <button
                 onClick={(e) => { e.stopPropagation(); onTogglePin(a.id); }}
                 disabled={pinningId === a.id}
-                title={a.isPinned ? "Unpin" : "Pin"}
+                aria-label={a.isPinned ? `Unpin announcement: ${a.title}` : `Pin announcement: ${a.title}`}
                 className={[
                   "p-1.5 rounded-lg transition-all",
                   a.isPinned
@@ -85,8 +92,7 @@ export function AnnouncementCard({
               <button
                 onClick={(e) => { e.stopPropagation(); onDelete(a.id); }}
                 disabled={deletingId === a.id}
-                title="Delete"
-                // mobile: always visible; desktop: hidden until hover
+                aria-label={`Delete announcement: ${a.title}`}
                 className="p-1.5 rounded-lg text-muted-foreground/60 hover:text-destructive hover:bg-destructive/10 transition-all opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
               >
                 {deletingId === a.id ? (

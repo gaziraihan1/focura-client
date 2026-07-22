@@ -1,4 +1,8 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import { Loader2 } from "lucide-react";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface DeleteNotificationsDialogProps {
   isOpen: boolean;
@@ -13,12 +17,37 @@ export function DeleteNotificationsDialog({
   onClose,
   onConfirm,
 }: DeleteNotificationsDialogProps) {
+  const trapRef = useFocusTrap(isOpen);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  // Close on Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isOpen, onClose]);
+
+  // Lock body scroll
+  useEffect(() => {
+    if (!isOpen) return;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
-      <div className="bg-popover border border-border rounded-xl p-6 max-w-md w-full shadow-lg">
-        <h3 className="text-lg font-semibold mb-2">
+    <div
+      ref={overlayRef}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm"
+      onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="delete-notifications-title"
+    >
+      <div ref={trapRef} className="bg-popover border border-border rounded-xl p-6 max-w-md w-full shadow-lg">
+        <h3 id="delete-notifications-title" className="text-lg font-semibold mb-2">
           Delete Read Notifications?
         </h3>
         <p className="text-sm text-muted-foreground mb-6">
