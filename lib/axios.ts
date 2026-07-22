@@ -93,6 +93,41 @@ async function getFreshSession(): Promise<AppSession | null> {
   return sessionPromise;
 }
 
+// ─── Request Queue During Refresh ────────────────────────────────────────────
+// When a refresh is in progress, queue requests and replay them after refresh
+// completes. This prevents thundering herd on token expiry.
+
+type QueuedRequest = {
+  resolve: (token: string) => void;
+  reject: (error: Error) => void;
+};
+
+let requestQueue: QueuedRequest[] = [];
+let refreshPromise: Promise<void> | null = null;
+
+function queueRequest(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    requestQueue.push({ resolve, reject });
+  });
+}
+
+function flushRequestQueue(token: string): void {
+  const queue = requestQueue;
+  requestQueue = [];
+  queue.forEach(({ resolve }) => resolve(token));
+}
+
+function rejectRequestQueue(error: Error): void {
+  const queue = requestQueue;
+  requestQueue = [];
+  queue.forEach(({ reject }) => reject(error));
+}
+
+// ─── Token Version Tracking ─────────────────────────────────────────────────
+// Track token version to detect session fixation / rotation
+
+let tokenVersion = 0;
+
 // ─── BroadcastChannel for Multi-Tab Coordination ──────────────────────────────────
 // Per FRONTEND_AUTH_GUIDE.md Pitfall 6: coordinate refresh across tabs
 
@@ -347,21 +382,50 @@ async function attemptBackgroundRefresh(): Promise<void> {
         scheduleBackgroundRefresh(newSession.backendTokenExpiry);
         // Broadcast completion to other tabs
         broadcastAuthEvent({ type: "refresh-complete", tokenExpiry: newSession.backendTokenExpiry });
+        // Flush queued requests with new token
+        flushRequestQueue(newSession.backendToken);
       }
+    } else {
+      // Refresh failed — reject queued requests
+      rejectRequestQueue(new Error("Token refresh failed"));
     }
   } finally {
     isRefreshing = false;
+    refreshPromise = null;
   }
 }
 
 async function doBackgroundRefresh(): Promise<boolean> {
   try {
-    // Force a session refresh by invalidating cache and getting fresh session
+    // Call the backend refresh endpoint to get a new access token
+    const session = await getFreshSession();
+    if (!session?.backendToken) return false;
+
+    const backendUrl = API_BASE_URL;
+    const response = await fetch(`${backendUrl}/api/v1/auth/refresh`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${session.backendToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) return false;
+
+    const data = await response.json();
+    if (data.success && data.data?.accessToken) {
+      // Invalidate cache so next getFreshSession picks up the new token
+      invalidateTokenCache();
+      tokenVersion++;
+      return true;
+    }
+
+    return false;
+  } catch {
+    // Refresh endpoint unreachable — fall back to session re-fetch
     invalidateTokenCache();
     const session = await getFreshSession();
     return !!session?.backendToken;
-  } catch {
-    return false;
   }
 }
 
@@ -442,9 +506,27 @@ axiosInstance.interceptors.response.use(
       config._retried = true;
       invalidateTokenCache();
 
+      // If a refresh is already in progress, queue this request
+      if (isRefreshing && refreshPromise) {
+        try {
+          const newToken = await queueRequest();
+          config.headers.Authorization = `Bearer ${newToken}`;
+          return axiosInstance(config);
+        } catch {
+          return Promise.reject(error);
+        }
+      }
+
+      // Start refresh (or join existing)
+      if (!refreshPromise) {
+        refreshPromise = attemptBackgroundRefresh();
+      }
+
+      await refreshPromise;
+
+      // Check if refresh succeeded by looking for a valid token
       const session = await getFreshSession();
       const token = session?.backendToken;
-
       if (token) {
         cachedBackendToken = token;
         cachedTokenExpiry = Date.now() + TOKEN_CACHE_TTL;
@@ -458,8 +540,9 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(config);
       }
 
-      // Refresh yielded no token — fall through to handleAxiosError as a
+      // Refresh failed — fall through to handleAxiosError as a
       // terminal auth error (TOKEN_EXPIRED will trigger forceLogout there)
+      rejectRequestQueue(new Error("Token refresh failed"));
       return Promise.reject(error);
     }
 

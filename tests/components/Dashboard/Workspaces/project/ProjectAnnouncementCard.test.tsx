@@ -148,7 +148,7 @@ describe('ProjectAnnouncementCard', () => {
 
   it('calls onOpen when card clicked', () => {
     render(<ProjectAnnouncementCard {...defaultProps} />)
-    fireEvent.click(screen.getByRole('article'))
+    fireEvent.click(screen.getByRole('button', { name: /open announcement/i }))
     expect(defaultProps.onOpen).toHaveBeenCalledWith(projectAnnouncement)
   })
 
@@ -204,7 +204,7 @@ describe('ProjectAnnouncementCard', () => {
 
   it('calls onTogglePin when pin button clicked', () => {
     render(<ProjectAnnouncementCard {...defaultProps} />)
-    fireEvent.click(screen.getByTitle('Unpin'))
+    fireEvent.click(screen.getByRole('button', { name: /unpin announcement/i }))
     expect(defaultProps.onTogglePin).toHaveBeenCalledWith('pa-1')
   })
 
@@ -215,49 +215,48 @@ describe('ProjectAnnouncementCard', () => {
 
   it('calls onDelete when delete button clicked', () => {
     render(<ProjectAnnouncementCard {...defaultProps} />)
-    fireEvent.click(screen.getByTitle('Delete'))
+    fireEvent.click(screen.getByRole('button', { name: /delete announcement/i }))
     expect(defaultProps.onDelete).toHaveBeenCalledWith('pa-1')
   })
 
   it('hides manage buttons when cannot manage', () => {
     render(<ProjectAnnouncementCard {...defaultProps} canManage={false} />)
-    expect(screen.queryByTitle('Pin')).not.toBeInTheDocument()
-    expect(screen.queryByTitle('Delete')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /pin/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /delete/i })).not.toBeInTheDocument()
   })
 
   it('hides manage buttons when archived', () => {
     render(<ProjectAnnouncementCard {...defaultProps} isArchived={true} />)
-    expect(screen.queryByTitle('Pin')).not.toBeInTheDocument()
-    expect(screen.queryByTitle('Delete')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /pin/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /delete/i })).not.toBeInTheDocument()
   })
 
   it('shows spinner when pinning', () => {
     render(<ProjectAnnouncementCard {...defaultProps} pinningId="pa-1" />)
-    const pinButtons = screen.getAllByRole('button')
-    const pinBtn = pinButtons.find(btn => btn.getAttribute('title') === 'Unpin')
+    const pinBtn = screen.getByRole('button', { name: /unpin announcement/i })
     expect(pinBtn).toBeDisabled()
   })
 
   it('shows spinner when deleting', () => {
     render(<ProjectAnnouncementCard {...defaultProps} deletingId="pa-1" />)
-    const deleteBtn = screen.getByTitle('Delete')
+    const deleteBtn = screen.getByRole('button', { name: /delete announcement/i })
     expect(deleteBtn).toBeDisabled()
   })
 
   it('shows filled pin icon when pinned', () => {
     render(<ProjectAnnouncementCard {...defaultProps} />)
-    expect(screen.getByTitle('Unpin')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /unpin announcement/i })).toBeInTheDocument()
   })
 
   it('prevents event propagation on pin click', () => {
     render(<ProjectAnnouncementCard {...defaultProps} />)
-    fireEvent.click(screen.getByTitle('Unpin'))
+    fireEvent.click(screen.getByRole('button', { name: /unpin announcement/i }))
     expect(defaultProps.onOpen).not.toHaveBeenCalled()
   })
 
   it('prevents event propagation on delete click', () => {
     render(<ProjectAnnouncementCard {...defaultProps} />)
-    fireEvent.click(screen.getByTitle('Delete'))
+    fireEvent.click(screen.getByRole('button', { name: /delete announcement/i }))
     expect(defaultProps.onOpen).not.toHaveBeenCalled()
   })
 })

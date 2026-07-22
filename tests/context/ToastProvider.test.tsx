@@ -22,7 +22,8 @@ describe('ToastProvider', () => {
   it('wraps in a fixed container with pointer-events-none', () => {
     const { container } = render(<ToastProvider />)
 
-    const wrapper = container.firstChild as HTMLElement
-    expect(wrapper).toHaveClass('fixed', 'inset-0', 'pointer-events-none')
+    // Find the fixed container (may not be firstChild due to sr-only announcer divs)
+    const fixedContainer = container.querySelector('.fixed.inset-0.pointer-events-none')
+    expect(fixedContainer).toBeInTheDocument()
   })
 })

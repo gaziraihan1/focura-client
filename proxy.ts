@@ -42,6 +42,40 @@ export async function proxy(request: NextRequest) {
 
   const response = NextResponse.next();
 
+  // ── Security Headers ────────────────────────────────────────────────────────
+  // Prevent clickjacking — pages cannot be embedded in iframes
+  response.headers.set("X-Frame-Options", "DENY");
+
+  // Prevent MIME type sniffing
+  response.headers.set("X-Content-Type-Options", "nosniff");
+
+  // Control referrer information
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+
+  // XSS protection (legacy browsers)
+  response.headers.set("X-XSS-Protection", "1; mode=block");
+
+  // Prevent search engines from indexing protected pages
+  if (isProtectedRoute) {
+    response.headers.set("X-Robots-Tag", "noindex, nofollow");
+  }
+
+  // Strict Transport Security — force HTTPS for 1 year
+  if (process.env.NODE_ENV === "production") {
+    response.headers.set(
+      "Strict-Transport-Security",
+      "max-age=31536000; includeSubDomains; preload"
+    );
+  }
+
+  // Content Security Policy — inline scripts only from same origin
+  if (process.env.NODE_ENV === "production") {
+    response.headers.set(
+      "Content-Security-Policy",
+      "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' http://localhost:5000 https:; frame-ancestors 'none';"
+    );
+  }
+
   // Optional: Add debug headers in development
   if (token && process.env.NODE_ENV === 'development') {
     response.headers.set('X-User-Email', token.email || '');

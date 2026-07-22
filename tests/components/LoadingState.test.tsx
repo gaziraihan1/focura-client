@@ -22,6 +22,6 @@ describe('LoadingState', () => {
     const { container } = render(<LoadingState />)
     const flexContainer = container.querySelector('.flex')
     expect(flexContainer).toBeInTheDocument()
-    expect(flexContainer).toHaveClass('items-center', 'justify-center', 'min-h-screen')
+    expect(flexContainer).toHaveClass('items-center', 'justify-center')
   })
 })

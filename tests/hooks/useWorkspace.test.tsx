@@ -9,7 +9,6 @@ import {
   useWorkspaceMembers,
   useWorkspaceStats,
   useWorkspaceStorage,
-  useWorkspacePlan,
   useWorkspaceRole,
   useCreateWorkspace,
   useUpdateWorkspace,
@@ -24,6 +23,7 @@ import {
   useWorkspaceRoleCheck,
   useWorkspaceRoleFromWorkspace,
 } from '@/hooks/useWorkspace'
+import { useWorkspacePlan, WorkspacePlanProvider } from '@/context/workspacePlan/WorkspacePlanContext'
 import { mockWorkspace } from '../mock/handlers/workspace.handlers'
 
 const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
@@ -210,7 +210,15 @@ describe('useWorkspaceStorage', () => {
 
 describe('useWorkspacePlan', () => {
   it('identifies FREE plan', async () => {
-    const { result } = renderHook(() => useWorkspacePlan('test-ws'), { wrapper: createWrapper() })
+    const wrapper = ({ children }: { children: React.ReactNode }) => {
+      const QueryWrapper = createWrapper()
+      return (
+        <QueryWrapper>
+          <WorkspacePlanProvider slug="test-ws">{children}</WorkspacePlanProvider>
+        </QueryWrapper>
+      )
+    }
+    const { result } = renderHook(() => useWorkspacePlan(), { wrapper })
     await waitFor(() => expect(result.current.isLoading).toBe(false))
     expect(result.current.isFree).toBe(true)
     expect(result.current.hasPlan('FREE')).toBe(true)
