@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { ActivityFeed } from '@/components/Dashboard/ActivityLogs/ActivityFeed'
 import { createWrapper } from '@/tests/utils/renderWithProviders'
 
-vi.mock('next/image', () => ({ default: (p: Record<string, unknown>) => <img {...p} /> }))
+vi.mock('next/image', () => ({ default: (p: Record<string, unknown>) => <img alt='' {...p} /> }))
 vi.mock('next/link', () => ({
   default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => <a href={href} {...props}>{children}</a>,
 }))

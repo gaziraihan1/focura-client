@@ -10,7 +10,7 @@ vi.mock('framer-motion', () => ({
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
 }))
-vi.mock('next/image', () => ({ default: (p: Record<string, unknown>) => <img {...p} /> }))
+vi.mock('next/image', () => ({ default: (p: Record<string, unknown>) => <img alt='' {...p} /> }))
 vi.mock('@/components/Shared/Avatar', () => ({
   Avatar: ({ name }: { name: string }) => <div data-testid="avatar">{name}</div>,
 }))

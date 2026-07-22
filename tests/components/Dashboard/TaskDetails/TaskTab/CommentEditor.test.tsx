@@ -4,7 +4,7 @@ import React from 'react';
 import { CommentEditor } from '@/components/Dashboard/TaskDetails/TaskTab/CommentEditor';
 
 vi.mock('next/image', () => ({
-  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img alt="" {...props} />,
 }));
 
 vi.mock('@/components/Dashboard/TaskDetails/TaskTab/MentionTextarea', () => ({

@@ -1,86 +1,117 @@
-import { render, screen } from '@testing-library/react'
-import { userEvent } from '@testing-library/user-event'
 import { describe, it, expect, vi } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { Pagination } from '@/components/Shared/Pagination'
 
 describe('Pagination', () => {
-  const defaultProps = {
-    currentPage: 1,
-    totalPages: 5,
-    onPageChange: vi.fn(),
-  }
+  const onPageChange = vi.fn()
 
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  it('returns null when totalPages <= 1', () => {
+  it('returns null when totalPages is 1', () => {
     const { container } = render(
-      <Pagination {...defaultProps} totalPages={1} />
+      <Pagination currentPage={1} totalPages={1} onPageChange={onPageChange} />
     )
     expect(container.innerHTML).toBe('')
   })
 
-  it('renders page buttons', () => {
-    render(<Pagination {...defaultProps} />)
-    expect(screen.getByLabelText('Page 1')).toBeInTheDocument()
-    expect(screen.getByLabelText('Page 5')).toBeInTheDocument()
-  })
-
-  it('renders info text with itemsPerPage and totalItems', () => {
-    render(
-      <Pagination {...defaultProps} itemsPerPage={10} totalItems={50} />
+  it('returns null when totalPages is 0', () => {
+    const { container } = render(
+      <Pagination currentPage={1} totalPages={0} onPageChange={onPageChange} />
     )
-    expect(screen.getByText(/Showing/)).toBeInTheDocument()
-    expect(screen.getByText(/50/)).toBeInTheDocument()
+    expect(container.innerHTML).toBe('')
   })
 
-  it('calls onPageChange when next button clicked', async () => {
-    const onPageChange = vi.fn()
-    const user = userEvent.setup()
-    render(<Pagination {...defaultProps} onPageChange={onPageChange} />)
-    
-    await user.click(screen.getByLabelText('Next page'))
-    expect(onPageChange).toHaveBeenCalledWith(2)
-  })
+  it('renders page buttons for small page count', () => {
+    render(
+      <Pagination currentPage={1} totalPages={5} onPageChange={onPageChange} />
+    )
 
-  it('calls onPageChange when prev button clicked', async () => {
-    const onPageChange = vi.fn()
-    const user = userEvent.setup()
-    render(<Pagination {...defaultProps} currentPage={3} onPageChange={onPageChange} />)
-    
-    await user.click(screen.getByLabelText('Previous page'))
-    expect(onPageChange).toHaveBeenCalledWith(2)
-  })
-
-  it('disables prev on first page', () => {
-    render(<Pagination {...defaultProps} currentPage={1} />)
-    expect(screen.getByLabelText('Previous page')).toBeDisabled()
-  })
-
-  it('disables next on last page', () => {
-    render(<Pagination {...defaultProps} currentPage={5} totalPages={5} />)
-    expect(screen.getByLabelText('Next page')).toBeDisabled()
+    expect(screen.getByText('1')).toBeInTheDocument()
+    expect(screen.getByText('5')).toBeInTheDocument()
+    expect(screen.getByText('Prev')).toBeInTheDocument()
+    expect(screen.getByText('Next')).toBeInTheDocument()
   })
 
   it('highlights current page', () => {
-    render(<Pagination {...defaultProps} currentPage={3} />)
-    const currentPage = screen.getByLabelText('Page 3')
-    expect(currentPage).toHaveAttribute('aria-current', 'page')
+    render(
+      <Pagination currentPage={3} totalPages={5} onPageChange={onPageChange} />
+    )
+
+    const currentPageButton = screen.getByText('3')
+    expect(currentPageButton).toHaveAttribute('aria-current', 'page')
   })
 
-  it('shows ellipsis for many pages', () => {
-    render(<Pagination {...defaultProps} currentPage={5} totalPages={15} />)
-    const ellipses = screen.getAllByText('...')
-    expect(ellipses.length).toBeGreaterThanOrEqual(1)
-  })
+  it('calls onPageChange when clicking a page', () => {
+    render(
+      <Pagination currentPage={1} totalPages={5} onPageChange={onPageChange} />
+    )
 
-  it('calls onPageChange when page number clicked', async () => {
-    const onPageChange = vi.fn()
-    const user = userEvent.setup()
-    render(<Pagination {...defaultProps} onPageChange={onPageChange} />)
-    
-    await user.click(screen.getByLabelText('Page 3'))
+    fireEvent.click(screen.getByText('3'))
     expect(onPageChange).toHaveBeenCalledWith(3)
+  })
+
+  it('navigates to previous page', () => {
+    render(
+      <Pagination currentPage={3} totalPages={5} onPageChange={onPageChange} />
+    )
+
+    fireEvent.click(screen.getByText('Prev'))
+    expect(onPageChange).toHaveBeenCalledWith(2)
+  })
+
+  it('navigates to next page', () => {
+    render(
+      <Pagination currentPage={3} totalPages={5} onPageChange={onPageChange} />
+    )
+
+    fireEvent.click(screen.getByText('Next'))
+    expect(onPageChange).toHaveBeenCalledWith(4)
+  })
+
+  it('disables prev button on first page', () => {
+    render(
+      <Pagination currentPage={1} totalPages={5} onPageChange={onPageChange} />
+    )
+
+    expect(screen.getByLabelText('Previous page')).toBeDisabled()
+  })
+
+  it('disables next button on last page', () => {
+    render(
+      <Pagination currentPage={5} totalPages={5} onPageChange={onPageChange} />
+    )
+
+    expect(screen.getByLabelText('Next page')).toBeDisabled()
+  })
+
+  it('shows items info when itemsPerPage and totalItems are provided', () => {
+    const { container } = render(
+      <Pagination
+        currentPage={2}
+        totalPages={5}
+        onPageChange={onPageChange}
+        itemsPerPage={10}
+        totalItems={50}
+      />
+    )
+
+    // Check the paragraph contains the info text
+    const infoParagraph = container.querySelector('p')
+    expect(infoParagraph).toBeInTheDocument()
+    expect(infoParagraph?.textContent).toContain('Showing')
+    expect(infoParagraph?.textContent).toContain('11')
+    expect(infoParagraph?.textContent).toContain('20')
+    expect(infoParagraph?.textContent).toContain('50')
+  })
+
+  it('shows ellipsis for large page counts', () => {
+    render(
+      <Pagination currentPage={10} totalPages={20} onPageChange={onPageChange} />
+    )
+
+    const ellipsisButtons = screen.getAllByText('...')
+    expect(ellipsisButtons.length).toBeGreaterThanOrEqual(1)
   })
 })

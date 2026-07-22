@@ -19,7 +19,7 @@ vi.mock('recharts', () => ({
 }))
 
 vi.mock('next/image', () => ({
-  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img alt="" {...props} />,
 }))
 
 const mockStats = [

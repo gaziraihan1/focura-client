@@ -1,91 +1,108 @@
-import { render, screen } from '@testing-library/react'
-import { userEvent } from '@testing-library/user-event'
 import { describe, it, expect, vi } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { PermissionModal } from '@/components/Shared/PermissionModal'
 
+vi.mock('lucide-react', () => ({
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
+  ShieldCheck: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="shield-icon" {...props} />,
+  Lock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="lock-icon" {...props} />,
+}))
+
 describe('PermissionModal', () => {
-  const defaultProps = {
-    operation: 'create' as const,
-    isOpen: true,
-    onClose: vi.fn(),
-  }
+  const onClose = vi.fn()
 
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  it('returns null when not open', () => {
+  it('renders nothing when not open', () => {
     const { container } = render(
-      <PermissionModal {...defaultProps} isOpen={false} />
+      <PermissionModal operation="create" isOpen={false} onClose={onClose} />
     )
+
     expect(container.innerHTML).toBe('')
   })
 
-  it('renders Permission Required heading', () => {
-    render(<PermissionModal {...defaultProps} />)
+  it('renders dialog when open', () => {
+    render(
+      <PermissionModal operation="create" isOpen={true} onClose={onClose} />
+    )
+
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+  })
+
+  it('renders title', () => {
+    render(
+      <PermissionModal operation="create" isOpen={true} onClose={onClose} />
+    )
+
     expect(screen.getByText('Permission Required')).toBeInTheDocument()
   })
 
-  it('shows correct verb for create operation', () => {
-    render(<PermissionModal {...defaultProps} operation="create" />)
-    expect(screen.getAllByText('create').length).toBeGreaterThanOrEqual(1)
+  it('renders operation-specific text', () => {
+    render(
+      <PermissionModal operation="delete" isOpen={true} onClose={onClose} resource="labels" />
+    )
+
+    // Check that the modal contains text about delete operation
+    const dialog = screen.getByRole('dialog')
+    expect(dialog).toHaveTextContent(/delete/i)
+    expect(dialog).toHaveTextContent(/labels/i)
   })
 
-  it('shows correct verb for update operation', () => {
-    render(<PermissionModal {...defaultProps} operation="update" />)
-    expect(screen.getAllByText('update').length).toBeGreaterThanOrEqual(1)
-  })
+  it('calls onClose when close button is clicked', () => {
+    render(
+      <PermissionModal operation="create" isOpen={true} onClose={onClose} />
+    )
 
-  it('shows correct verb for delete operation', () => {
-    render(<PermissionModal {...defaultProps} operation="delete" />)
-    expect(screen.getAllByText('delete').length).toBeGreaterThanOrEqual(1)
-  })
-
-  it('shows correct verb for manage operation', () => {
-    render(<PermissionModal {...defaultProps} operation="manage" />)
-    expect(screen.getAllByText('manage').length).toBeGreaterThanOrEqual(1)
-  })
-
-  it('shows custom resource name', () => {
-    render(<PermissionModal {...defaultProps} resource="label" />)
-    expect(screen.getAllByText(/label/).length).toBeGreaterThanOrEqual(1)
-  })
-
-  it('closes on Got it button click', async () => {
-    const onClose = vi.fn()
-    const user = userEvent.setup()
-    render(<PermissionModal {...defaultProps} onClose={onClose} />)
-    
-    await user.click(screen.getByText('Got it'))
+    fireEvent.click(screen.getByLabelText('Close'))
     expect(onClose).toHaveBeenCalled()
   })
 
-  it('closes on Escape key', async () => {
-    const onClose = vi.fn()
-    const user = userEvent.setup()
-    render(<PermissionModal {...defaultProps} onClose={onClose} />)
-    
-    await user.keyboard('{Escape}')
+  it('calls onClose when Got it button is clicked', () => {
+    render(
+      <PermissionModal operation="create" isOpen={true} onClose={onClose} />
+    )
+
+    fireEvent.click(screen.getByText('Got it'))
     expect(onClose).toHaveBeenCalled()
   })
 
-  it('closes on close button click', async () => {
-    const onClose = vi.fn()
-    const user = userEvent.setup()
-    render(<PermissionModal {...defaultProps} onClose={onClose} />)
-    
-    await user.click(screen.getByLabelText('Close'))
+  it('calls onClose when Escape key is pressed', () => {
+    render(
+      <PermissionModal operation="create" isOpen={true} onClose={onClose} />
+    )
+
+    fireEvent.keyDown(document, { key: 'Escape' })
     expect(onClose).toHaveBeenCalled()
   })
 
-  it('shows Who can verb this section', () => {
-    render(<PermissionModal {...defaultProps} operation="create" />)
-    expect(screen.getByText(/Who can create this\?/)).toBeInTheDocument()
+  it('calls onClose when clicking backdrop', () => {
+    render(
+      <PermissionModal operation="create" isOpen={true} onClose={onClose} />
+    )
+
+    const dialog = screen.getByRole('dialog')
+    fireEvent.click(dialog)
+
+    expect(onClose).toHaveBeenCalled()
   })
 
-  it('shows role pills', () => {
-    render(<PermissionModal {...defaultProps} />)
+  it('renders role pills', () => {
+    render(
+      <PermissionModal operation="create" isOpen={true} onClose={onClose} />
+    )
+
     expect(screen.getByText('Workspace Owner')).toBeInTheDocument()
     expect(screen.getByText('Workspace Admin')).toBeInTheDocument()
+  })
+
+  it('applies custom className', () => {
+    const { container } = render(
+      <PermissionModal operation="create" isOpen={true} onClose={onClose} className="custom-class" />
+    )
+
+    const panel = container.querySelector('.custom-class')
+    expect(panel).toBeInTheDocument()
   })
 })

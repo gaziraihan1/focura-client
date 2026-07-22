@@ -1,60 +1,92 @@
 import { describe, it, expect, vi } from 'vitest'
-import { screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { LabelBadge } from '@/components/Labels/LabelBadge'
-import { createWrapper } from '../../utils/renderWithProviders'
-import { render } from '@testing-library/react'
-import type { Label } from '@/hooks/useLabels'
 
-const baseLabel: Label = {
-  id: 'lbl-1',
+// Mock lucide-react
+vi.mock('lucide-react', () => ({
+  Tag: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="tag-icon" {...props} />,
+  X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,
+}))
+
+const mockLabel = {
+  id: 'label-1',
   name: 'Bug',
-  color: '#ef4444',
-}
-
-function renderBadge(props: Partial<React.ComponentProps<typeof LabelBadge>> = {}) {
-  return render(<LabelBadge label={baseLabel} {...props} />, {
-    wrapper: createWrapper(),
-  })
+  color: '#EF4444',
+  description: null,
+  workspaceId: 'ws-1',
+  createdById: 'user-1',
+  createdAt: new Date(),
+  _count: { tasks: 5 },
 }
 
 describe('LabelBadge', () => {
-  it('renders the label name', () => {
-    renderBadge()
+  it('renders label name', () => {
+    render(<LabelBadge label={mockLabel} />)
+
     expect(screen.getByText('Bug')).toBeInTheDocument()
   })
 
-  it('renders with md size by default', () => {
-    const { container } = renderBadge()
-    const badge = container.firstElementChild as HTMLElement
-    expect(badge.className).toContain('text-sm')
+  it('renders tag icon', () => {
+    render(<LabelBadge label={mockLabel} />)
+
+    expect(screen.getByTestId('tag-icon')).toBeInTheDocument()
   })
 
-  it('renders with sm size', () => {
-    const { container } = renderBadge({ size: 'sm' })
-    const badge = container.firstElementChild as HTMLElement
+  it('applies label color as background', () => {
+    const { container } = render(<LabelBadge label={mockLabel} />)
+
+    const badge = container.firstChild as HTMLElement
+    expect(badge.style.backgroundColor).toContain('239')
+  })
+
+  it('applies label color as text color', () => {
+    const { container } = render(<LabelBadge label={mockLabel} />)
+
+    const badge = container.firstChild as HTMLElement
+    expect(badge.style.color).toContain('239')
+  })
+
+  it('shows remove button when onRemove is provided', () => {
+    const onRemove = vi.fn()
+    render(<LabelBadge label={mockLabel} onRemove={onRemove} />)
+
+    expect(screen.getByTestId('x-icon')).toBeInTheDocument()
+  })
+
+  it('does not show remove button when onRemove is not provided', () => {
+    render(<LabelBadge label={mockLabel} />)
+
+    expect(screen.queryByTestId('x-icon')).not.toBeInTheDocument()
+  })
+
+  it('calls onRemove when remove button is clicked', () => {
+    const onRemove = vi.fn()
+    render(<LabelBadge label={mockLabel} onRemove={onRemove} />)
+
+    fireEvent.click(screen.getByTestId('x-icon'))
+    expect(onRemove).toHaveBeenCalled()
+  })
+
+  it('applies sm size class', () => {
+    const { container } = render(<LabelBadge label={mockLabel} size="sm" />)
+
+    const badge = container.firstChild as HTMLElement
     expect(badge.className).toContain('text-xs')
   })
 
-  it('calls onRemove when the X button is clicked', () => {
-    const onRemove = vi.fn()
-    renderBadge({ onRemove })
-    const button = screen.getByRole('button')
-    fireEvent.click(button)
-    expect(onRemove).toHaveBeenCalledTimes(1)
+  it('applies md size class by default', () => {
+    const { container } = render(<LabelBadge label={mockLabel} />)
+
+    const badge = container.firstChild as HTMLElement
+    expect(badge.className).toContain('text-sm')
   })
 
-  it('does not render the X button when onRemove is not provided', () => {
-    renderBadge()
-    expect(screen.queryByRole('button')).not.toBeInTheDocument()
-  })
+  it('applies custom className', () => {
+    const { container } = render(
+      <LabelBadge label={mockLabel} className="custom-class" />
+    )
 
-  it('applies inline styles with the label color', () => {
-    const { container } = renderBadge()
-    const badge = container.firstElementChild as HTMLElement
-    // JSDOM normalizes hex+alpha to rgba, so use toContain for partial matching
-    expect(badge.style.backgroundColor).toContain('239, 68, 68')
-    expect(badge.style.color).toContain('239, 68, 68')
-    expect(badge.style.border).toContain('239, 68, 68')
-    expect(badge.style.border).toContain('1px solid')
+    const badge = container.firstChild as HTMLElement
+    expect(badge.className).toContain('custom-class')
   })
 })

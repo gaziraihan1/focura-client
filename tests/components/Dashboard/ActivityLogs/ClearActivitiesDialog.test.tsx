@@ -1,49 +1,63 @@
-import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import { userEvent } from '@testing-library/user-event'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { ClearActivitiesDialog } from '@/components/Dashboard/ActivityLogs/ClearActivitiesDialog'
 
 describe('ClearActivitiesDialog', () => {
-  const defaultProps = {
-    isOpen: true,
-    isPending: false,
-    onClose: vi.fn(),
-    onConfirm: vi.fn(),
-  }
+  const onClose = vi.fn()
+  const onConfirm = vi.fn()
 
-  it('renders nothing when isOpen=false', () => {
-    const { container } = render(<ClearActivitiesDialog {...defaultProps} isOpen={false} />)
+  beforeEach(() => vi.clearAllMocks())
+
+  it('returns null when not open', () => {
+    const { container } = render(
+      <ClearActivitiesDialog isOpen={false} isPending={false} onClose={onClose} onConfirm={onConfirm} />
+    )
     expect(container.innerHTML).toBe('')
   })
 
-  it('shows dialog when isOpen=true', () => {
-    render(<ClearActivitiesDialog {...defaultProps} />)
+  it('renders dialog when open', () => {
+    render(
+      <ClearActivitiesDialog isOpen={true} isPending={false} onClose={onClose} onConfirm={onConfirm} />
+    )
     expect(screen.getByText('Clear all activities?')).toBeInTheDocument()
-  })
-
-  it('shows confirmation text', () => {
-    render(<ClearActivitiesDialog {...defaultProps} />)
     expect(screen.getByText(/permanently delete all activity logs/)).toBeInTheDocument()
   })
 
-  it('calls onClose when Cancel clicked', async () => {
-    const user = userEvent.setup()
-    const onClose = vi.fn()
-    render(<ClearActivitiesDialog {...defaultProps} onClose={onClose} />)
-    await user.click(screen.getByRole('button', { name: /cancel/i }))
-    expect(onClose).toHaveBeenCalledTimes(1)
+  it('renders cancel and confirm buttons', () => {
+    render(
+      <ClearActivitiesDialog isOpen={true} isPending={false} onClose={onClose} onConfirm={onConfirm} />
+    )
+    expect(screen.getByText('Cancel')).toBeInTheDocument()
+    expect(screen.getByText('Clear Activities')).toBeInTheDocument()
   })
 
-  it('calls onConfirm when Clear Activities clicked', async () => {
-    const user = userEvent.setup()
-    const onConfirm = vi.fn()
-    render(<ClearActivitiesDialog {...defaultProps} onConfirm={onConfirm} />)
-    await user.click(screen.getByRole('button', { name: /clear activities/i }))
-    expect(onConfirm).toHaveBeenCalledTimes(1)
+  it('calls onClose when cancel is clicked', () => {
+    render(
+      <ClearActivitiesDialog isOpen={true} isPending={false} onClose={onClose} onConfirm={onConfirm} />
+    )
+    fireEvent.click(screen.getByText('Cancel'))
+    expect(onClose).toHaveBeenCalled()
   })
 
-  it('shows "Clearing..." text when isPending=true', () => {
-    render(<ClearActivitiesDialog {...defaultProps} isPending={true} />)
+  it('calls onConfirm when confirm is clicked', () => {
+    render(
+      <ClearActivitiesDialog isOpen={true} isPending={false} onClose={onClose} onConfirm={onConfirm} />
+    )
+    fireEvent.click(screen.getByText('Clear Activities'))
+    expect(onConfirm).toHaveBeenCalled()
+  })
+
+  it('shows clearing text when pending', () => {
+    render(
+      <ClearActivitiesDialog isOpen={true} isPending={true} onClose={onClose} onConfirm={onConfirm} />
+    )
     expect(screen.getByText('Clearing...')).toBeInTheDocument()
+  })
+
+  it('disables confirm button when pending', () => {
+    render(
+      <ClearActivitiesDialog isOpen={true} isPending={true} onClose={onClose} onConfirm={onConfirm} />
+    )
+    expect(screen.getByText('Clearing...').closest('button')).toBeDisabled()
   })
 })

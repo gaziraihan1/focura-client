@@ -12,8 +12,8 @@ vi.mock("next/link", () => ({
 
 vi.mock("next/image", () => ({
   default: (props: Record<string, unknown>) => {
-    const { fill, priority, ...rest } = props;
-    return <img {...props } data-fill={fill} />;
+    const { fill, priority, alt = "", ...rest } = props;
+    return <img alt={alt} {...rest} data-fill={fill} />;
   },
 }));
 

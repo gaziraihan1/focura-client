@@ -7,7 +7,7 @@ import { InfoRow } from '@/components/Dashboard/MeetingDetails/InfoRow'
 import { DetailCard } from '@/components/Dashboard/MeetingDetails/DetailCard'
 import { MeetingDetailsSkeleton } from '@/components/Dashboard/MeetingDetails/MeetingDetailsSkeleton'
 
-vi.mock('next/image', () => ({ default: (p: Record<string, unknown>) => <img {...p} /> }))
+vi.mock('next/image', () => ({ default: (p: Record<string, unknown>) => <img alt='' {...p} /> }))
 vi.mock('@/utils/meetingDetails.utils', () => ({
   getInitials: (name: string) => name?.charAt(0) || 'U',
   avatarColor: () => 'bg-blue-500',

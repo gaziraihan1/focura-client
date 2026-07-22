@@ -12,7 +12,7 @@ vi.mock("lucide-react", () => {
 });
 
 vi.mock("next/image", () => ({
-  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img alt="" {...props} />,
 }));
 
 vi.mock("@/hooks/useFileManagement", () => ({

@@ -1,100 +1,143 @@
-import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import { userEvent } from '@testing-library/user-event'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { EmptyState } from '@/components/Dashboard/AllProjects/EmptyState'
-import { ProjectCard } from '@/components/Dashboard/AllProjects/ProjectCard'
+import { ProjectStats } from '@/components/Dashboard/AllProjects/ProjectStats'
+import { WorkspaceQuickFilter } from '@/components/Dashboard/AllProjects/WorkspaceQuickFilter'
+
+vi.mock('lucide-react', () => ({
+  FolderKanban: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="folder-icon" {...props} />,
+  Sparkles: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="sparkles-icon" {...props} />,
+  CheckCircle2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-icon" {...props} />,
+  TrendingUp: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="trending-icon" {...props} />,
+  Building2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="building-icon" {...props} />,
+}))
 
 vi.mock('framer-motion', () => ({
-  motion: { div: (p: Record<string, unknown>) => <div {...p} />, button: (p: Record<string, unknown>) => <button {...p} /> },
-  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
-}))
-vi.mock('@/components/Projects/WorkspaceProjects/AceessDeniedModal', () => ({
-  AccessDeniedModal: () => null,
-}))
-vi.mock('@/utils/project.utils', () => ({
-  getPriorityColor: () => 'text-red-500',
-  getStatusColor: () => 'border-green-500',
+  motion: {
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...props}>{children}</button>,
+  },
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => children,
 }))
 
-describe('AllProjects EmptyState', () => {
-  it('renders "No projects yet" when hasSearchOrFilters=false', () => {
-    render(<EmptyState hasSearchOrFilters={false} onBrowseWorkspaces={vi.fn()} />)
+describe('EmptyState', () => {
+  const defaultProps = {
+    hasSearchOrFilters: false,
+    onBrowseWorkspaces: vi.fn(),
+  }
+
+  beforeEach(() => vi.clearAllMocks())
+
+  it('renders no projects message when no filters', () => {
+    render(<EmptyState {...defaultProps} />)
     expect(screen.getByText('No projects yet')).toBeInTheDocument()
   })
 
-  it('renders "No projects match your search" when hasSearchOrFilters=true', () => {
-    render(<EmptyState hasSearchOrFilters={true} onBrowseWorkspaces={vi.fn()} />)
+  it('renders search message when filters active', () => {
+    render(<EmptyState {...defaultProps} hasSearchOrFilters={true} />)
     expect(screen.getByText('No projects match your search')).toBeInTheDocument()
   })
 
-  it('shows Browse Workspaces button when no filters', () => {
-    render(<EmptyState hasSearchOrFilters={false} onBrowseWorkspaces={vi.fn()} />)
-    expect(screen.getByRole('button', { name: /browse workspaces/i })).toBeInTheDocument()
+  it('renders browse workspaces button when no filters', () => {
+    render(<EmptyState {...defaultProps} />)
+    expect(screen.getByText('Browse Workspaces')).toBeInTheDocument()
   })
 
-  it('hides Browse Workspaces button when hasSearchOrFilters=true', () => {
-    render(<EmptyState hasSearchOrFilters={true} onBrowseWorkspaces={vi.fn()} />)
-    expect(screen.queryByRole('button', { name: /browse workspaces/i })).not.toBeInTheDocument()
+  it('hides browse button when filters active', () => {
+    render(<EmptyState {...defaultProps} hasSearchOrFilters={true} />)
+    expect(screen.queryByText('Browse Workspaces')).not.toBeInTheDocument()
   })
 
-  it('calls onBrowseWorkspaces when button clicked', async () => {
-    const user = userEvent.setup()
-    const onBrowseWorkspaces = vi.fn()
-    render(<EmptyState hasSearchOrFilters={false} onBrowseWorkspaces={onBrowseWorkspaces} />)
-    await user.click(screen.getByRole('button', { name: /browse workspaces/i }))
-    expect(onBrowseWorkspaces).toHaveBeenCalledTimes(1)
+  it('calls onBrowseWorkspaces when button clicked', () => {
+    render(<EmptyState {...defaultProps} />)
+    fireEvent.click(screen.getByText('Browse Workspaces'))
+    expect(defaultProps.onBrowseWorkspaces).toHaveBeenCalled()
+  })
+
+  it('renders folder icon', () => {
+    render(<EmptyState {...defaultProps} />)
+    expect(screen.getByTestId('folder-icon')).toBeInTheDocument()
   })
 })
 
-describe('AllProjects ProjectCard', () => {
-  const mockProject = {
-    id: 'p-1',
-    name: 'Test Project',
-    description: 'A test project description',
-    status: 'ACTIVE',
-    priority: 'HIGH',
-    color: '#3b82f6',
-    dueDate: '2025-12-31',
-    _count: { tasks: 5 },
-    workspace: { id: 'ws-1', name: 'Test Workspace', slug: 'test-ws' },
-    icon: null,
-    stats: null,
-    slug: 'test-project',
-  }
+describe('ProjectStats', () => {
+  it('renders all stat labels', () => {
+    render(<ProjectStats total={10} active={5} completed={3} totalTasks={42} />)
+    expect(screen.getByText('Total Projects')).toBeInTheDocument()
+    expect(screen.getByText('Active')).toBeInTheDocument()
+    expect(screen.getByText('Completed')).toBeInTheDocument()
+    expect(screen.getByText('Total Tasks')).toBeInTheDocument()
+  })
+
+  it('renders stat values', () => {
+    render(<ProjectStats total={10} active={5} completed={3} totalTasks={42} />)
+    expect(screen.getByText('10')).toBeInTheDocument()
+    expect(screen.getByText('5')).toBeInTheDocument()
+    expect(screen.getByText('3')).toBeInTheDocument()
+    expect(screen.getByText('42')).toBeInTheDocument()
+  })
+
+  it('renders stat icons', () => {
+    render(<ProjectStats total={10} active={5} completed={3} totalTasks={42} />)
+    expect(screen.getByTestId('folder-icon')).toBeInTheDocument()
+    expect(screen.getByTestId('sparkles-icon')).toBeInTheDocument()
+    expect(screen.getByTestId('check-icon')).toBeInTheDocument()
+    expect(screen.getByTestId('trending-icon')).toBeInTheDocument()
+  })
+})
+
+describe('WorkspaceQuickFilter', () => {
+  const workspaces = [
+    { id: 'ws-1', name: 'Workspace A' },
+    { id: 'ws-2', name: 'Workspace B' },
+  ]
 
   const defaultProps = {
-    project: mockProject as any,
-    index: 0,
-    onNavigate: vi.fn(),
-    showModal: false,
-    onCloseModal: vi.fn(),
+    workspaces,
+    selectedWorkspaceId: 'all',
+    onSelectWorkspace: vi.fn(),
   }
 
-  it('renders project name', () => {
-    render(<ProjectCard {...defaultProps} />)
-    expect(screen.getByText('Test Project')).toBeInTheDocument()
+  beforeEach(() => vi.clearAllMocks())
+
+  it('renders nothing when no workspaces', () => {
+    const { container } = render(
+      <WorkspaceQuickFilter {...defaultProps} workspaces={[]} />
+    )
+    expect(container.innerHTML).toBe('')
   })
 
-  it('shows description', () => {
-    render(<ProjectCard {...defaultProps} />)
-    expect(screen.getByText('A test project description')).toBeInTheDocument()
+  it('renders All Workspaces button', () => {
+    render(<WorkspaceQuickFilter {...defaultProps} />)
+    expect(screen.getByText('All Workspaces')).toBeInTheDocument()
   })
 
-  it('shows status badge', () => {
-    render(<ProjectCard {...defaultProps} />)
-    expect(screen.getByText('ACTIVE')).toBeInTheDocument()
+  it('renders workspace names', () => {
+    render(<WorkspaceQuickFilter {...defaultProps} />)
+    expect(screen.getByText('Workspace A')).toBeInTheDocument()
+    expect(screen.getByText('Workspace B')).toBeInTheDocument()
   })
 
-  it('shows task count', () => {
-    render(<ProjectCard {...defaultProps} />)
-    expect(screen.getByText(/5 tasks/)).toBeInTheDocument()
+  it('calls onSelectWorkspace with "all" when All Workspaces clicked', () => {
+    render(<WorkspaceQuickFilter {...defaultProps} />)
+    fireEvent.click(screen.getByText('All Workspaces'))
+    expect(defaultProps.onSelectWorkspace).toHaveBeenCalledWith('all')
   })
 
-  it('calls onNavigate when clicked', async () => {
-    const user = userEvent.setup()
-    const onNavigate = vi.fn()
-    render(<ProjectCard {...defaultProps} onNavigate={onNavigate} />)
-    await user.click(screen.getByText('Test Project'))
-    expect(onNavigate).toHaveBeenCalledTimes(1)
+  it('calls onSelectWorkspace with workspace id when clicked', () => {
+    render(<WorkspaceQuickFilter {...defaultProps} />)
+    fireEvent.click(screen.getByText('Workspace A'))
+    expect(defaultProps.onSelectWorkspace).toHaveBeenCalledWith('ws-1')
+  })
+
+  it('highlights selected workspace', () => {
+    render(<WorkspaceQuickFilter {...defaultProps} selectedWorkspaceId="ws-1" />)
+    const wsAButton = screen.getByText('Workspace A')
+    expect(wsAButton.className).toContain('bg-primary')
+  })
+
+  it('renders Filter by Workspace label', () => {
+    render(<WorkspaceQuickFilter {...defaultProps} />)
+    expect(screen.getByText('Filter by Workspace:')).toBeInTheDocument()
   })
 })
