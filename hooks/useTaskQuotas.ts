@@ -95,7 +95,9 @@ export function useWorkspaceQuota(workspaceId: string | undefined) {
       if (!data) return 20 * 1000;
 
       // If workspace is near quota limit, poll more frequently
-      if (data.isNearLimit) {
+      const isNearLimit = data.workspaceRemaining !== null && data.dailyWorkspaceLimit !== null
+        && data.workspaceRemaining < data.dailyWorkspaceLimit * 0.2;
+      if (isNearLimit) {
         return 10 * 1000;
       }
 

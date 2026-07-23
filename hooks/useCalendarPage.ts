@@ -139,11 +139,11 @@ export function useMainCalendarPage() {
   );
 
   // Fetch data
-  const { data: aggregates = [], loading: aggregatesLoading } =
+  const { data: aggregates = [], isLoading: aggregatesLoading } =
     useCalendarAggregates(calendarFilters);
-  const { data: insights, loading: insightsLoading } =
+  const { data: insights, isLoading: insightsLoading } =
     useCalendarInsights(calendarFilters);
-  const { data: goals = [], loading: goalsLoading } =
+  const { data: goals = [], isLoading: goalsLoading } =
     useGoalCheckpoints(calendarFilters);
   const { data: systemEvents = [] } = useSystemEvents(calendarFilters);
 

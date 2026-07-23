@@ -77,7 +77,7 @@ export function CalendarGrid({
       onDateSelect?.(calendarDays[newIndex]);
 
       // Focus the new cell
-      const cells = gridRef.current?.querySelectorAll("[role='gridcell']");
+      const cells = gridRef.current?.querySelectorAll<HTMLElement>("[role='gridcell']");
       cells?.[newIndex]?.focus();
     },
     [calendarDays, onDateClick, onDateSelect]

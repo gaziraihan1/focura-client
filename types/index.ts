@@ -84,10 +84,9 @@ export {
   FocusType,
 } from './types';
 
-// Activity & Notification Types
+// Activity Types
 export type {
   Activity,
-  Notification,
 } from './types';
 
 export {

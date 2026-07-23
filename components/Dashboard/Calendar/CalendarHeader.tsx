@@ -115,7 +115,7 @@ export function CalendarHeader({
               </button>
 
               <span
-                className="px-2 sm:px-4 text-sm font-medium min-w-[120px] sm:min-w-[140px] text-center"
+                className="px-2 sm:px-4 text-sm font-medium min-w-30 sm:min-w-35 text-center"
                 aria-live="polite"
                 aria-atomic="true"
               >

@@ -31,6 +31,7 @@ export interface AppError {
 export interface ApiOptions {
   showSuccessToast?: boolean;
   showErrorToast?: boolean;
+  params?: Record<string, unknown>;
 }
 
 interface ApiErrorResponse {
@@ -690,7 +691,7 @@ const mergeHeaders = (_options?: ApiOptions, extra?: Record<string, string>) => 
 export const api = {
   get: async <T = unknown>(endpoint: string, options?: ApiOptions) => {
     const res = await axiosInstance
-      .get<ApiResponse<T>>(endpoint, { headers: mergeHeaders(options) })
+      .get<ApiResponse<T>>(endpoint, { headers: mergeHeaders(options), params: options?.params })
       .catch((err) => handleAxiosError(err, options?.showErrorToast));
     if (options?.showSuccessToast && res?.data?.message) toast.success(res.data.message);
     return res?.data;
