@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { CalendarHeader } from "@/components/Dashboard/Calendar/CalendarHeader";
 import { CalendarInsightsBar } from "@/components/Dashboard/Calendar/CalendarInsightsBar";
 import { CalendarGrid } from "@/components/Dashboard/Calendar/CalendarGrid";
@@ -75,10 +75,10 @@ export default function CalendarPage() {
       />
 
       {/* Insights Bar */}
-      <CalendarInsightsBar insights={insights} />
+      <CalendarInsightsBar insights={insights ?? null} />
 
       {/* Burnout Trends */}
-      <div className="max-w-[1600px] mx-auto px-2 sm:px-6 lg:px-8 mt-4">
+      <div className="max-w-400 mx-auto px-2 sm:px-6 lg:px-8 mt-4">
         <BurnoutTrendsChart />
       </div>
 

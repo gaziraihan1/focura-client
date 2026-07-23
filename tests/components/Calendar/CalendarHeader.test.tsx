@@ -4,9 +4,11 @@ import { CalendarHeader } from '@/components/Dashboard/Calendar/CalendarHeader'
 
 const defaultProps = {
   currentDate: new Date(2026, 6, 1),
-  onPreviousMonth: vi.fn(),
-  onNextMonth: vi.fn(),
+  view: 'month' as const,
+  onPrevious: vi.fn(),
+  onNext: vi.fn(),
   onToday: vi.fn(),
+  onViewChange: vi.fn(),
 }
 
 describe('CalendarHeader', () => {
@@ -40,14 +42,14 @@ describe('CalendarHeader', () => {
 
   it('calls onPreviousMonth when left arrow is clicked', () => {
     render(<CalendarHeader {...defaultProps} />)
-    fireEvent.click(screen.getByLabelText('Previous month'))
-    expect(defaultProps.onPreviousMonth).toHaveBeenCalled()
+    fireEvent.click(screen.getByLabelText('Previous period'))
+    expect(defaultProps.onPrevious).toHaveBeenCalled()
   })
 
   it('calls onNextMonth when right arrow is clicked', () => {
     render(<CalendarHeader {...defaultProps} />)
-    fireEvent.click(screen.getByLabelText('Next month'))
-    expect(defaultProps.onNextMonth).toHaveBeenCalled()
+    fireEvent.click(screen.getByLabelText('Next period'))
+    expect(defaultProps.onNext).toHaveBeenCalled()
   })
 
   it('renders different month correctly', () => {
