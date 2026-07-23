@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useEffect } from "react";
 import { NotificationBellButton } from "./NotificationBellButton";
 import { NotificationDropdown } from "./NotificationDropdown";
 import { useNotificationBell } from "@/hooks/useNotificationBell";
@@ -23,8 +24,25 @@ export default function NotificationBell() {
     formatTimeAgo,
   } = useNotificationBell();
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!showDropdown) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        handleCloseDropdown();
+      }
+    };
+
+    // Use mousedown to catch the event before it's absorbed by the dropdown
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showDropdown, handleCloseDropdown]);
+
   return (
-    <div className="relative">
+    <div ref={containerRef} className="relative">
       <NotificationBellButton badge={badge} onClick={handleToggleDropdown} />
 
       {/* Connection status indicator */}
@@ -34,10 +52,6 @@ export default function NotificationBell() {
           aria-label={connectionStatusLabel}
           title={connectionStatusLabel}
         />
-      )}
-
-      {showDropdown && (
-        <div className="fixed inset-0 z-30" onClick={handleCloseDropdown} />
       )}
 
       {showDropdown && (

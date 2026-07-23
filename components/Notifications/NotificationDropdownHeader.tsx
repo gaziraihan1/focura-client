@@ -1,21 +1,26 @@
-import { CheckCheck } from "lucide-react";
+import { CheckCheck, Loader2 } from "lucide-react";
 
 interface NotificationDropdownHeaderProps {
   unreadCount: number;
   isMarkingAllAsRead: boolean;
+  isLoading?: boolean;
   onMarkAllAsRead: (e: React.MouseEvent) => void;
 }
 
 export function NotificationDropdownHeader({
   unreadCount,
   isMarkingAllAsRead,
+  isLoading = false,
   onMarkAllAsRead,
 }: NotificationDropdownHeaderProps) {
   return (
     <div className="p-4 border-b border-border flex items-center justify-between">
       <div className="flex items-center gap-2">
         <h3 className="font-semibold text-foreground">Notifications</h3>
-        {unreadCount > 0 && (
+        {isLoading && (
+          <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+        )}
+        {!isLoading && unreadCount > 0 && (
           <span className="px-2 py-0.5 text-xs font-medium bg-primary text-primary-foreground rounded-full">
             {unreadCount}
           </span>

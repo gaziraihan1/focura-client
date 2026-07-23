@@ -41,6 +41,7 @@ export function NotificationDropdown({
       <NotificationDropdownHeader
         unreadCount={unreadCount}
         isMarkingAllAsRead={isMarkingAllAsRead}
+        isLoading={isLoading}
         onMarkAllAsRead={onMarkAllAsRead}
       />
 
