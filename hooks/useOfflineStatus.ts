@@ -6,7 +6,7 @@
 
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import {
   getPendingMutations,
   addPendingMutation,
@@ -23,16 +23,17 @@ interface OfflineStatus {
 }
 
 export function useOfflineStatus(): OfflineStatus {
-  const [isOnline, setIsOnline] = useState(true);
+  const [isOnline, setIsOnline] = useState(() => 
+    typeof navigator !== "undefined" ? navigator.onLine : true
+  );
   const [pendingCount, setPendingCount] = useState(0);
+  const hasLoadedRef = useRef(false);
 
   // Update online status
   useEffect(() => {
     const updateOnlineStatus = () => {
       setIsOnline(navigator.onLine);
     };
-
-    setIsOnline(navigator.onLine);
 
     window.addEventListener("online", updateOnlineStatus);
     window.addEventListener("offline", updateOnlineStatus);
@@ -43,19 +44,20 @@ export function useOfflineStatus(): OfflineStatus {
     };
   }, []);
 
-  // Load pending mutations count
+  // Load pending mutations count on mount
   useEffect(() => {
     const loadPendingCount = async () => {
       try {
         const pending = await getPendingMutations();
         setPendingCount(pending.length);
+        hasLoadedRef.current = true;
       } catch (error) {
         console.error("Failed to load pending mutations:", error);
       }
     };
 
     loadPendingCount();
-  }, [isOnline]);
+  }, []);
 
   // Queue a mutation for later sync
   const queueMutation = useCallback(
@@ -76,8 +78,6 @@ export function useOfflineStatus(): OfflineStatus {
 
   // Sync pending mutations when back online
   const syncPending = useCallback(async () => {
-    if (!isOnline) return;
-
     try {
       const pending = await getPendingMutations();
 
@@ -104,12 +104,17 @@ export function useOfflineStatus(): OfflineStatus {
     } catch (error) {
       console.error("Failed to sync pending mutations:", error);
     }
-  }, [isOnline]);
+  }, []);
 
-  // Auto-sync when coming back online
+  // Auto-sync when coming back online (skip initial load)
   useEffect(() => {
+    if (!hasLoadedRef.current) return;
     if (isOnline && pendingCount > 0) {
-      syncPending();
+      // Use setTimeout to avoid calling setState synchronously in effect
+      const timeoutId = setTimeout(() => {
+        syncPending();
+      }, 0);
+      return () => clearTimeout(timeoutId);
     }
   }, [isOnline, pendingCount, syncPending]);
 
