@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Monitor, Sun, Moon, Save, Loader2 } from 'lucide-react';
+import { Monitor, Sun, Moon, Save, Loader2, PanelLeftClose, Sparkles, Lock } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import toast from 'react-hot-toast';
 
@@ -12,28 +12,54 @@ const DENSITY_OPTIONS = [
 ];
 
 export function AppearanceSettingsForm() {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const [density, setDensity] = useState('default');
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const savedDensity = localStorage.getItem('density') || 'default';
-    const savedSidebar = localStorage.getItem('sidebarCollapsed') === 'true';
     setDensity(savedDensity);
-    setSidebarCollapsed(savedSidebar);
+    // Apply density class to document
+    document.documentElement.setAttribute('data-density', savedDensity);
   }, []);
+
+  const handleDensityChange = (value: string) => {
+    setDensity(value);
+    document.documentElement.setAttribute('data-density', value);
+  };
 
   const handleSave = async () => {
     setSaving(true);
     try {
       localStorage.setItem('density', density);
-      localStorage.setItem('sidebarCollapsed', String(sidebarCollapsed));
+      document.documentElement.setAttribute('data-density', density);
       toast.success('Appearance settings saved');
     } finally {
       setSaving(false);
     }
   };
+
+  // Prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <div className="space-y-8">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="rounded-2xl border border-border bg-card p-6 animate-pulse">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="h-10 w-10 rounded-xl bg-muted" />
+              <div className="space-y-2">
+                <div className="h-4 w-24 rounded bg-muted" />
+                <div className="h-3 w-40 rounded bg-muted" />
+              </div>
+            </div>
+            <div className="h-20 rounded-xl bg-muted" />
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -55,7 +81,7 @@ export function AppearanceSettingsForm() {
           <button
             onClick={() => setTheme('light')}
             className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all ${
-              theme === 'light'
+              resolvedTheme === 'light'
                 ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
                 : 'border-border hover:border-primary/30'
             }`}
@@ -67,7 +93,7 @@ export function AppearanceSettingsForm() {
           <button
             onClick={() => setTheme('dark')}
             className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all ${
-              theme === 'dark'
+              resolvedTheme === 'dark'
                 ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
                 : 'border-border hover:border-primary/30'
             }`}
@@ -119,7 +145,7 @@ export function AppearanceSettingsForm() {
                 name="density"
                 value={option.value}
                 checked={density === option.value}
-                onChange={(e) => setDensity(e.target.value)}
+                onChange={(e) => handleDensityChange(e.target.value)}
                 className="w-4 h-4 text-primary"
               />
               <div>
@@ -131,34 +157,61 @@ export function AppearanceSettingsForm() {
         </div>
       </div>
 
-      {/* Sidebar */}
-      <div className="rounded-2xl border border-border bg-card p-6">
-        <div className="flex items-center gap-3 mb-4">
+      {/* Sidebar - Coming Soon */}
+      <div className="rounded-2xl border border-border bg-card p-6 relative overflow-hidden">
+        {/* Coming Soon Badge */}
+        <div className="absolute top-4 right-4">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-violet-500/10 to-pink-500/10 border border-violet-500/20 px-3 py-1 text-xs font-medium text-violet-600 dark:text-violet-400">
+            <Sparkles className="w-3 h-3" />
+            Coming Soon
+          </span>
+        </div>
+
+        <div className="flex items-center gap-3 mb-6">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10">
-            <span className="text-lg">📐</span>
+            <PanelLeftClose className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold tracking-tight">Sidebar</h3>
+            <h3 className="text-sm font-semibold tracking-tight">Sidebar Customization</h3>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Configure sidebar behavior
+              Personalize your sidebar layout and behavior
             </p>
           </div>
         </div>
 
-        <label className="flex items-center gap-3 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={sidebarCollapsed}
-            onChange={(e) => setSidebarCollapsed(e.target.checked)}
-            className="w-5 h-5 rounded border-border text-primary focus:ring-2 focus:ring-primary"
-          />
-          <div>
-            <p className="text-sm font-medium">Collapsed by default</p>
-            <p className="text-xs text-muted-foreground">
-              Start with sidebar collapsed for more workspace
-            </p>
+        {/* Preview of upcoming features */}
+        <div className="space-y-3 opacity-60">
+          <div className="flex items-center gap-3 p-3 rounded-xl border border-border bg-muted/30">
+            <Lock className="w-4 h-4 text-muted-foreground" />
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Collapsed by default</p>
+              <p className="text-xs text-muted-foreground/70">Start with sidebar collapsed for more workspace</p>
+            </div>
           </div>
-        </label>
+
+          <div className="flex items-center gap-3 p-3 rounded-xl border border-border bg-muted/30">
+            <Lock className="w-4 h-4 text-muted-foreground" />
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Pin favorite pages</p>
+              <p className="text-xs text-muted-foreground/70">Quick access to your most-used pages</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 p-3 rounded-xl border border-border bg-muted/30">
+            <Lock className="w-4 h-4 text-muted-foreground" />
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Custom sections</p>
+              <p className="text-xs text-muted-foreground/70">Organize sidebar with custom groups and dividers</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Coming Soon Message */}
+        <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-violet-500/5 to-pink-500/5 border border-violet-500/10">
+          <p className="text-sm text-muted-foreground text-center">
+            Sidebar customization is under development. Stay tuned for powerful layout options!
+          </p>
+        </div>
       </div>
 
       {/* Save */}

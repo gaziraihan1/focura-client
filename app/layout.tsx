@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { cookies } from "next/headers";
 import Providers from "@/components/Providers/SessionProvider";
-import { themeScript } from "@/lib/theme";
+// import { OfflineProvider } from "@/components/Providers/OfflineProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -77,26 +76,24 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const isDark = cookieStore.get("theme")?.value === "dark";
-
   return (
-    <html lang="en" className={isDark ? "dark" : ""} suppressHydrationWarning data-scroll-behavior="smooth">
+    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <Providers>
-          {/* Skip to main content - accessibility */}
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg focus:outline-none"
-          >
-            Skip to main content
-          </a>
-          {children}
-          <SpeedInsights />
+          {/* <OfflineProvider> */}
+            {/* Skip to main content - accessibility */}
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-9999 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg focus:outline-none"
+            >
+              Skip to main content
+            </a>
+            {children}
+            <SpeedInsights />
+          {/* </OfflineProvider> */}
         </Providers>
       </body>
     </html>

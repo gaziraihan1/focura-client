@@ -16,6 +16,9 @@ vi.mock('lucide-react', () => {
     Moon: icon('Moon'),
     Save: icon('Save'),
     Loader2: icon('Loader2'),
+    PanelLeftClose: icon('PanelLeftClose'),
+    Sparkles: icon('Sparkles'),
+    Lock: icon('Lock'),
   }
 })
 
@@ -68,32 +71,27 @@ describe('AppearanceSettingsForm', () => {
     expect(screen.getByText('Comfortable')).toBeInTheDocument()
   })
 
-  it('renders sidebar section', () => {
+  it('renders sidebar coming soon section', () => {
     renderWithProviders(<AppearanceSettingsForm />)
 
-    expect(screen.getByText('Sidebar')).toBeInTheDocument()
-    expect(screen.getByText('Collapsed by default')).toBeInTheDocument()
+    expect(screen.getByText('Sidebar Customization')).toBeInTheDocument()
+    expect(screen.getByText('Coming Soon')).toBeInTheDocument()
   })
 
   it('loads saved preferences from localStorage on mount', () => {
     localStorage.setItem('density', 'compact')
-    localStorage.setItem('sidebarCollapsed', 'true')
 
     renderWithProviders(<AppearanceSettingsForm />)
 
     const compactRadio = screen.getByDisplayValue('compact')
     expect(compactRadio).toBeChecked()
-    const checkbox = screen.getByRole('checkbox')
-    expect(checkbox).toBeChecked()
   })
 
-  it('defaults to default density and expanded sidebar when no localStorage', () => {
+  it('defaults to default density when no localStorage', () => {
     renderWithProviders(<AppearanceSettingsForm />)
 
     const defaultRadio = screen.getByDisplayValue('default')
     expect(defaultRadio).toBeChecked()
-    const checkbox = screen.getByRole('checkbox')
-    expect(checkbox).not.toBeChecked()
   })
 
   it('updates theme when theme button clicked', async () => {
@@ -110,15 +108,6 @@ describe('AppearanceSettingsForm', () => {
     userEvent.click(compactRadio)
 
     expect(compactRadio).toBeInTheDocument()
-  })
-
-  it('toggles sidebar collapsed state', () => {
-    renderWithProviders(<AppearanceSettingsForm />)
-
-    const checkbox = screen.getByRole('checkbox')
-    userEvent.click(checkbox)
-
-    expect(checkbox).toBeInTheDocument()
   })
 
   it('shows save button', () => {
