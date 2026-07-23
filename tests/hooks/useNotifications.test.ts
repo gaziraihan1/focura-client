@@ -432,6 +432,9 @@ describe('useNotifications', () => {
       expect(result.current.preferences).toEqual({
         browserNotifications: false,
         soundEnabled: true,
+        projectDueSoon: true,
+        projectOverdue: true,
+        projectAutoArchived: true,
       })
     })
 

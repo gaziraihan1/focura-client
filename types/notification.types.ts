@@ -34,6 +34,9 @@ export type ConnectionStatus =
 export interface NotificationPreferences {
   browserNotifications: boolean;
   soundEnabled: boolean;
+  projectDueSoon: boolean;
+  projectOverdue: boolean;
+  projectAutoArchived: boolean;
 }
 
 export const EMPTY_PAGE: NotificationsResponse = {
@@ -48,4 +51,10 @@ export const TASK_NOTIFICATION_TYPES = [
   "DEADLINE_REMINDER",
   "TASK_ASSIGNED",
   "TASK_COMPLETED",
+] as const;
+
+export const PROJECT_NOTIFICATION_TYPES = [
+  "PROJECT_DUE_SOON",
+  "PROJECT_OVERDUE",
+  "PROJECT_AUTO_ARCHIVED",
 ] as const;

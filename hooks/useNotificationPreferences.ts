@@ -10,6 +10,9 @@ export function getStoredPreferences(): NotificationPreferences {
   const defaultPreferences: NotificationPreferences = {
     browserNotifications: false,
     soundEnabled: true,
+    projectDueSoon: true,
+    projectOverdue: true,
+    projectAutoArchived: true,
   };
 
   if (typeof window === "undefined") {

@@ -9,6 +9,7 @@ import {
   ConnectionStatus,
   NotificationPreferences,
   TASK_NOTIFICATION_TYPES,
+  PROJECT_NOTIFICATION_TYPES,
 } from "@/types/notification.types";
 import { notificationKeys } from "./notificationKeys";
 import { playNotificationSound, showBrowserNotification } from "./useNotificationPreferences";
@@ -124,6 +125,15 @@ export function useNotificationSSE({
     [qc]
   );
 
+  const invalidateProjectQueries = useCallback(
+    (notificationType: string) => {
+      if (PROJECT_NOTIFICATION_TYPES.includes(notificationType as typeof PROJECT_NOTIFICATION_TYPES[number])) {
+        qc.invalidateQueries({ queryKey: ["projects"] });
+      }
+    },
+    [qc]
+  );
+
   // SSE connection
   const connect = useCallback(() => {
     if (!backendToken) return;
@@ -183,6 +193,7 @@ export function useNotificationSSE({
         prependNotification(notification);
         incrementUnreadCount();
         invalidateTaskQueries(notification.type);
+        invalidateProjectQueries(notification.type);
 
         // Notify callback
         onNotification?.(notification);
@@ -224,6 +235,7 @@ export function useNotificationSSE({
     prependNotification,
     incrementUnreadCount,
     invalidateTaskQueries,
+    invalidateProjectQueries,
     startHeartbeat,
     stopHeartbeat,
     onNotification,

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Bell, Mail, MessageSquare, Save, Loader2 } from 'lucide-react';
+import { Bell, Mail, MessageSquare, Save, Loader2, FolderKanban } from 'lucide-react';
 import { api } from '@/lib/axios';
 import toast from 'react-hot-toast';
 
@@ -16,6 +16,9 @@ interface NotificationPreferences {
   workspaceInvites: boolean;
   projectUpdates: boolean;
   weeklyDigest: boolean;
+  projectDueSoon: boolean;
+  projectOverdue: boolean;
+  projectAutoArchived: boolean;
 }
 
 const DEFAULT_PREFS: NotificationPreferences = {
@@ -29,6 +32,9 @@ const DEFAULT_PREFS: NotificationPreferences = {
   workspaceInvites: true,
   projectUpdates: true,
   weeklyDigest: false,
+  projectDueSoon: true,
+  projectOverdue: true,
+  projectAutoArchived: true,
 };
 
 export function NotificationsSettingsForm() {
@@ -129,6 +135,42 @@ export function NotificationsSettingsForm() {
             { key: 'taskComments' as const, label: 'New comments', desc: 'When someone comments on your tasks' },
             { key: 'taskDueSoon' as const, label: 'Due date reminders', desc: 'Reminders when tasks are due soon (e.g., 3h, 6h before)' },
             { key: 'taskOverdue' as const, label: 'Overdue alerts', desc: 'Alerts when tasks pass their due date without completion' },
+          ].map(({ key, label, desc }) => (
+            <label key={key} className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={prefs[key]}
+                onChange={() => togglePref(key)}
+                className="w-5 h-5 rounded border-border text-primary focus:ring-2 focus:ring-primary"
+              />
+              <div>
+                <p className="text-sm font-medium">{label}</p>
+                <p className="text-xs text-muted-foreground">{desc}</p>
+              </div>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Project Notifications */}
+      <div className="rounded-2xl border border-border bg-card p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-500/10">
+            <FolderKanban className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold tracking-tight">Project Notifications</h3>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Get notified about project deadlines and status changes
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          {[
+            { key: 'projectDueSoon' as const, label: 'Project due date reminders', desc: 'When a project you manage or own is due within 7 days' },
+            { key: 'projectOverdue' as const, label: 'Project overdue alerts', desc: 'When a project passes its due date without completion' },
+            { key: 'projectAutoArchived' as const, label: 'Auto-archive notifications', desc: 'When a project is automatically archived due to inaction' },
           ].map(({ key, label, desc }) => (
             <label key={key} className="flex items-center gap-3 cursor-pointer">
               <input

@@ -16,6 +16,7 @@ vi.mock('lucide-react', () => {
     MessageSquare: icon('MessageSquare'),
     Save: icon('Save'),
     Loader2: icon('Loader2'),
+    FolderKanban: icon('FolderKanban'),
   }
 })
 
