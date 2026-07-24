@@ -1,225 +1,205 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { IntegrationsSettingsForm } from '@/components/Settings/IntegrationsSettingsForm'
-import { createWrapper } from '@/tests/utils/renderWithProviders'
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React from 'react';
+import { IntegrationsSettingsForm } from '@/components/Settings/IntegrationsSettingsForm';
+import { api } from '@/lib/axios';
 
-vi.mock('lucide-react', () => {
-  const icon = (name: string) => {
-    const C = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={`icon-${name}`} {...props} />
-    C.displayName = name
-    return C
-  }
-  return {
-    Globe: icon('Globe'),
-    Github: icon('Github'),
-    MessageSquare: icon('MessageSquare'),
-    Calendar: icon('Calendar'),
-    Save: icon('Save'),
-    Loader2: icon('Loader2'),
-    ExternalLink: icon('ExternalLink'),
-    Check: icon('Check'),
-  }
-})
+// ─── Mocks ────────────────────────────────────────────────────────────────────
 
 vi.mock('@/lib/axios', () => ({
   api: {
     get: vi.fn(),
     post: vi.fn(),
+    put: vi.fn(),
     delete: vi.fn(),
   },
-}))
+}));
+
+vi.mock('@/lib/utils', () => ({
+  cn: (...classes: any[]) => classes.filter(Boolean).join(' '),
+}));
 
 vi.mock('react-hot-toast', () => ({
-  __esModule: true,
   default: {
     success: vi.fn(),
     error: vi.fn(),
   },
-}))
+}));
 
-const renderWithProviders = (ui: React.ReactElement) => {
-  return render(ui, { wrapper: createWrapper() })
-}
+// ─── Test Setup ───────────────────────────────────────────────────────────────
+
+const createWrapper = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
+  return function Wrapper({ children }: { children: React.ReactNode }) {
+    return React.createElement(QueryClientProvider, { client: queryClient }, children);
+  };
+};
+
+const mockIntegrations = [
+  {
+    id: 'int-1',
+    name: 'GitHub',
+    provider: 'github',
+    active: true,
+    connectedAt: '2024-01-15T10:00:00Z',
+    config: { syncDirection: 'two-way' },
+    syncStatus: { lastSyncStatus: 'success', lastSyncAt: '2024-01-15T12:00:00Z' },
+  },
+  {
+    id: 'int-2',
+    name: 'Slack',
+    provider: 'slack',
+    active: false,
+    connectedAt: '2024-01-10T08:00:00Z',
+  },
+];
+
+const mockWorkspaces = [
+  { id: 'ws-1', name: 'Test Workspace', slug: 'test-workspace' },
+];
+
+// ─── Tests ────────────────────────────────────────────────────────────────────
 
 describe('IntegrationsSettingsForm', () => {
-  let mockApiGet: ReturnType<typeof vi.fn>
-  let mockApiPost: ReturnType<typeof vi.fn>
-  let mockApiDelete: ReturnType<typeof vi.fn>
-  let mockToastSuccess: ReturnType<typeof vi.fn>
-  let mockToastError: ReturnType<typeof vi.fn>
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(api.get).mockImplementation((endpoint: string) => {
+      if (endpoint.includes('integrations')) {
+        return Promise.resolve({ success: true, data: mockIntegrations });
+      }
+      if (endpoint.includes('workspaces')) {
+        return Promise.resolve({ success: true, data: mockWorkspaces });
+      }
+      return Promise.resolve({ success: true, data: [] });
+    });
+  });
 
-  beforeAll(() => {
-    global.confirm = vi.fn(() => true)
-  })
+  it('should render loading state initially', async () => {
+    const neverResolve = new Promise(() => {});
+    vi.mocked(api.get).mockReturnValue(neverResolve as any);
 
-  beforeEach(async () => {
-    vi.clearAllMocks()
-    vi.mocked(global.confirm).mockReturnValue(true)
-    const { api } = await import('@/lib/axios')
-    mockApiGet = api.get as ReturnType<typeof vi.fn>
-    mockApiPost = api.post as ReturnType<typeof vi.fn>
-    mockApiDelete = api.delete as ReturnType<typeof vi.fn>
-    const { default: toast } = await import('react-hot-toast') as { default: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> } }
-    mockToastSuccess = toast.success
-    mockToastError = toast.error
+    const { container } = render(<IntegrationsSettingsForm />, { wrapper: createWrapper() });
 
-    mockApiGet.mockResolvedValue({
+    const loadingDiv = container.querySelector('.animate-spin');
+    expect(loadingDiv).toBeInTheDocument();
+  });
+
+  it('should render integrations after loading', async () => {
+    render(<IntegrationsSettingsForm />, { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(screen.getByText('GitHub')).toBeInTheDocument();
+    });
+
+    expect(screen.getByText('Slack')).toBeInTheDocument();
+    expect(screen.getByText('Google Calendar')).toBeInTheDocument();
+  });
+
+  it('should show connected status for connected integrations', async () => {
+    render(<IntegrationsSettingsForm />, { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(screen.getByText('Connected')).toBeInTheDocument();
+    });
+  });
+
+  it('should show configure button for connected integrations', async () => {
+    render(<IntegrationsSettingsForm />, { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(screen.getByText('Configure')).toBeInTheDocument();
+    });
+  });
+
+  it('should show disconnect button for connected integrations', async () => {
+    render(<IntegrationsSettingsForm />, { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(screen.getByText('Disconnect')).toBeInTheDocument();
+    });
+  });
+
+  it('should show connect button for disconnected integrations', async () => {
+    render(<IntegrationsSettingsForm />, { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      const connectButtons = screen.getAllByText('Connect');
+      expect(connectButtons.length).toBeGreaterThan(0);
+    });
+  });
+
+  it('should call auth endpoint when connect is clicked', async () => {
+    vi.mocked(api.post).mockResolvedValue({
       success: true,
-      data: [
-        { id: 'int-1', name: 'GitHub', provider: 'github', active: true, connectedAt: '2024-01-01T00:00:00.000Z' },
-      ],
-    })
-    mockApiPost.mockResolvedValue({ success: true })
-    mockApiDelete.mockResolvedValue({ success: true })
-  })
+      data: { authUrl: 'https://github.com/login/oauth/authorize?...' },
+    });
 
-  afterEach(() => {
-    vi.mocked(global.confirm).mockReturnValue(true)
-  })
+    const mockHref = vi.fn();
+    Object.defineProperty(window, 'location', {
+      value: { set href(val: string) { mockHref(val); }, get href() { return ''; } },
+      writable: true,
+    });
 
-  afterAll(() => {
-    vi.restoreAllMocks()
-  })
-
-  it('shows loading state initially', () => {
-    mockApiGet.mockImplementation(() => new Promise(resolve => setTimeout(() => resolve({ success: true, data: [] }), 100)))
-
-    renderWithProviders(<IntegrationsSettingsForm />)
-
-    expect(screen.getByTestId('icon-Loader2')).toBeInTheDocument()
-  })
-
-  it('renders available integrations after loading', async () => {
-    renderWithProviders(<IntegrationsSettingsForm />)
+    render(<IntegrationsSettingsForm />, { wrapper: createWrapper() });
 
     await waitFor(() => {
-      expect(screen.getByText('Available Integrations')).toBeInTheDocument()
-      expect(screen.getByText('GitHub')).toBeInTheDocument()
-      expect(screen.getByText('Slack')).toBeInTheDocument()
-      expect(screen.getByText('Google Calendar')).toBeInTheDocument()
-    })
-  })
+      expect(screen.getByText('Slack')).toBeInTheDocument();
+    });
 
-  it('shows connected status for active integrations', async () => {
-    renderWithProviders(<IntegrationsSettingsForm />)
-
-    await waitFor(() => {
-      expect(screen.getByText('Connected')).toBeInTheDocument()
-      expect(screen.getByText('Disconnect')).toBeInTheDocument()
-    })
-  })
-
-  it('shows connect button for inactive integrations', async () => {
-    renderWithProviders(<IntegrationsSettingsForm />)
+    const connectButtons = screen.getAllByText('Connect');
+    const slackConnectBtn = connectButtons.find(btn => !btn.closest('[class*="green"]'));
+    if (slackConnectBtn) {
+      fireEvent.click(slackConnectBtn);
+    }
 
     await waitFor(() => {
-      const slackConnect = screen.getAllByText('Connect')
-      expect(slackConnect.length).toBeGreaterThan(0)
-    })
-  })
+      expect(api.post).toHaveBeenCalledWith(
+        '/api/v1/user/integrations/auth',
+        expect.objectContaining({ provider: expect.any(String) }),
+      );
+    });
+  });
 
-  it('calls API to connect integration', async () => {
-    renderWithProviders(<IntegrationsSettingsForm />)
-
-    await waitFor(() => {
-      const slackConnect = screen.getAllByText('Connect')[0]
-      expect(slackConnect).toBeInTheDocument()
-    })
-  })
-
-  it('calls API to disconnect integration', async () => {
-    renderWithProviders(<IntegrationsSettingsForm />)
+  it('should expand details when chevron is clicked', async () => {
+    render(<IntegrationsSettingsForm />, { wrapper: createWrapper() });
 
     await waitFor(() => {
-      const disconnectButton = screen.getByText('Disconnect')
-      expect(disconnectButton).toBeInTheDocument()
-    })
-  })
+      expect(screen.getByText('GitHub')).toBeInTheDocument();
+    });
 
-  it('shows confirm dialog before disconnecting', async () => {
-    vi.mocked(global.confirm).mockReturnValue(false)
-
-    renderWithProviders(<IntegrationsSettingsForm />)
+    const expandButtons = screen.getAllByLabelText('Expand details');
+    fireEvent.click(expandButtons[0]);
 
     await waitFor(() => {
-      const disconnectButton = screen.getByText('Disconnect')
-      userEvent.click(disconnectButton)
-    })
+      expect(screen.getByText('Features')).toBeInTheDocument();
+    });
+  });
+
+  it('should show summary stats', async () => {
+    render(<IntegrationsSettingsForm />, { wrapper: createWrapper() });
 
     await waitFor(() => {
-      expect(mockApiDelete).not.toHaveBeenCalled()
-    })
-  })
+      const activeElements = screen.getAllByText(/active/);
+      expect(activeElements.length).toBeGreaterThan(0);
+    });
 
-  it('shows loading spinner while connecting', async () => {
-    let resolveConnect: (value: unknown) => void
-    mockApiPost.mockImplementation(() => new Promise(resolve => { resolveConnect = resolve }))
+    const inactiveElements = screen.getAllByText(/inactive/);
+    expect(inactiveElements.length).toBeGreaterThan(0);
+  });
 
-    renderWithProviders(<IntegrationsSettingsForm />)
-
-    await waitFor(() => {
-      const slackConnect = screen.getAllByText('Connect')[0]
-      userEvent.click(slackConnect)
-      expect(screen.getByTestId('icon-Loader2')).toBeInTheDocument()
-      resolveConnect!({ success: true })
-    })
-  })
-
-  it('shows error toast on connect failure', async () => {
-    mockApiPost.mockRejectedValueOnce(new Error('API Error'))
-
-    renderWithProviders(<IntegrationsSettingsForm />)
+  it('should show OAuth notice', async () => {
+    render(<IntegrationsSettingsForm />, { wrapper: createWrapper() });
 
     await waitFor(() => {
-      expect(screen.getAllByText('Connect')[0]).toBeInTheDocument()
-    })
-
-    await userEvent.click(screen.getAllByText('Connect')[0])
-
-    await waitFor(() => {
-      expect(mockToastError).toHaveBeenCalledWith('Failed to connect slack')
-    })
-  })
-
-  it('shows error toast on disconnect failure', async () => {
-    mockApiDelete.mockRejectedValueOnce(new Error('API Error'))
-
-    renderWithProviders(<IntegrationsSettingsForm />)
-
-    await waitFor(() => {
-      expect(screen.getByText('Disconnect')).toBeInTheDocument()
-    })
-
-    await userEvent.click(screen.getByText('Disconnect'))
-
-    await waitFor(() => {
-      expect(mockToastError).toHaveBeenCalledWith('Failed to disconnect GitHub')
-    })
-  })
-
-  it('renders globe, github, message square, and calendar icons', async () => {
-    renderWithProviders(<IntegrationsSettingsForm />)
-
-    await waitFor(() => {
-      expect(screen.getByTestId('icon-Globe')).toBeInTheDocument()
-      expect(screen.getByTestId('icon-Github')).toBeInTheDocument()
-      expect(screen.getByTestId('icon-MessageSquare')).toBeInTheDocument()
-      expect(screen.getByTestId('icon-Calendar')).toBeInTheDocument()
-    })
-  })
-
-  it('refetches integrations after connecting', async () => {
-    renderWithProviders(<IntegrationsSettingsForm />)
-
-    await waitFor(() => {
-      expect(screen.getAllByText('Connect')[0]).toBeInTheDocument()
-    })
-
-    await userEvent.click(screen.getAllByText('Connect')[0])
-
-    await waitFor(() => {
-      expect(mockApiGet).toHaveBeenCalledTimes(2)
-    })
-  })
-})
+      expect(screen.getByText('About OAuth Connections')).toBeInTheDocument();
+    });
+  });
+});

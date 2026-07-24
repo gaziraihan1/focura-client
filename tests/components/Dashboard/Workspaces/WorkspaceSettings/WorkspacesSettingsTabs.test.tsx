@@ -13,10 +13,11 @@ describe('WorkspacesSettingsTabs', () => {
     vi.clearAllMocks()
   })
 
-  it('renders all three tabs', () => {
+  it('renders all four tabs', () => {
     render(<WorkspaceSettingsTabs {...defaultProps} />)
     expect(screen.getByText('General')).toBeInTheDocument()
     expect(screen.getByText('Members')).toBeInTheDocument()
+    expect(screen.getByText('Integrations')).toBeInTheDocument()
     expect(screen.getByText('Danger Zone')).toBeInTheDocument()
   })
 
@@ -30,6 +31,12 @@ describe('WorkspacesSettingsTabs', () => {
     render(<WorkspaceSettingsTabs {...defaultProps} />)
     fireEvent.click(screen.getByText('Members'))
     expect(defaultProps.onTabChange).toHaveBeenCalledWith('members')
+  })
+
+  it('calls onTabChange when Integrations tab is clicked', () => {
+    render(<WorkspaceSettingsTabs {...defaultProps} />)
+    fireEvent.click(screen.getByText('Integrations'))
+    expect(defaultProps.onTabChange).toHaveBeenCalledWith('integrations')
   })
 
   it('calls onTabChange when Danger Zone tab is clicked', () => {
@@ -55,6 +62,13 @@ describe('WorkspacesSettingsTabs', () => {
     expect(membersBtn.className).toContain('text-primary')
   })
 
+  it('applies active styles to integrations tab when active', () => {
+    render(<WorkspaceSettingsTabs activeTab="integrations" onTabChange={vi.fn()} />)
+    const integrationsBtn = screen.getByText('Integrations').closest('button')!
+    expect(integrationsBtn.className).toContain('border-primary')
+    expect(integrationsBtn.className).toContain('text-primary')
+  })
+
   it('applies active styles to danger tab when active', () => {
     render(<WorkspaceSettingsTabs activeTab="danger" onTabChange={vi.fn()} />)
     const dangerBtn = screen.getByText('Danger Zone').closest('button')!
@@ -65,7 +79,7 @@ describe('WorkspacesSettingsTabs', () => {
   it('renders icons in each tab button', () => {
     const { container } = render(<WorkspaceSettingsTabs {...defaultProps} />)
     const buttons = container.querySelectorAll('button')
-    expect(buttons.length).toBe(3)
+    expect(buttons.length).toBe(4)
     buttons.forEach(btn => {
       expect(btn.querySelector('svg')).toBeInTheDocument()
     })

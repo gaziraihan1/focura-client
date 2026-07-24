@@ -176,4 +176,34 @@ export const calendarHandlers = [
   http.post(`${BASE}/api/v1/calendar/recalculate`, () =>
     HttpResponse.json({ success: true })
   ),
+
+  // GET /api/v1/calendar/capacity
+  http.get(`${BASE}/api/v1/calendar/capacity`, () =>
+    ok({
+      dailyCapacityHours: 8,
+      weeklyHours: 40,
+      deepWorkHours: 4,
+    })
+  ),
+
+  // PUT /api/v1/calendar/capacity
+  http.put(`${BASE}/api/v1/calendar/capacity`, async ({ request }) => {
+    const body = await request.json()
+    return ok(body)
+  }),
+
+  // GET /api/v1/calendar/schedule
+  http.get(`${BASE}/api/v1/calendar/schedule`, () =>
+    ok({
+      workDays: ['MON', 'TUE', 'WED', 'THU', 'FRI'],
+      workStartHour: 9,
+      workEndHour: 17,
+    })
+  ),
+
+  // PUT /api/v1/calendar/schedule
+  http.put(`${BASE}/api/v1/calendar/schedule`, async ({ request }) => {
+    const body = await request.json()
+    return ok(body)
+  }),
 ]
