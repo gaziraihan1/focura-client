@@ -12,9 +12,11 @@ import {
   Shield,
 } from 'lucide-react';
 import { api } from '@/lib/axios';
+import { invalidateCsrfToken } from '@/lib/csrf';
 import toast from 'react-hot-toast';
 import { WorkspaceIntegrationCard } from './WorkspaceIntegrations/WorkspaceIntegrationCard';
 import { WorkspaceConfigurationModal } from './WorkspaceIntegrations/WorkspaceConfigurationModal';
+import { ConfirmModal } from '@/components/Shared/ConfirmModal';
 import type {
   WorkspaceIntegration,
   WorkspaceIntegrationConfig,
@@ -120,6 +122,8 @@ export function WorkspaceIntegrationsForm({
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [configuringIntegration, setConfiguringIntegration] =
     useState<WorkspaceIntegration | null>(null);
+  const [disconnectTarget, setDisconnectTarget] = useState<{ id: string; name: string } | null>(null);
+  const [isDisconnecting, setIsDisconnecting] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -169,6 +173,12 @@ export function WorkspaceIntegrationsForm({
 
       setConnecting(provider);
       try {
+        // Invalidate cached CSRF token to ensure fresh token is fetched
+        invalidateCsrfToken();
+
+        // Store workspace slug for callback redirect
+        sessionStorage.setItem('integration_workspace_slug', workspaceSlug);
+
         // Get the OAuth URL from the backend
         const result = await api.post<{ authUrl: string }>(
           `/api/v1/workspace-integrations/${workspaceSlug}/auth`,
@@ -201,20 +211,27 @@ export function WorkspaceIntegrationsForm({
         toast.error('Only admins can disconnect integrations');
         return;
       }
-
-      if (!confirm(`Disconnect ${provider}? This will affect all workspace members.`)) return;
-      try {
-        await api.delete(
-          `/api/v1/workspace-integrations/${workspaceSlug}/${integrationId}`,
-        );
-        setIntegrations((prev) => prev.filter((i) => i.id !== integrationId));
-        toast.success(`${provider} disconnected`);
-      } catch {
-        toast.error(`Failed to disconnect ${provider}`);
-      }
+      setDisconnectTarget({ id: integrationId, name: provider });
     },
-    [workspaceSlug, isAdmin],
+    [isAdmin],
   );
+
+  const confirmDisconnect = useCallback(async () => {
+    if (!disconnectTarget) return;
+    setIsDisconnecting(true);
+    try {
+      await api.delete(
+        `/api/v1/workspace-integrations/${workspaceSlug}/${disconnectTarget.id}`,
+      );
+      setIntegrations((prev) => prev.filter((i) => i.id !== disconnectTarget.id));
+      toast.success(`${disconnectTarget.name} disconnected`);
+    } catch {
+      toast.error(`Failed to disconnect ${disconnectTarget.name}`);
+    } finally {
+      setIsDisconnecting(false);
+      setDisconnectTarget(null);
+    }
+  }, [workspaceSlug, disconnectTarget]);
 
   const handleConfigure = useCallback((integration: WorkspaceIntegration) => {
     setConfiguringIntegration(integration);
@@ -383,6 +400,19 @@ export function WorkspaceIntegrationsForm({
           onSave={handleConfigSave}
         />
       )}
+
+      {/* Disconnect Confirmation Modal */}
+      <ConfirmModal
+        isOpen={!!disconnectTarget}
+        onClose={() => setDisconnectTarget(null)}
+        onConfirm={confirmDisconnect}
+        title={`Disconnect ${disconnectTarget?.name || ''}?`}
+        message="This will revoke access and affect all workspace members. You can reconnect at any time."
+        confirmText="Disconnect"
+        cancelText="Cancel"
+        variant="danger"
+        isLoading={isDisconnecting}
+      />
     </div>
   );
 }

@@ -85,7 +85,7 @@ export function normalizeError(error: unknown): AppError {
 }
 
 let sessionPromise: Promise<AppSession | null> | null = null;
-async function getFreshSession(): Promise<AppSession | null> {
+export async function getFreshSession(): Promise<AppSession | null> {
   if (!sessionPromise) {
     sessionPromise = getSession().finally(() => {
       sessionPromise = null;
@@ -594,8 +594,10 @@ const handleAxiosError = async (
   }
 
   if (code === "FORBIDDEN") {
-    const required = data?.required?.join(", ") || "required permissions";
-    toast.error(`You don't have permission to perform this action. ${required}`);
+    if (showErrorToast) {
+      const required = data?.required?.join(", ") || "required permissions";
+      toast.error(`You don't have permission to perform this action. ${required}`);
+    }
     return Promise.reject(error);
   }
 

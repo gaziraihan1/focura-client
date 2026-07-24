@@ -1,6 +1,7 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useCallback } from "react";
+import { useParams, useRouter, usePathname } from "next/navigation";
 import { MembersSettingsTab } from "@/components/Dashboard/Workspaces/WorkspaceSettings/MembersSettingsTab";
 import { DangerZoneTab } from "@/components/Dashboard/Workspaces/WorkspaceSettings/DangerZoneTab";
 import { DeleteWorkspaceModal } from "@/components/Dashboard/Workspaces/WorkspaceSettings/DeleteWorkspaceModal";
@@ -73,13 +74,30 @@ export default function WorkspaceSettingsPage() {
     mutations,
   } = useWorkspaceSettings({ slug });
 
+  const router = useRouter();
+  const pathname = usePathname();
+  const handleTabChange = useCallback(
+    (tab: string) => {
+      setActiveTab(tab as any);
+      const params = new URLSearchParams(window.location.search);
+      if (tab === "general") {
+        params.delete("tab");
+      } else {
+        params.set("tab", tab);
+      }
+      const newUrl = params.toString() ? `${pathname}?${params}` : pathname;
+      router.replace(newUrl, { scroll: false });
+    },
+    [setActiveTab, pathname, router],
+  );
+
   if (!workspace) return <SettingsSkeleton />;
 
   return (
     <div className="max-w-4xl mx-auto p-3 space-y-6">
       <WorkspaceSettingsHeader />
 
-      <WorkspaceSettingsTabs activeTab={activeTab} onTabChange={setActiveTab} />
+      <WorkspaceSettingsTabs activeTab={activeTab} onTabChange={handleTabChange} />
 
       {activeTab === "general" && (
         <div

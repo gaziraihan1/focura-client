@@ -27,6 +27,11 @@ vi.mock('react-hot-toast', () => ({
   },
 }));
 
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+}));
+
 // ─── Test Setup ───────────────────────────────────────────────────────────────
 
 const createWrapper = () => {
@@ -210,5 +215,75 @@ describe('IntegrationsSettingsForm', () => {
     await waitFor(() => {
       expect(screen.getByText('About OAuth Connections')).toBeInTheDocument();
     });
+  });
+
+  it('should open ConfirmModal when disconnect is clicked', async () => {
+    render(<IntegrationsSettingsForm />, { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(screen.getByText('GitHub')).toBeInTheDocument();
+    });
+
+    // Click disconnect button on the connected integration (GitHub)
+    const disconnectButtons = screen.getAllByText('Disconnect');
+    fireEvent.click(disconnectButtons[0]);
+
+    // Should show ConfirmModal with disconnect confirmation
+    await waitFor(() => {
+      expect(screen.getByText(/Disconnect GitHub\?/)).toBeInTheDocument();
+      expect(screen.getByText(/This will revoke access/)).toBeInTheDocument();
+    });
+  });
+
+  it('should call delete API when disconnect is confirmed', async () => {
+    vi.mocked(api.delete).mockResolvedValue({ success: true });
+
+    render(<IntegrationsSettingsForm />, { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(screen.getByText('GitHub')).toBeInTheDocument();
+    });
+
+    // Click disconnect
+    const disconnectButtons = screen.getAllByText('Disconnect');
+    fireEvent.click(disconnectButtons[0]);
+
+    // Confirm in the modal
+    await waitFor(() => {
+      expect(screen.getByText(/Disconnect GitHub\?/)).toBeInTheDocument();
+    });
+
+    const confirmButton = screen.getAllByRole('button', { name: /^Disconnect$/i }).pop()!;
+    fireEvent.click(confirmButton);
+
+    await waitFor(() => {
+      expect(api.delete).toHaveBeenCalledWith('/api/v1/user/integrations/int-1');
+    });
+  });
+
+  it('should not call delete API when disconnect is cancelled', async () => {
+    render(<IntegrationsSettingsForm />, { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(screen.getByText('GitHub')).toBeInTheDocument();
+    });
+
+    // Click disconnect
+    const disconnectButtons = screen.getAllByText('Disconnect');
+    fireEvent.click(disconnectButtons[0]);
+
+    // Cancel in the modal
+    await waitFor(() => {
+      expect(screen.getByText(/Disconnect GitHub\?/)).toBeInTheDocument();
+    });
+
+    const cancelButton = screen.getByRole('button', { name: /Cancel/i });
+    fireEvent.click(cancelButton);
+
+    // Modal should close and no delete call
+    await waitFor(() => {
+      expect(screen.queryByText(/Disconnect GitHub\?/)).not.toBeInTheDocument();
+    });
+    expect(api.delete).not.toHaveBeenCalled();
   });
 });

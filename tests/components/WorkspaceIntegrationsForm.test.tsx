@@ -27,6 +27,11 @@ vi.mock('react-hot-toast', () => ({
   },
 }));
 
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+}));
+
 // ─── Test Setup ───────────────────────────────────────────────────────────────
 
 const createWrapper = () => {
@@ -208,5 +213,110 @@ describe('WorkspaceIntegrationsForm', () => {
 
     const inactiveElements = screen.getAllByText(/inactive/);
     expect(inactiveElements.length).toBeGreaterThan(0);
+  });
+
+  it('should open ConfirmModal when disconnect is clicked', async () => {
+    render(<WorkspaceIntegrationsForm {...defaultProps} />, { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(screen.getByText('GitHub')).toBeInTheDocument();
+    });
+
+    // Click disconnect button on the connected integration (GitHub)
+    const disconnectButtons = screen.getAllByText('Disconnect');
+    fireEvent.click(disconnectButtons[0]);
+
+    // Should show ConfirmModal with disconnect confirmation
+    await waitFor(() => {
+      expect(screen.getByText(/Disconnect GitHub\?/)).toBeInTheDocument();
+      expect(screen.getByText(/This will revoke access and affect all workspace members/)).toBeInTheDocument();
+    });
+  });
+
+  it('should call delete API when disconnect is confirmed', async () => {
+    vi.mocked(api.delete).mockResolvedValue({ success: true });
+
+    render(<WorkspaceIntegrationsForm {...defaultProps} />, { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(screen.getByText('GitHub')).toBeInTheDocument();
+    });
+
+    // Click disconnect
+    const disconnectButtons = screen.getAllByText('Disconnect');
+    fireEvent.click(disconnectButtons[0]);
+
+    // Confirm in the modal
+    await waitFor(() => {
+      expect(screen.getByText(/Disconnect GitHub\?/)).toBeInTheDocument();
+    });
+
+    const confirmButton = screen.getAllByRole('button', { name: /^Disconnect$/i }).pop()!;
+    fireEvent.click(confirmButton);
+
+    await waitFor(() => {
+      expect(api.delete).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/workspace-integrations/'),
+      );
+    });
+  });
+
+  it('should not call delete API when disconnect is cancelled', async () => {
+    render(<WorkspaceIntegrationsForm {...defaultProps} />, { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(screen.getByText('GitHub')).toBeInTheDocument();
+    });
+
+    // Click disconnect
+    const disconnectButtons = screen.getAllByText('Disconnect');
+    fireEvent.click(disconnectButtons[0]);
+
+    // Cancel in the modal
+    await waitFor(() => {
+      expect(screen.getByText(/Disconnect GitHub\?/)).toBeInTheDocument();
+    });
+
+    const cancelButton = screen.getByRole('button', { name: /Cancel/i });
+    fireEvent.click(cancelButton);
+
+    // Modal should close and no delete call
+    await waitFor(() => {
+      expect(screen.queryByText(/Disconnect GitHub\?/)).not.toBeInTheDocument();
+    });
+    expect(api.delete).not.toHaveBeenCalled();
+  });
+
+  it('should store workspace slug in sessionStorage when connect is clicked', async () => {
+    const mockSetItem = vi.spyOn(Storage.prototype, 'setItem');
+    vi.mocked(api.post).mockResolvedValue({
+      success: true,
+      data: { authUrl: 'https://github.com/login/oauth/authorize?...' },
+    });
+
+    const mockHref = vi.fn();
+    Object.defineProperty(window, 'location', {
+      value: { set href(val: string) { mockHref(val); }, get href() { return ''; } },
+      writable: true,
+    });
+
+    render(<WorkspaceIntegrationsForm {...defaultProps} />, { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(screen.getByText('GitHub')).toBeInTheDocument();
+    });
+
+    // Click connect on a non-connected integration
+    const connectButtons = screen.getAllByText('Connect');
+    fireEvent.click(connectButtons[0]);
+
+    await waitFor(() => {
+      expect(mockSetItem).toHaveBeenCalledWith(
+        'integration_workspace_slug',
+        'test-workspace',
+      );
+    });
+
+    mockSetItem.mockRestore();
   });
 });

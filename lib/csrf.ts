@@ -8,10 +8,10 @@ const CSRF_TOKEN_CACHE_DURATION = 55 * 60 * 1000; // 55 minutes (token valid for
 /**
  * Fetch CSRF token from backend
  */
-async function fetchCsrfToken(): Promise<string | null> {
+async function fetchCsrfToken(backendToken?: string): Promise<string | null> {
   try {
-    const session = await getSession();
-    if (!session?.backendToken) {
+    const token = backendToken || (await getSession())?.backendToken;
+    if (!token) {
       console.warn('No backend token available for CSRF token fetch');
       return null;
     }
@@ -21,7 +21,7 @@ async function fetchCsrfToken(): Promise<string | null> {
       {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${session.backendToken}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       }
@@ -42,16 +42,28 @@ async function fetchCsrfToken(): Promise<string | null> {
 
 /**
  * Get CSRF token with caching
+ * @param forceRefresh - bypass cache and fetch fresh token
+ * @param backendToken - explicit backend token to use (avoids stale session issues)
  */
-export async function getCsrfToken(forceRefresh = false): Promise<string | null> {
+export async function getCsrfToken(forceRefresh = false, backendToken?: string): Promise<string | null> {
   const now = Date.now();
-  
+
+  // If an explicit token is provided, always fetch fresh (different backend token = different CSRF)
+  if (backendToken) {
+    const token = await fetchCsrfToken(backendToken);
+    if (token) {
+      cachedCsrfToken = token;
+      csrfTokenExpiry = now + CSRF_TOKEN_CACHE_DURATION;
+    }
+    return token;
+  }
+
   if (!forceRefresh && cachedCsrfToken && now < csrfTokenExpiry) {
     return cachedCsrfToken;
   }
 
   const token = await fetchCsrfToken();
-  
+
   if (token) {
     cachedCsrfToken = token;
     csrfTokenExpiry = now + CSRF_TOKEN_CACHE_DURATION;

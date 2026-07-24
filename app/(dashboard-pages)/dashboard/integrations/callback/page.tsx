@@ -36,14 +36,16 @@ export default function IntegrationsCallbackPage() {
 
       try {
         // Send the authorization code to the backend for token exchange
+        // (CSRF is exempt for the callback endpoint — it uses its own OAuth state token)
         const result = await api.post<{ integration: { provider: string } }>(
           '/api/v1/user/integrations/callback',
           {
             code,
             state,
             provider: extractProviderFromState(state),
-            redirectUri: `${window.location.origin}/integrations/callback`,
+            redirectUri: `${window.location.origin}/dashboard/integrations/callback`,
           },
+          { showErrorToast: false },
         );
 
         if (result?.success) {
@@ -51,17 +53,33 @@ export default function IntegrationsCallbackPage() {
           const provider = result.data?.integration?.provider || 'provider';
           setMessage(`Successfully connected ${provider}`);
 
-          // Redirect to settings after 2 seconds
+          // Determine redirect destination
+          const workspaceSlug = sessionStorage.getItem('integration_workspace_slug');
+          const redirectPath = workspaceSlug
+            ? `/dashboard/workspaces/${workspaceSlug}/settings?tab=integrations`
+            : '/dashboard/settings';
+
+          // Redirect after 2 seconds
           setTimeout(() => {
-            router.push('/dashboard/settings');
+            sessionStorage.removeItem('integration_workspace_slug');
+            router.push(redirectPath);
           }, 2000);
         } else {
           setStatus('error');
           setMessage(result?.message || 'Failed to complete integration');
         }
       } catch (err: any) {
+        const errMsg = err?.response?.data?.message || err?.message || 'An error occurred while connecting';
+
+        // OAuth state expired — offer to retry from integrations page
+        if (errMsg.toLowerCase().includes('state has expired') || errMsg.toLowerCase().includes('oauth state')) {
+          setStatus('error');
+          setMessage('OAuth session expired. Please try connecting again.');
+          return;
+        }
+
         setStatus('error');
-        setMessage(err?.message || 'An error occurred while connecting');
+        setMessage(errMsg);
       }
     };
 
@@ -108,14 +126,28 @@ export default function IntegrationsCallbackPage() {
         {status !== 'loading' && (
           <div className="flex justify-center gap-3">
             <button
-              onClick={() => router.push('/dashboard/settings')}
+              onClick={() => {
+                const workspaceSlug = sessionStorage.getItem('integration_workspace_slug');
+                const redirectPath = workspaceSlug
+                  ? `/dashboard/workspaces/${workspaceSlug}/settings?tab=integrations`
+                  : '/dashboard/settings';
+                sessionStorage.removeItem('integration_workspace_slug');
+                router.push(redirectPath);
+              }}
               className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
             >
               {status === 'success' ? 'Go to Settings' : 'Back to Settings'}
             </button>
             {status === 'error' && (
               <button
-                onClick={() => router.back()}
+                onClick={() => {
+                  const workspaceSlug = sessionStorage.getItem('integration_workspace_slug');
+                  const redirectPath = workspaceSlug
+                    ? `/dashboard/workspaces/${workspaceSlug}/settings?tab=integrations`
+                    : '/dashboard/settings';
+                  sessionStorage.removeItem('integration_workspace_slug');
+                  router.push(redirectPath);
+                }}
                 className="px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-accent transition-colors"
               >
                 Try Again

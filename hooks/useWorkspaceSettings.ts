@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useSession } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 import {
   useWorkspace,
   useUpdateWorkspace,
@@ -39,7 +40,9 @@ interface UseWorkspaceSettingsProps {
 
 export function useWorkspaceSettings({ slug }: UseWorkspaceSettingsProps) {
   const { data: session } = useSession();
-  const [activeTab, setActiveTab] = useState<TabType>("general");
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab") as TabType | null;
+  const [activeTab, setActiveTab] = useState<TabType>(tabParam && ["general", "members", "integrations", "danger"].includes(tabParam) ? tabParam : "general");
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<WorkspaceRole>("MEMBER");
   const [showInviteModal, setShowInviteModal] = useState(false);

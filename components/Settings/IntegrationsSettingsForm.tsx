@@ -6,6 +6,7 @@ import {
   Github,
   MessageSquare,
   Calendar,
+  Trello,
   Loader2,
   // ExternalLink,
   Check,
@@ -20,7 +21,9 @@ import {
   Unlink2,
 } from 'lucide-react';
 import { api } from '@/lib/axios';
+import { invalidateCsrfToken } from '@/lib/csrf';
 import toast from 'react-hot-toast';
+import { ConfirmModal } from '@/components/Shared/ConfirmModal';
 import { cn } from '@/lib/utils';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -106,6 +109,21 @@ const AVAILABLE_INTEGRATIONS = [
       'Automatic reminders',
     ],
     oauthScopes: ['calendar.events', 'calendar.readonly'],
+  },
+  {
+    id: 'trello',
+    name: 'Trello',
+    description: 'Import boards and lists into Focura projects',
+    icon: Trello,
+    color: 'bg-[#0079BF]/10',
+    textColor: 'text-[#0079BF]',
+    features: [
+      'Import Trello boards',
+      'Sync cards as tasks',
+      'Map lists to sections',
+      'Preserve labels and due dates',
+    ],
+    oauthScopes: ['read', 'write'],
   },
 ];
 
@@ -411,7 +429,7 @@ function ConfigurationModal({
             >
               <span
                 className={cn(
-                  'absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform',
+                  'absolute top-1 left-1 w-4 h-4 rounded-full bg-background transition-transform',
                   config.autoSync && 'translate-x-5',
                 )}
               />
@@ -463,7 +481,7 @@ function ConfigurationModal({
             >
               <span
                 className={cn(
-                  'absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform',
+                  'absolute top-1 left-1 w-4 h-4 rounded-full bg-background transition-transform',
                   config.notifications && 'translate-x-5',
                 )}
               />
@@ -505,6 +523,8 @@ export function IntegrationsSettingsForm() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [configuringIntegration, setConfiguringIntegration] =
     useState<Integration | null>(null);
+  const [disconnectTarget, setDisconnectTarget] = useState<{ id: string; name: string } | null>(null);
+  const [isDisconnecting, setIsDisconnecting] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -544,6 +564,9 @@ export function IntegrationsSettingsForm() {
   const handleConnect = useCallback(async (provider: string) => {
     setConnecting(provider);
     try {
+      // Invalidate cached CSRF token to ensure fresh token is fetched
+      invalidateCsrfToken();
+
       // Get the OAuth URL from the backend
       const result = await api.post<{ authUrl: string }>(
         '/api/v1/user/integrations/auth',
@@ -568,17 +591,25 @@ export function IntegrationsSettingsForm() {
 
   const handleDisconnect = useCallback(
     async (integrationId: string, provider: string) => {
-      if (!confirm(`Disconnect ${provider}? This will revoke access.`)) return;
-      try {
-        await api.delete(`/api/v1/user/integrations/${integrationId}`);
-        setIntegrations((prev) => prev.filter((i) => i.id !== integrationId));
-        toast.success(`${provider} disconnected`);
-      } catch {
-        toast.error(`Failed to disconnect ${provider}`);
-      }
+      setDisconnectTarget({ id: integrationId, name: provider });
     },
     [],
   );
+
+  const confirmDisconnect = useCallback(async () => {
+    if (!disconnectTarget) return;
+    setIsDisconnecting(true);
+    try {
+      await api.delete(`/api/v1/user/integrations/${disconnectTarget.id}`);
+      setIntegrations((prev) => prev.filter((i) => i.id !== disconnectTarget.id));
+      toast.success(`${disconnectTarget.name} disconnected`);
+    } catch {
+      toast.error(`Failed to disconnect ${disconnectTarget.name}`);
+    } finally {
+      setIsDisconnecting(false);
+      setDisconnectTarget(null);
+    }
+  }, [disconnectTarget]);
 
   const handleConfigure = useCallback((integration: Integration) => {
     setConfiguringIntegration(integration);
@@ -716,6 +747,19 @@ export function IntegrationsSettingsForm() {
           onSave={handleConfigSave}
         />
       )}
+
+      {/* Disconnect Confirmation Modal */}
+      <ConfirmModal
+        isOpen={!!disconnectTarget}
+        onClose={() => setDisconnectTarget(null)}
+        onConfirm={confirmDisconnect}
+        title={`Disconnect ${disconnectTarget?.name || ''}?`}
+        message="This will revoke access. You can reconnect at any time."
+        confirmText="Disconnect"
+        cancelText="Cancel"
+        variant="danger"
+        isLoading={isDisconnecting}
+      />
     </div>
   );
 }

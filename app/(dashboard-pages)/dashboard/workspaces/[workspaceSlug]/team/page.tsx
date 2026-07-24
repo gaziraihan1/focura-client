@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 import { useTeamPage } from "@/hooks/useTeamPage";
@@ -39,6 +40,25 @@ export default function MainTeamPage() {
   } = useTeamPage();
 
   const [activeTab, setActiveTab] = useState<TabId>("members");
+
+  const router = useRouter();
+  const pathname = usePathname();
+  const handleTabChange = useCallback(
+    (tab: TabId) => {
+      setActiveTab(tab);
+      const searchParams = new URLSearchParams(window.location.search);
+      if (tab === "members") {
+        searchParams.delete("tab");
+      } else {
+        searchParams.set("tab", tab);
+      }
+      const newUrl = searchParams.toString()
+        ? `${pathname}?${searchParams}`
+        : pathname;
+      router.replace(newUrl, { scroll: false });
+    },
+    [pathname, router],
+  );
 
   const handleWorkspaceRoleChange = useCallback(
     (memberId: string, role: WorkspaceRoleOption) => {
@@ -81,7 +101,7 @@ export default function MainTeamPage() {
 
       <Tabs
         tabs={TABS}
-        onActiveTab={setActiveTab}
+        onActiveTab={handleTabChange}
         activeTab={activeTab}
         members={members}
         projects={projects}

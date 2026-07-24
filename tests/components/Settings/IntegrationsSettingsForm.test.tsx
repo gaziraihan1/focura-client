@@ -60,6 +60,13 @@ const mockIntegrations = [
     active: false,
     connectedAt: '2024-01-10T08:00:00Z',
   },
+  {
+    id: 'int-3',
+    name: 'Trello',
+    provider: 'trello',
+    active: false,
+    connectedAt: '2024-01-12T09:00:00Z',
+  },
 ];
 
 const mockWorkspaces = [
@@ -101,6 +108,7 @@ describe('IntegrationsSettingsForm', () => {
 
     expect(screen.getByText('Slack')).toBeInTheDocument();
     expect(screen.getByText('Google Calendar')).toBeInTheDocument();
+    expect(screen.getByText('Trello')).toBeInTheDocument();
   });
 
   it('should show connected status for connected integrations', async () => {

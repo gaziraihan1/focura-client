@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { useParams } from "next/navigation";
+import React, { useState, useMemo, useCallback } from "react";
+import { useParams, useRouter, usePathname } from "next/navigation";
 import {
   Settings,
   Users,
@@ -42,8 +42,27 @@ export default function ProjectSettingsPage() {
   const params = useParams();
   const workspaceSlug = params?.workspaceSlug as string;
   const projectSlug = params?.projectSlug as string;
+  const router = useRouter();
+  const pathname = usePathname();
 
   const [activeTab, setActiveTab] = useState<SettingsTab>("general");
+
+  const handleTabChange = useCallback(
+    (tab: SettingsTab) => {
+      setActiveTab(tab);
+      const searchParams = new URLSearchParams(window.location.search);
+      if (tab === "general") {
+        searchParams.delete("tab");
+      } else {
+        searchParams.set("tab", tab);
+      }
+      const newUrl = searchParams.toString()
+        ? `${pathname}?${searchParams}`
+        : pathname;
+      router.replace(newUrl, { scroll: false });
+    },
+    [pathname, router],
+  );
 
   const {
     data: project,
@@ -148,7 +167,7 @@ export default function ProjectSettingsPage() {
           return (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className={[
                 "flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all shrink-0",
                 active

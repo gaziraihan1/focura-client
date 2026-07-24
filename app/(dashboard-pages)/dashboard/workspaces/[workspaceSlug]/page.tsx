@@ -1,6 +1,7 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useCallback } from "react";
+import { useParams, useRouter, usePathname } from "next/navigation";
 import { WorkspaceHeader } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceHeader";
 import { WorkspaceStats } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceStats";
 import { WorkspaceTabNavigation } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceTabNavigation";
@@ -30,7 +31,22 @@ export default function WorkspaceDetailPage() {
     canCreateProjects,
   } = useWorkspaceDetailPage({ slug });
 
-  
+  const router = useRouter();
+  const pathname = usePathname();
+  const handleTabChange = useCallback(
+    (tab: string) => {
+      setActiveTab(tab as any);
+      const params = new URLSearchParams(window.location.search);
+      if (tab === "overview") {
+        params.delete("tab");
+      } else {
+        params.set("tab", tab);
+      }
+      const newUrl = params.toString() ? `${pathname}?${params}` : pathname;
+      router.replace(newUrl, { scroll: false });
+    },
+    [setActiveTab, pathname, router],
+  );
 
   if (isLoading) return <LoadingState />;
   if (isError) return <WorkspaceDetailErrorState />;
@@ -56,7 +72,7 @@ export default function WorkspaceDetailPage() {
 
       <WorkspaceTabNavigation
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
       />
 
       <WorkspaceDetailContent

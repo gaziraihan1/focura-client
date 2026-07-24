@@ -10,7 +10,9 @@ export function useTasksPage() {
   const { userId } = useUserProfile();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<"all" | "personal" | "assigned">("all");
+  const [activeTab, setActiveTab] = useState<"all" | "personal" | "assigned">(
+    (searchParams.get("tab") as "all" | "personal" | "assigned") || "all"
+  );
   const [searchQuery, setSearchQuery] = useState(searchParams.get("search") ?? "");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedPriority, setSelectedPriority] = useState("all");
@@ -33,7 +35,18 @@ export function useTasksPage() {
   const { data: qouta } = usePersonalQuota();
   const { data: stats } = useTaskStats(undefined, activeTab);
 
-  const handleTabChange = (tab: "all" | "personal" | "assigned") => { setActiveTab(tab); setCurrentPage(1); };
+  const handleTabChange = (tab: "all" | "personal" | "assigned") => {
+    setActiveTab(tab);
+    setCurrentPage(1);
+    const params = new URLSearchParams(searchParams.toString());
+    if (tab === "all") {
+      params.delete("tab");
+    } else {
+      params.set("tab", tab);
+    }
+    const newUrl = params.toString() ? `${window.location.pathname}?${params}` : window.location.pathname;
+    router.replace(newUrl, { scroll: false });
+  };
   const handleStatusChange = (status: string) => { setSelectedStatus(status); setCurrentPage(1); };
   const handlePriorityChange = (priority: string) => { setSelectedPriority(priority); setCurrentPage(1); };
   const handleFocusRequiredChange = (value: boolean) => { setFocusRequired(value); setCurrentPage(1); };

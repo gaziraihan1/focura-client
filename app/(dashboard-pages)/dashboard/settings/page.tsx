@@ -12,6 +12,7 @@ import {
   Clock,
   CheckCircle2,
 } from "lucide-react";
+import { useUrlState } from "@/hooks/useUrlState";
 import { CapacityScheduleForm } from "@/components/Settings/CapacityScheduleForm";
 import { AccountSettingsForm } from "@/components/Settings/AccountSettingsForm";
 import { AppearanceSettingsForm } from "@/components/Settings/AppearanceSettingsForm";
@@ -206,7 +207,7 @@ function SettingsSection({
 }
 
 export default function SettingsOverviewPage() {
-  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useUrlState<string>("section", "");
 
   const renderGlobalForm = (section: string) => {
     const FormComponent = GLOBAL_FORM_MAP[section];
@@ -258,7 +259,7 @@ export default function SettingsOverviewPage() {
         {activeSection ? (
           <div className="space-y-6">
             <button
-              onClick={() => setActiveSection(null)}
+              onClick={() => setActiveSection("")}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               &larr; Back to settings

@@ -1,7 +1,7 @@
 // workspace.hooks.ts — updated for public workspace viewer support
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import {
   useWorkspace,
@@ -233,7 +233,9 @@ export function useWorkspaceLayout({
 // useWorkspaceDetailPage
 export function useWorkspaceDetailPage({ slug }: UseWorkspaceDetailPageProps) {
   const { data: session } = useSession();
-  const [activeTab, setActiveTab] = useState<TabType>("overview");
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab") as TabType | null;
+  const [activeTab, setActiveTab] = useState<TabType>(tabParam && ["overview", "projects", "members"].includes(tabParam) ? tabParam : "overview");
   const [showInviteModal, setShowInviteModal] = useState(false);
 
   const {
