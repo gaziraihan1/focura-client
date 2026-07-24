@@ -85,7 +85,7 @@ export function NotificationsSettingsForm() {
   return (
     <div className="space-y-8">
       {/* Email Notifications */}
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center gap-3 mb-6">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/10">
             <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" />
@@ -115,7 +115,7 @@ export function NotificationsSettingsForm() {
       </div>
 
       {/* Task Notifications */}
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center gap-3 mb-6">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-500/10">
             <Bell className="w-5 h-5 text-green-600 dark:text-green-400" />
@@ -153,7 +153,7 @@ export function NotificationsSettingsForm() {
       </div>
 
       {/* Project Notifications */}
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center gap-3 mb-6">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-500/10">
             <FolderKanban className="w-5 h-5 text-orange-600 dark:text-orange-400" />

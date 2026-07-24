@@ -46,7 +46,7 @@ export function AppearanceSettingsForm() {
     return (
       <div className="space-y-8">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="rounded-2xl border border-border bg-card p-6 animate-pulse">
+          <div key={i} className="rounded-2xl border border-border bg-card p-4 animate-pulse">
             <div className="flex items-center gap-3 mb-6">
               <div className="h-10 w-10 rounded-xl bg-muted" />
               <div className="space-y-2">
@@ -64,7 +64,7 @@ export function AppearanceSettingsForm() {
   return (
     <div className="space-y-8">
       {/* Theme */}
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center gap-3 mb-6">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10">
             <Monitor className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
@@ -117,7 +117,7 @@ export function AppearanceSettingsForm() {
       </div>
 
       {/* Density */}
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center gap-3 mb-6">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-500/10">
             <span className="text-lg">📏</span>
@@ -158,10 +158,10 @@ export function AppearanceSettingsForm() {
       </div>
 
       {/* Sidebar - Coming Soon */}
-      <div className="rounded-2xl border border-border bg-card p-6 relative overflow-hidden">
+      <div className="rounded-2xl border border-border bg-card p-4 relative overflow-hidden">
         {/* Coming Soon Badge */}
         <div className="absolute top-4 right-4">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-violet-500/10 to-pink-500/10 border border-violet-500/20 px-3 py-1 text-xs font-medium text-violet-600 dark:text-violet-400">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-linear-to-r from-violet-500/10 to-pink-500/10 border border-violet-500/20 px-3 py-1 text-xs font-medium text-violet-600 dark:text-violet-400">
             <Sparkles className="w-3 h-3" />
             Coming Soon
           </span>
@@ -207,7 +207,7 @@ export function AppearanceSettingsForm() {
         </div>
 
         {/* Coming Soon Message */}
-        <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-violet-500/5 to-pink-500/5 border border-violet-500/10">
+        <div className="mt-6 p-4 rounded-xl bg-linear-to-r from-violet-500/5 to-pink-500/5 border border-violet-500/10">
           <p className="text-sm text-muted-foreground text-center">
             Sidebar customization is under development. Stay tuned for powerful layout options!
           </p>

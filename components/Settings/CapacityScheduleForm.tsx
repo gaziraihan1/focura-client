@@ -79,7 +79,7 @@ export function CapacityScheduleForm() {
   return (
     <div className="space-y-8">
       {/* Daily Capacity */}
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center gap-3 mb-6">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/10">
             <Clock className="w-5 h-5 text-blue-600 dark:text-blue-400" />
@@ -141,7 +141,7 @@ export function CapacityScheduleForm() {
       </div>
 
       {/* Work Schedule */}
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center gap-3 mb-6">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/10">
             <Calendar className="w-5 h-5 text-purple-600 dark:text-purple-400" />
@@ -215,7 +215,7 @@ export function CapacityScheduleForm() {
       </div>
 
       {/* Energy Insight */}
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center gap-3 mb-4">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-500/10">
             <Brain className="w-5 h-5 text-green-600 dark:text-green-400" />

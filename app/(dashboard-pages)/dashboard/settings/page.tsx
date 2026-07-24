@@ -216,7 +216,7 @@ export default function SettingsOverviewPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-12 p-6 lg:p-8">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-12 p-3 lg:p-8">
         {/* Header */}
         <div className="space-y-4">
           <div

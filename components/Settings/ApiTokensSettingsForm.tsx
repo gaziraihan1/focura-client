@@ -6,7 +6,7 @@ import {
   useApiTokens,
   useCreateApiToken,
   useDeleteApiToken,
-  type ApiToken,
+  // type ApiToken,
 } from '@/hooks/useApiTokens';
 import { ConfirmModal } from '@/components/Shared/ConfirmModal';
 import toast from 'react-hot-toast';
@@ -78,7 +78,7 @@ export function ApiTokensSettingsForm() {
   return (
     <div className="space-y-8">
       {/* New Token */}
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center gap-3 mb-6">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10">
             <KeyRound className="w-5 h-5 text-amber-600 dark:text-amber-400" />
@@ -150,7 +150,7 @@ export function ApiTokensSettingsForm() {
       </div>
 
       {/* Existing Tokens */}
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center gap-3 mb-6">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-500/10">
             <Shield className="w-5 h-5 text-slate-600 dark:text-slate-400" />
@@ -222,7 +222,7 @@ export function ApiTokensSettingsForm() {
       </div>
 
       {/* Documentation */}
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center gap-3 mb-6">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/10">
             <BookOpen className="w-5 h-5 text-blue-600 dark:text-blue-400" />
@@ -422,7 +422,7 @@ print(response.json())`}
       </div>
 
       {/* Quick Links */}
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center gap-3 mb-4">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/10">
             <Code className="w-5 h-5 text-purple-600 dark:text-purple-400" />

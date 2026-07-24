@@ -23,7 +23,7 @@ const PREDEFINED_COLORS = [
 ];
 
 type WorkspaceRole = "OWNER" | "ADMIN" | "MEMBER" | "GUEST";
-type TabType = "general" | "members" | "danger";
+type TabType = "general" | "members" | "integrations" | "danger";
 
 interface WorkspaceForm {
   name: string;

@@ -9,6 +9,7 @@ import { WorkspaceSettingsHeader } from "@/components/Dashboard/Workspaces/Works
 import { WorkspaceSettingsTabs } from "@/components/Dashboard/Workspaces/WorkspaceSettings/WorkspacesSettingsTabs";
 import { GeneralSettingsTab } from "@/components/Dashboard/Workspaces/WorkspaceSettings/GeneralSettingsTab";
 import { WorkspaceInviteMemberModal } from "@/components/Dashboard/Workspaces/WorkspaceSettings/WorkspaceInviteMemberModal";
+import { WorkspaceIntegrationsForm } from "@/components/Settings/WorkspaceIntegrationsForm";
 
 function SettingsSkeleton() {
   return (
@@ -111,6 +112,20 @@ export default function WorkspaceSettingsPage() {
             onInviteClick={() => setShowInviteModal(true)}
             onRemoveMember={handleRemoveMember}
             onUpdateRole={handleUpdateRole}
+          />
+        </div>
+      )}
+
+      {activeTab === "integrations" && (
+        <div
+          role="tabpanel"
+          id="tabpanel-integrations"
+          aria-labelledby="tab-integrations"
+        >
+          <WorkspaceIntegrationsForm
+            workspaceSlug={slug}
+            workspaceId={workspace?.id}
+            isAdmin={isAdmin}
           />
         </div>
       )}

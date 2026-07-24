@@ -73,7 +73,7 @@ export function SecuritySettingsForm() {
   return (
     <div className="space-y-8">
       {/* Change Password */}
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center gap-3 mb-6">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-500/10">
             <Lock className="w-5 h-5 text-red-600 dark:text-red-400" />
@@ -201,7 +201,7 @@ export function SecuritySettingsForm() {
       </div>
 
       {/* Two-Factor Authentication - Placeholder */}
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center gap-3 mb-6">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/10">
             <Smartphone className="w-5 h-5 text-purple-600 dark:text-purple-400" />
@@ -228,7 +228,7 @@ export function SecuritySettingsForm() {
       </div>
 
       {/* Active Sessions */}
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-500/10">
