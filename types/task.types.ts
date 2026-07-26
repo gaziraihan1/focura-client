@@ -109,6 +109,11 @@ interface LabelTypes {
   taskId: string;
   label:Label
 }
+export interface GitHubPrChecks {
+  totalChecks: number;
+  passingChecks: number;
+}
+
 export interface Task {
   id: string;
   title: string;
@@ -124,19 +129,60 @@ export interface Task {
   updatedAt: string;
   projectId: string | null;
   intent: IntentType
-  
+
   focusRequired?: boolean;
   focusLevel?: number;
   energyType?: EnergyType;
   distractionCost?: number;
-  
+
+  githubPrUrl?: string | null;
+  githubPrNumber?: number | null;
+  githubPrStatus?: 'open' | 'merged' | 'closed' | null;
+  githubPrChecks?: GitHubPrChecks | null;
+
+  githubIssueUrl?: string | null;
+  githubIssueNumber?: number | null;
+  githubIssueState?: 'open' | 'closed' | null;
+
+  githubBranchName?: string | null;
+  githubBranchUrl?: string | null;
+  githubBranchProtected?: boolean | null;
+
+  githubCommitSha?: string | null;
+  githubCommitUrl?: string | null;
+  githubCommitMessage?: string | null;
+  githubCommitAuthor?: string | null;
+
+  githubWorkflowStatus?: 'success' | 'failure' | 'pending' | 'cancelled' | null;
+  githubWorkflowName?: string | null;
+  githubWorkflowUrl?: string | null;
+  githubWorkflowRunId?: string | null;
+
+  githubReleaseName?: string | null;
+  githubReleaseUrl?: string | null;
+  githubReleaseTagName?: string | null;
+
+  githubMilestoneTitle?: string | null;
+  githubMilestoneUrl?: string | null;
+  githubMilestoneState?: 'open' | 'closed' | null;
+
+  githubProjectNumber?: number | null;
+  githubProjectUrl?: string | null;
+  githubProjectTitle?: string | null;
+
+  githubDiscussionNumber?: number | null;
+  githubDiscussionUrl?: string | null;
+  githubDiscussionCategory?: string | null;
+
+  githubLabels?: string[] | null;
+
   createdBy: User;
   assignees: TaskAssignee[];
   project?: Project;
   labels:LabelTypes[]
-  
+
   timeTracking?: TimeTracking;
-  
+
   _count: {
     comments: number;
     subtasks: number;

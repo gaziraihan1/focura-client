@@ -5,6 +5,16 @@ import { Task } from '@/types/task.types';
 import { TaskDetailItem } from './TaskDetailItem';
 import { TaskAssigneesList } from './TaskAssigneesList';
 import { TaskTimestamps } from './TaskTimeStamps';
+import { GitHubPrStatus } from './GitHubPrStatus';
+import { GitHubIssueLink } from './GitHubIssueLink';
+import { GitHubBranchLink } from './GitHubBranchLink';
+import { GitHubCommitLink } from './GitHubCommitLink';
+import { GitHubActionsStatus } from './GitHubActionsStatus';
+import { GitHubReleaseLink } from './GitHubReleaseLink';
+import { GitHubMilestoneLink } from './GitHubMilestoneLink';
+import { GitHubProjectLink } from './GitHubProjectLink';
+import { GitHubDiscussionLink } from './GitHubDiscussionLink';
+import { GitHubLabels } from './GitHubLabels';
 
 interface TaskDetailsSectionProps {
   task: Task;
@@ -34,6 +44,85 @@ export function TaskDetailsSection({ task }: TaskDetailsSectionProps) {
             </Link>
           </div>
         </div>
+      )}
+
+      {task.githubPrUrl && task.githubPrNumber && task.githubPrStatus && (
+        <GitHubPrStatus
+          prUrl={task.githubPrUrl}
+          prNumber={task.githubPrNumber}
+          prStatus={task.githubPrStatus}
+          prChecks={task.githubPrChecks}
+        />
+      )}
+
+      {task.githubIssueUrl && task.githubIssueNumber && task.githubIssueState && (
+        <GitHubIssueLink
+          issueUrl={task.githubIssueUrl}
+          issueNumber={task.githubIssueNumber}
+          issueState={task.githubIssueState}
+        />
+      )}
+
+      {task.githubBranchName && task.githubBranchUrl && (
+        <GitHubBranchLink
+          branchName={task.githubBranchName}
+          branchUrl={task.githubBranchUrl}
+          isProtected={task.githubBranchProtected ?? false}
+        />
+      )}
+
+      {task.githubCommitSha && task.githubCommitUrl && (
+        <GitHubCommitLink
+          commitSha={task.githubCommitSha}
+          commitUrl={task.githubCommitUrl}
+          commitMessage={task.githubCommitMessage ?? undefined}
+          commitAuthor={task.githubCommitAuthor ?? undefined}
+        />
+      )}
+
+      {task.githubWorkflowStatus && task.githubWorkflowName && task.githubWorkflowUrl && (
+        <GitHubActionsStatus
+          workflowStatus={task.githubWorkflowStatus}
+          workflowName={task.githubWorkflowName}
+          workflowUrl={task.githubWorkflowUrl}
+          workflowRunId={task.githubWorkflowRunId ?? undefined}
+        />
+      )}
+
+      {task.githubReleaseName && task.githubReleaseUrl && (
+        <GitHubReleaseLink
+          releaseName={task.githubReleaseName}
+          releaseUrl={task.githubReleaseUrl}
+          releaseTagName={task.githubReleaseTagName ?? undefined}
+        />
+      )}
+
+      {task.githubMilestoneTitle && task.githubMilestoneUrl && task.githubMilestoneState && (
+        <GitHubMilestoneLink
+          milestoneTitle={task.githubMilestoneTitle}
+          milestoneUrl={task.githubMilestoneUrl}
+          milestoneState={task.githubMilestoneState}
+        />
+      )}
+
+      {task.githubProjectNumber && task.githubProjectUrl && task.githubProjectTitle && (
+        <GitHubProjectLink
+          projectNumber={task.githubProjectNumber}
+          projectUrl={task.githubProjectUrl}
+          projectTitle={task.githubProjectTitle}
+        />
+      )}
+
+      {task.githubDiscussionNumber && task.githubDiscussionUrl && (
+        <GitHubDiscussionLink
+          discussionNumber={task.githubDiscussionNumber}
+          discussionUrl={task.githubDiscussionUrl}
+          discussionCategory={task.githubDiscussionCategory ?? undefined}
+        />
+      )}
+
+      {task.githubLabels && task.githubLabels.length > 0 && (
+        <GitHubLabels labels={task.githubLabels} />
       )}
 
       {task.estimatedHours && (
