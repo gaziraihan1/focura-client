@@ -135,6 +135,8 @@ export interface Task {
   energyType?: EnergyType;
   distractionCost?: number;
 
+  githubRepo?: string | null;
+
   githubPrUrl?: string | null;
   githubPrNumber?: number | null;
   githubPrStatus?: 'open' | 'merged' | 'closed' | null;

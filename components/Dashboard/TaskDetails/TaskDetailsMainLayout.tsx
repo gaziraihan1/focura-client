@@ -102,6 +102,7 @@ export default function TaskDetailsMainLayout({
         isUpdatingStatus={mutations.updateStatus.isPending}
         onStatusChange={handlers.handleStatusChange}
         canChangeStatus={permissions.canChangeStatus}
+        onTaskUpdated={handlers.handleTaskUpdated}
       />
     </div>
   );

@@ -15,8 +15,8 @@
  *  - Workspaces/project/Tasks/
  *  - Workspaces/project/Layout/
  */
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { describe, it, expect, vi,  } from 'vitest'
+import { render, screen,  } from '@testing-library/react'
 
 // ─── Global mocks ──────────────────────────────────────────────────────────
 vi.mock('next/link', () => ({
@@ -123,7 +123,7 @@ vi.mock('lucide-react', () => {
     Target: icon('Target'),
     Play: icon('Play'),
     ArchiveRestore: icon('ArchiveRestore'),
-    CheckCircle2: icon('CheckCircle2'),
+    XCircle: icon('XCircle'),
     Link: icon('Link'),
     Trash: icon('Trash'),
     Tag: icon('Tag'),

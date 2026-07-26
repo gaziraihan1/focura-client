@@ -1,16 +1,31 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Clock, Calendar, User, Folder, Check, Lock } from "lucide-react";
+import { Clock, Calendar, User, Folder, Check, Lock, Link2, Unlink2 } from "lucide-react";
 import { Task } from "@/types/task.types";
 import { getStatusColor, getPriorityColor } from "@/utils/task.utils";
 import { Avatar } from "@/components/Shared/Avatar";
 import Link from "next/link";
+import { GitHubPrStatus } from "./TaskSidebar/GitHubPrStatus";
+import { GitHubIssueLink } from "./TaskSidebar/GitHubIssueLink";
+import { GitHubBranchLink } from "./TaskSidebar/GitHubBranchLink";
+import { GitHubCommitLink } from "./TaskSidebar/GitHubCommitLink";
+import { GitHubActionsStatus } from "./TaskSidebar/GitHubActionsStatus";
+import { GitHubReleaseLink } from "./TaskSidebar/GitHubReleaseLink";
+import { GitHubMilestoneLink } from "./TaskSidebar/GitHubMilestoneLink";
+import { GitHubProjectLink } from "./TaskSidebar/GitHubProjectLink";
+import { GitHubDiscussionLink } from "./TaskSidebar/GitHubDiscussionLink";
+import { GitHubLabels } from "./TaskSidebar/GitHubLabels";
+import { GitHubLinkModal } from "./GitHubLinkModal";
+import { api } from "@/lib/axios";
+import toast from "react-hot-toast";
 
 interface TaskSidebarProps {
   task: Task;
   isPersonalTask: boolean;
   isUpdatingStatus: boolean;
   onStatusChange: (status: Task["status"]) => void;
-  canChangeStatus?: boolean; 
+  canChangeStatus?: boolean;
+  onTaskUpdated?: () => void;
 }
 
 export const TaskSidebar = ({
@@ -18,8 +33,32 @@ export const TaskSidebar = ({
   isPersonalTask,
   isUpdatingStatus,
   onStatusChange,
-  canChangeStatus = true, 
+  canChangeStatus = true,
+  onTaskUpdated,
 }: TaskSidebarProps) => {
+  const [showLinkModal, setShowLinkModal] = useState(false);
+  const [unlinking, setUnlinking] = useState(false);
+
+  // Check if any GitHub entity is linked
+  const hasGitHubLink =
+    task.githubPrUrl ||
+    task.githubIssueUrl ||
+    task.githubBranchName ||
+    task.githubCommitSha;
+
+  const handleUnlink = async () => {
+    setUnlinking(true);
+    try {
+      await api.put(`/api/v1/tasks/${task.id}/github-unlink`);
+      toast.success("GitHub link removed");
+      onTaskUpdated?.();
+    } catch {
+      toast.error("Failed to remove GitHub link");
+    } finally {
+      setUnlinking(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <motion.div
@@ -113,6 +152,86 @@ export const TaskSidebar = ({
           </div>
         )}
 
+        {/* GitHub Links */}
+        {task.githubPrUrl && task.githubPrNumber && task.githubPrStatus && (
+          <GitHubPrStatus
+            prUrl={task.githubPrUrl}
+            prNumber={task.githubPrNumber}
+            prStatus={task.githubPrStatus}
+            prChecks={task.githubPrChecks}
+          />
+        )}
+
+        {task.githubIssueUrl && task.githubIssueNumber && task.githubIssueState && (
+          <GitHubIssueLink
+            issueUrl={task.githubIssueUrl}
+            issueNumber={task.githubIssueNumber}
+            issueState={task.githubIssueState}
+          />
+        )}
+
+        {task.githubBranchName && task.githubBranchUrl && (
+          <GitHubBranchLink
+            branchName={task.githubBranchName}
+            branchUrl={task.githubBranchUrl}
+            isProtected={task.githubBranchProtected ?? false}
+          />
+        )}
+
+        {task.githubCommitSha && task.githubCommitUrl && (
+          <GitHubCommitLink
+            commitSha={task.githubCommitSha}
+            commitUrl={task.githubCommitUrl}
+            commitMessage={task.githubCommitMessage ?? undefined}
+            commitAuthor={task.githubCommitAuthor ?? undefined}
+          />
+        )}
+
+        {task.githubWorkflowStatus && task.githubWorkflowName && task.githubWorkflowUrl && (
+          <GitHubActionsStatus
+            workflowStatus={task.githubWorkflowStatus}
+            workflowName={task.githubWorkflowName}
+            workflowUrl={task.githubWorkflowUrl}
+            workflowRunId={task.githubWorkflowRunId ?? undefined}
+          />
+        )}
+
+        {task.githubReleaseName && task.githubReleaseUrl && (
+          <GitHubReleaseLink
+            releaseName={task.githubReleaseName}
+            releaseUrl={task.githubReleaseUrl}
+            releaseTagName={task.githubReleaseTagName ?? undefined}
+          />
+        )}
+
+        {task.githubMilestoneTitle && task.githubMilestoneUrl && task.githubMilestoneState && (
+          <GitHubMilestoneLink
+            milestoneTitle={task.githubMilestoneTitle}
+            milestoneUrl={task.githubMilestoneUrl}
+            milestoneState={task.githubMilestoneState}
+          />
+        )}
+
+        {task.githubProjectNumber && task.githubProjectUrl && task.githubProjectTitle && (
+          <GitHubProjectLink
+            projectNumber={task.githubProjectNumber}
+            projectUrl={task.githubProjectUrl}
+            projectTitle={task.githubProjectTitle}
+          />
+        )}
+
+        {task.githubDiscussionNumber && task.githubDiscussionUrl && (
+          <GitHubDiscussionLink
+            discussionNumber={task.githubDiscussionNumber}
+            discussionUrl={task.githubDiscussionUrl}
+            discussionCategory={task.githubDiscussionCategory ?? undefined}
+          />
+        )}
+
+        {task.githubLabels && task.githubLabels.length > 0 && (
+          <GitHubLabels labels={task.githubLabels} />
+        )}
+
         {task.estimatedHours && (
           <div className="flex items-center gap-3">
             <Clock size={16} className="text-muted-foreground" />
@@ -201,7 +320,45 @@ export const TaskSidebar = ({
             </div>
           )}
         </div>
+
+        {/* GitHub Link Button */}
+        {hasGitHubLink ? (
+          <div className="flex items-center gap-2">
+            <div className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-green-500/30 bg-green-500/5 text-sm text-green-600 dark:text-green-400">
+              <Link2 size={14} />
+              GitHub Linked
+            </div>
+            <button
+              onClick={handleUnlink}
+              disabled={unlinking}
+              className="p-2 rounded-lg border border-border text-muted-foreground hover:bg-red-500/10 hover:text-red-500 transition-colors disabled:opacity-50"
+              title="Remove GitHub link"
+            >
+              <Unlink2 size={14} />
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setShowLinkModal(true)}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-dashed border-border text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+          >
+            <Link2 size={14} />
+            Link GitHub
+          </button>
+        )}
       </motion.div>
+
+      {/* GitHub Link Modal */}
+      {showLinkModal && (
+        <GitHubLinkModal
+          taskId={task.id}
+          onClose={() => setShowLinkModal(false)}
+          onLinked={() => {
+            setShowLinkModal(false);
+            onTaskUpdated?.();
+          }}
+        />
+      )}
     </div>
   );
 };

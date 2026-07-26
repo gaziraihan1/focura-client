@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 import {
   useTask,            // reads from cache seeded by useTaskOverview
@@ -15,9 +16,11 @@ import {
 import { useUpdateComment, useDeleteComment } from "@/hooks/useComment";
 import { useTaskPermissions } from "@/hooks/useTaskPermissions";
 import { Task } from "@/types/task.types";
+import { taskKeys, taskOverviewKeys } from "./taskKeys";
 
 export function useTaskDetailsController(taskId: string, workspaceSlug: string ) {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({
@@ -30,6 +33,14 @@ export function useTaskDetailsController(taskId: string, workspaceSlug: string )
 
   const taskQuery       = useTask(taskId);
   const task            = taskQuery.data as Task | undefined;
+
+  // Auto-refresh task data every 10 seconds to catch webhook updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      taskQuery.refetch();
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [taskQuery]);
   const commentsQuery   = useTaskComments(taskId);
   const attachmentsQuery = useTaskAttachments(taskId);
 
@@ -105,6 +116,11 @@ export function useTaskDetailsController(taskId: string, workspaceSlug: string )
   handleAddComment: async (content: string) => {
     if (!permissions.canComment) return;
     await addComment.mutateAsync({ taskId, content, workspaceSlug });
+  },
+  handleTaskUpdated: () => {
+    // Invalidate all task-related queries to force immediate refetch
+    queryClient.invalidateQueries({ queryKey: taskKeys.all });
+    queryClient.invalidateQueries({ queryKey: taskOverviewKeys.detail(taskId) });
   },
     },
     mutations: {

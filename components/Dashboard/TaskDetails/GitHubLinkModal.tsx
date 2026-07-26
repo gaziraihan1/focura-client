@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { X, Link2, GitPullRequest, CircleDot, GitBranch, GitCommit, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { X, Link2, GitPullRequest, CircleDot, GitBranch, GitCommit, Loader2, AlertCircle } from 'lucide-react';
 import { api } from '@/lib/axios';
 import toast from 'react-hot-toast';
 import { cn } from '@/lib/utils';
@@ -99,8 +99,32 @@ export function GitHubLinkModal({ taskId, onClose, onLinked }: GitHubLinkModalPr
   const [selectedType, setSelectedType] = useState<LinkType>('pr');
   const [inputValue, setInputValue] = useState('');
   const [linking, setLinking] = useState(false);
+  const [hasGitHub, setHasGitHub] = useState<boolean | null>(null);
 
   const selectedOption = LINK_OPTIONS.find((o) => o.type === selectedType)!;
+
+  // Check if user has GitHub connected
+  useEffect(() => {
+    const checkGitHub = async () => {
+      try {
+        const result = await api.get('/api/v1/user/integrations', {
+          showErrorToast: false,
+        });
+        const data = result?.data;
+        if (Array.isArray(data)) {
+          const githubConnected = data.some(
+            (i: { provider: string; active: boolean }) => i.provider === 'github' && i.active,
+          );
+          setHasGitHub(githubConnected);
+        } else {
+          setHasGitHub(false);
+        }
+      } catch {
+        setHasGitHub(false);
+      }
+    };
+    checkGitHub();
+  }, []);
 
   const handleLink = async () => {
     if (!inputValue.trim()) {
@@ -143,6 +167,19 @@ export function GitHubLinkModal({ taskId, onClose, onLinked }: GitHubLinkModalPr
           </button>
         </div>
 
+        {/* Warning if GitHub not connected */}
+        {hasGitHub === false && (
+          <div className="mb-4 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+            <div className="flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-yellow-500 mt-0.5 shrink-0" />
+              <div className="text-xs text-yellow-600 dark:text-yellow-400">
+                <p className="font-medium">GitHub not connected</p>
+                <p>Connect GitHub in Settings → Integrations for automatic status updates and webhook sync.</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Link Type Selector */}
         <div className="grid grid-cols-4 gap-2 mb-6">
           {LINK_OPTIONS.map((option) => {
@@ -179,6 +216,11 @@ export function GitHubLinkModal({ taskId, onClose, onLinked }: GitHubLinkModalPr
             className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm"
             onKeyDown={(e) => e.key === 'Enter' && handleLink()}
           />
+          {inputValue && inputValue.includes('github.com') && (
+            <p className="text-xs text-green-600 dark:text-green-400">
+              Repository: {inputValue.match(/github\.com\/([^/]+\/[^/]+)/)?.[1] || 'Unknown'}
+            </p>
+          )}
         </div>
 
         {/* Actions */}
