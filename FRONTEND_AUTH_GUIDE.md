@@ -23,6 +23,7 @@ A complete reference for the Next.js frontend team on how to integrate with the 
 15. [Common Pitfalls & Troubleshooting](#15-common-pitfalls--troubleshooting)
 16. [API Quick Reference](#16-api-quick-reference)
 
+
 ---
 
 ## 1. Architecture Overview
