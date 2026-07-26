@@ -19,6 +19,7 @@ vi.mock('lucide-react', () => {
     GitBranch: icon('GitBranch'),
     GitCommit: icon('GitCommit'),
     Loader2: icon('Loader2'),
+    AlertCircle: icon('AlertCircle'),
   };
 });
 

@@ -123,11 +123,17 @@ vi.mock('lucide-react', () => {
     Target: icon('Target'),
     Play: icon('Play'),
     ArchiveRestore: icon('ArchiveRestore'),
-    CheckCircle2: icon('CheckCircle2'),
+    // CheckCircle2: icon('CheckCircle2'),
     Link: icon('Link'),
     Trash: icon('Trash'),
     Tag: icon('Tag'),
     Filter: icon('Filter'),
+    XCircle: icon('XCircle'),
+    CircleDot: icon('CircleDot'),
+    Ban: icon('Ban'),
+    GitPullRequest: icon('GitPullRequest'),
+    GitBranch: icon('GitBranch'),
+    GitCommit: icon('GitCommit'),
   }
 })
 

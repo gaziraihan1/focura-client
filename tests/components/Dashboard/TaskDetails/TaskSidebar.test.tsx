@@ -128,6 +128,19 @@ vi.mock('lucide-react', () => {
     Trash: icon('Trash'),
     Tag: icon('Tag'),
     Filter: icon('Filter'),
+    Link2: icon('Link2'),
+    Unlink2: icon('Unlink2'),
+    CircleDot: icon('CircleDot'),
+    Ban: icon('Ban'),
+    GitPullRequest: icon('GitPullRequest'),
+    Github: icon('Github'),
+    MessageCircle: icon('MessageCircle'),
+    Kanban: icon('Kanban'),
+    Milestone: icon('Milestone'),
+    Package: icon('Package'),
+    Workflow: icon('Workflow'),
+    GitBranch: icon('GitBranch'),
+    GitCommit: icon('GitCommit'),
   }
 })
 
@@ -420,7 +433,8 @@ describe('TaskDetails/TaskSidebar – StatusSelector', () => {
 describe('TaskDetails/TaskSidebar – TaskDetailItem', () => {
   it('renders label and value', async () => {
     const { TaskDetailItem } = await import('@/components/Dashboard/TaskDetails/TaskSidebar/TaskDetailItem')
-    render(<TaskDetailItem icon="Clock" label="Est. Hours" value="8h" />)
+    const Clock = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="icon-Clock" {...props} />
+    render(<TaskDetailItem icon={Clock} label="Est. Hours" value="8h" />)
     expect(screen.getByText('Est. Hours')).toBeInTheDocument()
     expect(screen.getByText('8h')).toBeInTheDocument()
   })
@@ -471,26 +485,26 @@ describe('TaskDetails/TaskSidebar – PriorityDisplay', () => {
   })
 })
 
-describe('TaskDetails/TaskSidebar – TaskDetailsSection', () => {
+describe('TaskDetails/TaskSidebar – main TaskSidebar', () => {
   it('renders Details header', async () => {
-    const { TaskDetailsSection } = await import('@/components/Dashboard/TaskDetails/TaskSidebar/TaskDetailsSection')
-    render(<TaskDetailsSection task={makeTask()} />)
+    const { TaskSidebar } = await import('@/components/Dashboard/TaskDetails/TaskSidebar')
+    render(<TaskSidebar task={makeTask()} isPersonalTask={false} isUpdatingStatus={false} onStatusChange={vi.fn()} />)
     expect(screen.getByText('Details')).toBeInTheDocument()
   })
   it('renders project name', async () => {
-    const { TaskDetailsSection } = await import('@/components/Dashboard/TaskDetails/TaskSidebar/TaskDetailsSection')
-    render(<TaskDetailsSection task={makeTask()} />)
+    const { TaskSidebar } = await import('@/components/Dashboard/TaskDetails/TaskSidebar')
+    render(<TaskSidebar task={makeTask()} isPersonalTask={false} isUpdatingStatus={false} onStatusChange={vi.fn()} />)
     expect(screen.getByText('My Project')).toBeInTheDocument()
   })
   it('renders created by', async () => {
-    const { TaskDetailsSection } = await import('@/components/Dashboard/TaskDetails/TaskSidebar/TaskDetailsSection')
-    render(<TaskDetailsSection task={makeTask()} />)
+    const { TaskSidebar } = await import('@/components/Dashboard/TaskDetails/TaskSidebar')
+    render(<TaskSidebar task={makeTask()} isPersonalTask={false} isUpdatingStatus={false} onStatusChange={vi.fn()} />)
     expect(screen.getByText('Created By')).toBeInTheDocument()
     expect(screen.getAllByText('Alice').length).toBeGreaterThanOrEqual(1)
   })
   it('hides project when not present', async () => {
-    const { TaskDetailsSection } = await import('@/components/Dashboard/TaskDetails/TaskSidebar/TaskDetailsSection')
-    render(<TaskDetailsSection task={makeTask({ project: null })} />)
+    const { TaskSidebar } = await import('@/components/Dashboard/TaskDetails/TaskSidebar')
+    render(<TaskSidebar task={makeTask({ project: null })} isPersonalTask={false} isUpdatingStatus={false} onStatusChange={vi.fn()} />)
     expect(screen.queryByText('My Project')).not.toBeInTheDocument()
   })
 })

@@ -9,6 +9,17 @@ vi.mock('lucide-react', () => ({
   Folder: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="folder-icon" {...props} />,
   Check: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-icon" {...props} />,
   Lock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="lock-icon" {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-circle-icon" {...props} />,
+  CheckCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-circle-icon" {...props} />,
+  CheckCircle2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-circle-2-icon" {...props} />,
+  XCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-circle-icon" {...props} />,
+  CircleDot: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="circle-dot-icon" {...props} />,
+  Ban: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="ban-icon" {...props} />,
+  Circle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="circle-icon" {...props} />,
+  GitPullRequest: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="git-pull-request-icon" {...props} />,
+  GitBranch: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="git-branch-icon" {...props} />,
+  GitCommit: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="git-commit-icon" {...props} />,
+  Link2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="link-2-icon" {...props} />,
 }))
 
 vi.mock('framer-motion', () => ({
