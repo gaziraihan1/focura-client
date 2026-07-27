@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sprout, Plus, MoreHorizontal, Target, Loader2 } from "lucide-react";
 import {
   useProjectSprints,
@@ -233,13 +233,22 @@ function SprintCard({
   onComplete: () => void;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState(() => Date.now());
   const statusClass = SPRINT_STATUS_COLORS[sprint.status] ?? "text-muted-foreground";
+
+  useEffect(() => {
+    // Update current time every minute
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   const totalDays = Math.ceil(
     (new Date(sprint.endDate).getTime() - new Date(sprint.startDate).getTime()) / (1000 * 60 * 60 * 24),
   );
   const daysElapsed = sprint.status === "ACTIVE"
-    ? Math.max(0, Math.ceil((Date.now() - new Date(sprint.startDate).getTime()) / (1000 * 60 * 60 * 24)))
+    ? Math.max(0, Math.ceil((currentTime - new Date(sprint.startDate).getTime()) / (1000 * 60 * 60 * 24)))
     : null;
   const progressPct = daysElapsed !== null ? Math.min(100, Math.round((daysElapsed / totalDays) * 100)) : null;
 
