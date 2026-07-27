@@ -20,6 +20,7 @@ vi.mock('lucide-react', () => ({
   GitBranch: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="git-branch-icon" {...props} />,
   GitCommit: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="git-commit-icon" {...props} />,
   Link2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="link-2-icon" {...props} />,
+  MessageSquare: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="message-square-icon" {...props} />,
 }))
 
 vi.mock('framer-motion', () => ({
