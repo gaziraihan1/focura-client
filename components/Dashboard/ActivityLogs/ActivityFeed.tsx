@@ -1,4 +1,3 @@
-import React from 'react';
 import { useActivities } from '@/hooks/useActivity';
 import { ActivityItem } from './ActivityItem';
 import { ActivityFilters as Filters } from '@/hooks/useActivity';

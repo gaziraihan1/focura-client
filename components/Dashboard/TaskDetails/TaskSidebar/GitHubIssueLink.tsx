@@ -1,4 +1,4 @@
-import { Github, CircleDot, CheckCircle2, XCircle } from 'lucide-react';
+import { Github, CircleDot, CheckCircle2 } from 'lucide-react';
 
 interface GitHubIssueLinkProps {
   issueUrl: string;

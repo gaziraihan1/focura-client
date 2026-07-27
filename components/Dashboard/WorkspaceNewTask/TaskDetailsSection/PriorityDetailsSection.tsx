@@ -1,6 +1,5 @@
 import { PRIORITY_COLORS } from "@/constants/intent.constants";
 import { Flag } from "lucide-react";
-import React from "react";
 
 interface PriorityDetailsSectionProps {
   onPriorityChange: (priority: "URGENT" | "HIGH" | "MEDIUM" | "LOW") => void;

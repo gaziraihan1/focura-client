@@ -6,8 +6,8 @@ import { Avatar } from '@/components/Shared/Avatar';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import {
-  Users, Building2, FolderOpen, Megaphone, Lightbulb,
-  TrendingUp, TrendingDown, ArrowUpRight, BarChart3,
+  Users, FolderOpen, Lightbulb,
+  ArrowUpRight, BarChart3,
 } from 'lucide-react';
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,

@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { KanbanHeader } from "@/components/Dashboard/KanbanView/KanbanHeader";
 import { ExecutionControlBar } from "@/components/Dashboard/KanbanView/ExecutionControlBar";
 import { KanbanBoard } from "@/components/Dashboard/KanbanView/KanbanBoard";

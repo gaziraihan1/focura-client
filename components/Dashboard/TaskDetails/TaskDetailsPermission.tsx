@@ -1,5 +1,4 @@
 import { Link, Lock } from 'lucide-react'
-import React from 'react'
 
 export default function TaskDetailsPermission() {
   return (

@@ -1,5 +1,4 @@
 import { ProjectSummary, WorkspaceMemberRow } from "@/hooks/useTeamPage";
-import React from "react";
 
 type Tab = {
   id: "members" | "projects";

@@ -1,7 +1,6 @@
 import { ProjectDetails } from '@/hooks/useProjects';
 import { ChevronRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import React from 'react'
 import ProjectDropdown from './ProjectDropdown';
 
 interface ProjectDetailsHeaderProps {

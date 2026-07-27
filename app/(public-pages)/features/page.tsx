@@ -8,7 +8,6 @@ import Metrics from '@/components/Features/Metrics'
 import UseCases from '@/components/Features/UseCases'
 import WhyChooseFocura from '@/components/Features/WhyChooseFocura'
 import { Metadata } from 'next'
-import React from 'react'
 
 export const metadata:Metadata = {
   title: "Focura Features – Smart Task & Workspace Management",

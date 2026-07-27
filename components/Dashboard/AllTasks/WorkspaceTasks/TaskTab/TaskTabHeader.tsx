@@ -1,4 +1,3 @@
-import React from 'react'
 
 type ActiveTab = "all" | "primary";
 interface TaskTabHeaderProps {

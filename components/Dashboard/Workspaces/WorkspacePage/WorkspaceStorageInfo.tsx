@@ -1,4 +1,3 @@
-import React from 'react'
 
 export default function WorkspaceStorageInfo({maxStorage}: {maxStorage: number}) {
   return (

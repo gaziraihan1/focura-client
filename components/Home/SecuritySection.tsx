@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { ShieldCheck, Lock, KeyRound, Server } from "lucide-react";
 import { motion } from "framer-motion";
 

@@ -1,6 +1,5 @@
 import { FileFilters } from "@/hooks/useFileManagement";
 import { Search, X } from "lucide-react";
-import React from "react";
 
 interface FileFiltersSearchProps {
   filters: FileFilters;

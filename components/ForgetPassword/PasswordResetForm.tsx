@@ -1,6 +1,5 @@
 import { useForgetPasswordPage } from "@/hooks/useForgetPasswordPage";
 import { Loader2, Mail } from "lucide-react";
-import React from "react";
 
 export default function PasswordResetForm() {
   const { register, handleSubmit, onSubmit, isSubmitting, success, errors } =

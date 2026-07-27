@@ -1,5 +1,4 @@
 import { Filter, Grid, List } from 'lucide-react'
-import React from 'react'
 
 interface FileFiltersControlProps {
     showFilters: boolean;

@@ -4,7 +4,6 @@ import SolutionsHero from '@/components/Solutions/SolutionsHero'
 import SolutionsMetrics from '@/components/Solutions/SolutionsMetrics'
 import SolutionProblems from '@/components/Solutions/SolutionsProblem'
 import SolutionUseCases from '@/components/Solutions/SolutionsUseCases'
-import React from 'react'
 
 export const metadata = {
   title: "Focura Solutions – Tailored Productivity for Every Team",

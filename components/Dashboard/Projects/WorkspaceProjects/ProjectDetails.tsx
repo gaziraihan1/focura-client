@@ -1,5 +1,4 @@
 import { CheckCircle2, FolderKanban } from 'lucide-react'
-import React from 'react'
 import { ProjectDetails as Details } from '@/hooks/useProjects'
 import { statusColors } from './ProjectCard';
 

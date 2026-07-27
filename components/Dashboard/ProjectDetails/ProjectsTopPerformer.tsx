@@ -1,7 +1,6 @@
 import { ProjectDetails } from '@/hooks/useProjects'
 import { Crown } from 'lucide-react'
 import Image from 'next/image'
-import React from 'react'
 
 interface ProjectsTopPerformerProps {
     project: ProjectDetails

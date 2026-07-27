@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { Avatar }       from '@/components/Shared/Avatar';
 import { RoleBadge }    from './RoleBadge';
 import { RoleDropdown, WorkspaceRoleOption } from './RoleDropdown';

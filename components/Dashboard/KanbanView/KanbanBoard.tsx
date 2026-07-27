@@ -1,4 +1,3 @@
-import React from "react";
 import { Task } from "@/hooks/useTask";
 import { KanbanSort } from "@/hooks/useKanbanPage";
 import { MobileColumnNavigator } from "./KanbanBoard/MobileColumnNavigator";

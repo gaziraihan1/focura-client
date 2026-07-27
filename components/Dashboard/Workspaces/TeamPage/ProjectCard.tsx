@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { ChevronDown, Users, CheckCircle2, Circle } from 'lucide-react';
 import { ProjectSummary } from '@/hooks/useTeamPage';
 

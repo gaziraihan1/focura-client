@@ -1,4 +1,3 @@
-import React from 'react';
 import { Task } from '@/hooks/useTask';
 import { X, TrendingUp, Clock, AlertCircle, CheckCircle } from 'lucide-react';
 import { useKanbanInsightFooter } from '@/hooks/useKanbanInsightFooter';

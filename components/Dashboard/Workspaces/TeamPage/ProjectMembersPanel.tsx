@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { Users } from 'lucide-react';
 import { ProjectRoleOption, RoleDropdown } from './RoleDropdown';
 import { useProjectDetails } from '@/hooks/useProjects';

@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Tag } from "lucide-react";
+import { Tag } from "lucide-react";
 import { EmptyState as SharedEmptyState } from "@/components/Shared/EmptyState";
 
 export interface LabelsEmptyStateProps {

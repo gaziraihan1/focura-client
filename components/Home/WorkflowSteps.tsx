@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { LayoutGrid, Users, Zap, CheckCircle } from "lucide-react";
 
 export default function WorkflowSteps() {

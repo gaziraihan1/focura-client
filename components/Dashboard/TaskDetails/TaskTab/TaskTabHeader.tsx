@@ -1,4 +1,3 @@
-import React from 'react'
 import { Activity, MessageSquare, Paperclip } from 'lucide-react';
 
 type TaskTab = "comments" | "activity" |"attachments"

@@ -1,5 +1,4 @@
 // components/Dashboard/ProjectDetails/MembersTab.tsx
-import React from "react";
 import { UserPlus, Users, Crown, Eye, X } from "lucide-react";
 import {
   useUpdateProjectMemberRole,

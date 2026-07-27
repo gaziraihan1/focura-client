@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useParams, usePathname } from "next/navigation";
 
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";

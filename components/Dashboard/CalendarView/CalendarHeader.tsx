@@ -1,4 +1,3 @@
-import React from 'react';
 import { format, startOfWeek } from 'date-fns';
 import { 
   ChevronLeft, 

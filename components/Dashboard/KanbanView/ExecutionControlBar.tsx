@@ -1,4 +1,3 @@
-import React from "react";
 import { KanbanFilters, KanbanSort, useExecutionControlBar } from "@/hooks/useKanbanPage";
 import { FocusModeBar } from "./ExecutionControlBar/FocusModeBar";
 import { ControlBarActions } from "./ExecutionControlBar/ControlBarActions";

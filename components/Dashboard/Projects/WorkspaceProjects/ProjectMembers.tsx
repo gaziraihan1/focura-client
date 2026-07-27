@@ -1,6 +1,5 @@
 import { ProjectMember } from "@/hooks/useProjects";
 import { Crown } from "lucide-react";
-import React from "react";
 
 interface ProjectMemberProps {
   members: ProjectMember[];

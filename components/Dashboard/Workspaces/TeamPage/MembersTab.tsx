@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from "react";
 import { Search, Users } from 'lucide-react';
 import { MemberRow }    from './MemberRow';
 import { EmptyState }   from './EmptyState';

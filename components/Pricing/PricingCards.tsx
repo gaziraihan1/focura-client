@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import PricingCard from "./PricingCard";
 
 type Props = {

@@ -1,6 +1,5 @@
 import { Users } from "lucide-react";
 import Image from "next/image";
-import React from "react";
 import { Invitation } from "../InvitationCard";
 
 interface InvitationHeaderProps {

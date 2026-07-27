@@ -1,5 +1,4 @@
 import { CheckCircle } from 'lucide-react'
-import React from 'react'
 
 interface SuccessStateProps {
     message: string

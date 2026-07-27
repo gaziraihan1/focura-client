@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from "react";
 import { Search, FolderOpen } from 'lucide-react';
 import { ProjectCard }          from './ProjectCard';
 import { ProjectMembersPanel }  from './ProjectMembersPanel';

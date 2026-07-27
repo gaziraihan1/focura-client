@@ -1,4 +1,3 @@
-import React from 'react'
 import StatCard from './StatCard'
 import { Calendar, CheckSquare, TrendingUp, Users } from 'lucide-react'
 import ProjectsTopPerformer from './ProjectsTopPerformer';

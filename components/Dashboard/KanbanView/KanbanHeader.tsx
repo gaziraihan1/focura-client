@@ -1,4 +1,3 @@
-import React from 'react';
 import { Target, Zap, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { KanbanScope } from '@/hooks/useKanbanPage';

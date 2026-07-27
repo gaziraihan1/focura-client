@@ -1,5 +1,4 @@
 import { FolderKanban, Users } from 'lucide-react';
-import React from 'react'
 
 interface ProjectStatsCountProps {
     taskCount: number;

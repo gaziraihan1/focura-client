@@ -1,5 +1,4 @@
 import { CreateTaskDto } from '@/hooks/useTask'
-import React from 'react'
 
 interface StatusDetailsSectionProps {
     status: CreateTaskDto["status"];

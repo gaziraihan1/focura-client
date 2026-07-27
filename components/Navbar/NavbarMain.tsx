@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Menu, X, LogOut, Loader2 } from "lucide-react";
 import ThemeSwitcher from "../Themes/ThemeSwitcher";

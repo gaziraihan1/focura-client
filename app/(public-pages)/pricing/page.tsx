@@ -6,7 +6,7 @@ import PricingFAQ from '@/components/Pricing/PricingFaq';
 import PricingHero from '@/components/Pricing/PricingHero'
 import PricingPlans from '@/components/Pricing/PricingPlans'
 import PricingSupportCTA from '@/components/Pricing/PricingSupportCTA';
-import React, { useState } from 'react'
+import { useState } from "react";
 
 export default function Pricing() {
     const [billing, setBilling] = useState<"yearly" | "monthly">("monthly");

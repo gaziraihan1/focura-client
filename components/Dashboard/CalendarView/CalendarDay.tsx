@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from "react";
 import { format, isPast } from 'date-fns';
 import { Task } from '@/hooks/useTask';
 import { AlertCircle } from 'lucide-react';

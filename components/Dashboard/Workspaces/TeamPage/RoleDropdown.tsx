@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { ChevronDown } from 'lucide-react';
 
 // ─── Workspace role options ─────────────────────────────────────────────────

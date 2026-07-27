@@ -1,5 +1,4 @@
 import { ProjectDetails } from '@/hooks/useProjects';
-import React from 'react'
 interface ProjectStatsProps {
     activeTab: string;
     setActiveTab: (v: string) => void;

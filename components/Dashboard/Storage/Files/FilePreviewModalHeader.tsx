@@ -1,7 +1,6 @@
 import { FileWithDetails } from '@/hooks/useFileManagement'
 import { formatFileSize, formatRelativeTime } from '@/utils/file.utils'
 import { Download, ExternalLink, X } from 'lucide-react'
-import React from 'react'
 
 export default function FilePreviewModalHeader({file, onClose} : {file: FileWithDetails; onClose: () => void}) {
   return (

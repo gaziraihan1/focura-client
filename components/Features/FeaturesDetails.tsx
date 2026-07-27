@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
 import { CheckCircle } from "lucide-react";
 import { features } from "@/constants/features.constants";

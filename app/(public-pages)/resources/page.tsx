@@ -4,7 +4,6 @@ import ResourcesCTA from '@/components/Resources/ResourcesCTA'
 import ResourcesFeaturedGuides from '@/components/Resources/ResourcesFeaturedGuides'
 import ResourcesHero from '@/components/Resources/ResourcesHero'
 import ResourceUpdateList from '@/components/Resources/ResourceUpdateList'
-import React from 'react'
 
 // Force dynamic rendering to avoid build-time API calls to unavailable backend
 export const dynamic = 'force-dynamic'

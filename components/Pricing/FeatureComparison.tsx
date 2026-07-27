@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Check, Minus } from "lucide-react";
 import { features } from "@/constants/pricing.constants";
 

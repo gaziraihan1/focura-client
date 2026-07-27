@@ -1,4 +1,3 @@
-import React from "react";
 import { Task } from "@/hooks/useTask";
 import { TaskModalHeader } from "./TaskModal/TaskModalHeader";
 import { TaskModalContent } from "./TaskModal/TaskModalContent";

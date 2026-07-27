@@ -1,4 +1,3 @@
-import React from "react";
 import { Invitation } from "../InvitationCard";
 import InvitationError from "./InvitationError";
 import InvitationActions from "./InvitationActions";

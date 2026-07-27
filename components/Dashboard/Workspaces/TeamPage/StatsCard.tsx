@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { Users, FolderOpen, ShieldCheck, Award } from 'lucide-react';
 import { TeamPageStats } from '@/hooks/useTeamPage';
 

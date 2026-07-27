@@ -1,4 +1,3 @@
-import React from 'react';
 import { Task } from '@/hooks/useTask';
 import { cn } from '@/lib/utils';
 import { KanbanCard } from './KanbanCard';

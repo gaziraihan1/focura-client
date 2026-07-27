@@ -1,4 +1,3 @@
-import React from 'react';
 import { Edit2, Trash2 } from 'lucide-react';
 import { Label } from '@/hooks/useLabels';
 

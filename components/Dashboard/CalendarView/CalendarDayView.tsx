@@ -1,4 +1,3 @@
-import React from "react";
 import { Task } from "@/hooks/useTask";
 import { DayViewHeader } from "./CalendarDayView/DayViewHeader";
 import { DayViewStats } from "./CalendarDayView/DayViewStats";

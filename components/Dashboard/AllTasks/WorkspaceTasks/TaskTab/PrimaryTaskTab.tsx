@@ -1,4 +1,3 @@
-import React from 'react'
 interface PrimaryTaskTabProps {
     activeTab: "all" | "primary";
     primaryTasksContent: React.ReactNode;

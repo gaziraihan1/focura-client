@@ -1,6 +1,5 @@
 import { FileFilters, Uploader } from '@/hooks/useFileManagement';
 import { ArrowUpDown, X } from 'lucide-react'
-import React from 'react'
 
 interface FileFiltersPanelProps {
     showFilters: boolean;

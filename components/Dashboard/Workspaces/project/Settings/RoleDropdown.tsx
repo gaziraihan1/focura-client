@@ -3,7 +3,7 @@
 import { LogOut, UserMinus, ChevronDown, Check } from "lucide-react";
 import { RoleBadge } from "./RoleBadge";
 import { ProjectRole } from "@/hooks/useProjects";
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef, useEffect } from "react";
 
 export function RoleDropdown({
   current,
@@ -27,7 +27,6 @@ export function RoleDropdown({
   const menuRef = useRef<HTMLDivElement>(null);
  
   const roles: ProjectRole[] = ["MANAGER", "COLLABORATOR", "VIEWER"];
-  const allItems = [...roles, isSelf ? "LEAVE" : "REMOVE"];
  
   const handleOpen = () => {
     if (!canManage) return;

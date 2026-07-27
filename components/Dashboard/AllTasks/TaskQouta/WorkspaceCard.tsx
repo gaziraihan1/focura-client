@@ -1,10 +1,10 @@
+import React from "react";
 import { AlertTriangle, Building2, Clock, TrendingUp, Zap, Infinity, Crown } from "lucide-react";
 import { MemberRow } from "./MemberRow";
 import { formatResetTime, getPlanBadgeBg } from "../TaskQoutaDetails";
 import { WorkspaceQuotaInfo } from "@/hooks/useTask";
 import { ProgressRing } from "./ProgressRing";
 import { StatPill } from "./StartPill";
-import React from "react";
 
 export function WorkspaceCard({ q }: { q: WorkspaceQuotaInfo }) {
   const [showMembers, setShowMembers] = React.useState(false);

@@ -1,6 +1,5 @@
 import { FileWithDetails } from "@/hooks/useFileManagement";
 import { Download, Eye, Trash2 } from "lucide-react";
-import React from "react";
 
 interface FileCardOverlayProps {
   canDelete: boolean;

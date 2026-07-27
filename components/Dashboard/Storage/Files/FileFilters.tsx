@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { FileFilters, Uploader } from "@/hooks/useFileManagement";
 import FileFiltersControl from "./FileFiltersControl";
 import FileFiltersPanel from "./FileFiltersPanel";
