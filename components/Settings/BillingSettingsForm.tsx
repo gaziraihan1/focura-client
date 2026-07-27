@@ -1,11 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CreditCard, Loader2, ExternalLink, Download } from 'lucide-react';
+import { CreditCard, Loader2 } from 'lucide-react';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { useWorkspacePlan } from '@/context/workspacePlan/WorkspacePlanContext';
 import { api } from '@/lib/axios';
-import toast from 'react-hot-toast';
 
 interface BillingSettingsFormProps {
   workspaceSlug: string;

@@ -417,9 +417,18 @@ return token;
 const useNotifications = () => {
   const [notifications, setNotifications] = useState([]);
   const { data: session } = useSession();
+  const channelRef = useRef<BroadcastChannel | null>(null);
 
   useEffect(() => {
     if (!session?.backendToken) return; // Wait for auth
+
+    // Multi-tab coordination via BroadcastChannel
+    channelRef.current = new BroadcastChannel("notifications");
+    channelRef.current.onmessage = (event) => {
+      if (event.data.type === "NEW_NOTIFICATION") {
+        setNotifications((prev) => [event.data.notification, ...prev]);
+      }
+    };
 
     const source = new EventSource(
       `${process.env.NEXT_PUBLIC_API_URL}/api/notifications/stream?token=${session.backendToken}`
@@ -428,6 +437,12 @@ const useNotifications = () => {
     source.addEventListener("notification", (event) => {
       const notification = JSON.parse(event.data);
       setNotifications((prev) => [notification, ...prev]);
+      
+      // Broadcast to other tabs
+      channelRef.current?.postMessage({
+        type: "NEW_NOTIFICATION",
+        notification,
+      });
     });
 
     source.addEventListener("error", () => {
@@ -435,12 +450,17 @@ const useNotifications = () => {
       // Reconnect after 5 seconds
     });
 
-    return () => source.close();
+    return () => {
+      source.close();
+      channelRef.current?.close();
+    };
   }, [session?.backendToken]);
 
   return { notifications };
 };
 ```
+
+**Connection limits**: Up to 5 simultaneous SSE connections per user (mobile + desktop + multiple tabs).
 
 ### **Backend SSE Verification**
 
@@ -488,7 +508,23 @@ From within app components:
 
 ### **App Router Middleware**
 
-**Location**: `middleware.ts` (if exists, or route-level checks)
+**Location**: `middleware.ts`
+
+```typescript
+import { withAuth } from "next-auth/middleware";
+
+export default withAuth({
+  pages: {
+    signIn: "/authentication/login",
+  },
+});
+
+export const config = {
+  matcher: ["/dashboard/:path*", "/workspace/:path*", "/settings/:path*"],
+};
+```
+
+### **Route-Level Protection**
 
 ```typescript
 // Redirect unauthenticated users
@@ -558,10 +594,44 @@ axiosInstance.interceptors.request.use(
       config.headers.Authorization = `Bearer ${session.backendToken}`;
     }
 
+    // Attach CSRF token for state-changing requests
+    if (["post", "put", "patch", "delete"].includes(config.method || "")) {
+      const csrfToken = await getCsrfToken();
+      if (csrfToken) {
+        config.headers["X-CSRF-Token"] = csrfToken;
+      }
+    }
+
     return config;
   },
   (error) => Promise.reject(error)
 );
+```
+
+### **CSRF Token Management**
+
+```typescript
+let cachedCsrfToken: string | null = null;
+
+async function getCsrfToken(): Promise<string | null> {
+  if (cachedCsrfToken) return cachedCsrfToken;
+  
+  try {
+    const response = await axiosInstance.get("/api/v1/csrf-token");
+    cachedCsrfToken = response.data.csrfToken;
+    
+    // Auto-refresh before expiry
+    setTimeout(() => { cachedCsrfToken = null; }, 25 * 60 * 1000); // 25 min
+    
+    return cachedCsrfToken;
+  } catch {
+    return null;
+  }
+}
+
+export function invalidateCsrfToken(): void {
+  cachedCsrfToken = null;
+}
 ```
 
 ### **Axios Response Interceptor**
@@ -650,6 +720,10 @@ export async function logout(logoutAll = false): Promise<void> {
     console.warn("Backend logout failed:", err);
   }
 
+  // Clear all caches
+  invalidateTokenCache();
+  invalidateCsrfToken();
+  
   // Clear session & redirect
   await signOut({ callbackUrl: "/authentication/login", redirect: true });
 }
@@ -687,6 +761,43 @@ Handled automatically:
    - Silent refresh returns 401
    - User sees "Session expired" message
    - Redirected to login
+
+3. **Inactivity timeout** (30 minutes)
+   - Backend clears session if no activity for 30 min
+   - User redirected to login on next request
+
+4. **Absolute timeout** (7 days)
+   - Forces re-login regardless of activity
+   - All sessions revoked
+
+### **Multi-Tab Coordination**
+
+```typescript
+// BroadcastChannel for cross-tab synchronization
+const channel = new BroadcastChannel("auth-events");
+
+// Listen for logout from other tabs
+channel.onmessage = (event) => {
+  if (event.data.type === "LOGOUT") {
+    window.location.href = "/authentication/login";
+  }
+  if (event.data.type === "ROLE_CHANGED") {
+    window.location.reload(); // Refresh to apply new permissions
+  }
+};
+
+// Broadcast logout to other tabs
+export function broadcastLogout() {
+  channel.postMessage({ type: "LOGOUT" });
+}
+```
+
+### **Offline Handling**
+
+- Axios interceptor queues requests when offline
+- Automatically retries on reconnection
+- SSE reconnects after 5 seconds on network恢复
+- CSRF token cached locally (25 min TTL)
 
 ---
 
@@ -759,15 +870,20 @@ X-RateLimit-Reset: 1704067260
 ### **What We Protect Against**
 
 ✅ **Credential theft**: Passwords hashed with Argon2id  
-✅ **CSRF attacks**: HMAC proof validation  
-✅ **Session hijacking**: HTTP-only cookies, secure flag  
+✅ **CSRF attacks**: HMAC proof validation + per-session CSRF tokens  
+✅ **Session hijacking**: HTTP-only cookies, secure flag, IP+UA binding  
 ✅ **Token replay**: Single-use JTIs, replay detection  
-✅ **Brute force**: Rate limiting, exponential backoff  
+✅ **Brute force**: Rate limiting, exponential backoff, account lockout  
 ✅ **Timing attacks**: `crypto.timingSafeEqual`  
 ✅ **Data tampering**: RS256 signature verification  
 ✅ **Cross-site leakage**: Workspace-scoped queries  
 ✅ **Email spoofing**: Email verification required  
 ✅ **Privilege escalation**: Role checks on every request  
+✅ **Session fixation**: Unique session ID per login  
+✅ **Concurrent session abuse**: Max 5 sessions per user  
+✅ **CSRF token theft**: Auto-rotating CSRF tokens  
+✅ **Multi-tab conflicts**: BroadcastChannel coordination  
+✅ **Stale sessions**: 30-min inactivity + 7-day absolute timeout  
 
 ### **Security Checklist**
 
@@ -781,6 +897,10 @@ X-RateLimit-Reset: 1704067260
 - ✅ Timing-safe comparisons
 - ✅ Input validation & sanitization
 - ✅ Output escaping (React auto-escapes)
+- ✅ CSRF tokens on state-changing requests
+- ✅ Security headers (CSP, HSTS, X-Frame-Options)
+- ✅ Account lockout after failed attempts
+- ✅ Session binding to IP+User-Agent
 
 ### **Password Hashing**
 
@@ -1045,7 +1165,7 @@ export default function NotificationBell() {
 
 ---
 
-**Last Updated**: April 5, 2026
+**Last Updated**: July 27, 2026
 
 **Maintainer**: Mohammad Raihan Gazi
 

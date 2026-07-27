@@ -178,6 +178,14 @@ export interface Task {
 
   githubLabels?: string[] | null;
 
+  // Slack Integration Fields
+  slackChannelId?: string | null;
+  slackMessageTs?: string | null;
+  slackThreadTs?: string | null;
+  slackMessageUrl?: string | null;
+  slackUserId?: string | null;
+  slackUserDisplayName?: string | null;
+
   createdBy: User;
   assignees: TaskAssignee[];
   project?: Project;

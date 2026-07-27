@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Clock, Calendar, User, Folder, Check, Lock, Link2, Unlink2 } from "lucide-react";
+import { Clock, Calendar, User, Folder, Check, Lock, Link2, Unlink2, MessageSquare } from "lucide-react";
 import { Task } from "@/types/task.types";
 import { getStatusColor, getPriorityColor } from "@/utils/task.utils";
 import { Avatar } from "@/components/Shared/Avatar";
@@ -16,6 +16,8 @@ import { GitHubProjectLink } from "./TaskSidebar/GitHubProjectLink";
 import { GitHubDiscussionLink } from "./TaskSidebar/GitHubDiscussionLink";
 import { GitHubLabels } from "./TaskSidebar/GitHubLabels";
 import { GitHubLinkModal } from "./GitHubLinkModal";
+import { SlackMessageLink } from "./TaskSidebar/SlackMessageLink";
+import { SlackLinkModal } from "./SlackLinkModal";
 import { api } from "@/lib/axios";
 import toast from "react-hot-toast";
 
@@ -37,6 +39,7 @@ export const TaskSidebar = ({
   onTaskUpdated,
 }: TaskSidebarProps) => {
   const [showLinkModal, setShowLinkModal] = useState(false);
+  const [showSlackLinkModal, setShowSlackLinkModal] = useState(false);
   const [unlinking, setUnlinking] = useState(false);
 
   // Check if any GitHub entity is linked
@@ -45,6 +48,9 @@ export const TaskSidebar = ({
     task.githubIssueUrl ||
     task.githubBranchName ||
     task.githubCommitSha;
+
+  // Check if Slack message is linked
+  const hasSlackLink = !!(task.slackChannelId && task.slackMessageTs);
 
   const handleUnlink = async () => {
     setUnlinking(true);
@@ -321,6 +327,18 @@ export const TaskSidebar = ({
           )}
         </div>
 
+        {/* Slack Message Link */}
+        {hasSlackLink && (
+          <SlackMessageLink
+            taskId={task.id}
+            channelId={task.slackChannelId ?? null}
+            messageTs={task.slackMessageTs ?? null}
+            messageUrl={task.slackMessageUrl ?? null}
+            userDisplayName={task.slackUserDisplayName ?? null}
+            onUnlinked={onTaskUpdated}
+          />
+        )}
+
         {/* GitHub Link Button */}
         {hasGitHubLink ? (
           <div className="flex items-center gap-2">
@@ -346,6 +364,17 @@ export const TaskSidebar = ({
             Link GitHub
           </button>
         )}
+
+        {/* Slack Link Button */}
+        {!hasSlackLink && (
+          <button
+            onClick={() => setShowSlackLinkModal(true)}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-dashed border-[#4A154B]/30 dark:border-[#E01E5A]/30 text-sm text-[#4A154B] dark:text-[#E01E5A] hover:bg-[#4A154B]/5 dark:hover:bg-[#E01E5A]/5 transition-colors"
+          >
+            <MessageSquare size={14} />
+            Link Slack Message
+          </button>
+        )}
       </motion.div>
 
       {/* GitHub Link Modal */}
@@ -355,6 +384,18 @@ export const TaskSidebar = ({
           onClose={() => setShowLinkModal(false)}
           onLinked={() => {
             setShowLinkModal(false);
+            onTaskUpdated?.();
+          }}
+        />
+      )}
+
+      {/* Slack Link Modal */}
+      {showSlackLinkModal && (
+        <SlackLinkModal
+          taskId={task.id}
+          onClose={() => setShowSlackLinkModal(false)}
+          onLinked={() => {
+            setShowSlackLinkModal(false);
             onTaskUpdated?.();
           }}
         />
