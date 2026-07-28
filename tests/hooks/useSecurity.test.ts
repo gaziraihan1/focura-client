@@ -1,5 +1,26 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { validatePasswordStrength } from '@/hooks/useSecurity';
+
+// Mock fetch for 2FA hooks
+const mockFetch = vi.fn();
+vi.stubGlobal('fetch', mockFetch);
+
+vi.mock('react-hot-toast', () => ({
+  toast: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
+}));
+
+vi.mock('@tanstack/react-query', async () => {
+  const actual = await vi.importActual('@tanstack/react-query');
+  return {
+    ...actual,
+    useQueryClient: () => ({
+      invalidateQueries: vi.fn(),
+    }),
+  };
+});
 
 describe('validatePasswordStrength', () => {
   it('should return score 0 for empty password', () => {

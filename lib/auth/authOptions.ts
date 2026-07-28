@@ -5,6 +5,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import * as argon2 from "argon2";
 import crypto from "crypto";
+import { verifySync as verifyTOTP } from "otplib";
 
 const isProd = process.env.NODE_ENV === "production";
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
@@ -135,6 +136,7 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
+        totpCode: { label: "TOTP Code", type: "text" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
@@ -151,6 +153,8 @@ export const authOptions: NextAuthOptions = {
             role: true,
             image: true,
             emailVerified: true,
+            twoFactorEnabled: true,
+            twoFactorSecret: true,
           },
         });
         if (!user || !user.password) {
@@ -164,11 +168,33 @@ export const authOptions: NextAuthOptions = {
           credentials.password,
         );
         if (!isValid) throw new Error("Invalid credentials.");
+
+        // ─── 2FA enforcement ────────────────────────────────────────────
+        if (user.twoFactorEnabled) {
+          if (!credentials.totpCode) {
+            throw new Error("2FA_REQUIRED");
+          }
+
+          // Second step: verify the TOTP code
+          if (!user.twoFactorSecret) {
+            throw new Error("Two-factor authentication is not properly configured. Please contact support.");
+          }
+
+          try {
+            const totpResult = verifyTOTP({ token: credentials.totpCode, secret: user.twoFactorSecret });
+            if (!totpResult.valid) {
+              throw new Error("Invalid verification code. Please try again.");
+            }
+          } catch {
+            throw new Error("Invalid verification code. Please try again.");
+          }
+        }
+
         await prisma.user.update({
           where: { id: user.id },
           data: { lastLoginAt: new Date() },
         });
-        const { password: _pw, ...safeUser } = user;
+        const { password: _pw, twoFactorSecret: _secret, ...safeUser } = user;
         return safeUser;
       },
     }),

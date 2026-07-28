@@ -137,23 +137,65 @@ export function useSecuritySettings() {
 }
 
 /**
- * Toggle two-factor authentication (placeholder for future implementation)
+ * Set up 2FA — generates TOTP secret and returns QR code URI
  */
-export function useToggleTwoFactor() {
+export function useSetupTwoFactor() {
+  return useMutation({
+    mutationFn: async (): Promise<{ secret: string; uri: string }> => {
+      const response = await api.post<{ secret: string; uri: string }>('/api/v1/user/2fa/setup', {}, {
+        showErrorToast: false,
+      });
+      if (!response?.data) {
+        throw new Error('Failed to set up two-factor authentication');
+      }
+      return response.data;
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || error?.message || 'Failed to set up two-factor authentication');
+    },
+  });
+}
+
+/**
+ * Verify a TOTP token and enable 2FA
+ */
+export function useVerifyTwoFactor() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async (enabled: boolean) => {
-      // TODO: Implement 2FA toggle when backend supports it
-      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API call
-      return { enabled };
+    mutationFn: async (token: string): Promise<void> => {
+      await api.post('/api/v1/user/2fa/verify', { token }, {
+        showErrorToast: false,
+      });
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: securityKeys.settings() });
-      toast.success('Two-factor authentication settings updated');
+      toast.success('Two-factor authentication enabled successfully');
     },
-    onError: () => {
-      toast.error('Failed to update two-factor authentication');
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || error?.message || 'Failed to verify code');
+    },
+  });
+}
+
+/**
+ * Disable 2FA (requires current password)
+ */
+export function useDisableTwoFactor() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (password: string): Promise<void> => {
+      await api.post('/api/v1/user/2fa/disable', { password }, {
+        showErrorToast: false,
+      });
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: securityKeys.settings() });
+      toast.success('Two-factor authentication disabled successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || error?.message || 'Failed to disable two-factor authentication');
     },
   });
 }

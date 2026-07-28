@@ -51,17 +51,25 @@ export function useAuthForm({ mode }: UseAuthFormProps) {
         });
 
         if (result?.error) {
+          // ─── 2FA required flow ────────────────────────────────────
+          if (result.error === "2FA_REQUIRED") {
+            const email = values.email;
+            toast("Two-factor authentication required. Enter your verification code.", { icon: "🔐" });
+            router.push(`/authentication/2fa?email=${encodeURIComponent(email)}`);
+            return;
+          }
+
           toast.error("Invalid email or password. Please try again.");
           return;
         }
 
-       if (result?.ok) {
-  toast.success("Welcome back!");
-  const successUrl = callbackUrl !== "/dashboard"
-    ? `/authentication/success?callbackUrl=${encodeURIComponent(callbackUrl)}`
-    : "/authentication/success";
-  router.push(successUrl);
-}
+        if (result?.ok) {
+          toast.success("Welcome back!");
+          const successUrl = callbackUrl !== "/dashboard"
+            ? `/authentication/success?callbackUrl=${encodeURIComponent(callbackUrl)}`
+            : "/authentication/success";
+          router.push(successUrl);
+        }
       } else {
         const registerValues = values as RegisterFormData;
 

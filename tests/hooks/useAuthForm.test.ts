@@ -15,10 +15,14 @@ vi.mock('next/navigation', () => ({
 }));
 
 vi.mock('react-hot-toast', () => ({
-  toast: {
-    success: vi.fn(),
-    error: vi.fn(),
-  },
+  toast: Object.assign(
+    (message: string, opts?: Record<string, unknown>) => {},
+    {
+      success: vi.fn(),
+      error: vi.fn(),
+    },
+  ),
+  default: (message: string, opts?: Record<string, unknown>) => {},
 }));
 
 describe('useAuthForm', () => {
@@ -68,6 +72,26 @@ describe('useAuthForm', () => {
       });
 
       expect(toast.error).toHaveBeenCalledWith('Invalid email or password. Please try again.');
+    });
+
+    it('should redirect to 2fa page when 2FA_REQUIRED is returned', async () => {
+      (signIn as any).mockResolvedValue({ error: '2FA_REQUIRED' });
+      mockGet.mockReturnValue(null);
+
+      const { result } = renderHook(() => useAuthForm({ mode: 'login' }));
+
+      await act(async () => {
+        await result.current.onSubmit({
+          email: 'test@example.com',
+          password: 'password123',
+        } as any as Record<string, unknown>);
+      });
+
+      expect(mockPush).toHaveBeenCalledWith(
+        '/authentication/2fa?email=test%40example.com',
+      );
+      expect(toast.success).not.toHaveBeenCalled();
+      expect(toast.error).not.toHaveBeenCalled();
     });
 
     it('should handle login exception', async () => {

@@ -22,54 +22,76 @@ vi.mock('lucide-react', () => {
     Laptop: icon('Laptop'),
     SmartphoneIcon: icon('SmartphoneIcon'),
     LogOut: icon('LogOut'),
+    Copy: icon('Copy'),
+    CheckCircle2: icon('CheckCircle2'),
+    AlertTriangle: icon('AlertTriangle'),
+    XCircle: icon('XCircle'),
   }
 })
 
-vi.mock('@/hooks/useSecurity', () => ({
-  useChangePassword: () => ({
-    mutateAsync: vi.fn().mockResolvedValue(undefined),
-    isPending: false,
-  }),
-  useActiveSessions: () => ({
-    data: [
-      {
-        id: 'session-1',
-        device: 'Chrome on Mac',
-        browser: 'Chrome',
-        os: 'macOS',
-        ip: '192.168.1.1',
-        location: 'New York, US',
-        lastActiveAt: '2024-01-15T10:00:00.000Z',
-        createdAt: '2024-01-15T09:00:00.000Z',
-        isCurrent: true,
-      },
-      {
-        id: 'session-2',
-        device: 'Safari on iPhone',
-        browser: 'Safari',
-        os: 'iOS',
-        ip: '192.168.1.2',
-        location: 'Los Angeles, US',
-        lastActiveAt: '2024-01-14T15:00:00.000Z',
-        createdAt: '2024-01-14T14:00:00.000Z',
-        isCurrent: false,
-      },
-    ],
-    isLoading: false,
-  }),
-  useRevokeSession: () => ({
-    mutateAsync: vi.fn().mockResolvedValue(undefined),
-    isPending: false,
-  }),
-  useRevokeAllSessions: () => ({
-    mutateAsync: vi.fn().mockResolvedValue(undefined),
-    isPending: false,
-  }),
-  validatePasswordStrength: (password: string) => ({
-    score: password.length >= 12 ? 5 : password.length >= 8 ? 3 : 1,
-    feedback: [],
-  }),
+vi.mock('qrcode.react', () => ({
+  QRCodeSVG: ({ value, size, level }: { value: string; size: number; level: string }) => (
+    <svg data-testid="qrcode" data-value={value} data-size={size} data-level={level} />
+  ),
 }))
+
+// Mutable mocks for hooks that need per-test overrides
+const mockSecuritySettings = vi.fn()
+const mockSetupTwoFactor = vi.fn()
+const mockVerifyTwoFactor = vi.fn()
+const mockDisableTwoFactor = vi.fn()
+
+vi.mock('@/hooks/useSecurity', () => {
+  return {
+    useChangePassword: () => ({
+      mutateAsync: vi.fn().mockResolvedValue(undefined),
+      isPending: false,
+    }),
+    useActiveSessions: () => ({
+      data: [
+        {
+          id: 'session-1',
+          device: 'Chrome on Mac',
+          browser: 'Chrome',
+          os: 'macOS',
+          ip: '192.168.1.1',
+          location: 'New York, US',
+          lastActiveAt: '2024-01-15T10:00:00.000Z',
+          createdAt: '2024-01-15T09:00:00.000Z',
+          isCurrent: true,
+        },
+        {
+          id: 'session-2',
+          device: 'Safari on iPhone',
+          browser: 'Safari',
+          os: 'iOS',
+          ip: '192.168.1.2',
+          location: 'Los Angeles, US',
+          lastActiveAt: '2024-01-14T15:00:00.000Z',
+          createdAt: '2024-01-14T14:00:00.000Z',
+          isCurrent: false,
+        },
+      ],
+      isLoading: false,
+    }),
+    useRevokeSession: () => ({
+      mutateAsync: vi.fn().mockResolvedValue(undefined),
+      isPending: false,
+    }),
+    useRevokeAllSessions: () => ({
+      mutateAsync: vi.fn().mockResolvedValue(undefined),
+      isPending: false,
+    }),
+    useSecuritySettings: () => mockSecuritySettings(),
+    useSetupTwoFactor: () => mockSetupTwoFactor(),
+    useVerifyTwoFactor: () => mockVerifyTwoFactor(),
+    useDisableTwoFactor: () => mockDisableTwoFactor(),
+    validatePasswordStrength: (password: string) => ({
+      score: password.length >= 12 ? 5 : password.length >= 8 ? 3 : 1,
+      feedback: [],
+    }),
+  }
+})
 
 // Mock window.confirm
 global.confirm = vi.fn(() => true)
@@ -92,6 +114,26 @@ const renderWithProviders = (ui: React.ReactElement) => {
 describe('SecuritySettingsForm', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    // Set default mock implementations
+    mockSecuritySettings.mockReturnValue({
+      data: { twoFactorEnabled: false, emailVerified: true, lastPasswordChange: null },
+      isLoading: false,
+    })
+    mockSetupTwoFactor.mockReturnValue({
+      mutateAsync: vi.fn().mockResolvedValue({
+        secret: 'MOCKBASE32SECRET',
+        uri: 'otpauth://totp/Focura:test@test.com?secret=MOCKBASE32SECRET&issuer=Focura',
+      }),
+      isPending: false,
+    })
+    mockVerifyTwoFactor.mockReturnValue({
+      mutateAsync: vi.fn().mockResolvedValue(undefined),
+      isPending: false,
+    })
+    mockDisableTwoFactor.mockReturnValue({
+      mutateAsync: vi.fn().mockResolvedValue(undefined),
+      isPending: false,
+    })
   })
 
   it('renders all sections correctly', () => {
@@ -204,19 +246,93 @@ describe('SecuritySettingsForm', () => {
     expect(screen.getByText('Revoke All Others')).toBeInTheDocument()
   })
 
-  it('shows 2FA placeholder section', () => {
+  it('shows 2FA status when not configured', () => {
     renderWithProviders(<SecuritySettingsForm />)
 
-    expect(screen.getByText('Coming Soon')).toBeInTheDocument()
-    expect(screen.getByText('Two-factor authentication will be available in a future update')).toBeInTheDocument()
+    expect(screen.getByText('Not Configured')).toBeInTheDocument()
+    expect(screen.getByText('Set Up')).toBeInTheDocument()
+  })
+
+  it('shows 2FA enabled status when configured', () => {
+    mockSecuritySettings.mockReturnValue({
+      data: { twoFactorEnabled: true, emailVerified: true, lastPasswordChange: null },
+      isLoading: false,
+    })
+
+    renderWithProviders(<SecuritySettingsForm />)
+
+    expect(screen.getByText('Enabled')).toBeInTheDocument()
+    expect(screen.getByText('Disable')).toBeInTheDocument()
+  })
+
+  it('shows setup button in idle state', () => {
+    renderWithProviders(<SecuritySettingsForm />)
+
+    expect(screen.getByText('Set Up')).toBeInTheDocument()
+    expect(screen.queryByText('Disable')).not.toBeInTheDocument()
+  })
+
+  it('renders QR code when setup is initiated', async () => {
+    renderWithProviders(<SecuritySettingsForm />)
+
+    const setupButton = screen.getByText('Set Up')
+    await userEvent.click(setupButton)
+
+    await waitFor(() => {
+      expect(screen.getByTestId('qrcode')).toBeInTheDocument()
+    })
+  })
+
+  it('shows verification input after QR code is displayed', async () => {
+    renderWithProviders(<SecuritySettingsForm />)
+
+    const setupButton = screen.getByText('Set Up')
+    await userEvent.click(setupButton)
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/6-digit code/)).toBeInTheDocument()
+    })
+  })
+
+  it('shows verify and enable button after setup', async () => {
+    renderWithProviders(<SecuritySettingsForm />)
+
+    const setupButton = screen.getByText('Set Up')
+    await userEvent.click(setupButton)
+
+    await waitFor(() => {
+      expect(screen.getByText('Verify & Enable')).toBeInTheDocument()
+    })
+  })
+
+  it('shows disable form when Disable is clicked', async () => {
+    mockSecuritySettings.mockReturnValue({
+      data: { twoFactorEnabled: true, emailVerified: true, lastPasswordChange: null },
+      isLoading: false,
+    })
+
+    renderWithProviders(<SecuritySettingsForm />)
+
+    // First verify enabled state renders correctly
+    expect(screen.getByText('Enabled')).toBeInTheDocument()
+    
+    const disableButton = screen.getByText('Disable')
+    await userEvent.click(disableButton)
+
+    // After clicking Disable, should show the disable confirmation form
+    await waitFor(() => {
+      expect(screen.getByText('Disable 2FA')).toBeInTheDocument()
+      expect(screen.getByText(/enter your current password/i)).toBeInTheDocument()
+    })
   })
 
   it('renders device icons for sessions', () => {
     renderWithProviders(<SecuritySettingsForm />)
 
     const laptopIcon = screen.getByTestId('icon-Laptop')
-    const smartphoneIcon = screen.getByTestId('icon-Smartphone')
     expect(laptopIcon).toBeInTheDocument()
-    expect(smartphoneIcon).toBeInTheDocument()
+    // Smartphone icons appear in both the 2FA header and device icons
+    const smartphoneIcons = screen.getAllByTestId('icon-Smartphone')
+    expect(smartphoneIcons.length).toBeGreaterThanOrEqual(1)
   })
 })
