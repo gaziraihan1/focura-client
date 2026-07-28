@@ -4,14 +4,39 @@ import { CareersValues } from '@/components/Careers/CareersValues';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title      : 'Careers | Focura',
-  description: 'Join the Focura team. We are building the productivity platform for focused teams. See open roles and learn what it is like to work here.',
-  openGraph  : {
-    title      : 'Careers at Focura',
-    description: 'Build the future of focused work. See our open roles.',
-    url        : 'https://focura-client.vercel.app/careers',
-    siteName   : 'Focura',
-    type       : 'website',
+  title: "Careers | Focura",
+  description:
+    "Join the Focura team. We are building the productivity platform for focused teams. See open roles and learn what it is like to work here.",
+  keywords: [
+    "focura careers",
+    "focura jobs",
+    "productivity platform jobs",
+    "saas startup careers",
+    "join focura",
+  ],
+  openGraph: {
+    title: "Careers at Focura – Build the Future of Focused Work",
+    description: "Build the future of focused work. See our open roles and join the Focura team.",
+    url: "https://focura-client.vercel.app/careers",
+    siteName: "Focura",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Careers at Focura",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Careers at Focura – Build the Future of Focused Work",
+    description: "Build the future of focused work. See our open roles and join the Focura team.",
+    images: ["/og-image.png"],
+  },
+  alternates: {
+    canonical: "https://focura-client.vercel.app/careers",
   },
 };
 

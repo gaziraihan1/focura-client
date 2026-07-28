@@ -4,20 +4,28 @@ import SolutionsHero from '@/components/Solutions/SolutionsHero'
 import SolutionsMetrics from '@/components/Solutions/SolutionsMetrics'
 import SolutionProblems from '@/components/Solutions/SolutionsProblem'
 import SolutionUseCases from '@/components/Solutions/SolutionsUseCases'
+import type { Metadata } from 'next';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Focura Solutions – Tailored Productivity for Every Team",
   description:
     "Focura provides solutions for startups, small teams, and enterprises. Streamline workflows, collaborate effectively, and increase productivity.",
+  keywords: [
+    "focura solutions",
+    "team productivity",
+    "startup workspace",
+    "enterprise project management",
+    "workflow automation",
+  ],
   openGraph: {
     title: "Focura Solutions – Productivity for Every Team",
     description:
-      "See how Focura’s tailored solutions help teams of all sizes manage workspaces, tasks, and projects efficiently.",
-    url: "https://focura.app/solutions",
+      "See how Focura's tailored solutions help teams of all sizes manage workspaces, tasks, and projects efficiently.",
+    url: "https://focura-client.vercel.app/solutions",
     siteName: "Focura",
     images: [
       {
-        url: "/og-solutions.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Focura solutions for teams",
@@ -29,8 +37,11 @@ export const metadata = {
     card: "summary_large_image",
     title: "Focura Solutions – Productivity for Every Team",
     description:
-      "See how Focura’s tailored solutions help teams of all sizes manage workspaces, tasks, and projects efficiently.",
-    images: ["/og-solutions.png"],
+      "See how Focura's tailored solutions help teams of all sizes manage workspaces, tasks, and projects efficiently.",
+    images: ["/og-image.png"],
+  },
+  alternates: {
+    canonical: "https://focura-client.vercel.app/solutions",
   },
 };
 

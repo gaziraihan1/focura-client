@@ -12,19 +12,38 @@ export const metadata: Metadata = {
   title: "About | Focura",
   description:
     "Learn about Focura — a modern productivity and collaboration SaaS built with Next.js 16, React 19, TypeScript, and Tailwind v4. Built by Mohammad Raihan Gazi.",
+  keywords: [
+    "focura about",
+    "focura team",
+    "productivity platform",
+    "workspace management",
+    "nextjs saas",
+  ],
   openGraph: {
-    title: "About Focura",
+    title: "About Focura – Focus Smarter. Manage Workspaces, Projects & Teams",
     description:
-      "Focus Smarter. Manage Workspaces, Projects & Teams. Meet the stack, architecture, and founder behind Focura.",
+      "Meet the stack, architecture, and founder behind Focura. A modern productivity platform built with Next.js 16, React 19, TypeScript, and Tailwind v4.",
     url: "https://focura-client.vercel.app/about",
     siteName: "Focura",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "About Focura - productivity platform",
+      },
+    ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "About Focura",
+    title: "About Focura – Focus Smarter. Manage Workspaces, Projects & Teams",
     description:
-      "Focus Smarter. Manage Workspaces, Projects & Teams. Next.js 16 · React 19 · TypeScript · Tailwind v4.",
+      "Meet the stack, architecture, and founder behind Focura. Next.js 16 · React 19 · TypeScript · Tailwind v4.",
+    images: ["/og-image.png"],
+  },
+  alternates: {
+    canonical: "https://focura-client.vercel.app/about",
   },
 };
 

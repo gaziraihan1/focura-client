@@ -18,8 +18,9 @@ interface FormData {
   description: string;
   color: string;
   isPublic: boolean;
-  plan: "FREE" | "PRO" | "BUSINESS" | "ENTERPRISE";
 }
+
+type PlanChoice = "FREE" | "PRO";
 
 export function useCreateWorkspacePage() {
   const router = useRouter();
@@ -30,9 +31,12 @@ export function useCreateWorkspacePage() {
     description: "",
     color: PREDEFINED_COLORS[0],
     isPublic: false,
-    plan: "FREE",
   });
 
+  // BUG FIX: selectedPlan is kept separate from formData.
+  // The backend always receives plan: "FREE" on creation.
+  // The selected plan only controls post-creation redirect logic.
+  const [selectedPlan, setSelectedPlan] = useState<PlanChoice>("FREE");
   const [selectedType, setSelectedType] = useState("team");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -63,14 +67,19 @@ export function useCreateWorkspacePage() {
     }
 
     try {
-    const workspace = await createWorkspace.mutateAsync(formData);
+      // BUG FIX: Always send plan: "FREE" — the user cannot get Pro without paying.
+      const workspace = await createWorkspace.mutateAsync({
+        ...formData,
+        plan: "FREE" as const,
+      });
 
-    if (formData.plan === "PRO") {
-      router.push(`/dashboard/workspaces/${workspace.slug}/billing/upgrade`);
-    } else {
-      router.push(`/dashboard/workspaces/${workspace.slug}`);
-    }
-  } catch {
+      // Redirect to billing upgrade only if user *intended* Pro — they still need to pay.
+      if (selectedPlan === "PRO") {
+        router.push(`/dashboard/workspaces/${workspace.slug}/billing/upgrade`);
+      } else {
+        router.push(`/dashboard/workspaces/${workspace.slug}`);
+      }
+    } catch {
     console.error("Failed to create workspace");
     setErrors({ form: "An error occurred while creating the workspace. Please try again." });
   }
@@ -97,6 +106,8 @@ export function useCreateWorkspacePage() {
     formData,
     selectedType,
     setSelectedType,
+    selectedPlan,
+    setSelectedPlan,
     errors,
     isSubmitting: createWorkspace.isPending,
     predefinedColors: PREDEFINED_COLORS,

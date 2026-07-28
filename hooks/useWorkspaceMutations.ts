@@ -7,16 +7,15 @@ import { analyticsKeys } from "./useAnalytics";
 
 export function useCreateWorkspace() {
   const qc = useQueryClient();
-  const router = useRouter();
 
   return useMutation<Workspace, unknown, CreateWorkspaceDto>({
     mutationFn: async (data): Promise<Workspace> => {
       const response = await api.post<Workspace>("/api/v1/workspaces", data, { showErrorToast: true, showSuccessToast: true });
       return response.data as Workspace;
     },
-    onSuccess: (workspace) => {
+    onSuccess: () => {
+      // NOTE: Caller handles routing (e.g. redirect to billing/upgrade for Pro).
       qc.invalidateQueries({ queryKey: workspaceKeys.lists() });
-      if (workspace?.slug) router.push(`/dashboard/workspaces/${workspace.slug}`);
     },
   });
 }

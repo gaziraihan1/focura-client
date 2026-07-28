@@ -6,13 +6,38 @@ export const metadata: Metadata = {
   title: "Contact | Focura",
   description:
     "Get in touch with the Focura team — for general enquiries, billing support, technical issues, feature requests, partnerships, or security disclosures.",
+  keywords: [
+    "focura contact",
+    "focura support",
+    "contact focura",
+    "focura help",
+    "billing support",
+  ],
   openGraph: {
-    title: "Contact Focura",
+    title: "Contact Focura – Get in Touch",
     description:
       "Reach out to the Focura team. We respond to all messages within 2 business days.",
     url: "https://focura-client.vercel.app/contact",
     siteName: "Focura",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Contact Focura",
+      },
+    ],
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact Focura – Get in Touch",
+    description:
+      "Reach out to the Focura team. We respond to all messages within 2 business days.",
+    images: ["/og-image.png"],
+  },
+  alternates: {
+    canonical: "https://focura-client.vercel.app/contact",
   },
 };
 

@@ -1,56 +1,46 @@
-'use client';
+import type { Metadata } from "next";
+import HelpContent from "./help-content";
 
-import { HelpCategories } from '@/components/Help/HelpCategories';
-import { HelpContactCard } from '@/components/Help/HelpContactCard';
-import { HelpFAQ } from '@/components/Help/HelpFaq';
-import { HelpFeaturesGuide } from '@/components/Help/HelpFeaturesGuide';
-import { HelpGettingStarted } from '@/components/Help/HelpGettingStarted';
-import { HelpHero } from '@/components/Help/HelpHero';
-import { HelpSearchResults } from '@/components/Help/HelpSearchResults';
-import { useState }          from 'react';
-
-/**
- * HelpPageClient
- *
- * Owns the search query state. When the user types, only
- * HelpSearchResults is shown. When empty, the full guide
- * (Categories → Getting Started → Feature Guide → FAQ → Contact)
- * is rendered.
- *
- * This is a single client root so the server page itself stays
- * a pure server component with metadata.
- */
-const HelpPage = () => {
-  const [query, setQuery] = useState('');
-
-  const scrollToCategory = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      const top = el.getBoundingClientRect().top + window.scrollY - 96;
-      window.scrollTo({ top, behavior: 'smooth' });
-    }
-  };
-
-  return (
-    <div className='min-h-screen bg-white dark:bg-neutral-950'>
-      {/* Hero is always visible — owns the search input */}
-      <HelpHero onSearch={setQuery} />
-
-      {query.trim() ? (
-        /* ── Search mode ───────────────────────────────────────────────────── */
-        <HelpSearchResults query={query} />
-      ) : (
-        /* ── Browse mode ───────────────────────────────────────────────────── */
-        <>
-          <HelpCategories onCategoryClick={scrollToCategory} />
-          <HelpGettingStarted />
-          <HelpFeaturesGuide />
-          <HelpFAQ />
-          <HelpContactCard />
-        </>
-      )}
-    </div>
-  );
+export const metadata: Metadata = {
+  title: "Help Center | Focura",
+  description:
+    "Get help with Focura. Browse guides, FAQs, and tutorials to get started with workspace management, task tracking, and team collaboration.",
+  keywords: [
+    "focura help",
+    "focura support",
+    "focura guide",
+    "focura tutorial",
+    "focura FAQ",
+    "workspace help",
+  ],
+  openGraph: {
+    title: "Focura Help Center – Guides, FAQs & Tutorials",
+    description:
+      "Get help with Focura. Browse guides, FAQs, and tutorials to master workspace management.",
+    url: "https://focura-client.vercel.app/help",
+    siteName: "Focura",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Focura help center",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Focura Help Center – Guides, FAQs & Tutorials",
+    description:
+      "Get help with Focura. Browse guides, FAQs, and tutorials to master workspace management.",
+    images: ["/og-image.png"],
+  },
+  alternates: {
+    canonical: "https://focura-client.vercel.app/help",
+  },
 };
 
-export default HelpPage;
+export default function HelpPage() {
+  return <HelpContent />;
+}

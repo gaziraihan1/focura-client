@@ -449,6 +449,8 @@ EMAIL_FROM="Focura <your-email>"
 
 # Optional
 NODE_OPTIONS=--dns-result-order=ipv4first
+NEXT_PUBLIC_GA_MEASUREMENT_ID=from-google-analytics-admin
+
 ```
 
 > **Note:** The `REDIS_URL` (ioredis TCP) env var is backend-only and never

@@ -8,19 +8,28 @@ import ResourceUpdateList from '@/components/Resources/ResourceUpdateList'
 // Force dynamic rendering to avoid build-time API calls to unavailable backend
 export const dynamic = 'force-dynamic'
 
-export const metadata = {
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
   title: "Focura Resources – Guides, Tutorials & Insights",
   description:
     "Access Focura resources: tutorials, guides, blogs, and tips to maximize productivity and master workspace management.",
+  keywords: [
+    "focura resources",
+    "focura guides",
+    "focura tutorials",
+    "productivity tips",
+    "workspace management guide",
+  ],
   openGraph: {
     title: "Focura Resources – Learn & Master Productivity",
     description:
       "Explore articles, tutorials, and guides to get the most out of Focura and boost your team's productivity.",
-    url: "https://focura.app/resources",
+    url: "https://focura-client.vercel.app/resources",
     siteName: "Focura",
     images: [
       {
-        url: "/og-resources.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Focura resources and guides",
@@ -33,7 +42,10 @@ export const metadata = {
     title: "Focura Resources – Learn & Master Productivity",
     description:
       "Explore articles, tutorials, and guides to get the most out of Focura and boost your team's productivity.",
-    images: ["/og-resources.png"],
+    images: ["/og-image.png"],
+  },
+  alternates: {
+    canonical: "https://focura-client.vercel.app/resources",
   },
 };
 

@@ -1,21 +1,61 @@
-export function FocuraTips() {
-  const tips = [
-    { color: "bg-blue-500", text: "Use workspaces to separate teams or clients. Each has its own members, projects, and billing." },
-    { color: "bg-green-500", text: "Labels and priorities make filtering fast. Tag tasks before assigning them to keep things tidy." },
-    { color: "bg-pink-500", text: "Daily tasks auto-refresh each morning. Primary tasks carry over; secondary ones reset." },
-    { color: "bg-orange-500", text: "Press ⌘K anywhere to switch workspaces or jump to a project instantly." },
-  ];
+import { Lightbulb, Keyboard, Tag, RefreshCw } from 'lucide-react';
 
+const tips = [
+  {
+    icon: Lightbulb,
+    color: 'text-blue-500',
+    bg: 'bg-blue-500/10',
+    title: 'Workspaces = Teams',
+    text: 'Keep teams or clients separate. Each workspace has its own projects, members, and billing.',
+  },
+  {
+    icon: Tag,
+    color: 'text-green-500',
+    bg: 'bg-green-500/10',
+    title: 'Label everything',
+    text: 'Labels and priorities make filtering a breeze. Tag tasks before you assign them.',
+  },
+  {
+    icon: RefreshCw,
+    color: 'text-pink-500',
+    bg: 'bg-pink-500/10',
+    title: 'Daily tasks reset',
+    text: 'Primary tasks carry over each morning. Secondary ones refresh — so you start fresh.',
+  },
+  {
+    icon: Keyboard,
+    color: 'text-orange-500',
+    bg: 'bg-orange-500/10',
+    title: '⌘K power move',
+    text: 'Press ⌘K anywhere to switch workspaces, jump to a project, or find anything fast.',
+  },
+];
+
+export function FocuraTips() {
   return (
     <div className="bg-card border rounded-xl p-5">
-      <h2 className="text-sm font-medium mb-4">Getting the most out of Focura</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-0 divide-y sm:divide-y-0">
-        {tips.map((tip, i) => (
-          <div key={i} className="flex gap-3 py-3 sm:py-0">
-            <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${tip.color}`} />
-            <p className="text-xs text-muted-foreground leading-relaxed">{tip.text}</p>
-          </div>
-        ))}
+      <div className="flex items-center gap-2 mb-4">
+        <Lightbulb className="w-4 h-4 text-primary" />
+        <h2 className="text-sm font-semibold text-foreground">Tips to get more done</h2>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {tips.map((tip) => {
+          const Icon = tip.icon;
+          return (
+            <div
+              key={tip.title}
+              className="flex gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
+            >
+              <div className={`w-8 h-8 rounded-lg shrink-0 flex items-center justify-center ${tip.bg}`}>
+                <Icon size={14} className={tip.color} />
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-foreground mb-0.5">{tip.title}</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">{tip.text}</p>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
