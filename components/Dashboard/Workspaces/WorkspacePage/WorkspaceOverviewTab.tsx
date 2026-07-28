@@ -1,9 +1,11 @@
-import { Loader2 } from "lucide-react";
-import { TaskActivityList } from "@/components/Dashboard/TaskDetails/TaskActivityList";
-import { useWorkspaceActivities } from "@/hooks/useActivity";
-import WorkspaceInformation from "./WorkspaceInformation";
-import WorkspaceStorageInfo from "./WorkspaceStorageInfo";
-import { useState } from "react";
+'use client';
+
+import { useState } from 'react';
+import { Loader2, Activity, ChevronUp } from 'lucide-react';
+import { TaskActivityList } from '@/components/Dashboard/TaskDetails/TaskActivityList';
+import { useWorkspaceActivities } from '@/hooks/useActivity';
+import WorkspaceInformation from './WorkspaceInformation';
+import WorkspaceStorageInfo from './WorkspaceStorageInfo';
 
 interface WorkspaceOverviewTabProps {
   workspaceId: string;
@@ -23,51 +25,80 @@ export function WorkspaceOverviewTab({
   isPublic,
   maxStorage,
 }: WorkspaceOverviewTabProps) {
-  const [limit, setLimit] = useState(3);
+  const [limit, setLimit] = useState(5);
   const { data: activities = [], isLoading: activitiesLoading } = useWorkspaceActivities(
     workspaceId,
     { limit: limit + 1 }
   );
- const hasMore = activities.length > limit;
-const visibleActivities = activities.slice(0, limit);
+
+  const hasMore = activities.length > limit;
+  const visibleActivities = activities.slice(0, limit);
+  const isEmpty = activities.length === 0 && !activitiesLoading;
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      <div className="p-4 sm:p-6 rounded-lg sm:rounded-xl bg-card border border-border">
-        <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">
-          Recent Activity
-        </h3>
-        
+    <div className="space-y-5">
+      {/* Activity feed */}
+      <div className="p-5 rounded-2xl bg-card border border-border">
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Activity className="w-4 h-4 text-primary" />
+            </div>
+            <h3 className="text-sm font-semibold text-foreground">Recent Activity</h3>
+          </div>
+          {hasMore && (
+            <button
+              onClick={() => setLimit((prev) => prev + 5)}
+              className="text-xs text-primary hover:underline font-medium"
+            >
+              View more
+            </button>
+          )}
+        </div>
+
         {activitiesLoading ? (
           <div className="flex justify-center py-12">
             <Loader2 className="w-6 h-6 animate-spin text-primary" />
           </div>
+        ) : isEmpty ? (
+          <div className="text-center py-12">
+            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
+              <Activity size={20} className="text-muted-foreground" />
+            </div>
+            <p className="text-sm text-muted-foreground">No activity yet</p>
+            <p className="text-xs text-muted-foreground/70 mt-1">
+              Activity will appear here as your team works
+            </p>
+          </div>
         ) : (
           <TaskActivityList activities={visibleActivities} />
         )}
-        <div className="flex gap-4 justify-center pt-5 font-medium underline text-blue-500 opacity-80 text-sm">
-          <button
-  onClick={() => setLimit((prev) => prev + 9)}
-  disabled={!hasMore}
-  className={`p-2 ${!hasMore ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
->
-  see more
-</button>
-        {
-limit > 9 &&
-        <button className="p-2 cursor-pointer" 
-        onClick={() => setLimit(limit - 9)}
-        >
-          see less
-        </button>
-        }
-        </div>
+
+        {limit > 5 && (
+          <div className="flex justify-center pt-4 border-t border-border/50 mt-4">
+            <button
+              onClick={() => setLimit(5)}
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition font-medium"
+            >
+              <ChevronUp size={14} />
+              Show less
+            </button>
+          </div>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-        <WorkspaceInformation name={owner.name} email={owner.email} createdAt={createdAt} isPublic={isPublic}  />
-
-        <WorkspaceStorageInfo maxStorage={maxStorage} />
+      {/* Info and Storage grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <WorkspaceInformation
+          name={owner.name}
+          email={owner.email}
+          createdAt={createdAt}
+          isPublic={isPublic}
+        />
+        <WorkspaceStorageInfo
+          maxStorage={maxStorage}
+          workspaceId={workspaceId}
+        />
       </div>
     </div>
   );

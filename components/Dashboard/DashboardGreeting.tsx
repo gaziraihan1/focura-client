@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Sparkles, TrendingUp } from 'lucide-react';
+import { useState } from 'react';
+import { TrendingUp } from 'lucide-react';
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -34,12 +34,6 @@ export function DashboardGreeting({
   const [greeting] = useState(getGreeting);
   const [dateStr] = useState(getDateStr);
   const [dayStr] = useState(getDayOfWeek);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
     <div className="bg-card border rounded-xl p-5 sm:p-6">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
@@ -48,11 +42,7 @@ export function DashboardGreeting({
             <h1 className="text-xl sm:text-2xl font-semibold text-foreground">
               {greeting.text}{userName ? `, ${userName.split(' ')[0]}` : ''}
             </h1>
-            <span
-              className={`text-lg transition-all duration-500 ${
-                mounted ? 'opacity-100 scale-100' : 'opacity-0 scale-50'
-              }`}
-            >
+            <span className="text-lg">
               {greeting.emoji}
             </span>
           </div>

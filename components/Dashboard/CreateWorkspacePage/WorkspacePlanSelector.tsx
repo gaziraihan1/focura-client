@@ -134,7 +134,7 @@ export function WorkspacePlanSelector({
                     </p>
                   </div>
                   <p className="text-[10px] text-violet-600/70 dark:text-violet-400/70 mt-1 ml-5">
-                    You'll be redirected to billing to complete setup
+                    You&apos;ll be redirected to billing to complete setup
                   </p>
                 </div>
               )}
