@@ -28,9 +28,16 @@ function hexToRgba(hex: string, alpha: number): string {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-async function getFontData(url: string): Promise<ArrayBuffer> {
-  const response = await fetch(url, { next: { revalidate: 86400 } });
-  return response.arrayBuffer();
+async function getFontData(url: string): Promise<ArrayBuffer | null> {
+  try {
+    const response = await fetch(url, { next: { revalidate: 86400 } });
+    if (!response.ok) return null;
+    const contentType = response.headers.get('content-type') || '';
+    if (!contentType.includes('font') && !contentType.includes('octet-stream')) return null;
+    return response.arrayBuffer();
+  } catch {
+    return null;
+  }
 }
 
 export async function generateOGImage({
@@ -188,14 +195,18 @@ export async function generateOGImage({
     {
       width: OG_CONFIG.width,
       height: OG_CONFIG.height,
-      fonts: [
-        {
-          name: 'Geist',
-          data: fontData,
-          style: 'normal',
-          weight: 400,
-        },
-      ],
+      ...(fontData
+        ? {
+            fonts: [
+              {
+                name: 'Geist',
+                data: fontData,
+                style: 'normal',
+                weight: 400,
+              },
+            ],
+          }
+        : {}),
     }
   );
 }
