@@ -47,6 +47,16 @@ const mockWorkspaceStats = {
   totalMembers: 10,
 }
 
+// Mock useWorkspaceStorageInfo used by WorkspaceStorageInfo
+const mockUseWorkspaceStorageInfo = vi.fn(() => ({
+  data: { usedMB: 0, totalMB: 1024, percentage: 0 },
+  isLoading: false,
+}))
+
+vi.mock('@/hooks/useStorage', () => ({
+  useWorkspaceStorageInfo: (...args: any[]) => mockUseWorkspaceStorageInfo(...args),
+}))
+
 describe('Workspaces/TeamPage/RoleBadge', () => {
   it('renders OWNER role', () => {
     render(<RoleBadge role="OWNER" />, { wrapper: createWrapper() })
@@ -399,9 +409,11 @@ describe('Workspaces/WorkspacePage/WorkspaceInformation', () => {
 
 describe('Workspaces/WorkspacePage/WorkspaceStorageInfo', () => {
   it('renders storage info', () => {
-    render(<WorkspaceStorageInfo maxStorage={1000} />, { wrapper: createWrapper() })
+    render(<WorkspaceStorageInfo maxStorage={1024} />, { wrapper: createWrapper() })
     expect(screen.getByText('Storage')).toBeInTheDocument()
-    expect(screen.getByText('0 MB / 1000 MB')).toBeInTheDocument()
+    // Component now shows used and total in separate elements: "0 MB" and "of 1.0 GB"
+    expect(screen.getByText('0 MB')).toBeInTheDocument()
+    expect(screen.getByText(/of 1\.0 GB/)).toBeInTheDocument()
   })
 })
 

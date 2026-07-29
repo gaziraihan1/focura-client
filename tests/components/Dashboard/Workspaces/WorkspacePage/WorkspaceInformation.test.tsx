@@ -56,10 +56,9 @@ describe('WorkspaceInformation', () => {
 
   it('renders Owner label with label key elements', () => {
     const { container } = render(<WorkspaceInformation name="Jane" createdAt="2024-01-15T00:00:00Z" isPublic={false} />)
-    const spans = container.querySelectorAll('span')
-    const labelTexts = Array.from(spans).map(s => s.textContent)
-    expect(labelTexts).toContain('Owner')
-    expect(labelTexts).toContain('Created')
-    expect(labelTexts).toContain('Visibility')
+    const allText = container.textContent
+    expect(allText).toContain('Owner')
+    expect(allText).toContain('Created')
+    expect(allText).toContain('Visibility')
   })
 })

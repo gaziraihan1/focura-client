@@ -49,14 +49,14 @@ describe('DashboardHeader', () => {
 describe('FocuraTips', () => {
   it('renders heading', () => {
     render(<FocuraTips />)
-    expect(screen.getByText('Getting the most out of Focura')).toBeInTheDocument()
+    expect(screen.getByText('Tips to get more done')).toBeInTheDocument()
   })
 
   it('shows 4 tips', () => {
     render(<FocuraTips />)
-    expect(screen.getByText(/Use workspaces to separate teams/)).toBeInTheDocument()
-    expect(screen.getByText(/Labels and priorities make filtering fast/)).toBeInTheDocument()
-    expect(screen.getByText(/Daily tasks auto-refresh each morning/)).toBeInTheDocument()
-    expect(screen.getByText(/Press .*K anywhere/)).toBeInTheDocument()
+    expect(screen.getByText(/Workspaces = Teams/)).toBeInTheDocument()
+    expect(screen.getByText(/Label everything/)).toBeInTheDocument()
+    expect(screen.getByText(/Daily tasks reset/)).toBeInTheDocument()
+    expect(screen.getByText(/⌘K power move/)).toBeInTheDocument()
   })
 })

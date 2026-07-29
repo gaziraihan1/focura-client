@@ -21,7 +21,7 @@ describe('useCreateWorkspacePage', () => {
     expect(result.current.formData.name).toBe('')
     expect(result.current.formData.description).toBe('')
     expect(result.current.formData.isPublic).toBe(false)
-    expect(result.current.formData.plan).toBe('FREE')
+    expect(result.current.selectedPlan).toBe('FREE')
     expect(result.current.selectedType).toBe('team')
     expect(result.current.isSubmitting).toBe(false)
   })

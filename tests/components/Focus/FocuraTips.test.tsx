@@ -5,31 +5,28 @@ import { FocuraTips } from '@/components/Dashboard/FocuraTips'
 describe('FocuraTips', () => {
   it('renders the heading', () => {
     render(<FocuraTips />)
-
-    expect(screen.getByText('Getting the most out of Focura')).toBeInTheDocument()
+    expect(screen.getByText('Tips to get more done')).toBeInTheDocument()
   })
 
   it('renders all four tips', () => {
     render(<FocuraTips />)
-
-    expect(screen.getByText(/Use workspaces to separate teams/)).toBeInTheDocument()
-    expect(screen.getByText(/Labels and priorities make filtering fast/)).toBeInTheDocument()
-    expect(screen.getByText(/Daily tasks auto-refresh each morning/)).toBeInTheDocument()
-    expect(screen.getByText(/Press ⌘K anywhere to switch/)).toBeInTheDocument()
+    expect(screen.getByText(/Workspaces = Teams/)).toBeInTheDocument()
+    expect(screen.getByText(/Label everything/)).toBeInTheDocument()
+    expect(screen.getByText(/Daily tasks reset/)).toBeInTheDocument()
+    expect(screen.getByText(/⌘K power move/)).toBeInTheDocument()
   })
 
-  it('renders colored dots for each tip', () => {
+  it('renders tip cards with content', () => {
     const { container } = render(<FocuraTips />)
-
-    const dots = container.querySelectorAll('.rounded-full')
-    expect(dots.length).toBeGreaterThanOrEqual(4)
+    const cards = container.querySelectorAll('[class*="rounded-lg"]')
+    expect(cards.length).toBeGreaterThanOrEqual(4)
   })
 
-  it('renders tip text in muted color', () => {
+  it('renders tip descriptions', () => {
     render(<FocuraTips />)
-
-    const tips = screen.getAllByText(/./)
-    const tipTexts = tips.filter(el => el.className.includes('text-muted-foreground'))
-    expect(tipTexts.length).toBeGreaterThanOrEqual(4)
+    expect(screen.getByText(/Keep teams or clients separate/)).toBeInTheDocument()
+    expect(screen.getByText(/Labels and priorities make filtering/)).toBeInTheDocument()
+    expect(screen.getByText(/Primary tasks carry over/)).toBeInTheDocument()
+    expect(screen.getByText(/Press ⌘K anywhere/)).toBeInTheDocument()
   })
 })
