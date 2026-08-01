@@ -5,7 +5,7 @@ import { plans } from "@/constants/pricing.constants";
 
 export default function PricingPlans() {
   return (
-    <section className="relative py-28 bg-background px-6">
+    <section className="relative py-20 sm:py-28 bg-background px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-20">
           <h2 className="text-3xl md:text-5xl font-bold text-foreground">
@@ -27,18 +27,18 @@ export default function PricingPlans() {
             <div
               key={i}
               className={`
-                relative rounded-2xl border backdrop-blur-lg p-8 flex flex-col
+                relative rounded-2xl border backdrop-blur-lg p-6 sm:p-8 flex flex-col
                 transition-all duration-300
                 ${
                   plan.highlighted
-                    ? "border-primary/40 bg-primary/10 shadow-lg scale-[1.02]"
+                    ? "border-primary/40 bg-primary/10 shadow-lg lg:scale-[1.02]"
                     : "border-border bg-background/30"
                 }
                 hover:shadow-xl hover:-translate-y-1
               `}
             >
               {plan.highlighted && (
-                <span className="absolute top-4 right-4 text-xs font-medium bg-primary text-primary-foreground px-3 py-1 rounded-full">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-medium bg-primary text-primary-foreground px-3 py-1 rounded-full shadow-md whitespace-nowrap">
                   Most Popular
                 </span>
               )}
@@ -48,8 +48,8 @@ export default function PricingPlans() {
               </h3>
               <p className="text-foreground/60 mt-1 text-sm">{plan.tagline}</p>
 
-              <div className="mt-6">
-                <span className="text-4xl font-bold text-foreground">
+              <div className="mt-6 flex items-baseline gap-1 flex-wrap">
+                <span className="text-3xl sm:text-4xl font-bold text-foreground">
                   {plan.price}
                 </span>
                 {plan.price !== "Free" && plan.price !== "Custom" && (
@@ -63,8 +63,8 @@ export default function PricingPlans() {
                     key={idx}
                     className="flex items-start gap-2 text-foreground/80"
                   >
-                    <Check className="w-4 h-4 text-primary mt-0.5" />
-                    {f}
+                    <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                    <span className="min-w-0">{f}</span>
                   </li>
                 ))}
               </ul>

@@ -14,6 +14,20 @@ type NextAuthHandler = (
 
 const nextAuthHandler = NextAuth(authOptions) as unknown as NextAuthHandler;
 
+/**
+ * Safety net for both handlers: if NextAuth throws an unexpected error,
+ * return JSON instead of letting Next.js render an HTML error page — the
+ * client (useSession/getSession) expects JSON and would otherwise throw
+ * CLIENT_FETCH_ERROR ("Unexpected token '<'").
+ */
+function sessionErrorResponse(err: unknown) {
+  console.error("❌ NextAuth handler error:", err);
+  return NextResponse.json(
+    { error: "SESSION_ERROR", message: "Session error. Please sign in again." },
+    { status: 500 }
+  );
+}
+
 function getClientIp(req: Request): string {
   const header =
     req.headers.get("x-forwarded-for") ||
@@ -35,7 +49,11 @@ export async function GET(
   context: { params: Promise<{ nextauth: string[] }> }
 ) {
   const params = await context.params;
-  return nextAuthHandler(req, { params });
+  try {
+    return await nextAuthHandler(req, { params });
+  } catch (err) {
+    return sessionErrorResponse(err);
+  }
 }
 
 export async function POST(
@@ -76,5 +94,9 @@ export async function POST(
   }
 
   const params = await context.params;
-  return nextAuthHandler(req, { params });
+  try {
+    return await nextAuthHandler(req, { params });
+  } catch (err) {
+    return sessionErrorResponse(err);
+  }
 }

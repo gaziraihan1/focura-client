@@ -87,6 +87,7 @@ vi.mock('lucide-react', () => {
     ArrowRight: icon('ArrowRight'),
     Zap: icon('Zap'),
     Rocket: icon('Rocket'),
+    Briefcase: icon('Briefcase'),
     MousePointerClick: icon('MousePointerClick'),
     Sparkles: icon('Sparkles'),
     GitFork: icon('GitFork'),

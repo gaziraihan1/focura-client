@@ -8,6 +8,7 @@ import { WorkspaceList } from "@/components/Dashboard/WorkspaceList";
 import { RecentActivity } from "@/components/Dashboard/RecentActivity";
 import { FocuraTips } from "@/components/Dashboard/FocuraTips";
 import { WellnessRecommendations } from "@/components/Dashboard/WellnessRecommendations";
+import { FocusStreakBadge } from "@/components/Dashboard/FocusStreakBadge";
 import { GettingStartedChecklist } from "@/components/Dashboard/GettingStartedChecklist";
 import { TaskHighlights } from "@/components/Dashboard/TaskHighlights";
 import type { Workspace } from "@/hooks/useWorkspace";
@@ -43,6 +44,7 @@ export default async function DashboardPage() {
 
         {/* Right column (1/3) */}
         <div className="space-y-5">
+          <FocusStreakBadge />
           <GettingStartedChecklist
             workspaces={wsList.map(ws => ({ id: ws.id, name: ws.name, slug: ws.slug }))}
             totalProjects={totalProjects}

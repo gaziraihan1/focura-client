@@ -4,20 +4,20 @@ import { Check } from "lucide-react";
 
 export default function PricingHero() {
   return (
-    <section className="relative overflow-hidden py-28 bg-background">
+    <section className="relative overflow-hidden py-20 sm:py-28 bg-background">
       <div className="absolute inset-0 pointer-events-none bg-linear-to-b from-primary/5 via-transparent to-transparent" />
 
-      <div className="relative max-w-4xl mx-auto px-6 text-center">
-        <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight">
+      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-foreground leading-tight">
           Simple, transparent pricing
         </h1>
 
-        <p className="mt-4 text-lg md:text-xl text-foreground/70 max-w-2xl mx-auto">
+        <p className="mt-4 text-base sm:text-lg md:text-xl text-foreground/70 max-w-2xl mx-auto">
           Choose a plan that scales with your team. No hidden fees, no contracts
           — just clarity.
         </p>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-sm text-foreground/70">
+        <div className="mt-8 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-4 text-sm text-foreground/70">
           <div className="flex items-center gap-2">
             <Check className="w-4 h-4 text-primary" />
             No credit card required

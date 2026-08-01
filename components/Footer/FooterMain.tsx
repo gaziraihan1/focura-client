@@ -1,12 +1,18 @@
 import Link from "next/link";
+import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
 
 export default function FooterMain() {
+  const socials = [
+    { icon: Facebook, label: "Facebook" },
+    { icon: Instagram, label: "Instagram" },
+    { icon: Twitter, label: "Twitter" },
+    { icon: Linkedin, label: "LinkedIn" },
+  ];
+
   return (
     <footer className="w-full border-t border-white/10 bg-black py-14">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-          
           <div>
             <h2 className="text-2xl font-bold text-white">Focura</h2>
             <p className="text-sm text-gray-400 mt-3 leading-relaxed">
@@ -44,7 +50,6 @@ export default function FooterMain() {
               <li><Link href="/cookies" className="hover:text-white">Cookies</Link></li>
             </ul>
           </div>
-
         </div>
 
         <div className="border-t border-white/10 mt-14 pt-6"></div>
@@ -54,22 +59,19 @@ export default function FooterMain() {
             © {new Date().getFullYear()} Focura — All Rights Reserved.
           </p>
 
-          <div className="flex items-center gap-4 text-gray-400">
-            <a href="#" className="hover:text-white transition">
-              <i className="ri-facebook-fill text-xl"></i>
-            </a>
-            <a href="#" className="hover:text-white transition">
-              <i className="ri-instagram-line text-xl"></i>
-            </a>
-            <a href="#" className="hover:text-white transition">
-              <i className="ri-twitter-x-line text-xl"></i>
-            </a>
-            <a href="#" className="hover:text-white transition">
-              <i className="ri-linkedin-fill text-xl"></i>
-            </a>
+          <div className="flex items-center gap-3 text-gray-400">
+            {socials.map(({ icon: Icon, label }) => (
+              <a
+                key={label}
+                href="#"
+                aria-label={label}
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-gray-400 transition hover:border-white/30 hover:text-white"
+              >
+                <Icon size={16} />
+              </a>
+            ))}
           </div>
         </div>
-
       </div>
     </footer>
   );

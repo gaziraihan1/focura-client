@@ -92,7 +92,7 @@ import FeatureSection from '@/components/Home/FeatureSection'
 describe('FeatureSection', () => {
   it('renders the heading', () => {
     render(<FeatureSection />)
-    expect(screen.getByText('A Platform Built for Modern Teams')).toBeInTheDocument()
+    expect(screen.getByText('A platform built for modern teams')).toBeInTheDocument()
   })
 
   it('renders all three feature cards', () => {
@@ -105,8 +105,8 @@ describe('FeatureSection', () => {
   it('renders feature descriptions', () => {
     render(<FeatureSection />)
     expect(screen.getByText(/Designed for speed/)).toBeInTheDocument()
-    expect(screen.getByText(/Manage tasks, docs, teams/)).toBeInTheDocument()
-    expect(screen.getByText(/Enterprise-grade protection/)).toBeInTheDocument()
+    expect(screen.getByText(/Tasks, docs, teams/)).toBeInTheDocument()
+    expect(screen.getByText(/Enterprise-grade protection keeps/)).toBeInTheDocument()
   })
 })
 
@@ -140,7 +140,7 @@ import Hero from '@/components/Home/Hero'
 describe('Hero', () => {
   it('renders the main heading', () => {
     render(<Hero />)
-    expect(screen.getByText('One tool to manage')).toBeInTheDocument()
+    expect(screen.getByText('One calm workspace')).toBeInTheDocument()
   })
 
   it('renders CTA buttons', () => {
@@ -151,12 +151,12 @@ describe('Hero', () => {
 
   it('renders the badge text', () => {
     render(<Hero />)
-    expect(screen.getByText(/Built for fast-moving teams/)).toBeInTheDocument()
+    expect(screen.getByText(/Built for focused teams/)).toBeInTheDocument()
   })
 
-  it('renders trust text', () => {
+  it('renders stat strip', () => {
     render(<Hero />)
-    expect(screen.getByText(/More than.*people Trust us/)).toBeInTheDocument()
+    expect(screen.getByText(/8,000\+/, { selector: 'strong' })).toBeInTheDocument()
   })
 
   it('links to correct URLs', () => {

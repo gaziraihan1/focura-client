@@ -273,8 +273,18 @@ export const authOptions: NextAuthOptions = {
           Date.now() > (token.refreshTokenExpiry as number);
 
         if (refreshExpired) {
-          console.error("❌ Refresh token expired - throwing SESSION_EXPIRED");
-          throw new Error("SESSION_EXPIRED");
+          // Never throw from a NextAuth callback: an uncaught error makes
+          // /api/auth/session return Next's HTML 500 page instead of JSON,
+          // which breaks useSession() with CLIENT_FETCH_ERROR
+          // ("Unexpected token '<', <!DOCTYPE..."). Instead mark the token
+          // as expired and clear backend credentials so the session callback
+          // surfaces `error` and DashboardShell forces a graceful logout.
+          console.error("❌ Refresh token expired - marking session expired");
+          token.error = "SESSION_EXPIRED";
+          token.backendToken = "";
+          token.backendTokenExpiry = 0;
+          token.refreshToken = "";
+          token.refreshTokenExpiry = 0;
         }
 
         // Refresh failed but token not expired - degrade session
@@ -292,6 +302,7 @@ export const authOptions: NextAuthOptions = {
     session.user.role = token.role as string;
     session.backendToken = token.backendToken as string;
     session.sessionId = token.sessionId as string;
+    session.error = token.error as string | undefined;
     
     // Log session state for debugging
     if (process.env.NODE_ENV === "development") {
@@ -366,6 +377,7 @@ declare module "next-auth" {
     };
     backendToken: string;
     sessionId: string;
+    error?: string;
   }
   interface User {
     role?: string;
@@ -382,5 +394,6 @@ declare module "next-auth/jwt" {
     backendTokenExpiry: number;
     refreshToken: string;
     refreshTokenExpiry: number;
+    error?: string;
   }
 }

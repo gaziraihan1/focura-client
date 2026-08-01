@@ -37,7 +37,7 @@ describe('useEnergyLevel', () => {
     expect(result.current.data).toBeNull()
   })
 
-  it('handles API error silently', async () => {
+  it('sets error on API failure', async () => {
     server.use(
       http.get(`${BASE}/api/v1/calendar/energy`, () =>
         new HttpResponse(null, { status: 500 })
@@ -48,6 +48,7 @@ describe('useEnergyLevel', () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false))
     expect(result.current.data).toBeNull()
+    expect(result.current.error).toBeTruthy()
   })
 
   it('logs energy level', async () => {
@@ -64,7 +65,7 @@ describe('useEnergyLevel', () => {
 
     let success: boolean | undefined
     await act(async () => {
-      success = await result.current.logEnergy({ level: 'HIGH', note: 'Great day' })
+      success = await result.current.logEnergy({ date: new Date('2024-06-15'), energyLevel: 5, note: 'Great day' })
     })
 
     expect(success).toBe(true)
@@ -83,14 +84,9 @@ describe('useEnergyLevel', () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false))
 
-    let success = false
-    try {
-      await act(async () => {
-        success = await result.current.logEnergy({ level: 'HIGH', note: 'Great day' })
-      })
-    } catch {
-      success = false
-    }
+    const success = await act(async () => {
+      return await result.current.logEnergy({ date: new Date('2024-06-15'), energyLevel: 5, note: 'Great day' })
+    })
 
     expect(success).toBe(false)
   })
@@ -117,7 +113,7 @@ describe('useEnergyHistory', () => {
     expect(result.current.data[0].level).toBe('LOW')
   })
 
-  it('returns empty array on API error', async () => {
+  it('returns empty array on API error and sets error', async () => {
     server.use(
       http.get(`${BASE}/api/v1/calendar/energy/history`, () =>
         new HttpResponse(null, { status: 500 })
@@ -131,5 +127,6 @@ describe('useEnergyHistory', () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false))
     expect(result.current.data).toEqual([])
+    expect(result.current.error).toBeTruthy()
   })
 })

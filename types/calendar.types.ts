@@ -65,19 +65,15 @@ export interface BurnoutSignal {
   createdAt: string;
 }
 
+/** Matches backend UserCapacityData */
 export interface UserCapacity {
-  id: string;
-  userId: string;
   weeklyHours: number;
   dailyCapacityHours: number;
   deepWorkHours: number;
-  createdAt: string;
-  updatedAt: string;
 }
 
+/** Matches backend UserWorkScheduleData */
 export interface UserWorkSchedule {
-  id: string;
-  userId: string;
   workDays: string[];
   workStartHour: number;
   workEndHour: number;

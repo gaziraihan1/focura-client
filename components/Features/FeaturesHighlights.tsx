@@ -64,8 +64,8 @@ export default function FeaturesHighlights() {
             <div
               key={i}
               className="
-                p-8 rounded-2xl border border-border/50 bg-background/40 backdrop-blur-xl 
-                hover:shadow-2xl transition-all hover:-translate-y-1
+                group p-8 rounded-2xl border border-border bg-card shadow-sm shadow-foreground/5
+                hover:shadow-2xl hover:shadow-foreground/5 transition-all hover:-translate-y-1
               "
             >
               <div className="w-14 h-14 flex items-center justify-center rounded-full bg-primary/10 border border-border mb-6">
@@ -75,7 +75,7 @@ export default function FeaturesHighlights() {
               <h3 className="text-xl font-semibold text-foreground">
                 {item.title}
               </h3>
-              <p className="mt-2 text-foreground/60 leading-relaxed">
+              <p className="mt-2 text-muted-foreground leading-relaxed">
                 {item.desc}
               </p>
             </div>

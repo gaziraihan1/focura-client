@@ -17,8 +17,8 @@ export default function FeatureComparison() {
           </p>
         </div>
 
-        <div className="hidden md:block overflow-hidden rounded-xl bg-card/40 backdrop-blur-xl border border-border">
-          <table className="w-full border-collapse">
+        <div className="hidden md:block overflow-x-auto rounded-xl bg-card/40 backdrop-blur-xl border border-border">
+          <table className="w-full min-w-[640px] border-collapse">
             <thead>
               <tr className="bg-card/60 backdrop-blur-xl border-b border-border">
                 <th className="text-left p-4 text-sm font-medium text-muted-foreground">

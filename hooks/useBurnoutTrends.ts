@@ -1,13 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import { api } from '@/lib/axios';
-import type { BurnoutTrend } from '@/types/calendar.types';
+import type { BurnoutTrend, WellnessRecommendation } from '@/types/calendar.types';
 
 export function useBurnoutTrends(weeks = 12) {
   const [data, setData] = useState<BurnoutTrend[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
       const result = await api.get<BurnoutTrend[]>(
         `/api/v1/calendar/burnout-trends?weeks=${weeks}`,
@@ -15,9 +17,11 @@ export function useBurnoutTrends(weeks = 12) {
       );
       if (result?.success && result.data) {
         setData(result.data);
+      } else {
+        setError('Failed to load burnout trends');
       }
     } catch {
-      // silent
+      setError('Unable to fetch burnout trends. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -25,22 +29,26 @@ export function useBurnoutTrends(weeks = 12) {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  return { data, loading, refetch: fetchData };
+  return { data, loading, error, refetch: fetchData };
 }
 
 export function useRecommendations() {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<WellnessRecommendation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
-      const result = await api.get<any[]>('/api/v1/calendar/recommendations', { showErrorToast: false });
+      const result = await api.get<WellnessRecommendation[]>('/api/v1/calendar/recommendations', { showErrorToast: false });
       if (result?.success && result.data) {
         setData(result.data);
+      } else {
+        setError('No recommendations available');
       }
     } catch {
-      // silent
+      setError('Unable to load recommendations. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -57,5 +65,5 @@ export function useRecommendations() {
     return false;
   };
 
-  return { data, loading, refetch: fetchData, dismiss };
+  return { data, loading, error, refetch: fetchData, dismiss };
 }

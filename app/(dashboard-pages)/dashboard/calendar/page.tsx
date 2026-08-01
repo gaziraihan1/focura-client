@@ -8,6 +8,10 @@ import { CalendarLegend } from "@/components/Dashboard/Calendar/CalendarLegend";
 import { CalendarSkeleton } from "@/components/Dashboard/Calendar/CalendarSkeleton";
 import { DayDetailsPanel } from "@/components/Dashboard/Calendar/DayDetailsPanel";
 import { BurnoutTrendsChart } from "@/components/Dashboard/Calendar/BurnoutTrendsChart";
+import { CapacityChart } from "@/components/Dashboard/Calendar/CapacityChart";
+import { DailyCapacityView } from "@/components/Dashboard/Calendar/DailyCapacityView";
+import { WeeklyComparison } from "@/components/Dashboard/Calendar/WeeklyComparison";
+import { EnergyQuickLog } from "@/components/Dashboard/Calendar/EnergyQuickLog";
 import { useMainCalendarPage } from "@/hooks/useCalendarPage";
 
 type CalendarViewType = "month" | "week" | "day";
@@ -77,8 +81,13 @@ export default function CalendarPage() {
       {/* Insights Bar */}
       <CalendarInsightsBar insights={insights ?? null} />
 
-      {/* Burnout Trends */}
-      <div className="max-w-400 mx-auto px-2 sm:px-6 lg:px-8 mt-4">
+      {/* Capacity Charts */}
+      <div className="max-w-400 mx-auto px-2 sm:px-6 lg:px-8 mt-4 space-y-4">
+        <WeeklyComparison />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <DailyCapacityView />
+          <CapacityChart />
+        </div>
         <BurnoutTrendsChart />
       </div>
 
@@ -108,6 +117,9 @@ export default function CalendarPage() {
           onClose={() => setSelectedDate(null)}
         />
       )}
+
+      {/* Floating energy quick-log */}
+      <EnergyQuickLog />
     </div>
   );
 }

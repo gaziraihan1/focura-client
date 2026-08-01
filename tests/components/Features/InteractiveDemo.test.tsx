@@ -121,9 +121,9 @@ describe('InteractiveDemo', () => {
     expect(screen.getByText(/Experience how/)).toBeInTheDocument()
   })
 
-  it('renders the demo preview image', () => {
+  it('renders the demo preview mockup', () => {
     render(<InteractiveDemo />)
-    expect(screen.getByAltText('Focura Demo')).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'Focura Demo' })).toBeInTheDocument()
   })
 
   it('renders "Launch Full Demo" button', () => {

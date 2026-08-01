@@ -9,23 +9,24 @@ import SecuritySection from "@/components/Home/SecuritySection";
 import Testimonials from "@/components/Home/Testimonials";
 import WorkflowSteps from "@/components/Home/WorkflowSteps";
 
-
-
-
-
 export default function Home() {
   return (
-    <div >
-    <Hero />
-    <FeatureSection />
-    <FeatureShowcase />
-    <WorkflowSteps />
-    <Testimonials />
-    <PricingSection />
-    <IntegrationsSection/>
-    <SecuritySection />
-    <FinalCTA />
-    <FAQSection />
+    <div>
+      <Hero />
+      {/* Social proof — right after the hero */}
+      <IntegrationsSection />
+      {/* Product tour */}
+      <FeatureShowcase />
+      {/* Value props */}
+      <FeatureSection />
+      {/* How it works */}
+      <WorkflowSteps />
+      {/* More social proof */}
+      <Testimonials />
+      <PricingSection />
+      <SecuritySection />
+      <FinalCTA />
+      <FAQSection />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { TrendingUp, ChevronDown, ChevronUp } from 'lucide-react';
+import { TrendingUp, ChevronDown, ChevronUp, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { useBurnoutTrends } from '@/hooks/useBurnoutTrends';
 
 const RISK_COLORS: Record<string, string> = {
@@ -26,10 +26,70 @@ const RISK_TEXT: Record<string, string> = {
 };
 
 export function BurnoutTrendsChart() {
-  const { data, loading } = useBurnoutTrends(12);
+  const { data, loading, error, refetch } = useBurnoutTrends(12);
   const [expanded, setExpanded] = useState(false);
 
-  if (loading || data.length === 0) return null;
+  // ── Loading ───────────────────────────────────────────────────────────────
+  if (loading) {
+    return (
+      <div className="rounded-2xl border border-border bg-card p-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted">
+            <Loader2 className="w-4.5 h-4.5 animate-spin text-muted-foreground" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h4 className="text-sm font-semibold text-foreground">Burnout Trends</h4>
+            <p className="text-xs text-muted-foreground mt-0.5">Loading your burnout trends…</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Error ─────────────────────────────────────────────────────────────────
+  if (error) {
+    return (
+      <div className="rounded-2xl border border-border bg-card p-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-red-500/10">
+            <AlertCircle className="w-4.5 h-4.5 text-red-600 dark:text-red-400" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h4 className="text-sm font-semibold text-foreground">Burnout Trends</h4>
+            <p className="text-xs text-muted-foreground mt-0.5">{error}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => refetch()}
+            className="flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            aria-label="Retry"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Empty ─────────────────────────────────────────────────────────────────
+  if (data.length === 0) {
+    return (
+      <div className="rounded-2xl border border-border bg-card p-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted">
+            <TrendingUp className="w-4.5 h-4.5 text-muted-foreground" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h4 className="text-sm font-semibold text-foreground">Burnout Trends</h4>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Not enough data yet. Keep tracking your workload to see burnout trends.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const latest = data[data.length - 1];
   const maxLoad = Math.max(...data.map(d => d.avgDailyLoad), 1);
@@ -37,6 +97,7 @@ export function BurnoutTrendsChart() {
   return (
     <div className="rounded-2xl border border-border bg-card overflow-hidden">
       <button
+        type="button"
         onClick={() => setExpanded(!expanded)}
         className="w-full flex items-center justify-between p-4 hover:bg-accent/30 transition-colors"
       >

@@ -16,6 +16,7 @@ import {
   X,
   Box,
   Activity,
+  HeartPulse,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -63,6 +64,7 @@ const navigation: NavItem[] = [
     ],
   },
   { name: "Calendar", href: "/dashboard/calendar", icon: Calendar },
+  { name: "Wellness", href: "/dashboard/wellness", icon: HeartPulse },
   { name: "Activity Logs", href: "/dashboard/activity-logs", icon: Activity },
 ];
 

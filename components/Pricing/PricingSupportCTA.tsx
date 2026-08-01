@@ -9,7 +9,7 @@ export default function PricingSupportCTA() {
         <div
           className="max-w-3xl mx-auto rounded-2xl border border-border 
                      bg-muted/40 dark:bg-muted/20 backdrop-blur-xl 
-                     p-10 text-center shadow-sm"
+                     p-6 sm:p-10 text-center shadow-sm"
         >
           <h3 className="text-2xl md:text-3xl font-semibold text-foreground">
             Still have questions?

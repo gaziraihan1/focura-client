@@ -29,11 +29,12 @@ export default function PricingCard({
       transition={{ duration: 0.6 }}
       viewport={{ once: true }}
       className={`
-        relative p-8 rounded-2xl border backdrop-blur-xl
+        relative p-6 sm:p-8 rounded-2xl border backdrop-blur-xl
         bg-card/50 border-border
         shadow-[0_8px_30px_rgb(0,0,0,0.06)]
         dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)]
-        ${popular ? "scale-[1.03] border-primary/40" : ""}
+        flex flex-col
+        ${popular ? "lg:scale-[1.03] border-primary/40" : ""}
       `}
     >
       {popular && (
@@ -55,8 +56,8 @@ export default function PricingCard({
       <h3 className="text-xl font-semibold text-foreground">{title}</h3>
 
       <div className="mt-4 mb-6">
-        <div className="flex items-end gap-2">
-          <h4 className="text-4xl font-bold text-foreground">
+        <div className="flex items-end gap-2 flex-wrap">
+          <h4 className="text-3xl sm:text-4xl font-bold text-foreground">
             ${price}
           </h4>
 
@@ -72,11 +73,11 @@ export default function PricingCard({
         </p>
       </div>
 
-      <ul className="space-y-3 mb-6">
+      <ul className="space-y-3 mb-6 flex-1">
         {features.map((f, i) => (
-          <li key={i} className="flex items-center gap-2 text-foreground/80">
-            <Check size={18} className="text-primary" />
-            {f}
+          <li key={i} className="flex items-start gap-2 text-foreground/80">
+            <Check size={18} className="text-primary shrink-0 mt-0.5" />
+            <span className="min-w-0">{f}</span>
           </li>
         ))}
       </ul>

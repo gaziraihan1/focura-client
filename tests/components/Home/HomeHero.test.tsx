@@ -11,18 +11,18 @@ vi.mock('next/link', () => ({
 describe('Hero', () => {
   it('renders badge', () => {
     render(<Hero />)
-    expect(screen.getByText(/Built for fast-moving teams/)).toBeInTheDocument()
+    expect(screen.getByText(/Built for focused teams/)).toBeInTheDocument()
   })
 
   it('renders heading', () => {
     render(<Hero />)
-    expect(screen.getByText('One tool to manage')).toBeInTheDocument()
-    expect(screen.getByText('workflows and your team')).toBeInTheDocument()
+    expect(screen.getByText('One calm workspace')).toBeInTheDocument()
+    expect(screen.getByText('for all your work.')).toBeInTheDocument()
   })
 
   it('renders description', () => {
     render(<Hero />)
-    expect(screen.getByText(/Focura helps teams plan, collaborate/)).toBeInTheDocument()
+    expect(screen.getByText(/Focura brings your tasks, projects/)).toBeInTheDocument()
   })
 
   it('renders CTA buttons', () => {
@@ -31,8 +31,10 @@ describe('Hero', () => {
     expect(screen.getByText('Get a Demo')).toBeInTheDocument()
   })
 
-  it('renders trust badge', () => {
+  it('renders stat strip', () => {
     render(<Hero />)
-    expect(screen.getByText(/More than.*people Trust us/)).toBeInTheDocument()
+    expect(screen.getByText(/8,000\+/, { selector: 'strong' })).toBeInTheDocument()
+    expect(screen.getByText(/99.9%/, { selector: 'strong' })).toBeInTheDocument()
+    expect(screen.getByText(/4.9\/5/, { selector: 'strong' })).toBeInTheDocument()
   })
 })

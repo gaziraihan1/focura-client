@@ -48,7 +48,7 @@ export default function FeaturesDetails() {
               <div
                 className="
                 flex-1 rounded-2xl overflow-hidden 
-                bg-background/40 backdrop-blur-xl border border-border shadow-xl
+                bg-card border border-border shadow-lg shadow-foreground/5
               "
               >
                 <Image

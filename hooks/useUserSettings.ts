@@ -25,13 +25,17 @@ export function useUserCapacity() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  const updateCapacity = async (input: UpdateCapacityInput) => {
-    const result = await api.put<UserCapacity>('/api/v1/calendar/capacity', input, { showSuccessToast: true });
-    if (result?.success && result.data) {
-      setData(result.data as any);
-      return true;
+  const updateCapacity = async (input: UpdateCapacityInput): Promise<boolean> => {
+    try {
+      const result = await api.put<UserCapacity>('/api/v1/calendar/capacity', input, { showSuccessToast: true });
+      if (result?.success && result.data) {
+        setData(result.data);
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
     }
-    return false;
   };
 
   return { data, loading, error, refetch: fetchData, updateCapacity };
@@ -48,7 +52,7 @@ export function useUserSchedule() {
     try {
       const result = await api.get<UserWorkSchedule>('/api/v1/calendar/schedule', { showErrorToast: false });
       if (result?.success && result.data) {
-        setData(result.data as any);
+        setData(result.data);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch schedule');
@@ -59,13 +63,17 @@ export function useUserSchedule() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  const updateSchedule = async (input: UpdateScheduleInput) => {
-    const result = await api.put<UserWorkSchedule>('/api/v1/calendar/schedule', input, { showSuccessToast: true });
-    if (result?.success && result.data) {
-      setData(result.data as any);
-      return true;
+  const updateSchedule = async (input: UpdateScheduleInput): Promise<boolean> => {
+    try {
+      const result = await api.put<UserWorkSchedule>('/api/v1/calendar/schedule', input, { showSuccessToast: true });
+      if (result?.success && result.data) {
+        setData(result.data);
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
     }
-    return false;
   };
 
   return { data, loading, error, refetch: fetchData, updateSchedule };

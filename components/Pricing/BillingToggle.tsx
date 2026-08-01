@@ -9,22 +9,23 @@ type Props = {
 
 export default function BillingToggle({ billing, setBilling }: Props) {
   return (
-    <div className="flex items-center justify-center mb-10">
+    <div className="flex items-center justify-center mb-10 px-4">
       <div
-        className="relative flex items-center bg-card/40 backdrop-blur-xl border border-border 
-        px-2 py-1 rounded-full gap-1"
+        className="relative grid grid-cols-2 items-center bg-card/40 backdrop-blur-xl border border-border 
+        p-1 rounded-full gap-1"
       >
         <motion.div
           layout
           transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          className={`absolute top-1 bottom-1 w-1/2 rounded-full bg-primary/10`}
+          className="absolute top-1 bottom-1 rounded-full bg-primary/10"
           style={{
-            left: billing === "monthly" ? "4px" : "calc(50% + -4px)",
+            left: billing === "monthly" ? "4px" : "50%",
+            width: "calc(50% - 4px)",
           }}
         />
         <button
           onClick={() => setBilling("monthly")}
-          className={`relative z-10 px-4 py-1 text-sm font-medium transition ${
+          className={`relative z-10 px-4 sm:px-6 py-1.5 text-sm font-medium transition whitespace-nowrap ${
             billing === "monthly"
               ? "text-primary"
               : "text-muted-foreground hover:text-foreground"
@@ -34,7 +35,7 @@ export default function BillingToggle({ billing, setBilling }: Props) {
         </button>
         <button
           onClick={() => setBilling("yearly")}
-          className={`relative z-10 px-4 py-1 text-sm font-medium transition ${
+          className={`relative z-10 px-4 sm:px-6 py-1.5 text-sm font-medium transition whitespace-nowrap ${
             billing === "yearly"
               ? "text-primary"
               : "text-muted-foreground hover:text-foreground"

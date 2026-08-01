@@ -28,7 +28,7 @@ describe('useBurnoutTrends', () => {
     expect(result.current.data[1].score).toBe(72)
   })
 
-  it('returns empty array on API error', async () => {
+  it('returns empty array on API error and sets error state', async () => {
     server.use(
       http.get(`${BASE}/api/v1/calendar/burnout-trends`, () =>
         new HttpResponse(null, { status: 500 })
@@ -39,6 +39,21 @@ describe('useBurnoutTrends', () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false))
     expect(result.current.data).toEqual([])
+    expect(result.current.error).toBeTruthy()
+  })
+
+  it('sets error state when API returns no data', async () => {
+    server.use(
+      http.get(`${BASE}/api/v1/calendar/burnout-trends`, () =>
+        ok(null)
+      )
+    )
+
+    const { result } = renderHook(() => useBurnoutTrends(), { wrapper: createWrapper() })
+
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    expect(result.current.data).toEqual([])
+    expect(result.current.error).toBe('Failed to load burnout trends')
   })
 
   it('refetches data on refetch call', async () => {
@@ -57,6 +72,35 @@ describe('useBurnoutTrends', () => {
 
     act(() => { result.current.refetch() })
     await waitFor(() => expect(spy).toHaveBeenCalledTimes(2))
+  })
+
+  it('clears error on refetch', async () => {
+    server.use(
+      http.get(`${BASE}/api/v1/calendar/burnout-trends`, () =>
+        new HttpResponse(null, { status: 500 })
+      )
+    )
+
+    const { result } = renderHook(() => useBurnoutTrends(), { wrapper: createWrapper() })
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false)
+      expect(result.current.error).toBeTruthy()
+    })
+
+    // Now set up a successful response for refetch
+    server.use(
+      http.get(`${BASE}/api/v1/calendar/burnout-trends`, () =>
+        ok([{ week: '2024-06-01', score: 50 }])
+      )
+    )
+
+    act(() => { result.current.refetch() })
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false)
+      expect(result.current.error).toBeNull()
+    })
   })
 })
 
@@ -99,5 +143,19 @@ describe('useRecommendations', () => {
 
     expect(result.current.data).toHaveLength(1)
     expect(result.current.data[0].id).toBe('rec-2')
+  })
+
+  it('sets error state on API failure', async () => {
+    server.use(
+      http.get(`${BASE}/api/v1/calendar/recommendations`, () =>
+        new HttpResponse(null, { status: 500 })
+      )
+    )
+
+    const { result } = renderHook(() => useRecommendations(), { wrapper: createWrapper() })
+
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    expect(result.current.data).toEqual([])
+    expect(result.current.error).toBeTruthy()
   })
 })

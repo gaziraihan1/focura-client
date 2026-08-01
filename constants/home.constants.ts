@@ -21,23 +21,25 @@ export const faqs = [
   },
 ];
 
+export type ShowcaseVariant = "workspace" | "collaborate" | "automation";
+
 export const features = [
   {
     title: "Organize your workspace effortlessly",
-    desc: "Create structured roadmaps, assign tasks, and visualize your team’s workload with clarity. Focura makes planning intuitive and powerful.",
-    image: "/images/showcase/workspace workflow.png",
+    desc: "Create structured roadmaps, assign tasks, and visualize your team's workload with clarity. Focura makes planning intuitive and powerful.",
+    variant: "workspace" as ShowcaseVariant,
     reverse: false,
   },
   {
     title: "Collaborate in real time",
     desc: "Keep everyone aligned with live updates, instant notifications, and seamless communication — all inside one unified workspace.",
-    image: "/images/showcase/collaborate.png",
+    variant: "collaborate" as ShowcaseVariant,
     reverse: true,
   },
   {
-    title: "Automate your routine work",
+    title: "Automate the busywork",
     desc: "Save time by automating repetitive tasks. Set triggers, create workflows, and let Focura handle the busywork for your team.",
-    image: "/showcase/automation.png",
+    variant: "automation" as ShowcaseVariant,
     reverse: false,
   },
 ];
@@ -55,7 +57,7 @@ export const plans = [
   {
     name: "Starter",
     price: "Free",
-    tagline: "Perfect for individuals and early-stage projects.",
+    tagline: "For individuals getting started.",
     features: [
       "Up to 3 projects",
       "Basic task management",
@@ -67,7 +69,7 @@ export const plans = [
   {
     name: "Pro",
     price: "$12",
-    tagline: "Best for fast-moving teams who need more control.",
+    tagline: "For teams that need momentum.",
     features: [
       "Unlimited projects",
       "Team collaboration tools",
@@ -80,7 +82,7 @@ export const plans = [
   {
     name: "Business",
     price: "$49",
-    tagline: "For organizations who need full visibility and power.",
+    tagline: "For organizations that need control.",
     features: [
       "Unlimited workspaces",
       "Custom roles and permissions",
@@ -94,27 +96,24 @@ export const plans = [
 
 export const testimonials = [
   {
-    name: "Sarah Johnson",
-    role: "Product Designer",
+    name: "Sarah Chen",
+    role: "Product Lead, Northwind",
     quote:
-      "Focura completely streamlined our team’s workflow. The clarity and speed it brings is unmatched.",
-    avatar: "/mnt/data/bea22d29-b167-4c3d-a1db-37e2282056e6.png",
+      "Focura gave our team back hours every week. Planning finally feels effortless instead of exhausting.",
     rating: 5,
   },
   {
-    name: "Michael Lee",
-    role: "Team Manager",
+    name: "Marcus Reed",
+    role: "Engineering Manager, Buildly",
     quote:
-      "We reduced project delivery time by 40% after switching to Focura. It keeps everyone aligned.",
-    avatar: "/mnt/data/bea22d29-b167-4c3d-a1db-37e2282056e6.png",
+      "We shipped 40% faster once everyone could see the same plan. The focus features are genuinely different.",
     rating: 5,
   },
   {
-    name: "Alicia Gomez",
-    role: "Operations Lead",
+    name: "Amara Okafor",
+    role: "Operations Director, Lumen",
     quote:
-      "Beautiful UI, smart features, and frictionless collaboration. Focura is built for modern teams.",
-    avatar: "/mnt/data/bea22d29-b167-4c3d-a1db-37e2282056e6.png",
+      "The first tool our team actually enjoys opening. Clear, calm, and incredibly easy to use.",
     rating: 5,
   },
 ];

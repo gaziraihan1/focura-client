@@ -131,8 +131,8 @@ describe('FeaturesHero', () => {
     expect(screen.getByText('Explore All Features')).toBeInTheDocument()
   })
 
-  it('renders the dashboard preview image', () => {
+  it('renders the dashboard preview mockup', () => {
     render(<FeaturesHero />)
-    expect(screen.getByAltText('Focura dashboard preview')).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'Focura dashboard preview' })).toBeInTheDocument()
   })
 })

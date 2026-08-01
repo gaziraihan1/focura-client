@@ -180,16 +180,20 @@ export const calendarHandlers = [
   // GET /api/v1/calendar/capacity
   http.get(`${BASE}/api/v1/calendar/capacity`, () =>
     ok({
-      dailyCapacityHours: 8,
       weeklyHours: 40,
+      dailyCapacityHours: 8,
       deepWorkHours: 4,
     })
   ),
 
   // PUT /api/v1/calendar/capacity
   http.put(`${BASE}/api/v1/calendar/capacity`, async ({ request }) => {
-    const body = await request.json()
-    return ok(body)
+    const body = (await request.json()) as Record<string, unknown>
+    return ok({
+      weeklyHours: (body.weeklyHours as number) ?? 40,
+      dailyCapacityHours: (body.dailyCapacityHours as number) ?? 8,
+      deepWorkHours: (body.deepWorkHours as number) ?? 4,
+    })
   }),
 
   // GET /api/v1/calendar/schedule
@@ -203,7 +207,11 @@ export const calendarHandlers = [
 
   // PUT /api/v1/calendar/schedule
   http.put(`${BASE}/api/v1/calendar/schedule`, async ({ request }) => {
-    const body = await request.json()
-    return ok(body)
+    const body = (await request.json()) as Record<string, unknown>
+    return ok({
+      workDays: (body.workDays as string[]) ?? ['MON', 'TUE', 'WED', 'THU', 'FRI'],
+      workStartHour: (body.workStartHour as number) ?? 9,
+      workEndHour: (body.workEndHour as number) ?? 17,
+    })
   }),
 ]
