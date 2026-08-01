@@ -1,71 +1,67 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
+import { AutomationMock, ThreadMock, WorkflowMock } from "./SolutionMocks";
 
 const features = [
   {
     title: "Automated Task Routing",
     desc: "No more manual tracking — tasks intelligently flow between teams with rules, triggers, and approvals.",
-    img: "/images/solutions/auto-routing.png",
+    Mock: AutomationMock,
   },
   {
     title: "Custom Workflows for Every Team",
     desc: "Marketing, HR, IT, Operations — each team gets custom pipelines without writing code.",
-    img: "/images/solutions/workflow-maker.png",
+    Mock: WorkflowMock,
   },
   {
     title: "Collaboration Without Chaos",
     desc: "Real-time updates, comments, timelines, files — everything stays organized in one place.",
-    img: "/images/solutions/collab.png",
+    Mock: ThreadMock,
   },
 ];
 
 export default function SolutionsFeatureShowcase() {
   return (
-    <section className="py-24 relative">
-      <div className="container mx-auto px-6">
+    <section className="relative py-20 sm:py-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center max-w-2xl mx-auto mb-16"
+          className="mx-auto mb-12 max-w-2xl text-center sm:mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+          <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
             Powerful Features That Fit Your Workflow
           </h2>
-          <p className="mt-4 text-gray-600 dark:text-gray-300">
+          <p className="mt-4 text-foreground/70">
             Focura adapts to your business — not the other way around.
           </p>
         </motion.div>
 
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 25 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
-              className="p-6 rounded-2xl bg-white/60 dark:bg-white/5 
-                         backdrop-blur-xl shadow-lg border border-white/20 
-                         hover:shadow-xl transition-all duration-300"
-            >
-              <div className="relative w-full h-48 rounded-xl overflow-hidden mb-6">
-                <Image
-                  src={feature.img}
-                  alt={feature.title}
-                  fill
-                  className="object-cover"
-                />
-              </div>
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+          {features.map((feature, i) => {
+            const { Mock } = feature;
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15 }}
+                className="group flex flex-col rounded-2xl border border-border bg-card p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-foreground/5"
+              >
+                <Mock />
 
-              <h3 className="text-xl font-semibold">{feature.title}</h3>
-              <p className="text-gray-600 dark:text-gray-300 mt-2 leading-relaxed">
-                {feature.desc}
-              </p>
-            </motion.div>
-          ))}
+                <h3 className="mt-5 text-xl font-semibold text-foreground">
+                  {feature.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {feature.desc}
+                </p>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -90,7 +90,7 @@ export default function SolutionsMetrics() {
               transition={{ duration: 0.4, ease: "easeInOut" }}
               className="
                 p-7 rounded-3xl border border-border
-                bg-background/40 backdrop-blur-xl shadow-sm
+                bg-card shadow-sm
                 hover:shadow-lg transition text-center
               "
             >

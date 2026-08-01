@@ -66,7 +66,7 @@ export default function SolutionUseCases() {
               viewport={{ once: true }}
               whileHover={{ y: -6 }}
               transition={{ duration: 0.2 }}
-              className="p-7 rounded-3xl border border-border bg-background/40 backdrop-blur-xl shadow-sm hover:shadow-lg transition"
+              className="p-7 rounded-3xl border border-border bg-card shadow-sm hover:shadow-lg transition"
             >
               <div className="w-14 h-14 flex items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 mb-5">
                 {item.icon}

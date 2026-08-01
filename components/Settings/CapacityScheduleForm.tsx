@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import {
   Clock,
   Calendar,
@@ -53,6 +53,7 @@ type SaveStatus = "idle" | "saving" | "success" | "error";
 // ─── Component ──────────────────────────────────────────────────────────────
 
 export function CapacityScheduleForm() {
+  const [, startTransition] = useTransition();
   const {
     data: capacity,
     loading: capLoading,
@@ -84,18 +85,22 @@ export function CapacityScheduleForm() {
   // Populate from fetched data
   useEffect(() => {
     if (capacity) {
-      setDailyHours(capacity.dailyCapacityHours);
-      setWeeklyHours(capacity.weeklyHours);
-      setDeepWorkHours(capacity.deepWorkHours);
+      startTransition(() => {
+        setDailyHours(capacity.dailyCapacityHours);
+        setWeeklyHours(capacity.weeklyHours);
+        setDeepWorkHours(capacity.deepWorkHours);
+      });
     }
   }, [capacity]);
 
   useEffect(() => {
     if (schedule) {
-      setWorkDays(schedule.workDays);
-      setStartHour(schedule.workStartHour);
-      setEndHour(schedule.workEndHour);
-      if (schedule.timezone) setTimezone(schedule.timezone);
+      startTransition(() => {
+        setWorkDays(schedule.workDays);
+        setStartHour(schedule.workStartHour);
+        setEndHour(schedule.workEndHour);
+        if (schedule.timezone) setTimezone(schedule.timezone);
+      });
     }
   }, [schedule]);
 
