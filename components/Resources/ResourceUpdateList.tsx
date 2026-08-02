@@ -10,12 +10,20 @@ interface ResourcePopularListProps {
 export default async function ResourceUpdateList({
   searchParams,
 }: ResourcePopularListProps) {
-const page = Math.max(1, Number(searchParams?.page || 1));
-  const data = await fetchPublicProductUpdates({
-    status: "PUBLIC",
-    page,
-    limit: 8,
-  });
+  const page = Math.max(1, Number(searchParams?.page || 1));
 
-  return <ResourcesUpdates updates={data} />;
+  // Gracefully degrade when the backend is unavailable (e.g. local dev
+  // without the API running) instead of crashing the whole page.
+  try {
+    const data = await fetchPublicProductUpdates({
+      status: "PUBLIC",
+      page,
+      limit: 8,
+    });
+
+    return <ResourcesUpdates updates={data} />;
+  } catch (error) {
+    console.error("Failed to load product updates:", error);
+    return null;
+  }
 }

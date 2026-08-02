@@ -78,7 +78,7 @@ export default function Hero() {
         }}
       />
 
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 pb-16 md:pt-32 md:pb-24 text-center">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 md:pt-32 md:pb-24 text-center">
           {/* Eyebrow badge */}
           <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3.5 py-1.5 text-xs font-medium tracking-wide text-muted-foreground shadow-sm">
             <span className="relative flex h-1.5 w-1.5">
