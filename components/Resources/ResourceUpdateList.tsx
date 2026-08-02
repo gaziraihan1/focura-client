@@ -14,16 +14,17 @@ export default async function ResourceUpdateList({
 
   // Gracefully degrade when the backend is unavailable (e.g. local dev
   // without the API running) instead of crashing the whole page.
+  let data;
   try {
-    const data = await fetchPublicProductUpdates({
+    data = await fetchPublicProductUpdates({
       status: "PUBLIC",
       page,
       limit: 8,
     });
-
-    return <ResourcesUpdates updates={data} />;
   } catch (error) {
     console.error("Failed to load product updates:", error);
     return null;
   }
+
+  return <ResourcesUpdates updates={data} />;
 }
