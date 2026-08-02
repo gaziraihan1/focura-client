@@ -290,8 +290,9 @@ describe('AboutOpenSource', () => {
   it('renders contribution steps', () => {
     render(<AboutOpenSource />)
     expect(screen.getByText('Fork the repo')).toBeInTheDocument()
-    expect(screen.getByText('Create a feature branch')).toBeInTheDocument()
-    expect(screen.getByText('Follow the conventions')).toBeInTheDocument()
+    expect(screen.getByText('Branch from dev')).toBeInTheDocument()
+    expect(screen.getByText('Set up locally')).toBeInTheDocument()
+    expect(screen.getByText('Test & lint')).toBeInTheDocument()
     expect(screen.getByText('Open a Pull Request')).toBeInTheDocument()
   })
 
@@ -304,8 +305,9 @@ describe('AboutOpenSource', () => {
     render(<AboutOpenSource />)
     expect(screen.getByText('ARCHITECTURE.md')).toBeInTheDocument()
     expect(screen.getByText('CONTRIBUTING.md')).toBeInTheDocument()
-    expect(screen.getByText('CODE_OF_CONDUCT.md')).toBeInTheDocument()
     expect(screen.getByText('Backend Repository')).toBeInTheDocument()
+    expect(screen.getByText('Backend CONTRIBUTING.md')).toBeInTheDocument()
+    expect(screen.getByText('CODE_OF_CONDUCT.md')).toBeInTheDocument()
   })
 
   it('renders security note', () => {
