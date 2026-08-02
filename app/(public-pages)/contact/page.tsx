@@ -19,14 +19,6 @@ export const metadata: Metadata = {
       "Reach out to the Focura team. We respond to all messages within 2 business days.",
     url: "https://focura-client.vercel.app/contact",
     siteName: "Focura",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Contact Focura",
-      },
-    ],
     type: "website",
   },
   twitter: {
@@ -34,7 +26,6 @@ export const metadata: Metadata = {
     title: "Contact Focura – Get in Touch",
     description:
       "Reach out to the Focura team. We respond to all messages within 2 business days.",
-    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "https://focura-client.vercel.app/contact",

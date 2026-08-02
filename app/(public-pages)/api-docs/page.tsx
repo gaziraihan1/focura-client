@@ -18,14 +18,6 @@ export const metadata: Metadata = {
       "Complete API reference for Focura. Authentication, rate limits, SSE, errors, and endpoints.",
     url: "https://focura-client.vercel.app/api-docs",
     siteName: "Focura",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Focura API documentation",
-      },
-    ],
     type: "website",
   },
   twitter: {
@@ -33,7 +25,6 @@ export const metadata: Metadata = {
     title: "Focura API Documentation – Developer Reference",
     description:
       "Complete API reference for Focura. Authentication, rate limits, SSE, errors, and endpoints.",
-    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "https://focura-client.vercel.app/api-docs",

@@ -8,6 +8,8 @@ vi.mock('lucide-react', () => ({
   Brain: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="brain-icon" {...props} />,
   Save: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="save-icon" {...props} />,
   Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader-icon" {...props} />,
+  Globe: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="globe-icon" {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-circle-icon" {...props} />,
 }))
 
 const mockUpdateCapacity = vi.fn()

@@ -18,14 +18,6 @@ export const metadata: Metadata = {
       "A transparent view of everything we've shipped and everything we're building next.",
     url: "https://focura-client.vercel.app/roadmap",
     siteName: "Focura",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Focura product roadmap",
-      },
-    ],
     type: "website",
   },
   twitter: {
@@ -33,7 +25,6 @@ export const metadata: Metadata = {
     title: "Focura Roadmap – What We're Building Next",
     description:
       "A transparent view of everything we've shipped and everything we're building next.",
-    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "https://focura-client.vercel.app/roadmap",

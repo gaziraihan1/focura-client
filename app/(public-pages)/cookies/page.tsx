@@ -21,14 +21,6 @@ export const metadata: Metadata = {
       "Learn exactly which cookies Focura sets, why, and how to manage or opt out of non-essential tracking.",
     url: "https://focura-client.vercel.app/cookies",
     siteName: "Focura",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Focura Cookie Policy",
-      },
-    ],
     type: "website",
   },
   twitter: {
@@ -36,7 +28,6 @@ export const metadata: Metadata = {
     title: "Cookie Policy – Focura",
     description:
       "Learn exactly which cookies Focura sets, why, and how to manage or opt out.",
-    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "https://focura-client.vercel.app/cookies",

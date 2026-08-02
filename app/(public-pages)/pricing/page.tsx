@@ -18,14 +18,6 @@ export const metadata: Metadata = {
       "Choose the right Focura plan for your team. Free, Pro, and Team options with no hidden fees.",
     url: "https://focura-client.vercel.app/pricing",
     siteName: "Focura",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Focura pricing plans overview",
-      },
-    ],
     type: "website",
   },
   twitter: {
@@ -33,7 +25,6 @@ export const metadata: Metadata = {
     title: "Focura Pricing – Simple, Transparent Plans",
     description:
       "Choose the right Focura plan for your team. Free, Pro, and Team options with no hidden fees.",
-    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "https://focura-client.vercel.app/pricing",

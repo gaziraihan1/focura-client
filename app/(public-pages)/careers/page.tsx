@@ -19,21 +19,12 @@ export const metadata: Metadata = {
     description: "Build the future of focused work. See our open roles and join the Focura team.",
     url: "https://focura-client.vercel.app/careers",
     siteName: "Focura",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Careers at Focura",
-      },
-    ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Careers at Focura – Build the Future of Focused Work",
     description: "Build the future of focused work. See our open roles and join the Focura team.",
-    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "https://focura-client.vercel.app/careers",

@@ -27,14 +27,6 @@ export const metadata: Metadata = {
       "Explore all features of Focura: workspace management, task tracking, team collaboration, and productivity insights.",
     url: "https://focura-client.vercel.app/features",
     siteName: "Focura",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Focura features overview",
-      },
-    ],
     type: "website",
   },
   twitter: {
@@ -42,7 +34,6 @@ export const metadata: Metadata = {
     title: "Focura Features – Work Smarter, Not Harder",
     description:
       "Explore all features of Focura: workspace management, task tracking, team collaboration, and productivity insights.",
-    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "https://focura-client.vercel.app/features",

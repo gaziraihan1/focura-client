@@ -23,14 +23,6 @@ export const metadata: Metadata = {
       "See how Focura's tailored solutions help teams of all sizes manage workspaces, tasks, and projects efficiently.",
     url: "https://focura-client.vercel.app/solutions",
     siteName: "Focura",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Focura solutions for teams",
-      },
-    ],
     type: "website",
   },
   twitter: {
@@ -38,7 +30,6 @@ export const metadata: Metadata = {
     title: "Focura Solutions – Productivity for Every Team",
     description:
       "See how Focura's tailored solutions help teams of all sizes manage workspaces, tasks, and projects efficiently.",
-    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "https://focura-client.vercel.app/solutions",

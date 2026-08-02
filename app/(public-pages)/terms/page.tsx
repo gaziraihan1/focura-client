@@ -20,14 +20,6 @@ export const metadata: Metadata = {
       "Read Focura's Terms & Conditions to understand your rights and obligations when using our platform.",
     url: "https://focura-client.vercel.app/terms",
     siteName: "Focura",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Focura Terms & Conditions",
-      },
-    ],
     type: "website",
   },
   twitter: {
@@ -35,7 +27,6 @@ export const metadata: Metadata = {
     title: "Terms & Conditions – Focura",
     description:
       "Read Focura's Terms & Conditions to understand your rights and obligations.",
-    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "https://focura-client.vercel.app/terms",

@@ -22,6 +22,7 @@ vi.mock('lucide-react', () => ({
   FolderOpen: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="folder-icon" {...props} />,
   Users: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="users-icon" {...props} />,
   Calendar: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="calendar-icon" {...props} />,
+  HeartPulse: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="heart-pulse-icon" {...props} />,
   Settings: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="settings-icon" {...props} />,
   HelpCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="help-icon" {...props} />,
   ChevronDown: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="chevron-icon" {...props} />,

@@ -39,14 +39,6 @@ export const metadata: Metadata = {
       "Organize workspaces, manage tasks, collaborate with your team, and track productivity—all in one focused platform.",
     url: "https://focura-client.vercel.app",
     siteName: "Focura",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Focura productivity platform dashboard",
-      },
-    ],
     type: "website",
   },
 
@@ -55,7 +47,6 @@ export const metadata: Metadata = {
     title: "Focura – Focus Smarter. Work Better.",
     description:
       "Manage workspaces, tasks, and teams with clarity. Stay focused with Focura.",
-    images: ["/og-image.png"],
   },
 
   robots: {

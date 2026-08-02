@@ -18,14 +18,6 @@ export const metadata: Metadata = {
       "Vote on features you'd love to see in Focura, or submit your own idea.",
     url: "https://focura-client.vercel.app/features/all-features",
     siteName: "Focura",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Focura feature requests board",
-      },
-    ],
     type: "website",
   },
   twitter: {
@@ -33,7 +25,6 @@ export const metadata: Metadata = {
     title: "Focura Feature Requests – Vote & Submit Ideas",
     description:
       "Vote on features you'd love to see in Focura, or submit your own idea.",
-    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "https://focura-client.vercel.app/features/all-features",

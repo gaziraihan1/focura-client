@@ -29,18 +29,21 @@ export const features = [
     desc: "Create structured roadmaps, assign tasks, and visualize your team's workload with clarity. Focura makes planning intuitive and powerful.",
     variant: "workspace" as ShowcaseVariant,
     reverse: false,
+    image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&q=80",
   },
   {
     title: "Collaborate in real time",
     desc: "Keep everyone aligned with live updates, instant notifications, and seamless communication — all inside one unified workspace.",
     variant: "collaborate" as ShowcaseVariant,
     reverse: true,
+    image: "https://images.unsplash.com/photo-1605379399642-870262d3d051?auto=format&fit=crop&w=1200&q=80",
   },
   {
     title: "Automate the busywork",
     desc: "Save time by automating repetitive tasks. Set triggers, create workflows, and let Focura handle the busywork for your team.",
     variant: "automation" as ShowcaseVariant,
     reverse: false,
+    image: "https://images.unsplash.com/photo-1535223289827-42f1e9919769?auto=format&fit=crop&w=1200&q=80",
   },
 ];
 
@@ -101,6 +104,7 @@ export const testimonials = [
     quote:
       "Focura gave our team back hours every week. Planning finally feels effortless instead of exhausting.",
     rating: 5,
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
   },
   {
     name: "Marcus Reed",
@@ -108,6 +112,7 @@ export const testimonials = [
     quote:
       "We shipped 40% faster once everyone could see the same plan. The focus features are genuinely different.",
     rating: 5,
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
   },
   {
     name: "Amara Okafor",
@@ -115,5 +120,6 @@ export const testimonials = [
     quote:
       "The first tool our team actually enjoys opening. Clear, calm, and incredibly easy to use.",
     rating: 5,
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80",
   },
 ];

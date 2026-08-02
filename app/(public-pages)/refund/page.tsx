@@ -21,14 +21,6 @@ export const metadata: Metadata = {
       "Focura's refund policy — a fair 7-day window for first-time subscribers.",
     url: "https://focura-client.vercel.app/refund",
     siteName: "Focura",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Focura Refund Policy",
-      },
-    ],
     type: "website",
   },
   twitter: {
@@ -36,7 +28,6 @@ export const metadata: Metadata = {
     title: "Refund Policy – Focura",
     description:
       "Focura's refund policy — a fair 7-day window for first-time subscribers.",
-    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "https://focura-client.vercel.app/refund",

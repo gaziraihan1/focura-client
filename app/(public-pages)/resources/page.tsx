@@ -27,14 +27,6 @@ export const metadata: Metadata = {
       "Explore articles, tutorials, and guides to get the most out of Focura and boost your team's productivity.",
     url: "https://focura-client.vercel.app/resources",
     siteName: "Focura",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Focura resources and guides",
-      },
-    ],
     type: "website",
   },
   twitter: {
@@ -42,7 +34,6 @@ export const metadata: Metadata = {
     title: "Focura Resources – Learn & Master Productivity",
     description:
       "Explore articles, tutorials, and guides to get the most out of Focura and boost your team's productivity.",
-    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "https://focura-client.vercel.app/resources",

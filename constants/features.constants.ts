@@ -42,13 +42,16 @@ export  const features = [
     {
       title: "Solo Founders",
       desc: "Manage ideas, roadmap, tasks, and documentation — all in one focused workspace.",
+      img: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80",
     },
     {
       title: "Agencies",
       desc: "Track client projects, approvals, communication, and deliverables with clarity.",
+      img: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80",
     },
     {
       title: "Remote Teams",
       desc: "Collaborate effortlessly with async docs, real-time comments, and structured workflows.",
+      img: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80",
     },
   ];

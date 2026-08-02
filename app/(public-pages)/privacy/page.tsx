@@ -21,14 +21,6 @@ export const metadata: Metadata = {
       "Learn how Focura collects, uses, and protects your personal data. We are committed to transparency and your privacy rights.",
     url: "https://focura-client.vercel.app/privacy",
     siteName: "Focura",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Focura Privacy Policy",
-      },
-    ],
     type: "website",
   },
   twitter: {
@@ -36,7 +28,6 @@ export const metadata: Metadata = {
     title: "Privacy Policy – Focura",
     description:
       "Learn how Focura collects, uses, and protects your personal data.",
-    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "https://focura-client.vercel.app/privacy",
