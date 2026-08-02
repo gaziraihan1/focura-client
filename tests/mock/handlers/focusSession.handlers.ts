@@ -28,6 +28,16 @@ export const mockFocusSessionStats: FocusSessionStats = {
   focusStreak: 5,
 }
 
+export const mockFocusDailySummary = {
+  date: '2024-01-01',
+  totalSessions: 3,
+  totalMinutes: 140,
+  byType: [
+    { type: 'POMODORO', sessions: 2, minutes: 50 },
+    { type: 'DEEP_WORK', sessions: 1, minutes: 90 },
+  ],
+}
+
 // api.get returns the full ApiResponse — fetchActiveSession reads result?.success and result.data
 const okActive = (data: FocusSession | null) =>
   HttpResponse.json({ success: true, data })
@@ -46,6 +56,11 @@ export const focusSessionHandlers = [
   // Stats
   http.get(`${BASE}/api/v1/focus-sessions/stats`, () =>
     okStats(mockFocusSessionStats)
+  ),
+
+  // Daily summary
+  http.get(`${BASE}/api/v1/focus-sessions/daily-summary`, () =>
+    ok(mockFocusDailySummary)
   ),
 
   // Start session

@@ -1,9 +1,17 @@
 "use client";
 
+import type { ComponentType } from "react";
 import { motion } from "framer-motion";
 import { AutomationMock, ThreadMock, WorkflowMock } from "./SolutionMocks";
 
-const features = [
+interface ShowcaseFeature {
+  title: string;
+  desc: string;
+  Mock: ComponentType<{ showSidebar?: boolean }>;
+  mockProps?: { showSidebar?: boolean };
+}
+
+const features: ShowcaseFeature[] = [
   {
     title: "Automated Task Routing",
     desc: "No more manual tracking — tasks intelligently flow between teams with rules, triggers, and approvals.",
@@ -18,6 +26,9 @@ const features = [
     title: "Collaboration Without Chaos",
     desc: "Real-time updates, comments, timelines, files — everything stays organized in one place.",
     Mock: ThreadMock,
+    // Inside the 3-column feature grid each card is only ~300px wide, so the
+    // thread mock renders without its fixed-width sidebar to stay readable.
+    mockProps: { showSidebar: false },
   },
 ];
 
@@ -41,7 +52,7 @@ export default function SolutionsFeatureShowcase() {
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
           {features.map((feature, i) => {
-            const { Mock } = feature;
+            const { Mock, mockProps } = feature;
             return (
               <motion.div
                 key={i}
@@ -51,7 +62,7 @@ export default function SolutionsFeatureShowcase() {
                 transition={{ delay: i * 0.15 }}
                 className="group flex flex-col rounded-2xl border border-border bg-card p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-foreground/5"
               >
-                <Mock />
+                <Mock {...(mockProps ?? {})} />
 
                 <h3 className="mt-5 text-xl font-semibold text-foreground">
                   {feature.title}

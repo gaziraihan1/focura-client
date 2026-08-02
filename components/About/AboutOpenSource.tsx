@@ -1,29 +1,56 @@
 import Link from "next/link";
-import { GitPullRequest, BookOpen, Heart, ExternalLink } from "lucide-react";
+import {
+  GitPullRequest,
+  BookOpen,
+  Heart,
+  ExternalLink,
+  GitFork,
+  GitBranch,
+  Terminal,
+  FlaskConical,
+  Rocket,
+  Server,
+  ScrollText,
+} from "lucide-react";
 
 const steps = [
   {
     step: "01",
+    icon: GitFork,
     title: "Fork the repo",
     detail: "Fork gaziraihan1/focura-client on GitHub and clone your fork locally.",
     code: "git clone https://github.com/gaziraihan1/focura-client.git",
   },
   {
     step: "02",
-    title: "Create a feature branch",
-    detail: "Keep changes focused — one branch per feature or fix.",
-    code: "git checkout -b feature/your-feature-name",
+    icon: GitBranch,
+    title: "Branch from dev",
+    detail:
+      "Active development happens on the dev branch — always branch from it and open pull requests against it.",
+    code: "git checkout -b feature/your-feature-name dev",
   },
   {
     step: "03",
-    title: "Follow the conventions",
-    detail: "TypeScript strict mode, Tailwind v4 utilities (shrink-0 not flex-shrink-0), clear commit messages.",
-    code: "npm run lint && npm run dev",
+    icon: Terminal,
+    title: "Set up locally",
+    detail:
+      "Install dependencies, create .env.local from the example, and run the dev server (the backend API runs on :5000).",
+    code: "npm install && cp .env.example .env.local && npm run dev",
   },
   {
     step: "04",
+    icon: FlaskConical,
+    title: "Test & lint",
+    detail:
+      "Run the quality gates before pushing: ESLint, the Vitest suite (with MSW-mocked API), and the TypeScript typecheck.",
+    code: "npm run lint && npm run test:run && npx tsc --noEmit",
+  },
+  {
+    step: "05",
+    icon: Rocket,
     title: "Open a Pull Request",
-    detail: "Describe your changes clearly, reference related issues, and wait for review.",
+    detail:
+      "Push your branch to your fork, then open a PR against dev — describe what changed, how you tested it, and add screenshots for UI work.",
     code: "git push origin feature/your-feature-name",
   },
 ];
@@ -32,26 +59,34 @@ const resources = [
   {
     icon: BookOpen,
     label: "ARCHITECTURE.md",
-    description: "System design decisions and data flow documentation.",
+    description: "System design decisions, data flow, and design patterns.",
     href: "https://github.com/gaziraihan1/focura-client/blob/main/ARCHITECTURE.md",
   },
   {
     icon: GitPullRequest,
     label: "CONTRIBUTING.md",
-    description: "Full guidelines for contributing code, tests, and docs.",
+    description:
+      "Full guidelines for the client: setup, test conventions, and review process.",
     href: "https://github.com/gaziraihan1/focura-client/blob/main/CONTRIBUTING.md",
+  },
+  {
+    icon: Server,
+    label: "Backend Repository",
+    description: "The Express + Node.js + Prisma API powering Focura.",
+    href: "https://github.com/gaziraihan1/focura-backend",
+  },
+  {
+    icon: ScrollText,
+    label: "Backend CONTRIBUTING.md",
+    description:
+      "Backend contribution guide — module architecture, cron jobs, and testing.",
+    href: "https://github.com/gaziraihan1/focura-backend/blob/main/CONTRIBUTING.md",
   },
   {
     icon: Heart,
     label: "CODE_OF_CONDUCT.md",
     description: "Our community standards for respectful collaboration.",
     href: "https://github.com/gaziraihan1/focura-client/blob/main/CODE_OF_CONDUCT.md",
-  },
-  {
-    icon: ExternalLink,
-    label: "Backend Repository",
-    description: "The Express + Node.js + Prisma API powering Focura.",
-    href: "https://github.com/gaziraihan1/focura-backend",
   },
 ];
 
@@ -73,7 +108,8 @@ export const AboutOpenSource = () => {
           </h2>
           <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-xs leading-relaxed md:text-right">
             Focura is source-available under a custom license. We welcome
-            contributions, bug reports, and feature discussions.
+            contributions, bug reports, and feature discussions across both the
+            client and the backend API.
           </p>
         </div>
 
@@ -84,25 +120,33 @@ export const AboutOpenSource = () => {
               How to Contribute
             </p>
             <div className="space-y-3">
-              {steps.map(({ step, title, detail, code }) => (
+              {steps.map(({ step, icon: Icon, title, detail, code }) => (
                 <div
                   key={step}
-                  className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4"
+                  className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4 transition-colors hover:border-neutral-300 dark:hover:border-neutral-700"
                 >
                   <div className="flex items-start gap-3 mb-2">
-                    <span className="shrink-0 text-xs font-bold font-mono text-neutral-300 dark:text-neutral-600 mt-0.5">
-                      {step}
+                    <span className="shrink-0 w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+                      <Icon
+                        className="w-4 h-4 text-neutral-500 dark:text-neutral-400"
+                        strokeWidth={1.8}
+                      />
                     </span>
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                        {title}
-                      </p>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                          {title}
+                        </p>
+                        <span className="shrink-0 text-[10px] font-bold font-mono text-neutral-300 dark:text-neutral-600">
+                          {step}
+                        </span>
+                      </div>
                       <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5 leading-relaxed">
                         {detail}
                       </p>
                     </div>
                   </div>
-                  <div className="ml-7">
+                  <div className="ml-11">
                     <code className="block text-[11px] font-mono text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 py-2 overflow-x-auto">
                       {code}
                     </code>

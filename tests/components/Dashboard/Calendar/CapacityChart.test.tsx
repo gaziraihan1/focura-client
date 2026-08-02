@@ -198,6 +198,36 @@ describe("CapacityChart", () => {
     });
   });
 
+  describe("error state", () => {
+    it("renders error message and retry button when aggregates fail", () => {
+      mockUseCalendarAggregates.mockReturnValue({
+        data: [],
+        isLoading: false,
+        isError: true,
+        refetch: vi.fn(),
+      });
+
+      render(<CapacityChart />);
+      expect(screen.getByText("Capacity vs Planned")).toBeInTheDocument();
+      expect(screen.getByText(/Failed to load capacity data/i)).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /retry/i })).toBeInTheDocument();
+    });
+
+    it("calls refetch when retry is clicked", () => {
+      const refetch = vi.fn().mockResolvedValue(undefined);
+      mockUseCalendarAggregates.mockReturnValue({
+        data: [],
+        isLoading: false,
+        isError: true,
+        refetch,
+      });
+
+      render(<CapacityChart />);
+      fireEvent.click(screen.getByRole("button", { name: /retry/i }));
+      expect(refetch).toHaveBeenCalled();
+    });
+  });
+
   describe("empty state", () => {
     it("renders empty state message when no aggregates", () => {
       mockUseCalendarAggregates.mockReturnValue({

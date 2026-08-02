@@ -158,4 +158,51 @@ describe('useRecommendations', () => {
     expect(result.current.data).toEqual([])
     expect(result.current.error).toBeTruthy()
   })
+
+  it('dismisses all recommendations and clears local data', async () => {
+    server.use(
+      http.get(`${BASE}/api/v1/calendar/recommendations`, () =>
+        ok([
+          { id: 'rec-1', title: 'Take a break', type: 'WELLNESS' },
+          { id: 'rec-2', title: 'Reduce workload', type: 'WORKLOAD' },
+        ])
+      ),
+      http.post(`${BASE}/api/v1/calendar/recommendations/dismiss-all`, () =>
+        ok({ dismissedCount: 2 })
+      ),
+    )
+
+    const { result } = renderHook(() => useRecommendations(), { wrapper: createWrapper() })
+
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    expect(result.current.data).toHaveLength(2)
+
+    let count: number | undefined
+    await act(async () => {
+      count = await result.current.dismissAll()
+    })
+
+    expect(count).toBe(2)
+    expect(result.current.data).toHaveLength(0)
+  })
+
+  it('returns 0 when dismiss-all API fails', async () => {
+    server.use(
+      http.get(`${BASE}/api/v1/calendar/recommendations`, () => ok([])),
+      http.post(`${BASE}/api/v1/calendar/recommendations/dismiss-all`, () =>
+        new HttpResponse(null, { status: 500 })
+      ),
+    )
+
+    const { result } = renderHook(() => useRecommendations(), { wrapper: createWrapper() })
+
+    await waitFor(() => expect(result.current.loading).toBe(false))
+
+    const count = await act(async () => {
+      return await result.current.dismissAll()
+    })
+
+    expect(count).toBe(0)
+    expect(result.current.data).toEqual([])
+  })
 })

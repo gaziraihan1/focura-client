@@ -65,5 +65,18 @@ export function useRecommendations() {
     return false;
   };
 
-  return { data, loading, error, refetch: fetchData, dismiss };
+  const dismissAll = async (): Promise<number> => {
+    try {
+      const result = await api.post<{ dismissedCount: number }>('/api/v1/calendar/recommendations/dismiss-all', {});
+      if (result?.success) {
+        setData([]);
+        return result.data?.dismissedCount ?? 0;
+      }
+      return 0;
+    } catch {
+      return 0;
+    }
+  };
+
+  return { data, loading, error, refetch: fetchData, dismiss, dismissAll };
 }

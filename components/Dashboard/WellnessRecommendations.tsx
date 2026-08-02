@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Lightbulb, X, Brain, Flame, Clock, Zap, AlertTriangle, Coffee, Eye, EyeOff } from 'lucide-react';
+import { Lightbulb, X, Brain, Flame, Clock, Zap, AlertTriangle, Coffee, Eye, EyeOff, Trash2 } from 'lucide-react';
 import { useRecommendations } from '@/hooks/useBurnoutTrends';
 import type { WellnessRecommendation } from '@/types/calendar.types';
 
@@ -60,7 +60,7 @@ function sortByPriority(recs: WellnessRecommendation[]): WellnessRecommendation[
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function WellnessRecommendations() {
-  const { data: recommendations, loading, dismiss } = useRecommendations();
+  const { data: recommendations, loading, dismiss, dismissAll } = useRecommendations();
   const [showDismissed, setShowDismissed] = useState(false);
   // Track locally-dismissed recs so the dismissed section works even if the
   // backend doesn't return dismissed items on subsequent fetches.
@@ -86,6 +86,11 @@ export function WellnessRecommendations() {
     dismiss(rec.id);
   };
 
+  const handleDismissAll = () => {
+    setDismissedRecs((prev) => [...prev, ...active]);
+    dismissAll();
+  };
+
   const sortedActive = sortByPriority(active).slice(0, 4);
   const sortedDismissed = sortByPriority(dismissed);
 
@@ -99,6 +104,16 @@ export function WellnessRecommendations() {
         <span className="ml-auto text-xs text-muted-foreground">
           {active.length} suggestion{active.length !== 1 ? 's' : ''}
         </span>
+        {active.length > 0 && (
+          <button
+            onClick={handleDismissAll}
+            className="flex items-center gap-1 ml-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Dismiss all suggestions"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            Dismiss all
+          </button>
+        )}
       </div>
 
       <div className="space-y-2">

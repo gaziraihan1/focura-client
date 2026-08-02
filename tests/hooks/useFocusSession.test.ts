@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest'
 import { http, HttpResponse } from 'msw'
 import { server } from '../mock/server'
 import { createWrapper } from '../utils/renderWithProviders'
-import { useFocusSession, useFocusSessionStats } from '@/hooks/useFocusSession'
+import { useFocusSession, useFocusSessionStats, useFocusSessionDailySummary } from '@/hooks/useFocusSession'
 import { noActiveSessionHandler } from '../mock/handlers/focusSession.handlers'
 
 const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
@@ -226,6 +226,39 @@ describe('useFocusSessionStats', () => {
 
     const { result } = renderHook(
       () => useFocusSessionStats(),
+      { wrapper: createWrapper() }
+    )
+
+    await waitFor(() => expect(result.current.isError).toBe(true))
+  })
+})
+
+// ─── useFocusSessionDailySummary ─────────────────────────────────────────────
+
+describe('useFocusSessionDailySummary', () => {
+  it('fetches today\'s focus summary with per-type breakdown', async () => {
+    const { result } = renderHook(
+      () => useFocusSessionDailySummary(),
+      { wrapper: createWrapper() }
+    )
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(result.current.data?.totalSessions).toBe(3)
+    expect(result.current.data?.totalMinutes).toBe(140)
+    expect(result.current.data?.byType).toHaveLength(2)
+    expect(result.current.data?.byType[0].type).toBe('POMODORO')
+    expect(result.current.data?.byType[0].minutes).toBe(50)
+  })
+
+  it('throws when daily summary fetch fails', async () => {
+    server.use(
+      http.get(`${BASE}/api/v1/focus-sessions/daily-summary`, () =>
+        HttpResponse.json({ success: false }, { status: 500 })
+      )
+    )
+
+    const { result } = renderHook(
+      () => useFocusSessionDailySummary(),
       { wrapper: createWrapper() }
     )
 

@@ -84,6 +84,23 @@ A modern, full-stack productivity and collaboration SaaS platform built with **N
 - ✅ Wellness recommendations
 - ✅ Capacity scheduling and work schedule preferences
 
+#### **Focus & Wellness System**
+The wellness dashboard (`/dashboard/wellness`) brings focus, energy, and burnout data into one view:
+
+| Widget | Purpose | Backed by |
+|--------|---------|-----------|
+| **Focus Streak Badge** | Current focus streak + best streak | `GET /focus-sessions/streak` |
+| **Focus Daily Summary** | Today's sessions, minutes, per-type breakdown | `GET /focus-sessions/daily-summary` |
+| **Wellness Recommendations** | Personalized burnout-prevention tips + dismiss / dismiss-all | `GET /calendar/recommendations`, `PATCH /:id/dismiss`, `POST /dismiss-all` |
+| **Burnout Trends Chart** | Weekly risk level (LOW → CRITICAL); auto-expands when risk is HIGH/CRITICAL | `GET /calendar/burnout-trends` |
+| **Energy Trend Chart** | Last 30 days of energy levels with hover tooltips | `GET /calendar/energy/history` |
+| **Energy Quick Log** | Floating daily energy check-in (floating action button) | `POST /calendar/energy` |
+| **Focus Session Card** | Per-task Pomodoro / Deep Work timer with auto-complete | `POST /focus-sessions/start`, `/:id/complete`, `/:id/cancel` |
+
+- **Energy CSV export** — download full energy history via `GET /calendar/energy/export` (button in the calendar day details panel)
+- **Error states** — every chart exposes a retry action and empty/loading states
+- **Hook coverage** — `useEnergyLevel`, `useBurnoutTrends`, `useFocusSession`, `useCapacityChart`, `useDailyCapacityView`
+
 #### **Meetings**
 - ✅ Meeting creation and management
 - ✅ Meeting visibility settings (public, private, team-only)

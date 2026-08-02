@@ -70,15 +70,19 @@ export function useCapacityChart() {
     return { startDate: start, endDate: end };
   }, []);
 
-  const { data: aggregates = [], isLoading: aggLoading } =
-    useCalendarAggregates({
-      workspaceId: undefined,
-      startDate: dateRange.startDate,
-      endDate: dateRange.endDate,
-    });
+  const {
+    data: aggregates = [],
+    isLoading: aggLoading,
+    isError: aggError,
+    refetch: refetchAggregates,
+  } = useCalendarAggregates({
+    workspaceId: undefined,
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
 
-  const { data: capacity, loading: capLoading } = useUserCapacity();
-  const { data: schedule, loading: schedLoading } = useUserSchedule();
+  const { data: capacity, loading: capLoading, error: capError, refetch: refetchCapacity } = useUserCapacity();
+  const { data: schedule, loading: schedLoading, error: schedError, refetch: refetchSchedule } = useUserSchedule();
 
   const weeks = useMemo(() => {
     const result: Date[] = [];
@@ -121,6 +125,15 @@ export function useCapacityChart() {
 
   const loading = aggLoading || capLoading || schedLoading;
   const isEmpty = aggregates.length === 0;
+  const error = aggError || capError || schedError ? 'Failed to load capacity data' : null;
+
+  const refetch = async () => {
+    await Promise.allSettled([
+      refetchAggregates?.(),
+      refetchCapacity?.(),
+      refetchSchedule?.(),
+    ]);
+  };
 
   return {
     expanded,
@@ -128,6 +141,8 @@ export function useCapacityChart() {
     chartContentRef,
     loading,
     isEmpty,
+    error,
+    refetch,
     weeklyData,
     totalPlannedAll,
     totalCapacityAll,

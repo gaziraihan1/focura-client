@@ -2,8 +2,10 @@
 
 import { Brain, HeartPulse, Sparkles } from "lucide-react";
 import { FocusStreakBadge } from "@/components/Dashboard/FocusStreakBadge";
+import { FocusDailySummary } from "@/components/Dashboard/FocusDailySummary";
 import { WellnessRecommendations } from "@/components/Dashboard/WellnessRecommendations";
 import { BurnoutTrendsChart } from "@/components/Dashboard/Calendar/BurnoutTrendsChart";
+import { EnergyTrendChart } from "@/components/Dashboard/Calendar/EnergyTrendChart";
 import { EnergyQuickLog } from "@/components/Dashboard/Calendar/EnergyQuickLog";
 
 export default function WellnessPage() {
@@ -31,21 +33,25 @@ export default function WellnessPage() {
         </span>
       </div>
 
-      {/* Top row: streak + recommendations */}
+      {/* Top row: streak + daily summary + recommendations */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <FocusStreakBadge />
-        <div className="lg:col-span-2">
+        <FocusDailySummary />
+        <div className="lg:col-span-1">
           <WellnessRecommendations />
         </div>
       </div>
 
-      {/* Burnout trends */}
+      {/* Burnout trends + energy trend */}
       <div>
         <div className="flex items-center gap-2 mb-3">
           <Brain className="w-4 h-4 text-muted-foreground" />
-          <h2 className="text-sm font-semibold text-foreground">Burnout Trends</h2>
+          <h2 className="text-sm font-semibold text-foreground">Trends</h2>
         </div>
-        <BurnoutTrendsChart />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <BurnoutTrendsChart />
+          <EnergyTrendChart />
+        </div>
       </div>
 
       {/* Floating energy quick-log (fixed bottom-right) */}

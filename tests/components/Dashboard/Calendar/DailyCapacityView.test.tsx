@@ -25,11 +25,13 @@ const mockAggregates = [
   },
 ];
 
+const mockUseCalendarAggregates = vi.fn(() => ({
+  data: mockAggregates,
+  isLoading: false,
+}));
+
 vi.mock("@/hooks/useCalendar", () => ({
-  useCalendarAggregates: () => ({
-    data: mockAggregates,
-    isLoading: false,
-  }),
+  useCalendarAggregates: (...args: any[]) => mockUseCalendarAggregates(...args),
 }));
 
 vi.mock("@/hooks/useUserSettings", () => ({
@@ -75,6 +77,8 @@ vi.mock("lucide-react", () => {
     ChevronUp: icon("ChevronUp"),
     Download: icon("Download"),
     Loader2: icon("Loader2"),
+    AlertCircle: icon("AlertCircle"),
+    RefreshCw: icon("RefreshCw"),
   };
 });
 
@@ -209,5 +213,35 @@ describe("DailyCapacityView", () => {
     const { container } = render(<DailyCapacityView />);
     const spinner = container.querySelector(".animate-spin");
     expect(spinner).toBeNull();
+  });
+
+  describe("error state", () => {
+    it("renders error message and retry button when aggregates fail", () => {
+      mockUseCalendarAggregates.mockReturnValue({
+        data: [],
+        isLoading: false,
+        isError: true,
+        refetch: vi.fn(),
+      });
+
+      render(<DailyCapacityView />);
+      expect(screen.getByText("This Week Daily")).toBeInTheDocument();
+      expect(screen.getByText(/Failed to load weekly capacity data/i)).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /retry/i })).toBeInTheDocument();
+    });
+
+    it("calls refetch when retry is clicked", () => {
+      const refetch = vi.fn().mockResolvedValue(undefined);
+      mockUseCalendarAggregates.mockReturnValue({
+        data: [],
+        isLoading: false,
+        isError: true,
+        refetch,
+      });
+
+      render(<DailyCapacityView />);
+      fireEvent.click(screen.getByRole("button", { name: /retry/i }));
+      expect(refetch).toHaveBeenCalled();
+    });
   });
 });

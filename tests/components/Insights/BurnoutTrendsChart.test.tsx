@@ -11,6 +11,12 @@ const mockUseBurnoutTrends = vi.mocked(useBurnoutTrends)
 const defaultData = [
   { weekStart: '2026-05-01', avgDailyLoad: 0.5, riskLevel: 'LOW', consecutiveHeavyDays: 0 },
   { weekStart: '2026-05-08', avgDailyLoad: 0.8, riskLevel: 'MODERATE', consecutiveHeavyDays: 2 },
+  { weekStart: '2026-05-15', avgDailyLoad: 1.0, riskLevel: 'MODERATE', consecutiveHeavyDays: 1 },
+]
+
+const highRiskData = [
+  { weekStart: '2026-05-01', avgDailyLoad: 0.5, riskLevel: 'LOW', consecutiveHeavyDays: 0 },
+  { weekStart: '2026-05-08', avgDailyLoad: 0.8, riskLevel: 'MODERATE', consecutiveHeavyDays: 2 },
   { weekStart: '2026-05-15', avgDailyLoad: 1.2, riskLevel: 'HIGH', consecutiveHeavyDays: 3 },
 ]
 
@@ -72,9 +78,11 @@ describe('BurnoutTrendsChart', () => {
   // ── Data state ───────────────────────────────────────────────────────────
   describe('data state', () => {
     it('renders the button with latest risk level', () => {
+      mockUseBurnoutTrends.mockReturnValue({ data: highRiskData, loading: false, error: null, refetch: vi.fn() } as any)
       render(<BurnoutTrendsChart />, { wrapper: createWrapper() })
       expect(screen.getByText('Burnout Trends')).toBeInTheDocument()
-      expect(screen.getByText('HIGH')).toBeInTheDocument()
+      const badges = screen.getAllByText('HIGH')
+      expect(badges.length).toBeGreaterThanOrEqual(1)
     })
 
     it('renders week count', () => {

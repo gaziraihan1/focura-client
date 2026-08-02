@@ -114,6 +114,8 @@ vi.mock('@/components/Dashboard/Calendar/DayDetailsPanelParts', () => ({
   DaySummaryBar: () => <div data-testid="day-summary-bar" />,
 }));
 
+const mockExportEnergyHistory = vi.fn().mockResolvedValue(true);
+
 vi.mock('@/hooks/useEnergyLevel', () => ({
   useEnergyLevel: () => ({
     data: null,
@@ -126,6 +128,7 @@ vi.mock('@/hooks/useEnergyLevel', () => ({
     pagination: null,
     loading: false,
   }),
+  exportEnergyHistory: (...args: unknown[]) => mockExportEnergyHistory(...args),
 }));
 
 vi.mock('@/hooks/useMeetingForm', () => ({
@@ -242,5 +245,14 @@ describe('DayDetailsPanel', () => {
   it('shows "Log your energy level" when no energy data', () => {
     render(<DayDetailsPanel {...baseProps} />);
     expect(screen.getByText(/\+ Log your energy level/)).toBeInTheDocument();
+  });
+
+  it('exports energy history as CSV when export button clicked', async () => {
+    render(<DayDetailsPanel {...baseProps} />);
+
+    const exportBtn = screen.getByRole('button', { name: /export csv/i });
+    fireEvent.click(exportBtn);
+
+    expect(mockExportEnergyHistory).toHaveBeenCalledTimes(1);
   });
 });

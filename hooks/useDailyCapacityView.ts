@@ -66,15 +66,19 @@ export function useDailyCapacityView() {
   }, []);
 
   // Fetch aggregates for current week
-  const { data: aggregates = [], isLoading: aggLoading } =
-    useCalendarAggregates({
-      workspaceId: undefined,
-      startDate: weekStart,
-      endDate: weekEnd,
-    });
+  const {
+    data: aggregates = [],
+    isLoading: aggLoading,
+    isError: aggError,
+    refetch: refetchAggregates,
+  } = useCalendarAggregates({
+    workspaceId: undefined,
+    startDate: weekStart,
+    endDate: weekEnd,
+  });
 
-  const { data: capacity, loading: capLoading } = useUserCapacity();
-  const { data: schedule, loading: schedLoading } = useUserSchedule();
+  const { data: capacity, loading: capLoading, error: capError, refetch: refetchCapacity } = useUserCapacity();
+  const { data: schedule, loading: schedLoading, error: schedError, refetch: refetchSchedule } = useUserSchedule();
 
   const dailyCapacity = capacity?.dailyCapacityHours ?? 8;
   const workDays = schedule?.workDays ?? [];
@@ -131,6 +135,15 @@ export function useDailyCapacityView() {
 
   const loading = aggLoading || capLoading || schedLoading;
   const isEmpty = aggregates.length === 0;
+  const error = aggError || capError || schedError ? 'Failed to load weekly capacity data' : null;
+
+  const refetch = async () => {
+    await Promise.allSettled([
+      refetchAggregates?.(),
+      refetchCapacity?.(),
+      refetchSchedule?.(),
+    ]);
+  };
 
   return {
     expanded,
@@ -138,6 +151,8 @@ export function useDailyCapacityView() {
     chartContentRef,
     loading,
     isEmpty,
+    error,
+    refetch,
     weekStart,
     weekEnd,
     dailyCapacity,

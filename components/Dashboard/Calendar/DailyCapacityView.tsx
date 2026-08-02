@@ -5,6 +5,8 @@ import {
   ChevronDown,
   ChevronUp,
   Loader2,
+  AlertCircle,
+  RefreshCw,
 } from "lucide-react";
 import { ExportButton } from "@/components/Dashboard/Calendar/ExportButton";
 import { format } from "date-fns";
@@ -22,6 +24,8 @@ export function DailyCapacityView() {
     chartContentRef,
     loading,
     isEmpty,
+    error,
+    refetch,
     weekStart,
     weekEnd,
     dailyCapacity,
@@ -36,6 +40,31 @@ export function DailyCapacityView() {
     return (
       <div className="flex items-center justify-center py-16">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-2xl border border-border bg-card p-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-red-500/10">
+            <AlertCircle className="w-4.5 h-4.5 text-red-600 dark:text-red-400" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h4 className="text-sm font-semibold text-foreground">This Week Daily</h4>
+            <p className="text-xs text-muted-foreground mt-0.5">{error}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => refetch()}
+            className="flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            aria-label="Retry"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            Retry
+          </button>
+        </div>
       </div>
     );
   }

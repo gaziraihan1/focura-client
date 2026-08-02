@@ -39,12 +39,26 @@ export interface FocusSessionStats {
   focusStreak: number; // consecutive days with focus sessions
 }
 
+export interface FocusSessionTypeSummary {
+  type: FocusType;
+  sessions: number;
+  minutes: number;
+}
+
+export interface FocusDailySummary {
+  date: string;
+  totalSessions: number;
+  totalMinutes: number;
+  byType: FocusSessionTypeSummary[];
+}
+
 // ─── Query Key Factory ────────────────────────────────────────────────────────
 
 export const focusSessionKeys = {
   all: ['focus-sessions'] as const,
   active: () => [...focusSessionKeys.all, 'active'] as const,
   stats: () => [...focusSessionKeys.all, 'stats'] as const,
+  dailySummary: () => [...focusSessionKeys.all, 'daily-summary'] as const,
   lists: () => [...focusSessionKeys.all, 'list'] as const,
   detail: (id: string) => [...focusSessionKeys.all, 'detail', id] as const,
 };
@@ -62,6 +76,14 @@ const fetchFocusSessionStats = async (): Promise<FocusSessionStats> => {
   const result = await api.get<FocusSessionStats>('/api/v1/focus-sessions/stats');
   if (!result?.success || !result.data) {
     throw new Error('Failed to fetch focus session stats');
+  }
+  return result.data;
+};
+
+const fetchFocusDailySummary = async (): Promise<FocusDailySummary> => {
+  const result = await api.get<FocusDailySummary>('/api/v1/focus-sessions/daily-summary');
+  if (!result?.success || !result.data) {
+    throw new Error('Failed to fetch focus session daily summary');
   }
   return result.data;
 };
@@ -210,5 +232,15 @@ export function useFocusSessionStats() {
     queryKey: focusSessionKeys.stats(),
     queryFn: fetchFocusSessionStats,
     staleTime: 60_000, // Stats are less time-sensitive
+  });
+}
+
+// ─── Daily Summary Hook (separate concern) ───────────────────────────────────
+
+export function useFocusSessionDailySummary() {
+  return useQuery({
+    queryKey: focusSessionKeys.dailySummary(),
+    queryFn: fetchFocusDailySummary,
+    staleTime: 30_000,
   });
 }

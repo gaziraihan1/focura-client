@@ -47,6 +47,45 @@ export function useEnergyLevel(date: Date) {
   return { data, loading, error, refetch: fetchData, logEnergy };
 }
 
+export interface EnergyExportResult {
+  filename: string;
+  csv: string;
+}
+
+/**
+ * Fetch the user's full energy history for a date range (unpaginated) as CSV
+ * and trigger a browser download. Returns true on success, false otherwise.
+ */
+export async function exportEnergyHistory(startDate: Date, endDate: Date): Promise<boolean> {
+  try {
+    const params = new URLSearchParams({
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+    });
+
+    const result = await api.get<EnergyExportResult>(
+      `/api/v1/calendar/energy/export?${params}`,
+      { showErrorToast: false }
+    );
+
+    if (result?.success && result.data?.csv) {
+      const blob = new Blob([result.data.csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = result.data.filename || 'energy-history.csv';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      return true;
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 export function useEnergyHistory(startDate: Date, endDate: Date, page = 1, limit = 31) {
   const [data, setData] = useState<EnergyLevel[]>([]);
   const [pagination, setPagination] = useState<PaginationMeta | null>(null);

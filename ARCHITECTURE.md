@@ -15,6 +15,7 @@ This document describes the comprehensive architecture, design decisions, data f
 - [API Integration Layer](#-api-integration-layer)
 - [Real-Time Communication](#-real-time-communication)
 - [Database Architecture](#-database-architecture)
+- [Focus, Energy & Burnout Architecture](#-focus-energy--burnout-architecture)
 - [Security Architecture](#-security-architecture)
 - [Performance Optimization](#-performance-optimization)
 - [Error Handling](#-error-handling)
@@ -789,6 +790,67 @@ CREATE INDEX idx_workspace_member_user
 CREATE INDEX idx_daily_task_date 
   ON dailyTasks(date, userId);
 ```
+
+---
+
+## 🧘 Focus, Energy & Burnout Architecture
+
+### Overview
+
+The wellness system combines focus sessions, energy tracking, calendar workload, and burnout risk into one cohesive view (`/dashboard/wellness`). Data flows from raw activity → per-day aggregates → weekly signals → user-facing widgets.
+
+### Data Model
+
+| Model | Purpose | Key fields |
+|-------|---------|-----------|
+| `FocusSession` | Completed/running focus blocks | `type` (POMODORO/DEEP_WORK/CUSTOM), `duration`, `completed`, `startedAt` |
+| `CalendarDayAggregate` | Per-day workload rollup | `workloadScore`, `plannedHours`, `overCapacity`, `focusMinutes` |
+| `BurnoutSignal` | Per-week risk level | `weekStart`, `riskLevel` (LOW/MODERATE/HIGH/CRITICAL), `consecutiveHeavyDays`, `avgDailyLoad` |
+| `EnergyLevel` | One daily energy check-in per user | `date` (unique per user), `energyLevel` (1–10), `note` |
+| `WellnessRecommendation` | Generated tips with priority + expiry | `type`, `priority`, `expiresAt`, `dismissed` |
+| `UserCapacity` / `UserWorkSchedule` | User availability | `weeklyHours`, `dailyCapacityHours`, `workDays`, `workStartHour` |
+
+### Data Flow
+
+```
+Daily activity (tasks, focus sessions, time entries)
+    │
+    ▼
+CalendarDayAggregate (per-day workloadScore, plannedHours)
+    │
+    ├─▶ BurnoutSignal (weekly upsert — riskLevel from workloadScore)
+    │       computed on-demand via insights + batch-precomputed weekly by
+    │       burnoutSignal.cron.ts (Mon 7 AM, all verified users)
+    │
+    ├─▶ WellnessRecommendation (daily cron at 6 AM, 3-day expiry)
+    │
+    ▼
+GET /calendar/burnout-trends   → BurnoutTrendsChart (auto-expands on HIGH/CRITICAL)
+GET /calendar/recommendations  → WellnessRecommendations (dismiss / dismiss-all)
+GET /calendar/energy/history   → EnergyTrendChart (last 30 days)
+POST /calendar/energy          → EnergyQuickLog (daily check-in)
+GET /focus-sessions/daily-summary → FocusDailySummary (today's sessions/minutes)
+GET /focus-sessions/streak     → FocusStreakBadge
+```
+
+### Frontend Widgets
+
+| Widget | Hook | Endpoint |
+|--------|------|----------|
+| `FocusStreakBadge` | `useFocusSession` | `GET /focus-sessions/streak` |
+| `FocusDailySummary` | `useFocusSessionDailySummary` | `GET /focus-sessions/daily-summary` |
+| `WellnessRecommendations` | `useRecommendations` | `GET /calendar/recommendations` + dismiss endpoints |
+| `BurnoutTrendsChart` | `useBurnoutTrends` | `GET /calendar/burnout-trends` |
+| `EnergyTrendChart` | `useEnergyHistory` | `GET /calendar/energy/history` |
+| `EnergyQuickLog` | `useEnergyLevel` | `GET/POST /calendar/energy` |
+| `CapacityChart` / `DailyCapacityView` | `useCapacityChart` / `useDailyCapacityView` | `GET /calendar/aggregates` + capacity/schedule |
+
+### Design Notes
+
+- **Caching** — energy, burnout trends, and daily summaries are Redis-cached with short TTLs and invalidated on mutations (`CalendarCache`, `FocusSessionCache`).
+- **Error handling** — every chart exposes `loading` / `error` (with retry) / `empty` states.
+- **Burnout risk thresholds** — CRITICAL when ≥5 consecutive heavy days or avgDailyLoad > 1.5; HIGH at ≥3 days or > 1.2; MODERATE at ≥2 heavy days or > 1.0.
+- **CSV export** — full energy history is downloadable from the calendar day-details panel via `GET /calendar/energy/export`.
 
 ---
 

@@ -28,6 +28,19 @@ const RISK_TEXT: Record<string, string> = {
 export function BurnoutTrendsChart() {
   const { data, loading, error, refetch } = useBurnoutTrends(12);
   const [expanded, setExpanded] = useState(false);
+  const [autoExpanded, setAutoExpanded] = useState(false);
+
+  // Auto-expand when the latest risk level is HIGH or CRITICAL so the
+  // concerning trend is immediately visible. Uses the "adjust state during
+  // render" pattern (fires once — `autoExpanded` latches) so the chart still
+  // respects a manual collapse afterwards.
+  const latestRisk = data.length > 0 ? data[data.length - 1].riskLevel : null;
+  const shouldAutoExpand =
+    !loading && !error && (latestRisk === 'HIGH' || latestRisk === 'CRITICAL');
+  if (shouldAutoExpand && !autoExpanded) {
+    setExpanded(true);
+    setAutoExpanded(true);
+  }
 
   // ── Loading ───────────────────────────────────────────────────────────────
   if (loading) {
@@ -124,7 +137,7 @@ export function BurnoutTrendsChart() {
         <div className="px-4 pb-4 space-y-4">
           {/* Mini Bar Chart */}
           <div className="flex items-end gap-1 h-24">
-            {data.map((trend, i) => {
+            {data.map((trend) => {
               const height = (trend.avgDailyLoad / maxLoad) * 100;
               const color = RISK_COLORS[trend.riskLevel] || 'bg-muted';
               return (

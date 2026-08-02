@@ -1,5 +1,5 @@
 import { renderHook, waitFor, act } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { createWrapper } from '../utils/renderWithProviders'
 import { server } from '../mock/server'
 import { http, HttpResponse } from 'msw'
@@ -7,7 +7,11 @@ import { http, HttpResponse } from 'msw'
 const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 const ok = (data: any) => HttpResponse.json({ success: true, data })
 
-import { useEnergyLevel, useEnergyHistory } from '@/hooks/useEnergyLevel'
+import { useEnergyLevel, useEnergyHistory, exportEnergyHistory } from '@/hooks/useEnergyLevel'
+
+afterEach(() => {
+  vi.restoreAllMocks()
+})
 
 describe('useEnergyLevel', () => {
   it('fetches energy level for a given date', async () => {
@@ -128,5 +132,55 @@ describe('useEnergyHistory', () => {
     await waitFor(() => expect(result.current.loading).toBe(false))
     expect(result.current.data).toEqual([])
     expect(result.current.error).toBeTruthy()
+  })
+})
+
+describe('exportEnergyHistory', () => {
+  it('downloads a CSV file on success', async () => {
+    const createObjectURL = vi.fn(() => 'blob:mock-url')
+    const revokeObjectURL = vi.fn()
+    // Attach the mocks to the existing URL constructor so `new URL(...)` still works.
+    const originalCreate = URL.createObjectURL
+    const originalRevoke = URL.revokeObjectURL
+    ;(URL as any).createObjectURL = createObjectURL
+    ;(URL as any).revokeObjectURL = revokeObjectURL
+    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
+
+    server.use(
+      http.get(`${BASE}/api/v1/calendar/energy/export`, () =>
+        ok({ filename: 'energy-history.csv', csv: 'date,energyLevel,note\n2024-06-14,5,Tired\n' })
+      )
+    )
+
+    const result = await exportEnergyHistory(new Date('2024-06-01'), new Date('2024-06-30'))
+
+    expect(result).toBe(true)
+    expect(createObjectURL).toHaveBeenCalledTimes(1)
+    expect(clickSpy).toHaveBeenCalledTimes(1)
+    clickSpy.mockRestore()
+    ;(URL as any).createObjectURL = originalCreate
+    ;(URL as any).revokeObjectURL = originalRevoke
+  })
+
+  it('returns false when API fails', async () => {
+    server.use(
+      http.get(`${BASE}/api/v1/calendar/energy/export`, () =>
+        new HttpResponse(null, { status: 500 })
+      )
+    )
+
+    const result = await exportEnergyHistory(new Date('2024-06-01'), new Date('2024-06-30'))
+    expect(result).toBe(false)
+  })
+
+  it('returns false when response has no csv', async () => {
+    server.use(
+      http.get(`${BASE}/api/v1/calendar/energy/export`, () =>
+        ok(null)
+      )
+    )
+
+    const result = await exportEnergyHistory(new Date('2024-06-01'), new Date('2024-06-30'))
+    expect(result).toBe(false)
   })
 })

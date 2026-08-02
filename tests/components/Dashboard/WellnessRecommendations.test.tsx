@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { WellnessRecommendations } from '@/components/Dashboard/WellnessRecommendations'
 
 const mockDismiss = vi.fn()
+const mockDismissAll = vi.fn()
 
 vi.mock('@/hooks/useBurnoutTrends', () => ({
   useRecommendations: vi.fn(),
@@ -21,6 +22,7 @@ describe('WellnessRecommendations', () => {
       data: [],
       loading: true,
       dismiss: mockDismiss,
+      dismissAll: mockDismissAll,
     })
 
     const { container } = render(<WellnessRecommendations />)
@@ -33,6 +35,7 @@ describe('WellnessRecommendations', () => {
       data: [],
       loading: false,
       dismiss: mockDismiss,
+      dismissAll: mockDismissAll,
     })
 
     const { container } = render(<WellnessRecommendations />)
@@ -47,6 +50,7 @@ describe('WellnessRecommendations', () => {
       ],
       loading: false,
       dismiss: mockDismiss,
+      dismissAll: mockDismissAll,
     })
 
     render(<WellnessRecommendations />)
@@ -62,6 +66,7 @@ describe('WellnessRecommendations', () => {
       ],
       loading: false,
       dismiss: mockDismiss,
+      dismissAll: mockDismissAll,
     })
 
     render(<WellnessRecommendations />)
@@ -78,6 +83,7 @@ describe('WellnessRecommendations', () => {
       ],
       loading: false,
       dismiss: mockDismiss,
+      dismissAll: mockDismissAll,
     })
 
     render(<WellnessRecommendations />)
@@ -92,6 +98,7 @@ describe('WellnessRecommendations', () => {
       ],
       loading: false,
       dismiss: mockDismiss,
+      dismissAll: mockDismissAll,
     })
 
     render(<WellnessRecommendations />)
@@ -108,6 +115,7 @@ describe('WellnessRecommendations', () => {
       })),
       loading: false,
       dismiss: mockDismiss,
+      dismissAll: mockDismissAll,
     })
 
     render(<WellnessRecommendations />)
@@ -125,11 +133,14 @@ describe('WellnessRecommendations', () => {
       ],
       loading: false,
       dismiss: mockDismiss,
+      dismissAll: mockDismissAll,
     })
 
     render(<WellnessRecommendations />)
 
-    const dismissBtn = screen.getByRole('button', { name: /dismiss/i })
+    // The per-item dismiss button has aria-label="Dismiss" (exact match), which
+    // is distinct from the "Dismiss all suggestions" action.
+    const dismissBtn = screen.getByRole('button', { name: 'Dismiss' })
     await user.click(dismissBtn)
 
     expect(mockDismiss).toHaveBeenCalledWith('rec-1')
@@ -143,6 +154,7 @@ describe('WellnessRecommendations', () => {
       ],
       loading: false,
       dismiss: mockDismiss,
+      dismissAll: mockDismissAll,
     })
 
     const { container } = render(<WellnessRecommendations />)
@@ -150,5 +162,38 @@ describe('WellnessRecommendations', () => {
     // 1 heading icon + 2 recommendation icons = 3
     const iconContainers = container.querySelectorAll('.flex.h-8.w-8')
     expect(iconContainers.length).toBe(3)
+  })
+
+  it('calls dismissAll when "Dismiss all" is clicked', async () => {
+    const user = userEvent.setup()
+    vi.mocked(useRecommendations).mockReturnValue({
+      data: [
+        { id: '1', type: 'WORKLOAD_ALERT', message: 'Heavy week' },
+        { id: '2', type: 'FOCUS_SUGGESTION', message: 'Try a Pomodoro' },
+      ],
+      loading: false,
+      dismiss: mockDismiss,
+      dismissAll: mockDismissAll,
+    })
+
+    render(<WellnessRecommendations />)
+
+    const dismissAllBtn = screen.getByRole('button', { name: /dismiss all/i })
+    await user.click(dismissAllBtn)
+
+    expect(mockDismissAll).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not render "Dismiss all" when there are no active recommendations', () => {
+    vi.mocked(useRecommendations).mockReturnValue({
+      data: [{ id: '1', type: 'CAPACITY_TIP', message: 'Tip', dismissed: true }],
+      loading: false,
+      dismiss: mockDismiss,
+      dismissAll: mockDismissAll,
+    })
+
+    render(<WellnessRecommendations />)
+
+    expect(screen.queryByRole('button', { name: /dismiss all/i })).not.toBeInTheDocument()
   })
 })

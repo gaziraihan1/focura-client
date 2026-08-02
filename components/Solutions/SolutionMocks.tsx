@@ -289,11 +289,25 @@ const MESSAGES = [
   },
 ];
 
-export function ThreadMock({ task = "Launch mobile app", status = "In Review" }: { task?: string; status?: string }) {
+export function ThreadMock({
+  task = "Launch mobile app",
+  status = "In Review",
+  showSidebar = true,
+}: {
+  task?: string;
+  status?: string;
+  /**
+   * Hide the right-hand assignees/details sidebar so the conversation fills
+   * the full width. Used when the mock is rendered inside narrow cards
+   * (e.g. the "Powerful Features" grid) where a fixed 190px sidebar would
+   * crush the thread.
+   */
+  showSidebar?: boolean;
+}) {
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-background shadow-xl shadow-foreground/5">
       <WindowChrome url="app.focura.com/tasks/124/discussion" />
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_190px]">
+      <div className={showSidebar ? "grid grid-cols-1 lg:grid-cols-[1fr_190px]" : ""}>
         <div className="min-w-0 p-2.5 sm:p-3">
           <div className="flex items-center gap-2 border-b border-border pb-2.5">
             <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-indigo-500 text-[10px] font-bold text-indigo-50">#</div>
@@ -342,31 +356,33 @@ export function ThreadMock({ task = "Launch mobile app", status = "In Review" }:
           </div>
         </div>
 
-        <div className="flex flex-col gap-2.5 border-t border-border bg-muted/20 p-3 lg:border-l lg:border-t-0">
-          <div>
-            <p className="font-semibold uppercase tracking-wide text-muted-foreground" style={{ fontSize: 7.5 }}>Assignees</p>
-            <div className="mt-1.5 space-y-1.5">
-              {[
-                { n: "Amira Khan", i: "AK", c: "bg-emerald-500/20 text-emerald-600" },
-                { n: "Diego López", i: "DL", c: "bg-amber-500/20 text-amber-600" },
-                { n: "Sara Rahman", i: "SR", c: "bg-indigo-500/20 text-indigo-600" },
-              ].map((u) => (
-                <div key={u.n} className="flex items-center gap-1.5">
-                  <Avatar initials={u.i} color={u.c} />
-                  <span className="text-[8px] text-foreground">{u.n}</span>
-                </div>
-              ))}
+        {showSidebar && (
+          <div className="flex flex-col gap-2.5 border-t border-border bg-muted/20 p-3 lg:border-l lg:border-t-0">
+            <div>
+              <p className="font-semibold uppercase tracking-wide text-muted-foreground" style={{ fontSize: 7.5 }}>Assignees</p>
+              <div className="mt-1.5 space-y-1.5">
+                {[
+                  { n: "Amira Khan", i: "AK", c: "bg-emerald-500/20 text-emerald-600" },
+                  { n: "Diego López", i: "DL", c: "bg-amber-500/20 text-amber-600" },
+                  { n: "Sara Rahman", i: "SR", c: "bg-indigo-500/20 text-indigo-600" },
+                ].map((u) => (
+                  <div key={u.n} className="flex items-center gap-1.5">
+                    <Avatar initials={u.i} color={u.c} />
+                    <span className="text-[8px] text-foreground">{u.n}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="border-t border-border/70 pt-2">
+              <p className="font-semibold uppercase tracking-wide text-muted-foreground" style={{ fontSize: 7.5 }}>Details</p>
+              <div className="mt-1.5 space-y-1 text-[8px] text-muted-foreground">
+                <p className="flex items-center gap-1"><Calendar size={9} /> Due Mar 8, 2026</p>
+                <p className="flex items-center gap-1"><Clock size={9} /> High priority</p>
+                <p className="flex items-center gap-1"><MessageSquare size={9} /> 3 members</p>
+              </div>
             </div>
           </div>
-          <div className="border-t border-border/70 pt-2">
-            <p className="font-semibold uppercase tracking-wide text-muted-foreground" style={{ fontSize: 7.5 }}>Details</p>
-            <div className="mt-1.5 space-y-1 text-[8px] text-muted-foreground">
-              <p className="flex items-center gap-1"><Calendar size={9} /> Due Mar 8, 2026</p>
-              <p className="flex items-center gap-1"><Clock size={9} /> High priority</p>
-              <p className="flex items-center gap-1"><MessageSquare size={9} /> 3 members</p>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

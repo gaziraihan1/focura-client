@@ -214,4 +214,62 @@ export const calendarHandlers = [
       workEndHour: (body.workEndHour as number) ?? 17,
     })
   }),
+
+  // GET /api/v1/calendar/energy
+  http.get(`${BASE}/api/v1/calendar/energy`, () =>
+    ok({ id: 'energy-1', date: '2024-06-15', energyLevel: 7, note: null })
+  ),
+
+  // GET /api/v1/calendar/energy/history
+  http.get(`${BASE}/api/v1/calendar/energy/history`, () =>
+    ok([
+      { id: 'energy-1', date: '2024-06-15', energyLevel: 7, note: null },
+      { id: 'energy-2', date: '2024-06-14', energyLevel: 5, note: 'Tired' },
+    ])
+  ),
+
+  // GET /api/v1/calendar/energy/export
+  http.get(`${BASE}/api/v1/calendar/energy/export`, () =>
+    ok({
+      filename: 'energy-history.csv',
+      csv: 'date,energyLevel,note\n2024-06-14,5,Tired\n2024-06-15,7,\n',
+    })
+  ),
+
+  // POST /api/v1/calendar/energy
+  http.post(`${BASE}/api/v1/calendar/energy`, async ({ request }) => {
+    const body = (await request.json()) as Record<string, unknown>
+    return ok({
+      id: 'energy-new',
+      date: body.date ?? '2024-06-15',
+      energyLevel: body.energyLevel ?? 7,
+      note: body.note ?? null,
+    })
+  }),
+
+  // GET /api/v1/calendar/burnout-trends
+  http.get(`${BASE}/api/v1/calendar/burnout-trends`, () =>
+    ok([
+      { weekStart: '2024-06-01', riskLevel: 'LOW', consecutiveHeavyDays: 0, avgDailyLoad: 0.6 },
+      { weekStart: '2024-06-08', riskLevel: 'MODERATE', consecutiveHeavyDays: 1, avgDailyLoad: 0.9 },
+    ])
+  ),
+
+  // GET /api/v1/calendar/recommendations
+  http.get(`${BASE}/api/v1/calendar/recommendations`, () =>
+    ok([
+      { id: 'rec-1', type: 'BURNOUT_PREVENTION', message: 'Take a break', priority: 100, dismissed: false },
+      { id: 'rec-2', type: 'FOCUS_SUGGESTION', message: 'Try a Pomodoro', priority: 60, dismissed: false },
+    ])
+  ),
+
+  // PATCH /api/v1/calendar/recommendations/:id/dismiss
+  http.patch(`${BASE}/api/v1/calendar/recommendations/:id/dismiss`, () =>
+    ok({ dismissed: true })
+  ),
+
+  // POST /api/v1/calendar/recommendations/dismiss-all
+  http.post(`${BASE}/api/v1/calendar/recommendations/dismiss-all`, () =>
+    ok({ dismissedCount: 2 })
+  ),
 ]

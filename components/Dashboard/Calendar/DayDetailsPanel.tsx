@@ -1,8 +1,9 @@
 // components/Calendar/DayDetailsPanel.tsx
 import { useState } from 'react';
-import { X, Brain, ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { X, Brain, ChevronLeft, ChevronRight, BarChart3, Download } from 'lucide-react';
 import type { CalendarDayAggregate, GoalCheckpoint, SystemCalendarEvent } from '@/types/calendar.types';
-import { useEnergyLevel, useEnergyHistory } from '@/hooks/useEnergyLevel';
+import { useEnergyLevel, useEnergyHistory, exportEnergyHistory } from '@/hooks/useEnergyLevel';
 import {
   PlannedHoursCard,
   FocusSessionsCard,
@@ -115,7 +116,18 @@ function EnergyHistorySection({ date }: { date: Date }) {
   rangeStart.setDate(rangeStart.getDate() - 90);
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
+  const [exporting, setExporting] = useState(false);
   const { data: history, pagination, loading } = useEnergyHistory(rangeStart, date, page, limit);
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      const ok = await exportEnergyHistory(rangeStart, date);
+      if (!ok) toast.error('Failed to export energy history');
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const getBarColor = (level: number): string => {
     if (level >= 8) return 'bg-green-500';
@@ -132,6 +144,14 @@ function EnergyHistorySection({ date }: { date: Date }) {
           </div>
           <h4 className="text-sm font-medium text-muted-foreground">Energy History</h4>
         </div>
+        <button
+          onClick={handleExport}
+          disabled={exporting}
+          className="flex items-center gap-1.5 text-xs font-medium text-primary hover:underline disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          <Download className="w-3.5 h-3.5" />
+          {exporting ? 'Exporting…' : 'Export CSV'}
+        </button>
       </div>
 
       {loading ? (
