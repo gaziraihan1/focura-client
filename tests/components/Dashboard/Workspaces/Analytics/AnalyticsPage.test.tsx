@@ -70,6 +70,7 @@ vi.mock('lucide-react', () => {
     HardDrive: mock('hard-drive'),
     Timer: mock('timer'),
     LayoutGrid: mock('layout-grid'),
+    CalendarRange: mock('calendar-range'),
     Zap: mock('zap'),
     Infinity: mock('infinity'),
     Bold: mock('bold'),
@@ -385,12 +386,19 @@ describe('AnalyticsPage', () => {
       overview: {
         kpis: mockKpis,
         taskStatus: mockTaskStatusData,
-        projectStatus: [],
+        projectStatus: [
+          { status: 'ACTIVE', count: 5 },
+          { status: 'PLANNING', count: 3 },
+          { status: 'ON_HOLD', count: 2 },
+        ],
         tasksByPriority: mockPriorityData,
         deadlineRisk: mockDeadlineRiskData,
       },
       hasNotPlan: false,
-      taskTrends: { completionTrend: mockCompletionTrendData, overdueTrend: [] },
+      taskTrends: {
+        completionTrend: mockCompletionTrendData,
+        overdueTrend: [{ weekStart: new Date('2025-01-01'), count: 4 }],
+      },
       projectHealth: mockProjectHealthData,
       memberContribution: mockMemberData,
       timeSummary: mockTimeSummaryData,
@@ -405,7 +413,7 @@ describe('AnalyticsPage', () => {
     render(<AnalyticsPage workspaceId="ws-1" />)
     expect(screen.getByText('Analytics')).toBeInTheDocument()
     expect(screen.getByText('Comprehensive workspace insights and metrics')).toBeInTheDocument()
-    expect(screen.getByText('Total Projects')).toBeInTheDocument()
+    expect(screen.getAllByText('Total Projects').length).toBeGreaterThan(0)
     expect(screen.getByText('Task Status Distribution')).toBeInTheDocument()
     expect(screen.getByText('Tasks by Priority')).toBeInTheDocument()
     expect(screen.getByText('Team Leaderboard')).toBeInTheDocument()
@@ -414,6 +422,9 @@ describe('AnalyticsPage', () => {
     expect(screen.getByText('Time Tracking Summary')).toBeInTheDocument()
     expect(screen.getByText('Peak Activity Day')).toBeInTheDocument()
     expect(screen.getByText('Deadline Risk Analysis')).toBeInTheDocument()
+    expect(screen.getByText('Project Status')).toBeInTheDocument()
+    expect(screen.getByText('Overdue Trend')).toBeInTheDocument()
+    expect(screen.getByTestId('analytics-period-badge')).toHaveTextContent('Last 30 days')
   })
 
   it('renders without optional data sections', () => {
@@ -444,7 +455,7 @@ describe('AnalyticsPage', () => {
     expect(screen.queryByText('Workload Distribution')).not.toBeInTheDocument()
   })
 
-  it('hides project health when empty', () => {
+  it('hides project health and new widgets when empty', () => {
     mockUseAnalyticsPage.mockReturnValue({
       overview: {
         kpis: mockKpis,
@@ -468,6 +479,8 @@ describe('AnalyticsPage', () => {
     })
     render(<AnalyticsPage workspaceId="ws-1" />)
     expect(screen.queryByText('Project Health')).not.toBeInTheDocument()
+    expect(screen.queryByText('Project Status')).not.toBeInTheDocument()
+    expect(screen.queryByText('Overdue Trend')).not.toBeInTheDocument()
   })
 
   it('shows loading overlay when isLoading is true', () => {

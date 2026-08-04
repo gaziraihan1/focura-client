@@ -128,6 +128,7 @@ export interface Task {
   createdAt: string;
   updatedAt: string;
   projectId: string | null;
+  sectionId?: string | null;
   intent: IntentType
 
   focusRequired?: boolean;

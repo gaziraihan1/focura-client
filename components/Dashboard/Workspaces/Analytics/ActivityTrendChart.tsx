@@ -49,25 +49,25 @@ export function ActivityTrendChart({ data }: ActivityTrendChartProps) {
               <div className="w-full h-full flex flex-col-reverse rounded-t overflow-hidden">
                 {point.created > 0 && (
                   <div
-                    className="bg-blue-500 hover:bg-blue-600 transition-colors"
+                    className="bg-chart-1 hover:opacity-80 transition-opacity"
                     style={{ height: `${createdPercent}%` }}
                   />
                 )}
                 {point.updated > 0 && (
                   <div
-                    className="bg-purple-500 hover:bg-purple-600 transition-colors"
+                    className="bg-chart-2 hover:opacity-80 transition-opacity"
                     style={{ height: `${updatedPercent}%` }}
                   />
                 )}
                 {point.completed > 0 && (
                   <div
-                    className="bg-green-500 hover:bg-green-600 transition-colors"
+                    className="bg-chart-5 hover:opacity-80 transition-opacity"
                     style={{ height: `${completedPercent}%` }}
                   />
                 )}
                 {point.assigned > 0 && (
                   <div
-                    className="bg-orange-500 hover:bg-orange-600 transition-colors"
+                    className="bg-chart-3 hover:opacity-80 transition-opacity"
                     style={{ height: `${assignedPercent}%` }}
                   />
                 )}
@@ -82,25 +82,25 @@ export function ActivityTrendChart({ data }: ActivityTrendChartProps) {
                   <div className="space-y-1">
                     {point.created > 0 && (
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-blue-500" />
+                        <div className="w-2 h-2 rounded-full bg-chart-1" />
                         <span className="text-xs">Created: {point.created}</span>
                       </div>
                     )}
                     {point.updated > 0 && (
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-purple-500" />
+                        <div className="w-2 h-2 rounded-full bg-chart-2" />
                         <span className="text-xs">Updated: {point.updated}</span>
                       </div>
                     )}
                     {point.completed > 0 && (
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-green-500" />
+                        <div className="w-2 h-2 rounded-full bg-chart-5" />
                         <span className="text-xs">Completed: {point.completed}</span>
                       </div>
                     )}
                     {point.assigned > 0 && (
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-orange-500" />
+                        <div className="w-2 h-2 rounded-full bg-chart-3" />
                         <span className="text-xs">Assigned: {point.assigned}</span>
                       </div>
                     )}
@@ -118,7 +118,7 @@ export function ActivityTrendChart({ data }: ActivityTrendChartProps) {
       {/* Legend */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-blue-500" />
+          <div className="w-3 h-3 rounded-full bg-chart-1" />
           <div>
             <p className="text-xs text-muted-foreground">Created</p>
             <p className="text-sm font-medium">
@@ -127,7 +127,7 @@ export function ActivityTrendChart({ data }: ActivityTrendChartProps) {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-purple-500" />
+          <div className="w-3 h-3 rounded-full bg-chart-2" />
           <div>
             <p className="text-xs text-muted-foreground">Updated</p>
             <p className="text-sm font-medium">
@@ -136,7 +136,7 @@ export function ActivityTrendChart({ data }: ActivityTrendChartProps) {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-green-500" />
+          <div className="w-3 h-3 rounded-full bg-chart-5" />
           <div>
             <p className="text-xs text-muted-foreground">Completed</p>
             <p className="text-sm font-medium">
@@ -145,7 +145,7 @@ export function ActivityTrendChart({ data }: ActivityTrendChartProps) {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-orange-500" />
+          <div className="w-3 h-3 rounded-full bg-chart-3" />
           <div>
             <p className="text-xs text-muted-foreground">Assigned</p>
             <p className="text-sm font-medium">

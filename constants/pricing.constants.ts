@@ -88,7 +88,7 @@ export const plans = [
       "Unlimited workspaces",
       "Unlimited members",
       "Unlimited projects",
-      "50 GB storage",
+      "100 GB storage",
       "Unlimited meetings",
       "Analytics + reports",
       "Priority support",

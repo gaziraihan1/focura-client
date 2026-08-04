@@ -3,7 +3,7 @@
 import { User, Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import { Task } from "@/types/task.types";
+import { Task, TaskComment, Attachment } from "@/types/task.types";
 import { TaskHeader } from "@/components/Dashboard/TaskDetails/TaskHeader";
 import { TimeTrackingCard } from "@/components/Dashboard/TaskDetails/TimeTrackingCard";
 import { FocusRequirementsCard } from "@/components/Dashboard/TaskDetails/FocusRequirementsCard";
@@ -22,7 +22,7 @@ import {
 import { useUpdateComment, useDeleteComment } from "@/hooks/useComment";
 import TaskDetailsMainLayout from "./TaskDetailsMainLayout";
 
-import { TaskHandlers, TaskPermissionsState } from "@/types/taskDetails.types";
+import { EditTaskData, TaskHandlers, TaskPermissionsState } from "@/types/taskDetails.types";
 
 export interface TaskMutations {
   addComment: ReturnType<typeof useAddComment>;
@@ -39,9 +39,13 @@ interface TaskDetailsViewProps {
   task: Task;
   permissions: TaskPermissionsState; 
   isEditing: boolean;
+  editData: EditTaskData;
+  setIsEditing: (isEditing: boolean) => void;
+  setEditData: (data: EditTaskData) => void;
+  comments: TaskComment[];
+  attachments: Attachment[];
   handlers: TaskHandlers;
   mutations: TaskMutations;
-  id: string;
   workspaceSlug: string;
 }
 
@@ -49,9 +53,13 @@ export default function TaskDetailsView({
   task,
   permissions,
   isEditing,
+  editData,
+  setIsEditing,
+  setEditData,
+  comments,
+  attachments,
   handlers,
   mutations,
-  id,
   workspaceSlug,
 }: TaskDetailsViewProps) {
   const router = useRouter();
@@ -124,10 +132,18 @@ export default function TaskDetailsView({
 
 
       <TaskDetailsMainLayout
-        id={id}
         task={task}
         isPersonalTask={isPersonalTask}
         workspaceSlug={workspaceSlug}
+        isEditing={isEditing}
+        editData={editData}
+        setIsEditing={setIsEditing}
+        setEditData={setEditData}
+        comments={comments}
+        attachments={attachments}
+        permissions={permissions}
+        handlers={handlers}
+        mutations={mutations}
       />
     </div>
   );

@@ -53,7 +53,8 @@ export const mockTaskTrends: TaskTrends = {
     { date: new Date('2024-01-02'), count: 5 },
   ],
   overdueTrend: [
-    { weekStart: new Date('2024-01-01'), count: 1 },
+    // weekStart arrives as an ISO string over JSON (Date → string serialization).
+    { weekStart: '2024-01-01T00:00:00.000Z', count: 1 },
   ],
 }
 

@@ -6,14 +6,15 @@ interface ProjectTaskStatusChartProps {
   data: ProjectTaskStatusItem[];
 }
 
+// Static, literal class pairs so Tailwind v4 generates each utility.
 const statusColors: Record<string, string> = {
-  TODO: "#667eea",
-  IN_PROGRESS: "#f59e0b",
-  IN_REVIEW: "#8b5cf6",
-  DONE: "#10b981",
-  COMPLETED: "#10b981",
-  BACKLOG: "#6b7280",
-  BLOCKED: "#ef4444",
+  TODO: "bg-chart-1",
+  IN_PROGRESS: "bg-chart-2",
+  IN_REVIEW: "bg-chart-3",
+  DONE: "bg-chart-5",
+  COMPLETED: "bg-chart-5",
+  BACKLOG: "bg-muted-foreground/60",
+  BLOCKED: "bg-chart-4",
 };
 
 const statusLabels: Record<string, string> = {
@@ -49,15 +50,14 @@ export function ProjectTaskStatusChart({ data }: ProjectTaskStatusChartProps) {
         {data.map((item, index) => {
           const percentage = total > 0 ? Math.round((item.count / total) * 100) : 0;
           const barWidth = maxCount > 0 ? (item.count / maxCount) * 100 : 0;
-          const color = statusColors[item.status.toUpperCase()] || "#667eea";
+          const color = statusColors[item.status.toUpperCase()] || "bg-chart-1";
 
           return (
             <div key={index} className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 min-w-0">
                   <div
-                    className="w-2.5 h-2.5 rounded-full shrink-0"
-                    style={{ backgroundColor: color }}
+                    className={`w-2.5 h-2.5 rounded-full shrink-0 ${color}`}
                   />
                   <span className="text-sm font-medium text-foreground truncate">
                     {statusLabels[item.status] || item.status}
@@ -74,11 +74,8 @@ export function ProjectTaskStatusChart({ data }: ProjectTaskStatusChartProps) {
               </div>
               <div className="h-2 bg-muted rounded-full overflow-hidden">
                 <div
-                  className="h-full rounded-full transition-all duration-500 ease-out"
-                  style={{
-                    width: `${barWidth}%`,
-                    backgroundColor: color,
-                  }}
+                  className={`h-full rounded-full transition-all duration-500 ease-out ${color}`}
+                  style={{ width: `${barWidth}%` }}
                 />
               </div>
             </div>

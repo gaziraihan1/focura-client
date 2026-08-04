@@ -2,10 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Users } from "lucide-react";
-import type {
-  UserEngagementMetrics,
-  ProjectActivityMetrics,
-} from "@/types/workspace-usage.types";
+import type { UserEngagementMetrics } from "@/types/workspace-usage.types";
 import {
   ActiveUserCards,
   DailyActiveUsersChart,
@@ -22,7 +19,6 @@ export interface ActiveUserStat {
 
 interface EngagementSectionProps {
   userEngagement: UserEngagementMetrics;
-  projectActivity: ProjectActivityMetrics;
 }
 
 export function EngagementSection({
@@ -53,21 +49,22 @@ export function EngagementSection({
     [userEngagement.collaborationIndex, searchQuery]
   );
 
+  // Theme-aware chart tokens (defined in globals.css).
   const activeStats: ActiveUserStat[] = [
     {
       label: "Online Now",
       value: userEngagement.activeUsers.online,
-      color: "text-green-500",
+      color: "text-chart-2",
     },
     {
       label: "This Week",
       value: userEngagement.activeUsers.thisWeek,
-      color: "text-blue-500",
+      color: "text-chart-1",
     },
     {
       label: "This Month",
       value: userEngagement.activeUsers.thisMonth,
-      color: "text-purple-500",
+      color: "text-chart-3",
     },
   ];
 
@@ -89,7 +86,7 @@ export function EngagementSection({
       {/* DAU chart + Peak Hours heatmap */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
         <DailyActiveUsersChart chartData={chartData} />
-        <PeakHoursHeatmap />
+        <PeakHoursHeatmap data={userEngagement.peakHours ?? []} />
       </div>
 
       {/* Inactive members */}

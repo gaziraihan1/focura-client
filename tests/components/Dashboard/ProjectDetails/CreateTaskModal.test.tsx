@@ -41,6 +41,12 @@ vi.mock('@/hooks/useCreateTaskModal', () => ({
     updateField: vi.fn(),
     toggleAssignee: vi.fn(),
     handleSubmit: vi.fn(),
+    sections: [
+      { id: 'sec-1', name: 'Frontend', status: 'ACTIVE', position: 0, projectId: 'p-1', taskStatus: 'IN_PROGRESS' },
+      { id: 'sec-2', name: 'Archived', status: 'COMPLETED', position: 1, projectId: 'p-1' },
+    ],
+    sectionId: '',
+    setSectionId: vi.fn(),
   })),
 }));
 
@@ -76,5 +82,12 @@ describe('CreateTaskModal', () => {
   it('renders Cancel button', () => {
     render(<CreateTaskModal {...defaultProps} />);
     expect(screen.getByText('Cancel')).toBeInTheDocument();
+  });
+
+  it('renders the section picker with active sections only', () => {
+    render(<CreateTaskModal {...defaultProps} />);
+    expect(screen.getByLabelText('Section')).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Frontend' })).toBeInTheDocument();
+    expect(screen.queryByRole('option', { name: 'Archived' })).not.toBeInTheDocument();
   });
 });

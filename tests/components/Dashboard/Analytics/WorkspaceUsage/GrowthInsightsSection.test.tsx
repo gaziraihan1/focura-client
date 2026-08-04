@@ -1,6 +1,24 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { GrowthInsightsSection } from '@/components/Dashboard/Analytics/WorkspaceUsage/GrowthInsightsSection'
+import type { WorkspaceGrowthMetrics } from '@/types/workspace-usage.types'
+
+vi.mock('lucide-react', () => {
+  const icon = (name: string) => {
+    const C = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={`icon-${name}`} {...props} />
+    C.displayName = name
+    return C
+  }
+  return {
+    TrendingUp: icon('TrendingUp'),
+    TrendingDown: icon('TrendingDown'),
+    ListTodo: icon('ListTodo'),
+    Users: icon('Users'),
+    Folder: icon('Folder'),
+    CheckCircle: icon('CheckCircle'),
+    Lightbulb: icon('Lightbulb'),
+  }
+})
 
 vi.mock('recharts', () => ({
   ResponsiveContainer: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
@@ -13,37 +31,62 @@ vi.mock('recharts', () => ({
   Legend: () => null,
 }))
 
-const mockWorkspaceGrowth = {
-  thisMonth: { newUsers: 5, newProjects: 3, newTasks: 28 },
+const workspaceGrowth: WorkspaceGrowthMetrics = {
+  thisMonth: { newUsers: 2, newProjects: 1, newTasks: 30 },
   trend: [
-    { month: 'Jan', users: 10, projects: 4, tasks: 50 },
-    { month: 'Feb', users: 12, projects: 5, tasks: 65 },
+    { month: 'Jan', users: 5, projects: 2, tasks: 20 },
+    { month: 'Feb', users: 7, projects: 3, tasks: 30 },
   ],
-  projectLifecycle: { created: 12, active: 8, completed: 15, archived: 3 },
+  projectLifecycle: { created: 5, active: 4, completed: 1, archived: 0 },
+  changes: { newTasks: 50, newUsers: 40, newProjects: null },
+  insights: [
+    { id: 1, text: 'Task creation increased 50% this month — strong team engagement.', type: 'positive' },
+    { id: 2, text: 'Storage usage is healthy at 40% of your plan limit.', type: 'positive' },
+    { id: 3, text: '4 active projects progressing with 30 new tasks added this month.', type: 'neutral' },
+  ],
 }
 
 describe('GrowthInsightsSection', () => {
-  it('renders section heading', () => {
-    render(<GrowthInsightsSection workspaceGrowth={mockWorkspaceGrowth as any as Record<string, unknown>} />)
+  it('renders heading and growth metrics', () => {
+    render(<GrowthInsightsSection workspaceGrowth={workspaceGrowth} />)
     expect(screen.getByText('Growth Insights')).toBeInTheDocument()
-  })
-
-  it('renders growth metric cards', () => {
-    render(<GrowthInsightsSection workspaceGrowth={mockWorkspaceGrowth as any as Record<string, unknown>} />)
     expect(screen.getByText('New Tasks')).toBeInTheDocument()
     expect(screen.getByText('New Members')).toBeInTheDocument()
     expect(screen.getByText('New Projects')).toBeInTheDocument()
     expect(screen.getByText('Completed')).toBeInTheDocument()
   })
 
-  it('renders key insights panel', () => {
-    render(<GrowthInsightsSection workspaceGrowth={mockWorkspaceGrowth as any as Record<string, unknown>} />)
-    expect(screen.getByText('Key Insights')).toBeInTheDocument()
-    expect(screen.getByText(/Task creation increased significantly/)).toBeInTheDocument()
+  it('renders the 6-month trend chart', () => {
+    const { container } = render(<GrowthInsightsSection workspaceGrowth={workspaceGrowth} />)
+    expect(container.querySelector('[data-testid="bar-chart"]')).toBeTruthy()
   })
 
-  it('renders project lifecycle stats', () => {
-    render(<GrowthInsightsSection workspaceGrowth={mockWorkspaceGrowth as any as Record<string, unknown>} />)
+  it('renders insights from real data', () => {
+    render(<GrowthInsightsSection workspaceGrowth={workspaceGrowth} />)
+    expect(screen.getByText('Key Insights')).toBeInTheDocument()
+    expect(screen.getByText(/Task creation increased 50%/)).toBeInTheDocument()
+    expect(screen.getByText(/Storage usage is healthy/)).toBeInTheDocument()
+    expect(screen.getByText(/4 active projects/)).toBeInTheDocument()
+  })
+
+  it('shows real month-over-month change badges', () => {
+    render(<GrowthInsightsSection workspaceGrowth={workspaceGrowth} />)
+    expect(screen.getByText('+50%')).toBeInTheDocument()
+    expect(screen.getByText('+40%')).toBeInTheDocument()
+  })
+
+  it('renders project lifecycle values', () => {
+    render(<GrowthInsightsSection workspaceGrowth={workspaceGrowth} />)
     expect(screen.getByText('Project Lifecycle')).toBeInTheDocument()
+    expect(screen.getByText('Created')).toBeInTheDocument()
+    expect(screen.getByText('Active')).toBeInTheDocument()
+    expect(screen.getByText('Done')).toBeInTheDocument()
+    expect(screen.getByText('Archived')).toBeInTheDocument()
+  })
+
+  it('uses chart token colors for lifecycle items', () => {
+    render(<GrowthInsightsSection workspaceGrowth={workspaceGrowth} />)
+    const created = screen.getByText('Created').previousElementSibling
+    expect(created?.className).toContain('text-chart-1')
   })
 })

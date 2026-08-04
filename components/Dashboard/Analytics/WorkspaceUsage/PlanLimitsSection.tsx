@@ -8,7 +8,6 @@ import {
   ArrowUpRight,
   Crown,
   AlertTriangle,
-  // Infinity,
 } from "lucide-react";
 import type { PlanLimitsMetrics } from "@/types/workspace-usage.types";
 import Link from "next/link";
@@ -265,7 +264,7 @@ export function PlanLimitsSection({ planLimits, workspaceSlug }: PlanLimitsSecti
                 Unlock More with Pro
               </h3>
               <div className="flex flex-wrap gap-x-3 sm:gap-x-4 gap-y-1">
-                {["50 team members", "5 GB storage", "Unlimited projects", "50 automations"].map(
+                {["25 team members", "10 GB storage", "Unlimited projects", "50 automations"].map(
                   (benefit) => (
                     <span
                       key={benefit}
@@ -278,10 +277,13 @@ export function PlanLimitsSection({ planLimits, workspaceSlug }: PlanLimitsSecti
                 )}
               </div>
             </div>
-            <Link href={`/dashboard/workspaces/${workspaceSlug}/billing/upgrade`} className="... flex items-center gap-1.5 ...">
-  <ArrowUpRight className="w-3.5 h-3.5" />
-  Upgrade
-</Link>
+            <Link
+              href={`/dashboard/workspaces/${workspaceSlug}/billing/upgrade`}
+              className="shrink-0 flex items-center justify-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors w-full sm:w-auto text-center"
+            >
+              <ArrowUpRight className="w-3.5 h-3.5" />
+              Upgrade
+            </Link>
           </div>
         </div>
       )}

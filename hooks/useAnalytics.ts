@@ -57,12 +57,14 @@ export interface AnalyticsOverview {
 }
 
 export interface TrendDataPoint {
-  date: Date;
+  // The API serializes Date to an ISO string over JSON, so both are possible.
+  date: Date | string;
   count: number;
 }
 
 export interface OverdueTrendPoint {
-  weekStart: Date;
+  // The API serializes Date to an ISO string over JSON, so both are possible.
+  weekStart: Date | string;
   count: number;
 }
 
@@ -107,7 +109,8 @@ export interface TimeSummary {
 }
 
 export interface ActivityTrendPoint {
-  date: Date;
+  // The API serializes Date to an ISO string over JSON, so both are possible.
+  date: Date | string;
   created: number;
   updated: number;
   completed: number;

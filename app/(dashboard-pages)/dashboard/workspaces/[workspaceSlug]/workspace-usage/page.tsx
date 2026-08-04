@@ -126,10 +126,7 @@ export default function WorkspaceUsagePage() {
 
       {data.isAdmin && (
         <SectionErrorBoundary sectionName="Engagement">
-          <EngagementSection
-            userEngagement={data.userEngagement}
-            projectActivity={data.projectActivity}
-          />
+          <EngagementSection userEngagement={data.userEngagement} />
         </SectionErrorBoundary>
       )}
 

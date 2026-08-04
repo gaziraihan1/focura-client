@@ -1,9 +1,10 @@
 import { Task } from "@/hooks/useTask";
 import { cn } from "@/lib/utils";
-import { ChevronDown, Filter, LayoutGrid, List, Search, SlidersHorizontal, X } from "lucide-react";
+import { ChevronDown, Filter, FolderOpen, LayoutGrid, List, Search, SlidersHorizontal, X } from "lucide-react";
 import { useState } from "react";
 import { PRIORITY_CONFIG } from "./PriorityBadge";
 import { COLUMNS } from "./ListRow";
+import type { ProjectSectionItem } from "@/hooks/useProjectFeatures";
 type ViewMode     = 'board' | 'list';
 type TaskPriority = Task['priority'];
 type TaskStatus   = Task['status'];
@@ -13,6 +14,9 @@ export function Toolbar({
   search,         setSearch,
   priorityFilter, setPriorityFilter,
   statusFilter,   setStatusFilter,
+  sections = [],
+  sectionFilter = 'ALL',
+  setSectionFilter,
 }: {
   viewMode:          ViewMode;
   setViewMode:       (v: ViewMode) => void;
@@ -22,11 +26,16 @@ export function Toolbar({
   setPriorityFilter: (v: TaskPriority | 'ALL') => void;
   statusFilter:      TaskStatus | 'ALL';
   setStatusFilter:   (v: TaskStatus | 'ALL') => void;
+  sections?:         ProjectSectionItem[];
+  sectionFilter?:    string;
+  setSectionFilter?: (v: string) => void;
 }) {
   const [priorityOpen, setPriorityOpen] = useState(false);
   const [statusOpen,   setStatusOpen]   = useState(false);
+  const [sectionOpen,  setSectionOpen]  = useState(false);
 
-  const hasFilters = priorityFilter !== 'ALL' || statusFilter !== 'ALL';
+  const activeSection = sections.find((s) => s.id === sectionFilter);
+  const hasFilters = priorityFilter !== 'ALL' || statusFilter !== 'ALL' || sectionFilter !== 'ALL';
 
   return (
     <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -112,10 +121,45 @@ export function Toolbar({
           )}
         </div>
 
+        {/* Section dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => { setSectionOpen((s) => !s); setPriorityOpen(false); setStatusOpen(false); }}
+            className={cn(
+              'flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted text-muted-foreground hover:text-foreground',
+              sectionFilter !== 'ALL' && 'border-primary/50 text-primary bg-primary/5',
+            )}
+          >
+            <FolderOpen className="size-3.5" />
+            <span className="hidden sm:inline">{activeSection ? activeSection.name : 'Section'}</span>
+            <ChevronDown className={cn('size-3.5 transition-transform', sectionOpen && 'rotate-180')} />
+          </button>
+          {sectionOpen && (
+            <div className="absolute top-full left-0 mt-1.5 z-30 min-w-44 rounded-xl border border-border bg-popover shadow-[0_8px_24px_0_rgb(0_0_0/0.12)] py-1 overflow-hidden">
+              <button
+                onClick={() => { setSectionFilter?.('ALL'); setSectionOpen(false); }}
+                className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', sectionFilter === 'ALL' && 'bg-muted font-medium')}
+              >
+                All sections
+              </button>
+              {sections.map((section) => (
+                <button
+                  key={section.id}
+                  onClick={() => { setSectionFilter?.(section.id); setSectionOpen(false); }}
+                  className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', sectionFilter === section.id && 'bg-muted font-medium')}
+                >
+                  <span className="size-2 rounded-full shrink-0" style={{ backgroundColor: section.color ?? '#667eea' }} />
+                  {section.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
         {/* Clear */}
         {hasFilters && (
           <button
-            onClick={() => { setPriorityFilter('ALL'); setStatusFilter('ALL'); }}
+            onClick={() => { setPriorityFilter('ALL'); setStatusFilter('ALL'); setSectionFilter?.('ALL'); }}
             className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
             <X className="size-3" /> Clear

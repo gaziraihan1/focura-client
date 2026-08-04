@@ -28,6 +28,9 @@ export function CommentItem({
   const [isSaving, setIsSaving]       = useState(false);
 
   const isOwn    = comment.user.id === currentUserId;
+  // Optimistic (still-uploading) comments don't have a server id yet — replying
+  // to one would persist a parentId that never exists and orphan the reply.
+  const isOptimistic = comment.id.startsWith("optimistic-comment-");
   const replies  = comment.replies ?? [];
   const hasReplies = replies.length > 0;
 
@@ -118,7 +121,7 @@ export function CommentItem({
           {/* Actions */}
           {!isEditing && (
             <div className="flex items-center gap-3 px-1">
-              {!isReply && (
+              {!isReply && !isOptimistic && (
                 <button
                   onClick={() => onReply(comment)}
                   className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground hover:text-primary transition-colors"

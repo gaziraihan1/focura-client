@@ -15,26 +15,8 @@ vi.mock("next-auth/react", () => ({
   }),
 }));
 
-vi.mock("@/hooks/useTaskDetailsController", () => ({
-  useTaskDetailsController: () => ({
-    isEditing: false,
-    editData: {},
-    mutations: {
-      updateTask: { isPending: false },
-      addComment: {},
-      updateComment: {},
-      deleteComment: {},
-      uploadAttachment: {},
-      deleteAttachment: {},
-      updateStatus: { isPending: false },
-    },
-    handlers: { handleSaveEdit: vi.fn(), handleStatusChange: vi.fn() },
-    setIsEditing: vi.fn(),
-    setEditData: vi.fn(),
-    comments: [],
-    attachments: [],
-    permissions: { isAssignee: true, isOwner: false, canComment: true, canChangeStatus: true },
-  }),
+vi.mock("@/components/Dashboard/ProjectDetails/TaskSectionBadge", () => ({
+  TaskSectionBadge: () => null,
 }));
 
 vi.mock("@/components/Dashboard/TaskDetails/TaskDetailsForm", () => ({
@@ -61,25 +43,58 @@ const mockTask = {
   priority: "HIGH",
 };
 
+const defaultProps = {
+  task: mockTask as any,
+  isPersonalTask: false,
+  workspaceSlug: "ws1",
+  isEditing: false,
+  editData: {
+    title: "Test Task",
+    description: "Test description",
+    priority: "HIGH",
+    status: "TODO",
+    estimatedHours: "",
+  },
+  setIsEditing: vi.fn(),
+  setEditData: vi.fn(),
+  comments: [],
+  attachments: [],
+  permissions: { isAssignee: true, isOwner: false, canComment: true, canChangeStatus: true },
+  handlers: { handleSaveEdit: vi.fn(), handleStatusChange: vi.fn() },
+  mutations: {
+    updateTask: { isPending: false },
+    updateStatus: { isPending: false },
+  },
+};
+
 describe("TaskDetailsMainLayout", () => {
   it("renders the task title", () => {
-    render(<TaskDetailsMainLayout id="t1" isPersonalTask={false} task={mockTask as any as Record<string, unknown>} workspaceSlug="ws1" />);
+    render(<TaskDetailsMainLayout {...(defaultProps as any)} />);
     expect(screen.getByText("Test Task")).toBeInTheDocument();
   });
 
   it("renders the task description", () => {
-    render(<TaskDetailsMainLayout id="t1" isPersonalTask={false} task={mockTask as any as Record<string, unknown>} workspaceSlug="ws1" />);
+    render(<TaskDetailsMainLayout {...(defaultProps as any)} />);
     expect(screen.getByText("Test description")).toBeInTheDocument();
   });
 
   it("shows 'No description' when description is empty", () => {
-    const taskNoDesc = { ...mockTask, description: "" };
-    render(<TaskDetailsMainLayout id="t1" isPersonalTask={false} task={taskNoDesc as any as Record<string, unknown>} workspaceSlug="ws1" />);
+    render(<TaskDetailsMainLayout {...(defaultProps as any)} task={{ ...mockTask, description: "" }} />);
     expect(screen.getByText("No description provided")).toBeInTheDocument();
   });
 
   it("renders the task sidebar", () => {
-    render(<TaskDetailsMainLayout id="t1" isPersonalTask={false} task={mockTask as any as Record<string, unknown>} workspaceSlug="ws1" />);
+    render(<TaskDetailsMainLayout {...(defaultProps as any)} />);
     expect(screen.getByTestId("task-sidebar")).toBeInTheDocument();
+  });
+
+  it("renders the edit form when isEditing is true", () => {
+    render(<TaskDetailsMainLayout {...(defaultProps as any)} isEditing />);
+    expect(screen.getByTestId("task-details-form")).toBeInTheDocument();
+  });
+
+  it("does not render the edit form when not editing", () => {
+    render(<TaskDetailsMainLayout {...(defaultProps as any)} />);
+    expect(screen.queryByTestId("task-details-form")).not.toBeInTheDocument();
   });
 });

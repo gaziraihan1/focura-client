@@ -1,82 +1,90 @@
 import { ExecutiveKPIs, TaskStatusItem } from "@/hooks/useAnalytics";
 import { formatHours } from "@/utils/analytics.utils";
-import { AlertCircle, CheckCircle2, Folder, HardDrive, LayoutGrid, Timer, TrendingUp, Users } from "lucide-react";
+import { AlertCircle, CheckCircle2, Folder, HardDrive, LayoutGrid, Timer, TrendingUp, Users, type LucideIcon } from "lucide-react";
 
 interface KpisCardProps {
     kpis: ExecutiveKPIs
 }
+// Static, literal class pairs so Tailwind v4 generates each utility.
+const KPI_TOKEN_CLASSES: Array<{ color: string; bgColor: string }> = [
+  { color: 'text-chart-1', bgColor: 'bg-chart-1/10' },
+  { color: 'text-chart-2', bgColor: 'bg-chart-2/10' },
+  { color: 'text-chart-3', bgColor: 'bg-chart-3/10' },
+  { color: 'text-chart-4', bgColor: 'bg-chart-4/10' },
+  { color: 'text-chart-5', bgColor: 'bg-chart-5/10' },
+];
+
+interface KpiCard {
+  label: string;
+  value: string | number;
+  icon: LucideIcon;
+  color: string;
+  bgColor: string;
+  subtitle?: string;
+}
+
 export function kpisCard ({kpis}: KpisCardProps) {
-    const cards = [
+    const cards: KpiCard[] = [
     {
       label: 'Total Projects',
       value: kpis.totalProjects,
       icon: Folder,
-      color: 'text-blue-600 dark:text-blue-400',
-      bgColor: 'bg-blue-500/10',
+      ...KPI_TOKEN_CLASSES[0],
     },
     {
       label: 'Active Projects',
       value: kpis.activeProjects,
       icon: LayoutGrid,
-      color: 'text-purple-600 dark:text-purple-400',
-      bgColor: 'bg-purple-500/10',
+      ...KPI_TOKEN_CLASSES[1],
     },
     {
       label: 'Total Tasks',
       value: kpis.totalTasks,
       icon: CheckCircle2,
-      color: 'text-indigo-600 dark:text-indigo-400',
-      bgColor: 'bg-indigo-500/10',
+      ...KPI_TOKEN_CLASSES[2],
     },
     {
       label: 'Completed',
       value: kpis.completedTasks,
       icon: CheckCircle2,
-      color: 'text-green-600 dark:text-green-400',
-      bgColor: 'bg-green-500/10',
+      ...KPI_TOKEN_CLASSES[3],
     },
     {
       label: 'Overdue',
       value: kpis.overdueTasks,
       icon: AlertCircle,
-      color: 'text-red-600 dark:text-red-400',
-      bgColor: 'bg-red-500/10',
+      ...KPI_TOKEN_CLASSES[4],
     },
     {
       label: 'Completion Rate',
       value: `${kpis.completionRate}%`,
       icon: TrendingUp,
-      color: 'text-emerald-600 dark:text-emerald-400',
-      bgColor: 'bg-emerald-500/10',
+      ...KPI_TOKEN_CLASSES[0],
     },
     {
       label: 'Team Members',
       value: kpis.totalMembers,
       icon: Users,
-      color: 'text-cyan-600 dark:text-cyan-400',
-      bgColor: 'bg-cyan-500/10',
+      ...KPI_TOKEN_CLASSES[1],
     },
     {
       label: 'Active Members',
       value: kpis.activeMembers,
       icon: Users,
-      color: 'text-teal-600 dark:text-teal-400',
-      bgColor: 'bg-teal-500/10',
+      ...KPI_TOKEN_CLASSES[2],
       subtitle: 'Last 7 days',
     },
     {
       label: 'Hours Logged',
       value: formatHours(kpis.totalHours),
       icon: Timer,
-      color: 'text-orange-600 dark:text-orange-400',
-      bgColor: 'bg-orange-500/10',
+      ...KPI_TOKEN_CLASSES[3],
     },
     {
       label: 'Storage Used',
       value: `${kpis.storageUsed.toFixed(1)} MB`,
       icon: HardDrive,
-      color: 'text-pink-600 dark:text-pink-400',
-      bgColor: 'bg-pink-500/10',
+      ...KPI_TOKEN_CLASSES[4],
     },
   ];
   
@@ -102,13 +110,15 @@ export function statusChartData({data}: ChartData) {
     };
   });
 
+  // Theme-aware chart tokens (defined in globals.css) - keeps the donut
+  // consistent with the rest of the analytics palette in both themes.
   const colors = [
-    'rgb(156 163 175)', // gray - TODO
-    'rgb(59 130 246)',  // blue - IN_PROGRESS
-    'rgb(168 85 247)',  // purple - IN_REVIEW
-    'rgb(239 68 68)',   // red - BLOCKED
-    'rgb(34 197 94)',   // green - COMPLETED
-    'rgb(156 163 175)', // gray - CANCELLED
+    'var(--chart-1)', // TODO
+    'var(--chart-2)',  // IN_PROGRESS
+    'var(--chart-3)',  // IN_REVIEW
+    'var(--chart-4)',  // BLOCKED
+    'var(--chart-5)',  // COMPLETED
+    'var(--chart-1)',  // CANCELLED
   ];
 
   const conicGradient = segments

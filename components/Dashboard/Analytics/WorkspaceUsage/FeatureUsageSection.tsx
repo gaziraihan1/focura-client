@@ -50,48 +50,50 @@ function FeatureCard({ icon: Icon, label, count, accentColor, bgColor }: Feature
 }
 
 export function FeatureUsageSection({ featureUsage }: FeatureUsageSectionProps) {
+  // Theme-aware chart tokens (defined in globals.css) — consistent with the rest
+  // of the analytics palette in both light and dark mode.
   const features: FeatureCardProps[] = [
     {
       icon: ListTodo,
       label: "Tasks Created",
       count: featureUsage.tasksCreated,
-      accentColor: "text-blue-600 dark:text-blue-400",
-      bgColor: "bg-blue-50 dark:bg-blue-900/30",
+      accentColor: "text-chart-1",
+      bgColor: "bg-chart-1/10",
     },
     {
       icon: MessageCircle,
       label: "Comments Added",
       count: featureUsage.commentsAdded,
-      accentColor: "text-green-600 dark:text-green-400",
-      bgColor: "bg-green-50 dark:bg-green-900/30",
+      accentColor: "text-chart-2",
+      bgColor: "bg-chart-2/10",
     },
     {
       icon: Clock,
       label: "Time Entries",
       count: featureUsage.timeEntriesLogged,
-      accentColor: "text-purple-600 dark:text-purple-400",
-      bgColor: "bg-purple-50 dark:bg-purple-900/30",
+      accentColor: "text-chart-3",
+      bgColor: "bg-chart-3/10",
     },
     {
       icon: FileUp,
       label: "Files Uploaded",
       count: featureUsage.filesUploaded,
-      accentColor: "text-orange-600 dark:text-orange-400",
-      bgColor: "bg-orange-50 dark:bg-orange-900/30",
+      accentColor: "text-chart-4",
+      bgColor: "bg-chart-4/10",
     },
     {
       icon: AtSign,
       label: "Mentions Used",
       count: featureUsage.mentionsUsed,
-      accentColor: "text-cyan-600 dark:text-cyan-400",
-      bgColor: "bg-cyan-50 dark:bg-cyan-900/30",
+      accentColor: "text-chart-5",
+      bgColor: "bg-chart-5/10",
     },
     {
       icon: Bell,
       label: "Notifications",
       count: featureUsage.notificationsTriggered,
-      accentColor: "text-rose-600 dark:text-rose-400",
-      bgColor: "bg-rose-50 dark:bg-rose-900/30",
+      accentColor: "text-chart-1",
+      bgColor: "bg-chart-1/10",
     },
   ];
 
@@ -125,18 +127,18 @@ export function FeatureUsageSection({ featureUsage }: FeatureUsageSectionProps) 
             <BarChart data={distributionData} margin={{ bottom: 0 }}>
               <CartesianGrid
                 strokeDasharray="3 3"
-                stroke="hsl(var(--border))"
+                stroke="var(--border)"
                 opacity={0.5}
               />
               <XAxis
                 dataKey="name"
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
-                stroke="hsl(var(--border))"
+                tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                stroke="var(--border)"
                 tickLine={false}
               />
               <YAxis
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
-                stroke="hsl(var(--border))"
+                tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                stroke="var(--border)"
                 tickLine={false}
                 axisLine={false}
                 allowDecimals={false}
@@ -144,16 +146,16 @@ export function FeatureUsageSection({ featureUsage }: FeatureUsageSectionProps) 
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
+                  backgroundColor: "var(--card)",
+                  border: "1px solid var(--border)",
                   borderRadius: "8px",
-                  color: "hsl(var(--foreground))",
+                  color: "var(--foreground)",
                   fontSize: "12px",
                 }}
               />
               <Bar
                 dataKey="value"
-                fill="hsl(var(--primary))"
+                fill="var(--primary)"
                 radius={[6, 6, 0, 0]}
               />
             </BarChart>

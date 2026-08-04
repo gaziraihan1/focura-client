@@ -1,6 +1,9 @@
 import { api } from "@/lib/axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { milestoneKeys, sprintKeys, sectionKeys, viewKeys, favoriteKeys } from "./projectFeatureKeys";
+import type { Task } from "./useTask";
+
+export type TaskStatus = Task["status"];
 
 function unwrap<T>(response: any): T {
   if (response && typeof response === "object" && "success" in response && "data" in response) {
@@ -183,6 +186,9 @@ export interface ProjectSectionItem {
   status: "PENDING" | "ACTIVE" | "COMPLETED";
   position: number;
   projectId: string;
+  wipLimit?: number | null;
+  taskStatus?: TaskStatus | null;
+  _count?: { tasks: number };
 }
 
 export const useProjectSections = (projectId?: string) =>
@@ -193,13 +199,15 @@ export const useProjectSections = (projectId?: string) =>
       return unwrap<ProjectSectionItem[]>(res);
     },
     enabled: !!projectId,
-    staleTime: 5 * 60 * 1000,
+    // Short stale time so per-section task counts stay fresh right after a
+    // task is created/assigned (task mutations don't invalidate sections).
+    staleTime: 30 * 1000,
   });
 
 export const useCreateSection = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (data: { name: string; description?: string; color?: string; projectId: string }) => {
+    mutationFn: async (data: { name: string; description?: string; color?: string; wipLimit?: number; taskStatus?: TaskStatus; projectId: string }) => {
       const res = await api.post(`/api/v1/projects/${data.projectId}/sections`, data, { showSuccessToast: true, showErrorToast: true });
       return unwrap<ProjectSectionItem>(res);
     },
@@ -223,6 +231,17 @@ export const useDeleteSection = () => {
   return useMutation({
     mutationFn: async ({ sectionId, projectId }: { sectionId: string; projectId: string }) => {
       await api.delete(`/api/v1/projects/${projectId}/sections/${sectionId}`, { showSuccessToast: true, showErrorToast: true });
+    },
+    onSuccess: (_, vars) => qc.invalidateQueries({ queryKey: sectionKeys.list(vars.projectId) }),
+  });
+};
+
+export const useReorderSections = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ projectId, sectionIds }: { projectId: string; sectionIds: string[] }) => {
+      const res = await api.put(`/api/v1/projects/${projectId}/sections/reorder`, { sectionIds }, { showSuccessToast: true, showErrorToast: true });
+      return unwrap(res);
     },
     onSuccess: (_, vars) => qc.invalidateQueries({ queryKey: sectionKeys.list(vars.projectId) }),
   });

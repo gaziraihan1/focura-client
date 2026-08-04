@@ -31,9 +31,9 @@ export function useUpdateComment() {
     onSuccess: (_, { taskId, commentId }) => {
       qc.invalidateQueries({ queryKey: commentKeys.byTask(taskId) });
       qc.invalidateQueries({ queryKey: ['comments', commentId] });
-      setTimeout(() => {
-        qc.invalidateQueries({ queryKey: activityKeys.task(taskId) });
-      }, 800);
+      // The backend commits the activity row + invalidates the activity cache
+      // before responding, so an immediate refetch is always fresh.
+      qc.invalidateQueries({ queryKey: activityKeys.task(taskId) });
     },
   });
 }
@@ -48,6 +48,7 @@ export function useDeleteComment() {
     },
     onSuccess: (_, { taskId }) => {
       qc.invalidateQueries({ queryKey: commentKeys.byTask(taskId) });
+      qc.invalidateQueries({ queryKey: activityKeys.task(taskId) });
     },
   });
 }

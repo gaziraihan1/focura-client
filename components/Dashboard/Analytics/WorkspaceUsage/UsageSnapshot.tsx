@@ -47,35 +47,41 @@ export function UsageSnapshot({ data }: UsageSnapshotProps) {
   // ✅ 100% REAL DATA from backend snapshot
   const snapshot = data.snapshot;
 
+  // Theme-aware chart tokens (defined in globals.css) — consistent with the rest
+  // of the analytics palette in both light and dark mode.
+  const tokenClasses = [
+    { accentClass: "text-chart-1", iconBgClass: "bg-chart-1/10" },
+    { accentClass: "text-chart-2", iconBgClass: "bg-chart-2/10" },
+    { accentClass: "text-chart-3", iconBgClass: "bg-chart-3/10" },
+    { accentClass: "text-chart-4", iconBgClass: "bg-chart-4/10" },
+    { accentClass: "text-chart-5", iconBgClass: "bg-chart-5/10" },
+  ];
+
   const kpis: KPICardProps[] = [
     {
       icon: Users,
       label: "Total Members",
       value: snapshot.totalMembers,
-      accentClass: "text-blue-600 dark:text-blue-400",
-      iconBgClass: "bg-blue-50 dark:bg-blue-900/30",
+      ...tokenClasses[0],
     },
     {
       icon: UserCheck,
       label: "Active Members",
       value: snapshot.activeMembers,
       subtitle: "Last 7 days",
-      accentClass: "text-green-600 dark:text-green-400",
-      iconBgClass: "bg-green-50 dark:bg-green-900/30",
+      ...tokenClasses[1],
     },
     {
       icon: ListTodo,
       label: "Total Tasks",
       value: snapshot.totalTasks.toLocaleString(),
-      accentClass: "text-purple-600 dark:text-purple-400",
-      iconBgClass: "bg-purple-50 dark:bg-purple-900/30",
+      ...tokenClasses[2],
     },
     {
       icon: Folder,
       label: "Total Projects",
       value: snapshot.totalProjects,
-      accentClass: "text-orange-600 dark:text-orange-400",
-      iconBgClass: "bg-orange-50 dark:bg-orange-900/30",
+      ...tokenClasses[3],
     },
     {
       icon: HardDrive,
@@ -83,31 +89,27 @@ export function UsageSnapshot({ data }: UsageSnapshotProps) {
       value: snapshot.storageUsedMB >= 1024
         ? `${(snapshot.storageUsedMB / 1024).toFixed(1)} GB`
         : `${Math.round(snapshot.storageUsedMB)} MB`,
-      accentClass: "text-cyan-600 dark:text-cyan-400",
-      iconBgClass: "bg-cyan-50 dark:bg-cyan-900/30",
+      ...tokenClasses[4],
     },
     {
       icon: Activity,
       label: "Activity Events",
       value: snapshot.activityEvents.toLocaleString(),
       subtitle: "Last 7 days",
-      accentClass: "text-rose-600 dark:text-rose-400",
-      iconBgClass: "bg-rose-50 dark:bg-rose-900/30",
+      ...tokenClasses[0],
     },
     {
       icon: TrendingUp,
       label: "Avg Daily Users",
       value: snapshot.avgDailyUsers,
-      accentClass: "text-indigo-600 dark:text-indigo-400",
-      iconBgClass: "bg-indigo-50 dark:bg-indigo-900/30",
+      ...tokenClasses[1],
     },
     {
       icon: Zap,
       label: "Engagement Score",
       value: `${snapshot.engagementScore}%`,
       subtitle: "Active vs Total",
-      accentClass: "text-amber-600 dark:text-amber-400",
-      iconBgClass: "bg-amber-50 dark:bg-amber-900/30",
+      ...tokenClasses[2],
     },
   ];
 

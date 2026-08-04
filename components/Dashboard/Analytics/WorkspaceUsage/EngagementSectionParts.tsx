@@ -64,24 +64,24 @@ export function DailyActiveUsersChart({ chartData }: { chartData: { date: string
           <LineChart data={chartData}>
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke="hsl(var(--border))"
+              stroke="var(--border)"
               opacity={0.5}
             />
             <XAxis
               dataKey="date"
               tick={{
                 fontSize: 12,
-                fill: "hsl(var(--muted-foreground))",
+                fill: "var(--muted-foreground)",
               }}
-              stroke="hsl(var(--border))"
+              stroke="var(--border)"
               tickLine={false}
             />
             <YAxis
               tick={{
                 fontSize: 13,
-                fill: "hsl(var(--muted-foreground))",
+                fill: "var(--muted-foreground)",
               }}
-              stroke="hsl(var(--border))"
+              stroke="var(--border)"
               tickLine={false}
               axisLine={false}
               allowDecimals={false}
@@ -89,10 +89,10 @@ export function DailyActiveUsersChart({ chartData }: { chartData: { date: string
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border))",
+                backgroundColor: "var(--card)",
+                border: "1px solid var(--border)",
                 borderRadius: "8px",
-                color: "hsl(var(--foreground))",
+                color: "var(--foreground)",
                 fontSize: "12px",
               }}
               formatter={(value) => [Math.round(Number(value)), "Active users"]}
@@ -100,10 +100,10 @@ export function DailyActiveUsersChart({ chartData }: { chartData: { date: string
             <Line
               type="monotone"
               dataKey="users"
-              stroke="hsl(var(--primary))"
+              stroke="var(--primary)"
               strokeWidth={2}
               dot={{
-                fill: "hsl(var(--primary))",
+                fill: "var(--primary)",
                 r: 3,
                 strokeWidth: 0,
               }}
@@ -116,7 +116,14 @@ export function DailyActiveUsersChart({ chartData }: { chartData: { date: string
   );
 }
 
-export function PeakHoursHeatmap() {
+export function PeakHoursHeatmap({
+  data,
+}: {
+  data: Array<{ day: string; hour: number; activity: number }>;
+}) {
+  // Look up real activity intensity per (day, hour) cell.
+  const activityMap = new Map(data.map((p) => [`${p.day}:${p.hour}`, p.activity]));
+
   return (
     <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-3.5 sm:p-5">
       <h3 className="text-sm font-semibold text-foreground mb-1">
@@ -127,24 +134,24 @@ export function PeakHoursHeatmap() {
       </p>
 
       <div className="space-y-1 sm:space-y-1.5">
-        {days.map((day, di) => (
+        {days.map((day) => (
           <div key={day} className="flex items-center gap-2 sm:gap-1.5">
             <span className="text-xs font-medium text-muted-foreground w-7 shrink-0">
               {day}
             </span>
             <div className="flex gap-1 flex-1">
-              {hoursReduced.map((hour, hi) => {
-                const activity = (di * 31 + hi * 17 + 13) % 100;
+              {hoursReduced.map((hour) => {
+                const activity = activityMap.get(`${day}:${hour}`) ?? 0;
                 return (
                   <div
                     key={hour}
                     className="flex-1 h-3 sm:h-3.5 rounded-sm transition-opacity hover:opacity-100"
                     style={{
-                      backgroundColor: `rgba(59, 130, 246, ${
-                        (activity / 100) * 0.85 + 0.05
-                      })`,
+                      backgroundColor: `color-mix(in oklab, var(--chart-1) ${
+                        (activity / 100) * 85 + 5
+                      }%, transparent)`,
                     }}
-                    title={`${day} ${hour}:00 — ${activity}%`}
+                    title={`${day} ${hour}:00 — ${activity}% activity`}
                   />
                 );
               })}
@@ -156,11 +163,13 @@ export function PeakHoursHeatmap() {
       <div className="flex items-center justify-between mt-3 sm:mt-4 text-xs text-muted-foreground">
         <span>Less</span>
         <div className="flex gap-0.5">
-          {[0.1, 0.3, 0.5, 0.7, 0.9].map((o) => (
+          {[10, 30, 50, 70, 90].map((o) => (
             <div
               key={o}
               className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm"
-              style={{ backgroundColor: `rgba(59, 130, 246, ${o})` }}
+              style={{
+                backgroundColor: `color-mix(in oklab, var(--chart-1) ${o}%, transparent)`,
+              }}
             />
           ))}
         </div>

@@ -308,7 +308,7 @@ vi.mock("@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[
 describe("ProjectTaskStatusChart", () => {
   it("renders chart with data", async () => {
     const { ProjectTaskStatusChart } = await import("@/components/Dashboard/Workspaces/project/Analytics/ProjectTaskStatusChart");
-    render(
+    const { container } = render(
       <ProjectTaskStatusChart
         data={[{ status: "TODO", count: 10 }, { status: "DONE", count: 5 }]}
       />
@@ -316,11 +316,24 @@ describe("ProjectTaskStatusChart", () => {
     expect(screen.getByText("Task Status Distribution")).toBeInTheDocument();
     expect(screen.getByText("To Do")).toBeInTheDocument();
     expect(screen.getByText("Total: 15 tasks")).toBeInTheDocument();
+
+    // Status colors use chart-N token classes instead of raw hex colors.
+    const dot = container.querySelector(".shrink-0.bg-chart-1");
+    expect(dot).toBeTruthy();
+    expect(dot).toHaveClass("w-2.5");
   });
 
   it("renders empty state", async () => {
     const { ProjectTaskStatusChart } = await import("@/components/Dashboard/Workspaces/project/Analytics/ProjectTaskStatusChart");
     render(<ProjectTaskStatusChart data={[]} />);
     expect(screen.getByText("No task status data available")).toBeInTheDocument();
+  });
+
+  it("applies chart token class to bar fill", async () => {
+    const { ProjectTaskStatusChart } = await import("@/components/Dashboard/Workspaces/project/Analytics/ProjectTaskStatusChart");
+    const { container } = render(<ProjectTaskStatusChart data={[{ status: "DONE", count: 5 }]} />);
+    // The bar fill uses bg-chart-5 for DONE/COMPLETED.
+    const barFill = container.querySelector(".h-full.bg-chart-5");
+    expect(barFill).toBeTruthy();
   });
 });

@@ -29,6 +29,9 @@ export default function CreateTaskModal({
     updateField,
     toggleAssignee,
     handleSubmit,
+    sections,
+    sectionId,
+    setSectionId,
   } = useCreateTaskModal({ projectId, onClose });
 
   return (
@@ -104,6 +107,33 @@ export default function CreateTaskModal({
             value={formData.dueDate}
             onChange={(value) => updateField("dueDate", value)}
           />
+
+          {/* Section */}
+          {sections && sections.length > 0 && (
+            <div>
+              <label
+                htmlFor="task-section"
+                className="block text-xs font-medium text-muted-foreground mb-1.5"
+              >
+                Section
+              </label>
+              <select
+                id="task-section"
+                value={sectionId}
+                onChange={(e) => setSectionId(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+              >
+                <option value="">No section</option>
+                {sections
+                  .filter((section) => section.status === "ACTIVE")
+                  .map((section) => (
+                    <option key={section.id} value={section.id}>
+                      {section.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          )}
 
           {/* Labels */}
           <div>

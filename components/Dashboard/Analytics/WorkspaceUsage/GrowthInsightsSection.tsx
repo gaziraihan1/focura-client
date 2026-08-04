@@ -19,7 +19,10 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import type { WorkspaceGrowthMetrics } from "@/types/workspace-usage.types";
+import type {
+  GrowthInsightType,
+  WorkspaceGrowthMetrics,
+} from "@/types/workspace-usage.types";
 
 interface GrowthInsightsSectionProps {
   workspaceGrowth: WorkspaceGrowthMetrics;
@@ -28,25 +31,25 @@ interface GrowthInsightsSectionProps {
 interface GrowthMetricProps {
   label: string;
   value: number;
-  change: number;
+  change: number | null;
   icon: React.ElementType;
 }
 
 function GrowthMetric({ label, value, change, icon: Icon }: GrowthMetricProps) {
-  const isPositive = change > 0;
-  const isNeutral  = change === 0;
+  const hasChange = change !== null && change !== 0;
+  const isPositive = change !== null && change > 0;
 
   return (
     <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg sm:rounded-xl bg-muted/50 border border-border">
       <div className={`p-2 rounded-lg sm:rounded-xl shrink-0 ${
         isPositive ? "bg-green-100 dark:bg-green-900/30"
-        : isNeutral ? "bg-muted"
-        : "bg-red-100 dark:bg-red-900/30"
+        : hasChange ? "bg-red-100 dark:bg-red-900/30"
+        : "bg-muted"
       }`}>
         <Icon className={`w-3.5 h-3.5 ${
           isPositive ? "text-green-600 dark:text-green-400"
-          : isNeutral ? "text-muted-foreground"
-          : "text-red-600 dark:text-red-400"
+          : hasChange ? "text-red-600 dark:text-red-400"
+          : "text-muted-foreground"
         }`} />
       </div>
       <div className="flex-1 min-w-0">
@@ -54,31 +57,24 @@ function GrowthMetric({ label, value, change, icon: Icon }: GrowthMetricProps) {
         {/* Smaller font on mobile — text-xl at 2-col (~160px) clips */}
         <p className="text-base sm:text-xl font-bold text-foreground leading-tight">{value}</p>
       </div>
-      {/* Badge: shrink to just the percentage, hide icon on mobile */}
-      <div className={`text-xs font-semibold shrink-0 ${
-        isPositive ? "text-green-600 dark:text-green-400"
-        : isNeutral ? "text-muted-foreground"
-        : "text-red-600 dark:text-red-400"
-      }`}>
-        <span className="hidden sm:inline">
-          {isPositive && <TrendingUp className="w-3 h-3 inline mr-0.5" />}
-          {!isPositive && !isNeutral && <TrendingDown className="w-3 h-3 inline mr-0.5" />}
-        </span>
-        {isPositive ? "+" : ""}{change}%
-      </div>
+      {/* Badge: only shown when there is a real previous-month baseline */}
+      {hasChange && (
+        <div className={`text-xs font-semibold shrink-0 ${
+          isPositive ? "text-green-600 dark:text-green-400"
+          : "text-red-600 dark:text-red-400"
+        }`}>
+          <span className="hidden sm:inline">
+            {isPositive && <TrendingUp className="w-3 h-3 inline mr-0.5" />}
+            {!isPositive && <TrendingDown className="w-3 h-3 inline mr-0.5" />}
+          </span>
+          {isPositive ? "+" : ""}{change}%
+        </div>
+      )}
     </div>
   );
 }
 
-type InsightType = "positive" | "warning" | "neutral";
-
-interface Insight {
-  id: number;
-  text: string;
-  type: InsightType;
-}
-
-const insightStyles: Record<InsightType, { wrapper: string; dot: string; text: string }> = {
+const insightStyles: Record<GrowthInsightType, { wrapper: string; dot: string; text: string }> = {
   positive: {
     wrapper: "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800",
     dot:     "bg-green-500",
@@ -97,31 +93,13 @@ const insightStyles: Record<InsightType, { wrapper: string; dot: string; text: s
 };
 
 export function GrowthInsightsSection({ workspaceGrowth }: GrowthInsightsSectionProps) {
-  const { thisMonth, projectLifecycle, trend } = workspaceGrowth;
-
-  const insights: Insight[] = [
-    {
-      id: 1,
-      text: "Task creation increased significantly this week — strong team engagement.",
-      type: "positive",
-    },
-    {
-      id: 2,
-      text: "Storage growth accelerating. Consider upgrading your plan soon.",
-      type: "warning",
-    },
-    {
-      id: 3,
-      text: `${projectLifecycle.active} active projects progressing with ${thisMonth.newTasks} new tasks added this month.`,
-      type: "neutral",
-    },
-  ];
+  const { thisMonth, projectLifecycle, trend, changes, insights } = workspaceGrowth;
 
   const growthMetrics: GrowthMetricProps[] = [
-    { label: "New Tasks",    value: thisMonth.newTasks,          change: 18, icon: ListTodo    },
-    { label: "New Members",  value: thisMonth.newUsers,          change: 9,  icon: Users       },
-    { label: "New Projects", value: thisMonth.newProjects,       change: 4,  icon: Folder      },
-    { label: "Completed",    value: projectLifecycle.completed,  change: 15, icon: CheckCircle },
+    { label: "New Tasks",    value: thisMonth.newTasks,          change: changes.newTasks,    icon: ListTodo    },
+    { label: "New Members",  value: thisMonth.newUsers,          change: changes.newUsers,    icon: Users       },
+    { label: "New Projects", value: thisMonth.newProjects,       change: changes.newProjects, icon: Folder      },
+    { label: "Completed",    value: projectLifecycle.completed,  change: null,                icon: CheckCircle },
   ];
 
   return (
@@ -150,18 +128,18 @@ export function GrowthInsightsSection({ workspaceGrowth }: GrowthInsightsSection
               <BarChart data={trend} margin={{ bottom: 0 }}>
                 <CartesianGrid
                   strokeDasharray="3 3"
-                  stroke="hsl(var(--border))"
+                  stroke="var(--border)"
                   opacity={0.5}
                 />
                 <XAxis
                   dataKey="month"
-                  tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
-                  stroke="hsl(var(--border))"
+                  tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                  stroke="var(--border)"
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
-                  stroke="hsl(var(--border))"
+                  tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                  stroke="var(--border)"
                   tickLine={false}
                   axisLine={false}
                   allowDecimals={false}
@@ -169,22 +147,22 @@ export function GrowthInsightsSection({ workspaceGrowth }: GrowthInsightsSection
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "hsl(var(--card))",
-                    border: "1px solid hsl(var(--border))",
+                    backgroundColor: "var(--card)",
+                    border: "1px solid var(--border)",
                     borderRadius: "8px",
-                    color: "hsl(var(--foreground))",
+                    color: "var(--foreground)",
                     fontSize: "12px",
                   }}
                 />
                 <Legend
                   wrapperStyle={{
                     fontSize: "12px",
-                    color: "hsl(var(--muted-foreground))",
+                    color: "var(--muted-foreground)",
                   }}
                 />
-                <Bar dataKey="tasks"    name="Tasks"    fill="#3b82f6" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="users"    name="Users"    fill="#8b5cf6" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="projects" name="Projects" fill="#10b981" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="tasks"    name="Tasks"    fill="var(--chart-1)" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="users"    name="Users"    fill="var(--chart-3)" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="projects" name="Projects" fill="var(--chart-2)" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -199,7 +177,8 @@ export function GrowthInsightsSection({ workspaceGrowth }: GrowthInsightsSection
 
           <div className="space-y-2 sm:space-y-3 flex-1">
             {insights.map((insight) => {
-              const styles = insightStyles[insight.type];
+              const styles = insightStyles[insight.type] ?? insightStyles.neutral;
+              // Backend always returns a valid type, but keep a safe fallback.
               return (
                 <div
                   key={insight.id}
@@ -220,10 +199,10 @@ export function GrowthInsightsSection({ workspaceGrowth }: GrowthInsightsSection
             </p>
             <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
               {[
-                { label: "Created",   value: projectLifecycle.created,   color: "text-blue-500"           },
-                { label: "Active",    value: projectLifecycle.active,    color: "text-green-500"          },
-                { label: "Done",      value: projectLifecycle.completed, color: "text-purple-500"         },
-                { label: "Archived",  value: projectLifecycle.archived,  color: "text-muted-foreground"   },
+                { label: "Created",   value: projectLifecycle.created,   color: "text-chart-1"          },
+                { label: "Active",    value: projectLifecycle.active,    color: "text-chart-2"          },
+                { label: "Done",      value: projectLifecycle.completed, color: "text-chart-3"          },
+                { label: "Archived",  value: projectLifecycle.archived,  color: "text-muted-foreground" },
               ].map((item) => (
                 <div
                   key={item.label}

@@ -1,5 +1,5 @@
 // import { TaskCard } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskCard";
-import TaskCard from "@/components/Dashboard/ProjectDetails/TaskCard";
+import TaskCard, { type SectionsById } from "@/components/Dashboard/ProjectDetails/TaskCard";
 import { Task } from "@/hooks/useTask";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
@@ -7,10 +7,10 @@ import { memo } from "react";
 
 type TaskStatus   = Task['status'];
 
-
 export const BoardColumn = memo(function BoardColumn({
   status, label, icon, color,
   tasks, workspaceSlug, onAddTask,
+  sectionsById,
 }: {
   status:        TaskStatus;
   label:         string;
@@ -19,6 +19,7 @@ export const BoardColumn = memo(function BoardColumn({
   tasks:         Task[];
   workspaceSlug: string;
   onAddTask:     () => void;
+  sectionsById?: SectionsById;
 }) {
   return (
     /*
@@ -72,7 +73,11 @@ export const BoardColumn = memo(function BoardColumn({
               data-task-id={task.id}
               className="cursor-grab active:cursor-grabbing"
             >
-              <TaskCard task={task} workspaceSlug={workspaceSlug}  />
+              <TaskCard
+                task={task}
+                workspaceSlug={workspaceSlug}
+                section={task.sectionId ? sectionsById?.get(task.sectionId) : undefined}
+              />
             </div>
           ))
         )}

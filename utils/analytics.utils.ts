@@ -112,20 +112,23 @@ export function getRelativeTime(date: Date | string): string {
   return formatDate(d);
 }
 
-// Chart colors using Tailwind CSS variables
+// Chart colors using Tailwind CSS variables.
+// The --chart-N / --primary / --secondary tokens are defined as oklch()
+// values, so they must be referenced via var() directly (wrapping them in
+// hsl() would produce invalid CSS).
 export const chartColors = {
-  primary: "hsl(var(--primary))",
-  secondary: "hsl(var(--secondary))",
+  primary: "var(--primary)",
+  secondary: "var(--secondary)",
   success: "rgb(34 197 94)",
   warning: "rgb(251 146 60)",
   danger: "rgb(239 68 68)",
   info: "rgb(59 130 246)",
   purple: "rgb(168 85 247)",
-  chart1: "hsl(var(--chart-1))",
-  chart2: "hsl(var(--chart-2))",
-  chart3: "hsl(var(--chart-3))",
-  chart4: "hsl(var(--chart-4))",
-  chart5: "hsl(var(--chart-5))",
+  chart1: "var(--chart-1)",
+  chart2: "var(--chart-2)",
+  chart3: "var(--chart-3)",
+  chart4: "var(--chart-4)",
+  chart5: "var(--chart-5)",
 };
 
 export function calculateTrendPercentage(

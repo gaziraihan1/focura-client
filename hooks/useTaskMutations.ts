@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { Task, CreateTaskDto } from "./useTask";
-import { taskKeys, commentKeys, attachmentKeys } from "./taskKeys";
+import { taskKeys, commentKeys, attachmentKeys, taskOverviewKeys } from "./taskKeys";
 import { ProjectDetails, projectKeys } from "./useProjects";
 import { activityKeys } from "./useActivity";
 import { TaskComment } from "@/types/task.types";
@@ -249,12 +249,19 @@ export function useAddComment() {
       return response?.data;
     },
     onMutate: async ({ taskId, content, parentId }) => {
-      await qc.cancelQueries({ queryKey: commentKeys.byTask(taskId) });
+      // Cancel both the comments query and any in-flight overview fetch — the
+      // overview queryFn re-seeds the comments cache, so letting it finish after
+      // this mutation would clobber the optimistic entry with stale data.
+      await Promise.all([
+        qc.cancelQueries({ queryKey: commentKeys.byTask(taskId) }),
+        qc.cancelQueries({ queryKey: taskOverviewKeys.detail(taskId) }),
+      ]);
 
       const previousComments = qc.getQueryData<TaskComment[]>(commentKeys.byTask(taskId));
+      const optimisticId = `optimistic-comment-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
       const optimisticComment: TaskComment = {
-        id: `optimistic-comment-${Date.now()}`,
+        id: optimisticId,
         content,
         createdAt: new Date().toISOString(),
         user: { id: "current-user", name: "You", email: "" },
@@ -267,23 +274,30 @@ export function useAddComment() {
         return [...old, optimisticComment];
       });
 
-      return { previousComments };
+      return { previousComments, optimisticId };
     },
     onError: (_err, { taskId }, context) => {
       if (context?.previousComments) {
         qc.setQueryData(commentKeys.byTask(taskId), context.previousComments);
       }
     },
-    onSuccess: (newComment, { taskId }) => {
+    onSuccess: (newComment, { taskId }, context) => {
       if (newComment) {
         qc.setQueryData<TaskComment[]>(commentKeys.byTask(taskId), (old) => {
           if (!old) return [newComment];
-          // Remove optimistic comment and add real one
-          return old.filter((c) => !c.id.startsWith("optimistic-comment-")).concat(newComment);
+          // Idempotent: never duplicate a comment that's already in the list.
+          if (old.some((c) => c.id === newComment.id)) return old;
+          // Replace only THIS comment's optimistic entry so other pending
+          // optimistic comments/replies are never dropped or reordered.
+          const hasOptimistic = old.some((c) => c.id === context?.optimisticId);
+          if (!hasOptimistic) return [...old, newComment];
+          return old.map((c) => (c.id === context?.optimisticId ? newComment : c));
         });
       }
       qc.invalidateQueries({ queryKey: taskKeys.detail(taskId) });
-      setTimeout(() => { qc.invalidateQueries({ queryKey: activityKeys.task(taskId) }); }, 800);
+      // The backend commits the activity row + invalidates the activity cache
+      // before responding, so an immediate refetch is always fresh.
+      qc.invalidateQueries({ queryKey: activityKeys.task(taskId) });
     },
     retry: 1,
     retryDelay: (attempt) => getRetryDelay(attempt),

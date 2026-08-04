@@ -5,7 +5,6 @@ import {
   DailyActiveUsersChart,
   PeakHoursHeatmap,
   InactiveMembers,
-  CollaborationLeaderboard,
 } from '@/components/Dashboard/Analytics/WorkspaceUsage/EngagementSectionParts'
 
 vi.mock('recharts', () => ({
@@ -27,10 +26,6 @@ const mockStats = [
   { label: 'This Week', value: 12, color: 'text-blue-500' },
 ]
 
-const mockLeaderboard = [
-  { userId: 'u1', userName: 'Alice', userEmail: 'alice@test.com', userImage: null, commentsCount: 15, tasksCreated: 10, tasksAssigned: 8, collaborationScore: 92 },
-]
-
 describe('EngagementSectionParts', () => {
   it('ActiveUserCards renders stat values', () => {
     render(<ActiveUserCards stats={mockStats} />)
@@ -44,9 +39,22 @@ describe('EngagementSectionParts', () => {
   })
 
   it('PeakHoursHeatmap renders day labels', () => {
-    render(<PeakHoursHeatmap />)
+    render(<PeakHoursHeatmap data={[]} />)
     expect(screen.getByText('Mon')).toBeInTheDocument()
     expect(screen.getByText('Sun')).toBeInTheDocument()
+  })
+
+  it('PeakHoursHeatmap renders real activity values in cell titles', () => {
+    const { container } = render(
+      <PeakHoursHeatmap
+        data={[
+          { day: 'Mon', hour: 9, activity: 100 },
+          { day: 'Fri', hour: 15, activity: 40 },
+        ]}
+      />
+    )
+    expect(container.querySelector('[title="Mon 9:00 — 100% activity"]')).toBeTruthy()
+    expect(container.querySelector('[title="Fri 15:00 — 40% activity"]')).toBeTruthy()
   })
 
   it('InactiveMembers returns null for empty users', () => {

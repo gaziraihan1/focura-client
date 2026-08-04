@@ -4,37 +4,42 @@ import { useSession } from "next-auth/react";
 import { TaskDetailsForm } from "./TaskDetailsForm";
 import { TaskTabs } from "./TaskTab";
 import { TaskSidebar } from "./TaskSidebar";
-import { useTaskDetailsController } from "@/hooks/useTaskDetailsController";
-import { Task } from "@/types/task.types";
+import { Task, TaskComment, Attachment } from "@/types/task.types";
 import { SubtaskSection } from "./SubtasksSection/SubtaskSection";
+import { TaskSectionBadge } from "@/components/Dashboard/ProjectDetails/TaskSectionBadge";
+import { EditTaskData, TaskHandlers, TaskMutations, TaskPermissionsState } from "@/types/taskDetails.types";
 
 interface TaskDetailsMainLayoutProps {
-  id:             string;
   isPersonalTask: boolean;
-  task:           Task;
-  workspaceSlug:  string;
+  task: Task;
+  workspaceSlug: string;
+  isEditing: boolean;
+  editData: EditTaskData;
+  setIsEditing: (isEditing: boolean) => void;
+  setEditData: (data: EditTaskData) => void;
+  comments: TaskComment[];
+  attachments: Attachment[];
+  permissions: TaskPermissionsState;
+  handlers: TaskHandlers;
+  mutations: TaskMutations;
 }
 
 export default function TaskDetailsMainLayout({
-  id,
   isPersonalTask,
   task,
   workspaceSlug,
+  isEditing,
+  editData,
+  setIsEditing,
+  setEditData,
+  comments,
+  attachments,
+  permissions,
+  handlers,
+  mutations,
 }: TaskDetailsMainLayoutProps) {
   const { data: session } = useSession();
   const currentUserId = session?.user?.id ?? "";
-
-  const {
-    isEditing,
-    editData,
-    mutations,
-    handlers,
-    setIsEditing,
-    setEditData,
-    comments,
-    attachments,
-    permissions,
-  } = useTaskDetailsController(id, workspaceSlug);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -54,9 +59,12 @@ export default function TaskDetailsMainLayout({
             />
           ) : (
             <>
-              <h1 className="text-3xl font-bold text-foreground mb-4">
-                {task.title}
-              </h1>
+              <div className="mb-4">
+                <h1 className="text-3xl font-bold text-foreground">
+                  {task.title}
+                </h1>
+                {!isPersonalTask && <TaskSectionBadge task={task} />}
+              </div>
               {task.description ? (
                 <p className="text-foreground/80 whitespace-pre-wrap">
                   {task.description}

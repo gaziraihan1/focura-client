@@ -16,7 +16,7 @@ vi.mock('@/hooks/useStoragePage', () => ({
   getPlanLimits: (plan: string) => ({
     FREE: { storage: 1024, features: ['Basic file storage', 'Up to 5 MB per file', '5 team members'] },
     PRO: { storage: 10240, features: ['Enhanced storage', 'Up to 25 MB per file'] },
-    BUSINESS: { storage: 51200, features: ['Large storage', 'Up to 100 MB per file'] },
+    BUSINESS: { storage: 102400, features: ['Large storage', 'Up to 100 MB per file'] },
   }[plan] || { storage: 1024, features: ['Basic'] }),
 }))
 

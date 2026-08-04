@@ -202,6 +202,78 @@ describe('Task Mutations', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true))
     })
+
+    it('replaces the optimistic comment with the server comment after success', async () => {
+      const { result, qc } = renderHookWithProviders(() => useAddComment())
+      qc.setQueryData(['comments', 'task-1'], [])
+
+      await act(async () => {
+        await result.current.mutateAsync({
+          taskId: 'task-1',
+          content: 'Great work!',
+          workspaceSlug: 'ws-1',
+        })
+      })
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true))
+
+      const comments = qc.getQueryData(['comments', 'task-1']) as { id: string; content: string }[]
+      expect(comments).toHaveLength(1)
+      expect(comments[0].content).toBe('Great work!')
+      expect(comments[0].id).not.toMatch(/^optimistic-comment-/)
+    })
+
+    it('keeps a second pending optimistic comment when the first resolves', async () => {
+      const existing = [
+        { id: 'optimistic-comment-111-aaa', content: 'still uploading', user: { id: 'u1', name: 'You' }, createdAt: '2025-01-01T00:00:00Z', parentId: null },
+      ]
+      const { result, qc } = renderHookWithProviders(() => useAddComment())
+      qc.setQueryData(['comments', 'task-1'], existing)
+
+      await act(async () => {
+        await result.current.mutateAsync({
+          taskId: 'task-1',
+          content: 'Great work!',
+          workspaceSlug: 'ws-1',
+        })
+      })
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true))
+
+      const comments = qc.getQueryData(['comments', 'task-1']) as { id: string; content: string }[]
+      // Server comment replaces only its own optimistic entry; the other
+      // pending optimistic comment must survive.
+      expect(comments).toHaveLength(2)
+      expect(comments.some((c) => c.id === 'optimistic-comment-111-aaa')).toBe(true)
+      expect(comments.some((c) => c.content === 'Great work!')).toBe(true)
+    })
+
+    it('rolls back the optimistic comment on error', async () => {
+      server.use(
+        http.post('*/api/v1/tasks/task-1/comments', () => {
+          return new HttpResponse(null, { status: 500 })
+        })
+      )
+
+      const existing = [
+        { id: 'c-real', content: 'existing comment', user: { id: 'u1', name: 'A' }, createdAt: '2025-01-01T00:00:00Z', parentId: null },
+      ]
+      const { result, qc } = renderHookWithProviders(() => useAddComment())
+      qc.setQueryData(['comments', 'task-1'], existing)
+
+      await act(async () => {
+        try {
+          await result.current.mutateAsync({
+            taskId: 'task-1',
+            content: 'Will fail',
+            workspaceSlug: 'ws-1',
+          })
+        } catch (e) {}
+      })
+
+      await waitFor(() => expect(result.current.isError).toBe(true))
+      expect(qc.getQueryData(['comments', 'task-1'])).toEqual(existing)
+    })
   })
 
   describe('useDeleteAttachment', () => {

@@ -16,8 +16,8 @@ interface StackGroup {
 const stackGroups: StackGroup[] = [
   {
     category: "Core Framework",
-    color: "border-blue-200 dark:border-blue-800/50 bg-blue-50/40 dark:bg-blue-950/10",
-    badgeColor: "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400",
+    color: "border-border bg-muted/40",
+    badgeColor: "bg-muted text-foreground",
     items: [
       { name: "Next.js", version: "16.0.10", role: "App Router — SSR, RSC, API routes" },
       { name: "React", version: "19.2.0", role: "UI library with concurrent features" },
@@ -26,8 +26,8 @@ const stackGroups: StackGroup[] = [
   },
   {
     category: "Styling & Motion",
-    color: "border-violet-200 dark:border-violet-800/50 bg-violet-50/40 dark:bg-violet-950/10",
-    badgeColor: "bg-violet-100 dark:bg-violet-900/50 text-violet-700 dark:text-violet-400",
+    color: "border-border bg-muted/40",
+    badgeColor: "bg-muted text-foreground",
     items: [
       { name: "Tailwind CSS", version: "4.0", role: "Utility-first styling — v4 engine" },
       { name: "Framer Motion", version: "12.23.24", role: "Animations and page transitions" },
@@ -36,8 +36,8 @@ const stackGroups: StackGroup[] = [
   },
   {
     category: "Data & State",
-    color: "border-emerald-200 dark:border-emerald-800/50 bg-emerald-50/40 dark:bg-emerald-950/10",
-    badgeColor: "bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400",
+    color: "border-border bg-muted/40",
+    badgeColor: "bg-muted text-foreground",
     items: [
       { name: "TanStack Query", version: "5.90.21", role: "Server state, caching, optimistic updates" },
       { name: "Redux Toolkit", version: "2.11.0", role: "Client-side global state slices" },
@@ -46,8 +46,8 @@ const stackGroups: StackGroup[] = [
   },
   {
     category: "Forms & Validation",
-    color: "border-amber-200 dark:border-amber-800/50 bg-amber-50/40 dark:bg-amber-950/10",
-    badgeColor: "bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400",
+    color: "border-border bg-muted/40",
+    badgeColor: "bg-muted text-foreground",
     items: [
       { name: "React Hook Form", version: "7.66.1", role: "Performant, uncontrolled form handling" },
       { name: "Zod", version: "4.1.13", role: "Runtime schema validation" },
@@ -56,8 +56,8 @@ const stackGroups: StackGroup[] = [
   },
   {
     category: "Auth & Security",
-    color: "border-rose-200 dark:border-rose-800/50 bg-rose-50/40 dark:bg-rose-950/10",
-    badgeColor: "bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-400",
+    color: "border-border bg-muted/40",
+    badgeColor: "bg-muted text-foreground",
     items: [
       { name: "NextAuth.js", version: "4.24.13", role: "Session management + Google OAuth" },
       { name: "RS256 JWT", version: "—", role: "Token auth issued by backend on exchange" },
@@ -66,8 +66,8 @@ const stackGroups: StackGroup[] = [
   },
   {
     category: "Infrastructure",
-    color: "border-neutral-200 dark:border-neutral-700 bg-neutral-50/40 dark:bg-neutral-900/30",
-    badgeColor: "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400",
+    color: "border-border bg-muted/40",
+    badgeColor: "bg-muted text-foreground",
     items: [
       { name: "Vercel", version: "—", role: "Hosting, CDN edge network, preview deploys" },
       { name: "Cloudinary", version: "2.8.0", role: "File uploads, storage, media optimisation" },
@@ -78,21 +78,21 @@ const stackGroups: StackGroup[] = [
 
 export const AboutStack = () => {
   return (
-    <section className="border-t border-neutral-100 dark:border-neutral-800/60">
+    <section className="border-t">
       <div className="max-w-5xl mx-auto px-6 py-20 md:py-24">
         {/* Header */}
-        <p className="text-xs font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-4">
+        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
           Under the Hood
         </p>
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 leading-tight">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground leading-tight">
             A stack built for
             <br />
-            <span className="text-neutral-400 dark:text-neutral-500">
+            <span className="text-muted-foreground">
               production from day one.
             </span>
           </h2>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-xs leading-relaxed md:text-right">
+          <p className="text-sm text-muted-foreground max-w-xs leading-relaxed md:text-right">
             Every technology was chosen deliberately — not for hype, but for
             correctness, performance, and maintainability.
           </p>
@@ -121,20 +121,20 @@ export const AboutStack = () => {
                 {items.map(({ name, version, role }) => (
                   <li key={name} className="flex items-start gap-3">
                     <div className="shrink-0 mt-0.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-600 block mt-1.5" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50 block mt-1.5" />
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-baseline gap-2 flex-wrap">
-                        <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                        <span className="text-sm font-semibold text-foreground">
                           {name}
                         </span>
                         {version !== "—" && (
-                          <span className="text-[11px] font-mono text-neutral-400 dark:text-neutral-500">
+                          <span className="text-[11px] font-mono text-muted-foreground">
                             v{version}
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed mt-0.5">
+                      <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">
                         {role}
                       </p>
                     </div>

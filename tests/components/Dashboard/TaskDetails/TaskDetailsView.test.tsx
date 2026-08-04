@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import TaskDetailsView from '@/components/Dashboard/TaskDetails/TaskDetailsView';
 
@@ -40,8 +40,12 @@ vi.mock('@/components/Dashboard/TaskDetails/IntentBadge', () => ({
   IntentBadge: () => <div data-testid="intent-badge" />,
 }));
 
+let mockMainLayoutProps: Record<string, unknown> | null = null;
 vi.mock('@/components/Dashboard/TaskDetails/TaskDetailsMainLayout', () => ({
-  default: () => <div data-testid="task-main-layout" />,
+  default: (props: Record<string, unknown>) => {
+    mockMainLayoutProps = props;
+    return <div data-testid="task-main-layout" />;
+  },
 }));
 
 const mockTask = {
@@ -93,51 +97,75 @@ const defaultMutations = {
   updateStatus: { mutateAsync: vi.fn(), isPending: false },
 } as any;
 
+const defaultEditData = {
+  title: 'Test Task',
+  description: '',
+  priority: 'MEDIUM',
+  status: 'TODO',
+  estimatedHours: '',
+};
+
+function renderView(overrides: Record<string, unknown> = {}) {
+  return render(
+    <TaskDetailsView
+      task={mockTask}
+      permissions={defaultPermissions}
+      isEditing={false}
+      editData={defaultEditData}
+      setIsEditing={vi.fn()}
+      setEditData={vi.fn()}
+      comments={[]}
+      attachments={[]}
+      handlers={defaultHandlers}
+      mutations={defaultMutations}
+      workspaceSlug="test-workspace"
+      {...(overrides as any)}
+    />,
+  );
+}
+
 describe('TaskDetailsView', () => {
+  beforeEach(() => {
+    mockMainLayoutProps = null;
+  });
+
   it('renders the task header', () => {
-    render(
-      <TaskDetailsView
-        task={mockTask}
-        permissions={defaultPermissions}
-        isEditing={false}
-        handlers={defaultHandlers}
-        mutations={defaultMutations}
-        id="1"
-        workspaceSlug="test-workspace"
-      />,
-    );
+    renderView();
     expect(screen.getByTestId('task-header')).toBeInTheDocument();
   });
 
   it('shows archived project warning', () => {
-    const archivedTask = { ...mockTask, project: { status: 'ARCHIVED' } };
-    render(
-      <TaskDetailsView
-        task={archivedTask}
-        permissions={defaultPermissions}
-        isEditing={false}
-        handlers={defaultHandlers}
-        mutations={defaultMutations}
-        id="1"
-        workspaceSlug="test-workspace"
-      />,
-    );
+    renderView({ task: { ...mockTask, project: { status: 'ARCHIVED' } } });
     expect(screen.getByText(/archived/)).toBeInTheDocument();
   });
 
   it('shows personal task badge', () => {
-    const personalTask = { ...mockTask, projectId: null, project: null };
-    render(
-      <TaskDetailsView
-        task={personalTask}
-        permissions={defaultPermissions}
-        isEditing={false}
-        handlers={defaultHandlers}
-        mutations={defaultMutations}
-        id="1"
-        workspaceSlug="test-workspace"
-      />,
-    );
+    renderView({ task: { ...mockTask, projectId: null, project: null } });
     expect(screen.getByText('Personal')).toBeInTheDocument();
+  });
+
+  it('forwards controller state to the main layout', () => {
+    const comments = [
+      {
+        id: 'c1',
+        content: 'Nice work',
+        createdAt: '2025-01-01T00:00:00Z',
+        user: { id: 'u1', name: 'A', email: '' },
+        parentId: null,
+      },
+    ];
+    renderView({ isEditing: true, comments });
+
+    expect(mockMainLayoutProps).toMatchObject({
+      task: mockTask,
+      isEditing: true,
+      editData: defaultEditData,
+      comments,
+      attachments: [],
+      permissions: defaultPermissions,
+      workspaceSlug: 'test-workspace',
+    });
+    expect(mockMainLayoutProps?.setIsEditing).toBeTypeOf('function');
+    expect(mockMainLayoutProps?.setEditData).toBeTypeOf('function');
   });
 });

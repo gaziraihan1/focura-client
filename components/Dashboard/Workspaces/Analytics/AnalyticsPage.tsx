@@ -1,6 +1,6 @@
 'use client';
 
-import { BarChart3, Loader2, AlertTriangle } from 'lucide-react';
+import { BarChart3, Loader2, AlertTriangle, CalendarRange } from 'lucide-react';
 import { KPICards } from './KPICards';
 import { TaskStatusChart } from './TaskStatusChart';
 import { TaskCompletionTrend } from './TaskCompletionTrend';
@@ -12,7 +12,10 @@ import { WorkloadChart } from './WorkloadChart';
 import { MostActiveDay } from './MostActiveDay';
 import { TimeSummaryCard } from './TimeSummaryCard';
 import { PriorityDistribution } from './PriorityDistribution';
+import { ProjectStatusChart } from './ProjectStatusChart';
+import { OverdueTrendChart } from './OverdueTrendChart';
 import { useAnalyticsPage } from '@/hooks/useAnalyticsPage';
+import LoadingAnalytics from './LoadingAnalytics';
 
 interface AnalyticsPageProps {
   workspaceId: string;
@@ -36,15 +39,8 @@ export function AnalyticsPage({
     errorMessage,
   } = useAnalyticsPage({ workspaceId });
 
-  if (overviewLoading ) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">Loading analytics...</p>
-        </div>
-      </div>
-    );
+  if (overviewLoading) {
+    return <LoadingAnalytics />;
   }
 
   if (overviewError) {
@@ -105,6 +101,15 @@ export function AnalyticsPage({
           </div>
         </div>
 
+        <div className="flex items-center gap-2 self-start">
+          <span
+            data-testid="analytics-period-badge"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-card border text-xs font-medium text-muted-foreground"
+          >
+            <CalendarRange className="w-3.5 h-3.5" />
+            Last 30 days
+          </span>
+        </div>
       </div>
 
       <KPICards kpis={overview.kpis} />
@@ -116,14 +121,23 @@ export function AnalyticsPage({
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <PriorityDistribution data={overview.tasksByPriority} />
-        {projectHealth && projectHealth.length > 0 && (
-          <ProjectHealthCards data={projectHealth} />
+        {overview.projectStatus.length > 0 && (
+          <ProjectStatusChart data={overview.projectStatus} />
         )}
       </div>
 
       {memberContribution && memberContribution.length > 0 && (
         <MemberLeaderboard data={memberContribution} />
       )}
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {taskTrends && taskTrends.overdueTrend.length > 0 && (
+          <OverdueTrendChart data={taskTrends.overdueTrend} />
+        )}
+        {projectHealth && projectHealth.length > 0 && (
+          <ProjectHealthCards data={projectHealth} />
+        )}
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {activityTrends && <ActivityTrendChart data={activityTrends.volumeTrend} />}

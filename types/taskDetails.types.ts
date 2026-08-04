@@ -57,6 +57,8 @@ export interface TaskHandlers {
   handleSaveEdit: () => void;
   handleDelete: () => void;
   handleStatusChange: (status: Task["status"]) => void;
+  handleAddComment: (content: string) => Promise<void>;
+  handleTaskUpdated: () => void;
 }
 
 export interface TaskMutations {

@@ -31,7 +31,7 @@ export default function ProjectSectionsPage() {
         <p className="text-xs text-muted-foreground mb-4">
           Organize your project into logical sections with colors and descriptions.
         </p>
-        {project?.id && <SectionList projectId={project.id} />}
+        {project?.id && <SectionList projectId={project.id} tasksBaseHref={base} />}
         {!project?.id && (
           <p className="text-sm text-muted-foreground italic py-4">Loading project...</p>
         )}

@@ -45,6 +45,7 @@ vi.mock("lucide-react", () => {
     BarChart3: icon("BarChart3"),
     Calendar: icon("Calendar"),
     CalendarClock: icon("CalendarClock"),
+    CalendarRange: icon("CalendarRange"),
     Camera: icon("Camera"),
     Check: icon("Check"),
     CheckCircle2: icon("CheckCircle2"),
@@ -318,5 +319,6 @@ describe("ProjectAnalyticsPage", () => {
     );
     expect(screen.getByText("My Project Analytics")).toBeInTheDocument();
     expect(screen.getByText("Total Tasks")).toBeInTheDocument();
+    expect(screen.getByTestId("project-analytics-period-badge")).toHaveTextContent("Last 30 days");
   });
 });

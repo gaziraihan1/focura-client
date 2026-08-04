@@ -66,9 +66,7 @@ export interface ProjectActivityMetrics {
     projectName: string;
     trend: Array<{ date: string; count: number }>;
   }>;
-}
-
-export interface UserEngagementMetrics {
+}export interface UserEngagementMetrics {
   activeUsers: {
     online: number;
     thisWeek: number;
@@ -93,8 +91,14 @@ export interface UserEngagementMetrics {
     collaborationScore: number;
   }>;
   dailyActiveUsers: Array<{
-    date: string;   
-    count: number;  
+    date: string;
+    count: number;
+  }>;
+  /** Activity intensity (0-100) per weekday × hour bucket, from the Activity table. */
+  peakHours: Array<{
+    day: string;
+    hour: number;
+    activity: number;
   }>;
 }
 
@@ -118,6 +122,23 @@ export interface ResourceUsageMetrics {
     totalMB: number;
     percentage: number;
   };
+  /** Monthly cumulative storage (MB) for the last 6 months, from file.uploadedAt. */
+  storageGrowth: Array<{
+    month: string;
+    storage: number;
+  }>;
+  /** Files uploaded per month (last 6 months) — powers the file-count trend card. */
+  fileTrend: Array<{
+    month: string;
+    count: number;
+  }>;
+  /** Month-over-month change of file uploads (%, null when there is no baseline). */
+  fileGrowthPct: number | null;
+  /** File count grouped by mime-type category (Images, PDFs, Docs, Videos, ...). */
+  fileTypeDistribution: Array<{
+    name: string;
+    value: number;
+  }>;
 }
 
 export interface WorkspaceLoadMetrics {
@@ -154,6 +175,14 @@ export interface WorkspaceLoadMetrics {
   };
 }
 
+export type GrowthInsightType = "positive" | "warning" | "neutral";
+
+export interface GrowthInsight {
+  id: number;
+  text: string;
+  type: GrowthInsightType;
+}
+
 export interface WorkspaceGrowthMetrics {
   thisMonth: {
     newUsers: number;
@@ -172,4 +201,12 @@ export interface WorkspaceGrowthMetrics {
     completed: number;
     archived: number;
   };
+  /** Real month-over-month % change (null when there is no previous-month baseline). */
+  changes: {
+    newTasks: number | null;
+    newUsers: number | null;
+    newProjects: number | null;
+  };
+  /** Data-driven insights generated from the real growth + storage metrics. */
+  insights: GrowthInsight[];
 }

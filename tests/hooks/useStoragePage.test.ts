@@ -211,7 +211,7 @@ describe('getPlanLimits', () => {
 
   it('returns BUSINESS limits', () => {
     const limits = getPlanLimits('BUSINESS')
-    expect(limits.storage).toBe(51200)
+    expect(limits.storage).toBe(102400)
     expect(limits.maxFileSize).toBe(100)
   })
 

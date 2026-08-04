@@ -325,4 +325,18 @@ describe("ProjectCompletionTrendChart", () => {
     render(<ProjectCompletionTrendChart data={[]} />);
     expect(screen.getByText("No completion data available")).toBeInTheDocument();
   });
+
+  it("handles date as an ISO string (JSON-serialized API payload)", async () => {
+    const { ProjectCompletionTrendChart } = await import("@/components/Dashboard/Workspaces/project/Analytics/ProjectCompletionTrend");
+    render(
+      <ProjectCompletionTrendChart
+        data={[
+          { date: "2026-07-01T00:00:00.000Z", count: 5 },
+          { date: "2026-07-15T00:00:00.000Z", count: 10 },
+        ]}
+      />
+    );
+    expect(screen.getByText("+100%")).toBeInTheDocument();
+    expect(screen.getByText("Completion Trend")).toBeInTheDocument();
+  });
 });

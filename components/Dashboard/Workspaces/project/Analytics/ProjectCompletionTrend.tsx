@@ -61,7 +61,7 @@ export function ProjectCompletionTrendChart({ data }: ProjectCompletionTrendChar
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                 <div className="bg-popover border rounded-lg shadow-lg p-3 whitespace-nowrap">
                   <p className="text-xs text-muted-foreground">
-                    {format(point.date, 'MMM d')}
+                    {format(new Date(point.date), 'MMM d')}
                   </p>
                   <p className="text-sm font-semibold mt-1">
                     {point.count} {point.count === 1 ? 'task' : 'tasks'}
@@ -74,9 +74,9 @@ export function ProjectCompletionTrendChart({ data }: ProjectCompletionTrendChar
       </div>
 
       <div className="flex justify-between mt-4 text-xs text-muted-foreground">
-        <span>{format(data[0]?.date, 'MMM d')}</span>
-        <span>{format(data[Math.floor(data.length / 2)]?.date, 'MMM d')}</span>
-        <span>{format(data[data.length - 1]?.date, 'MMM d')}</span>
+        <span>{format(new Date(data[0]?.date), 'MMM d')}</span>
+        <span>{format(new Date(data[Math.floor(data.length / 2)]?.date), 'MMM d')}</span>
+        <span>{format(new Date(data[data.length - 1]?.date), 'MMM d')}</span>
       </div>
     </div>
   );

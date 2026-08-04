@@ -94,7 +94,7 @@ describe('analytics.constants', () => {
         { status: 'COMPLETED', count: 50 },
       ]
       const result = statusChartData({ data })
-      expect(result.conicGradient).toContain('rgb(')
+      expect(result.conicGradient).toContain('var(--chart-')
       expect(result.conicGradient).toContain('0%')
       expect(result.conicGradient).toContain('100%')
     })

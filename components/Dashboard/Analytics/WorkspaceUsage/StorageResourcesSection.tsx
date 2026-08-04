@@ -1,4 +1,3 @@
-// components/Analytics/WorkspaceUsage/StorageResourcesSection.tsx
 "use client";
 
 import { HardDrive, AlertTriangle } from "lucide-react";
@@ -21,15 +20,6 @@ export function StorageResourcesSection({
   const { totalStorage, storageByProject, filesByUser } = resourceUsage;
 
   const totalFiles = filesByUser.reduce((sum, u) => sum + u.fileCount, 0);
-
-  const storageGrowthData = [
-    { month: "Jan", storage: 800 },
-    { month: "Feb", storage: 1200 },
-    { month: "Mar", storage: 1800 },
-    { month: "Apr", storage: 2100 },
-    { month: "May", storage: 2300 },
-    { month: "Jun", storage: totalStorage.usedMB },
-  ];
 
   const isCritical = totalStorage.percentage >= 90;
   const isWarning = totalStorage.percentage >= 75;
@@ -66,15 +56,19 @@ export function StorageResourcesSection({
           isCritical={isCritical}
           isWarning={isWarning}
         />
-        <TotalFilesCard totalFiles={totalFiles} />
+        <TotalFilesCard
+          totalFiles={totalFiles}
+          trend={resourceUsage.fileTrend ?? []}
+          growthPct={resourceUsage.fileGrowthPct ?? null}
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-        <StorageGrowthChart data={storageGrowthData} />
+        <StorageGrowthChart data={resourceUsage.storageGrowth ?? []} />
         <TopProjectsChart storageByProject={storageByProject} />
       </div>
 
-      <FileTypeDistribution />
+      <FileTypeDistribution data={resourceUsage.fileTypeDistribution ?? []} />
     </section>
   );
 }

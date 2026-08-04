@@ -16,7 +16,7 @@ type PlanOption = typeof PLAN_OPTIONS[number];
 const PLAN_PRESETS: Record<PlanOption, { maxMembers: number; maxStorage: number }> = {
   FREE:       { maxMembers: 5,   maxStorage: 1024 },
   PRO:        { maxMembers: 25,  maxStorage: 10240 },
-  BUSINESS:   { maxMembers: 100, maxStorage: 51200 },
+  BUSINESS:   { maxMembers: -1, maxStorage: 102400 },
   ENTERPRISE: { maxMembers: -1,  maxStorage: -1 },
 };
 

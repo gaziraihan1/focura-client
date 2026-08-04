@@ -6,11 +6,13 @@ interface ProjectPriorityDistributionProps {
   data: ProjectTaskPriorityItem[];
 }
 
+// Static, literal class pairs so Tailwind v4 generates each utility.
+// Semantic priority hues (matching the workspace PriorityDistribution).
 const priorityColors: Record<string, string> = {
-  URGENT: "#ef4444",
-  HIGH: "#f97316",
-  MEDIUM: "#f59e0b",
-  LOW: "#10b981",
+  URGENT: "bg-red-500",
+  HIGH: "bg-orange-500",
+  MEDIUM: "bg-yellow-500",
+  LOW: "bg-green-500",
 };
 
 const priorityLabels: Record<string, string> = {
@@ -43,15 +45,14 @@ export function ProjectPriorityDistribution({ data }: ProjectPriorityDistributio
         {data.map((item, index) => {
           const percentage = total > 0 ? Math.round((item.count / total) * 100) : 0;
           const barWidth = maxCount > 0 ? (item.count / maxCount) * 100 : 0;
-          const color = priorityColors[item.priority.toUpperCase()] || "#667eea";
+          const color = priorityColors[item.priority.toUpperCase()] || "bg-chart-1";
 
           return (
             <div key={index} className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 min-w-0">
                   <div
-                    className="w-2.5 h-2.5 rounded-full shrink-0"
-                    style={{ backgroundColor: color }}
+                    className={`w-2.5 h-2.5 rounded-full shrink-0 ${color}`}
                   />
                   <span className="text-sm font-medium text-foreground truncate">
                     {priorityLabels[item.priority] || item.priority}
@@ -68,11 +69,8 @@ export function ProjectPriorityDistribution({ data }: ProjectPriorityDistributio
               </div>
               <div className="h-2 bg-muted rounded-full overflow-hidden">
                 <div
-                  className="h-full rounded-full transition-all duration-500 ease-out"
-                  style={{
-                    width: `${barWidth}%`,
-                    backgroundColor: color,
-                  }}
+                  className={`h-full rounded-full transition-all duration-500 ease-out ${color}`}
+                  style={{ width: `${barWidth}%` }}
                 />
               </div>
             </div>

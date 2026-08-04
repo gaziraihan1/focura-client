@@ -57,9 +57,13 @@ export function TaskDetailsClient({ id, workspaceSlug }: Props) {
     <TaskDetailsView
       task={task}
       permissions={permissions}   // already resolved upstream
-      id={id}
       workspaceSlug={workspaceSlug}
       isEditing={controller.isEditing}
+      editData={controller.editData}
+      setIsEditing={controller.setIsEditing}
+      setEditData={controller.setEditData}
+      comments={controller.comments}
+      attachments={controller.attachments}
       handlers={controller.handlers}
       mutations={controller.mutations}
     />

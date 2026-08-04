@@ -4,6 +4,8 @@ import { AlertCircle, Calendar, CheckCircle2, Circle, Clock, GripVertical, Messa
 import { memo } from "react";
 import { Assignees } from "./Assignees";
 import { PriorityBadge } from "./PriorityBadge";
+import { type SectionsById } from "@/components/Dashboard/ProjectDetails/TaskCard";
+import { SectionBadge } from "@/components/Dashboard/ProjectDetails/SectionBadge";
 import Link from "next/link";
 
 type TaskStatus   = Task['status'];
@@ -21,9 +23,18 @@ export const COLUMNS: {
 ];
 
 
-export const ListRow = memo(function ListRow({ task, workspaceSlug }: { task: Task; workspaceSlug: string }) {
+export const ListRow = memo(function ListRow({
+  task,
+  workspaceSlug,
+  sectionsById,
+}: {
+  task: Task;
+  workspaceSlug: string;
+  sectionsById?: SectionsById;
+}) {
   const col       = COLUMNS.find((c) => c.status === task.status);
   const isOverdue = task.dueDate && new Date(task.dueDate) < new Date();
+  const section   = task.sectionId ? sectionsById?.get(task.sectionId) : undefined;
 
   return (
     /*
@@ -41,6 +52,7 @@ export const ListRow = memo(function ListRow({ task, workspaceSlug }: { task: Ta
         {task.description && (
           <p className="hidden sm:block text-xs text-muted-foreground truncate mt-0.5">{task.description}</p>
         )}
+        {section && <SectionBadge name={section.name} color={section.color} />}
       </div>
 
       {col && (

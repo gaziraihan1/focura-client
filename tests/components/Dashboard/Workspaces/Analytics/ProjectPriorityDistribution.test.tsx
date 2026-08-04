@@ -308,7 +308,7 @@ vi.mock("@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[
 describe("ProjectPriorityDistribution", () => {
   it("renders priority distribution", async () => {
     const { ProjectPriorityDistribution } = await import("@/components/Dashboard/Workspaces/project/Analytics/ProjectPriorityDistribution");
-    render(
+    const { container } = render(
       <ProjectPriorityDistribution
         data={[{ priority: "HIGH", count: 8 }, { priority: "LOW", count: 2 }]}
       />
@@ -316,11 +316,24 @@ describe("ProjectPriorityDistribution", () => {
     expect(screen.getByText("Priority Distribution")).toBeInTheDocument();
     expect(screen.getByText("High")).toBeInTheDocument();
     expect(screen.getByText("Total: 10 tasks")).toBeInTheDocument();
+
+    // Priority colors use semantic Tailwind classes instead of raw hex colors.
+    const dot = container.querySelector(".shrink-0.bg-orange-500");
+    expect(dot).toBeTruthy();
+    expect(dot).toHaveClass("w-2.5");
   });
 
   it("renders empty state", async () => {
     const { ProjectPriorityDistribution } = await import("@/components/Dashboard/Workspaces/project/Analytics/ProjectPriorityDistribution");
     render(<ProjectPriorityDistribution data={[]} />);
     expect(screen.getByText("No priority data available")).toBeInTheDocument();
+  });
+
+  it("applies semantic color class to bar fill", async () => {
+    const { ProjectPriorityDistribution } = await import("@/components/Dashboard/Workspaces/project/Analytics/ProjectPriorityDistribution");
+    const { container } = render(<ProjectPriorityDistribution data={[{ priority: "LOW", count: 3 }]} />);
+    // The bar fill uses bg-green-500 for LOW.
+    const barFill = container.querySelector(".h-full.bg-green-500");
+    expect(barFill).toBeTruthy();
   });
 });

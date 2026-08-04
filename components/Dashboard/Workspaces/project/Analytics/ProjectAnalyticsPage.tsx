@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart3, Loader2, AlertTriangle } from "lucide-react";
+import { BarChart3, Loader2, AlertTriangle, CalendarRange } from "lucide-react";
 import { ProjectKPICards } from "./ProjectKPICards";
 import { ProjectTaskStatusChart } from "./ProjectTaskStatusChart";
 import { ProjectCompletionTrendChart } from "./ProjectCompletionTrend";
@@ -8,6 +8,7 @@ import { ProjectPriorityDistribution } from "./ProjectPriorityDistribution";
 import { ProjectDeadlineRiskPanel } from "./ProjectDeadlineRiskPanel";
 import { ProjectMemberLeaderboard } from "./ProjectMemberLeaderboard";
 import { useProjectAnalyticsPage } from "@/hooks/useProjectAnalyticsPage";
+import LoadingAnalytics from "../../Analytics/LoadingAnalytics";
 
 interface ProjectAnalyticsPageProps {
   workspaceId: string;
@@ -35,14 +36,7 @@ export function ProjectAnalyticsPage({
   } = useProjectAnalyticsPage({ workspaceId, projectId });
 
   if (overviewLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">Loading project analytics...</p>
-        </div>
-      </div>
-    );
+    return <LoadingAnalytics />;
   }
 
   if (overviewError) {
@@ -104,6 +98,16 @@ export function ProjectAnalyticsPage({
               </p>
             </div>
           </div>
+        </div>
+
+        <div className="flex items-center gap-2 self-start">
+          <span
+            data-testid="project-analytics-period-badge"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-card border text-xs font-medium text-muted-foreground"
+          >
+            <CalendarRange className="w-3.5 h-3.5" />
+            Last 30 days
+          </span>
         </div>
       </div>
 

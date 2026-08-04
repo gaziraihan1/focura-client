@@ -11,6 +11,7 @@ vi.mock('lucide-react', () => {
   }
   return {
     Loader2: mock('loader2'),
+    BarChart3: mock('bar-chart3'),
   }
 })
 
@@ -25,5 +26,15 @@ describe('LoadingAnalytics', () => {
   it('renders loader icon', () => {
     render(<LoadingAnalytics />)
     expect(screen.getByTestId('loader2-icon')).toBeInTheDocument()
+  })
+
+  it('renders analytics icon', () => {
+    render(<LoadingAnalytics />)
+    expect(screen.getByTestId('bar-chart3-icon')).toBeInTheDocument()
+  })
+
+  it('is labelled for screen readers', () => {
+    render(<LoadingAnalytics />)
+    expect(screen.getByRole('status')).toBeInTheDocument()
   })
 })

@@ -1,6 +1,7 @@
 // hooks/useCreateTaskModal.ts
 import { useState, useCallback } from "react";
 import { useCreateTask } from "@/hooks/useTask";
+import { useProjectSections } from "@/hooks/useProjectFeatures";
 import { CreateTaskFormData } from "@/types/taskForm.types";
 
 interface UseCreateTaskModalProps {
@@ -13,6 +14,9 @@ export function useCreateTaskModal({
   onClose,
 }: UseCreateTaskModalProps) {
   const createTask = useCreateTask();
+  const { data: sections } = useProjectSections(projectId);
+
+  const [sectionId, setSectionId] = useState<string>("");
 
   const [formData, setFormData] = useState<CreateTaskFormData>({
     title: "",
@@ -75,6 +79,7 @@ export function useCreateTaskModal({
     createTask.mutate(
       {
         ...formData,
+        sectionId: sectionId || undefined,
         projectId,
       },
       {
@@ -83,7 +88,7 @@ export function useCreateTaskModal({
         },
       }
     );
-  }, [validate, createTask, formData, projectId, onClose]);
+  }, [validate, createTask, formData, sectionId, projectId, onClose]);
 
   return {
     formData,
@@ -92,5 +97,8 @@ export function useCreateTaskModal({
     updateField,
     toggleAssignee,
     handleSubmit,
+    sections,
+    sectionId,
+    setSectionId,
   };
 }

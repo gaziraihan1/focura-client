@@ -22,20 +22,20 @@ export const AboutMission = () => {
   return (
     <section className="max-w-5xl mx-auto px-6 py-20 md:py-24">
       {/* Label */}
-      <p className="text-xs font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-4">
+      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
         Why Focura Exists
       </p>
 
       {/* Mission statement */}
       <div className="max-w-3xl mb-14">
-        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 leading-tight mb-5">
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground leading-tight mb-5">
           The modern team is overloaded.
           <br />
-          <span className="text-neutral-400 dark:text-neutral-500">
+          <span className="text-muted-foreground">
             Focura is the answer.
           </span>
         </h2>
-        <p className="text-base text-neutral-500 dark:text-neutral-400 leading-relaxed">
+        <p className="text-base text-muted-foreground leading-relaxed">
           Scattered tasks. Siloed projects. Endless context-switching.
           Productivity tools promised to fix these problems but instead became
           part of them. Focura was built from scratch to address this — a
@@ -49,18 +49,18 @@ export const AboutMission = () => {
         {pillars.map(({ icon: Icon, title, body }) => (
           <div
             key={title}
-            className="group rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/40 p-6 hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors"
+            className="group rounded-2xl border bg-muted/40 p-6 hover:border-foreground/20 transition-colors"
           >
-            <div className="w-10 h-10 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 flex items-center justify-center mb-5 shadow-sm group-hover:shadow-md transition-shadow">
+            <div className="w-10 h-10 rounded-xl bg-card border  flex items-center justify-center mb-5 shadow-sm group-hover:shadow-md transition-shadow">
               <Icon
-                className="w-4.5 h-4.5 text-neutral-700 dark:text-neutral-300"
+                className="w-4.5 h-4.5 text-foreground"
                 strokeWidth={1.8}
               />
             </div>
-            <h3 className="text-sm font-bold text-neutral-900 dark:text-neutral-100 mb-2">
+            <h3 className="text-sm font-bold text-foreground mb-2">
               {title}
             </h3>
-            <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-relaxed">
               {body}
             </p>
           </div>

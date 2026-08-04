@@ -86,4 +86,14 @@ describe('CommentItem', () => {
     render(<CommentItem comment={makeComment()} {...defaultProps} />);
     expect(screen.getByText('Reply')).toBeInTheDocument();
   });
+
+  it('does not show Reply button for optimistic (unsaved) comments', () => {
+    render(
+      <CommentItem
+        comment={makeComment({ id: 'optimistic-comment-123-abc', user: { id: 'current-user', name: 'You', image: null } })}
+        {...defaultProps}
+      />,
+    );
+    expect(screen.queryByText('Reply')).not.toBeInTheDocument();
+  });
 });

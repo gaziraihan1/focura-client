@@ -64,7 +64,8 @@ export interface ProjectTimeSummary {
 }
 
 export interface ProjectCompletionTrend {
-  date: Date;
+  // The API serializes Date to an ISO string over JSON, so both are possible.
+  date: Date | string;
   count: number;
 }
 

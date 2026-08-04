@@ -328,5 +328,15 @@ describe("ProjectKPICards", () => {
     expect(screen.getByText("50%")).toBeInTheDocument();
     expect(screen.getByText("Total Tasks")).toBeInTheDocument();
     expect(screen.getByText("Completion Rate")).toBeInTheDocument();
+
+    // Non-accent cards use chart-N token classes instead of raw hex colors.
+    expect(screen.getByTestId("icon-BarChart3").parentElement).toHaveClass("bg-chart-1/10");
+    expect(screen.getByTestId("icon-BarChart3")).toHaveClass("text-chart-1");
+    expect(screen.getByTestId("icon-Timer").parentElement).toHaveClass("bg-chart-3/10");
+    // Completion rate keeps the project accent color.
+    expect(screen.getByTestId("icon-TrendingUp").parentElement).toHaveStyle({
+      backgroundColor: "#3b82f618",
+    });
+    expect(screen.getByTestId("icon-TrendingUp")).toHaveStyle({ color: "#3b82f6" });
   });
 });

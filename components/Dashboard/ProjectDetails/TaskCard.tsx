@@ -2,14 +2,23 @@ import { useParams, useRouter } from 'next/navigation';
 import { MessageSquare, Clock } from 'lucide-react';
 import Image from 'next/image';
 import { Task } from '@/hooks/useTask';
+import { SectionBadge } from './SectionBadge';
 // import { Task } from '@/hooks/useProjects';
+
+export interface TaskSectionBadge {
+  name: string;
+  color?: string | null;
+}
+
+export type SectionsById = ReadonlyMap<string, TaskSectionBadge>;
 
 interface TaskCardProps {
   task: Task;
   workspaceSlug: string
+  section?: TaskSectionBadge | null
 }
 
-export default function TaskCard({ task, workspaceSlug }: TaskCardProps) {
+export default function TaskCard({ task, workspaceSlug, section }: TaskCardProps) {
   const router = useRouter();
   const {projectSlug} = useParams();
 
@@ -29,6 +38,8 @@ export default function TaskCard({ task, workspaceSlug }: TaskCardProps) {
         <h4 className="font-medium text-foreground line-clamp-2">{task.title}</h4>
         <div className={`w-2 h-2 rounded-full ${priorityColors[task.priority]}`} />
       </div>
+
+      {section && <SectionBadge name={section.name} color={section.color} />}
 
       <div className="flex items-center gap-4 text-xs text-muted-foreground">
         {task._count.comments > 0 && (

@@ -14,6 +14,7 @@ export interface Task {
   createdBy: { id: string; name: string; image?: string };
   assignees: Array<{ user: { id: string; name: string; image?: string } }>;
   project?: { id: string; slug: string; name: string; color: string; workspace: { id: string; name: string } };
+  sectionId?: string | null;
   workspaceId?: string;
   _count: { comments: number; subtasks: number; files: number };
   createdAt: string;
@@ -75,6 +76,7 @@ export interface CreateTaskDto {
   title: string;
   description?: string;
   projectId?: string | null;
+  sectionId?: string | null;
   workspaceId?: string | null;
   status: Task["status"];
   priority: Task["priority"];
