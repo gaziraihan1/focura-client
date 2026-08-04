@@ -16,13 +16,17 @@ import { ProjectStatusChart } from './ProjectStatusChart';
 import { OverdueTrendChart } from './OverdueTrendChart';
 import { useAnalyticsPage } from '@/hooks/useAnalyticsPage';
 import LoadingAnalytics from './LoadingAnalytics';
+import { UpgradeSectionCard } from '@/components/Shared/UpgradeSectionCard';
 
 interface AnalyticsPageProps {
   workspaceId: string;
+  /** PRO workspaces see most analytics but a few advanced sections are Business-only. */
+  isPro?: boolean;
 }
 
 export function AnalyticsPage({
   workspaceId,
+  isPro = false,
 }: AnalyticsPageProps) {
   const {
     overview,
@@ -126,9 +130,14 @@ export function AnalyticsPage({
         )}
       </div>
 
-      {memberContribution && memberContribution.length > 0 && (
+      {isPro ? (
+        <UpgradeSectionCard
+          title="Member Leaderboard"
+          description="See how your team ranks by contribution, hours logged, and completed tasks — upgrade to Business to see more analytics."
+        />
+      ) : memberContribution && memberContribution.length > 0 ? (
         <MemberLeaderboard data={memberContribution} />
-      )}
+      ) : null}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {taskTrends && taskTrends.overdueTrend.length > 0 && (
@@ -139,10 +148,17 @@ export function AnalyticsPage({
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {activityTrends && <ActivityTrendChart data={activityTrends.volumeTrend} />}
-        {workload && workload.length > 0 && <WorkloadChart data={workload} />}
-      </div>
+      {isPro ? (
+        <UpgradeSectionCard
+          title="Activity & Workload Trends"
+          description="Spot activity spikes and balance team workload — upgrade to Business to see more analytics."
+        />
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {activityTrends && <ActivityTrendChart data={activityTrends.volumeTrend} />}
+          {workload && workload.length > 0 && <WorkloadChart data={workload} />}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {timeSummary && (

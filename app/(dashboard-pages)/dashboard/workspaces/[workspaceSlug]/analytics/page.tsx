@@ -10,7 +10,7 @@ export default function WorkspaceAnalyticsPage() {
   const params = useParams();
   const workspaceSlug = params.workspaceSlug as string;
 
-  const { isFree, isLoading } = useWorkspacePlan();
+  const { isFree, isPro, isLoading } = useWorkspacePlan();
   const { data: workspace } = useWorkspace(workspaceSlug); // already cached, no extra fetch
 
   if (isLoading) return null; // layout already shows loading, no double spinner
@@ -24,5 +24,5 @@ export default function WorkspaceAnalyticsPage() {
     );
   }
 
-  return <AnalyticsPage workspaceId={workspace!.id} />;
+  return <AnalyticsPage workspaceId={workspace!.id} isPro={isPro} />;
 }

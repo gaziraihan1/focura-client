@@ -19,12 +19,34 @@ vi.mock('lucide-react', () => {
   };
 });
 
+const mockStorageInfo = {
+  workspaceName: 'Test Workspace',
+  plan: 'PRO',
+  usedMB: 2048,
+  totalMB: 10240,
+  percentage: 20,
+  fileCount: 150,
+  userCount: 5,
+};
+
+const mockData = {
+  storageInfo: mockStorageInfo,
+  breakdown: { byType: [], byProject: [], byUser: [] },
+  trend: [],
+  largestFiles: [],
+  myContribution: { usedMB: 500, fileCount: 30 },
+  isAdmin: true,
+  userContributions: [],
+};
+
+const mockUseStorageOverview = vi.fn(() => ({
+  data: null,
+  isLoading: true,
+  error: null,
+}));
+
 vi.mock('@/hooks/useStorage', () => ({
-  useWorkspaceStorageOverview: vi.fn(() => ({
-    data: null,
-    isLoading: true,
-    error: null,
-  })),
+  useWorkspaceStorageOverview: () => mockUseStorageOverview(),
 }));
 
 vi.mock('@/hooks/useStoragePage', () => ({
@@ -39,8 +61,20 @@ vi.mock('@/components/Dashboard/Storage/StorageTrendChart', () => ({ StorageTren
 vi.mock('@/components/Dashboard/Storage/LargestFilesTable', () => ({ LargestFilesTable: () => <div data-testid="largest-files" /> }));
 vi.mock('@/components/Dashboard/Storage/PlanComparison', () => ({ PlanComparison: () => <div data-testid="plan-comparison" /> }));
 
+vi.mock('@/components/Shared/UpgradeSectionCard', () => ({
+  UpgradeSectionCard: ({ title, ctaLabel }: { title: string; ctaLabel?: string }) => (
+    <div data-testid="upgrade-section-card">
+      <span>{title}</span>
+      {ctaLabel && <span data-testid="cta-label">{ctaLabel}</span>}
+    </div>
+  ),
+}));
+
 describe('WorkspaceStorageOverviewPage', () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockUseStorageOverview.mockReturnValue({ data: null, isLoading: true, error: null });
+  });
 
   it('shows loading state initially', () => {
     render(<WorkspaceStorageOverviewPage workspaceId="ws-1" />);
@@ -51,4 +85,20 @@ describe('WorkspaceStorageOverviewPage', () => {
     render(<WorkspaceStorageOverviewPage workspaceId="ws-1" />);
     expect(screen.getByText('Storage Overview')).toBeInTheDocument();
   });
-});
+
+  it('renders breakdown chart when isPro is false', () => {
+    mockUseStorageOverview.mockReturnValue({ data: mockData, isLoading: false, error: null });
+    render(<WorkspaceStorageOverviewPage workspaceId="ws-1" isPro={false} />);
+    expect(screen.getByTestId('breakdown-chart')).toBeInTheDocument();
+    expect(screen.queryByTestId('upgrade-section-card')).not.toBeInTheDocument();
+  });
+
+  it('shows upgrade card instead of breakdown chart when isPro is true', () => {
+    mockUseStorageOverview.mockReturnValue({ data: mockData, isLoading: false, error: null });
+    render(<WorkspaceStorageOverviewPage workspaceId="ws-1" isPro={true} />);
+    expect(screen.queryByTestId('breakdown-chart')).not.toBeInTheDocument();
+    const upgradeCards = screen.getAllByTestId('upgrade-section-card');
+    expect(upgradeCards.length).toBe(1);
+    expect(upgradeCards[0]).toHaveTextContent('Storage Breakdown Chart');
+  });
+});

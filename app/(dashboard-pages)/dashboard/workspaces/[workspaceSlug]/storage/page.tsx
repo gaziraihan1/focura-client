@@ -5,12 +5,13 @@ import { useWorkspace } from "@/hooks/useWorkspace";
 import { useWorkspacePlan } from "@/context/workspacePlan/WorkspacePlanContext";
 import { WorkspaceStorageOverviewPage } from "@/components/Dashboard/Storage/WorkspaceStorageOverviewPage";
 import { UpgradePlanCard } from "@/components/Shared/UpgradePlanCard";
+import { UpgradeSectionCard } from "@/components/Shared/UpgradeSectionCard";
 
 export default function WorkspaceStorage() {
   const params = useParams();
   const workspaceSlug = params.workspaceSlug as string;
 
-  const { isFree, isLoading: isPlanLoading } = useWorkspacePlan();
+  const { isFree, isPro, isLoading: isPlanLoading } = useWorkspacePlan();
   const { data: workspace } = useWorkspace(workspaceSlug); // already cached, no extra fetch
 
   if (isPlanLoading) return null;
@@ -26,7 +27,7 @@ export default function WorkspaceStorage() {
 
   return (
     <div className="space-y-6 min-w-0">
-      <WorkspaceStorageOverviewPage workspaceId={workspace?.id ?? ""} />
+      <WorkspaceStorageOverviewPage workspaceId={workspace?.id ?? ""} isPro={isPro} />
     </div>
   );
 }

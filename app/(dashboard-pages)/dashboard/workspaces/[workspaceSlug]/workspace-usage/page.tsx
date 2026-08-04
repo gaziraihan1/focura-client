@@ -14,6 +14,7 @@ import type { DateRangeFilter } from "@/types/workspace-usage.types";
 import { useWorkspaces } from "@/hooks/useWorkspace";
 import { useWorkspacePlan } from "@/context/workspacePlan/WorkspacePlanContext";
 import { UpgradePlanCard } from "@/components/Shared/UpgradePlanCard";
+import { UpgradeSectionCard } from "@/components/Shared/UpgradeSectionCard";
 
 const EngagementSection = dynamic(
   () => import("@/components/Dashboard/Analytics/WorkspaceUsage/EngagementSection").then((m) => m.EngagementSection),
@@ -46,7 +47,7 @@ const GrowthInsightsSection = dynamic(
 
 export default function WorkspaceUsagePage() {
   const { workspaceSlug } = useParams();
-  const { isFree, isLoading: isPlanLoading } = useWorkspacePlan();
+  const { isFree, isPro, isLoading: isPlanLoading } = useWorkspacePlan();
 
   const { data: workspaces } = useWorkspaces();
   const workspace   = workspaces?.find((w) => w.slug === workspaceSlug);
@@ -130,9 +131,19 @@ export default function WorkspaceUsagePage() {
         </SectionErrorBoundary>
       )}
 
-      <SectionErrorBoundary sectionName="Storage & Resources">
-        <StorageResourcesSection resourceUsage={data.resourceUsage} />
-      </SectionErrorBoundary>
+      {isPro ? (
+        <SectionErrorBoundary sectionName="Storage & Resources">
+          <UpgradeSectionCard
+            title="Storage & Resources"
+            description="Get detailed storage growth, top projects, and file type distribution — upgrade to Business to see more usage data."
+            ctaLabel="Upgrade to Business"
+          />
+        </SectionErrorBoundary>
+      ) : (
+        <SectionErrorBoundary sectionName="Storage & Resources">
+          <StorageResourcesSection resourceUsage={data.resourceUsage} />
+        </SectionErrorBoundary>
+      )}
 
       <SectionErrorBoundary sectionName="Feature Usage">
         <FeatureUsageSection featureUsage={data.featureUsage} />

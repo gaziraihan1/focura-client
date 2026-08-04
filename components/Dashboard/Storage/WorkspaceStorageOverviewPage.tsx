@@ -10,12 +10,15 @@ import { StorageBreakdownChart } from './StorageBreakdownChart';
 import { StorageTrendChart } from './StorageTrendChart';
 import { LargestFilesTable } from './LargestFilesTable';
 import { PlanComparison } from './PlanComparison';
+import { UpgradeSectionCard } from '@/components/Shared/UpgradeSectionCard';
 
 interface WorkspaceStoragePageProps {
   workspaceId: string;
+  /** PRO workspaces see the overview but the breakdown chart is Business-only. */
+  isPro?: boolean;
 }
 
-export function WorkspaceStorageOverviewPage({ workspaceId }: WorkspaceStoragePageProps) {
+export function WorkspaceStorageOverviewPage({ workspaceId, isPro = false }: WorkspaceStoragePageProps) {
   const { data, isLoading, error } = useWorkspaceStorageOverview(workspaceId);
   const warning = useStorageWarning(data?.storageInfo);
 
@@ -136,8 +139,15 @@ export function WorkspaceStorageOverviewPage({ workspaceId }: WorkspaceStoragePa
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Breakdown Chart */}
-        <StorageBreakdownChart breakdown={data.breakdown} />
+        {/* Breakdown Chart — Business-only for PRO workspaces */}
+        {isPro ? (
+          <UpgradeSectionCard
+            title="Storage Breakdown Chart"
+            description="Visualize what's using your storage — file types, project breakdown, and user share — upgrade to Business to see more storage data."
+          />
+        ) : (
+          <StorageBreakdownChart breakdown={data.breakdown} />
+        )}
 
         {/* Trend Chart */}
         <StorageTrendChart trend={data.trend} />

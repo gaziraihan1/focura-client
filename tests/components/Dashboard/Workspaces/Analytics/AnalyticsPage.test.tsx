@@ -118,6 +118,12 @@ vi.mock('@/components/Shared/Avatar', () => ({
   Avatar: ({ name }: { name: string }) => <div data-testid="avatar">{name}</div>,
 }))
 
+vi.mock('@/components/Shared/UpgradeSectionCard', () => ({
+  UpgradeSectionCard: ({ title }: { title: string }) => (
+    <div data-testid="upgrade-section-card">{title}</div>
+  ),
+}))
+
 import { AnalyticsPage } from '@/components/Dashboard/Workspaces/Analytics/AnalyticsPage'
 import { useAnalyticsPage } from '@/hooks/useAnalyticsPage'
 import type { ExecutiveKPIs, TaskStatusItem, TasksByPriorityItem, ActivityTrendPoint, TrendDataPoint, MemberContribution, ProjectHealth, DeadlineRisk, TimeSummary, MostActiveDay as MostActiveDayType, WorkloadMember } from '@/hooks/useAnalytics'
@@ -379,6 +385,54 @@ describe('AnalyticsPage', () => {
     render(<AnalyticsPage workspaceId="ws-1" />)
     expect(screen.getByText('No Analytics Data')).toBeInTheDocument()
     expect(screen.getByText('Analytics data is not available for this workspace.')).toBeInTheDocument()
+  })
+
+  it('shows upgrade cards instead of Business-only sections when isPro is true', () => {
+    mockUseAnalyticsPage.mockReturnValue({
+      overview: {
+        kpis: mockKpis,
+        taskStatus: mockTaskStatusData,
+        projectStatus: [
+          { status: 'ACTIVE', count: 5 },
+          { status: 'PLANNING', count: 3 },
+          { status: 'ON_HOLD', count: 2 },
+        ],
+        tasksByPriority: mockPriorityData,
+        deadlineRisk: mockDeadlineRiskData,
+      },
+      hasNotPlan: false,
+      taskTrends: {
+        completionTrend: mockCompletionTrendData,
+        overdueTrend: [{ weekStart: new Date('2025-01-01'), count: 4 }],
+      },
+      projectHealth: mockProjectHealthData,
+      memberContribution: mockMemberData,
+      timeSummary: mockTimeSummaryData,
+      activityTrends: { volumeTrend: mockActivityTrendData, mostActiveDay: mockMostActiveDayData },
+      workload: mockWorkloadData,
+      overviewLoading: false,
+      isLoading: false,
+      overviewError: null,
+      isAccessDenied: false,
+      errorMessage: '',
+    })
+    render(<AnalyticsPage workspaceId="ws-1" isPro={true} />)
+
+    // Core sections still visible
+    expect(screen.getByText('Task Status Distribution')).toBeInTheDocument()
+    expect(screen.getByText('Time Tracking Summary')).toBeInTheDocument()
+    expect(screen.getByText('Deadline Risk Analysis')).toBeInTheDocument()
+
+    // Business-only sections replaced by upgrade cards
+    const upgradeCards = screen.getAllByTestId('upgrade-section-card')
+    expect(upgradeCards.length).toBe(2)
+    expect(upgradeCards[0]).toHaveTextContent('Member Leaderboard')
+    expect(upgradeCards[1]).toHaveTextContent('Activity & Workload Trends')
+
+    // Actual charts are not rendered
+    expect(screen.queryByText('Team Leaderboard')).not.toBeInTheDocument()
+    expect(screen.queryByText('Activity Volume Trend')).not.toBeInTheDocument()
+    expect(screen.queryByText('Workload Distribution')).not.toBeInTheDocument()
   })
 
   it('renders full analytics with all data', () => {
