@@ -12,9 +12,14 @@ import {
   Loader2,
   Flame,
   ChevronRight,
+  Flag,
+  Sprout,
+  Columns,
+  Eye,
 } from "lucide-react";
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
 import { useUserProfile } from "@/hooks/useUser";
+import { useProjectMilestones, useProjectSprints, useProjectSections, useProjectViews } from "@/hooks/useProjectFeatures";
 import { AccessDeniedProject } from "@/components/Dashboard/ProjectDetails/AccessDeniedProject";
 import LoadingState from "@/components/Dashboard/ProjectDetails/LoadingState";
 import { StatPill } from "@/components/Dashboard/Workspaces/project/StatPill";
@@ -29,6 +34,7 @@ import { ProjectHeader } from "@/components/Dashboard/Workspaces/project/Project
 export function formatDate(dateStr: string | undefined) {
   if (!dateStr) return "—";
   return new Date(dateStr).toLocaleDateString("en-US", {
+    timeZone: "UTC",
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -51,6 +57,10 @@ export default function ProjectOverviewPage() {
   const base = `/dashboard/workspaces/${workspaceSlug}/projects/${projectSlug}`;
 
   const { data: project, isLoading, error } = useProjectDetailsBySlug(projectSlug);
+  const { data: milestoneStats } = useProjectMilestones(project?.id);
+  const { data: sprintStats } = useProjectSprints(project?.id);
+  const { data: sectionItems = [] } = useProjectSections(project?.id);
+  const { data: viewItems = [] } = useProjectViews(project?.id);
   const { userId, isLoading: userLoading } = useUserProfile();
 
   // Access check
@@ -230,6 +240,46 @@ export default function ProjectOverviewPage() {
             statLabel="members"
             accent="#8b5cf6"
             onClick={() => router.push(`${base}/members`)}
+          />
+
+          <QuickAccessCard
+            icon={Flag}
+            title="Milestones"
+            description="Track key milestones with health status (on track / at risk / delayed) and progress."
+            stat={milestoneStats?.total ?? 0}
+            statLabel="milestones"
+            accent="#f59e0b"
+            onClick={() => router.push(`${base}/milestones`)}
+          />
+
+          <QuickAccessCard
+            icon={Sprout}
+            title="Sprints"
+            description="Plan time-boxed iterations, track velocity and run retrospectives."
+            stat={sprintStats?.sprints?.length ?? 0}
+            statLabel="sprints"
+            accent="#10b981"
+            onClick={() => router.push(`${base}/sprints`)}
+          />
+
+          <QuickAccessCard
+            icon={Columns}
+            title="Sections"
+            description="Organize tasks into sections — map any section to a board column with WIP limits."
+            stat={sectionItems.length}
+            statLabel="sections"
+            accent="#8b5cf6"
+            onClick={() => router.push(`${base}/sections`)}
+          />
+
+          <QuickAccessCard
+            icon={Eye}
+            title="Views"
+            description="Save custom views (Kanban, List, Calendar, Timeline) to switch perspectives instantly."
+            stat={viewItems.length}
+            statLabel="views"
+            accent="#14b8a6"
+            onClick={() => router.push(`${base}/views`)}
           />
         </div>
       </div>

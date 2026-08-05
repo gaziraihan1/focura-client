@@ -76,6 +76,7 @@ function FavoriteRow({ fav }: { fav: FavoriteItem }) {
   const updateFavorite = useUpdateFavorite();
 
   const handleUpdateGroup = async () => {
+    if (updateFavorite.isPending) return;
     await updateFavorite.mutateAsync({
       projectId: fav.projectId,
       group: group || null,

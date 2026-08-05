@@ -17,7 +17,7 @@ export default function PricingSection() {
         <div className="mt-20 grid md:grid-cols-3 gap-10">
           {plans.map((plan, idx) => (
             <div
-              key={idx}
+              key={plan.name}
               className={`relative rounded-2xl p-8 border
                 ${
                   plan.highlighted
@@ -53,8 +53,8 @@ export default function PricingSection() {
                 </p>
 
                 <ul className="mt-8 space-y-3 text-left">
-                  {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-3">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-3">
                       <Check size={18} className="text-primary mt-1" />
                       <span className="text-foreground/80 text-sm">
                         {feature}

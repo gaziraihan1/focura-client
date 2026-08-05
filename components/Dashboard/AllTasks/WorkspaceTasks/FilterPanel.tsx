@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Tag, Brain } from "lucide-react";
 
 interface Project {
@@ -16,6 +17,12 @@ interface Member {
   name: string;
 }
 
+interface Section {
+  id: string;
+  name: string;
+  projectName: string;
+}
+
 interface FilterPanelProps {
   selectedStatus: string;
   onStatusChange: (status: string) => void;
@@ -32,6 +39,9 @@ interface FilterPanelProps {
   members: Member[];
   focusRequired: boolean;
   onFocusRequiredChange: (value: boolean) => void;
+  sections?: Section[];
+  selectedSection?: string;
+  onSectionChange?: (sectionId: string) => void;
 }
 
 export function FilterPanel({
@@ -50,7 +60,21 @@ export function FilterPanel({
   members,
   focusRequired,
   onFocusRequiredChange,
+  sections = [],
+  selectedSection = "all",
+  onSectionChange = () => {},
 }: FilterPanelProps) {
+  const selectedLabelSet = new Set(selectedLabels);
+  const groupedSections = useMemo(() => {
+    const map = new Map<string, Section[]>();
+    for (const section of sections) {
+      const list = map.get(section.projectName) ?? [];
+      list.push(section);
+      map.set(section.projectName, list);
+    }
+    return Array.from(map.entries());
+  }, [sections]);
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -110,6 +134,30 @@ export function FilterPanel({
           </select>
         </div>
 
+        {/* Section Filter */}
+        <div>
+          <label htmlFor="section-filter" className="block text-sm font-medium text-foreground mb-2">
+            Section
+          </label>
+          <select
+            id="section-filter"
+            value={selectedSection}
+            onChange={(e) => onSectionChange(e.target.value)}
+            className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
+          >
+            <option value="all">All Sections</option>
+            {groupedSections.map(([projectName, group]) => (
+              <optgroup key={projectName} label={projectName}>
+                {group.map((section) => (
+                  <option key={section.id} value={section.id}>
+                    {section.name}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+        </div>
+
         {/* Assignee Filter */}
         <div>
           <label className="block text-sm font-medium text-foreground mb-2">
@@ -143,7 +191,7 @@ export function FilterPanel({
                 key={label.id}
                 onClick={() => onToggleLabel(label.id)}
                 className={`px-3 py-1.5 rounded-full text-sm font-medium transition ${
-                  selectedLabels.includes(label.id)
+                  selectedLabelSet.has(label.id)
                     ? "opacity-100 ring-2 ring-offset-2"
                     : "opacity-60 hover:opacity-100"
                 }`}

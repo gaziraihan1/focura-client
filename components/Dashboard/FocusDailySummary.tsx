@@ -67,7 +67,7 @@ export function FocusDailySummary() {
                 <span className="text-xs text-muted-foreground w-24 shrink-0">{label}</span>
                 <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-purple-500/70 transition-all"
+                    className="h-full rounded-full bg-purple-500/70 transition-colors"
                     style={{ width: `${pct}%` }}
                   />
                 </div>

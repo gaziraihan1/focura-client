@@ -18,6 +18,7 @@ export function TaskDetailsModal({ task, onClose }: TaskDetailsModalProps) {
       className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm px-4 py-6"
       onClick={onClose}
     >
+      {/* react-doctor-disable-next-line react-doctor/no-transition-all -- tailwindcss-animate `animate-in` entry animation only animates opacity/transform/filter, not `all` (false positive) */}
       <div
         className="bg-card border border-border rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden animate-in fade-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}

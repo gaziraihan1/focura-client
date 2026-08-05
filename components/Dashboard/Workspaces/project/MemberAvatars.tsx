@@ -12,9 +12,9 @@ export function MemberAvatars({
 
   return (
     <div className="flex items-center">
-      {visible.map((m, i) => (
+      {visible.map((m) => (
         <div
-          key={m.userId ?? i}
+          key={m.userId ?? `anon-${m.user?.name ?? 'member'}`}
           className="w-7 h-7 rounded-full border-2 border-card bg-primary/20 flex items-center justify-center text-[10px] font-bold text-foreground -ml-2 first:ml-0 ring-1 ring-border overflow-hidden"
           title={m.user?.name ?? "Member"}
         >

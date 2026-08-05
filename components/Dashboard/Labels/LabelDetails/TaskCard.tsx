@@ -30,7 +30,7 @@ export function TaskCard({ task }: TaskCardProps) {
   return (
     <Link
       href={href}
-      className="group relative flex flex-col gap-3 rounded-lg border border-border bg-card p-4 shadow-sm transition-all duration-200 hover:border-ring hover:shadow-md hover:bg-accent/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="group relative flex flex-col gap-3 rounded-lg border border-border bg-card p-4 shadow-sm transition-colors duration-200 hover:border-ring hover:shadow-md hover:bg-accent/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       {/* Arrow icon top-right */}
       <span className="absolute right-3 top-3 text-muted-foreground opacity-0 transition-opacity duration-200 group-hover:opacity-100">

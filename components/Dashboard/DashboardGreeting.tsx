@@ -22,6 +22,10 @@ function getDayOfWeek() {
   return new Date().toLocaleDateString('en-US', { weekday: 'short' });
 }
 
+function getDayOfMonth() {
+  return new Date().getDate();
+}
+
 interface DashboardGreetingProps {
   userName?: string | null;
   workspaceCount?: number;
@@ -34,6 +38,7 @@ export function DashboardGreeting({
   const [greeting] = useState(getGreeting);
   const [dateStr] = useState(getDateStr);
   const [dayStr] = useState(getDayOfWeek);
+  const [dayOfMonth] = useState(getDayOfMonth);
   return (
     <div className="bg-card border rounded-xl p-5 sm:p-6">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
@@ -68,7 +73,7 @@ export function DashboardGreeting({
           <div className="w-10 h-10 rounded-xl bg-primary/10 flex flex-col items-center justify-center shrink-0">
             <span className="text-[10px] font-medium text-primary leading-none">{dayStr}</span>
             <span className="text-sm font-bold text-primary leading-tight">
-              {new Date().getDate()}
+              {dayOfMonth}
             </span>
           </div>
         </div>

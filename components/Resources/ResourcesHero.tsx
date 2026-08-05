@@ -57,7 +57,7 @@ export default function ResourcesHero() {
                 bg-background/50 backdrop-blur
                 border border-border
                 text-foreground hover:bg-primary/10 hover:text-primary
-                transition-all
+                transition-colors
               "
             >
               {tag}

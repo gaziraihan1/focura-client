@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {  initials } from "@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/announcements/page";
 import { Announcement } from "@/types/announcement.types";
 
@@ -14,10 +15,11 @@ export function AuthorAvatar({
       className={`${dim} rounded-full bg-primary/10 border border-border flex items-center justify-center font-bold text-foreground/70 shrink-0 overflow-hidden`}
     >
       {author?.image ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={author.image}
           alt={author.name ?? ""}
+          width={36}
+          height={36}
           className="w-full h-full object-cover"
         />
       ) : (

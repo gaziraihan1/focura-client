@@ -14,10 +14,10 @@ export default function Metrics() {
       </div>
 
       <div className="mx-auto mt-16 grid max-w-6xl gap-6 px-6 sm:grid-cols-2 md:grid-cols-4">
-        {metrics.map((m, i) => (
+        {metrics.map((m) => (
           <div
-            key={i}
-            className="rounded-2xl border border-border bg-card p-8 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-foreground/5"
+            key={m.label}
+            className="rounded-2xl border border-border bg-card p-8 text-center shadow-sm transition-colors transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-foreground/5"
           >
             <div className="text-4xl font-bold text-primary">{m.value}</div>
             <div className="mt-2 text-sm text-muted-foreground">{m.label}</div>

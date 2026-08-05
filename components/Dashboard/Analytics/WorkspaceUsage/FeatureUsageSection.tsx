@@ -33,7 +33,7 @@ interface FeatureCardProps {
 
 function FeatureCard({ icon: Icon, label, count, accentColor, bgColor }: FeatureCardProps) {
   return (
-    <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-3.5 sm:p-5 hover:shadow-md hover:border-primary/20 transition-all duration-300">
+    <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-3.5 sm:p-5 hover:shadow-md hover:border-primary/20 transition-colors duration-300">
       <div className="flex items-center justify-between mb-2.5 sm:mb-3">
         <div className={`p-2 sm:p-2.5 rounded-lg sm:rounded-xl ${bgColor}`}>
           <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${accentColor}`} />

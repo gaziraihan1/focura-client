@@ -24,6 +24,9 @@ vi.mock('@/hooks/useTask', () => ({
 
 vi.mock('@/hooks/useProjectFeatures', () => ({
   useProjectSections: vi.fn(),
+  useProjectSprints: vi.fn(() => ({ data: { sprints: [] } })),
+  useProjectMilestones: vi.fn(() => ({ data: { milestones: [] } })),
+  useProjectViews: vi.fn(() => ({ data: [] })),
 }))
 
 import { useProjectTasksPage } from '@/hooks/useProjectTasksPage'

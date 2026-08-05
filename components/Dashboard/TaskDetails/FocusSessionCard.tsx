@@ -147,7 +147,7 @@ export function FocusSessionCard({ taskId }: FocusSessionCardProps) {
           <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
             <div
               data-testid="focus-progress-bar"
-              className="h-full bg-linear-to-r from-purple-500 to-purple-600 rounded-full transition-all duration-1000 ease-linear"
+              className="h-full bg-linear-to-r from-purple-500 to-purple-600 rounded-full transition-colors duration-1000 ease-linear"
               style={{ width: `${getProgress()}%` }}
             />
           </div>

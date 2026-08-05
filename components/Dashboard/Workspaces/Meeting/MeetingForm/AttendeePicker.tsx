@@ -15,6 +15,7 @@ interface Props {
 export function AttendeePicker({
   attendeeIds, members, currentUserId, search, onSearchChange, onToggle, required,
 }: Props) {
+  const attendeeSet = new Set(attendeeIds);
   const filtered = members.filter(
     (m) =>
       m.userId !== currentUserId &&
@@ -49,7 +50,7 @@ export function AttendeePicker({
           <p className="px-3 py-4 text-center text-xs text-muted-foreground">No members found</p>
         ) : (
           filtered.map((m) => {
-            const selected = attendeeIds.includes(m.userId);
+            const selected = attendeeSet.has(m.userId);
             return (
               <button
                 key={m.userId}

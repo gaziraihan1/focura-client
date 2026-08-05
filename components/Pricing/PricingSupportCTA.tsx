@@ -24,7 +24,7 @@ export default function PricingSupportCTA() {
             href="/contact"
             className="inline-flex items-center justify-center mt-6 px-6 py-3
                        rounded-xl bg-primary text-primary-foreground font-medium
-                       hover:bg-primary/90 transition-all shadow-md shadow-primary/20
+                       hover:bg-primary/90 transition-colors shadow-md shadow-primary/20
                        text-sm md:text-base"
           >
             Contact Support

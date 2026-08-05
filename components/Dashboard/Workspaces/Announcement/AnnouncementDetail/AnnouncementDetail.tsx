@@ -38,6 +38,7 @@ export function AnnouncementDetail({ id, workspaceSlug }: AnnouncementDetailProp
 
   const isPrivate   = announcement.visibility === 'PRIVATE';
   const formattedDate = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'UTC',
     dateStyle: 'long',
     timeStyle: 'short',
   }).format(new Date(announcement.createdAt));
@@ -121,6 +122,7 @@ export function AnnouncementDetail({ id, workspaceSlug }: AnnouncementDetailProp
                 {wasEdited && (
                   <span className="text-xs text-muted-foreground">
                     Edited {new Intl.DateTimeFormat('en-US', {
+                      timeZone: 'UTC',
                       dateStyle: 'medium',
                     }).format(new Date(announcement.updatedAt))}
                   </span>
@@ -136,6 +138,7 @@ export function AnnouncementDetail({ id, workspaceSlug }: AnnouncementDetailProp
               {/* Renders content as pre-formatted paragraphs — swap for MDX/rich text renderer if needed */}
               {announcement.content.split('\n').map((paragraph, i) =>
                 paragraph.trim() ? (
+                  // react-doctor-disable-next-line react-doctor/no-array-index-as-key -- paragraphs split from static content have no per-item identity; append-only
                   <p
                     key={i}
                     className="mb-4 text-sm leading-relaxed text-foreground last:mb-0"
@@ -143,6 +146,7 @@ export function AnnouncementDetail({ id, workspaceSlug }: AnnouncementDetailProp
                     {paragraph}
                   </p>
                 ) : (
+                  // react-doctor-disable-next-line react-doctor/no-array-index-as-key -- blank separator rows have no identity
                   <div key={i} className="mb-4" />
                 ),
               )}

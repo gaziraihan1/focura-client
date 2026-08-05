@@ -46,7 +46,7 @@ export function ProductUpdateList({ onEdit }: ProductUpdateListProps) {
             title={update.title}
             subtitle={update.description}
             badge={update.status}
-            meta={`v${update.version} · ${new Date(update.date).toLocaleDateString()}`}
+            meta={`v${update.version} · ${new Date(update.date).toLocaleDateString("en-US", { timeZone: "UTC" })}`}
             onEdit={() => onEdit(update)}
             onDelete={() => deleteUpdate(update.slug)}
             isDeleting={isDeleting && deletingId === update.slug}

@@ -29,7 +29,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   // Close mobile menu on route change
 
+  // Redirect gate on async admin-status query (useIsFocuraAdmin) — no
+  // event-handler or server component has this client-fetched info; per the
+  // rule's own validation this is a false positive (async-subscription-gated).
   useEffect(() => {
+    // react-doctor-disable-next-line react-doctor/nextjs-no-client-side-redirect
     if (!isLoading && !isAdmin) router.replace('/dashboard');
   }, [isAdmin, isLoading, router]);
 

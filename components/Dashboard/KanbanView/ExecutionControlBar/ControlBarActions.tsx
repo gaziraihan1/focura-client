@@ -33,7 +33,7 @@ export function ControlBarActions({
       <button
         onClick={onToggleFilters}
         className={cn(
-          "flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg transition-all",
+          "flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg transition-colors",
           showFilters || activeFilterCount > 0
             ? "bg-primary text-primary-foreground"
             : "bg-muted text-muted-foreground hover:bg-accent"
@@ -50,7 +50,7 @@ export function ControlBarActions({
 
       {/* Sort Dropdown */}
       <div className="relative group">
-        <button className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg bg-muted text-muted-foreground hover:bg-accent transition-all">
+        <button className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg bg-muted text-muted-foreground hover:bg-accent transition-colors">
           <ArrowUpDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           <span className="hidden sm:inline">Sort:</span>
           <span className="capitalize font-medium text-foreground">{sort}</span>
@@ -76,7 +76,7 @@ export function ControlBarActions({
       <button
         onClick={onToggleBlockedOnly}
         className={cn(
-          "flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg transition-all",
+          "flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg transition-colors",
           filters.blockedOnly
             ? "bg-destructive text-destructive-foreground"
             : "bg-muted text-muted-foreground hover:bg-accent"
@@ -90,7 +90,7 @@ export function ControlBarActions({
       <button
         onClick={onToggleStaleOnly}
         className={cn(
-          "flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg transition-all",
+          "flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg transition-colors",
           filters.staleOnly
             ? "bg-amber-500 text-white"
             : "bg-muted text-muted-foreground hover:bg-accent"

@@ -31,7 +31,8 @@ export default function WorkspaceTasksPage() {
     sortBy, sortOrder, setSortBy, selectedStatus, setSelectedStatus,
     selectedPriority, setSelectedPriority, selectedProject, setSelectedProject,
     selectedAssignee, setSelectedAssignee, selectedLabels, toggleLabel, clearFilters,
-    focusRequired, setFocusRequired, handlePageChange, projects, labels, members,
+    selectedSection, setSelectedSection,
+    focusRequired, setFocusRequired, handlePageChange, projects, sections, labels, members,
     qouta, focusedTask, timeRemaining, activeSession, completeSession,
     primaryTask, secondaryTasks, hasPrimaryTask, dailyTasksLoading,
     handleAddToPrimary, handleAddToSecondary, handleRemoveDailyTask,
@@ -63,6 +64,7 @@ export default function WorkspaceTasksPage() {
         onAssigneeChange={setSelectedAssignee} selectedLabels={selectedLabels}
         onToggleLabel={toggleLabel} onClearFilters={clearFilters} focusRequired={focusRequired}
         onFocusRequiredChange={setFocusRequired} projects={projects} labels={labels} members={members}
+        sections={sections} selectedSection={selectedSection} onSectionChange={setSelectedSection}
       />
 
       <TaskTabs

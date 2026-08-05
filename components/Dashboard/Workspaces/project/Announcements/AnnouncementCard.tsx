@@ -30,7 +30,7 @@ export function AnnouncementCard({
       onClick={() => onOpen(a)}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(a); } }}
       aria-label={`Open announcement: ${a.title}`}
-      className="group relative rounded-2xl border border-border bg-card overflow-hidden hover:border-border/70 hover:shadow-md transition-all duration-200 cursor-pointer"
+      className="group relative rounded-2xl border border-border bg-card overflow-hidden hover:border-border/70 hover:shadow-md transition-colors duration-200 cursor-pointer"
     >
       {/*Top meta bar */}
       <div className="flex items-center justify-between gap-3 px-5 pt-4 pb-0">
@@ -75,7 +75,7 @@ export function AnnouncementCard({
                 disabled={pinningId === a.id}
                 aria-label={a.isPinned ? `Unpin announcement: ${a.title}` : `Pin announcement: ${a.title}`}
                 className={[
-                  "p-1.5 rounded-lg transition-all",
+                  "p-1.5 rounded-lg transition-colors transition-opacity",
                   a.isPinned
                     ? "text-amber-500 bg-amber-50 dark:bg-amber-950/30"
                     // mobile: always visible (opacity-100); desktop: hidden until hover
@@ -93,7 +93,7 @@ export function AnnouncementCard({
                 onClick={(e) => { e.stopPropagation(); onDelete(a.id); }}
                 disabled={deletingId === a.id}
                 aria-label={`Delete announcement: ${a.title}`}
-                className="p-1.5 rounded-lg text-muted-foreground/60 hover:text-destructive hover:bg-destructive/10 transition-all opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+                className="p-1.5 rounded-lg text-muted-foreground/60 hover:text-destructive hover:bg-destructive/10 transition-colors transition-opacity opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
               >
                 {deletingId === a.id ? (
                   <Loader2 size={13} className="animate-spin" />

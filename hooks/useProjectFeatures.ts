@@ -27,6 +27,9 @@ export interface MilestoneItem {
   completed: boolean;
   projectId: string;
   dependsOnId?: string;
+  tasks?: Array<{ id: string; title: string; status: string }>;
+  tasksDone?: number;
+  taskProgress?: number | null;
   dependsOn?: MilestoneItem;
   dependencies?: MilestoneItem[];
 }
@@ -112,6 +115,7 @@ export interface SprintItem {
   completedPoints?: number;
   velocity?: number;
   projectId: string;
+  _count?: { tasks: number };
 }
 
 export interface SprintStats {

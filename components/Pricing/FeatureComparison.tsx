@@ -33,9 +33,9 @@ export default function FeatureComparison() {
             </thead>
 
             <tbody>
-              {features.map((f, i) => (
+              {features.map((f) => (
                 <tr
-                  key={i}
+                  key={f.name}
                   className="border-b border-border/40 hover:bg-card/30 transition"
                 >
                   <td className="p-4 text-sm">{f.name}</td>
@@ -76,9 +76,9 @@ export default function FeatureComparison() {
         </div>
 
         <div className="md:hidden space-y-4 mt-6">
-          {features.map((f, i) => (
+          {features.map((f) => (
             <div
-              key={i}
+              key={f.name}
               className="rounded-xl bg-card/30 backdrop-blur-xl border border-border p-4"
             >
               <h3 className="text-base font-medium mb-3">{f.name}</h3>

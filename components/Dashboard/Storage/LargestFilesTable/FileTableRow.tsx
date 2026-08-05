@@ -110,7 +110,7 @@ export function FileTableRow({
       <td className="py-3 px-4">
         <div className="flex items-center justify-end gap-1">
           <button
-            onClick={() => window.open(file.url, '_blank')}
+            onClick={() => window.open(file.url, '_blank', 'noopener,noreferrer')}
             className="p-2 hover:bg-muted rounded-lg transition-colors"
             title="View file"
           >

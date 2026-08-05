@@ -32,7 +32,7 @@ export function ActivityTrendChart({ data }: ActivityTrendChartProps) {
 
       {/* Stacked Bar Chart */}
       <div className="relative h-48 flex items-end gap-1 mb-6">
-        {data.map((point, index) => {
+        {data.map((point) => {
           const totalHeight = (point.total / maxTotal) * 100;
           const createdPercent = point.total > 0 ? (point.created / point.total) * 100 : 0;
           const updatedPercent = point.total > 0 ? (point.updated / point.total) * 100 : 0;
@@ -41,7 +41,7 @@ export function ActivityTrendChart({ data }: ActivityTrendChartProps) {
 
           return (
             <div
-              key={index}
+              key={String(point.date)}
               className="group relative flex-1 flex flex-col justify-end"
               style={{ height: `${totalHeight}%` }}
             >

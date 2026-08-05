@@ -1,14 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 
 vi.mock("@/hooks/useProjectFeatures", () => ({
   useProjectViews: vi.fn(),
   useCreateView: vi.fn(),
   useDeleteView: vi.fn(),
+  useUpdateView: vi.fn(),
 }));
 
 import ViewList from "@/components/Dashboard/ProjectDetails/ViewList";
-import { useProjectViews } from "@/hooks/useProjectFeatures";
+import { useProjectViews, useDeleteView, useUpdateView } from "@/hooks/useProjectFeatures";
 
 describe("ViewList", () => {
   beforeEach(() => {
@@ -40,6 +41,34 @@ describe("ViewList", () => {
     expect(screen.getByText("Timeline View")).toBeDefined();
     expect(screen.getByText("KANBAN")).toBeDefined();
     expect(screen.getByText("TIMELINE")).toBeDefined();
-    expect(screen.getByText("Default")).toBeDefined();
+    expect(screen.getAllByText("Default").length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("opens a confirmation modal before deleting", async () => {
+    const deleteView = { mutateAsync: vi.fn() };
+    (useProjectViews as any).mockReturnValue({
+      data: [{ id: "v1", name: "My Kanban", type: "KANBAN", isDefault: false, visibility: "PRIVATE", createdById: "u1", projectId: "proj1" }],
+      isLoading: false,
+    });
+    (useDeleteView as any).mockReturnValue(deleteView);
+
+    render(<ViewList projectId="proj1" />);
+    fireEvent.click(screen.getByLabelText("Delete view My Kanban"));
+    expect(screen.getByText("Delete view?")).toBeDefined();
+    fireEvent.click(screen.getAllByRole("button").find((b) => b.textContent === "Delete")!);
+    expect(deleteView.mutateAsync).toHaveBeenCalledWith({ viewId: "v1", projectId: "proj1" });
+  });
+
+  it("sets a view as default via the Set default button", () => {
+    const updateView = { mutateAsync: vi.fn() };
+    (useProjectViews as any).mockReturnValue({
+      data: [{ id: "v1", name: "My Kanban", type: "KANBAN", isDefault: false, visibility: "PRIVATE", createdById: "u1", projectId: "proj1" }],
+      isLoading: false,
+    });
+    (useUpdateView as any).mockReturnValue(updateView);
+
+    render(<ViewList projectId="proj1" />);
+    fireEvent.click(screen.getByText("Set default"));
+    expect(updateView.mutateAsync).toHaveBeenCalledWith({ viewId: "v1", projectId: "proj1", isDefault: true });
   });
 });

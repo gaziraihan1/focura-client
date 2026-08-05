@@ -161,6 +161,7 @@ export function SubtaskRow({
             <span className="text-[11px] text-muted-foreground/40">·</span>
             <span className="text-[11px] text-muted-foreground">
               {new Date(subtask.createdAt).toLocaleDateString("en-US", {
+                timeZone: "UTC",
                 month: "short",
                 day:   "numeric",
               })}
@@ -171,6 +172,7 @@ export function SubtaskRow({
                 <span className="text-[11px] text-muted-foreground">
                   Due{" "}
                   {new Date(subtask.dueDate).toLocaleDateString("en-US", {
+                    timeZone: "UTC",
                     month: "short",
                     day:   "numeric",
                   })}

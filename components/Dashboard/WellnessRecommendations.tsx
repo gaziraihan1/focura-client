@@ -140,7 +140,7 @@ export function WellnessRecommendations() {
               </div>
               <button
                 onClick={() => handleDismiss(rec)}
-                className="shrink-0 p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-accent transition-all"
+                className="shrink-0 p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-accent transition-colors transition-opacity"
                 aria-label="Dismiss"
               >
                 <X className="w-3.5 h-3.5 text-muted-foreground" />

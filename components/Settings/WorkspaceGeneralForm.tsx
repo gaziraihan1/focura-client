@@ -1,14 +1,55 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import { Settings2, Save, Loader2 } from 'lucide-react';
-import { useWorkspace, useUpdateWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace, useUpdateWorkspace, type Workspace } from '@/hooks/useWorkspace';
 import toast from 'react-hot-toast';
 
 const PREDEFINED_COLORS = [
   '#667eea', '#3B82F6', '#10B981', '#F59E0B',
   '#EF4444', '#8B5CF6', '#EC4899', '#14B8A6',
 ];
+
+interface WorkspaceFormState {
+  name: string;
+  description: string;
+  color: string;
+  isPublic: boolean;
+  allowInvites: boolean;
+}
+
+type WorkspaceFormAction =
+  | { type: 'load'; workspace: Workspace }
+  | { type: 'setName'; value: string }
+  | { type: 'setDescription'; value: string }
+  | { type: 'setColor'; value: string }
+  | { type: 'setIsPublic'; value: boolean }
+  | { type: 'setAllowInvites'; value: boolean };
+
+function formReducer(state: WorkspaceFormState, action: WorkspaceFormAction): WorkspaceFormState {
+  switch (action.type) {
+    case 'load':
+      return {
+        name: action.workspace.name || '',
+        description: action.workspace.description || '',
+        color: action.workspace.color || PREDEFINED_COLORS[0],
+        isPublic: action.workspace.isPublic || false,
+        allowInvites: action.workspace.allowInvites ?? true,
+      };
+    case 'setName':
+      return { ...state, name: action.value };
+    case 'setDescription':
+      return { ...state, description: action.value };
+    case 'setColor':
+      return { ...state, color: action.value };
+    case 'setIsPublic':
+      return { ...state, isPublic: action.value };
+    case 'setAllowInvites':
+      return { ...state, allowInvites: action.value };
+    default:
+      return state;
+  }
+}
 
 interface WorkspaceGeneralFormProps {
   workspaceSlug: string;
@@ -17,26 +58,24 @@ interface WorkspaceGeneralFormProps {
 export function WorkspaceGeneralForm({ workspaceSlug }: WorkspaceGeneralFormProps) {
   const { data: workspace } = useWorkspace(workspaceSlug);
   const updateWorkspace = useUpdateWorkspace();
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [color, setColor] = useState(PREDEFINED_COLORS[0]);
-  const [isPublic, setIsPublic] = useState(false);
-  const [allowInvites, setAllowInvites] = useState(true);
+  const [form, dispatch] = useReducer(formReducer, {
+    name: '',
+    description: '',
+    color: PREDEFINED_COLORS[0],
+    isPublic: false,
+    allowInvites: true,
+  });
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (workspace) {
-      setName(workspace.name || '');
-      setDescription(workspace.description || '');
-      setColor(workspace.color || PREDEFINED_COLORS[0]);
-      setIsPublic(workspace.isPublic || false);
-      setAllowInvites(workspace.allowInvites ?? true);
+      dispatch({ type: 'load', workspace });
     }
   }, [workspace]);
 
   const handleSave = async () => {
     if (!workspace) return;
-    if (!name.trim()) {
+    if (!form.name.trim()) {
       toast.error('Workspace name is required');
       return;
     }
@@ -44,7 +83,7 @@ export function WorkspaceGeneralForm({ workspaceSlug }: WorkspaceGeneralFormProp
     try {
       await updateWorkspace.mutateAsync({
         id: workspace.id,
-        data: { name, description, color, isPublic },
+        data: { name: form.name, description: form.description, color: form.color, isPublic: form.isPublic },
       });
       toast.success('Workspace settings saved');
     } catch {
@@ -85,8 +124,8 @@ export function WorkspaceGeneralForm({ workspaceSlug }: WorkspaceGeneralFormProp
             </label>
             <input
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={form.name}
+              onChange={(e) => dispatch({ type: 'setName', value: e.target.value })}
               className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm"
               placeholder="My Workspace"
             />
@@ -97,8 +136,8 @@ export function WorkspaceGeneralForm({ workspaceSlug }: WorkspaceGeneralFormProp
               Description
             </label>
             <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={form.description}
+              onChange={(e) => dispatch({ type: 'setDescription', value: e.target.value })}
               rows={3}
               className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm resize-none"
               placeholder="What is this workspace for?"
@@ -113,9 +152,9 @@ export function WorkspaceGeneralForm({ workspaceSlug }: WorkspaceGeneralFormProp
               {PREDEFINED_COLORS.map((c) => (
                 <button
                   key={c}
-                  onClick={() => setColor(c)}
+                  onClick={() => dispatch({ type: 'setColor', value: c })}
                   className={`w-8 h-8 rounded-lg transition-all ${
-                    color === c ? 'ring-2 ring-offset-2 ring-primary scale-110' : 'hover:scale-105'
+                    form.color === c ? 'ring-2 ring-offset-2 ring-primary scale-110' : 'hover:scale-105'
                   }`}
                   style={{ backgroundColor: c }}
                 />
@@ -131,8 +170,8 @@ export function WorkspaceGeneralForm({ workspaceSlug }: WorkspaceGeneralFormProp
           <label className="flex items-center gap-3 cursor-pointer">
             <input
               type="checkbox"
-              checked={isPublic}
-              onChange={(e) => setIsPublic(e.target.checked)}
+              checked={form.isPublic}
+              onChange={(e) => dispatch({ type: 'setIsPublic', value: e.target.checked })}
               className="w-5 h-5 rounded border-border text-primary focus:ring-2 focus:ring-primary"
             />
             <div>
@@ -146,8 +185,8 @@ export function WorkspaceGeneralForm({ workspaceSlug }: WorkspaceGeneralFormProp
           <label className="flex items-center gap-3 cursor-pointer">
             <input
               type="checkbox"
-              checked={allowInvites}
-              onChange={(e) => setAllowInvites(e.target.checked)}
+              checked={form.allowInvites}
+              onChange={(e) => dispatch({ type: 'setAllowInvites', value: e.target.checked })}
               className="w-5 h-5 rounded border-border text-primary focus:ring-2 focus:ring-primary"
             />
             <div>

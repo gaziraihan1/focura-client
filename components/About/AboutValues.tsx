@@ -79,7 +79,7 @@ export const AboutValues = () => {
           {values.map(({ icon: Icon, title, body, tag, tagColor }) => (
             <div
               key={title}
-              className="group rounded-2xl border border bg-card p-6 space-y-4 hover:shadow-sm hover:border-foreground/20 transition-all"
+              className="group rounded-2xl border border bg-card p-6 space-y-4 hover:shadow-sm hover:border-foreground/20 transition-colors"
             >
               {/* Icon + tag row */}
               <div className="flex items-start justify-between gap-3">

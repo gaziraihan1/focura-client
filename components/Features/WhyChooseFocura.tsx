@@ -60,7 +60,7 @@ export default function WhyChooseFocura() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {reasons.map((r, i) => (
             <motion.div
-              key={i}
+              key={r.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: i * 0.1 }}
@@ -71,7 +71,7 @@ export default function WhyChooseFocura() {
                 shadow-[0_0_25px_-10px_var(--border)]
                 rounded-2xl p-8 flex flex-col items-start 
                 hover:shadow-lg hover:bg-background/50 
-                transition-all duration-300
+                transition-colors duration-300
               "
             >
               <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-5 border border-border/50">

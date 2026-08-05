@@ -4,12 +4,12 @@
 // All data fetching, filtering and board-column logic for the project tasks
 // page lives here — the page component stays presentational.
 
-import { createElement, useMemo, useEffect, useState, type ReactNode } from 'react';
+import { createElement, useMemo, useEffect, useRef, useState, type ReactNode } from 'react';
 import { useParams } from 'next/navigation';
 import { useProjectDetailsBySlug, useProjectRole } from '@/hooks/useProjects';
 import { useUserProfile } from '@/hooks/useUser';
 import { Task, useTasks, TaskSort } from '@/hooks/useTask';
-import { useProjectSections } from '@/hooks/useProjectFeatures';
+import { useProjectSections, useProjectSprints, useProjectMilestones, useProjectViews, type ProjectViewItem } from '@/hooks/useProjectFeatures';
 import { buildWorkflowColumns, mergeBoardColumns, assignTasksToColumns } from '@/utils/workflow';
 import { COLUMNS } from '@/components/Dashboard/Workspaces/project/Tasks/ListRow';
 import type { SectionsById } from '@/components/Dashboard/ProjectDetails/TaskCard';
@@ -45,6 +45,9 @@ export function useProjectTasksPage() {
   // the URL (useUrlState writes via router.replace), so the filter applies on
   // the navigation render — the codebase's established pattern.
   const [rawSectionFilter, setSectionFilter] = useUrlState<string>('section', NO_SECTION_FILTER);
+  const [rawSprintFilter, setSprintFilter] = useUrlState<string>('sprint', NO_SECTION_FILTER);
+  const [rawMilestoneFilter, setMilestoneFilter] = useUrlState<string>('milestone', NO_SECTION_FILTER);
+  const [viewParam, setViewParam] = useUrlState<string>('view', '');
 
   // ── Project (for header, members, permissions) ────────────────────────────
   const { data: project, isLoading, error } = useProjectDetailsBySlug(projectSlug);
@@ -67,6 +70,11 @@ export function useProjectTasksPage() {
   // Custom sections with a status mapping drive the board; default columns are
   // merged in for any status without a mapped section so tasks are never hidden.
   const { data: sections } = useProjectSections(project?.id);
+  const { data: sprintStats } = useProjectSprints(project?.id);
+  const { data: milestoneStats } = useProjectMilestones(project?.id);
+  const { data: views = [] } = useProjectViews(project?.id);
+  const sprints = sprintStats?.sprints ?? [];
+  const milestones = milestoneStats?.milestones ?? [];
 
   // sectionId → { name, color } so cards/rows can show which section a task
   // belongs to (folder sections included — they don't become board columns).
@@ -80,6 +88,16 @@ export function useProjectTasksPage() {
   const sectionFilter =
     rawSectionFilter !== NO_SECTION_FILTER && sectionsById.has(rawSectionFilter)
       ? rawSectionFilter
+      : NO_SECTION_FILTER;
+
+  const sprintFilter =
+    rawSprintFilter !== NO_SECTION_FILTER && sprints.some((s) => s.id === rawSprintFilter)
+      ? rawSprintFilter
+      : NO_SECTION_FILTER;
+
+  const milestoneFilter =
+    rawMilestoneFilter !== NO_SECTION_FILTER && milestones.some((m) => m.id === rawMilestoneFilter)
+      ? rawMilestoneFilter
       : NO_SECTION_FILTER;
 
   const boardColumns = useMemo<BoardColumnConfig[]>(() => {
@@ -100,6 +118,49 @@ export function useProjectTasksPage() {
         : col,
     );
   }, [sections]);
+
+  // ── Saved views ──────────────────────────────────────────────────────────
+  const activeView = viewParam ? views.find((v) => v.id === viewParam) : undefined;
+
+  const applyView = (view: ProjectViewItem) => {
+    setViewMode(view.type === 'LIST' ? 'list' : 'board');
+    setSearch('');
+    setPriorityFilter('ALL');
+    setStatusFilter('ALL');
+    setSectionFilter(NO_SECTION_FILTER);
+    setSprintFilter(NO_SECTION_FILTER);
+    setMilestoneFilter(NO_SECTION_FILTER);
+    setViewParam(view.id);
+  };
+
+  // Drop the applied saved view (back to the default board/list toggle).
+  const resetView = () => {
+    setViewParam('');
+    setViewMode('board');
+    setSearch('');
+    setPriorityFilter('ALL');
+    setStatusFilter('ALL');
+    setSectionFilter(NO_SECTION_FILTER);
+    setSprintFilter(NO_SECTION_FILTER);
+    setMilestoneFilter(NO_SECTION_FILTER);
+  };
+
+  // Arriving with ?view= (deep link / chip click) keeps the mode in sync.
+  useEffect(() => {
+    if (activeView) setViewMode(activeView.type === 'LIST' ? 'list' : 'board');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeView?.id]);
+
+  // Auto-apply the project's default view on first load when none is chosen.
+  const defaultAppliedRef = useRef(false);
+  useEffect(() => {
+    if (!project?.id || viewParam || defaultAppliedRef.current) return;
+    const defaultView = views.find((v) => v.isDefault);
+    if (defaultView) {
+      setViewMode(defaultView.type === 'LIST' ? 'list' : 'board');
+      defaultAppliedRef.current = true;
+    }
+  }, [project?.id, viewParam, views]);
 
   // ── Permission helpers (mirror ProjectDetailsPage) ────────────────────────
   const { userId } = useUserProfile();
@@ -123,8 +184,10 @@ export function useProjectTasksPage() {
     if (priorityFilter !== 'ALL') result = result.filter((t) => t.priority === priorityFilter);
     if (statusFilter !== 'ALL') result = result.filter((t) => t.status === statusFilter);
     if (sectionFilter !== NO_SECTION_FILTER) result = result.filter((t) => t.sectionId === sectionFilter);
+    if (sprintFilter !== NO_SECTION_FILTER) result = result.filter((t) => t.sprintId === sprintFilter);
+    if (milestoneFilter !== NO_SECTION_FILTER) result = result.filter((t) => t.milestoneId === milestoneFilter);
     return result;
-  }, [tasks, search, priorityFilter, statusFilter, sectionFilter]);
+  }, [tasks, search, priorityFilter, statusFilter, sectionFilter, sprintFilter, milestoneFilter]);
 
   // Tasks grouped per column — an assigned section wins over status so a card
   // never renders twice (see assignTasksToColumns).
@@ -154,6 +217,16 @@ export function useProjectTasksPage() {
     tasksLoading,
     sections,
     sectionsById,
+    sprints,
+    milestones,
+    views,
+    activeViewId: viewParam || null,
+    applyView,
+    resetView,
+    sprintFilter,
+    setSprintFilter,
+    milestoneFilter,
+    setMilestoneFilter,
     boardColumns,
     canCreateTasks,
     isMember,

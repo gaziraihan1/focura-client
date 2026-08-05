@@ -74,8 +74,8 @@ export default function PricingCard({
       </div>
 
       <ul className="space-y-3 mb-6 flex-1">
-        {features.map((f, i) => (
-          <li key={i} className="flex items-start gap-2 text-foreground/80">
+        {features.map((f) => (
+          <li key={f} className="flex items-start gap-2 text-foreground/80">
             <Check size={18} className="text-primary shrink-0 mt-0.5" />
             <span className="min-w-0">{f}</span>
           </li>

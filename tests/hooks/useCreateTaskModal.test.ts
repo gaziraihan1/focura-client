@@ -20,6 +20,12 @@ vi.mock('@/hooks/useProjectFeatures', () => ({
     ],
     isLoading: false,
   })),
+  useProjectSprints: vi.fn(() => ({
+    data: { sprints: [], activeSprint: null, avgVelocity: 0 },
+  })),
+  useProjectMilestones: vi.fn(() => ({
+    data: { milestones: [] },
+  })),
 }))
 
 describe('useCreateTaskModal', () => {

@@ -30,8 +30,9 @@ export default function AddMemberModal({
   const [role, setRole] = useState('COLLABORATOR');
 
   // Filter out users who are already project members
+  const existingMemberSet = new Set(existingMemberIds);
   const availableMembers = workspaceMembers.filter(
-    member => !existingMemberIds.includes(member.userId)
+    member => !existingMemberSet.has(member.userId)
   );
 
   const handleSubmit = () => {

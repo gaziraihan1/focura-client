@@ -138,8 +138,8 @@ export function AdminCharts() {
           <ResponsiveContainer width="100%" height={160}>
             <PieChart>
               <Pie data={pieData} cx="50%" cy="50%" innerRadius={46} outerRadius={68} paddingAngle={3} dataKey="value">
-                {pieData.map((entry: { color: string }, i: number) => (
-                  <Cell key={i} fill={entry.color} stroke="transparent" />
+                {pieData.map((entry: { name: string; color: string }) => (
+                  <Cell key={entry.name} fill={entry.color} stroke="transparent" />
                 ))}
               </Pie>
               <Tooltip content={({ active, payload }) => {

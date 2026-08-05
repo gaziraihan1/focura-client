@@ -68,7 +68,7 @@ export function TaskCompletionTrend({ data }: TaskCompletionTrendProps) {
 
           return (
             <div
-              key={index}
+              key={String(point.date)}
               className="group relative flex-1"
             >
               <div

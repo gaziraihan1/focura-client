@@ -11,6 +11,7 @@ import {
   RefreshCw,
   Mail,
 } from "lucide-react";
+import Link from "next/link";
 import {PrivacySection} from "./PrivacySection";
 import {PrivacyHighlight} from "./PrivacyHighlight";
 import {PrivacyList} from "./PrivacyList";
@@ -291,12 +292,12 @@ export const PrivacyContent = () => {
         </p>
         <p>
           For full details, see our{" "}
-          <a
+          <Link
             href="/cookies"
             className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
           >
             Cookie Policy
-          </a>
+          </Link>
           .
         </p>
       </PrivacySection>

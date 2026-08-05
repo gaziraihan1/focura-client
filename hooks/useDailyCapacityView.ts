@@ -81,7 +81,7 @@ export function useDailyCapacityView() {
   const { data: schedule, loading: schedLoading, error: schedError, refetch: refetchSchedule } = useUserSchedule();
 
   const dailyCapacity = capacity?.dailyCapacityHours ?? 8;
-  const workDays = schedule?.workDays ?? [];
+  const workDays = useMemo(() => schedule?.workDays ?? [], [schedule]);
 
   // Build aggregate lookup map
   const aggMap = useMemo(() => {
@@ -95,10 +95,11 @@ export function useDailyCapacityView() {
 
   // Build day-by-day data
   const dailyData: DayData[] = useMemo(() => {
+    const workDaySet = new Set(workDays);
     return weekDates.map((date, i) => {
       const dateKey = formatDateKey(date);
       const plannedHours = aggMap.get(dateKey) ?? 0;
-      const isWork = workDays.includes(DAY_CODES[i]);
+      const isWork = workDaySet.has(DAY_CODES[i]);
       return {
         dayName: DAY_NAMES_SHORT[i],
         dateKey,

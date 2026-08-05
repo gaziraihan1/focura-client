@@ -1,0 +1,18 @@
+{
+  // DevGuides documentation pages intentionally render .env setup snippets
+  // with placeholder values (e.g. "your secret here", "postgresql://...") so
+  // contributors can copy the shape. No real secret is ever rendered, and
+  // .env files are not tracked. artifact-env-leak flags these placeholders
+  // inside the generated browser bundle, which the rule's own docs classify
+  // as a false positive ("a secret-looking NAME that holds no real secret
+  // value"). Suppress only for generated build artifacts; source scanning of
+  // public-prefixed secrets remains fully active.
+  "ignore": {
+    "overrides": [
+      {
+        "files": [".next/static/**"],
+        "rules": ["react-doctor/artifact-env-leak"]
+      }
+    ]
+  }
+}

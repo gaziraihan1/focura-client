@@ -21,7 +21,7 @@ export function QuickAccessCard({
   return (
     <button
       onClick={onClick}
-      className="group relative w-full text-left rounded-2xl border border-border bg-card overflow-hidden hover:border-border/0 hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+      className="group relative w-full text-left rounded-2xl border border-border bg-card overflow-hidden hover:border-border/0 hover:shadow-xl transition-colors transition-transform duration-300 hover:-translate-y-0.5"
     >
       {/* Gradient sweep on hover */}
       <div

@@ -535,6 +535,7 @@ model ProjectMilestone {
   dependsOn    ProjectMilestone?  @relation("MilestoneDependencies", fields: [dependsOnId], references: [id])
   dependencies ProjectMilestone[] @relation("MilestoneDependencies")
   project      Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tasks        Task[]
 
   @@index([projectId])
 }
@@ -608,6 +609,8 @@ model Task {
   sprintId                 String?
   sectionId                String?
   section                  ProjectSection? @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+  milestoneId              String?
+  milestone                ProjectMilestone? @relation(fields: [milestoneId], references: [id], onDelete: SetNull)
   createdById              String
   parentId                 String?
   workspaceId              String?
@@ -683,6 +686,7 @@ model Task {
   @@index([createdAt])
   @@index([sprintId])
   @@index([sectionId])
+  @@index([milestoneId])
 }
 
 model TaskAssignee {

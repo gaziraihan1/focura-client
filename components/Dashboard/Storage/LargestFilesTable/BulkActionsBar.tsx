@@ -24,11 +24,11 @@ export function BulkActionsBar({
   if (selectedCount === 0) return null;
 
   return (
-    <AnimatePresence>
+    <AnimatePresence initial={false}>
       <motion.div
-        initial={{ opacity: 0, height: 0 }}
-        animate={{ opacity: 1, height: 'auto' }}
-        exit={{ opacity: 0, height: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
         className="mb-4 p-4 bg-muted/50 rounded-lg"
       >
         <div className="flex items-center justify-between">

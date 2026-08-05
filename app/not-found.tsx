@@ -52,7 +52,7 @@ export default function NotFound() {
         >
           <button
             onClick={() => router.back()}
-            className="group w-full sm:w-auto px-6 py-3 rounded-xl bg-secondary text-secondary-foreground font-medium hover:bg-secondary/80 transition-all flex items-center justify-center gap-2 border border-border"
+            className="group w-full sm:w-auto px-6 py-3 rounded-xl bg-secondary text-secondary-foreground font-medium hover:bg-secondary/80 transition-colors flex items-center justify-center gap-2 border border-border"
           >
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             Go Back
@@ -60,7 +60,7 @@ export default function NotFound() {
 
           <Link
             href="/"
-            className="group w-full sm:w-auto px-6 py-3 rounded-xl bg-primary text-primary-foreground font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2"
+            className="group w-full sm:w-auto px-6 py-3 rounded-xl bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
           >
             <Home className="w-5 h-5 group-hover:scale-110 transition-transform" />
             Back to Home

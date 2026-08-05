@@ -12,7 +12,7 @@ export function KanbanInsightsButton({
   return (
     <button
       onClick={onToggle}
-      className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-card border border-border px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-all text-sm font-medium z-10"
+      className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-card border border-border px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-colors text-sm font-medium z-10"
     >
       Show Insights
     </button>

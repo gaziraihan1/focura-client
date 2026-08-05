@@ -129,6 +129,10 @@ export interface Task {
   updatedAt: string;
   projectId: string | null;
   sectionId?: string | null;
+  sprintId?: string | null;
+  milestoneId?: string | null;
+  sprint?: { id: string; name: string } | null;
+  milestone?: { id: string; title: string; status?: string; progress?: number } | null;
   intent: IntentType
 
   focusRequired?: boolean;

@@ -14,6 +14,7 @@ export function TaskAssigneePicker({
   selectedUserIds,
   onToggle,
 }: TaskAssigneePickerProps) {
+  const selectedSet = new Set(selectedUserIds);
   return (
     <div>
       <label className="text-sm font-medium mb-2 block">
@@ -23,7 +24,7 @@ export function TaskAssigneePicker({
 
       <div className="space-y-2 max-h-40 overflow-y-auto">
         {projectMembers.map((member) => {
-          const isSelected = selectedUserIds.includes(member.userId);
+          const isSelected = selectedSet.has(member.userId);
 
           return (
             <button

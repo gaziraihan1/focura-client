@@ -50,7 +50,7 @@ export function FileCard({ file, isAdmin, workspaceId }: FileCardProps) {
 
   return (
     <>
-      <div className="group relative bg-card border rounded-lg overflow-hidden hover:shadow-md transition-all">
+      <div className="group relative bg-card border rounded-lg overflow-hidden hover:shadow-md transition-colors">
         <div className="aspect-square bg-muted flex items-center justify-center relative overflow-hidden">
           {isImageFile(file.mimeType) ? (
             <Image

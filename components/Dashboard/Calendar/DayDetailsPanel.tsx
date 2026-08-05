@@ -165,7 +165,7 @@ function EnergyHistorySection({ date }: { date: Date }) {
           <div className="space-y-1.5">
             {history.map((entry) => {
               const d = new Date(entry.date);
-              const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+              const label = d.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' });
               return (
                 <div key={entry.id} className="flex items-center gap-2">
                   <span className="text-[10px] text-muted-foreground w-12 shrink-0">{label}</span>

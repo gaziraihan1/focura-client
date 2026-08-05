@@ -5,6 +5,7 @@ import type { Notification } from "@/types/notification.types";
 import { NotificationPreferences } from "@/types/notification.types";
 
 const NOTIFICATION_SOUND_URL = "/sounds/notification.mp3";
+const STORAGE_KEY = "notification-preferences:v1";
 
 export function getStoredPreferences(): NotificationPreferences {
   const defaultPreferences: NotificationPreferences = {
@@ -20,7 +21,7 @@ export function getStoredPreferences(): NotificationPreferences {
   }
 
   try {
-    const saved = localStorage.getItem("notification-preferences");
+    const saved = localStorage.getItem(STORAGE_KEY);
     return saved ? JSON.parse(saved) : defaultPreferences;
   } catch {
     return defaultPreferences;
@@ -29,7 +30,7 @@ export function getStoredPreferences(): NotificationPreferences {
 
 export function storePreferences(preferences: NotificationPreferences): void {
   try {
-    localStorage.setItem("notification-preferences", JSON.stringify(preferences));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(preferences));
   } catch {
     // Ignore storage errors
   }
@@ -81,11 +82,10 @@ export function useNotificationPreferencesState() {
 
   const updatePreferences = useCallback(
     (updates: Partial<NotificationPreferences>) => {
-      setPreferencesState((prev) => {
-        const next = { ...prev, ...updates };
-        storePreferences(next);
-        return next;
-      });
+      setPreferencesState((prev) => ({ ...prev, ...updates }));
+      // Persist after state is queued — never run side effects inside the setter.
+      const next = { ...getStoredPreferences(), ...updates };
+      storePreferences(next);
     },
     []
   );

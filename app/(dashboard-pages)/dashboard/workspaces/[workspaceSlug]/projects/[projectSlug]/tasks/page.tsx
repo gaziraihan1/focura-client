@@ -22,6 +22,25 @@ import {
   NO_SECTION_FILTER,
 } from '@/hooks/useProjectTasksPage';
 
+// ── Task loading skeleton ───────────────────────────────────────────────────
+const TasksSkeleton = () => (
+  <div className="space-y-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="rounded-xl border border-border bg-card p-3 animate-pulse space-y-3">
+          <div className="h-3 w-2/3 rounded bg-muted" />
+          <div className="h-2.5 w-full rounded bg-muted" />
+          <div className="h-2.5 w-4/5 rounded bg-muted" />
+          <div className="flex -space-x-2 pt-1">
+            <div className="size-6 rounded-full bg-muted border-2 border-card" />
+            <div className="size-6 rounded-full bg-muted border-2 border-card" />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
 export default function ProjectTasksPage() {
   const router = useRouter();
   const {
@@ -33,6 +52,16 @@ export default function ProjectTasksPage() {
     tasksLoading,
     sections,
     sectionsById,
+    sprints,
+    milestones,
+    views,
+    activeViewId,
+    applyView,
+    resetView,
+    sprintFilter,
+    setSprintFilter,
+    milestoneFilter,
+    setMilestoneFilter,
     boardColumns,
     canCreateTasks,
     isMember,
@@ -88,25 +117,6 @@ export default function ProjectTasksPage() {
   }
 
   const workspaceSlug = project.workspace?.slug ?? '';
-
-  // ── Task loading skeleton ────────────────────────────────────────────────
-  const TasksSkeleton = () => (
-    <div className="space-y-3">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="rounded-xl border border-border bg-card p-3 animate-pulse space-y-3">
-            <div className="h-3 w-2/3 rounded bg-muted" />
-            <div className="h-2.5 w-full rounded bg-muted" />
-            <div className="h-2.5 w-4/5 rounded bg-muted" />
-            <div className="flex -space-x-2 pt-1">
-              <div className="size-6 rounded-full bg-muted border-2 border-card" />
-              <div className="size-6 rounded-full bg-muted border-2 border-card" />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
 
   // ── Body ──────────────────────────────────────────────────────────────────
   const renderBody = () => {
@@ -201,6 +211,14 @@ export default function ProjectTasksPage() {
           statusFilter={statusFilter} setStatusFilter={setStatusFilter}
           sections={sections ?? []}
           sectionFilter={sectionFilter} setSectionFilter={setSectionFilter}
+          sprints={sprints ?? []}
+          sprintFilter={sprintFilter} setSprintFilter={setSprintFilter}
+          milestones={milestones ?? []}
+          milestoneFilter={milestoneFilter} setMilestoneFilter={setMilestoneFilter}
+          views={views ?? []}
+          activeViewId={activeViewId}
+          onApplyView={applyView}
+          onResetView={resetView}
         />
 
         {renderBody()}

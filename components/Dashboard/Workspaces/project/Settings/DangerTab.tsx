@@ -47,7 +47,7 @@ export function DangerTab({
 
   // ── Archive ────────────────────────────────────────────────────────────────
   const handleArchive = async () => {
-    if (archiving || archiveConfirm !== projectName || !project?.id) return;
+    if (archiving || updateProject.isPending || archiveConfirm !== projectName || !project?.id) return;
     setArchiving(true);
     try {
       await updateProject.mutateAsync({
@@ -62,7 +62,7 @@ export function DangerTab({
 
   // ── Unarchive ──────────────────────────────────────────────────────────────
   const handleUnarchive = async () => {
-    if (unarchiving || !project?.id) return;
+    if (unarchiving || updateProject.isPending || !project?.id) return;
     setUnarchiving(true);
     try {
       await updateProject.mutateAsync({
@@ -76,7 +76,7 @@ export function DangerTab({
 
   // ── Delete ─────────────────────────────────────────────────────────────────
   const handleDelete = async () => {
-    if (deleting || deleteConfirm !== projectName || !project?.id) return;
+    if (deleting || deleteProjectMutation.isPending || deleteConfirm !== projectName || !project?.id) return;
     setDeleting(true);
     try {
       await deleteProjectMutation.mutateAsync(project.id);
@@ -114,7 +114,7 @@ export function DangerTab({
                     key={s.value}
                     onClick={() => setNewStatus(s.value)}
                     className={[
-                      "px-3 py-2 rounded-xl text-xs font-semibold border transition-all",
+                      "px-3 py-2 rounded-xl text-xs font-semibold border transition-colors",
                       newStatus === s.value
                         ? `${STATUS_STYLES[s.value]} border-current ring-1 ring-current/30`
                         : "border-border text-muted-foreground hover:bg-accent",
@@ -130,7 +130,7 @@ export function DangerTab({
               onClick={handleUnarchive}
               disabled={unarchiving}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
-                         bg-emerald-500 text-white hover:bg-emerald-600 transition-all
+                         bg-emerald-500 text-white hover:bg-emerald-600 transition-colors
                          disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {unarchiving
@@ -174,7 +174,7 @@ export function DangerTab({
               disabled={archiveConfirm !== projectName || archiving}
               onClick={handleArchive}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
-                         bg-amber-500 text-white hover:bg-amber-600 transition-all
+                         bg-amber-500 text-white hover:bg-amber-600 transition-colors
                          disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {archiving ? <Loader2 size={14} className="animate-spin" /> : <Shield size={14} />}
@@ -201,7 +201,7 @@ export function DangerTab({
                   }
                   disabled={project?.status === s.value || updateProject.isPending}
                   className={[
-                    "px-3 py-2 rounded-xl text-xs font-semibold border transition-all",
+                    "px-3 py-2 rounded-xl text-xs font-semibold border transition-colors",
                     project?.status === s.value
                       ? `${STATUS_STYLES[s.value]} border-current ring-1 ring-current/30 cursor-default`
                       : "border-border text-muted-foreground hover:bg-accent disabled:opacity-40",
@@ -252,7 +252,7 @@ export function DangerTab({
               disabled={deleteConfirm !== projectName || deleting}
               onClick={handleDelete}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
-                         bg-destructive text-white hover:bg-destructive/90 transition-all
+                         bg-destructive text-white hover:bg-destructive/90 transition-colors
                          disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {deleting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}

@@ -32,6 +32,12 @@ export default function CreateTaskModal({
     sections,
     sectionId,
     setSectionId,
+    sprints,
+    sprintId,
+    setSprintId,
+    milestones,
+    milestoneId,
+    setMilestoneId,
   } = useCreateTaskModal({ projectId, onClose });
 
   return (
@@ -131,6 +137,56 @@ export default function CreateTaskModal({
                       {section.name}
                     </option>
                   ))}
+              </select>
+            </div>
+          )}
+
+          {/* Sprint */}
+          {sprints && sprints.length > 0 && (
+            <div>
+              <label
+                htmlFor="task-sprint"
+                className="block text-xs font-medium text-muted-foreground mb-1.5"
+              >
+                Sprint
+              </label>
+              <select
+                id="task-sprint"
+                value={sprintId}
+                onChange={(e) => setSprintId(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+              >
+                <option value="">No sprint</option>
+                {sprints.map((sprint) => (
+                  <option key={sprint.id} value={sprint.id}>
+                    {sprint.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Milestone */}
+          {milestones && milestones.length > 0 && (
+            <div>
+              <label
+                htmlFor="task-milestone"
+                className="block text-xs font-medium text-muted-foreground mb-1.5"
+              >
+                Milestone
+              </label>
+              <select
+                id="task-milestone"
+                value={milestoneId}
+                onChange={(e) => setMilestoneId(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+              >
+                <option value="">No milestone</option>
+                {milestones.map((milestone) => (
+                  <option key={milestone.id} value={milestone.id}>
+                    {milestone.title}
+                  </option>
+                ))}
               </select>
             </div>
           )}

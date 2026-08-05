@@ -48,6 +48,7 @@ export function PreviewContent({ raw }: PreviewContentProps) {
 
         if (token.type === 'mono')
           return (
+            // react-doctor-disable-next-line react-doctor/no-array-index-as-key -- parsed inline tokens have no stable per-item identity
             <span key={i} className="inline-flex items-center gap-1">
               <code className="px-1.5 py-0.5 rounded bg-muted text-[0.8em] font-mono border border-border/60 text-foreground/80">
                 {token.value}
@@ -69,6 +70,7 @@ export function PreviewContent({ raw }: PreviewContentProps) {
 
         if (token.type === 'link')
           return (
+            // react-doctor-disable-next-line react-doctor/no-array-index-as-key -- parsed inline tokens have no stable per-item identity
             <Link
               key={i}
               href={token.url}

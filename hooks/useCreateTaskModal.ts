@@ -1,7 +1,7 @@
 // hooks/useCreateTaskModal.ts
 import { useState, useCallback } from "react";
 import { useCreateTask } from "@/hooks/useTask";
-import { useProjectSections } from "@/hooks/useProjectFeatures";
+import { useProjectSections, useProjectSprints, useProjectMilestones } from "@/hooks/useProjectFeatures";
 import { CreateTaskFormData } from "@/types/taskForm.types";
 
 interface UseCreateTaskModalProps {
@@ -15,8 +15,12 @@ export function useCreateTaskModal({
 }: UseCreateTaskModalProps) {
   const createTask = useCreateTask();
   const { data: sections } = useProjectSections(projectId);
+  const { data: sprints } = useProjectSprints(projectId);
+  const { data: milestoneStats } = useProjectMilestones(projectId);
 
   const [sectionId, setSectionId] = useState<string>("");
+  const [sprintId, setSprintId] = useState<string>("");
+  const [milestoneId, setMilestoneId] = useState<string>("");
 
   const [formData, setFormData] = useState<CreateTaskFormData>({
     title: "",
@@ -80,6 +84,8 @@ export function useCreateTaskModal({
       {
         ...formData,
         sectionId: sectionId || undefined,
+        sprintId: sprintId || undefined,
+        milestoneId: milestoneId || undefined,
         projectId,
       },
       {
@@ -88,7 +94,7 @@ export function useCreateTaskModal({
         },
       }
     );
-  }, [validate, createTask, formData, sectionId, projectId, onClose]);
+  }, [validate, createTask, formData, sectionId, sprintId, milestoneId, projectId, onClose]);
 
   return {
     formData,
@@ -100,5 +106,11 @@ export function useCreateTaskModal({
     sections,
     sectionId,
     setSectionId,
+    sprints: sprints?.sprints ?? [],
+    sprintId,
+    setSprintId,
+    milestones: milestoneStats?.milestones ?? [],
+    milestoneId,
+    setMilestoneId,
   };
 }

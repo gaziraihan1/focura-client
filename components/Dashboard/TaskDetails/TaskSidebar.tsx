@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Clock, Calendar, User, Folder, Check, Lock, Link2, Unlink2, MessageSquare } from "lucide-react";
 import { Task } from "@/types/task.types";
@@ -41,6 +41,7 @@ export const TaskSidebar = ({
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [showSlackLinkModal, setShowSlackLinkModal] = useState(false);
   const [unlinking, setUnlinking] = useState(false);
+  const unlinkingRef = useRef(false);
 
   // Check if any GitHub entity is linked
   const hasGitHubLink =
@@ -53,6 +54,8 @@ export const TaskSidebar = ({
   const hasSlackLink = !!(task.slackChannelId && task.slackMessageTs);
 
   const handleUnlink = async () => {
+    if (unlinkingRef.current) return;
+    unlinkingRef.current = true;
     setUnlinking(true);
     try {
       await api.put(`/api/v1/tasks/${task.id}/github-unlink`);
@@ -61,6 +64,7 @@ export const TaskSidebar = ({
     } catch {
       toast.error("Failed to remove GitHub link");
     } finally {
+      unlinkingRef.current = false;
       setUnlinking(false);
     }
   };
@@ -256,7 +260,7 @@ export const TaskSidebar = ({
             <div className="flex-1">
               <p className="text-xs text-muted-foreground">Start Date</p>
               <p className="text-sm font-medium text-foreground">
-                {new Date(task.startDate).toLocaleDateString()}
+                {new Date(task.startDate).toLocaleDateString("en-US", { timeZone: "UTC" })}
               </p>
             </div>
           </div>
@@ -268,7 +272,7 @@ export const TaskSidebar = ({
             <div className="flex-1">
               <p className="text-xs text-muted-foreground">Due Date</p>
               <p className="text-sm font-medium text-foreground">
-                {new Date(task.dueDate).toLocaleDateString()}
+                {new Date(task.dueDate).toLocaleDateString("en-US", { timeZone: "UTC" })}
               </p>
             </div>
           </div>
@@ -317,12 +321,12 @@ export const TaskSidebar = ({
         <div className="pt-4 border-t border-border">
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
             <Clock size={14} />
-            Created {new Date(task.createdAt).toLocaleDateString()}
+            Created {new Date(task.createdAt).toLocaleDateString("en-US", { timeZone: "UTC" })}
           </div>
           {task.completedAt && (
             <div className="flex items-center gap-3 text-xs text-muted-foreground mt-2">
               <Check size={14} />
-              Completed {new Date(task.completedAt).toLocaleDateString()}
+              Completed {new Date(task.completedAt).toLocaleDateString("en-US", { timeZone: "UTC" })}
             </div>
           )}
         </div>

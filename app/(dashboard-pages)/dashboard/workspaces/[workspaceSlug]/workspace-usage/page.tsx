@@ -63,8 +63,11 @@ export default function WorkspaceUsagePage() {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    await refetch?.();
-    setIsRefreshing(false);
+    try {
+      await refetch?.();
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   // Plan still resolving — let the layout handle it, render nothing

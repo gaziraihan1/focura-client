@@ -54,7 +54,7 @@ export default function LabelCard({
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.2 }}
-        className="bg-card rounded-lg border border-border p-4 hover:shadow-md transition-all relative group"
+        className="bg-card rounded-lg border border-border p-4 hover:shadow-md transition-colors relative group"
       >
         <div className="flex items-start justify-between mb-3">
           <Link
@@ -73,7 +73,7 @@ export default function LabelCard({
           <div className="relative">
             <button
               onClick={onDropdownToggle}
-              className="p-1.5 md:opacity-0 group-hover:opacity-100 hover:bg-accent rounded transition-all"
+              className="p-1.5 md:opacity-0 group-hover:opacity-100 hover:bg-accent rounded transition-colors transition-opacity"
               aria-label="Label options"
             >
               <MoreVertical className="w-4 h-4 text-muted-foreground" />
@@ -129,6 +129,7 @@ export default function LabelCard({
             </div>
             <span>
               {new Date(label.createdAt).toLocaleDateString("en-US", {
+                timeZone: "UTC",
                 month: "short",
                 day:   "numeric",
               })}

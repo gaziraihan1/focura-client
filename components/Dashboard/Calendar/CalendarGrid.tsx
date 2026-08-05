@@ -116,7 +116,7 @@ export function CalendarGrid({
 
           return (
             <CalendarDayCell
-              key={index}
+              key={day.toISOString()}
               date={day}
               aggregate={aggregate}
               goals={goals}

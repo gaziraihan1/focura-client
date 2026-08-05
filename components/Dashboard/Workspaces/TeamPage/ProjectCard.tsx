@@ -110,7 +110,7 @@ export function ProjectCard({ project, isExpanded, onToggle, children }: Project
           </div>
           <div className="w-full h-1.5 rounded-full bg-muted overflow-hidden">
             <div
-              className="h-full rounded-full bg-emerald-500 transition-all duration-500"
+              className="h-full rounded-full bg-emerald-500 transition-colors duration-500"
               style={{ width: `${completionPct}%` }}
             />
           </div>

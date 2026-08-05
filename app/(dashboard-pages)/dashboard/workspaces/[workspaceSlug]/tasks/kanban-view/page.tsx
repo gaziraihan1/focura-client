@@ -1,5 +1,6 @@
 "use client";
 
+import { useParams } from "next/navigation";
 import { KanbanHeader } from "@/components/Dashboard/KanbanView/KanbanHeader";
 import { ExecutionControlBar } from "@/components/Dashboard/KanbanView/ExecutionControlBar";
 import { KanbanBoard } from "@/components/Dashboard/KanbanView/KanbanBoard";
@@ -8,16 +9,9 @@ import { KanbanInsightsButton } from "@/components/Dashboard/KanbanView/KanbanIn
 import { TaskDetailsModal } from "@/components/Dashboard/CalendarView/TaskDetailsModal";
 import { useWorkspaceKanbanPage } from "@/hooks/useWorkspaceKanbanPage";
 
-interface WorkspaceKanbanPageProps {
-  params: {
-    "workspace-name": string;
-  };
-}
-
-export default function WorkspaceKanbanPage({
-  params,
-}: WorkspaceKanbanPageProps) {
-  const workspaceSlug = params["workspace-name"];
+export default function WorkspaceKanbanPage() {
+  const { "workspace-name": workspaceName } = useParams();
+  const workspaceSlug = workspaceName as string;
 
   const {
     scope,

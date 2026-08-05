@@ -27,7 +27,7 @@ interface KPICardProps {
 
 function KPICard({ icon: Icon, label, value, subtitle, accentClass, iconBgClass }: KPICardProps) {
   return (
-    <div className="group bg-card border border-border rounded-xl sm:rounded-2xl p-3 sm:p-5 hover:shadow-md hover:border-primary/20 transition-all duration-300">
+    <div className="group bg-card border border-border rounded-xl sm:rounded-2xl p-3 sm:p-5 hover:shadow-md hover:border-primary/20 transition-colors duration-300">
       <div className={`p-2 rounded-lg ${iconBgClass} w-fit mb-2.5 sm:mb-4`}>
         <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${accentClass}`} />
       </div>

@@ -28,6 +28,7 @@ export function TaskList({
   primaryTaskId,
   secondaryTaskIds
 }: TaskListProps) {
+  const secondaryTaskIdSet = new Set(secondaryTaskIds ?? []);
   return (
     <div className="space-y-3">
       {tasks.map((task, index) => (
@@ -47,7 +48,7 @@ export function TaskList({
             loadingTaskId={loadingTaskId}
             loadingType={loadingType}
             isInPrimary={primaryTaskId === task.id}
-            isInSecondary={secondaryTaskIds?.includes(task.id)
+            isInSecondary={secondaryTaskIdSet.has(task.id)
             }
 
           />

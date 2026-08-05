@@ -40,14 +40,14 @@ export default function FinalSolutionsCTA() {
         >
           <Link
             href="/signup"
-            className="inline-flex items-center gap-2 rounded-xl bg-primary px-7 py-3 font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:opacity-90"
+            className="inline-flex items-center gap-2 rounded-xl bg-primary px-7 py-3 font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-opacity hover:opacity-90"
           >
             Get Started Free
           </Link>
 
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-7 py-3 font-medium text-foreground shadow-sm transition-all hover:bg-card/70"
+            className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-7 py-3 font-medium text-foreground shadow-sm transition-colors hover:bg-card/70"
           >
             Talk to Sales
           </Link>

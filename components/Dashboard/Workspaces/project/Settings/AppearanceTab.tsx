@@ -26,16 +26,18 @@ export function AppearanceTab({
   const updateProject = useUpdateProject();
 
   const handleSave = async () => {
-    if (saving) return;
+    if (saving || !project?.id) return;
     setSaving(true);
-    if ( saving || !project?.id) return;
-    await updateProject.mutateAsync({
-      projectId: project.id,
-      data: { color: activeColor },
-    });
-    setSaving(false);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    try {
+      await updateProject.mutateAsync({
+        projectId: project.id,
+        data: { color: activeColor },
+      });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -48,7 +50,7 @@ export function AppearanceTab({
           {/* Preview */}
           <div className="flex items-center gap-4 p-4 rounded-xl bg-muted/30 border border-border">
             <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-xl font-black shadow-md transition-all duration-300"
+              className="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-xl font-black shadow-md transition-colors duration-300"
               style={{ backgroundColor: activeColor }}
             >
               {project?.name?.charAt(0).toUpperCase() ?? "P"}
@@ -90,7 +92,7 @@ export function AppearanceTab({
             </label>
             <div className="flex items-center gap-2">
               <div
-                className="w-8 h-8 rounded-lg shrink-0 border border-border transition-all"
+                className="w-8 h-8 rounded-lg shrink-0 border border-border transition-colors"
                 style={{ backgroundColor: activeColor }}
               />
               <input
@@ -112,7 +114,7 @@ export function AppearanceTab({
                 onClick={handleSave}
                 disabled={saving}
                 className={[
-                  "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all",
+                  "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-colors transition-opacity",
                   saved
                     ? "bg-emerald-500 text-white"
                     : "bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-40",

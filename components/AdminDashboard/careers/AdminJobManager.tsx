@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Plus, X, Loader2, AlertTriangle } from 'lucide-react';
 import AdminJobTable from './AdminJobTable';
 import type { JobPosting } from '@/types/job.types';
@@ -50,6 +50,7 @@ const AdminJobsManager = () => {
   const [panel, setPanel] = useState<Panel | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<JobPosting | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const deletingRef = useRef(false);
 
   const { data, isPending, isError, refetch } = useAdminJobs();
   const jobs = data?.jobs ?? [];
@@ -73,12 +74,14 @@ const AdminJobsManager = () => {
   };
 
   const handleDelete = async () => {
-    if (!deleteTarget) return;
+    if (!deleteTarget || deleting || deletingRef.current) return;
+    deletingRef.current = true;
     setDeleting(true);
     try {
       await deleteJob.mutateAsync(deleteTarget.id);
       setDeleteTarget(null);
     } finally {
+      deletingRef.current = false;
       setDeleting(false);
     }
   };

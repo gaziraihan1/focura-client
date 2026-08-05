@@ -24,14 +24,14 @@ export default function FeatureFinalCTA() {
         >
           <Link
             href="/signup"
-            className="flex items-center gap-2 rounded-xl bg-primary px-7 py-3 text-lg font-semibold text-primary-foreground transition-all hover:opacity-90"
+            className="flex items-center gap-2 rounded-xl bg-primary px-7 py-3 text-lg font-semibold text-primary-foreground transition-opacity hover:opacity-90"
           >
             Get Started Free
           </Link>
 
           <Link
             href="/contact"
-            className="rounded-xl border border-border bg-card px-7 py-3 text-lg font-semibold text-foreground shadow-sm transition-all hover:bg-muted"
+            className="rounded-xl border border-border bg-card px-7 py-3 text-lg font-semibold text-foreground shadow-sm transition-colors hover:bg-muted"
           >
             Talk to Sales
           </Link>

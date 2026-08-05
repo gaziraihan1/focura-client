@@ -304,8 +304,8 @@ export function FileTypeDistribution({
                 paddingAngle={4}
                 dataKey="value"
               >
-                {data.map((_, i) => (
-                  <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                {data.map((entry) => (
+                  <Cell key={entry.name} fill={PIE_COLORS[data.indexOf(entry) % PIE_COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip

@@ -116,7 +116,7 @@ export function MemberLeaderboard({ data }: MemberLeaderboardProps) {
               {/* Progress Bar */}
               <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
                 <div
-                  className="h-full bg-primary rounded-full transition-all duration-500"
+                  className="h-full bg-primary rounded-full transition-colors duration-500"
                   style={{ width: `${widthPercentage}%` }}
                 />
               </div>

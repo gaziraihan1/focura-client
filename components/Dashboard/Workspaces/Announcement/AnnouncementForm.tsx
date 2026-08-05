@@ -29,6 +29,7 @@ export function AnnouncementForm({
   lockedProjectId,
   onProjectChange,
 }: AnnouncementFormProps) {
+  const targetIdSet = new Set(formState.targetIds);
   return (
     <div className="flex flex-col gap-5">
 
@@ -162,7 +163,7 @@ export function AnnouncementForm({
               <p className="text-xs text-muted-foreground text-center py-3">No members found</p>
             ) : (
               members.map(({ userId, user }) => {
-                const selected = formState.targetIds.includes(userId);
+                const selected = targetIdSet.has(userId);
                 return (
                   <button
                     key={userId}

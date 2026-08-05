@@ -33,6 +33,7 @@ export function FilePreviewModal({ file, onClose }: FilePreviewModalProps) {
     if (file.mimeType.includes('pdf')) {
       return (
         <iframe
+        sandbox="allow-scripts"
           src={file.url}
           className="w-full h-[70vh] border-0"
           title={file.originalName}

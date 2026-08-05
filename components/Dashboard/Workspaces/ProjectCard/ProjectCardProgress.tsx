@@ -19,7 +19,7 @@ export function ProjectCardProgress({
       </div>
       <div className="w-full h-1.5 sm:h-2 bg-muted rounded-full overflow-hidden">
         <div
-          className="h-full bg-primary rounded-full transition-all"
+          className="h-full bg-primary rounded-full transition-colors"
           style={{ width: `${completionRate}%` }}
         />
       </div>

@@ -118,9 +118,9 @@ export function FocusModeBanner({
             {/* Progress Bar */}
             <div className="mt-3 h-2 bg-muted/50 rounded-full overflow-hidden">
               <motion.div
-                className="h-full bg-linear-to-r from-purple-500 via-purple-600 to-purple-500 rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: `${getProgress()}%` }}
+                className="h-full w-full origin-left bg-linear-to-r from-purple-500 via-purple-600 to-purple-500 rounded-full"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: getProgress() / 100 }}
                 transition={{ duration: 1 }}
               />
             </div>

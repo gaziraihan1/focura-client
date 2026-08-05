@@ -13,6 +13,7 @@ export const RefundList = ({ items, ordered = false, className }: RefundListProp
   return (
     <Tag className={cn("space-y-2 text-sm text-neutral-600 dark:text-neutral-400", className)}>
       {items.map((item, i) => (
+        // react-doctor-disable-next-line react-doctor/no-array-index-as-key -- item may be an arbitrary ReactNode with no stable per-item identity; this is an append-only static content list
         <li key={i} className="flex items-start gap-3">
           {ordered ? (
             <span className="shrink-0 w-5 h-5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-[10px] font-bold flex items-center justify-center mt-0.5">

@@ -92,14 +92,13 @@ export function useEnergyHistory(startDate: Date, endDate: Date, page = 1, limit
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const params = new URLSearchParams({
-    startDate: startDate.toISOString(),
-    endDate: endDate.toISOString(),
-    page: String(page),
-    limit: String(limit),
-  });
-
   const fetchData = useCallback(async () => {
+    const params = new URLSearchParams({
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+      page: String(page),
+      limit: String(limit),
+    });
     setLoading(true);
     setError(null);
     try {
@@ -120,7 +119,7 @@ export function useEnergyHistory(startDate: Date, endDate: Date, page = 1, limit
     } finally {
       setLoading(false);
     }
-  }, [params.toString()]);
+  }, [startDate, endDate, page, limit]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
 

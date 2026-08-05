@@ -29,10 +29,11 @@ export function StorageBreakdownChart({
           {data.map((item, index) => (
             <motion.div
               key={item.label}
-              initial={{ width: 0 }}
-              animate={{ width: `${item.percentage}%` }}
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
               transition={{ duration: 0.8, delay: index * 0.1 }}
-              className={`h-full ${item.color}`}
+              className={`h-full w-full origin-left ${item.color}`}
+              style={{ width: `${item.percentage}%` }}
               title={`${item.label}: ${item.percentage}%`}
             />
           ))}
@@ -75,10 +76,11 @@ export function StorageBreakdownChart({
 
               <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
                 <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${item.percentage}%` }}
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
                   transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
-                  className={`h-full ${item.color} rounded-full`}
+                  className={`h-full w-full origin-left ${item.color} rounded-full`}
+                  style={{ width: `${item.percentage}%` }}
                 />
               </div>
             </motion.div>

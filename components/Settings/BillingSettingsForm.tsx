@@ -42,6 +42,8 @@ export function BillingSettingsForm({ workspaceSlug }: BillingSettingsFormProps)
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
+
     const fetchData = async () => {
       if (!workspace) return;
       try {
@@ -49,6 +51,7 @@ export function BillingSettingsForm({ workspaceSlug }: BillingSettingsFormProps)
           api.get<Subscription>(`/api/v1/billing/${workspace.id}/subscription`),
           api.get<Invoice[]>(`/api/v1/billing/${workspace.id}/invoices`),
         ]);
+        if (cancelled) return;
         if (subResult.status === 'fulfilled' && subResult.value?.data) {
           setSubscription(subResult.value.data);
         }
@@ -58,10 +61,16 @@ export function BillingSettingsForm({ workspaceSlug }: BillingSettingsFormProps)
       } catch {
         // silent
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     };
     fetchData();
+
+    return () => {
+      cancelled = true;
+    };
   }, [workspace]);
 
   if (loading) {

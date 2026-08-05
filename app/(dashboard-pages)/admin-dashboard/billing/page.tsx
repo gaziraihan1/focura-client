@@ -130,6 +130,7 @@ export default function AdminBillingPage() {
         columns={columns}
         data={data?.data ?? []}
         isLoading={isLoading}
+        getRowKey={(b) => b.subscriptionId}
       />
 
       <Pagination

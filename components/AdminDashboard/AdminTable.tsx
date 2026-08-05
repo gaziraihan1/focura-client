@@ -14,9 +14,21 @@ interface Props<T> {
   data:      T[];
   isLoading: boolean;
   skeletonRows?: number;
+  /** Returns a stable, unique key for each row (e.g. row.id). Falls back to a
+   *  content-based key so list identity survives reorders/filters. */
+  getRowKey?: (row: T) => string | number;
 }
 
-export function AdminTable<T>({ columns, data, isLoading, skeletonRows = 8 }: Props<T>) {
+function defaultRowKey<T>(row: T): string {
+  try {
+    return JSON.stringify(row);
+  } catch {
+    return crypto.randomUUID();
+  }
+}
+
+export function AdminTable<T>({ columns, data, isLoading, skeletonRows = 8, getRowKey }: Props<T>) {
+  const rowKey = getRowKey ?? defaultRowKey;
   return (
     <div className="rounded-xl border border-border bg-card overflow-hidden">
       <div className="overflow-x-auto">
@@ -47,8 +59,8 @@ export function AdminTable<T>({ columns, data, isLoading, skeletonRows = 8 }: Pr
                     ))}
                   </tr>
                 ))
-              : data.map((row, i) => (
-                  <tr key={i} className="hover:bg-muted/20 transition-colors">
+              : data.map((row) => (
+                  <tr key={rowKey(row)} className="hover:bg-muted/20 transition-colors">
                     {columns.map((col) => (
                       <td key={col.key} className={cn('px-4 py-3', col.className)}>
                         {col.render(row)}

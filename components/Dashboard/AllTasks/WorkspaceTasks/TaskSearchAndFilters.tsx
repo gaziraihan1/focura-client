@@ -18,6 +18,12 @@ interface Member {
   name: string;
 }
 
+interface Section {
+  id: string;
+  name: string;
+  projectName: string;
+}
+
 type Sorting = "title" | "status" | "priority" | "dueDate" | "createdAt" | undefined;
 
 interface TaskSearchAndFiltersProps {
@@ -45,6 +51,9 @@ interface TaskSearchAndFiltersProps {
   sortOrder?: "asc" | "desc";
   focusRequired: boolean;
   onFocusRequiredChange: (value: boolean) => void;
+  sections?: Section[];
+  selectedSection?: string;
+  onSectionChange?: (sectionId: string) => void;
 }
 
 export function TaskSearchAndFilters({
@@ -72,6 +81,9 @@ export function TaskSearchAndFilters({
   sortOrder,
   focusRequired,
   onFocusRequiredChange,
+  sections = [],
+  selectedSection = "all",
+  onSectionChange = () => {},
 }: TaskSearchAndFiltersProps) {
   const getSortIcon = () => {
     if (!sortOrder) return <ArrowUpDown size={18} />;
@@ -141,9 +153,9 @@ export function TaskSearchAndFilters({
       {/* Filter Panel */}
       {showFilters && (
         <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           className="mt-4 pt-4 border-t border-border"
         >
           <FilterPanel
@@ -162,6 +174,9 @@ export function TaskSearchAndFilters({
             members={members}
             focusRequired={focusRequired}
             onFocusRequiredChange={onFocusRequiredChange}
+            sections={sections}
+            selectedSection={selectedSection}
+            onSectionChange={onSectionChange}
           />
 
           {activeFiltersCount > 0 && (

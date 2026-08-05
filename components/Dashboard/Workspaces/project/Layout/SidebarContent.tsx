@@ -27,7 +27,7 @@ export function SidebarContent({
         <Link
           href={`/dashboard/workspaces/${workspaceSlug}/projects`}
           onClick={onNavClick}
-          className="group inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-150"
+          className="group inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-150"
         >
           <ChevronLeft
             size={11}
@@ -81,7 +81,7 @@ export function SidebarContent({
               href={item.href}
               onClick={onNavClick}
               className={[
-                "group relative flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150",
+                "group relative flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-150",
                 active
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-foreground/80 hover:text-foreground hover:bg-accent",

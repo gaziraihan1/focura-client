@@ -85,7 +85,7 @@ export default function FeatureComparison() {
 
             {plans.map((plan, i) => (
               <div
-                key={i}
+                key={plan.name}
                 className={`relative flex flex-col items-center justify-center gap-1 p-4 text-center sm:p-5 ${
                   i > 0 ? "md:border-l md:border-border/60" : ""
                 } ${plan.highlighted ? "bg-primary/5" : ""}`}
@@ -108,7 +108,7 @@ export default function FeatureComparison() {
           {/* Feature rows — stacked cards on mobile, 4-column table on md+ */}
           {featureList.map((feature, i) => (
             <div
-              key={i}
+              key={feature}
               className={`md:grid md:grid-cols-4 md:items-stretch ${
                 i < featureList.length - 1 ? "border-b border-border/60" : ""
               }`}
@@ -121,7 +121,7 @@ export default function FeatureComparison() {
               <div className="grid grid-cols-3 md:contents">
                 {plans.map((plan, j) => (
                   <div
-                    key={j}
+                    key={`${plan.name}-cell`}
                     className={`flex items-center justify-center py-3.5 md:px-5 ${
                       j > 0 ? "md:border-l md:border-border/60" : ""
                     } ${plan.highlighted ? "md:bg-primary/5" : ""}`}

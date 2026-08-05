@@ -45,14 +45,16 @@ export function useKanbanPage() {
 
   const filteredTasks = useMemo(() => {
     let tasks = scopedTasks;
+    const statusSet = new Set(filters.status ?? []);
+    const prioritySet = new Set(filters.priority ?? []);
 
     if (filters.status && filters.status.length > 0) {
-      tasks = tasks.filter((task) => filters.status!.includes(task.status));
+      tasks = tasks.filter((task) => statusSet.has(task.status));
     }
 
     if (filters.priority && filters.priority.length > 0) {
       tasks = tasks.filter((task) =>
-        filters.priority!.includes(task.priority)
+        prioritySet.has(task.priority)
       );
     }
 

@@ -32,7 +32,7 @@ const TemplateCard = ({ template, onNotify }: TemplateCardProps) => {
 
   return (
     <article className={cn(
-      'group rounded-2xl border bg-white dark:bg-neutral-900 overflow-hidden transition-all hover:shadow-sm flex flex-col',
+      'group rounded-2xl border bg-white dark:bg-neutral-900 overflow-hidden transition-colors hover:shadow-sm flex flex-col',
       cat.borderColor
     )}>
       {/* ── Colour strip + icon ───────────────────────────────────────────── */}
@@ -92,6 +92,7 @@ const TemplateCard = ({ template, onNotify }: TemplateCardProps) => {
 
         {/* Expand: preview tasks + labels */}
         {expanded && (
+          /* react-doctor-disable-next-line react-doctor/no-transition-all -- tailwindcss-animate `animate-in` entry animation only animates opacity/transform/filter, not `all` (false positive) */
           <div className='mb-4 space-y-3 animate-in slide-in-from-top-2 duration-150'>
             {/* Sections */}
             <div>

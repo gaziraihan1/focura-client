@@ -38,7 +38,7 @@ export default function FeatureSection() {
           {cards.map(({ icon: Icon, title, desc }) => (
             <div
               key={title}
-              className="group relative p-8 rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-foreground/5"
+              className="group relative p-8 rounded-2xl border border-border bg-card transition-colors transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-foreground/5"
             >
               <div className="w-14 h-14 mb-6 rounded-xl bg-muted flex items-center justify-center transition-colors group-hover:bg-foreground">
                 <Icon className="w-7 h-7 text-foreground transition-colors group-hover:text-background" />

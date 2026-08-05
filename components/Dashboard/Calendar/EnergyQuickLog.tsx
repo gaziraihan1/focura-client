@@ -70,7 +70,7 @@ export function EnergyQuickLog() {
         type="button"
         onClick={handleToggle}
         aria-label="Log energy level"
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-primary px-5 py-3.5 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:bg-primary/90 hover:shadow-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/40 active:scale-95"
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-primary px-5 py-3.5 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition-colors transition-transform hover:bg-primary/90 hover:shadow-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/40 active:scale-95"
       >
         <Zap className="h-4.5 w-4.5" />
         <span>Log energy</span>

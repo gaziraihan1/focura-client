@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useEffectEvent } from "react";
 import { Mail, Loader2 } from "lucide-react";
 import { useInviteMember } from "@/hooks/useWorkspace";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
@@ -22,12 +22,12 @@ export function InviteMemberModal({
   const inviteMember = useInviteMember();
 
   // Close on Escape
+  const onEscape = useEffectEvent((e: KeyboardEvent) => { if (e.key === "Escape") onClose(); });
   useEffect(() => {
     if (!isOpen) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [isOpen, onClose]);
+    window.addEventListener("keydown", onEscape);
+    return () => window.removeEventListener("keydown", onEscape);
+  }, [isOpen]);
 
   // Lock body scroll
   useEffect(() => {
@@ -37,7 +37,7 @@ export function InviteMemberModal({
   }, [isOpen]);
 
   const handleInvite = async () => {
-    if (!inviteEmail) return;
+    if (!inviteEmail || inviteMember.isPending) return;
 
     try {
       await inviteMember.mutateAsync({

@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Sprout, Plus, MoreHorizontal, Target, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { Sprout, Plus, MoreHorizontal, Target, Loader2, Trash2, ExternalLink } from "lucide-react";
+import { ConfirmModal } from "@/components/Shared/ConfirmModal";
 import {
   useProjectSprints,
   useCreateSprint,
@@ -33,9 +36,13 @@ export default function SprintList({ projectId }: SprintListProps) {
   const [endDate, setEndDate] = useState("");
   const [retroModal, setRetroModal] = useState<{ sprintId: string; name: string } | null>(null);
   const [retroText, setRetroText] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState<SprintItem | null>(null);
+  const params = useParams();
+  const workspaceSlug = params?.workspaceSlug as string;
+  const projectSlug = params?.projectSlug as string;
 
   const handleCreate = async () => {
-    if (!name.trim() || !startDate || !endDate) return;
+    if (!name.trim() || !startDate || !endDate || createSprint.isPending) return;
     await createSprint.mutateAsync({
       name: name.trim(),
       goal: goal.trim() || undefined,
@@ -51,7 +58,7 @@ export default function SprintList({ projectId }: SprintListProps) {
   };
 
   const handleCompleteWithRetro = async () => {
-    if (!retroModal) return;
+    if (!retroModal || completeSprint.isPending) return;
     await completeSprint.mutateAsync({
       sprintId: retroModal.sprintId,
       projectId,
@@ -107,7 +114,7 @@ export default function SprintList({ projectId }: SprintListProps) {
             </button>
           </div>
           <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
-            <span>{new Date(activeSprint.startDate).toLocaleDateString()} → {new Date(activeSprint.endDate).toLocaleDateString()}</span>
+            <span>{new Date(activeSprint.startDate).toLocaleDateString("en-US", { timeZone: "UTC" })} → {new Date(activeSprint.endDate).toLocaleDateString("en-US", { timeZone: "UTC" })}</span>
           </div>
         </div>
       )}
@@ -118,7 +125,12 @@ export default function SprintList({ projectId }: SprintListProps) {
           <SprintCard
             key={sprint.id}
             sprint={sprint}
-            onDelete={() => deleteSprint.mutateAsync({ sprintId: sprint.id, projectId })}
+            tasksHref={
+              workspaceSlug && projectSlug
+                ? `/dashboard/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks?sprint=${sprint.id}`
+                : undefined
+            }
+            onDelete={() => setDeleteTarget(sprint)}
             onComplete={() => setRetroModal({ sprintId: sprint.id, name: sprint.name })}
           />
         ))}
@@ -219,16 +231,33 @@ export default function SprintList({ projectId }: SprintListProps) {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={async () => {
+          if (deleteTarget) {
+            await deleteSprint.mutateAsync({ sprintId: deleteTarget.id, projectId });
+            setDeleteTarget(null);
+          }
+        }}
+        title="Delete sprint?"
+        message={`This will delete "${deleteTarget?.name}". Tasks in it stay untouched but lose their sprint assignment.`}
+        confirmText="Delete"
+        isLoading={deleteSprint?.isPending}
+      />
     </div>
   );
 }
 
 function SprintCard({
   sprint,
+  tasksHref,
   onDelete,
   onComplete,
 }: {
   sprint: SprintItem;
+  tasksHref?: string;
   onDelete: () => void;
   onComplete: () => void;
 }) {
@@ -271,8 +300,20 @@ function SprintCard({
             <p className="text-xs text-muted-foreground mt-0.5 italic">{sprint.goal}</p>
           )}
           <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground">
-            <span>{new Date(sprint.startDate).toLocaleDateString()} → {new Date(sprint.endDate).toLocaleDateString()}</span>
+            <span>{new Date(sprint.startDate).toLocaleDateString("en-US", { timeZone: "UTC" })} → {new Date(sprint.endDate).toLocaleDateString("en-US", { timeZone: "UTC" })}</span>
             <span>({totalDays} days)</span>
+          </div>
+          <div className="flex items-center gap-2 mt-1.5">
+            {sprint._count?.tasks != null && (
+              <span className="text-[10px] text-muted-foreground">
+                {sprint._count.tasks} task{sprint._count.tasks === 1 ? "" : "s"}
+              </span>
+            )}
+            {tasksHref && (
+              <Link href={tasksHref} className="inline-flex items-center gap-1 text-[10px] font-medium text-primary hover:underline transition">
+                <ExternalLink className="size-3" /> View tasks
+              </Link>
+            )}
           </div>
         </div>
         <div className="relative">
@@ -288,8 +329,8 @@ function SprintCard({
                     Complete
                   </button>
                 )}
-                <button onClick={() => { setMenuOpen(false); onDelete(); }} className="w-full px-3 py-1.5 text-xs text-left text-red-500 hover:bg-accent transition">
-                  Delete
+                <button onClick={() => { setMenuOpen(false); onDelete(); }} className="w-full flex items-center gap-1.5 px-3 py-1.5 text-xs text-left text-red-500 hover:bg-accent transition">
+                  <Trash2 size={12} /> Delete
                 </button>
               </div>
             </>
@@ -306,7 +347,7 @@ function SprintCard({
           </div>
           <div className="h-1.5 rounded-full bg-muted overflow-hidden">
             <div
-              className="h-full rounded-full bg-primary transition-all duration-500"
+              className="h-full rounded-full bg-primary transition-colors duration-500"
               style={{ width: `${progressPct}%` }}
             />
           </div>

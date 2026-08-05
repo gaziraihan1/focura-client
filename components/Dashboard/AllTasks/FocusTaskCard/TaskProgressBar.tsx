@@ -14,9 +14,9 @@ export function TaskProgressBar({ timeRemaining }: TaskProgressBarProps) {
     <div className="mt-4 mb-3">
       <div className="h-2 bg-muted/50 rounded-full overflow-hidden">
         <motion.div
-          className="h-full bg-linear-to-r from-purple-500 via-purple-600 to-purple-500 rounded-full"
-          initial={{ width: 0 }}
-          animate={{ width: `${progress}%` }}
+          className="h-full w-full origin-left bg-linear-to-r from-purple-500 via-purple-600 to-purple-500 rounded-full"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: progress / 100 }}
           transition={{ duration: 1 }}
         />
       </div>

@@ -7,6 +7,8 @@ export type CreateTaskFormData = Required<
     CreateTaskDto,
     | "description"
     | "sectionId"
+    | "sprintId"
+    | "milestoneId"
     | "startDate"
     | "dueDate"
     | "estimatedHours"

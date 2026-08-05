@@ -54,7 +54,7 @@ export function KanbanCardMetadata({
           </div>
           <div className="h-1.5 bg-muted rounded-full overflow-hidden">
             <div
-              className="h-full bg-primary transition-all duration-300"
+              className="h-full bg-primary transition-colors duration-300"
               style={{ width: `${subtaskProgress}%` }}
             />
           </div>

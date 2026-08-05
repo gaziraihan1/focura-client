@@ -75,8 +75,8 @@ export function HelpShortcutsPanel({ className }: HelpShortcutsPanelProps) {
                   {shortcut.description}
                 </span>
                 <div className="flex items-center gap-1">
-                  {shortcut.keys.map((key, i) => (
-                    <Kbd key={i}>{key}</Kbd>
+                  {shortcut.keys.map((key) => (
+                    <Kbd key={key}>{key}</Kbd>
                   ))}
                 </div>
               </div>

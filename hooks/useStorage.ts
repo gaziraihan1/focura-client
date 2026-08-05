@@ -252,6 +252,7 @@ export function useDeleteFile(workspaceId: string) {
 }
 
 export function useCheckUpload(workspaceId: string) {
+  // react-doctor-disable-next-line react-doctor/query-mutation-missing-invalidation -- read-only validation check (POST returns a boolean, mutates no cached data)
   return useMutation({
     mutationFn: async (fileSize: number) => {
       const response = await api.post<{ allowed: boolean; reason?: string }>(

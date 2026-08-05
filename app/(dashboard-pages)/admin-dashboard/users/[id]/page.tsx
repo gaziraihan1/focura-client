@@ -231,8 +231,8 @@ export default function AdminUserDetailPage() {
           {user.workspaceMemberships.length === 0 ? (
             <p className="px-5 py-4 text-xs text-muted-foreground">None</p>
           ) : (
-            user.workspaceMemberships.map((m, i) => (
-              <div key={i} className="flex items-center justify-between px-5 py-3 gap-3">
+            user.workspaceMemberships.map((m) => (
+              <div key={m.workspace.id} className="flex items-center justify-between px-5 py-3 gap-3">
                 <div className="min-w-0">
                   <Link
                     href={`/admin-dashboard/workspaces/${m.workspace.slug}`}
@@ -267,8 +267,8 @@ export default function AdminUserDetailPage() {
           {user.projectMemberships.length === 0 ? (
             <p className="px-5 py-4 text-xs text-muted-foreground">None</p>
           ) : (
-            user.projectMemberships.map((m, i) => (
-              <div key={i} className="flex items-center justify-between px-5 py-3 gap-4">
+            user.projectMemberships.map((m) => (
+              <div key={m.project.id} className="flex items-center justify-between px-5 py-3 gap-4">
                 <div className="min-w-0">
                   <p className="text-xs font-medium text-foreground truncate">{m.project.name}</p>
                   <p className="text-[10px] text-muted-foreground truncate">

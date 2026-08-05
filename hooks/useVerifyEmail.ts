@@ -13,10 +13,15 @@ export function useVerifyEmail({ token }: UseVerifyEmailProps) {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
+    let cancelled = false;
+    let redirectTimer: ReturnType<typeof setTimeout> | undefined;
+
     const verifyEmail = async () => {
       if (!token) {
-        setStatus("error");
-        setMessage("Invalid verification link");
+        if (!cancelled) {
+          setStatus("error");
+          setMessage("Invalid verification link");
+        }
         return;
       }
 
@@ -27,19 +32,21 @@ export function useVerifyEmail({ token }: UseVerifyEmailProps) {
           body: JSON.stringify({ token }),
         });
 
-        const data = await res.json();
-
         if (res.ok) {
+          const data = await res.json().catch(() => null);
+          if (cancelled) return;
           setStatus("success");
           setMessage(data.message || "Email verified successfully!");
-          setTimeout(() => {
+          redirectTimer = setTimeout(() => {
             router.push("/authentication/login");
           }, 3000);
         } else {
+          const data = await res.json().catch(() => null);
+          if (cancelled) return;
           setStatus("error");
           setMessage(data.error || "Verification failed");
-        }
-      } catch (error) {
+        }      } catch (error) {
+        if (cancelled) return;
         console.error("Verification error:", error);
         setStatus("error");
         setMessage("Something went wrong. Please try again.");
@@ -47,6 +54,11 @@ export function useVerifyEmail({ token }: UseVerifyEmailProps) {
     };
 
     verifyEmail();
+
+    return () => {
+      cancelled = true;
+      if (redirectTimer) clearTimeout(redirectTimer);
+    };
   }, [token, router]);
 
   return {

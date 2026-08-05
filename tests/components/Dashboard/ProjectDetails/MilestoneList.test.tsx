@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 
 vi.mock("@/hooks/useProjectFeatures", () => ({
   useProjectMilestones: vi.fn(),
@@ -9,7 +9,7 @@ vi.mock("@/hooks/useProjectFeatures", () => ({
 }));
 
 import MilestoneList from "@/components/Dashboard/ProjectDetails/MilestoneList";
-import { useProjectMilestones } from "@/hooks/useProjectFeatures";
+import { useProjectMilestones, useDeleteMilestone } from "@/hooks/useProjectFeatures";
 
 describe("MilestoneList", () => {
   beforeEach(() => {
@@ -51,6 +51,28 @@ describe("MilestoneList", () => {
     // Use getAllByText since "On Track" appears as both label and stat badge
     const onTrackElements = screen.getAllByText("On Track");
     expect(onTrackElements.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("opens a confirmation modal before deleting", async () => {
+    const deleteMilestone = { mutateAsync: vi.fn() };
+    (useProjectMilestones as any).mockReturnValue({
+      data: {
+        total: 1, completed: 0, atRisk: 0, delayed: 0, onTrack: 1, avgProgress: 50,
+        milestones: [
+          { id: "m1", title: "Launch MVP", status: "ON_TRACK", progress: 50, completed: false, projectId: "proj1" },
+        ],
+      },
+      isLoading: false,
+    });
+    (useDeleteMilestone as any).mockReturnValue(deleteMilestone);
+
+    render(<MilestoneList projectId="proj1" />);
+    // open the card menu
+    fireEvent.click(screen.getAllByRole("button")[0]);
+    fireEvent.click(screen.getByText("Delete"));
+    expect(screen.getByText("Delete milestone?")).toBeDefined();
+    fireEvent.click(screen.getAllByRole("button").find((b) => b.textContent === "Delete")!);
+    expect(deleteMilestone.mutateAsync).toHaveBeenCalledWith({ milestoneId: "m1", projectId: "proj1" });
   });
 
   it("should show stat cards with counts", () => {

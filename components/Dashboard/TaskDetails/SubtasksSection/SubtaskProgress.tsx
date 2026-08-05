@@ -54,16 +54,18 @@ export function SubtaskProgress({ stats }: SubtaskProgressProps) {
       {/* Segmented bar */}
       <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden flex gap-px">
         <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: `${completionRate}%` }}
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="h-full bg-emerald-500 rounded-l-full"
+          className="h-full bg-emerald-500 rounded-l-full origin-left"
+          style={{ width: `${completionRate}%` }}
         />
         <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: `${inProgressPct}%` }}
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
           transition={{ duration: 0.5, ease: "easeOut", delay: 0.05 }}
-          className="h-full bg-blue-500/70"
+          className="h-full bg-blue-500/70 origin-left"
+          style={{ width: `${inProgressPct}%` }}
         />
       </div>
     </div>

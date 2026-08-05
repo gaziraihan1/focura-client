@@ -11,9 +11,10 @@ function AuthSuccessInner() {
 
   useEffect(() => {
     const callbackUrl = safeCallbackUrl(searchParams.get("callbackUrl"));
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       router.push(callbackUrl);
     }, 500);
+    return () => clearTimeout(timer);
   }, [router, searchParams]);
 
   return (

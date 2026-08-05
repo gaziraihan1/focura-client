@@ -125,7 +125,7 @@ export function Pagination({
           if (page === "ellipsis-start" || page === "ellipsis-end") {
             return (
               <button
-                key={`${page}-${index}`}
+                key={page}
                 onClick={() =>
                   handleEllipsisClick(
                     page === "ellipsis-start" ? "start" : "end"

@@ -26,7 +26,7 @@ export function ProjectCard({ project, index, onNavigate, showModal, onCloseModa
         transition={{ delay: index * 0.05 }}
         whileHover={{ y: -4 }}
         onClick={onNavigate}
-        className="group cursor-pointer rounded-2xl bg-card border border-border hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 overflow-hidden"
+        className="group cursor-pointer rounded-2xl bg-card border border-border hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-colors duration-300 overflow-hidden"
       >
         <div className="p-4 lg:p-6">
           {/* Header */}
@@ -54,7 +54,7 @@ export function ProjectCard({ project, index, onNavigate, showModal, onCloseModa
                 )}
               </div>
             </div>
-            <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+            <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-colors transition-transform" />
           </div>
 
           {/* Description */}
@@ -91,7 +91,7 @@ export function ProjectCard({ project, index, onNavigate, showModal, onCloseModa
             {project.dueDate && (
               <div className="flex items-center gap-1.5">
                 <Calendar size={16} />
-                <span>{new Date(project.dueDate).toLocaleDateString()}</span>
+                <span>{new Date(project.dueDate).toLocaleDateString("en-US", { timeZone: "UTC" })}</span>
               </div>
             )}
           </div>

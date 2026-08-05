@@ -67,7 +67,7 @@ export function WorkspaceUsageHeader({
               role="radio"
               aria-checked={dateRange === range.value}
               aria-label={`Last ${range.label === "custom" ? "custom range" : range.label}`}
-              className={`px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 ${
+              className={`px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-md transition-colors duration-200 ${
                 dateRange === range.value
                   ? "bg-background text-foreground shadow-sm border border-border"
                   : "text-muted-foreground hover:text-foreground hover:bg-background/50"
@@ -85,7 +85,7 @@ export function WorkspaceUsageHeader({
               onClick={onRefresh}
               disabled={isRefreshing}
               aria-label={isRefreshing ? "Refreshing data" : "Refresh data"}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-lg bg-background border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-all text-xs font-medium shadow-sm disabled:opacity-50"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-lg bg-background border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-colors text-xs font-medium shadow-sm disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 shrink-0 ${isRefreshing ? "animate-spin" : ""}`} aria-hidden="true" />
               <span className="hidden sm:inline">Refresh</span>
@@ -94,7 +94,7 @@ export function WorkspaceUsageHeader({
           <button
             onClick={handleExport}
             aria-label={exported ? "Export complete" : "Export data as CSV"}
-            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-all text-xs font-semibold shadow-sm"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-xs font-semibold shadow-sm"
           >
             {exported ? (
               <Check className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />

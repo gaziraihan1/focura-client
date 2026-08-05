@@ -166,7 +166,7 @@ describe('FileTableRow', () => {
     render(<table><tbody><FileTableRow {...defaultProps} /></tbody></table>);
     const viewButton = screen.getByTitle('View file');
     await user.click(viewButton);
-    expect(openSpy).toHaveBeenCalledWith('https://example.com/report.pdf', '_blank');
+    expect(openSpy).toHaveBeenCalledWith('https://example.com/report.pdf', '_blank', 'noopener,noreferrer');
     openSpy.mockRestore();
   });
 

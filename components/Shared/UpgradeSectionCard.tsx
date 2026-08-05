@@ -60,7 +60,7 @@ export function UpgradeSectionCard({
           onClick={() => router.push(`/dashboard/workspaces/${slug}/billing/upgrade`)}
           className="shrink-0 inline-flex items-center justify-center gap-1.5 h-9 px-4 rounded-lg
                      bg-primary text-primary-foreground text-sm font-medium
-                     hover:bg-primary/90 active:scale-[0.98] transition-all"
+                     hover:bg-primary/90 active:scale-[0.98] transition-colors transition-transform"
         >
           <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
           {ctaLabel}

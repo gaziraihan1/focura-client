@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Flag, Plus, MoreHorizontal, AlertTriangle, CheckCircle2, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { Flag, Plus, MoreHorizontal, AlertTriangle, CheckCircle2, Loader2, Trash2, ExternalLink } from "lucide-react";
+import { ConfirmModal } from "@/components/Shared/ConfirmModal";
 import { useProjectMilestones, useCreateMilestone, useDeleteMilestone, useUpdateMilestoneProgress, MilestoneItem } from "@/hooks/useProjectFeatures";
 
 const STATUS_COLORS: Record<string, string> = {
@@ -30,9 +33,13 @@ export default function MilestoneList({ projectId }: MilestoneListProps) {
   const [showNew, setShowNew] = useState(false);
   const [title, setTitle] = useState("");
   const [dueDate, setDueDate] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState<MilestoneItem | null>(null);
+  const params = useParams();
+  const workspaceSlug = params?.workspaceSlug as string;
+  const projectSlug = params?.projectSlug as string;
 
   const handleCreate = async () => {
-    if (!title.trim()) return;
+    if (!title.trim() || createMilestone.isPending) return;
     await createMilestone.mutateAsync({
       title: title.trim(),
       dueDate: dueDate || undefined,
@@ -43,10 +50,10 @@ export default function MilestoneList({ projectId }: MilestoneListProps) {
     setShowNew(false);
   };
 
-  const handleDelete = async (milestoneId: string) => {
-    if (confirm("Delete this milestone?")) {
-      await deleteMilestone.mutateAsync({ milestoneId, projectId });
-    }
+  const handleDelete = async () => {
+    if (!deleteTarget || deleteMilestone.isPending) return;
+    await deleteMilestone.mutateAsync({ milestoneId: deleteTarget.id, projectId });
+    setDeleteTarget(null);
   };
 
   if (isLoading) {
@@ -81,7 +88,7 @@ export default function MilestoneList({ projectId }: MilestoneListProps) {
           </div>
           <div className="h-2 rounded-full bg-muted overflow-hidden">
             <div
-              className="h-full rounded-full bg-primary transition-all duration-500"
+              className="h-full rounded-full bg-primary transition-colors duration-500"
               style={{ width: `${stats.avgProgress}%` }}
             />
           </div>
@@ -94,7 +101,12 @@ export default function MilestoneList({ projectId }: MilestoneListProps) {
           <MilestoneCard
             key={milestone.id}
             milestone={milestone}
-            onDelete={() => handleDelete(milestone.id)}
+            tasksHref={
+              workspaceSlug && projectSlug
+                ? `/dashboard/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks?milestone=${milestone.id}`
+                : undefined
+            }
+            onDelete={() => setDeleteTarget(milestone)}
             onUpdateProgress={(p) => updateProgress.mutateAsync({ milestoneId: milestone.id, projectId, progress: p })}
           />
         ))}
@@ -149,6 +161,16 @@ export default function MilestoneList({ projectId }: MilestoneListProps) {
           </button>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete milestone?"
+        message={`This will delete "${deleteTarget?.title}". Linked tasks stay untouched.`}
+        confirmText="Delete"
+        isLoading={deleteMilestone?.isPending}
+      />
     </div>
   );
 }
@@ -164,10 +186,12 @@ function StatCard({ label, value, color }: { label: string; value: number; color
 
 function MilestoneCard({
   milestone,
+  tasksHref,
   onDelete,
   onUpdateProgress,
 }: {
   milestone: MilestoneItem;
+  tasksHref?: string;
   onDelete: () => void;
   onUpdateProgress: (progress: number) => void;
 }) {
@@ -206,7 +230,9 @@ function MilestoneCard({
             <>
               <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
               <div className="absolute right-0 top-8 z-20 w-32 rounded-lg border border-border bg-popover shadow-lg py-1">
-                <button onClick={onDelete} className="w-full px-3 py-1.5 text-xs text-left text-red-500 hover:bg-accent transition">Delete</button>
+                <button onClick={onDelete} className="w-full flex items-center gap-1.5 px-3 py-1.5 text-xs text-left text-red-500 hover:bg-accent transition">
+                  <Trash2 size={12} /> Delete
+                </button>
               </div>
             </>
           )}
@@ -217,7 +243,7 @@ function MilestoneCard({
       <div className="mt-3 flex items-center gap-3">
         <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
           <div
-            className="h-full rounded-full bg-primary transition-all duration-300"
+            className="h-full rounded-full bg-primary transition-colors duration-300"
             style={{ width: `${milestone.progress}%` }}
           />
         </div>
@@ -243,8 +269,22 @@ function MilestoneCard({
 
       {milestone.dueDate && (
         <p className="mt-2 text-[10px] text-muted-foreground">
-          Due: {new Date(milestone.dueDate).toLocaleDateString()}
+          Due: {new Date(milestone.dueDate).toLocaleDateString("en-US", { timeZone: "UTC" })}
         </p>
+      )}
+
+      {/* Linked tasks summary (auto-derived from tasks when present) */}
+      {milestone.tasks && milestone.tasks.length > 0 && (
+        <div className="mt-2 flex items-center justify-between rounded-lg bg-muted/50 px-2.5 py-1.5">
+          <span className="text-[10px] text-muted-foreground">
+            {milestone.tasksDone ?? 0}/{milestone.tasks.length} linked task{milestone.tasks.length === 1 ? "" : "s"} done
+          </span>
+          {tasksHref && (
+            <Link href={tasksHref} className="inline-flex items-center gap-1 text-[10px] font-medium text-primary hover:underline transition">
+              <ExternalLink className="size-3" /> View tasks
+            </Link>
+          )}
+        </div>
       )}
     </div>
   );

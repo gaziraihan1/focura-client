@@ -109,8 +109,8 @@ const TemplatesForCreators = () => {
               { version: 'v1.1',           desc: 'Save any project as a private workspace template',                       done: false },
               { version: 'v1.2',           desc: 'Publish templates publicly — community gallery + author credits',         done: false },
               { version: 'v1.2',           desc: 'Ratings, usage counts, and featured templates section',                   done: false },
-            ].map(({ version, desc, done }, i) => (
-              <div key={i} className='flex items-start gap-4 relative z-10'>
+            ].map(({ version, desc, done }) => (
+              <div key={desc} className='flex items-start gap-4 relative z-10'>
                 <div className={`shrink-0 w-5.5 h-5.5 rounded-full border-2 flex items-center justify-center mt-0.5 ${
                   done
                     ? 'border-emerald-500 bg-emerald-500'

@@ -1,5 +1,5 @@
 import { useParams, useRouter } from 'next/navigation';
-import { MessageSquare, Clock } from 'lucide-react';
+import { MessageSquare, Clock, Flag, Sprout } from 'lucide-react';
 import Image from 'next/image';
 import { Task } from '@/hooks/useTask';
 import { SectionBadge } from './SectionBadge';
@@ -39,7 +39,21 @@ export default function TaskCard({ task, workspaceSlug, section }: TaskCardProps
         <div className={`w-2 h-2 rounded-full ${priorityColors[task.priority]}`} />
       </div>
 
-      {section && <SectionBadge name={section.name} color={section.color} />}
+      <div className="flex flex-wrap gap-1.5">
+        {section && <SectionBadge name={section.name} color={section.color} />}
+        {task.sprint && (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-violet-50 text-violet-600 dark:bg-violet-950/20 dark:text-violet-400">
+            <Sprout size={10} />
+            {task.sprint.name}
+          </span>
+        )}
+        {task.milestone && (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-600 dark:bg-amber-950/20 dark:text-amber-400">
+            <Flag size={10} />
+            {task.milestone.title}
+          </span>
+        )}
+      </div>
 
       <div className="flex items-center gap-4 text-xs text-muted-foreground">
         {task._count.comments > 0 && (
@@ -51,7 +65,7 @@ export default function TaskCard({ task, workspaceSlug, section }: TaskCardProps
         {task.dueDate && (
           <div className="flex items-center gap-1">
             <Clock size={14} />
-            <span>{new Date(task.dueDate).toLocaleDateString()}</span>
+            <span>{new Date(task.dueDate).toLocaleDateString("en-US", { timeZone: "UTC" })}</span>
           </div>
         )}
       </div>

@@ -32,6 +32,7 @@ export function EngagementSection({
 
     return userEngagement.dailyActiveUsers.map((day) => ({
       date: new Date(day.date).toLocaleDateString("en-US", {
+        timeZone: "UTC",
         month: "short",
         day: "numeric",
       }),

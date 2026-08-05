@@ -141,7 +141,7 @@ export default function FeaturesHero() {
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <button
             onClick={() => router.push("/signup")}
-            className="flex items-center gap-2 rounded-xl bg-primary px-7 py-3 text-lg font-semibold text-primary-foreground transition-all hover:opacity-90"
+            className="flex items-center gap-2 rounded-xl bg-primary px-7 py-3 text-lg font-semibold text-primary-foreground transition-opacity hover:opacity-90"
           >
             Get Started
             <ArrowRight size={20} />
@@ -149,7 +149,7 @@ export default function FeaturesHero() {
 
           <button
             onClick={() => router.push("/features/all-features")}
-            className="rounded-xl border border-border/60 px-7 py-3 text-lg font-semibold text-foreground backdrop-blur-md transition-all hover:bg-foreground/5 hover:cursor-pointer"
+            className="rounded-xl border border-border/60 px-7 py-3 text-lg font-semibold text-foreground backdrop-blur-md transition-colors hover:bg-foreground/5 hover:cursor-pointer"
           >
             Explore All Features
           </button>

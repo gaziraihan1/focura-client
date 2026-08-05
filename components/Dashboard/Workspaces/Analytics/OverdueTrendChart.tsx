@@ -40,16 +40,16 @@ export function OverdueTrendChart({ data }: OverdueTrendChartProps) {
       </div>
 
       <div className="relative h-48 flex items-end gap-1">
-        {data.map((point, index) => {
+        {data.map((point) => {
           const height = (point.count / maxValue) * 100;
 
           return (
             <div
-              key={`${String(point.weekStart)}-${index}`}
+              key={String(point.weekStart)}
               className="group relative flex-1"
             >
               <div
-                className="w-full rounded-t bg-destructive/70 transition-all duration-300 hover:bg-destructive group-hover:opacity-90"
+                className="w-full rounded-t bg-destructive/70 transition-colors transition-opacity duration-300 hover:bg-destructive group-hover:opacity-90"
                 style={{ height: `${height}%` }}
               />
 

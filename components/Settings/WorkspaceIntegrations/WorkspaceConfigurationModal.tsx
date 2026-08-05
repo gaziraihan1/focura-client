@@ -25,6 +25,8 @@ export function WorkspaceConfigurationModal({
   );
   const [saving, setSaving] = useState(false);
 
+  const allowedMemberSet = new Set(config.allowedMembers ?? []);
+
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -206,7 +208,7 @@ export function WorkspaceConfigurationModal({
                     <input
                       type="checkbox"
                       checked={
-                        config.allowedMembers?.includes(member.userId) ?? true
+                        allowedMemberSet.has(member.userId) || !config.allowedMembers
                       }
                       onChange={(e) => {
                         const current = config.allowedMembers || [];

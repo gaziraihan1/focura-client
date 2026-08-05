@@ -52,14 +52,13 @@ export function useResetPasswordPage({ token }: UseResetPasswordPageProps) {
         }),
       });
 
-      const data = await res.json();
-
       if (res.ok) {
         setSuccess(true);
         setTimeout(() => {
           router.push("/authentication/login");
         }, 3000);
       } else {
+        const data = await res.json().catch(() => null);
         setError(data.error || "Failed to reset password");
       }
     } catch (err) {

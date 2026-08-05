@@ -60,11 +60,12 @@ export function StorageTrendChart({ trend }: StorageTrendChartProps) {
 
           return (
             <motion.div
-              key={index}
-              initial={{ height: 0 }}
-              animate={{ height: `${height}%` }}
+              key={String(point.date)}
+              initial={{ scaleY: 0 }}
+              animate={{ scaleY: 1 }}
               transition={{ duration: 0.5, delay: index * 0.02 }}
-              className="group relative flex-1"
+              className="group relative flex-1 origin-bottom"
+              style={{ height: `${height}%` }}
             >
               <div
                 className={`w-full rounded-t transition-colors ${
@@ -76,6 +77,7 @@ export function StorageTrendChart({ trend }: StorageTrendChartProps) {
                 <div className="bg-popover border rounded-lg shadow-lg p-3 whitespace-nowrap">
                   <p className="text-xs text-muted-foreground">
                     {new Date(point.date).toLocaleDateString('en-US', {
+                      timeZone: 'UTC',
                       month: 'short',
                       day: 'numeric',
                     })}
@@ -91,18 +93,21 @@ export function StorageTrendChart({ trend }: StorageTrendChartProps) {
       <div className="flex justify-between mt-4 text-xs text-muted-foreground">
         <span>
           {new Date(trend[0]?.date).toLocaleDateString('en-US', {
+            timeZone: 'UTC',
             month: 'short',
             day: 'numeric',
           })}
         </span>
         <span>
           {new Date(trend[Math.floor(trend.length / 2)]?.date).toLocaleDateString('en-US', {
+            timeZone: 'UTC',
             month: 'short',
             day: 'numeric',
           })}
         </span>
         <span>
           {new Date(trend[trend.length - 1]?.date).toLocaleDateString('en-US', {
+            timeZone: 'UTC',
             month: 'short',
             day: 'numeric',
           })}

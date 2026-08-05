@@ -100,7 +100,7 @@ export const HelpContactCard = () => {
                 href={href}
                 target={external ? '_blank' : undefined}
                 rel={external ? 'noopener noreferrer' : undefined}
-                className={`group flex items-start gap-4 rounded-2xl border p-5 transition-all hover:shadow-sm ${accent}`}
+                className={`group flex items-start gap-4 rounded-2xl border p-5 transition-colors hover:shadow-sm ${accent}`}
               >
                 <div className={`shrink-0 w-9 h-9 rounded-xl flex items-center justify-center ${iconBg}`}>
                   <Icon className={`w-4 h-4 ${iconColor}`} strokeWidth={1.8} />
@@ -112,7 +112,7 @@ export const HelpContactCard = () => {
                   <p className='text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed mb-2'>
                     {description}
                   </p>
-                  <span className='inline-flex items-center gap-1 text-xs font-semibold text-neutral-700 dark:text-neutral-300 group-hover:gap-2 transition-all'>
+                  <span className='inline-flex items-center gap-1 text-xs font-semibold text-neutral-700 dark:text-neutral-300 group-hover:gap-2 transition-colors'>
                     {label}
                     <ArrowRight className='w-3 h-3 shrink-0' strokeWidth={2.5} />
                   </span>
@@ -134,7 +134,7 @@ export const HelpContactCard = () => {
                 href={href}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='flex items-center gap-3 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-4 py-3 hover:border-neutral-300 dark:hover:border-neutral-700 hover:shadow-sm transition-all group'
+                className='flex items-center gap-3 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-4 py-3 hover:border-neutral-300 dark:hover:border-neutral-700 hover:shadow-sm transition-colors group'
               >
                 <Icon
                   className='w-4 h-4 shrink-0 text-neutral-400 dark:text-neutral-500 group-hover:text-neutral-700 dark:group-hover:text-neutral-300 transition-colors'

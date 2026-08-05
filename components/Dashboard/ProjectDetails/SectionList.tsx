@@ -73,7 +73,7 @@ export default function SectionList({ projectId, tasksBaseHref }: SectionListPro
   );
 
   const handleCreate = async () => {
-    if (!name.trim()) return;
+    if (!name.trim() || createSection.isPending) return;
     await createSection.mutateAsync({
       name: name.trim(),
       description: desc.trim() || undefined,

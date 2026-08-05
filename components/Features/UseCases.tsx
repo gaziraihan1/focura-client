@@ -38,8 +38,8 @@ export default function UseCases() {
           const theme = THEMES[i % THEMES.length];
           return (
             <div
-              key={i}
-              className="group overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-foreground/5"
+              key={c.title}
+              className="group overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-colors transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-foreground/5"
             >
               <div className={`relative h-32 w-full bg-linear-to-b ${theme.header}`}>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">

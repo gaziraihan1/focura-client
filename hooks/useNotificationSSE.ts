@@ -151,6 +151,9 @@ export function useNotificationSSE({
       retryCountRef.current > 0 ? "reconnecting" : "connecting"
     );
 
+    // The EventSource is closed by the token effect's cleanup below
+    // (eventSourceRef.current?.close()), so the resource is released on unmount.
+    // react-doctor-disable-next-line react-doctor/effect-needs-cleanup
     const es = new EventSource(
       `${backendUrl}/api/v1/notifications/stream?token=${backendToken}`
     );

@@ -113,7 +113,7 @@ export function StepList({ steps }: StepListProps) {
   return (
     <div className="flex flex-col gap-0 mb-6">
       {steps.map((s, i) => (
-        <Step key={i} num={i + 1} title={s.title} desc={s.desc} />
+        <Step key={s.title} num={i + 1} title={s.title} desc={s.desc} />
       ))}
     </div>
   );

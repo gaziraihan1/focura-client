@@ -72,10 +72,10 @@ export function MyContributionCard({ contribution, workspaceName }: MyContributi
         </div>
         <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
           <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${percentage}%` }}
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: percentage / 100 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
-            className={`h-full rounded-full ${getProgressColor()}`}
+            className={`h-full w-full origin-left rounded-full ${getProgressColor()}`}
           />
         </div>
       </div>

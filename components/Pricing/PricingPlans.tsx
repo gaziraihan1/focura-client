@@ -25,7 +25,7 @@ export default function PricingPlans() {
         >
           {plans.map((plan, i) => (
             <div
-              key={i}
+              key={plan.name}
               className={`
                 relative rounded-2xl border backdrop-blur-lg p-6 sm:p-8 flex flex-col
                 transition-all duration-300
@@ -58,9 +58,9 @@ export default function PricingPlans() {
               </div>
 
               <ul className="mt-8 space-y-3 text-sm flex-1">
-                {plan.features.map((f, idx) => (
+                {plan.features.map((f) => (
                   <li
-                    key={idx}
+                    key={f}
                     className="flex items-start gap-2 text-foreground/80"
                   >
                     <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />

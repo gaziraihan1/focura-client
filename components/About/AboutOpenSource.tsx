@@ -168,7 +168,7 @@ export const AboutOpenSource = () => {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-start gap-4 rounded-xl border bg-card p-4 hover:border-foreground/20 hover:shadow-sm transition-all group"
+                  className="flex items-start gap-4 rounded-xl border bg-card p-4 hover:border-foreground/20 hover:shadow-sm transition-colors group"
                 >
                   <div className="shrink-0 w-9 h-9 rounded-xl bg-muted flex items-center justify-center group-hover:bg-muted/80 transition-colors">
                     <Icon

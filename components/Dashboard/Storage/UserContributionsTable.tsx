@@ -86,10 +86,11 @@ export function UserContributionsTable({
               </div>
               <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
                 <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${user.percentage}%` }}
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
                   transition={{ duration: 0.6, delay: 0.1 + index * 0.05 }}
-                  className={`h-full rounded-full ${getProgressColor(user.percentage)}`}
+                  className={`h-full w-full origin-left rounded-full ${getProgressColor(user.percentage)}`}
+                  style={{ width: `${user.percentage}%` }}
                 />
               </div>
             </div>

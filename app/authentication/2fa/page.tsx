@@ -165,7 +165,7 @@ function TwoFactorContent() {
                     bg-transparent border
                     placeholder:text-muted-foreground/40
                     focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/60
-                    transition-all duration-200
+                    transition-colors duration-200
                     ${errors.password ? "border-destructive/70 focus:ring-destructive/30 focus:border-destructive" : "border-border/70"}
                   `}
                 />
@@ -197,7 +197,7 @@ function TwoFactorContent() {
                     bg-transparent border
                     placeholder:text-muted-foreground/40
                     focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/60
-                    transition-all duration-200
+                    transition-colors duration-200
                     ${errors.totpCode ? "border-destructive/70 focus:ring-destructive/30 focus:border-destructive" : "border-border/70"}
                   `}
                 />
@@ -215,7 +215,7 @@ function TwoFactorContent() {
                 className="
                   group relative w-full py-3 rounded-xl
                   bg-primary text-primary-foreground text-sm font-semibold tracking-wide
-                  overflow-hidden transition-all duration-200
+                  overflow-hidden transition-colors transition-transform duration-200
                   hover:brightness-110 active:scale-[0.98]
                   disabled:opacity-50 disabled:cursor-not-allowed
                   flex items-center justify-center gap-2

@@ -39,6 +39,8 @@ export default function DashboardShell({
       const loginUrl = `/authentication/login?callbackUrl=${encodeURIComponent(
         pathname
       )}`;
+      // Session/auth status only exists client-side via async useSession.
+      // react-doctor-disable-next-line react-doctor/nextjs-no-client-side-redirect
       router.replace(loginUrl);
       return;
     }

@@ -134,6 +134,7 @@ export default function AdminWorkspacesPage() {
         columns={columns}
         data={data?.data ?? []}
         isLoading={isLoading}
+        getRowKey={(w) => w.id}
       />
 
       <Pagination

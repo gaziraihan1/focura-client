@@ -18,7 +18,7 @@ export default function FeaturesDetails() {
         <div className="flex flex-col gap-28">
           {features.map((f, i) => (
             <div
-              key={i}
+              key={f.title}
               className={`
                 flex flex-col-reverse md:flex-row items-center gap-12 
                 ${i % 2 !== 0 ? "md:flex-row-reverse" : ""}
@@ -35,7 +35,7 @@ export default function FeaturesDetails() {
                 <ul className="mt-6 space-y-3">
                   {f.points.map((p, idx) => (
                     <li
-                      key={idx}
+                      key={p}
                       className="flex items-center gap-3 text-foreground/80"
                     >
                       <CheckCircle size={20} className="text-primary" />
@@ -56,7 +56,7 @@ export default function FeaturesDetails() {
                   alt={f.title}
                   width={1200}
                   height={900}
-                  className="w-full h-full object-cover transition-all hover:scale-105"
+                  className="w-full h-full object-cover transition-transform hover:scale-105"
                 />
               </div>
             </div>

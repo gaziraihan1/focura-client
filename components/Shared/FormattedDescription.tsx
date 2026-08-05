@@ -39,7 +39,7 @@ export function FormattedDescription({
 
       {rest.map((sentence, index) => (
         <motion.p
-          key={`${index}-${sentence.slice(0, 12)}`}
+          key={sentence}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.08 * (index + 1) }}

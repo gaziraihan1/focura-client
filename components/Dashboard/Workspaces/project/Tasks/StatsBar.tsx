@@ -35,7 +35,7 @@ export function StatsBar({ tasks, isLoading }: { tasks: Task[]; isLoading?: bool
       </div>
       <div className="h-1.5 rounded-full bg-muted overflow-hidden">
         <div
-          className="h-full rounded-full bg-emerald-500 transition-all duration-500"
+          className="h-full rounded-full bg-emerald-500 transition-colors duration-500"
           style={{ width: `${pct}%` }}
         />
       </div>

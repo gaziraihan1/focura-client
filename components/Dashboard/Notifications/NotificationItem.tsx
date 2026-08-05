@@ -30,7 +30,7 @@ export function NotificationItem({
       tabIndex={0}
       onClick={onClick}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onClick(); }}
-      className={`group relative p-4 rounded-xl border transition-all cursor-pointer ${
+      className={`group relative p-4 rounded-xl border transition-colors cursor-pointer ${
         !notification.read
           ? "bg-accent/30 border-accent hover:bg-accent/40"
           : "bg-card border-border hover:bg-accent/20"
@@ -67,7 +67,7 @@ export function NotificationItem({
             e.stopPropagation();
             onDelete();
           }}
-          className="md:opacity-0 group-hover:opacity-100 p-2 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-all"
+          className="md:opacity-0 group-hover:opacity-100 p-2 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-colors transition-opacity"
           title="Delete notification"
         >
           <Trash2 className="w-4 h-4" />

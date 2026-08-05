@@ -70,6 +70,7 @@ export function ActivityFeed({
   // Group activities by date
   const groupedActivities = activities.reduce((acc, activity) => {
     const date = new Date(activity.createdAt).toLocaleDateString('en-US', {
+      timeZone: 'UTC',
       year: 'numeric',
       month: 'long',
       day: 'numeric',

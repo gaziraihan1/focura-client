@@ -18,16 +18,17 @@ export default function IntegrationsSection() {
         </p>
 
         <div className="mt-14 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-          {integrations.map((item, index) => (
+          {integrations.map((item) => (
             <div
-              key={index}
-              className="group flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-muted px-4 py-6 transition-all duration-300 hover:-translate-y-1 hover:border-foreground/30 hover:shadow-lg hover:shadow-foreground/5"
+              key={item.name}
+              className="group flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-muted px-4 py-6 transition-colors transition-transform duration-300 hover:-translate-y-1 hover:border-foreground/30 hover:shadow-lg hover:shadow-foreground/5"
             >
-              <div className="relative h-10 w-10 opacity-70 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0">
+              <div className="relative h-10 w-10 opacity-70 grayscale transition-opacity duration-300 group-hover:opacity-100 group-hover:grayscale-0">
                 <Image
                   src={item.logo}
                   alt={item.name}
                   fill
+                  sizes="40px"
                   className="object-contain"
                 />
               </div>

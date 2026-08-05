@@ -50,7 +50,7 @@ export function ProjectCompletionTrendChart({ data }: ProjectCompletionTrendChar
           const isRecent = index >= data.length - 7;
 
           return (
-            <div key={index} className="group relative flex-1">
+            <div key={String(point.date)} className="group relative flex-1">
               <div
                 className={`w-full rounded-t transition-all duration-300 hover:opacity-80 ${
                   isRecent ? 'bg-primary' : 'bg-primary/40'

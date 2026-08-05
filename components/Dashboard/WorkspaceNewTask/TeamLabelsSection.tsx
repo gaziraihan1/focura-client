@@ -36,6 +36,7 @@ export function TeamLabelsSection({
   onLabelChange,
   onOpenLabelManager,
 }: TeamLabelsSectionProps) {
+  const assigneeSet = new Set(assigneeIds);
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -78,7 +79,7 @@ export function TeamLabelsSection({
                   onClick={() => onToggleAssignee(member.user.id)}
                   disabled={!canSelect}
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition ${
-                    assigneeIds.includes(member.user.id)
+                    assigneeSet.has(member.user.id)
                       ? "bg-primary/10 border-primary text-primary"
                       : canSelect
                       ? "border-border text-foreground hover:bg-accent"

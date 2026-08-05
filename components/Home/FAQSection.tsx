@@ -29,7 +29,7 @@ export default function FAQSection() {
             const open = openIndex === i;
             return (
               <div
-                key={i}
+                key={faq.q}
                 className={`rounded-xl border transition-colors duration-300 ${
                   open ? "border-foreground/25 bg-card shadow-lg shadow-foreground/5" : "border-border bg-card/50"
                 }`}
@@ -48,7 +48,7 @@ export default function FAQSection() {
                 <div
                   inert={!open}
                   aria-hidden={!open}
-                  className="grid transition-all duration-300 ease-in-out"
+                  className="grid transition-opacity duration-300 ease-in-out"
                   style={{
                     gridTemplateRows: open ? "1fr" : "0fr",
                     opacity: open ? 1 : 0,

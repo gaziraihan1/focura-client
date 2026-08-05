@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react';
 import { api } from '@/lib/axios';
@@ -8,12 +8,31 @@ import { api } from '@/lib/axios';
 type CallbackStatus = 'loading' | 'success' | 'error';
 
 export default function IntegrationsCallbackPage() {
+  return (
+    <Suspense fallback={<CallbackLoading />}>
+      <IntegrationsCallbackInner />
+    </Suspense>
+  );
+}
+
+function CallbackLoading() {
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />
+    </div>
+  );
+}
+
+function IntegrationsCallbackInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<CallbackStatus>('loading');
   const [message, setMessage] = useState('');
 
   useEffect(() => {
+    let redirectTimer: ReturnType<typeof setTimeout> | undefined;
+    let cancelled = false;
+
     const handleCallback = async () => {
       const code = searchParams.get('code');
       const state = searchParams.get('state');
@@ -22,15 +41,19 @@ export default function IntegrationsCallbackPage() {
 
       // Handle OAuth errors from provider
       if (error) {
-        setStatus('error');
-        setMessage(errorDescription || `Authorization failed: ${error}`);
+        if (!cancelled) {
+          setStatus('error');
+          setMessage(errorDescription || `Authorization failed: ${error}`);
+        }
         return;
       }
 
       // Validate required parameters
       if (!code || !state) {
-        setStatus('error');
-        setMessage('Missing authorization code or state parameter');
+        if (!cancelled) {
+          setStatus('error');
+          setMessage('Missing authorization code or state parameter');
+        }
         return;
       }
 
@@ -48,6 +71,8 @@ export default function IntegrationsCallbackPage() {
           { showErrorToast: false },
         );
 
+        if (cancelled) return;
+
         if (result?.success) {
           setStatus('success');
           const provider = result.data?.integration?.provider || 'provider';
@@ -60,7 +85,7 @@ export default function IntegrationsCallbackPage() {
             : '/dashboard/settings';
 
           // Redirect after 2 seconds
-          setTimeout(() => {
+          redirectTimer = setTimeout(() => {
             sessionStorage.removeItem('integration_workspace_slug');
             router.push(redirectPath);
           }, 2000);
@@ -69,6 +94,7 @@ export default function IntegrationsCallbackPage() {
           setMessage(result?.message || 'Failed to complete integration');
         }
       } catch (err: any) {
+        if (cancelled) return;
         const errMsg = err?.response?.data?.message || err?.message || 'An error occurred while connecting';
 
         // OAuth state expired — offer to retry from integrations page
@@ -84,6 +110,11 @@ export default function IntegrationsCallbackPage() {
     };
 
     handleCallback();
+
+    return () => {
+      cancelled = true;
+      if (redirectTimer) clearTimeout(redirectTimer);
+    };
   }, [searchParams, router]);
 
   return (

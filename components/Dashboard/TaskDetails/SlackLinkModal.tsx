@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   X,
   MessageSquare,
@@ -23,6 +23,7 @@ interface SlackLinkModalProps {
 export function SlackLinkModal({ taskId, onClose, onLinked }: SlackLinkModalProps) {
   const [messageUrl, setMessageUrl] = useState('');
   const [linking, setLinking] = useState(false);
+  const linkingRef = useRef(false);
   const { isConnected, loading: checkingSlack } = useSlackIntegration();
 
   const handleLink = async () => {
@@ -38,6 +39,8 @@ export function SlackLinkModal({ taskId, onClose, onLinked }: SlackLinkModalProp
       return;
     }
 
+    if (linkingRef.current) return;
+    linkingRef.current = true;
     setLinking(true);
     try {
       // Parse channel and timestamp from Slack message URL
@@ -66,6 +69,7 @@ export function SlackLinkModal({ taskId, onClose, onLinked }: SlackLinkModalProp
     } catch {
       toast.error('Failed to link Slack message');
     } finally {
+      linkingRef.current = false;
       setLinking(false);
     }
   };

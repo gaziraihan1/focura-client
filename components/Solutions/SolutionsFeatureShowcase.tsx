@@ -55,12 +55,12 @@ export default function SolutionsFeatureShowcase() {
             const { Mock, mockProps } = feature;
             return (
               <motion.div
-                key={i}
+                key={feature.title}
                 initial={{ opacity: 0, y: 25 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.15 }}
-                className="group flex flex-col rounded-2xl border border-border bg-card p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-foreground/5"
+                className="group flex flex-col rounded-2xl border border-border bg-card p-4 shadow-sm transition-colors transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-foreground/5"
               >
                 <Mock {...(mockProps ?? {})} />
 

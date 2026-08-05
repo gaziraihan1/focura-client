@@ -48,7 +48,7 @@ function formatDueDate(dateStr: string): string {
   if (diffDays === 0) return 'Today';
   if (diffDays === 1) return 'Tomorrow';
   if (diffDays <= 7) return `In ${diffDays} days`;
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return date.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' });
 }
 
 function isOverdue(dateStr: string): boolean {

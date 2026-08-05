@@ -1,6 +1,6 @@
 'use client';
-
 import { useState }                from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
   FILTER_OPTIONS,
@@ -196,12 +196,12 @@ export default function RoadmapContent() {
         >
           <p className='text-xs text-neutral-400 dark:text-neutral-500 leading-relaxed'>
             Roadmap priorities shift based on user feedback.{' '}
-            <a
+            <Link
               href='/dashboard/feature-requests'
               className='font-semibold text-neutral-700 dark:text-neutral-300 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-600 transition-colors'
             >
               Cast your vote
-            </a>{' '}
+            </Link>{' '}
             on the Feature Voting board inside Focura.
           </p>
         </motion.div>

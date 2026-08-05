@@ -22,6 +22,7 @@ export function useTasks(
       if (filters?.status && filters.status !== "all") params.append("status", filters.status);
       if (filters?.priority && filters.priority !== "all") params.append("priority", filters.priority);
       if (filters?.projectId) params.append("projectId", filters.projectId);
+      if (filters?.sectionId) params.append("sectionId", filters.sectionId);
       if (filters?.workspaceId) params.append("workspaceId", filters.workspaceId);
       if (filters?.assigneeId) params.append("assigneeId", filters.assigneeId);
       if (filters?.search) params.append("search", filters.search);

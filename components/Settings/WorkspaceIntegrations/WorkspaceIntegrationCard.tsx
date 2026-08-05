@@ -175,7 +175,7 @@ export function WorkspaceIntegrationCard({
                     {connectedIntegration.syncStatus.lastSyncAt
                       ? new Date(
                           connectedIntegration.syncStatus.lastSyncAt,
-                        ).toLocaleString()
+                        ).toLocaleString("en-US", { timeZone: "UTC" })
                       : 'Never'}
                   </span>
                 </div>

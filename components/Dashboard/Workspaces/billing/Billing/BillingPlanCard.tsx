@@ -1,5 +1,5 @@
 // components/WorkspaceBilling/PlanCard.tsx
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ChevronRight, CreditCard, ExternalLink } from 'lucide-react';
 import { PLAN_META } from '@/constants/billing.upgrade.constants';
@@ -21,6 +21,12 @@ export function BillingPlanCard({
   const params = useParams();
   const workspaceSlug = params.workspaceSlug as string;
   const [cancelConfirm, setCancelConfirm] = useState(false);
+  const [now, setNow] = useState<number | null>(null);
+
+  useEffect(() => {
+    setNow(Date.now());
+  }, []);
+
   const isFree = !sub || sub.planName === 'FREE';
   const meta = PLAN_META[sub?.planName ?? 'FREE'];
   const Icon = meta.icon;
@@ -81,7 +87,7 @@ export function BillingPlanCard({
                 </span>
               </p>
             )}
-            {sub.trialEnd && new Date(sub.trialEnd) > new Date() && (
+            {now && sub.trialEnd && new Date(sub.trialEnd) > new Date(now) && (
               <p className="text-blue-600 dark:text-blue-400 font-medium">
                 Trial ends {formatDate(sub.trialEnd)} — add a payment method to
                 continue

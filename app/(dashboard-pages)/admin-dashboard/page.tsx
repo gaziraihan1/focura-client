@@ -119,7 +119,7 @@ export default function AdminOverviewPage() {
             { label: 'Check Billing', href: '/admin-dashboard/billing', icon: Zap, color: VIZ.orange },
             { label: 'Activity Log', href: '/admin-dashboard/activity', icon: Activity, color: VIZ.pink },
           ].map(({ label, href, icon: Icon, color }) => (
-            <Link key={href} href={href} className="flex items-center gap-3 p-3.5 rounded-xl border border-border bg-card/30 transition-all hover:border-border/60 hover:bg-accent/30 group">
+            <Link key={href} href={href} className="flex items-center gap-3 p-3.5 rounded-xl border border-border bg-card/30 transition-colors hover:border-border/60 hover:bg-accent/30 group">
               <div className="p-2 rounded-lg" style={{ background: `${color}22` }}>
                 <Icon className="w-4 h-4" style={{ color }} />
               </div>

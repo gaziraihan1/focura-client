@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useEffectEvent } from "react";
 import { Loader2 } from "lucide-react";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 
@@ -21,12 +21,12 @@ export function DeleteNotificationsDialog({
   const overlayRef = useRef<HTMLDivElement>(null);
 
   // Close on Escape
+  const onEscape = useEffectEvent((e: KeyboardEvent) => { if (e.key === "Escape") onClose(); });
   useEffect(() => {
     if (!isOpen) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [isOpen, onClose]);
+    window.addEventListener("keydown", onEscape);
+    return () => window.removeEventListener("keydown", onEscape);
+  }, [isOpen]);
 
   // Lock body scroll
   useEffect(() => {

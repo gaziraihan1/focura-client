@@ -1,7 +1,7 @@
 'use client';
 
 import { MessageSquare, ExternalLink, Unlink2, Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { api } from '@/lib/axios';
 import toast from 'react-hot-toast';
 
@@ -23,10 +23,13 @@ export function SlackMessageLink({
   onUnlinked,
 }: SlackMessageLinkProps) {
   const [unlinking, setUnlinking] = useState(false);
+  const unlinkingRef = useRef(false);
 
   if (!channelId || !messageTs) return null;
 
   const handleUnlink = async () => {
+    if (unlinkingRef.current) return;
+    unlinkingRef.current = true;
     setUnlinking(true);
     try {
       await api.put(`/api/v1/tasks/${taskId}/slack-unlink`);
@@ -35,6 +38,7 @@ export function SlackMessageLink({
     } catch {
       toast.error('Failed to remove Slack link');
     } finally {
+      unlinkingRef.current = false;
       setUnlinking(false);
     }
   };

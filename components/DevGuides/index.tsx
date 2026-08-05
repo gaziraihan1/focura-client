@@ -97,7 +97,7 @@ export function Step({ num, title, desc }: { num: number; title: string; desc: R
 export function StepList({ steps }: { steps: Array<{ title: string; desc: ReactNode }> }) {
   return (
     <div className="flex flex-col gap-0 mb-5">
-      {steps.map((s, i) => <Step key={i} num={i + 1} title={s.title} desc={s.desc} />)}
+      {steps.map((s, i) => <Step key={s.title} num={i + 1} title={s.title} desc={s.desc} />)}
     </div>
   );
 }
@@ -117,8 +117,10 @@ export function Table({ headers, rows }: { headers: string[]; rows: string[][] }
         </thead>
         <tbody>
           {rows.map((row, i) => (
+            // react-doctor-disable-next-line react-doctor/no-array-index-as-key -- primitive data rows in a static reference table have no per-row identity
             <tr key={i} className={i < rows.length - 1 ? "border-b border-border" : ""}>
               {row.map((cell, j) => (
+                // react-doctor-disable-next-line react-doctor/no-array-index-as-key -- primitive cells have no stable identity
                 <td key={j} className="px-4 py-2.5 text-sm text-muted-foreground font-mono">
                   {cell}
                 </td>

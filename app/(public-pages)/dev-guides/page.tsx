@@ -41,6 +41,7 @@ export default function DevGuidePage() {
         <main ref={contentRef} className="flex-1 min-w-0">
           <DevSectionHero section={currentSection} />
 
+          {/* react-doctor-disable-next-line react-doctor/no-transition-all -- tailwindcss-animate `animate-in` entry animation only animates opacity/transform/filter, not `all` (false positive) */}
           <div key={activeId} className="animate-in fade-in slide-in-from-bottom-2 duration-200">
             {sectionContent}
           </div>

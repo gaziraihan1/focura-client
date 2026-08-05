@@ -49,7 +49,7 @@ function LimitCard({ icon: Icon, label, current, max, unit, percentage }: LimitC
 
   return (
     <div
-      className={`bg-card border rounded-xl sm:rounded-2xl p-3.5 sm:p-5 hover:shadow-md transition-all duration-300 ${
+      className={`bg-card border rounded-xl sm:rounded-2xl p-3.5 sm:p-5 hover:shadow-md transition-colors duration-300 ${
         isCritical
           ? "border-red-300 dark:border-red-800"
           : isWarning
@@ -110,7 +110,7 @@ function LimitCard({ icon: Icon, label, current, max, unit, percentage }: LimitC
 
           <div className="w-full bg-muted rounded-full h-2 overflow-hidden mb-2">
             <div
-              className={`h-full rounded-full transition-all duration-700 ${
+              className={`h-full rounded-full transition-colors duration-700 ${
                 isCritical
                   ? "bg-red-500 dark:bg-red-400"
                   : isWarning
@@ -204,7 +204,7 @@ export function PlanLimitsSection({ planLimits, workspaceSlug }: PlanLimitsSecti
         </div>
 
         {hasWarnings && (
-          <button className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-primary text-primary-foreground text-xs sm:text-sm font-semibold hover:bg-primary/90 transition-all shadow-sm">
+          <button className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-primary text-primary-foreground text-xs sm:text-sm font-semibold hover:bg-primary/90 transition-colors shadow-sm">
             <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             Upgrade
           </button>

@@ -218,6 +218,7 @@ function WorkspaceMock() {
                       <div className="mt-2 flex items-center justify-between">
                         <div className="flex -space-x-1">
                           {t.avatars.map((a, i) => (
+                            // react-doctor-disable-next-line react-doctor/no-array-index-as-key -- static mock avatar initials may repeat; no per-item identity
                             <span key={i} className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-muted font-bold text-muted-foreground ring-1 ring-background" style={{ fontSize: 5.5 }}>
                               {a}
                             </span>
@@ -501,7 +502,7 @@ export default function FeatureShowcase() {
         <div className="mt-16 space-y-20">
           {features.map((f, index) => (
             <div
-              key={index}
+              key={f.title}
               className={`flex flex-col items-center gap-10 md:gap-16 ${
                 f.reverse ? "md:flex-row-reverse" : "md:flex-row"
               }`}

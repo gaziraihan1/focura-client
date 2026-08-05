@@ -85,7 +85,13 @@ export function FocusEnergySection({
               min={0}
               max={5}
               value={distractionCost}
-              onChange={(e) => onDistractionCostChange(Number(e.target.value))}
+              onChange={(e) => {
+                const raw = e.target.value;
+                const parsed = Number(raw);
+                if (!Number.isNaN(parsed) && raw.trim() !== "") {
+                  onDistractionCostChange(parsed);
+                }
+              }}
               className="w-full px-3 py-2 rounded-lg border border-border"
             />
             <p className="text-xs text-muted-foreground mt-1">

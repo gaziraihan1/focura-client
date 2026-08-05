@@ -50,7 +50,7 @@ export function DueDateBadge({
       )}
       title={
         info.dueDate
-          ? `Due: ${info.dueDate.toLocaleDateString()} ${info.dueDate.toLocaleTimeString()}`
+          ? `Due: ${info.dueDate.toLocaleDateString("en-US", { timeZone: "UTC" })} ${info.dueDate.toLocaleTimeString("en-US", { timeZone: "UTC" })}`
           : undefined
       }
     >

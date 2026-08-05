@@ -1,6 +1,7 @@
 'use client';
 
 import { Search, ArrowRight }  from 'lucide-react';
+import Link from 'next/link';
 import { HELP_CATEGORIES }     from './HelpCategories';
 
 interface SearchResult {
@@ -108,13 +109,13 @@ export const HelpSearchResults = ({ query }: HelpSearchResultsProps) => {
           <p className='text-xs text-neutral-400 dark:text-neutral-500 mb-5'>
             Try different keywords, or browse the categories above.
           </p>
-          <a
+          <Link
             href='/contact'
             className='inline-flex items-center gap-1.5 text-sm font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors underline underline-offset-2'
           >
             Ask our support team
             <ArrowRight className='w-3.5 h-3.5 shrink-0' strokeWidth={2.5} />
-          </a>
+          </Link>
         </div>
       </section>
     );

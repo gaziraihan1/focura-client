@@ -12,9 +12,9 @@ export function KPICards({ kpis }: KPICardsProps) {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
-      {cards.map((card, index) => (
+      {cards.map((card) => (
         <div
-          key={index}
+          key={card.label}
           className="bg-card border rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow"
         >
           {/* Stack icon + value vertically on mobile, side-by-side on sm+ */}

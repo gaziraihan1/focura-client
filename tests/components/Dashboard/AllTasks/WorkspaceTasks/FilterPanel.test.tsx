@@ -54,4 +54,33 @@ describe('FilterPanel', () => {
     fireEvent.click(screen.getByText('Bug'))
     expect(defaultProps.onToggleLabel).toHaveBeenCalledWith('l1')
   })
+
+  it('renders section filter with sections grouped by project', () => {
+    render(
+      <FilterPanel
+        {...defaultProps}
+        sections={[
+          { id: 'sec1', name: 'Backlog', projectName: 'Project A' },
+          { id: 'sec2', name: 'Research', projectName: 'Project B' },
+        ]}
+      />,
+    )
+    expect(screen.getByLabelText('Section')).toBeInTheDocument()
+    expect(screen.getByText('Backlog')).toBeInTheDocument()
+    expect(screen.getByText('Research')).toBeInTheDocument()
+  })
+
+  it('calls onSectionChange when a section is picked', () => {
+    const onSectionChange = vi.fn()
+    render(
+      <FilterPanel
+        {...defaultProps}
+        sections={[{ id: 'sec1', name: 'Backlog', projectName: 'Project A' }]}
+        selectedSection="all"
+        onSectionChange={onSectionChange}
+      />,
+    )
+    fireEvent.change(screen.getByLabelText('Section'), { target: { value: 'sec1' } })
+    expect(onSectionChange).toHaveBeenCalledWith('sec1')
+  })
 })

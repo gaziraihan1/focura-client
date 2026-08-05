@@ -213,6 +213,7 @@ export default function MeetingDetailsPage() {
         <p className="mt-6 text-center text-xs text-muted-foreground">
           Created{" "}
           {new Date(meeting.createdAt).toLocaleDateString("en-US", {
+            timeZone: "UTC",
             month: "short",
             day: "numeric",
             year: "numeric",
@@ -221,6 +222,7 @@ export default function MeetingDetailsPage() {
             <>
               {" · "}Updated{" "}
               {new Date(meeting.updatedAt).toLocaleDateString("en-US", {
+                timeZone: "UTC",
                 month: "short",
                 day: "numeric",
                 year: "numeric",

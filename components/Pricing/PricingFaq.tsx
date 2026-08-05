@@ -26,7 +26,7 @@ export default function PricingFAQ() {
         <div className="max-w-3xl mx-auto space-y-4">
           {faqs.map((item, i) => (
             <div
-              key={i}
+              key={item.q}
               className="border border-border rounded-xl bg-muted/40 dark:bg-muted/30 
                          backdrop-blur-sm"
             >
@@ -44,12 +44,13 @@ export default function PricingFAQ() {
                   <ChevronDown className="w-5 h-5 text-muted-foreground" />
                 </motion.div>
               </button>
-              <AnimatePresence>
+              <AnimatePresence initial={false}>
                 {open === i && (
                   <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                     transition={{ duration: 0.25, ease: "easeOut" }}
                   >
                     <div className="px-5 pb-5 text-muted-foreground">

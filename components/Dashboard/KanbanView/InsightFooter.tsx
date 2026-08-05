@@ -11,6 +11,7 @@ export function InsightFooter({ tasks, onClose }: InsightFooterProps) {
   const controller = useKanbanInsightFooter({tasks})
 
   return (
+    // react-doctor-disable-next-line react-doctor/no-transition-all -- tailwindcss-animate `animate-in` entry animation only animates opacity/transform/filter, not `all` (false positive)
     <div className="border-t border-border bg-card animate-in slide-in-from-bottom duration-300">
       <div className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between mb-4">

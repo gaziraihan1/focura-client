@@ -100,7 +100,7 @@ export function ActiveSessionsSection() {
                       {session.os} &bull; {session.location || session.ip}
                     </p>
                     <p className="text-[10px] text-muted-foreground/60">
-                      Last active: {new Date(session.lastActiveAt).toLocaleDateString()}
+                      Last active: {new Date(session.lastActiveAt).toLocaleDateString("en-US", { timeZone: "UTC" })}
                     </p>
                   </div>
                 </div>

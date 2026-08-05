@@ -28,7 +28,7 @@ export function StatusBar({
             <div
               key={i}
               style={{ width: `${s.pct}%`, backgroundColor: s.color }}
-              className="transition-all duration-700"
+              className="transition-colors duration-700"
             />
           ) : null
         )}

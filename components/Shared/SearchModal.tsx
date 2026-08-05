@@ -24,6 +24,12 @@ const TYPE_LABEL: Record<SearchResult["type"], string> = {
 };
 
 export function SearchModal({ isOpen, onClose }: SearchModalProps) {
+  // Keying the stateful body on `isOpen` makes React remount it fresh on every
+  // open, so the query/selection reset automatically without a manual effect.
+  return <SearchModalBody key={isOpen ? "open" : "closed"} isOpen={isOpen} onClose={onClose} />;
+}
+
+function SearchModalBody({ isOpen, onClose }: SearchModalProps) {
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -42,14 +48,11 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
   const flatResults = results;
 
-  // Focus input on open
+  // Focus input on open — body remounts via key, so a mount effect runs once per open.
   useEffect(() => {
-    if (isOpen) {
-      setQuery("");
-      setSelectedIndex(0);
-      setTimeout(() => inputRef.current?.focus(), 50);
-    }
-  }, [isOpen]);
+    const timer = setTimeout(() => inputRef.current?.focus(), 50);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Reset selection when results change
   useEffect(() => {

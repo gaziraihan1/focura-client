@@ -53,7 +53,7 @@ export function ProjectTaskStatusChart({ data }: ProjectTaskStatusChartProps) {
           const color = statusColors[item.status.toUpperCase()] || "bg-chart-1";
 
           return (
-            <div key={index} className="space-y-1.5">
+            <div key={item.status} className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 min-w-0">
                   <div

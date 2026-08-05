@@ -29,9 +29,9 @@ export default function ResourcesUpdates({ updates }: ResourceUpdatesProps) {
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {updates?.items.map((u, i) => (
+          {updates?.items.map((u) => (
             <motion.div
-              key={i}
+              key={u.slug}
               initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -57,6 +57,7 @@ export default function ResourcesUpdates({ updates }: ResourceUpdatesProps) {
 
                 <p className="mt-4 text-xs text-foreground/50">
                   {new Date(u.date).toLocaleDateString("en-US", {
+                    timeZone: "UTC",
                     year: "numeric",
                     month: "short",
                     day: "numeric",

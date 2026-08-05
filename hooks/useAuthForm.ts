@@ -83,9 +83,8 @@ export function useAuthForm({ mode }: UseAuthFormProps) {
           headers: { "Content-Type": "application/json" },
         });
 
-        const data = await res.json();
-
         if (!res.ok) {
+          const data = await res.json().catch(() => null);
           if (res.status === 429) {
             toast.error("Too many attempts. Please try again later.");
           } else if (data.error?.toLowerCase().includes("already exists")) {
@@ -115,6 +114,7 @@ export function useAuthForm({ mode }: UseAuthFormProps) {
   } catch (err) {
     console.error("Google sign-in error:", err);
     toast.error("Google sign-in failed. Please try again.");
+  } finally {
     setIsGoogleLoading(false);
   }
 };

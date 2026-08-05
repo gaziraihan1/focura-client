@@ -19,7 +19,7 @@ export function FocusTaskCard({ task, timeRemaining }: FocusTaskCardProps) {
       <div className="absolute -inset-1 bg-linear-to-r from-purple-600/20 via-purple-500/20 to-purple-600/20 rounded-2xl blur-xl" />
 
       <Link href={`/dashboard/tasks/${task.id}`}>
-        <div className="relative p-5 rounded-2xl bg-linear-to-br from-purple-500/10 via-card to-card border-2 border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/20 hover:border-purple-500 transition-all cursor-pointer group">
+        <div className="relative p-5 rounded-2xl bg-linear-to-br from-purple-500/10 via-card to-card border-2 border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/20 hover:border-purple-500 transition-colors cursor-pointer group">
           <FocusBadge timeRemaining={timeRemaining} />
 
           <div className="flex items-start gap-4">

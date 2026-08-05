@@ -30,10 +30,11 @@ export function GettingStartedChecklist({
   totalProjects = 0,
   totalMembers = 0,
 }: GettingStartedChecklistProps) {
-  const [dismissed, setDismissed] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return localStorage.getItem('focura-onboarding-dismissed') === 'true';
-  });
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    setDismissed(localStorage.getItem('focura-onboarding-dismissed') === 'true');
+  }, []);
 
   const dismiss = () => {
     setDismissed(true);
@@ -111,7 +112,7 @@ export function GettingStartedChecklist({
       <div className="px-5 pb-4">
         <div className="h-1.5 bg-muted rounded-full overflow-hidden">
           <div
-            className="h-full bg-primary rounded-full transition-all duration-500 ease-out"
+            className="h-full bg-primary rounded-full transition-colors duration-500 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>

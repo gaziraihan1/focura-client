@@ -122,7 +122,7 @@ export const ContactFAQ = () => {
       <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-5">
         {faqs.map((item, i) => (
           <FAQRow
-            key={i}
+            key={item.question}
             item={item}
             isOpen={openIndex === i}
             onToggle={() => setOpenIndex(openIndex === i ? null : i)}

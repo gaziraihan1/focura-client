@@ -79,7 +79,7 @@ export default function TopNavbar({
             <button
               onClick={() => setShowSearch(true)}
               aria-label="Open search"
-              className="hidden md:flex flex-1 max-w-sm items-center gap-2 rounded-xl border border-border bg-muted/40 px-3.5 py-2 hover:border-primary/30 hover:bg-muted/60 transition-all duration-200 group cursor-text"
+              className="hidden md:flex flex-1 max-w-sm items-center gap-2 rounded-xl border border-border bg-muted/40 px-3.5 py-2 hover:border-primary/30 hover:bg-muted/60 transition-colors duration-200 group cursor-text"
             >
               <Search size={15} className="text-muted-foreground shrink-0" />
               <span className="flex-1 text-sm text-muted-foreground text-left min-w-0">
@@ -121,7 +121,7 @@ export default function TopNavbar({
                 className="flex items-center gap-2 rounded-xl px-2 py-1.5 transition hover:bg-accent"
               >
                 <div
-                  className={`relative flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 ring-2 transition-all duration-300 overflow-hidden ${
+                  className={`relative flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 ring-2 transition-colors duration-300 overflow-hidden ${
                     isRefreshing ? "ring-primary/50 animate-pulse" : "ring-transparent"
                   }`}
                 >

@@ -30,7 +30,7 @@ export function CalendarDay({
     return 'critical';
   }, [density]);
 
-  const { overdueTasks } = useMemo(() => {
+  const { overdueTaskSet } = useMemo(() => {
     const personal: Task[] = [];
     const assigned: Task[] = [];
     const overdue: Task[] = [];
@@ -47,7 +47,7 @@ export function CalendarDay({
       }
     });
 
-    return { personalTasks: personal, assignedTasks: assigned, overdueTasks: overdue };
+    return { personalTasks: personal, assignedTasks: assigned, overdueTaskSet: new Set(overdue) };
   }, [tasks]);
 
   const getBgColor = () => {
@@ -114,7 +114,7 @@ export function CalendarDay({
             key={task.id}
             task={task}
             isPersonal={task.assignees.length === 0}
-            isOverdue={overdueTasks.includes(task)}
+            isOverdue={overdueTaskSet.has(task)}
             onClick={() => onTaskClick(task)}
           />
         ))}

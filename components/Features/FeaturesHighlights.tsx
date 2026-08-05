@@ -62,10 +62,10 @@ export default function FeaturesHighlights() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {highlights.map((item, i) => (
             <div
-              key={i}
+              key={item.title}
               className="
                 group p-8 rounded-2xl border border-border bg-card shadow-sm shadow-foreground/5
-                hover:shadow-2xl hover:shadow-foreground/5 transition-all hover:-translate-y-1
+                hover:shadow-2xl hover:shadow-foreground/5 transition-colors transition-transform hover:-translate-y-1
               "
             >
               <div className="w-14 h-14 flex items-center justify-center rounded-full bg-primary/10 border border-border mb-6">

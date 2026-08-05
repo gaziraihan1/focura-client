@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X, Link2, GitPullRequest, CircleDot, GitBranch, GitCommit, Loader2, AlertCircle } from 'lucide-react';
 import { api } from '@/lib/axios';
 import toast from 'react-hot-toast';
@@ -99,6 +99,7 @@ export function GitHubLinkModal({ taskId, onClose, onLinked }: GitHubLinkModalPr
   const [selectedType, setSelectedType] = useState<LinkType>('pr');
   const [inputValue, setInputValue] = useState('');
   const [linking, setLinking] = useState(false);
+  const linkingRef = useRef(false);
   const [hasGitHub, setHasGitHub] = useState<boolean | null>(null);
 
   const selectedOption = LINK_OPTIONS.find((o) => o.type === selectedType)!;
@@ -132,6 +133,8 @@ export function GitHubLinkModal({ taskId, onClose, onLinked }: GitHubLinkModalPr
       return;
     }
 
+    if (linkingRef.current) return;
+    linkingRef.current = true;
     setLinking(true);
     try {
       const parsed = parseGitHubInput(inputValue, selectedType);
@@ -147,6 +150,7 @@ export function GitHubLinkModal({ taskId, onClose, onLinked }: GitHubLinkModalPr
     } catch {
       toast.error(`Failed to link GitHub ${selectedOption.label.toLowerCase()}`);
     } finally {
+      linkingRef.current = false;
       setLinking(false);
     }
   };

@@ -19,17 +19,18 @@ export function LabelPicker({
   const [isOpen, setIsOpen] = useState(false);
   const { data: labels, isLoading } = useLabels();
   const allLabels = labels?.data || [];
+  const selectedSet = new Set(selectedLabelIds);
 
   const selectedLabels = allLabels.filter((label) =>
-    selectedLabelIds.includes(label.id)
+    selectedSet.has(label.id)
   );
 
   const availableLabels = allLabels.filter(
-    (label) => !selectedLabelIds.includes(label.id)
+    (label) => !selectedSet.has(label.id)
   );
 
   const handleToggle = (labelId: string) => {
-    if (selectedLabelIds.includes(labelId)) {
+    if (selectedSet.has(labelId)) {
       onChange(selectedLabelIds.filter((id) => id !== labelId));
     } else {
       if (selectedLabelIds.length >= maxLabels) {

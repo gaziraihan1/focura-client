@@ -46,6 +46,7 @@ export default function TestimonialSection() {
             className="absolute -top-5 left-2 text-muted-foreground/20"
             aria-hidden="true"
           />
+          {/* react-doctor-disable-next-line react-doctor/no-transition-all -- tailwindcss-animate `animate-in` entry animation only animates opacity/transform/filter, not `all` (false positive) */}
           <div
             key={index}
             className="flex h-full flex-col items-center justify-center rounded-2xl border border-border bg-card p-8 shadow-xl shadow-foreground/5 animate-in fade-in duration-500"
@@ -77,11 +78,12 @@ export default function TestimonialSection() {
 
         <div className="mt-10 flex justify-center gap-2.5">
           {testimonials.map((_, i) => (
+            // react-doctor-disable-next-line react-doctor/no-array-index-as-key -- carousel dots are position-bound indicators with no per-item identity
             <button
               key={i}
               onClick={() => setIndex(i)}
               aria-label={`Show testimonial ${i + 1}`}
-              className={`h-2 rounded-full transition-all duration-300 ${
+              className={`h-2 rounded-full transition-colors duration-300 ${
                 index === i ? "w-6 bg-foreground" : "w-2 bg-foreground/20 hover:bg-foreground/40"
               }`}
             />

@@ -3,6 +3,34 @@
 import { motion, useMotionValue, animate } from "framer-motion";
 import { useEffect, useState } from "react";
 
+function Counter({ value, suffix }: { value: number; suffix: string }) {
+  const count = useMotionValue(0);
+  const [display, setDisplay] = useState("0");
+
+  useEffect(() => {
+    const controls = animate(count, value, {
+      duration: 1.4,
+      ease: "easeOut",
+    });
+
+    const unsubscribe = count.on("change", (latest) => {
+      setDisplay(latest.toFixed(latest % 1 === 0 ? 0 : 1));
+    });
+
+    return () => {
+      unsubscribe();
+      controls.stop();
+    };
+  }, [value, count]);
+
+  return (
+    <span>
+      {display}
+      {suffix}
+    </span>
+  );
+}
+
 export default function SolutionsMetrics() {
   const metrics = [
     {
@@ -31,34 +59,6 @@ export default function SolutionsMetrics() {
     },
   ];
 
-  function Counter({ value, suffix }: { value: number; suffix: string }) {
-    const count = useMotionValue(0);
-    const [display, setDisplay] = useState("0");
-
-    useEffect(() => {
-      const controls = animate(count, value, {
-        duration: 1.4,
-        ease: "easeOut",
-      });
-
-      const unsubscribe = count.on("change", (latest) => {
-        setDisplay(latest.toFixed(latest % 1 === 0 ? 0 : 1));
-      });
-
-      return () => {
-        unsubscribe();
-        controls.stop();
-      };
-    }, [value, count]);
-
-    return (
-      <span>
-        {display}
-        {suffix}
-      </span>
-    );
-  }
-
   return (
     <section className="py-28 bg-background">
       <div className="max-w-6xl mx-auto px-6 lg:px-10">
@@ -82,7 +82,7 @@ export default function SolutionsMetrics() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {metrics.map((item, i) => (
             <motion.div
-              key={i}
+              key={item.label}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

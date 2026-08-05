@@ -32,11 +32,10 @@ export const useForgetPasswordPage = () => {
         body: JSON.stringify({ email: values.email }),
       });
 
-      const data = await res.json();
-
       if (res.ok) {
         setSuccess(true);
       } else {
+        const data = await res.json().catch(() => null);
         setError(data.error || "Failed to send reset email");
       }
     } catch (err) {

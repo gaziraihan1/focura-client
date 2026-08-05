@@ -1,11 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, Plus, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { Check, Eye, ExternalLink, Plus, Loader2, Trash2 } from "lucide-react";
+import { ConfirmModal } from "@/components/Shared/ConfirmModal";
 import {
   useProjectViews,
   useCreateView,
   useDeleteView,
+  useUpdateView,
 } from "@/hooks/useProjectFeatures";
 
 interface ViewListProps {
@@ -16,12 +20,22 @@ export default function ViewList({ projectId }: ViewListProps) {
   const { data: views, isLoading } = useProjectViews(projectId);
   const createView = useCreateView();
   const deleteView = useDeleteView();
+  const updateView = useUpdateView();
   const [showNew, setShowNew] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<any>(null);
+  const params = useParams();
+  const workspaceSlug = params?.workspaceSlug as string;
+  const projectSlug = params?.projectSlug as string;
+
+  const tasksHref = (viewId: string) =>
+    workspaceSlug && projectSlug
+      ? `/dashboard/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks?view=${viewId}`
+      : "#";
   const [name, setName] = useState("");
   const [type, setType] = useState<"KANBAN" | "LIST" | "CALENDAR" | "TIMELINE">("KANBAN");
 
   const handleCreate = async () => {
-    if (!name.trim()) return;
+    if (!name.trim() || createView.isPending) return;
     await createView.mutateAsync({
       name: name.trim(),
       type,
@@ -73,12 +87,29 @@ export default function ViewList({ projectId }: ViewListProps) {
                 </div>
               </div>
             </div>
-            <button
-              onClick={() => deleteView.mutateAsync({ viewId: view.id, projectId })}
-              className="p-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/20 transition"
-            >
-              <span className="text-[10px] text-red-500">×</span>
-            </button>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => updateView.mutateAsync({ viewId: view.id, projectId, isDefault: true })}
+                disabled={view.isDefault}
+                title={view.isDefault ? "Default view" : "Make this the default view"}
+                className="inline-flex items-center gap-1 rounded-lg border border-border px-2 py-1.5 text-[10px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition disabled:opacity-40 disabled:cursor-default"
+              >
+                <Check className="size-3" /> {view.isDefault ? "Default" : "Set default"}
+              </button>
+              <Link
+                href={tasksHref(view.id)}
+                className="inline-flex items-center gap-1 rounded-lg border border-border px-2 py-1.5 text-[10px] font-medium text-primary hover:bg-primary/5 transition"
+              >
+                <ExternalLink className="size-3" /> Apply
+              </Link>
+              <button
+                onClick={() => setDeleteTarget(view)}
+                aria-label={`Delete view ${view.name}`}
+                className="p-1.5 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition"
+              >
+                <Trash2 className="size-3.5" />
+              </button>
+            </div>
           </div>
         </div>
       ))}
@@ -131,6 +162,21 @@ export default function ViewList({ projectId }: ViewListProps) {
           New View
         </button>
       )}
+
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={async () => {
+          if (deleteTarget) {
+            await deleteView.mutateAsync({ viewId: deleteTarget.id, projectId });
+            setDeleteTarget(null);
+          }
+        }}
+        title="Delete view?"
+        message={`This will permanently delete the "${deleteTarget?.name}" view.`}
+        confirmText="Delete"
+        isLoading={deleteView?.isPending}
+      />
     </div>
   );
 }

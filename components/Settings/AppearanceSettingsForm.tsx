@@ -18,6 +18,8 @@ export function AppearanceSettingsForm() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // SSR hydration guard: must flip after mount to avoid theme/density mismatch.
+    // react-doctor-disable-next-line react-doctor/no-initialize-state -- mounted is a hydration guard (Next.js SSR pattern, see `if (!mounted)` below), not state whose initializer belongs in useState.
     setMounted(true);
     const savedDensity = localStorage.getItem('density') || 'default';
     setDensity(savedDensity);

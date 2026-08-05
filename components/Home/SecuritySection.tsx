@@ -42,7 +42,7 @@ export default function SecuritySection() {
           {items.map(({ icon: Icon, title, desc }) => (
             <div
               key={title}
-              className="group rounded-2xl border border-border bg-card p-7 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-foreground/5"
+              className="group rounded-2xl border border-border bg-card p-7 text-left transition-colors transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-foreground/5"
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-muted transition-colors group-hover:bg-foreground">
                 <Icon size={22} className="text-foreground transition-colors group-hover:text-background" />

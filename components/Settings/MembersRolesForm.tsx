@@ -24,7 +24,7 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
   const [inviting, setInviting] = useState(false);
 
   const handleInvite = async () => {
-    if (!workspace || !inviteEmail.trim()) return;
+    if (!workspace || !inviteEmail.trim() || inviting || inviteMember.isPending) return;
     setInviting(true);
     try {
       await inviteMember.mutateAsync({

@@ -141,7 +141,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     >
       <div className="flex items-center justify-between px-5 py-5 border-b border-sidebar-border shrink-0">
         <Link href="/dashboard" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 ring-1 ring-sidebar-border group-hover:ring-sidebar-primary/40 transition-all">
+          <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 ring-1 ring-sidebar-border group-hover:ring-sidebar-primary/40 transition-colors">
             <Image src="/focura.png" width={32} height={32} alt="Focura Logo" className="w-full h-full object-cover" />
           </div>
           <span className="text-[15px] font-bold tracking-tight text-sidebar-foreground">
@@ -175,7 +175,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     aria-expanded={expandedItems.includes(item.name)}
                     className={`
                       w-full flex items-center justify-between px-3 py-2.5 rounded-xl
-                      text-sm font-medium transition-all duration-150 group
+                      text-sm font-medium transition-colors duration-150 group
                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
                       ${active
                         ? "bg-sidebar-accent text-sidebar-accent-foreground"
@@ -210,7 +210,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                             onClick={onClose}
                             aria-current={childActive ? "page" : undefined}
                             className={`
-                              block px-2.5 py-2 rounded-lg text-[13px] transition-all duration-150
+                              block px-2.5 py-2 rounded-lg text-[13px] transition-colors duration-150
                               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
                               ${childActive
                                 ? "text-sidebar-primary font-semibold bg-sidebar-primary/8"
@@ -232,7 +232,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                   aria-current={isActive(item.href || "") ? "page" : undefined}
                   className={`
                     flex items-center gap-3 px-3 py-2.5 rounded-xl
-                    text-sm font-medium transition-all duration-150
+                    text-sm font-medium transition-colors duration-150
                     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
                     ${item.href && isActive(item.href)
                       ? "bg-sidebar-accent text-sidebar-accent-foreground"
@@ -267,7 +267,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             aria-current={isActive(item.href || "") ? "page" : undefined}
             className={`
               flex items-center gap-3 px-3 py-2.5 rounded-xl
-              text-sm font-medium transition-all duration-150
+              text-sm font-medium transition-colors duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
               ${isActive(item.href || "")
                 ? "bg-sidebar-accent text-sidebar-accent-foreground"

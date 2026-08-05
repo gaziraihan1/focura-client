@@ -24,12 +24,14 @@ export function TwoFactorSection() {
   const [copied, setCopied] = useState(false);
 
   const handleSetup2FA = async () => {
+    if (setupTwoFactor.isPending) return;
     const result = await setupTwoFactor.mutateAsync();
     setSetupData(result);
     setTwoFactorStep('verify');
   };
 
   const handleVerify2FA = async () => {
+    if (verifyTwoFactor.isPending) return;
     if (!verificationCode || verificationCode.length < 6) return;
     await verifyTwoFactor.mutateAsync(verificationCode);
     setTwoFactorStep('idle');
@@ -39,6 +41,7 @@ export function TwoFactorSection() {
   };
 
   const handleDisable2FA = async () => {
+    if (disableTwoFactor.isPending) return;
     if (!disablePassword) return;
     await disableTwoFactor.mutateAsync(disablePassword);
     setTwoFactorStep('idle');

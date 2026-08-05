@@ -231,16 +231,20 @@ export function useWorkspaceNewProjectPage({
   const isLoading = workspaceLoading || roleLoading;
 
   // Handle access control redirects
+  // Access/role checks come from async react-query (useWorkspaceRole) staying
+  // client-side; no event-handler or server equivalent — rule's documented FP.
   useEffect(() => {
     if (!isLoading && workspace) {
       if (!hasAccess) {
         toast.error("You don't have access to this workspace");
+        // react-doctor-disable-next-line react-doctor/nextjs-no-client-side-redirect
         router.push("/dashboard/workspaces");
         return;
       }
 
       if (!canCreateProjects) {
         toast.error("You don't have permission to create projects");
+        // react-doctor-disable-next-line react-doctor/nextjs-no-client-side-redirect
         router.push(`/dashboard/workspaces/${workspaceSlug}/projects`);
         return;
       }

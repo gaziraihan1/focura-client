@@ -44,7 +44,7 @@ export default function ResourcesFeaturedGuides() {
         <div className="grid sm:grid-cols-2 gap-8">
           {guides.map((g, i) => (
             <motion.div
-              key={i}
+              key={g.title}
               initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

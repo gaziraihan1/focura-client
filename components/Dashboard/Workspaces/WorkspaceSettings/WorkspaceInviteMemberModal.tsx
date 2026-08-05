@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 import { Mail, Loader2 } from "lucide-react";
 import { WorkspaceRole } from "@/hooks/useWorkspaceSettings";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
@@ -29,12 +29,12 @@ export function WorkspaceInviteMemberModal({
   const trapRef = useFocusTrap(isOpen);
 
   // Close on Escape
+  const onEscape = useEffectEvent((e: KeyboardEvent) => { if (e.key === "Escape") onClose(); });
   useEffect(() => {
     if (!isOpen) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [isOpen, onClose]);
+    window.addEventListener("keydown", onEscape);
+    return () => window.removeEventListener("keydown", onEscape);
+  }, [isOpen]);
 
   // Lock body scroll
   useEffect(() => {

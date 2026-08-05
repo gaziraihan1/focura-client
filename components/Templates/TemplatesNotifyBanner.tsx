@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Bell, CheckCircle2, Loader2, Mail } from 'lucide-react';
 
 type State = 'idle' | 'loading' | 'success' | 'error';
@@ -9,11 +9,12 @@ const TemplatesNotifyBanner = () => {
   const [email, setEmail] = useState('');
   const [state, setState] = useState<State>('idle');
   const [error, setError] = useState('');
+  const submittingRef = useRef(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (state === 'loading') return;
+    if (state === 'loading' || submittingRef.current) return;
 
     if (!email.trim()) return;
 
@@ -25,6 +26,7 @@ const TemplatesNotifyBanner = () => {
 
     setError('');
     setState('loading');
+    submittingRef.current = true;
 
     try {
       const res = await fetch(
@@ -38,15 +40,12 @@ const TemplatesNotifyBanner = () => {
         }
       );
 
-      const data = await res.json();
-
       if (!res.ok) {
+        const data = await res.json().catch(() => null);
         setState('error');
         setError(data?.message || 'Failed to subscribe.');
         return;
       }
-
-      // success
       setState('success');
       setEmail('');
 
@@ -54,6 +53,8 @@ const TemplatesNotifyBanner = () => {
       console.error(err);
       setState('error');
       setError('Network error. Please try again.');
+    } finally {
+      submittingRef.current = false;
     }
   };
 

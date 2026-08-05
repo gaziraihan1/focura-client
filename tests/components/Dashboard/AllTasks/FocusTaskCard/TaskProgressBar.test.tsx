@@ -3,9 +3,15 @@ import { render } from '@testing-library/react';
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, animate, ...props }: Record<string, unknown>) => (
-      <div {...props} animate-width={animate?.width}>{children}</div>
-    ),
+    div: ({ children, animate, initial, transition, ...props }: Record<string, unknown>) => {
+      const width =
+        typeof animate?.scaleX === 'number' ? `${(animate.scaleX as number) * 100}%` : undefined;
+      return (
+        <div {...props} animate-width={width}>
+          {children}
+        </div>
+      );
+    },
   },
 }));
 

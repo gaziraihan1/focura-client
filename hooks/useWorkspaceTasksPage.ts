@@ -6,6 +6,7 @@ import { useTeamMembers } from "@/hooks/useTeam";
 import { useTasks, useTaskStats, TaskFilters, TaskSort, useWorkspaceQuota, useTask } from "@/hooks/useTask";
 import { useFocusSession } from "./useFocusSession";
 import { useDailyTasks } from "./useDailyTasks";
+import { useWorkspaceSections } from "@/hooks/useWorkspaceSections";
 import toast from "react-hot-toast";
 
 export const DEFAULT_PAGE_SIZE = 10;
@@ -24,6 +25,7 @@ export function useWorkspaceTasksPage({ workspaceSlug }: UseWorkspaceTasksPagePr
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [selectedPriority, setSelectedPriority] = useState<string>("all");
   const [selectedProject, setSelectedProject] = useState<string>("all");
+  const [selectedSection, setSelectedSection] = useState<string>("all");
   const [selectedAssignee, setSelectedAssignee] = useState<string>("all");
   const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
   const [focusRequired, setFocusRequired] = useState(false);
@@ -34,6 +36,7 @@ export function useWorkspaceTasksPage({ workspaceSlug }: UseWorkspaceTasksPagePr
   const { data: workspace } = useWorkspace(workspaceSlug);
   const { role } = useWorkspaceRoleFromWorkspace(workspaceSlug);
   const { data: projects = [] } = useProjects(workspace?.id);
+  const { data: sections = [] } = useWorkspaceSections(workspace?.id, projects);
   const { data: labelsResponse } = useLabels();
   const labels = labelsResponse?.data ?? [];
   const { data: members = [] } = useTeamMembers(workspace?.id);
@@ -45,14 +48,14 @@ export function useWorkspaceTasksPage({ workspaceSlug }: UseWorkspaceTasksPagePr
 
   const clearFilters = () => {
     setSelectedStatus("all"); setSelectedPriority("all"); setSelectedProject("all");
-    setSelectedAssignee("all"); setSelectedLabels([]); setFocusRequired(false); setCurrentPage(1);
+    setSelectedAssignee("all"); setSelectedLabels([]); setFocusRequired(false); setSelectedSection("all"); setCurrentPage(1);
   };
 
   const toggleFilters = () => setShowFilters(!showFilters);
 
   const activeFiltersCount = useMemo(
-    () => [selectedStatus !== "all", selectedPriority !== "all", selectedProject !== "all", selectedAssignee !== "all", selectedLabels.length > 0, focusRequired].filter(Boolean).length,
-    [selectedStatus, selectedPriority, selectedProject, selectedAssignee, selectedLabels, focusRequired],
+    () => [selectedStatus !== "all", selectedPriority !== "all", selectedProject !== "all", selectedSection !== "all", selectedAssignee !== "all", selectedLabels.length > 0, focusRequired].filter(Boolean).length,
+    [selectedStatus, selectedPriority, selectedProject, selectedSection, selectedAssignee, selectedLabels, focusRequired],
   );
 
   const filters: TaskFilters = useMemo(
@@ -60,11 +63,12 @@ export function useWorkspaceTasksPage({ workspaceSlug }: UseWorkspaceTasksPagePr
       workspaceId: workspace?.id, status: selectedStatus !== "all" ? selectedStatus : undefined,
       priority: selectedPriority !== "all" ? selectedPriority : undefined,
       projectId: selectedProject !== "all" ? selectedProject : undefined,
+      sectionId: selectedSection !== "all" ? selectedSection : undefined,
       assigneeId: selectedAssignee !== "all" ? selectedAssignee : undefined,
       labelIds: selectedLabels.length > 0 ? selectedLabels : undefined,
       search: searchQuery.trim() || undefined, focusRequired: focusRequired || undefined,
     }),
-    [workspace?.id, selectedStatus, selectedPriority, selectedProject, selectedAssignee, selectedLabels, searchQuery, focusRequired],
+    [workspace?.id, selectedStatus, selectedPriority, selectedProject, selectedSection, selectedAssignee, selectedLabels, searchQuery, focusRequired],
   );
 
   const sort: TaskSort = useMemo(() => ({ sortBy, sortOrder }), [sortBy, sortOrder]);
@@ -137,6 +141,7 @@ export function useWorkspaceTasksPage({ workspaceSlug }: UseWorkspaceTasksPagePr
   const handleStatusChange = (status: string) => { setSelectedStatus(status); setCurrentPage(1); };
   const handlePriorityChange = (priority: string) => { setSelectedPriority(priority); setCurrentPage(1); };
   const handleProjectChange = (projectId: string) => { setSelectedProject(projectId); setCurrentPage(1); };
+  const handleSectionChange = (sectionId: string) => { setSelectedSection(sectionId); setCurrentPage(1); };
   const handleAssigneeChange = (assigneeId: string) => { setSelectedAssignee(assigneeId); setCurrentPage(1); };
   const handleFocusRequiredChange = (value: boolean) => { setFocusRequired(value); setCurrentPage(1); };
   const handleSearchChange = (value: string) => { setSearchQuery(value); setCurrentPage(1); };
@@ -146,10 +151,11 @@ export function useWorkspaceTasksPage({ workspaceSlug }: UseWorkspaceTasksPagePr
     searchQuery, setSearchQuery: handleSearchChange, showFilters, toggleFilters, activeFiltersCount,
     sortBy, sortOrder, setSortBy: handleSortChange, selectedStatus, setSelectedStatus: handleStatusChange,
     selectedPriority, setSelectedPriority: handlePriorityChange, selectedProject, setSelectedProject: handleProjectChange,
+    selectedSection, setSelectedSection: handleSectionChange,
     selectedAssignee, setSelectedAssignee: handleAssigneeChange, selectedLabels, toggleLabel, clearFilters,
     focusRequired, setFocusRequired: handleFocusRequiredChange, handlePageChange, handleAddToSecondary,
     handleAddToPrimary, loadingTaskId, primaryTask, secondaryTasks, hasPrimaryTask, dailyTasksLoading,
-    handleRemoveDailyTask, projects, labels, members, qouta, focusedTask, timeRemaining, activeSession,
+    handleRemoveDailyTask, projects, sections, labels, members, qouta, focusedTask, timeRemaining, activeSession,
     completeSession, loadingType, role,
   };
 }

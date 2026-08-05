@@ -34,7 +34,7 @@ export function ProjectCard({ project, workspaceSlug, index }: ProjectCardProps)
       transition={{ delay: index * 0.05 }}
     >
       <Link href={`/dashboard/workspaces/${workspaceSlug}/projects/${project.slug}`}>
-        <div className="group p-4 sm:p-6 rounded-lg sm:rounded-xl bg-card border border-border hover:border-primary/50 transition-all cursor-pointer h-full">
+        <div className="group p-4 sm:p-6 rounded-lg sm:rounded-xl bg-card border border-border hover:border-primary/50 transition-colors cursor-pointer h-full">
           <ProjectCardHeader
             name={project.name}
             color={project.color}

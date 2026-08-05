@@ -2,6 +2,7 @@ import type { MeetingStatus, MeetingVisibility } from "@/types/meeting.types";
 
 export function formatMeetingDate(iso: string): string {
   return new Date(iso).toLocaleDateString("en-US", {
+    timeZone: "UTC",
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -11,6 +12,7 @@ export function formatMeetingDate(iso: string): string {
 
 export function formatMeetingTime(iso: string): string {
   return new Date(iso).toLocaleTimeString("en-US", {
+    timeZone: "UTC",
     hour: "numeric",
     minute: "2-digit",
     hour12: true,

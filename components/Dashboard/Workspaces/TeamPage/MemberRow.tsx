@@ -53,7 +53,8 @@ export function MemberRow({
 
       {/* ── Joined ─────────────────────────────────────────────────────── */}
       <td className="hidden md:table-cell px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
-        {new Date(member.joinedAt).toLocaleDateString(undefined, {
+        {new Date(member.joinedAt).toLocaleDateString("en-US", {
+          timeZone: "UTC",
           year:  'numeric',
           month: 'short',
           day:   'numeric',

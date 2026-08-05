@@ -36,7 +36,7 @@ export const CareersJobDetailModal = ({ job, onClose }: CareersJobDetailModalPro
 
   const salary = formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency);
   const closingDate = job.closingDate
-    ? new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(job.closingDate))
+    ? new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(job.closingDate))
     : null;
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {

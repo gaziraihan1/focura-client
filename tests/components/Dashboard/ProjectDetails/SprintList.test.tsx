@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 
 vi.mock("@/hooks/useProjectFeatures", () => ({
   useProjectSprints: vi.fn(),
@@ -9,7 +9,7 @@ vi.mock("@/hooks/useProjectFeatures", () => ({
 }));
 
 import SprintList from "@/components/Dashboard/ProjectDetails/SprintList";
-import { useProjectSprints } from "@/hooks/useProjectFeatures";
+import { useProjectSprints, useDeleteSprint } from "@/hooks/useProjectFeatures";
 
 describe("SprintList", () => {
   beforeEach(() => {
@@ -48,6 +48,28 @@ describe("SprintList", () => {
     const sprint1Elements = screen.getAllByText("Sprint 1");
     expect(sprint1Elements.length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("Sprint 2")).toBeDefined();
+  });
+
+  it("opens a confirmation modal before deleting", async () => {
+    const deleteSprint = { mutateAsync: vi.fn() };
+    (useProjectSprints as any).mockReturnValue({
+      data: {
+        sprints: [{ id: "s1", name: "Sprint 1", status: "PLANNING", startDate: "2024-01-01", endDate: "2024-01-14", projectId: "proj1" }],
+        activeSprint: null,
+        avgVelocity: 0,
+      },
+      isLoading: false,
+    });
+    (useDeleteSprint as any).mockReturnValue(deleteSprint);
+
+    render(<SprintList projectId="proj1" />);
+    // open the card menu
+    fireEvent.click(screen.getAllByRole("button")[0]);
+    fireEvent.click(screen.getByText("Delete"));
+    expect(screen.getByText("Delete sprint?")).toBeDefined();
+    // confirm actually deletes
+    fireEvent.click(screen.getAllByRole("button").find((b) => b.textContent === "Delete")!);
+    expect(deleteSprint.mutateAsync).toHaveBeenCalledWith({ sprintId: "s1", projectId: "proj1" });
   });
 
   it("should show active sprint banner", () => {

@@ -18,7 +18,7 @@ export function SettingsCard({
       onClick={onClick}
       className="
         w-full text-left group relative overflow-hidden rounded-2xl border border-border
-        bg-card p-5 transition-all duration-200
+        bg-card p-5 transition-colors duration-200
         hover:border-primary/20 hover:bg-accent/30
       "
     >

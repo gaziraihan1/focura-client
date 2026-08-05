@@ -4,7 +4,9 @@ import { Toolbar } from '@/components/Dashboard/Workspaces/project/Tasks/ToolBar
 
 vi.mock('lucide-react', () => ({
   ChevronDown: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="chevron" {...props} />,
-  Filter: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="filter" {...props} />,
+  Eye: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="eye" {...props} />,
+  Flag: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="flag" {...props} />,
+  Sprout: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="sprout" {...props} />,  Filter: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="filter" {...props} />,
   FolderOpen: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="folder-open" {...props} />,
   LayoutGrid: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="layout-grid" {...props} />,
   List: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="list" {...props} />,

@@ -17,7 +17,7 @@ export function FeaturesGained({
 }: FeaturesGainedProps) {
   return (
     <div
-      className={`rounded-2xl border border-border bg-card mb-5 overflow-hidden transition-all duration-700 delay-200 ${
+      className={`rounded-2xl border border-border bg-card mb-5 overflow-hidden transition-opacity transition-transform duration-700 delay-200 ${
         visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
       }`}
     >
@@ -35,7 +35,7 @@ export function FeaturesGained({
         {features.map(({ icon: Icon, label, detail }, i) => (
           <div
             key={label}
-            className="flex items-start gap-4 px-6 py-4 transition-all duration-500"
+            className="flex items-start gap-4 px-6 py-4 transition-colors duration-500"
             style={{ transitionDelay: `${300 + i * 60}ms` }}
           >
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">

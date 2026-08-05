@@ -40,8 +40,11 @@ function WorkspaceLayoutInner({
 
   // Redirect only after loading is done and access is confirmed denied.
   // During loading, isAccessible is false (workspace is undefined) — don't redirect yet.
+  // Workspace access comes from the async useWorkspaceLayout query — no
+  // event-handler equivalent exists; matches the rule's documented FP case.
   useEffect(() => {
     if (!isLoading && !isAccessible) {
+      // react-doctor-disable-next-line react-doctor/nextjs-no-client-side-redirect
       router.push("/dashboard");
     }
   }, [isLoading, isAccessible, router]);

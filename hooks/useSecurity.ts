@@ -104,6 +104,8 @@ export function useRevokeAllSessions() {
  * Change user password
  */
 export function useChangePassword() {
+  const qc = useQueryClient();
+
   return useMutation({
     mutationFn: async (input: PasswordChangeInput) => {
       await api.put('/api/v1/user/password', input, {
@@ -111,6 +113,7 @@ export function useChangePassword() {
       });
     },
     onSuccess: () => {
+      qc.invalidateQueries({ queryKey: securityKeys.settings() });
       toast.success('Password changed successfully');
     },
     onError: (error: any) => {
@@ -140,6 +143,8 @@ export function useSecuritySettings() {
  * Set up 2FA — generates TOTP secret and returns QR code URI
  */
 export function useSetupTwoFactor() {
+  const qc = useQueryClient();
+
   return useMutation({
     mutationFn: async (): Promise<{ secret: string; uri: string }> => {
       const response = await api.post<{ secret: string; uri: string }>('/api/v1/user/2fa/setup', {}, {
@@ -149,6 +154,9 @@ export function useSetupTwoFactor() {
         throw new Error('Failed to set up two-factor authentication');
       }
       return response.data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: securityKeys.settings() });
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.message || error?.message || 'Failed to set up two-factor authentication');

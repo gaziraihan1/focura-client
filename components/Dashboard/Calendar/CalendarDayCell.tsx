@@ -29,6 +29,7 @@ export function CalendarDayCell({
   onKeyDown,
 }: CalendarDayCellProps) {
   const dateLabel = date.toLocaleDateString("en-US", {
+    timeZone: "UTC",
     weekday: "long",
     month: "long",
     day: "numeric",

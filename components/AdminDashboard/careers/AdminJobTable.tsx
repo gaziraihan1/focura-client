@@ -77,7 +77,7 @@ const AdminJobTable = ({ jobs, onEdit, onDelete, onTogglePin, onToggleStatus }: 
                 <td className='px-4 py-3 align-middle whitespace-nowrap'>
                   <span className='text-xs text-neutral-400 dark:text-neutral-500'>
                     {job.publishedAt
-                      ? new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(job.publishedAt))
+                      ? new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(job.publishedAt))
                       : '—'}
                   </span>
                 </td>

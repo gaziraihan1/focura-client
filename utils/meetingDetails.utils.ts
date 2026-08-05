@@ -1,5 +1,6 @@
 export function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
+    timeZone: "UTC",
     weekday: "long",
     month: "long",
     day: "numeric",
@@ -9,6 +10,7 @@ export function formatDate(iso: string) {
 
 export function formatTime(iso: string) {
   return new Date(iso).toLocaleTimeString("en-US", {
+    timeZone: "UTC",
     hour: "2-digit",
     minute: "2-digit",
   });

@@ -34,7 +34,7 @@ export default function WorkflowSteps() {
 
         <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12 text-left">
           {steps.map((step, i) => (
-            <div key={i} className="relative flex gap-5">
+            <div key={step.title} className="relative flex gap-5">
               <div className="flex flex-col items-center">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-card font-mono text-sm font-semibold text-foreground shadow-sm">
                   {String(i + 1).padStart(2, "0")}

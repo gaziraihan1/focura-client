@@ -15,6 +15,10 @@ export interface Task {
   assignees: Array<{ user: { id: string; name: string; image?: string } }>;
   project?: { id: string; slug: string; name: string; color: string; workspace: { id: string; name: string } };
   sectionId?: string | null;
+  sprintId?: string | null;
+  milestoneId?: string | null;
+  sprint?: { id: string; name: string } | null;
+  milestone?: { id: string; title: string; status?: string; progress?: number } | null;
   workspaceId?: string;
   _count: { comments: number; subtasks: number; files: number };
   createdAt: string;
@@ -77,6 +81,8 @@ export interface CreateTaskDto {
   description?: string;
   projectId?: string | null;
   sectionId?: string | null;
+  sprintId?: string | null;
+  milestoneId?: string | null;
   workspaceId?: string | null;
   status: Task["status"];
   priority: Task["priority"];
@@ -96,6 +102,7 @@ export interface TaskFilters {
   priority?: string;
   search?: string;
   projectId?: string;
+  sectionId?: string;
   workspaceId?: string;
   assigneeId?: string;
   labelIds?: string[];

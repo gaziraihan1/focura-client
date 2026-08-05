@@ -30,9 +30,9 @@ export default function ResourcesPopular({data}: ResourcesPopularProps) {
           </p>
         </motion.div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {data?.items.map((item, i) => (
+          {data?.items.map((item) => (
             <motion.div
-              key={i}
+              key={item.slug}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -41,7 +41,7 @@ export default function ResourcesPopular({data}: ResourcesPopularProps) {
               className="
                 rounded-2xl border border-border bg-background/40
                 shadow-sm hover:shadow-lg backdrop-blur-md p-5
-                transition-all cursor-pointer
+                transition-colors cursor-pointer
               "
             >
               <Link href={`/resources/popular/${item.slug}`}>
@@ -50,6 +50,7 @@ export default function ResourcesPopular({data}: ResourcesPopularProps) {
                   src={item.image}
                   alt={item.title}
                   fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover"
                 />
               </div>
@@ -76,7 +77,7 @@ export default function ResourcesPopular({data}: ResourcesPopularProps) {
         className={`
           flex items-center justify-center
           h-11 w-11 rounded-xl border
-          transition-all duration-200
+          transition-colors duration-200
           ${
             data.page === 1
               ? "pointer-events-none opacity-40"
@@ -101,7 +102,7 @@ export default function ResourcesPopular({data}: ResourcesPopularProps) {
               h-11 min-w-11 px-4
               flex items-center justify-center
               rounded-xl border text-sm font-medium
-              transition-all duration-200
+              transition-colors transition-transform duration-200
               ${
                 page === data.page
                   ? "bg-primary text-primary-foreground shadow-lg scale-105"
@@ -119,7 +120,7 @@ export default function ResourcesPopular({data}: ResourcesPopularProps) {
         className={`
           flex items-center justify-center
           h-11 w-11 rounded-xl border
-          transition-all duration-200
+          transition-colors duration-200
           ${
             data.page === data.totalPages
               ? "pointer-events-none opacity-40"

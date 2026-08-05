@@ -37,7 +37,7 @@ export default function AdminProjectsPage() {
             value={input}
             onChange={(e) => { setInput(e.target.value); handleSearch(e.target.value); }}
             placeholder="Search project name…"
-            className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-border bg-card focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all"
+            className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-border bg-card focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-colors"
           />
         </div>
       </div>

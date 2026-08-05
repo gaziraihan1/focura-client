@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef }    from 'react';
+import { useEffect, useRef, useEffectEvent }    from 'react';
 import { X, MapPin, Clock, Briefcase, ExternalLink, Mail, ChevronRight } from 'lucide-react';
 import { DEPARTMENT_LABELS, LOCATION_LABELS, TYPE_LABELS, EXPERIENCE_LABELS,JobListItem  } from '@/types/job.types';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
@@ -16,13 +16,13 @@ export const CareersApplyModal = ({ job, onClose }: CareersApplyModalProps) => {
   const trapRef    = useFocusTrap(!!job);
 
   // Close on Escape
+  const onEscape = useEffectEvent((e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); });
   useEffect(() => {
     if (!job) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    document.addEventListener('keydown', handler);
+    document.addEventListener('keydown', onEscape);
     closeRef.current?.focus();
-    return () => document.removeEventListener('keydown', handler);
-  }, [job, onClose]);
+    return () => document.removeEventListener('keydown', onEscape);
+  }, [job]);
 
   // Lock body scroll
   useEffect(() => {
@@ -149,7 +149,7 @@ export const CareersApplyModal = ({ job, onClose }: CareersApplyModalProps) => {
             <p className='text-[11px] text-neutral-400 dark:text-neutral-500 border-t border-neutral-100 dark:border-neutral-800 pt-4'>
               Applications close{' '}
               <strong className='font-semibold text-neutral-600 dark:text-neutral-400'>
-                {new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(job.closingDate))}
+                {new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(job.closingDate))}
               </strong>
             </p>
           )}

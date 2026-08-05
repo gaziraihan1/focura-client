@@ -24,6 +24,7 @@ export function ApiTokensSettingsForm() {
   const [tokenToDelete, setTokenToDelete] = useState<{ id: string; name: string } | null>(null);
 
   const handleCreate = async () => {
+    if (createToken.isPending) return;
     if (!newTokenName.trim()) {
       toast.error('Token name is required');
       return;
@@ -43,8 +44,8 @@ export function ApiTokensSettingsForm() {
     setDeleteModalOpen(true);
   };
 
-  const handleDeleteConfirm = async () => {
-    if (!tokenToDelete) return;
+const handleDeleteConfirm = async () => {
+    if (!tokenToDelete || deleteToken.isPending) return;
     await deleteToken.mutateAsync(tokenToDelete.id);
     setDeleteModalOpen(false);
     setTokenToDelete(null);
@@ -200,10 +201,10 @@ export function ApiTokensSettingsForm() {
                       {token.lastUsedAt && (
                         <span className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
-                          Last used {new Date(token.lastUsedAt).toLocaleDateString()}
+                          Last used {new Date(token.lastUsedAt).toLocaleDateString("en-US", { timeZone: "UTC" })}
                         </span>
                       )}
-                      <span>Created {new Date(token.createdAt).toLocaleDateString()}</span>
+                      <span>Created {new Date(token.createdAt).toLocaleDateString("en-US", { timeZone: "UTC" })}</span>
                     </div>
                   </div>
                 </div>
@@ -441,8 +442,8 @@ print(response.json())`}
             { method: 'POST', path: '/api/v1/tasks', desc: 'Create a new task' },
             { method: 'GET', path: '/api/v1/projects', desc: 'List your projects' },
             { method: 'GET', path: '/api/v1/workspaces', desc: 'List your workspaces' },
-          ].map((endpoint, i) => (
-            <div key={i} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50">
+          ].map((endpoint) => (
+            <div key={`${endpoint.method}-${endpoint.path}`} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50">
               <span className={`text-xs font-mono font-medium px-2 py-1 rounded ${
                 endpoint.method === 'GET' ? 'bg-green-500/10 text-green-600 dark:text-green-400' :
                 endpoint.method === 'POST' ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400' :

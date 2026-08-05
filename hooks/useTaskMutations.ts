@@ -379,6 +379,7 @@ export function useBatchUpdateTaskStatus() {
         qc.cancelQueries({ queryKey: projectKeys.all }),
       ]);
 
+      const taskIdSet = new Set(taskIds);
       const listSnapshots: Array<{ queryKey: readonly unknown[]; data: unknown }> = [];
       const projectSnapshots: Array<{ queryKey: readonly unknown[]; data: ProjectDetails }> = [];
 
@@ -388,7 +389,7 @@ export function useBatchUpdateTaskStatus() {
         if (listData && typeof listData === "object" && "data" in listData) {
           const tasks = (listData as { data: Task[] }).data;
           const updatedTasks = tasks.map((t) =>
-            taskIds.includes(t.id) ? { ...t, status } : t
+            taskIdSet.has(t.id) ? { ...t, status } : t
           );
           qc.setQueryData(queryKey, { ...listData, data: updatedTasks });
         }
@@ -401,7 +402,7 @@ export function useBatchUpdateTaskStatus() {
         qc.setQueryData<ProjectDetails>(queryKey, {
           ...projectData,
           tasks: projectData.tasks.map((t) =>
-            taskIds.includes(t.id) ? { ...t, status } : t
+            taskIdSet.has(t.id) ? { ...t, status } : t
           ),
         });
       });
@@ -437,6 +438,7 @@ export function useBatchDeleteTasks() {
     onMutate: async (taskIds) => {
       await qc.cancelQueries({ queryKey: taskKeys.lists() });
 
+      const taskIdSet = new Set(taskIds);
       const listSnapshots: Array<{ queryKey: readonly unknown[]; data: unknown }> = [];
       qc.getQueriesData({ queryKey: taskKeys.lists() }).forEach(([queryKey, data]) => {
         listSnapshots.push({ queryKey, data });
@@ -444,7 +446,7 @@ export function useBatchDeleteTasks() {
           const tasks = (data as { data: Task[] }).data;
           qc.setQueryData(queryKey, {
             ...data,
-            data: tasks.filter((t) => !taskIds.includes(t.id)),
+            data: tasks.filter((t) => !taskIdSet.has(t.id)),
           });
         }
       });

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import Link from 'next/link';
 import { Menu, X }                from 'lucide-react';
 import { API_SECTIONS } from '@/lib/apiData';
 import { ApiDocsHero } from '@/components/ApiDocs/ApiDocsHero';
@@ -160,12 +161,12 @@ const ApiDocsContent = () => {
                 an issue with the docs, let us know.
               </p>
               <div className='flex flex-col sm:flex-row items-center justify-center gap-3'>
-                <a
+                <Link
                   href='/contact'
                   className='inline-flex items-center gap-2 bg-neutral-900 dark:bg-neutral-50 text-white dark:text-neutral-900 rounded-xl px-5 py-2.5 text-sm font-bold hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors'
                 >
                   Contact support
-                </a>
+                </Link>
                 <a
                   href='https://github.com/gaziraihan1/focura-backend/issues'
                   target='_blank'

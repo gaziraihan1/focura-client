@@ -27,9 +27,17 @@ export function useServiceWorker(): ServiceWorkerState {
   const [registration, setRegistration] =
     useState<ServiceWorkerRegistration | null>(null);
 
+  // The registration and its "updatefound"/"statechange" listeners are removed
+  // by this effect's returned cleanup (cleanups.forEach), so no resource is
+  // leaked on unmount. The detector misses the cleanup because the
+  // registrations happen inside the nested async registerSW().
+  // react-doctor-disable-next-line react-doctor/effect-needs-cleanup
   useEffect(() => {
     // If service workers are not supported, nothing to register.
     if (!initialIsSupported) return;
+
+    let active = true;
+    const cleanups: Array<() => void> = [];
 
     const registerSW = async () => {
       try {
@@ -37,17 +45,19 @@ export function useServiceWorker(): ServiceWorkerState {
           scope: "/",
         });
 
+        if (!active) return;
+
         setRegistration(reg);
         setIsRegistered(true);
 
         // Check for updates periodically
-        reg.addEventListener("updatefound", () => {
+        const handleUpdateFound = () => {
           const newWorker = reg.installing;
           if (!newWorker) return;
 
           setIsInstalling(true);
 
-          newWorker.addEventListener("statechange", () => {
+          const handleStateChange = () => {
             if (newWorker.state === "installed") {
               setIsInstalling(false);
 
@@ -59,8 +69,18 @@ export function useServiceWorker(): ServiceWorkerState {
                 console.log("✅ Content is cached for offline use");
               }
             }
-          });
-        });
+          };
+
+          newWorker.addEventListener("statechange", handleStateChange);
+          cleanups.push(() =>
+            newWorker.removeEventListener("statechange", handleStateChange)
+          );
+        };
+
+        reg.addEventListener("updatefound", handleUpdateFound);
+        cleanups.push(() =>
+          reg.removeEventListener("updatefound", handleUpdateFound)
+        );
 
         console.log("✅ Service Worker registered");
       } catch (error) {
@@ -69,6 +89,11 @@ export function useServiceWorker(): ServiceWorkerState {
     };
 
     registerSW();
+
+    return () => {
+      active = false;
+      cleanups.forEach((cleanup) => cleanup());
+    };
   }, [initialIsSupported]);
 
   const update = useCallback(async () => {

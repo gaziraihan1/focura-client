@@ -66,7 +66,7 @@ export function AnnouncementCard({
           'group relative flex flex-col gap-3 p-5 rounded-xl cursor-pointer',
           'border border-border bg-card',
           'hover:border-primary/30 hover:shadow-sm hover:shadow-primary/5',
-          'transition-all duration-200',
+          'transition-colors duration-200',
           announcement.isPinned && 'border-amber-500/30 bg-amber-500/5',
         )}
       >
@@ -100,7 +100,7 @@ export function AnnouncementCard({
         <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
           {preview.length >= 50 ? `${preview.slice(0, 50)}...` : preview}
           {preview.length >= 50 && (
-            <span className="opacity-70 hover:opacity-100 transition-all hover:text-accent-foreground/70">
+            <span className="opacity-70 hover:opacity-100 transition-colors transition-opacity hover:text-accent-foreground/70">
               {' '}read more
             </span>
           )}

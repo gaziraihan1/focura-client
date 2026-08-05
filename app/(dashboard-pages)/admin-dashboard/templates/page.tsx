@@ -24,10 +24,15 @@ const TemplatesOwnerPage = () => {
 
     (async () => {
       setLoading(true);
-      const result = await fetchSubscribers();
-      if (mounted) {
-        setData(result);
-        setLoading(false);
+      try {
+        const result = await fetchSubscribers();
+        if (mounted) {
+          setData(result);
+        }
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
       }
     })();
 

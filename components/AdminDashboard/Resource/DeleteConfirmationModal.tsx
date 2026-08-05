@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useEffectEvent } from "react";
 import { AlertTriangle, X } from "lucide-react";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 
@@ -16,13 +16,13 @@ export function DeleteConfirmModal({ title, isDeleting, onCancel, onConfirm }: D
   const trapRef = useFocusTrap(true);
 
   // Close on Escape
+  const onEscape = useEffectEvent((e: KeyboardEvent) => {
+    if (e.key === "Escape" && !isDeleting) onCancel();
+  });
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !isDeleting) onCancel();
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [isDeleting, onCancel]);
+    window.addEventListener("keydown", onEscape);
+    return () => window.removeEventListener("keydown", onEscape);
+  }, []);
 
   // Lock body scroll
   useEffect(() => {

@@ -24,7 +24,7 @@ export function AuthFormButtons({
         className="
           group relative w-full py-3 rounded-xl
           bg-primary text-primary-foreground text-sm font-semibold tracking-wide
-          overflow-hidden transition-all duration-200
+          overflow-hidden transition-colors transition-transform duration-200
           hover:brightness-110 active:scale-[0.98]
           disabled:opacity-50 disabled:cursor-not-allowed
           flex items-center justify-center gap-2
@@ -54,7 +54,7 @@ export function AuthFormButtons({
           bg-transparent text-foreground text-sm font-medium
           border border-border/70
           hover:border-primary/40 hover:bg-primary/5
-          transition-all duration-200 active:scale-[0.98]
+          transition-colors transition-transform duration-200 active:scale-[0.98]
           disabled:opacity-50 disabled:cursor-not-allowed
           flex items-center justify-center gap-2.5
         "

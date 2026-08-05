@@ -24,7 +24,7 @@ export function ProjectListItem({ project, index, onNavigate, showModal, onClose
       transition={{ delay: index * 0.03 }}
       whileHover={{ x: 4 }}
       onClick={onNavigate}
-      className="group cursor-pointer rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 p-2 sm:p-4 lg:p-6"
+      className="group cursor-pointer rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-lg transition-colors duration-300 p-2 sm:p-4 lg:p-6"
     >
       <div className="flex items-center gap-4">
         {/* Icon */}
@@ -86,14 +86,14 @@ export function ProjectListItem({ project, index, onNavigate, showModal, onClose
             {project.dueDate && (
               <div className="flex flex-wrap items-center gap-1.5">
                 <Calendar size={14} />
-                <span>{new Date(project.dueDate).toLocaleDateString()}</span>
+                <span>{new Date(project.dueDate).toLocaleDateString("en-US", { timeZone: "UTC" })}</span>
               </div>
             )}
           </div>
         </div>
 
         {/* Arrow */}
-        <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all shrink-0" />
+        <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-colors transition-transform shrink-0" />
       </div>
     </motion.div>
         {showModal && <AccessDeniedModal isOpen={showModal} onClose={onCloseModal} />}
