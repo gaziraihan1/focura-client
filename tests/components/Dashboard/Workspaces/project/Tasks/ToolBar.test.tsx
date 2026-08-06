@@ -99,4 +99,33 @@ describe('Toolbar', () => {
     )
     expect(screen.getByRole('button', { name: /Frontend/i })).toBeInTheDocument()
   })
+
+  it('shows the Clear button when a filter is active and calls onClearFilters', () => {
+    const onClearFilters = vi.fn()
+    render(<Toolbar {...defaultProps} priorityFilter="HIGH" onClearFilters={onClearFilters} />)
+    const clearBtn = screen.getByRole('button', { name: /clear/i })
+    expect(clearBtn).toBeInTheDocument()
+    fireEvent.click(clearBtn)
+    expect(onClearFilters).toHaveBeenCalledTimes(1)
+  })
+
+  it('shows the Clear button when there is a search query', () => {
+    render(<Toolbar {...defaultProps} search="bug" onClearFilters={vi.fn()} />)
+    expect(screen.getByRole('button', { name: /clear/i })).toBeInTheDocument()
+  })
+
+  it('shows Reset view when a view is active and calls onResetView', () => {
+    const onResetView = vi.fn()
+    const view = { id: 'v1', name: 'My List', type: 'LIST' as const, isDefault: false, visibility: 'PRIVATE' as const, createdById: 'u1', projectId: 'p1' }
+    render(<Toolbar {...defaultProps} views={[view]} activeViewId="v1" onResetView={onResetView} />)
+    const resetBtn = screen.getByRole('button', { name: /reset view/i })
+    expect(resetBtn).toBeInTheDocument()
+    fireEvent.click(resetBtn)
+    expect(onResetView).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not show Reset view when no view is active', () => {
+    render(<Toolbar {...defaultProps} views={[]} onResetView={vi.fn()} />)
+    expect(screen.queryByRole('button', { name: /reset view/i })).not.toBeInTheDocument()
+  })
 })

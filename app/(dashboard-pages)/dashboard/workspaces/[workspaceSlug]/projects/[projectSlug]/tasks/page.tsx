@@ -19,7 +19,6 @@ import { Pagination } from '@/components/Shared/Pagination';
 import {
   useProjectTasksPage,
   LIST_PAGE_SIZE,
-  NO_SECTION_FILTER,
 } from '@/hooks/useProjectTasksPage';
 
 // ── Task loading skeleton ───────────────────────────────────────────────────
@@ -58,6 +57,7 @@ export default function ProjectTasksPage() {
     activeViewId,
     applyView,
     resetView,
+    clearFilters,
     sprintFilter,
     setSprintFilter,
     milestoneFilter,
@@ -131,13 +131,8 @@ export default function ProjectTasksPage() {
         <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
           <p className="text-sm font-medium text-foreground">No tasks match your filters</p>
           <button
-            onClick={() => {
-              setSearch('');
-              setPriorityFilter('ALL');
-              setStatusFilter('ALL');
-              setSectionFilter(NO_SECTION_FILTER);
-            }}
-            className="text-sm text-primary hover:underline transition-colors"
+            onClick={clearFilters}
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
             Clear filters
           </button>
@@ -219,6 +214,7 @@ export default function ProjectTasksPage() {
           activeViewId={activeViewId}
           onApplyView={applyView}
           onResetView={resetView}
+          onClearFilters={clearFilters}
         />
 
         {renderBody()}

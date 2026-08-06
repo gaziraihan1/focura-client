@@ -4,8 +4,8 @@
 // All data fetching, filtering and board-column logic for the project tasks
 // page lives here — the page component stays presentational.
 
-import { createElement, useMemo, useEffect, useRef, useState, type ReactNode } from 'react';
-import { useParams } from 'next/navigation';
+import { createElement, useCallback, useMemo, useEffect, useRef, useState, type ReactNode } from 'react';
+import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useProjectDetailsBySlug, useProjectRole } from '@/hooks/useProjects';
 import { useUserProfile } from '@/hooks/useUser';
 import { Task, useTasks, TaskSort } from '@/hooks/useTask';
@@ -47,7 +47,15 @@ export function useProjectTasksPage() {
   const [rawSectionFilter, setSectionFilter] = useUrlState<string>('section', NO_SECTION_FILTER);
   const [rawSprintFilter, setSprintFilter] = useUrlState<string>('sprint', NO_SECTION_FILTER);
   const [rawMilestoneFilter, setMilestoneFilter] = useUrlState<string>('milestone', NO_SECTION_FILTER);
-  const [viewParam, setViewParam] = useUrlState<string>('view', '');
+  // view is written through replaceUrlParams (batched with the other URL
+  // params), so only the read half of useUrlState is needed here.
+  const [viewParam] = useUrlState<string>('view', '');
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  // Tracks whether the project's default view was auto-applied on first load,
+  // so Reset view doesn't immediately re-apply it after dropping a saved view.
+  const defaultAppliedRef = useRef(false);
 
   // ── Project (for header, members, permissions) ────────────────────────────
   const { data: project, isLoading, error } = useProjectDetailsBySlug(projectSlug);
@@ -122,27 +130,66 @@ export function useProjectTasksPage() {
   // ── Saved views ──────────────────────────────────────────────────────────
   const activeView = viewParam ? views.find((v) => v.id === viewParam) : undefined;
 
+  // URL-synced filter changes must be batched: useUrlState setters each build
+  // their URL from the same render-time searchParams snapshot, so several
+  // setters fired in one handler would leave stale params behind. One replace.
+  const replaceUrlParams = useCallback(
+    (changes: Record<string, string>) => {
+      const params = new URLSearchParams(searchParams.toString());
+      for (const [key, value] of Object.entries(changes)) {
+        if (value === NO_SECTION_FILTER || value === '') {
+          params.delete(key);
+        } else {
+          params.set(key, value);
+        }
+      }
+      const newUrl = params.toString() ? `${pathname}?${params}` : pathname;
+      router.replace(newUrl, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
+
   const applyView = (view: ProjectViewItem) => {
     setViewMode(view.type === 'LIST' ? 'list' : 'board');
     setSearch('');
     setPriorityFilter('ALL');
     setStatusFilter('ALL');
-    setSectionFilter(NO_SECTION_FILTER);
-    setSprintFilter(NO_SECTION_FILTER);
-    setMilestoneFilter(NO_SECTION_FILTER);
-    setViewParam(view.id);
+    replaceUrlParams({
+      section: NO_SECTION_FILTER,
+      sprint: NO_SECTION_FILTER,
+      milestone: NO_SECTION_FILTER,
+      view: view.id,
+    });
   };
 
   // Drop the applied saved view (back to the default board/list toggle).
   const resetView = () => {
-    setViewParam('');
+    // Make sure the default-view auto-apply effect below doesn't re-apply a
+    // default view right after we drop the user's chosen one.
+    defaultAppliedRef.current = true;
     setViewMode('board');
     setSearch('');
     setPriorityFilter('ALL');
     setStatusFilter('ALL');
-    setSectionFilter(NO_SECTION_FILTER);
-    setSprintFilter(NO_SECTION_FILTER);
-    setMilestoneFilter(NO_SECTION_FILTER);
+    replaceUrlParams({
+      view: '',
+      section: NO_SECTION_FILTER,
+      sprint: NO_SECTION_FILTER,
+      milestone: NO_SECTION_FILTER,
+    });
+  };
+
+  // Reset every filter (search, priority, status + URL-synced section,
+  // sprint and milestone) back to the defaults.
+  const clearFilters = () => {
+    setSearch('');
+    setPriorityFilter('ALL');
+    setStatusFilter('ALL');
+    replaceUrlParams({
+      section: NO_SECTION_FILTER,
+      sprint: NO_SECTION_FILTER,
+      milestone: NO_SECTION_FILTER,
+    });
   };
 
   // Arriving with ?view= (deep link / chip click) keeps the mode in sync.
@@ -152,7 +199,6 @@ export function useProjectTasksPage() {
   }, [activeView?.id]);
 
   // Auto-apply the project's default view on first load when none is chosen.
-  const defaultAppliedRef = useRef(false);
   useEffect(() => {
     if (!project?.id || viewParam || defaultAppliedRef.current) return;
     const defaultView = views.find((v) => v.isDefault);
@@ -223,6 +269,7 @@ export function useProjectTasksPage() {
     activeViewId: viewParam || null,
     applyView,
     resetView,
+    clearFilters,
     sprintFilter,
     setSprintFilter,
     milestoneFilter,

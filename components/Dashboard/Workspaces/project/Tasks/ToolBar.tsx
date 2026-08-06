@@ -27,6 +27,7 @@ export function Toolbar({
   activeViewId = null,
   onApplyView,
   onResetView,
+  onClearFilters,
 }: {
   viewMode:          ViewMode;
   setViewMode:       (v: ViewMode) => void;
@@ -49,13 +50,14 @@ export function Toolbar({
   activeViewId?:     string | null;
   onApplyView?:      (view: ProjectViewItem) => void;
   onResetView?:      () => void;
+  onClearFilters?:   () => void;
 }) {
   const [openMenu, setOpenMenu] = useState<'priority' | 'status' | 'section' | 'sprint' | 'milestone' | null>(null);
 
   const activeSection = sections.find((s) => s.id === sectionFilter);
   const activeSprint = sprints.find((s) => s.id === sprintFilter);
   const activeMilestone = milestones.find((m) => m.id === milestoneFilter);
-  const hasFilters = priorityFilter !== 'ALL' || statusFilter !== 'ALL' || sectionFilter !== 'ALL' || sprintFilter !== 'ALL' || milestoneFilter !== 'ALL';
+  const hasFilters = search !== '' || priorityFilter !== 'ALL' || statusFilter !== 'ALL' || sectionFilter !== 'ALL' || sprintFilter !== 'ALL' || milestoneFilter !== 'ALL';
 
   return (
     <div className="flex flex-col gap-2">
@@ -249,10 +251,10 @@ export function Toolbar({
         {/* Clear */}
         {hasFilters && (
           <button
-            onClick={() => { setPriorityFilter('ALL'); setStatusFilter('ALL'); setSectionFilter?.('ALL'); setSprintFilter?.('ALL'); setMilestoneFilter?.('ALL'); }}
-            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            onClick={onClearFilters}
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
-            <X className="size-3" /> Clear
+            <X className="size-3.5" /> Clear
           </button>
         )}
 
@@ -302,8 +304,8 @@ export function Toolbar({
             ))}
             {activeViewId && (
               <button
-                onClick={() => { setViewMode('board'); onResetView?.(); }}
-                className="text-[11px] text-muted-foreground hover:text-foreground transition-colors underline-offset-2 hover:underline"
+                onClick={onResetView}
+                className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               >
                 Reset view
               </button>

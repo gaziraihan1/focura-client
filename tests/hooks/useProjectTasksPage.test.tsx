@@ -1,11 +1,29 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { act } from '@testing-library/react'
 import { renderHookWithProviders } from '../utils/renderWithProviders'
 import type { Task } from '@/hooks/useTask'
 
+// Stateful URL mock so router.replace() actually updates what useSearchParams
+// returns — lets the tests verify URL-synced filters (section/sprint/milestone
+// and the applied view) really get cleared.
+const urlState = vi.hoisted(() => {
+  let params = new URLSearchParams()
+  return {
+    get: () => params,
+    set: (p: URLSearchParams) => {
+      params = p
+    },
+    replace: (url: string) => {
+      const query = url.split('?')[1] ?? ''
+      params = new URLSearchParams(query)
+    },
+  }
+})
+
 vi.mock('next/navigation', () => ({
   useParams: () => ({ workspaceSlug: 'acme', projectSlug: 'web-app' }),
-  useRouter: () => ({ back: vi.fn(), push: vi.fn(), replace: vi.fn() }),
-  useSearchParams: vi.fn(() => new URLSearchParams()),
+  useRouter: () => ({ back: vi.fn(), push: vi.fn(), replace: urlState.replace }),
+  useSearchParams: () => urlState.get(),
   usePathname: () => '/x',
 }))
 
@@ -33,8 +51,7 @@ import { useProjectTasksPage } from '@/hooks/useProjectTasksPage'
 import { useProjectDetailsBySlug, useProjectRole } from '@/hooks/useProjects'
 import { useUserProfile } from '@/hooks/useUser'
 import { useTasks } from '@/hooks/useTask'
-import { useProjectSections } from '@/hooks/useProjectFeatures'
-import { useSearchParams } from 'next/navigation'
+import { useProjectSections, useProjectSprints, useProjectMilestones, useProjectViews } from '@/hooks/useProjectFeatures'
 
 const project = {
   id: 'proj1',
@@ -78,12 +95,13 @@ function mockData(tasks: Task[], sections: unknown[] = [], url = '') {
     isLoading: false,
   })
   ;(useProjectSections as any).mockReturnValue({ data: sections })
-  ;(useSearchParams as any).mockReturnValue(new URLSearchParams(url))
+  urlState.set(new URLSearchParams(url))
 }
 
 describe('useProjectTasksPage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    urlState.set(new URLSearchParams())
   })
 
   it('returns tasks, sections and the merged default board columns', () => {
@@ -155,5 +173,67 @@ describe('useProjectTasksPage', () => {
 
     expect(result.current.sectionFilter).toBe('ALL')
     expect(result.current.filteredTasks).toHaveLength(2)
+  })
+
+  it('clearFilters resets all filters including URL-synced ones', () => {
+    const section = { id: 'sec-frontend', name: 'Frontend', color: '#667eea', status: 'ACTIVE', position: 0, projectId: 'proj1' }
+    const sprint = { id: 's1', name: 'Sprint 1', status: 'ACTIVE' as const, startDate: '2026-08-01', endDate: '2026-08-15', projectId: 'proj1' }
+    const milestone = { id: 'm1', title: 'M1', status: 'ON_TRACK' as const, progress: 0, completed: false, projectId: 'proj1' }
+    ;(useProjectSprints as any).mockReturnValue({ data: { sprints: [sprint] } })
+    ;(useProjectMilestones as any).mockReturnValue({ data: { milestones: [milestone] } })
+    mockData(
+      [makeTask('t1', 'Build navbar', 'TODO', 'sec-frontend')],
+      [section],
+      '?section=sec-frontend&sprint=s1&milestone=m1',
+    )
+    const { result } = renderHookWithProviders(() => useProjectTasksPage())
+
+    expect(result.current.sectionFilter).toBe('sec-frontend')
+    expect(result.current.sprintFilter).toBe('s1')
+    expect(result.current.milestoneFilter).toBe('m1')
+
+    // Give plain-state filters non-default values so clearFilters has real
+    // work to do (and triggers the re-render that re-reads the URL params).
+    act(() => {
+      result.current.setSearch('nav')
+      result.current.setPriorityFilter('HIGH')
+      result.current.setStatusFilter('IN_PROGRESS')
+    })
+    expect(result.current.search).toBe('nav')
+    expect(result.current.priorityFilter).toBe('HIGH')
+    expect(result.current.statusFilter).toBe('IN_PROGRESS')
+
+    act(() => result.current.clearFilters())
+
+    expect(result.current.search).toBe('')
+    expect(result.current.priorityFilter).toBe('ALL')
+    expect(result.current.statusFilter).toBe('ALL')
+    expect(result.current.sectionFilter).toBe('ALL')
+    expect(result.current.sprintFilter).toBe('ALL')
+    expect(result.current.milestoneFilter).toBe('ALL')
+    expect(urlState.get().has('section')).toBe(false)
+    expect(urlState.get().has('sprint')).toBe(false)
+    expect(urlState.get().has('milestone')).toBe(false)
+  })
+
+  it('resetView drops the applied view and clears URL params', () => {
+    const view = { id: 'v1', name: 'My List', type: 'LIST' as const, isDefault: false, visibility: 'PRIVATE' as const, createdById: 'u1', projectId: 'proj1' }
+    ;(useProjectViews as any).mockReturnValue({ data: [view] })
+    mockData(
+      [makeTask('t1', 'Write docs', 'TODO')],
+      [{ id: 'sec-frontend', name: 'Frontend', color: '#667eea', status: 'ACTIVE', position: 0, projectId: 'proj1' }],
+      '?view=v1&section=sec-frontend',
+    )
+    const { result } = renderHookWithProviders(() => useProjectTasksPage())
+
+    expect(result.current.activeViewId).toBe('v1')
+    expect(result.current.sectionFilter).toBe('sec-frontend')
+
+    act(() => result.current.resetView())
+
+    expect(result.current.activeViewId).toBeNull()
+    expect(result.current.viewMode).toBe('board')
+    expect(urlState.get().has('view')).toBe(false)
+    expect(urlState.get().has('section')).toBe(false)
   })
 })
