@@ -23,12 +23,20 @@ describe('ControlBarActions', () => {
     expect(screen.getByText('Filters')).toBeInTheDocument()
   })
 
-  it('renders Sort dropdown with current sort', () => {
+  it('renders the sort trigger showing the current sort', () => {
     render(<ControlBarActions {...defaultProps} />)
-    expect(screen.getByText('Sort:')).toBeInTheDocument()
-    // "priority" appears in both button and dropdown
-    const priorities = screen.getAllByText('priority')
-    expect(priorities.length).toBeGreaterThanOrEqual(1)
+    expect(screen.getByRole('button', { name: /priority/i })).toBeInTheDocument()
+  })
+
+  it('opens the sort dropdown on click and applies a selection', () => {
+    render(<ControlBarActions {...defaultProps} />)
+    fireEvent.click(screen.getByRole('button', { name: /priority/i }))
+
+    const recent = screen.getByRole('button', { name: /recent/i })
+    expect(recent).toBeInTheDocument()
+    fireEvent.click(recent)
+
+    expect(defaultProps.onSortChange).toHaveBeenCalledWith('recent')
   })
 
   it('renders WIP toggle', () => {

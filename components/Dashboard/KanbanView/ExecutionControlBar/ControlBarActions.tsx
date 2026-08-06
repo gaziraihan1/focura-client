@@ -1,5 +1,6 @@
 import { Filter, ArrowUpDown, AlertCircle, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FilterDropdown } from "@/components/Shared/FilterDropdown";
 import { KanbanSort, KanbanFilters } from "@/hooks/useKanbanPage";
 
 interface ControlBarActionsProps {
@@ -48,29 +49,32 @@ export function ControlBarActions({
         )}
       </button>
 
-      {/* Sort Dropdown */}
-      <div className="relative group">
-        <button className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg bg-muted text-muted-foreground hover:bg-accent transition-colors">
-          <ArrowUpDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          <span className="hidden sm:inline">Sort:</span>
-          <span className="capitalize font-medium text-foreground">{sort}</span>
-        </button>
-
-        <div className="hidden group-hover:block absolute top-full left-0 mt-1 bg-card border border-border rounded-lg shadow-lg z-10 min-w-37.5">
-          {(["priority", "aging", "recent", "comments"] as const).map((s) => (
-            <button
-              key={s}
-              onClick={() => onSortChange(s)}
-              className={cn(
-                "w-full text-left px-3 py-2 text-sm hover:bg-accent transition-colors capitalize",
-                sort === s && "bg-accent font-medium"
-              )}
-            >
-              {s}
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* Sort Dropdown — click-to-open (touch friendly, viewport clamped) */}
+      <FilterDropdown
+        label="Sort"
+        value={sort.charAt(0).toUpperCase() + sort.slice(1)}
+        icon={<ArrowUpDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+      >
+        {(close) => (
+          <>
+            {(["priority", "aging", "recent", "comments"] as const).map((s) => (
+              <button
+                key={s}
+                onClick={() => {
+                  onSortChange(s);
+                  close();
+                }}
+                className={cn(
+                  "w-full text-left px-3 py-2 text-sm hover:bg-accent transition-colors capitalize",
+                  sort === s && "bg-accent font-medium"
+                )}
+              >
+                {s}
+              </button>
+            ))}
+          </>
+        )}
+      </FilterDropdown>
 
       {/* Blocked Only Button */}
       <button

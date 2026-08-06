@@ -14,6 +14,8 @@ import { ListRow } from '@/components/Dashboard/Workspaces/project/Tasks/ListRow
 import { Toolbar } from '@/components/Dashboard/Workspaces/project/Tasks/ToolBar';
 import { StatsBar } from '@/components/Dashboard/Workspaces/project/Tasks/StatsBar';
 import { BoardColumn } from '@/components/Dashboard/Workspaces/project/Tasks/BoardColumn';
+import { ProjectTasksCalendar } from '@/components/Dashboard/Workspaces/project/Tasks/ProjectTasksCalendar';
+import { ProjectTasksTimeline } from '@/components/Dashboard/Workspaces/project/Tasks/ProjectTasksTimeline';
 import { PageHeader } from '@/components/Dashboard/Workspaces/project/Tasks/PageHeader';
 import { Pagination } from '@/components/Shared/Pagination';
 import {
@@ -138,6 +140,14 @@ export default function ProjectTasksPage() {
           </button>
         </div>
       );
+    }
+
+    if (viewMode === 'calendar') {
+      return <ProjectTasksCalendar tasks={filteredTasks} isLoading={tasksLoading} />;
+    }
+
+    if (viewMode === 'timeline') {
+      return <ProjectTasksTimeline tasks={filteredTasks} isLoading={tasksLoading} />;
     }
 
     if (viewMode === 'board') {

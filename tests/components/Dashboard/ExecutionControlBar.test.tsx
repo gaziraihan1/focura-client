@@ -32,7 +32,7 @@ describe('ExecutionControlBar', () => {
 
   it('renders sort dropdown', () => {
     render(<ExecutionControlBar {...defaultProps} />)
-    expect(screen.getByText('Sort:')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /priority/i })).toBeInTheDocument()
   })
 
   it('renders WIP toggle', () => {

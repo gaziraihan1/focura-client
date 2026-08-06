@@ -16,7 +16,7 @@ import type { SectionsById } from '@/components/Dashboard/ProjectDetails/TaskCar
 import { usePagination } from '@/hooks/usePagination';
 import { useUrlState } from '@/hooks/useUrlState';
 
-export type ViewMode = 'board' | 'list';
+export type ViewMode = 'board' | 'list' | 'calendar' | 'timeline';
 type TaskStatus   = Task['status'];
 type TaskPriority = Task['priority'];
 
@@ -30,6 +30,16 @@ export interface BoardColumnConfig {
 
 export const LIST_PAGE_SIZE = 15;
 export const NO_SECTION_FILTER = 'ALL';
+
+// Saved view types → the page mode that actually renders them.
+// KANBAN and CALENDAR have real, distinct views on this page (board columns /
+// calendar grid) — LIST maps to the list, TIMELINE to the gantt timeline.
+const VIEW_TYPE_TO_MODE: Record<ProjectViewItem['type'], ViewMode> = {
+  KANBAN: 'board',
+  LIST: 'list',
+  CALENDAR: 'calendar',
+  TIMELINE: 'timeline',
+};
 
 export function useProjectTasksPage() {
   const params = useParams();
@@ -150,7 +160,7 @@ export function useProjectTasksPage() {
   );
 
   const applyView = (view: ProjectViewItem) => {
-    setViewMode(view.type === 'LIST' ? 'list' : 'board');
+    setViewMode(VIEW_TYPE_TO_MODE[view.type]);
     setSearch('');
     setPriorityFilter('ALL');
     setStatusFilter('ALL');
@@ -194,7 +204,7 @@ export function useProjectTasksPage() {
 
   // Arriving with ?view= (deep link / chip click) keeps the mode in sync.
   useEffect(() => {
-    if (activeView) setViewMode(activeView.type === 'LIST' ? 'list' : 'board');
+    if (activeView) setViewMode(VIEW_TYPE_TO_MODE[activeView.type]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeView?.id]);
 
@@ -203,7 +213,7 @@ export function useProjectTasksPage() {
     if (!project?.id || viewParam || defaultAppliedRef.current) return;
     const defaultView = views.find((v) => v.isDefault);
     if (defaultView) {
-      setViewMode(defaultView.type === 'LIST' ? 'list' : 'board');
+      setViewMode(VIEW_TYPE_TO_MODE[defaultView.type]);
       defaultAppliedRef.current = true;
     }
   }, [project?.id, viewParam, views]);

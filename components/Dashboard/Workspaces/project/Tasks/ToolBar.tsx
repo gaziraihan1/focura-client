@@ -1,13 +1,51 @@
 import { Task } from "@/hooks/useTask";
 import { cn } from "@/lib/utils";
-import { ChevronDown, Eye, Filter, Flag, FolderOpen, LayoutGrid, List, Search, SlidersHorizontal, Sprout, X } from "lucide-react";
+import { CalendarDays, ChevronDown, Eye, Filter, Flag, FolderOpen, GanttChartSquare, LayoutGrid, List, Search, SlidersHorizontal, Sprout, X } from "lucide-react";
 import { useState } from "react";
+import { FilterDropdown } from "@/components/Shared/FilterDropdown";
 import { PRIORITY_CONFIG } from "./PriorityBadge";
 import { COLUMNS } from "./ListRow";
 import type { MilestoneItem, ProjectSectionItem, ProjectViewItem, SprintItem } from "@/hooks/useProjectFeatures";
-type ViewMode     = 'board' | 'list';
+type ViewMode     = 'board' | 'list' | 'calendar' | 'timeline';
 type TaskPriority = Task['priority'];
 type TaskStatus   = Task['status'];
+
+// Board / List / Calendar / Timeline switch. Rendered twice so it can live on
+// its own row on mobile (next to the Filters toggle) while staying inline on
+// the right of the filter row on larger screens.
+function ViewToggle({
+  viewMode,
+  setViewMode,
+}: {
+  viewMode: ViewMode;
+  setViewMode: (v: ViewMode) => void;
+}) {
+  const buttons: Array<{ mode: ViewMode; label: string; icon: React.ReactNode }> = [
+    { mode: 'board', label: 'board view', icon: <LayoutGrid className="size-3.5" /> },
+    { mode: 'list', label: 'list view', icon: <List className="size-3.5" /> },
+    { mode: 'calendar', label: 'calendar view', icon: <CalendarDays className="size-3.5" /> },
+    { mode: 'timeline', label: 'timeline view', icon: <GanttChartSquare className="size-3.5" /> },
+  ];
+
+  return (
+    <div className="flex items-center rounded-lg border border-border bg-background p-0.5 gap-0.5">
+      {buttons.map(({ mode, label, icon }) => (
+        <button
+          key={mode}
+          onClick={() => setViewMode(mode)}
+          aria-label={label}
+          title={label}
+          className={cn(
+            'flex items-center justify-center rounded-md px-2.5 py-1.5 transition-all',
+            viewMode === mode ? 'bg-muted text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground',
+          )}
+        >
+          {icon}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export function Toolbar({
   viewMode,       setViewMode,
@@ -52,229 +90,223 @@ export function Toolbar({
   onResetView?:      () => void;
   onClearFilters?:   () => void;
 }) {
-  const [openMenu, setOpenMenu] = useState<'priority' | 'status' | 'section' | 'sprint' | 'milestone' | null>(null);
+  // On small screens the filter controls are hidden behind this toggle (large
+  // screens show them always, expanded by default).
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const activeSection = sections.find((s) => s.id === sectionFilter);
   const activeSprint = sprints.find((s) => s.id === sprintFilter);
   const activeMilestone = milestones.find((m) => m.id === milestoneFilter);
-  const hasFilters = search !== '' || priorityFilter !== 'ALL' || statusFilter !== 'ALL' || sectionFilter !== 'ALL' || sprintFilter !== 'ALL' || milestoneFilter !== 'ALL';
+  const activeFilterCount =
+    (search !== '' ? 1 : 0) +
+    (priorityFilter !== 'ALL' ? 1 : 0) +
+    (statusFilter !== 'ALL' ? 1 : 0) +
+    (sectionFilter !== 'ALL' ? 1 : 0) +
+    (sprintFilter !== 'ALL' ? 1 : 0) +
+    (milestoneFilter !== 'ALL' ? 1 : 0);
+  const hasFilters = activeFilterCount > 0;
 
   return (
     <div className="flex flex-col gap-2">
-      {/* Search */}
-      <div className="relative flex-1 max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none" />
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search tasks…"
-          className="w-full rounded-lg border border-border bg-background pl-8 pr-8 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/50 transition-shadow"
-        />
-        {search && (
-          <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-            <X className="size-3.5" />
-          </button>
-        )}
+      {/* Mobile controls row — filters toggle + view switch, always visible */}
+      <div className="flex items-center justify-between gap-2 sm:hidden">
+        <button
+          type="button"
+          onClick={() => setFiltersOpen((v) => !v)}
+          aria-expanded={filtersOpen}
+          aria-controls="project-task-filters"
+          className={cn(
+            'flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted text-muted-foreground hover:text-foreground',
+            hasFilters && 'border-primary/50 text-primary bg-primary/5',
+          )}
+        >
+          <SlidersHorizontal className="size-3.5" />
+          <span>Filters</span>
+          {hasFilters && (
+            <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-bold text-primary-foreground">
+              {activeFilterCount}
+            </span>
+          )}
+          <ChevronDown className={cn('size-3.5 transition-transform', filtersOpen && 'rotate-180')} />
+        </button>
+
+        <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
       </div>
 
-      <div className="flex items-center gap-2">
-        {/* Priority dropdown */}
-        <div className="relative">
-          <button
-            onClick={() => { setOpenMenu((cur) => (cur === 'priority' ? null : 'priority')); }}
-            className={cn(
-              'flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted text-muted-foreground hover:text-foreground',
-              priorityFilter !== 'ALL' && 'border-primary/50 text-primary bg-primary/5',
-            )}
-          >
-            <SlidersHorizontal className="size-3.5" />
-            <span className="hidden sm:inline">
-              {priorityFilter === 'ALL' ? 'Priority' : PRIORITY_CONFIG[priorityFilter as TaskPriority].label}
-            </span>
-            <ChevronDown className={cn('size-3.5 transition-transform', openMenu === 'priority' && 'rotate-180')} />
-          </button>
-          {openMenu === 'priority' && (
-            <div className="absolute top-full left-0 mt-1.5 z-30 min-w-37.5 rounded-xl border border-border bg-popover shadow-[0_8px_24px_0_rgb(0_0_0/0.12)] py-1 overflow-hidden">
-              {(['ALL', 'LOW', 'MEDIUM', 'HIGH', 'URGENT'] as const).map((p) => (
-                <button
-                  key={p}
-                  onClick={() => { setPriorityFilter(p); setOpenMenu(null); }}
-                  className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', priorityFilter === p && 'bg-muted font-medium')}
-                >
-                  {p !== 'ALL' && <span className={cn('size-2 rounded-full shrink-0', PRIORITY_CONFIG[p].dot)} />}
-                  {p === 'ALL' ? 'All priorities' : PRIORITY_CONFIG[p].label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Status dropdown */}
-        <div className="relative">
-          <button
-            onClick={() => { setOpenMenu((cur) => (cur === 'status' ? null : 'status')); }}
-            className={cn(
-              'flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted text-muted-foreground hover:text-foreground',
-              statusFilter !== 'ALL' && 'border-primary/50 text-primary bg-primary/5',
-            )}
-          >
-            <Filter className="size-3.5" />
-            <span className="hidden sm:inline">
-              {statusFilter === 'ALL' ? 'Status' : COLUMNS.find((c) => c.status === statusFilter)?.label}
-            </span>
-            <ChevronDown className={cn('size-3.5 transition-transform', openMenu === 'status' && 'rotate-180')} />
-          </button>
-          {openMenu === 'status' && (
-            <div className="absolute top-full left-0 mt-1.5 z-30 min-w-40 rounded-xl border border-border bg-popover shadow-[0_8px_24px_0_rgb(0_0_0/0.12)] py-1 overflow-hidden">
-              {(['ALL', ...COLUMNS.map((c) => c.status)] as const).map((s) => {
-                const col = COLUMNS.find((c) => c.status === s);
-                return (
-                  <button
-                    key={s}
-                    onClick={() => { setStatusFilter(s as TaskStatus | 'ALL'); setOpenMenu(null); }}
-                    className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', statusFilter === s && 'bg-muted font-medium')}
-                  >
-                    {col && <span className={col.color}>{col.icon}</span>}
-                    {s === 'ALL' ? 'All statuses' : col?.label}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        {/* Section dropdown */}
-        <div className="relative">
-          <button
-            onClick={() => { setOpenMenu((cur) => (cur === 'section' ? null : 'section')); }}
-            className={cn(
-              'flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted text-muted-foreground hover:text-foreground',
-              sectionFilter !== 'ALL' && 'border-primary/50 text-primary bg-primary/5',
-            )}
-          >
-            <FolderOpen className="size-3.5" />
-            <span className="hidden sm:inline">{activeSection ? activeSection.name : 'Section'}</span>
-            <ChevronDown className={cn('size-3.5 transition-transform', openMenu === 'section' && 'rotate-180')} />
-          </button>
-          {openMenu === 'section' && (
-            <div className="absolute top-full left-0 mt-1.5 z-30 min-w-44 rounded-xl border border-border bg-popover shadow-[0_8px_24px_0_rgb(0_0_0/0.12)] py-1 overflow-hidden">
-              <button
-                onClick={() => { setSectionFilter?.('ALL'); setOpenMenu(null); }}
-                className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', sectionFilter === 'ALL' && 'bg-muted font-medium')}
-              >
-                All sections
-              </button>
-              {sections.map((section) => (
-                <button
-                  key={section.id}
-                  onClick={() => { setSectionFilter?.(section.id); setOpenMenu(null); }}
-                  className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', sectionFilter === section.id && 'bg-muted font-medium')}
-                >
-                  <span className="size-2 rounded-full shrink-0" style={{ backgroundColor: section.color ?? '#667eea' }} />
-                  {section.name}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Sprint dropdown */}
-        <div className="relative">
-          <button
-            onClick={() => { setOpenMenu((cur) => (cur === 'sprint' ? null : 'sprint')); }}
-            className={cn(
-              'flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted text-muted-foreground hover:text-foreground',
-              sprintFilter !== 'ALL' && 'border-primary/50 text-primary bg-primary/5',
-            )}
-          >
-            <Sprout className="size-3.5" />
-            <span className="hidden sm:inline">{activeSprint ? activeSprint.name : 'Sprint'}</span>
-            <ChevronDown className={cn('size-3.5 transition-transform', openMenu === 'sprint' && 'rotate-180')} />
-          </button>
-          {openMenu === 'sprint' && (
-            <div className="absolute top-full left-0 mt-1.5 z-30 min-w-44 rounded-xl border border-border bg-popover shadow-[0_8px_24px_0_rgb(0_0_0/0.12)] py-1 overflow-hidden">
-              <button
-                onClick={() => { setSprintFilter?.('ALL'); setOpenMenu(null); }}
-                className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', sprintFilter === 'ALL' && 'bg-muted font-medium')}
-              >
-                All sprints
-              </button>
-              {sprints.map((sprint) => (
-                <button
-                  key={sprint.id}
-                  onClick={() => { setSprintFilter?.(sprint.id); setOpenMenu(null); }}
-                  className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', sprintFilter === sprint.id && 'bg-muted font-medium')}
-                >
-                  <span className={cn('size-2 rounded-full shrink-0', sprint.status === 'ACTIVE' ? 'bg-emerald-500' : sprint.status === 'COMPLETED' ? 'bg-blue-500' : 'bg-muted-foreground/40')} />
-                  <span className="truncate">{sprint.name}</span>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Milestone dropdown */}
-        <div className="relative">
-          <button
-            onClick={() => { setOpenMenu((cur) => (cur === 'milestone' ? null : 'milestone')); }}
-            className={cn(
-              'flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted text-muted-foreground hover:text-foreground',
-              milestoneFilter !== 'ALL' && 'border-primary/50 text-primary bg-primary/5',
-            )}
-          >
-            <Flag className="size-3.5" />
-            <span className="hidden sm:inline">{activeMilestone ? activeMilestone.title : 'Milestone'}</span>
-            <ChevronDown className={cn('size-3.5 transition-transform', openMenu === 'milestone' && 'rotate-180')} />
-          </button>
-          {openMenu === 'milestone' && (
-            <div className="absolute top-full left-0 mt-1.5 z-30 min-w-44 rounded-xl border border-border bg-popover shadow-[0_8px_24px_0_rgb(0_0_0/0.12)] py-1 overflow-hidden">
-              <button
-                onClick={() => { setMilestoneFilter?.('ALL'); setOpenMenu(null); }}
-                className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', milestoneFilter === 'ALL' && 'bg-muted font-medium')}
-              >
-                All milestones
-              </button>
-              {milestones.map((milestone) => (
-                <button
-                  key={milestone.id}
-                  onClick={() => { setMilestoneFilter?.(milestone.id); setOpenMenu(null); }}
-                  className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', milestoneFilter === milestone.id && 'bg-muted font-medium')}
-                >
-                  <span className={cn('size-2 rounded-full shrink-0', milestone.status === 'COMPLETED' ? 'bg-blue-500' : milestone.status === 'DELAYED' ? 'bg-red-500' : milestone.status === 'AT_RISK' ? 'bg-amber-500' : 'bg-emerald-500')} />
-                  <span className="truncate">{milestone.title}</span>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Clear */}
-        {hasFilters && (
-          <button
-            onClick={onClearFilters}
-            className="flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-          >
-            <X className="size-3.5" /> Clear
-          </button>
-        )}
-
-        <div className="flex-1" />
-
-        {/* View toggle */}
-        <div className="flex items-center rounded-lg border border-border bg-background p-0.5 gap-0.5">
-          {(['board', 'list'] as const).map((mode) => (
-            <button
-              key={mode}
-              onClick={() => setViewMode(mode)}
-              aria-label={`${mode} view`}
-              className={cn(
-                'flex items-center justify-center rounded-md px-2.5 py-1.5 transition-all',
-                viewMode === mode ? 'bg-muted text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground',
-              )}
-            >
-              {mode === 'board' ? <LayoutGrid className="size-3.5" /> : <List className="size-3.5" />}
+      {/* Filter controls — collapsed behind the toggle on mobile, always visible on sm+ */}
+      <div
+        id="project-task-filters"
+        className={cn('flex-col gap-2', filtersOpen ? 'flex' : 'hidden sm:flex')}
+      >
+        {/* Search */}
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search tasks…"
+            className="w-full rounded-lg border border-border bg-background pl-8 pr-8 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/50 transition-shadow"
+          />
+          {search && (
+            <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+              <X className="size-3.5" />
             </button>
-          ))}
+          )}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Priority dropdown */}
+          <FilterDropdown
+            label="Priority"
+            icon={<SlidersHorizontal className="size-3.5" />}
+            value={priorityFilter === 'ALL' ? undefined : PRIORITY_CONFIG[priorityFilter as TaskPriority].label}
+            active={priorityFilter !== 'ALL'}
+          >
+            {(close) => (
+              <>
+                {(['ALL', 'LOW', 'MEDIUM', 'HIGH', 'URGENT'] as const).map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => { setPriorityFilter(p); close(); }}
+                    className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', priorityFilter === p && 'bg-muted font-medium')}
+                  >
+                    {p !== 'ALL' && <span className={cn('size-2 rounded-full shrink-0', PRIORITY_CONFIG[p].dot)} />}
+                    {p === 'ALL' ? 'All priorities' : PRIORITY_CONFIG[p].label}
+                  </button>
+                ))}
+              </>
+            )}
+          </FilterDropdown>
+
+          {/* Status dropdown */}
+          <FilterDropdown
+            label="Status"
+            icon={<Filter className="size-3.5" />}
+            value={statusFilter === 'ALL' ? undefined : COLUMNS.find((c) => c.status === statusFilter)?.label}
+            active={statusFilter !== 'ALL'}
+          >
+            {(close) => (
+              <>
+                {(['ALL', ...COLUMNS.map((c) => c.status)] as const).map((s) => {
+                  const col = COLUMNS.find((c) => c.status === s);
+                  return (
+                    <button
+                      key={s}
+                      onClick={() => { setStatusFilter(s as TaskStatus | 'ALL'); close(); }}
+                      className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', statusFilter === s && 'bg-muted font-medium')}
+                    >
+                      {col && <span className={col.color}>{col.icon}</span>}
+                      {s === 'ALL' ? 'All statuses' : col?.label}
+                    </button>
+                  );
+                })}
+              </>
+            )}
+          </FilterDropdown>
+
+          {/* Section dropdown */}
+          <FilterDropdown
+            label="Section"
+            icon={<FolderOpen className="size-3.5" />}
+            value={sectionFilter === 'ALL' ? undefined : activeSection?.name}
+            active={sectionFilter !== 'ALL'}
+          >
+            {(close) => (
+              <>
+                <button
+                  onClick={() => { setSectionFilter?.('ALL'); close(); }}
+                  className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', sectionFilter === 'ALL' && 'bg-muted font-medium')}
+                >
+                  All sections
+                </button>
+                {sections.map((section) => (
+                  <button
+                    key={section.id}
+                    onClick={() => { setSectionFilter?.(section.id); close(); }}
+                    className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', sectionFilter === section.id && 'bg-muted font-medium')}
+                  >
+                    <span className="size-2 rounded-full shrink-0" style={{ backgroundColor: section.color ?? '#667eea' }} />
+                    {section.name}
+                  </button>
+                ))}
+              </>
+            )}
+          </FilterDropdown>
+
+          {/* Sprint dropdown */}
+          <FilterDropdown
+            label="Sprint"
+            icon={<Sprout className="size-3.5" />}
+            value={sprintFilter === 'ALL' ? undefined : activeSprint?.name}
+            active={sprintFilter !== 'ALL'}
+          >
+            {(close) => (
+              <>
+                <button
+                  onClick={() => { setSprintFilter?.('ALL'); close(); }}
+                  className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', sprintFilter === 'ALL' && 'bg-muted font-medium')}
+                >
+                  All sprints
+                </button>
+                {sprints.map((sprint) => (
+                  <button
+                    key={sprint.id}
+                    onClick={() => { setSprintFilter?.(sprint.id); close(); }}
+                    className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', sprintFilter === sprint.id && 'bg-muted font-medium')}
+                  >
+                    <span className={cn('size-2 rounded-full shrink-0', sprint.status === 'ACTIVE' ? 'bg-emerald-500' : sprint.status === 'COMPLETED' ? 'bg-blue-500' : 'bg-muted-foreground/40')} />
+                    <span className="truncate">{sprint.name}</span>
+                  </button>
+                ))}
+              </>
+            )}
+          </FilterDropdown>
+
+          {/* Milestone dropdown */}
+          <FilterDropdown
+            label="Milestone"
+            icon={<Flag className="size-3.5" />}
+            value={milestoneFilter === 'ALL' ? undefined : activeMilestone?.title}
+            active={milestoneFilter !== 'ALL'}
+          >
+            {(close) => (
+              <>
+                <button
+                  onClick={() => { setMilestoneFilter?.('ALL'); close(); }}
+                  className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', milestoneFilter === 'ALL' && 'bg-muted font-medium')}
+                >
+                  All milestones
+                </button>
+                {milestones.map((milestone) => (
+                  <button
+                    key={milestone.id}
+                    onClick={() => { setMilestoneFilter?.(milestone.id); close(); }}
+                    className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', milestoneFilter === milestone.id && 'bg-muted font-medium')}
+                  >
+                    <span className={cn('size-2 rounded-full shrink-0', milestone.status === 'COMPLETED' ? 'bg-blue-500' : milestone.status === 'DELAYED' ? 'bg-red-500' : milestone.status === 'AT_RISK' ? 'bg-amber-500' : 'bg-emerald-500')} />
+                    <span className="truncate">{milestone.title}</span>
+                  </button>
+                ))}
+              </>
+            )}
+          </FilterDropdown>
+
+          {/* Clear */}
+          {hasFilters && (
+            <button
+              onClick={onClearFilters}
+              className="flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            >
+              <X className="size-3.5" /> Clear
+            </button>
+          )}
+
+          <div className="hidden sm:block flex-1" />
+
+          {/* View switch — inline on the right for sm+ (mobile has its own row) */}
+          <div className="hidden sm:block">
+            <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
+          </div>
         </div>
       </div>
 

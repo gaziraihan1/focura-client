@@ -34,7 +34,7 @@ import ProjectTasksPage from '@/app/(dashboard-pages)/dashboard/workspaces/[work
 import { useProjectDetailsBySlug, useProjectRole } from '@/hooks/useProjects'
 import { useUserProfile } from '@/hooks/useUser'
 import { useTasks } from '@/hooks/useTask'
-import { useProjectSections } from '@/hooks/useProjectFeatures'
+import { useProjectSections, useProjectViews } from '@/hooks/useProjectFeatures'
 import { useSearchParams } from 'next/navigation'
 
 const project = {
@@ -110,6 +110,7 @@ describe('ProjectTasksPage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     ;(useSearchParams as any).mockReturnValue(new URLSearchParams())
+    ;(useProjectViews as any).mockReturnValue({ data: [] })
   })
 
   it('renders the board with tasks grouped into workflow columns', () => {
@@ -162,7 +163,7 @@ describe('ProjectTasksPage', () => {
     expect(screen.getByText('Frontend')).toBeDefined()
 
     // List view: the row shows the same badge
-    fireEvent.click(screen.getByLabelText('list view'))
+    fireEvent.click(screen.getAllByLabelText('list view')[0])
     expect(screen.getByText('Frontend')).toBeDefined()
   })
 
@@ -172,7 +173,7 @@ describe('ProjectTasksPage', () => {
     )
     renderPage(tasks)
 
-    fireEvent.click(screen.getByLabelText('list view'))
+    fireEvent.click(screen.getAllByLabelText('list view')[0])
 
     expectShowing(1, 15, 20)
     expect(screen.getByText('Bugfix 01')).toBeDefined()
@@ -185,13 +186,50 @@ describe('ProjectTasksPage', () => {
     expect(screen.queryByText('Bugfix 01')).toBeNull()
   })
 
+  it('renders the calendar view when a CALENDAR saved view is applied', () => {
+    const calendarView = {
+      id: 'v-cal',
+      name: 'Sprint Calendar',
+      type: 'CALENDAR' as const,
+      isDefault: false,
+      visibility: 'PRIVATE' as const,
+      createdById: 'u1',
+      projectId: 'proj1',
+    }
+    ;(useProjectViews as any).mockReturnValue({ data: [calendarView] })
+    renderPage([makeTask('t1', 'Ship feature', 'TODO', null)])
+
+    fireEvent.click(screen.getByRole('button', { name: /Sprint Calendar/i }))
+
+    // Calendar header renders its Today/navigation controls
+    expect(screen.getByRole('button', { name: 'Today' })).toBeDefined()
+  })
+
+  it('renders the timeline view when a TIMELINE saved view is applied', () => {
+    const timelineView = {
+      id: 'v-tl',
+      name: 'Roadmap',
+      type: 'TIMELINE' as const,
+      isDefault: false,
+      visibility: 'PRIVATE' as const,
+      createdById: 'u1',
+      projectId: 'proj1',
+    }
+    ;(useProjectViews as any).mockReturnValue({ data: [timelineView] })
+    renderPage([makeTask('t1', 'Q3 roadmap', 'TODO', null)])
+
+    fireEvent.click(screen.getByRole('button', { name: /Roadmap/i }))
+
+    expect(screen.getByText('Project Timeline')).toBeDefined()
+  })
+
   it('resets to the first page when the search filter changes', async () => {
     const tasks = Array.from({ length: 20 }, (_, i) =>
       makeTask(`t${i + 1}`, `Bugfix ${String(i + 1).padStart(2, '0')}`, 'TODO'),
     )
     renderPage(tasks)
 
-    fireEvent.click(screen.getByLabelText('list view'))
+    fireEvent.click(screen.getAllByLabelText('list view')[0])
     fireEvent.click(screen.getByRole('button', { name: 'Page 2' }))
     expectShowing(16, 20, 20)
 

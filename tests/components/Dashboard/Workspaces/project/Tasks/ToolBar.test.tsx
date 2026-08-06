@@ -3,9 +3,11 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { Toolbar } from '@/components/Dashboard/Workspaces/project/Tasks/ToolBar'
 
 vi.mock('lucide-react', () => ({
+  CalendarDays: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="calendar-days" {...props} />,
   ChevronDown: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="chevron" {...props} />,
   Eye: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="eye" {...props} />,
   Flag: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="flag" {...props} />,
+  GanttChartSquare: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="gantt-chart" {...props} />,
   Sprout: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="sprout" {...props} />,  Filter: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="filter" {...props} />,
   FolderOpen: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="folder-open" {...props} />,
   LayoutGrid: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="layout-grid" {...props} />,
@@ -56,16 +58,46 @@ describe('Toolbar', () => {
     expect(screen.getByPlaceholderText('Search tasks…')).toBeInTheDocument()
   })
 
+  it('toggles the mobile Filters panel open and closed', () => {
+    render(<Toolbar {...defaultProps} />)
+    const filtersBtn = screen.getByRole('button', { name: /filters/i })
+    expect(filtersBtn).toBeInTheDocument()
+    // Filters area starts closed on mobile
+    const panel = document.getElementById('project-task-filters')
+    expect(panel).not.toBeNull()
+    expect(panel!.className).toContain('hidden')
+    fireEvent.click(filtersBtn)
+    expect(panel!.className).not.toContain('hidden')
+    fireEvent.click(filtersBtn)
+    expect(panel!.className).toContain('hidden')
+  })
+
   it('renders the board view as active', () => {
     render(<Toolbar {...defaultProps} />)
-    const boardBtn = screen.getByLabelText('board view')
-    expect(boardBtn).toBeInTheDocument()
+    const boardBtns = screen.getAllByLabelText('board view')
+    expect(boardBtns.length).toBeGreaterThan(0)
+    expect(boardBtns[0]).toBeInTheDocument()
   })
 
   it('renders the list view button', () => {
     render(<Toolbar {...defaultProps} />)
-    const listBtn = screen.getByLabelText('list view')
-    expect(listBtn).toBeInTheDocument()
+    const listBtns = screen.getAllByLabelText('list view')
+    expect(listBtns.length).toBeGreaterThan(0)
+  })
+
+  it('renders the calendar and timeline view buttons', () => {
+    render(<Toolbar {...defaultProps} />)
+    expect(screen.getAllByLabelText('calendar view').length).toBeGreaterThan(0)
+    expect(screen.getAllByLabelText('timeline view').length).toBeGreaterThan(0)
+  })
+
+  it('switches to calendar and timeline views', () => {
+    const setViewMode = vi.fn()
+    render(<Toolbar {...defaultProps} setViewMode={setViewMode} />)
+    fireEvent.click(screen.getAllByLabelText('calendar view')[0])
+    expect(setViewMode).toHaveBeenCalledWith('calendar')
+    fireEvent.click(screen.getAllByLabelText('timeline view')[0])
+    expect(setViewMode).toHaveBeenCalledWith('timeline')
   })
 
   it('does not show Clear button when no filters active', () => {

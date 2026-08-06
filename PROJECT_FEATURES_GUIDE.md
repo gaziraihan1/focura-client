@@ -154,21 +154,41 @@ project (type: **Kanban · List · Calendar · Timeline**), with visibility
 (Private / Shared) and a default flag.
 
 ### How views control the Tasks page
-Views aren't just labels anymore — they **actually apply**:
+Views aren't just labels — they **actually apply**. Each saved-view type maps to
+a real layout on the project Tasks page:
+
+| View type | What you see |
+|---|---|
+| **Kanban** | The board — tasks grouped into workflow columns |
+| **List** | The sortable, paginated task list |
+| **Calendar** | A month/week/day calendar with tasks placed on their start/due dates |
+| **Timeline** | A Gantt-style timeline with horizontal bars from start → due date |
 
 - Every saved view appears as a **chip in the project Tasks page toolbar**.
-  Click a chip to instantly switch the task list to that view's mode
-  (board ↔ list) — the URL updates to `?view=<id>` so the perspective is
-  shareable.
+  Click a chip to instantly switch the task list to that view's mode — the URL
+  updates to `?view=<id>` so the perspective is shareable.
+- The toolbar also has **quick toggle buttons** (board · list · calendar ·
+  timeline) so you can switch layouts without saving a view.
 - The chip for the active view is highlighted; click **Reset view** to clear it.
 - Mark a view as **Default** and it **auto-applies** every time you open the
   project Tasks page.
 - From the Views page, each card's **Apply** link opens the Tasks page with that
   view already active.
 
-> Calendar / Timeline view types are captured for future use; applying them
-> currently opens the Tasks page in board mode. Kanban and List types switch
-> between board and list layouts.
+### Calendar view
+- Tasks with a **due date** (or start date) appear on the grid — pick Month /
+  Week / Day, navigate with the arrows, jump to **Today**, and toggle
+  **Time-bound only** to hide tasks without dates.
+- Click any task pill to open its details without leaving the calendar.
+- Uses the same full calendar stack as the workspace-wide calendar page.
+
+### Timeline view
+- Each dated task is a **coloured bar** spanning start → due date on a shared
+  date axis; the bar colour follows the task status (legend in the header).
+- The ruler shows month bands and day ticks; a vertical marker highlights
+  **today**.
+- Tasks without dates are collected in an **Unscheduled** tray below the grid.
+- Click a bar (or an unscheduled chip) to open the task details.
 
 ### How to use it (Project → Views)
 1. **New View** — name it (e.g. "My Kanban", "Launch Timeline") and pick a type.
