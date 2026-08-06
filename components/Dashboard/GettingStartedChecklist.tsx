@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import {
   Check,
@@ -30,11 +30,9 @@ export function GettingStartedChecklist({
   totalProjects = 0,
   totalMembers = 0,
 }: GettingStartedChecklistProps) {
-  const [dismissed, setDismissed] = useState(false);
-
-  useEffect(() => {
-    setDismissed(localStorage.getItem('focura-onboarding-dismissed') === 'true');
-  }, []);
+  const [dismissed, setDismissed] = useState(
+    () => localStorage.getItem('focura-onboarding-dismissed') === 'true'
+  );
 
   const dismiss = () => {
     setDismissed(true);
