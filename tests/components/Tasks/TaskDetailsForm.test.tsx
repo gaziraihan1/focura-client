@@ -6,6 +6,10 @@ vi.mock('lucide-react', () => ({
   Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader-icon" {...props} />,
 }))
 
+vi.mock('@/components/Tasks/form/RepeatControl', () => ({
+  RepeatControl: () => <div data-testid="repeat-control" />,
+}))
+
 describe('TaskDetailsForm', () => {
   const defaultProps = {
     editData: {
@@ -14,6 +18,7 @@ describe('TaskDetailsForm', () => {
       priority: 'HIGH',
       status: 'TODO',
       estimatedHours: '8',
+      recurrence: { pattern: 'NONE', interval: 1, days: [], endsAt: '' },
     },
     isUpdating: false,
     onEditDataChange: vi.fn(),

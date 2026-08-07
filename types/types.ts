@@ -346,8 +346,9 @@ export interface TaskRecurrence {
   taskId: string;
   pattern: RecurrencePattern;
   interval: number;
-  days: string[] | null;
+  days: number[] | null;
   endsAt: Date | null;
+  lastOccurredAt: Date | null;
 }
 
 

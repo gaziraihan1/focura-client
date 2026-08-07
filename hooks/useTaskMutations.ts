@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
-import { Task, CreateTaskDto } from "./useTask";
+import { Task, CreateTaskDto, RecurrenceInputDto } from "./useTask";
 import { taskKeys, commentKeys, attachmentKeys, taskOverviewKeys } from "./taskKeys";
 import { ProjectDetails, projectKeys } from "./useProjects";
 import { activityKeys } from "./useActivity";
@@ -66,7 +66,7 @@ export function useUpdateTask() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Partial<Task> }) => {
+    mutationFn: async ({ id, data }: { id: string; data: Omit<Partial<Task>, "recurrence"> & { recurrence?: RecurrenceInputDto | null } }) => {
       const response = await api.put<Task>(`/api/v1/tasks/${id}`, data, { showSuccessToast: true });
       return response?.data;
     },
@@ -76,15 +76,21 @@ export function useUpdateTask() {
 
       const previousTask = qc.getQueryData<Task>(taskKeys.detail(id));
 
+      // `recurrence` carries the create/update input shape (no `id`), so it is
+      // excluded from the optimistic merge — the refetch returns the stored
+      // TaskRecurrence record shape.
+      const { recurrence: _recurrence, ...rest } = data;
+      void _recurrence; // recurrence is intentionally not merged into the optimistic cache
+
       if (previousTask) {
-        qc.setQueryData<Task>(taskKeys.detail(id), { ...previousTask, ...data });
+        qc.setQueryData<Task>(taskKeys.detail(id), { ...previousTask, ...rest });
       }
 
       // Update task in all list caches
       qc.getQueriesData({ queryKey: taskKeys.lists() }).forEach(([queryKey, listData]) => {
         if (!listData || typeof listData !== "object" || !("data" in listData)) return;
         const tasks = (listData as { data: Task[] }).data;
-        const updatedTasks = tasks.map((t) => (t.id === id ? { ...t, ...data } : t));
+        const updatedTasks = tasks.map((t) => (t.id === id ? { ...t, ...rest } : t));
         qc.setQueryData(queryKey, { ...listData, data: updatedTasks });
       });
 

@@ -1,5 +1,5 @@
 import { useParams, useRouter } from 'next/navigation';
-import { MessageSquare, Clock, Flag, Sprout } from 'lucide-react';
+import { MessageSquare, Clock, Flag, Repeat, Sprout } from 'lucide-react';
 import Image from 'next/image';
 import { Task } from '@/hooks/useTask';
 import { SectionBadge } from './SectionBadge';
@@ -51,6 +51,13 @@ export default function TaskCard({ task, workspaceSlug, section }: TaskCardProps
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-600 dark:bg-amber-950/20 dark:text-amber-400">
             <Flag size={10} />
             {task.milestone.title}
+          </span>
+        )}
+        {task.recurrence && (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-cyan-50 text-cyan-600 dark:bg-cyan-950/20 dark:text-cyan-400">
+            <Repeat size={10} />
+            {task.recurrence.pattern.charAt(0) +
+              task.recurrence.pattern.slice(1).toLowerCase()}
           </span>
         )}
       </div>

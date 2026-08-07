@@ -1,6 +1,6 @@
 import { Task } from "@/hooks/useTask";
 import { cn } from "@/lib/utils";
-import { AlertCircle, Calendar, CheckCircle2, Circle, Clock, Flag, GripVertical, MessageSquare, Sprout } from "lucide-react";
+import { AlertCircle, Calendar, CheckCircle2, Circle, Clock, Flag, GripVertical, MessageSquare, Repeat, Sprout } from "lucide-react";
 import { memo } from "react";
 import { Assignees } from "./Assignees";
 import { PriorityBadge } from "./PriorityBadge";
@@ -64,6 +64,13 @@ export const ListRow = memo(function ListRow({
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-600 dark:bg-amber-950/20 dark:text-amber-400">
               <Flag size={10} />
               {task.milestone.title}
+            </span>
+          )}
+          {task.recurrence && (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-cyan-50 text-cyan-600 dark:bg-cyan-950/20 dark:text-cyan-400">
+              <Repeat size={10} />
+              {task.recurrence.pattern.charAt(0) +
+                task.recurrence.pattern.slice(1).toLowerCase()}
             </span>
           )}
         </div>

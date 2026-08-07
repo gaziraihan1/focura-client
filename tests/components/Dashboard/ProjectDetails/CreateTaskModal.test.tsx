@@ -28,6 +28,10 @@ vi.mock('@/components/Tasks/form/FocusEnergySection', () => ({
   FocusEnergySection: () => <div data-testid="focus-energy" />,
 }));
 
+vi.mock('@/components/Tasks/form/RepeatControl', () => ({
+  RepeatControl: () => <div data-testid="repeat-control" />,
+}));
+
 vi.mock('@/hooks/useCreateTaskModal', () => ({
   useCreateTaskModal: vi.fn(() => ({
     formData: {
@@ -47,6 +51,8 @@ vi.mock('@/hooks/useCreateTaskModal', () => ({
     ],
     sectionId: '',
     setSectionId: vi.fn(),
+    recurrence: { pattern: 'NONE', interval: 1, days: [], endsAt: '' },
+    setRecurrence: vi.fn(),
   })),
 }));
 
@@ -82,6 +88,11 @@ describe('CreateTaskModal', () => {
   it('renders Cancel button', () => {
     render(<CreateTaskModal {...defaultProps} />);
     expect(screen.getByText('Cancel')).toBeInTheDocument();
+  });
+
+  it('renders the Repeat control', () => {
+    render(<CreateTaskModal {...defaultProps} />);
+    expect(screen.getByTestId('repeat-control')).toBeInTheDocument();
   });
 
   it('renders the section picker with active sections only', () => {

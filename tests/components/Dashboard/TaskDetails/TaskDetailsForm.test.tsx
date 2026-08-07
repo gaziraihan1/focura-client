@@ -83,6 +83,9 @@ vi.mock('lucide-react', () => {
     Send: icon('Send'),
     Loader2: icon('Loader2'),
     X: icon('X'),
+    Repeat: icon('Repeat'),
+    Minus: icon('Minus'),
+    RotateCcw: icon('RotateCcw'),
     Paperclip: icon('Paperclip'),
     Download: icon('Download'),
     ArrowLeft: icon('ArrowLeft'),
@@ -400,7 +403,7 @@ const makeTask = (overrides: Record<string, unknown> = {}) => ({
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('TaskDetails/TaskDetailsForm', () => {
-  const editData = { title: 'T', description: 'D', priority: 'HIGH', status: 'TODO', estimatedHours: '8' }
+  const editData = { title: 'T', description: 'D', priority: 'HIGH', status: 'TODO', estimatedHours: '8', recurrence: { pattern: 'NONE', interval: 1, days: [], endsAt: '' } }
   it('renders title input', async () => {
     const { TaskDetailsForm } = await import('@/components/Dashboard/TaskDetails/TaskDetailsForm')
     render(<TaskDetailsForm editData={editData} isUpdating={false} onEditDataChange={vi.fn()} onSave={vi.fn()} onCancel={vi.fn()} />)

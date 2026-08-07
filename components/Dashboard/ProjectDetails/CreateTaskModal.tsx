@@ -13,6 +13,7 @@ import { TaskEstimatedHoursInput } from "./TaskModal/TaskEstimatedHoursInput";
 import { TaskAssigneePicker } from "./TaskModal/TaskAssigneePicker";
 import { CreateTaskModalProps } from "@/types/taskForm.types";
 import { TaskStartDateInput } from "./TaskModal/TaskStartDateInput";
+import { RepeatControl } from "@/components/Tasks/form/RepeatControl";
 
 export default function CreateTaskModal({
   projectId,
@@ -38,6 +39,8 @@ export default function CreateTaskModal({
     milestones,
     milestoneId,
     setMilestoneId,
+    recurrence,
+    setRecurrence,
   } = useCreateTaskModal({ projectId, onClose });
 
   return (
@@ -190,6 +193,9 @@ export default function CreateTaskModal({
               </select>
             </div>
           )}
+
+          {/* Repeat */}
+          <RepeatControl value={recurrence} onChange={setRecurrence} />
 
           {/* Labels */}
           <div>

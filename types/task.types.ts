@@ -133,6 +133,15 @@ export interface Task {
   milestoneId?: string | null;
   sprint?: { id: string; name: string } | null;
   milestone?: { id: string; title: string; status?: string; progress?: number } | null;
+  recurrenceId?: string | null;
+  recurrence?: {
+    id: string;
+    pattern: "DAILY" | "WEEKLY" | "MONTHLY" | "CUSTOM";
+    interval: number;
+    days: number[] | null;
+    endsAt: string | null;
+    lastOccurredAt?: string | null;
+  } | null;
   intent: IntentType
 
   focusRequired?: boolean;

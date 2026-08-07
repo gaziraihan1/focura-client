@@ -17,18 +17,27 @@ import { useUpdateComment, useDeleteComment } from "@/hooks/useComment";
 import { useTaskPermissions } from "@/hooks/useTaskPermissions";
 import { Task } from "@/types/task.types";
 import { taskKeys, taskOverviewKeys } from "./taskKeys";
+import { EMPTY_REPEAT, type RepeatValue } from "@/components/Tasks/form/RepeatControl";
 
 export function useTaskDetailsController(taskId: string, workspaceSlug: string ) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState({
+  const [editData, setEditData] = useState<{
+    title: string;
+    description: string;
+    priority: string;
+    status: string;
+    estimatedHours: string;
+    recurrence: RepeatValue;
+  }>({
     title: "",
     description: "",
     priority: "",
     status: "",
     estimatedHours: "",
+    recurrence: EMPTY_REPEAT,
   });
 
   const taskQuery       = useTask(taskId);
@@ -63,12 +72,39 @@ export function useTaskDetailsController(taskId: string, workspaceSlug: string )
       priority:       task.priority,
       status:         task.status,
       estimatedHours: task.estimatedHours?.toString() || "",
+      recurrence: task.recurrence
+        ? {
+            pattern:  task.recurrence.pattern,
+            interval: task.recurrence.interval,
+            days:     task.recurrence.days ?? [],
+            endsAt:   task.recurrence.endsAt ?? "",
+          }
+        : EMPTY_REPEAT,
     });
     setIsEditing(true);
   };
 
   const handleSaveEdit = async () => {
     if (!task || !permissions.canEdit) return;
+
+    // Only touch the recurrence when the user actually changed it: pattern NONE
+    // + no existing recurrence → omit (no-op), NONE + existing → stop (null),
+    // otherwise → upsert the chosen schedule.
+    const nextRecurrence =
+      editData.recurrence.pattern === "NONE"
+        ? task.recurrence
+          ? null
+          : undefined
+        : {
+            pattern:  editData.recurrence.pattern,
+            interval: editData.recurrence.interval,
+            days:
+              editData.recurrence.days.length > 0
+                ? editData.recurrence.days
+                : undefined,
+            endsAt: editData.recurrence.endsAt || undefined,
+          };
+
     await updateTask.mutateAsync({
       id:   task.id,
       data: {
@@ -79,6 +115,7 @@ export function useTaskDetailsController(taskId: string, workspaceSlug: string )
         estimatedHours: editData.estimatedHours
           ? parseFloat(editData.estimatedHours)
           : undefined,
+        ...(nextRecurrence !== undefined && { recurrence: nextRecurrence }),
       },
     });
     setIsEditing(false);

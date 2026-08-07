@@ -18,6 +18,12 @@ export interface EditTaskData {
   priority: string;
   status: string;
   estimatedHours: string;
+  recurrence: {
+    pattern: "NONE" | "DAILY" | "WEEKLY" | "MONTHLY" | "CUSTOM";
+    interval: number;
+    days: number[];
+    endsAt: string;
+  };
 }
 
 

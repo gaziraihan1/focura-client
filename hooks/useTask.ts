@@ -19,6 +19,15 @@ export interface Task {
   milestoneId?: string | null;
   sprint?: { id: string; name: string } | null;
   milestone?: { id: string; title: string; status?: string; progress?: number } | null;
+  recurrenceId?: string | null;
+  recurrence?: {
+    id: string;
+    pattern: "DAILY" | "WEEKLY" | "MONTHLY" | "CUSTOM";
+    interval: number;
+    days: number[] | null;
+    endsAt: string | null;
+    lastOccurredAt?: string | null;
+  } | null;
   workspaceId?: string;
   _count: { comments: number; subtasks: number; files: number };
   createdAt: string;
@@ -76,6 +85,15 @@ export interface WorkspaceQuotaInfo {
   members: MemberQuotaInfo[];
 }
 
+export type RecurrencePattern = "DAILY" | "WEEKLY" | "MONTHLY" | "CUSTOM";
+
+export interface RecurrenceInputDto {
+  pattern: RecurrencePattern;
+  interval?: number;
+  days?: number[];
+  endsAt?: string;
+}
+
 export interface CreateTaskDto {
   title: string;
   description?: string;
@@ -94,6 +112,7 @@ export interface CreateTaskDto {
   intent?: "EXECUTION" | "PLANNING" | "REVIEW" | "LEARNING" | "COMMUNICATION";
   energyType?: "LOW" | "MEDIUM" | "HIGH";
   focusRequired?: boolean;
+  recurrence?: RecurrenceInputDto | null;
 }
 
 export interface TaskFilters {

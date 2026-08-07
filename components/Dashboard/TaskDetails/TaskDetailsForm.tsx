@@ -1,5 +1,6 @@
 // components/TaskDetails/TaskDetailsForm.tsx
 import { Loader2 } from "lucide-react";
+import { RepeatControl, type RepeatValue } from "@/components/Tasks/form/RepeatControl";
 
 interface EditData {
   title: string;
@@ -7,6 +8,7 @@ interface EditData {
   priority: string;
   status: string;
   estimatedHours: string;
+  recurrence: RepeatValue;
 }
 
 interface TaskDetailsFormProps {
@@ -61,6 +63,11 @@ export const TaskDetailsForm = ({
           className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
         />
       </div>
+
+      <RepeatControl
+        value={editData.recurrence}
+        onChange={(recurrence) => onEditDataChange({ ...editData, recurrence })}
+      />
 
       <div className="flex gap-3">
         <button

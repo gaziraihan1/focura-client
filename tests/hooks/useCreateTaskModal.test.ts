@@ -197,4 +197,69 @@ describe('useCreateTaskModal', () => {
     await waitFor(() => expect(onClose).toHaveBeenCalled())
     expect(captured?.sectionId).toBeUndefined()
   })
+
+  it('initializes recurrence with no repeat', () => {
+    const { result } = renderHook(
+      () => useCreateTaskModal({ projectId: 'proj-1', onClose }),
+      { wrapper: createWrapper() }
+    )
+
+    expect(result.current.recurrence.pattern).toBe('NONE')
+    expect(result.current.recurrence.interval).toBe(1)
+  })
+
+  it('omits recurrence from the payload when no repeat is selected', async () => {
+    let captured: Record<string, unknown> | undefined
+    server.use(
+      http.post('*/api/v1/tasks', async ({ request }) => {
+        captured = (await request.json()) as Record<string, unknown>
+        return HttpResponse.json({ success: true, data: { id: 't1' } })
+      })
+    )
+
+    const { result } = renderHook(
+      () => useCreateTaskModal({ projectId: 'proj-1', onClose }),
+      { wrapper: createWrapper() }
+    )
+
+    act(() => result.current.updateField('title', 'New Task'))
+    act(() => result.current.handleSubmit())
+
+    await waitFor(() => expect(onClose).toHaveBeenCalled())
+    expect(captured?.recurrence).toBeUndefined()
+  })
+
+  it('includes recurrence in the payload when a repeat is selected', async () => {
+    let captured: Record<string, unknown> | undefined
+    server.use(
+      http.post('*/api/v1/tasks', async ({ request }) => {
+        captured = (await request.json()) as Record<string, unknown>
+        return HttpResponse.json({ success: true, data: { id: 't1' } })
+      })
+    )
+
+    const { result } = renderHook(
+      () => useCreateTaskModal({ projectId: 'proj-1', onClose }),
+      { wrapper: createWrapper() }
+    )
+
+    act(() => {
+      result.current.updateField('title', 'Weekly Standup')
+      result.current.setRecurrence({
+        pattern: 'WEEKLY',
+        interval: 1,
+        days: [1, 3, 5],
+        endsAt: '2026-12-31',
+      })
+    })
+    act(() => result.current.handleSubmit())
+
+    await waitFor(() => expect(onClose).toHaveBeenCalled())
+    expect(captured?.recurrence).toMatchObject({
+      pattern: 'WEEKLY',
+      interval: 1,
+      days: [1, 3, 5],
+      endsAt: '2026-12-31',
+    })
+  })
 })

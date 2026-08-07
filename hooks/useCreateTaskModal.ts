@@ -3,6 +3,7 @@ import { useState, useCallback } from "react";
 import { useCreateTask } from "@/hooks/useTask";
 import { useProjectSections, useProjectSprints, useProjectMilestones } from "@/hooks/useProjectFeatures";
 import { CreateTaskFormData } from "@/types/taskForm.types";
+import { EMPTY_REPEAT, type RepeatValue } from "@/components/Tasks/form/RepeatControl";
 
 interface UseCreateTaskModalProps {
   projectId: string;
@@ -21,6 +22,7 @@ export function useCreateTaskModal({
   const [sectionId, setSectionId] = useState<string>("");
   const [sprintId, setSprintId] = useState<string>("");
   const [milestoneId, setMilestoneId] = useState<string>("");
+  const [recurrence, setRecurrence] = useState<RepeatValue>(EMPTY_REPEAT);
 
   const [formData, setFormData] = useState<CreateTaskFormData>({
     title: "",
@@ -87,6 +89,15 @@ export function useCreateTaskModal({
         sprintId: sprintId || undefined,
         milestoneId: milestoneId || undefined,
         projectId,
+        recurrence:
+          recurrence.pattern === "NONE"
+            ? undefined
+            : {
+                pattern: recurrence.pattern,
+                interval: recurrence.interval,
+                days: recurrence.days.length > 0 ? recurrence.days : undefined,
+                endsAt: recurrence.endsAt || undefined,
+              },
       },
       {
         onSuccess: () => {
@@ -94,7 +105,7 @@ export function useCreateTaskModal({
         },
       }
     );
-  }, [validate, createTask, formData, sectionId, sprintId, milestoneId, projectId, onClose]);
+  }, [validate, createTask, formData, sectionId, sprintId, milestoneId, projectId, recurrence, onClose]);
 
   return {
     formData,
@@ -112,5 +123,7 @@ export function useCreateTaskModal({
     milestones: milestoneStats?.milestones ?? [],
     milestoneId,
     setMilestoneId,
+    recurrence,
+    setRecurrence,
   };
 }

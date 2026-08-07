@@ -50,4 +50,22 @@ describe("TaskCard", () => {
     render(<TaskCard task={makeTask("t1", "Build navbar")} workspaceSlug="acme" section={null} />);
     expect(screen.queryByText(/Frontend/i)).toBeNull();
   });
+
+  it("shows the recurrence badge when the task repeats", () => {
+    const task = makeTask("t1", "Weekly bug triage");
+    task.recurrence = {
+      id: "rec-1",
+      pattern: "WEEKLY",
+      interval: 1,
+      days: null,
+      endsAt: null,
+    };
+    render(<TaskCard task={task} workspaceSlug="acme" />);
+    expect(screen.getByText("Weekly")).toBeDefined();
+  });
+
+  it("does not render a recurrence badge when the task is not repeating", () => {
+    render(<TaskCard task={makeTask("t1", "Build navbar")} workspaceSlug="acme" />);
+    expect(screen.queryByText(/Weekly|Daily|Monthly|Custom/i)).toBeNull();
+  });
 });
