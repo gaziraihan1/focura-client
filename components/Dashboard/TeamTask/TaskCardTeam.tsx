@@ -24,7 +24,7 @@ export interface TaskTimeInfo {
 export function TaskCardTeam({ task, index }: TaskCardTeamProps) {
   const timeInfo = getTaskTimeInfo(task);
   const timeProgress = calculateTimeProgress(
-    task.startDate,
+    task.startDate ?? undefined,
     task.dueDate,
     task.estimatedHours
   );

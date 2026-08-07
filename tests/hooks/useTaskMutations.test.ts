@@ -71,6 +71,54 @@ describe('Task Mutations', () => {
 
       expect(qc.getQueryData(['projects', 'detail', 'project-1'])).toEqual(projectData)
     })
+
+    it('seeds the detail cache and replaces the optimistic entry with the response recurrence', async () => {
+      const createdTask = {
+        ...mockTask,
+        id: 'task-created',
+        title: 'Daily Task',
+        recurrence: {
+          id: 'rec-1',
+          taskId: 'task-created',
+          pattern: 'DAILY',
+          interval: 1,
+          days: null,
+          endsAt: null,
+          lastOccurredAt: null,
+        },
+      }
+      server.use(
+        http.post('*/api/v1/tasks', () => {
+          return HttpResponse.json({ success: true, data: createdTask })
+        })
+      )
+
+      const { result, qc } = renderHookWithProviders(() => useCreateTask())
+      const projectData = { id: 'project-1', tasks: [], _count: { tasks: 0 } }
+      qc.setQueryData(['projects', 'detail', 'project-1'], projectData)
+
+      await act(async () => {
+        await result.current.mutateAsync({
+          title: 'Daily Task',
+          status: 'TODO',
+          priority: 'MEDIUM',
+          projectId: 'project-1',
+          recurrence: { pattern: 'DAILY', interval: 1 },
+        })
+      })
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true))
+
+      // The response (which embeds the stored recurrence) lands in the detail cache
+      expect(qc.getQueryData(taskKeys.detail('task-created'))).toEqual(createdTask)
+
+      // ...and the optimistic ghost in the project cache is replaced by the real task
+      const project = qc.getQueryData(['projects', 'detail', 'project-1']) as { tasks: any[] }
+      expect(project.tasks).toHaveLength(1)
+      expect(project.tasks[0].id).toBe('task-created')
+      expect(project.tasks[0].id).not.toMatch(/^optimistic-/)
+      expect(project.tasks[0].recurrence?.pattern).toBe('DAILY')
+    })
   })
 
   describe('useUpdateTask', () => {
@@ -109,6 +157,61 @@ describe('Task Mutations', () => {
 
       // Should rollback to original
       expect(qc.getQueryData(taskKeys.detail('task-1'))).toEqual(mockTask)
+    })
+
+    it('propagates the stored recurrence from the response into list and project caches', async () => {
+      const updatedTask = {
+        ...mockTask,
+        title: 'Weekly Task',
+        recurrence: {
+          id: 'rec-1',
+          taskId: 'task-1',
+          pattern: 'WEEKLY',
+          interval: 2,
+          days: null,
+          endsAt: null,
+          lastOccurredAt: null,
+        },
+      }
+      server.use(
+        http.put('*/api/v1/tasks/task-1', () => {
+          return HttpResponse.json({ success: true, data: updatedTask })
+        })
+      )
+
+      const { result, qc } = renderHookWithProviders(() => useUpdateTask())
+      const listData = {
+        data: [mockTask],
+        pagination: { page: 1, pageSize: 10, totalCount: 1, totalPages: 1, hasNext: false, hasPrev: false },
+      }
+      qc.setQueryData(taskKeys.lists(), listData)
+      qc.setQueryData(taskKeys.detail('task-1'), mockTask)
+      qc.setQueryData(['projects', 'detail', 'project-1'], {
+        id: 'project-1',
+        tasks: [mockTask],
+        _count: { tasks: 1, members: 0, announcement: 0 },
+      })
+
+      await act(async () => {
+        await result.current.mutateAsync({
+          id: 'task-1',
+          data: { title: 'Weekly Task', recurrence: { pattern: 'WEEKLY', interval: 2 } },
+        })
+      })
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true))
+
+      // The list entry is replaced with the response task, recurrence included
+      const list = qc.getQueryData(taskKeys.lists()) as { data: any[] }
+      expect(list.data[0].id).toBe('task-1')
+      expect(list.data[0].recurrence).toMatchObject({ pattern: 'WEEKLY', interval: 2 })
+      expect(qc.getQueryData(taskKeys.detail('task-1'))).toEqual(updatedTask)
+
+      // The project detail cache entry is replaced with the response task too
+      const project = qc.getQueryData(['projects', 'detail', 'project-1']) as { tasks: any[] }
+      expect(project.tasks).toHaveLength(1)
+      expect(project.tasks[0].id).toBe('task-1')
+      expect(project.tasks[0].recurrence).toMatchObject({ pattern: 'WEEKLY', interval: 2 })
     })
   })
 
@@ -163,6 +266,56 @@ describe('Task Mutations', () => {
       const updatedTask = qc.getQueryData(taskKeys.detail('task-1'))
       expect(updatedTask).toEqual({ ...mockTask, status: 'IN_PROGRESS' })
     })
+
+    it('propagates the response into list and project caches on success', async () => {
+      const updatedTask = {
+        ...mockTask,
+        status: 'IN_PROGRESS',
+        recurrence: {
+          id: 'rec-1',
+          taskId: 'task-1',
+          pattern: 'WEEKLY',
+          interval: 2,
+          days: null,
+          endsAt: null,
+          lastOccurredAt: null,
+        },
+      }
+      server.use(
+        http.patch('*/api/v1/tasks/task-1/status', () => {
+          return HttpResponse.json({ success: true, data: updatedTask })
+        })
+      )
+
+      const { result, qc } = renderHookWithProviders(() => useUpdateTaskStatus())
+      const listData = {
+        data: [mockTask],
+        pagination: { page: 1, pageSize: 10, totalCount: 1, totalPages: 1, hasNext: false, hasPrev: false },
+      }
+      qc.setQueryData(taskKeys.lists(), listData)
+      qc.setQueryData(taskKeys.detail('task-1'), mockTask)
+      qc.setQueryData(['projects', 'detail', 'project-1'], {
+        id: 'project-1',
+        tasks: [mockTask],
+        _count: { tasks: 1, members: 0, announcement: 0 },
+      })
+
+      await act(async () => {
+        await result.current.mutateAsync({ id: 'task-1', status: 'IN_PROGRESS' })
+      })
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true))
+
+      const list = qc.getQueryData(taskKeys.lists()) as { data: any[] }
+      expect(list.data[0].status).toBe('IN_PROGRESS')
+      expect(list.data[0].recurrence).toMatchObject({ pattern: 'WEEKLY', interval: 2 })
+
+      expect(qc.getQueryData(taskKeys.detail('task-1'))).toEqual(updatedTask)
+
+      const project = qc.getQueryData(['projects', 'detail', 'project-1']) as { tasks: any[] }
+      expect(project.tasks[0].status).toBe('IN_PROGRESS')
+      expect(project.tasks[0].recurrence).toMatchObject({ pattern: 'WEEKLY', interval: 2 })
+    })
   })
 
   describe('useUpdateTaskPriority', () => {
@@ -184,6 +337,56 @@ describe('Task Mutations', () => {
 
       const updatedTask = qc.getQueryData(taskKeys.detail('task-1'))
       expect(updatedTask).toEqual({ ...mockTask, priority: 'URGENT' })
+    })
+
+    it('propagates the response into list and project caches on success', async () => {
+      const updatedTask = {
+        ...mockTask,
+        priority: 'URGENT',
+        recurrence: {
+          id: 'rec-1',
+          taskId: 'task-1',
+          pattern: 'DAILY',
+          interval: 1,
+          days: null,
+          endsAt: null,
+          lastOccurredAt: null,
+        },
+      }
+      server.use(
+        http.patch('*/api/v1/tasks/task-1/priority', () => {
+          return HttpResponse.json({ success: true, data: updatedTask })
+        })
+      )
+
+      const { result, qc } = renderHookWithProviders(() => useUpdateTaskPriority())
+      const listData = {
+        data: [mockTask],
+        pagination: { page: 1, pageSize: 10, totalCount: 1, totalPages: 1, hasNext: false, hasPrev: false },
+      }
+      qc.setQueryData(taskKeys.lists(), listData)
+      qc.setQueryData(taskKeys.detail('task-1'), mockTask)
+      qc.setQueryData(['projects', 'detail', 'project-1'], {
+        id: 'project-1',
+        tasks: [mockTask],
+        _count: { tasks: 1, members: 0, announcement: 0 },
+      })
+
+      await act(async () => {
+        await result.current.mutateAsync({ id: 'task-1', priority: 'URGENT' })
+      })
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true))
+
+      const list = qc.getQueryData(taskKeys.lists()) as { data: any[] }
+      expect(list.data[0].priority).toBe('URGENT')
+      expect(list.data[0].recurrence).toMatchObject({ pattern: 'DAILY', interval: 1 })
+
+      expect(qc.getQueryData(taskKeys.detail('task-1'))).toEqual(updatedTask)
+
+      const project = qc.getQueryData(['projects', 'detail', 'project-1']) as { tasks: any[] }
+      expect(project.tasks[0].priority).toBe('URGENT')
+      expect(project.tasks[0].recurrence).toMatchObject({ pattern: 'DAILY', interval: 1 })
     })
   })
 

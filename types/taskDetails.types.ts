@@ -18,6 +18,11 @@ export interface EditTaskData {
   priority: string;
   status: string;
   estimatedHours: string;
+  sectionId?: string;
+  sprintId?: string;
+  milestoneId?: string;
+  startDate?: string;
+  dueDate?: string;
   recurrence: {
     pattern: "NONE" | "DAILY" | "WEEKLY" | "MONTHLY" | "CUSTOM";
     interval: number;

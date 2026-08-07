@@ -9,7 +9,7 @@ export interface Task {
   status: "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "BLOCKED" | "COMPLETED" | "CANCELLED";
   priority: "URGENT" | "HIGH" | "MEDIUM" | "LOW";
   dueDate: string | null;
-  startDate?: string;
+  startDate?: string | null;
   estimatedHours?: number;
   createdBy: { id: string; name: string; image?: string };
   assignees: Array<{ user: { id: string; name: string; image?: string } }>;

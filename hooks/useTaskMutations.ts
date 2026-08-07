@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { Task, CreateTaskDto, RecurrenceInputDto } from "./useTask";
 import { taskKeys, commentKeys, attachmentKeys, taskOverviewKeys } from "./taskKeys";
@@ -10,8 +10,38 @@ import { Attachment } from "@/types/task.types";
 const MUTATION_RETRY_DELAY = 1000;
 const MAX_RETRY_ATTEMPTS = 2;
 
+/**
+ * Project caches type their tasks with the fuller Task shape from
+ * types/task.types.ts, while mutation responses use the slimmer shape from
+ * hooks/useTask.ts — this alias marks the boundary between the two.
+ */
+type ProjectTask = ProjectDetails["tasks"][number];
+
 function getRetryDelay(attempt: number): number {
   return MUTATION_RETRY_DELAY * Math.pow(2, attempt);
+}
+
+/**
+ * Response-first cache write shared by task mutations: the mutation response
+ * embeds the stored recurrence (and other server-normalized fields), so it is
+ * written into the detail cache, every list cache, and every project detail
+ * cache immediately — refetches remain only as a background consistency net.
+ */
+function propagateTaskResponse(qc: QueryClient, data: Task): void {
+  qc.setQueryData(taskKeys.detail(data.id), data);
+
+  qc.getQueriesData({ queryKey: taskKeys.lists() }).forEach(([queryKey, listData]) => {
+    if (!listData || typeof listData !== "object" || !("data" in listData)) return;
+    const tasks = (listData as { data: Task[] }).data;
+    qc.setQueryData(queryKey, { ...listData, data: tasks.map((t) => (t.id === data.id ? data : t)) });
+  });
+
+  const serverTask = data as unknown as ProjectTask;
+  qc.getQueriesData<ProjectDetails>({ queryKey: projectKeys.details() }).forEach(([queryKey, projectData]) => {
+    if (!projectData?.tasks || !projectData.tasks.some((t) => t.id === data.id)) return;
+    const tasks = projectData.tasks.map((t) => (t.id === data.id ? serverTask : t));
+    qc.setQueryData<ProjectDetails>(queryKey, { ...projectData, tasks });
+  });
 }
 
 export function useCreateTask() {
@@ -27,10 +57,11 @@ export function useCreateTask() {
       await qc.cancelQueries({ queryKey: projectKeys.detail(newTask.projectId) });
       const previous = qc.getQueryData(projectKeys.detail(newTask.projectId));
 
+      const optimisticId = `optimistic-${Date.now()}`;
       qc.setQueryData(projectKeys.detail(newTask.projectId), (old: ProjectDetails | undefined) => {
         if (!old) return old;
         const optimisticTask = {
-          id: `optimistic-${Date.now()}`,
+          id: optimisticId,
           title: newTask.title,
           description: newTask.description ?? null,
           status: newTask.status ?? "TODO",
@@ -44,7 +75,28 @@ export function useCreateTask() {
         return { ...old, tasks: [...(old.tasks ?? []), optimisticTask], _count: { ...old._count, tasks: (old._count?.tasks ?? 0) + 1 } };
       });
 
-      return { previous };
+      return { previous, optimisticId };
+    },
+    onSuccess: (data, variables, context) => {
+      if (!data) return;
+      // The create response embeds the stored recurrence — use it to seed the
+      // detail cache and replace the optimistic entry in project detail caches
+      // instead of waiting for a refetch. taskKeys.lists() is intentionally left
+      // to the onSettled refetch: there is no optimistic entry there to replace,
+      // and inserting into a paginated/sorted list cache could misplace the task.
+      qc.setQueryData(taskKeys.detail(data.id), data);
+      if (variables.projectId) {
+        const serverTask = data as unknown as ProjectTask;
+        qc.setQueryData<ProjectDetails>(projectKeys.detail(variables.projectId), (old) => {
+          if (!old) return old;
+          const current = old.tasks ?? [];
+          const hasGhost = current.some((t) => t.id === context?.optimisticId);
+          const tasks = hasGhost
+            ? current.map((t) => (t.id === context?.optimisticId ? serverTask : t))
+            : [...current, serverTask];
+          return { ...old, tasks };
+        });
+      }
     },
     onError: (_err, variables, context) => {
       if (context?.previous && variables.projectId) {
@@ -102,9 +154,7 @@ export function useUpdateTask() {
       }
     },
     onSuccess: (data) => {
-      if (data) {
-        qc.setQueryData(taskKeys.detail(data.id), data);
-      }
+      if (data) propagateTaskResponse(qc, data);
     },
     onSettled: (_data, _err, { id }) => {
       qc.invalidateQueries({ queryKey: taskKeys.lists() });
@@ -194,7 +244,7 @@ export function useUpdateTaskStatus() {
       context?.projectCacheSnapshots?.forEach(({ queryKey, data }) => qc.setQueryData(queryKey, data));
     },
     onSettled: (data, _, { id }) => {
-      if (data) qc.setQueryData<Task>(taskKeys.detail(id), data);
+      if (data) propagateTaskResponse(qc, data);
       qc.invalidateQueries({ queryKey: taskKeys.detail(id) });
       qc.invalidateQueries({ queryKey: taskKeys.lists() });
       qc.invalidateQueries({ queryKey: taskKeys.stats() });
@@ -237,7 +287,7 @@ export function useUpdateTaskPriority() {
       if (context?.previousTask) qc.setQueryData(taskKeys.detail(id), context.previousTask);
     },
     onSettled: (data, _, { id }) => {
-      if (data) qc.setQueryData<Task>(taskKeys.detail(id), data);
+      if (data) propagateTaskResponse(qc, data);
       qc.invalidateQueries({ queryKey: taskKeys.detail(id) });
       qc.invalidateQueries({ queryKey: taskKeys.lists() });
     },

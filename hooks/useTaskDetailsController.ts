@@ -15,33 +15,45 @@ import {
 } from "@/hooks/useTask";
 import { useUpdateComment, useDeleteComment } from "@/hooks/useComment";
 import { useTaskPermissions } from "@/hooks/useTaskPermissions";
+import {
+  useProjectMilestones,
+  useProjectSections,
+  useProjectSprints,
+} from "@/hooks/useProjectFeatures";
 import { Task } from "@/types/task.types";
 import { taskKeys, taskOverviewKeys } from "./taskKeys";
-import { EMPTY_REPEAT, type RepeatValue } from "@/components/Tasks/form/RepeatControl";
+import { EMPTY_REPEAT } from "@/components/Tasks/form/RepeatControl";
+import type { EditTaskData } from "@/types/taskDetails.types";
 
 export function useTaskDetailsController(taskId: string, workspaceSlug: string ) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState<{
-    title: string;
-    description: string;
-    priority: string;
-    status: string;
-    estimatedHours: string;
-    recurrence: RepeatValue;
-  }>({
+  const [editData, setEditData] = useState<EditTaskData>({
     title: "",
     description: "",
     priority: "",
     status: "",
     estimatedHours: "",
+    sectionId: "",
+    sprintId: "",
+    milestoneId: "",
+    startDate: "",
+    dueDate: "",
     recurrence: EMPTY_REPEAT,
   });
 
   const taskQuery       = useTask(taskId);
   const task            = taskQuery.data as Task | undefined;
+
+  // M1 options (sections / sprints / milestones) for the edit form.
+  const projectId = task?.projectId ?? undefined;
+  const { data: sections }        = useProjectSections(projectId);
+  const { data: sprintStats }     = useProjectSprints(projectId);
+  const { data: milestoneStats }  = useProjectMilestones(projectId);
+  const sprints    = sprintStats?.sprints ?? [];
+  const milestones = milestoneStats?.milestones ?? [];
 
   // Auto-refresh task data every 10 seconds to catch webhook updates
   useEffect(() => {
@@ -72,6 +84,11 @@ export function useTaskDetailsController(taskId: string, workspaceSlug: string )
       priority:       task.priority,
       status:         task.status,
       estimatedHours: task.estimatedHours?.toString() || "",
+      sectionId:      task.sectionId ?? "",
+      sprintId:       task.sprintId ?? "",
+      milestoneId:    task.milestoneId ?? "",
+      startDate:      task.startDate?.slice(0, 10) ?? "",
+      dueDate:        task.dueDate?.slice(0, 10) ?? "",
       recurrence: task.recurrence
         ? {
             pattern:  task.recurrence.pattern,
@@ -86,6 +103,11 @@ export function useTaskDetailsController(taskId: string, workspaceSlug: string )
 
   const handleSaveEdit = async () => {
     if (!task || !permissions.canEdit) return;
+
+    // "yyyy-MM-dd" from the date input → ISO string the API stores (UTC midnight);
+    // empty → null (clears the date).
+    const toIso = (v?: string) =>
+      v ? new Date(`${v}T00:00:00Z`).toISOString() : null;
 
     // Only touch the recurrence when the user actually changed it: pattern NONE
     // + no existing recurrence → omit (no-op), NONE + existing → stop (null),
@@ -115,6 +137,11 @@ export function useTaskDetailsController(taskId: string, workspaceSlug: string )
         estimatedHours: editData.estimatedHours
           ? parseFloat(editData.estimatedHours)
           : undefined,
+        sectionId:    editData.sectionId || null,
+        sprintId:     editData.sprintId || null,
+        milestoneId:  editData.milestoneId || null,
+        startDate:    toIso(editData.startDate),
+        dueDate:      toIso(editData.dueDate),
         ...(nextRecurrence !== undefined && { recurrence: nextRecurrence }),
       },
     });
@@ -142,6 +169,9 @@ export function useTaskDetailsController(taskId: string, workspaceSlug: string )
     setIsEditing,
     editData,
     setEditData,
+    sections,
+    sprints,
+    milestones,
     handlers: {
       handleEditClick,
       handleSaveEdit,

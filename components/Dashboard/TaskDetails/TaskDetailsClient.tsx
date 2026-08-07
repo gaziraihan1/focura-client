@@ -66,6 +66,9 @@ export function TaskDetailsClient({ id, workspaceSlug }: Props) {
       attachments={controller.attachments}
       handlers={controller.handlers}
       mutations={controller.mutations}
+      sections={controller.sections}
+      sprints={controller.sprints}
+      milestones={controller.milestones}
     />
   );
 }

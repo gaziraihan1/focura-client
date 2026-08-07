@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
+import { Flag, Repeat, Sprout } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { TaskDetailsForm } from "./TaskDetailsForm";
 import { TaskTabs } from "./TaskTab";
@@ -22,6 +23,9 @@ interface TaskDetailsMainLayoutProps {
   permissions: TaskPermissionsState;
   handlers: TaskHandlers;
   mutations: TaskMutations;
+  sections?: Array<{ id: string; name: string; status?: string }>;
+  sprints?: Array<{ id: string; name: string }>;
+  milestones?: Array<{ id: string; title: string }>;
 }
 
 export default function TaskDetailsMainLayout({
@@ -37,6 +41,9 @@ export default function TaskDetailsMainLayout({
   permissions,
   handlers,
   mutations,
+  sections,
+  sprints,
+  milestones,
 }: TaskDetailsMainLayoutProps) {
   const { data: session } = useSession();
   const currentUserId = session?.user?.id ?? "";
@@ -52,6 +59,10 @@ export default function TaskDetailsMainLayout({
           {isEditing ? (
             <TaskDetailsForm
               editData={editData}
+              sections={sections}
+              sprints={sprints}
+              milestones={milestones}
+              isPersonalTask={isPersonalTask}
               isUpdating={mutations.updateTask.isPending}
               onEditDataChange={setEditData}
               onSave={handlers.handleSaveEdit}
@@ -63,7 +74,28 @@ export default function TaskDetailsMainLayout({
                 <h1 className="text-3xl font-bold text-foreground">
                   {task.title}
                 </h1>
-                {!isPersonalTask && <TaskSectionBadge task={task} />}
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {!isPersonalTask && <TaskSectionBadge task={task} />}
+                    {task.sprint && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-violet-50 text-violet-600 dark:bg-violet-950/20 dark:text-violet-400">
+                        <Sprout size={10} />
+                        {task.sprint.name}
+                      </span>
+                    )}
+                    {task.milestone && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-600 dark:bg-amber-950/20 dark:text-amber-400">
+                        <Flag size={10} />
+                        {task.milestone.title}
+                      </span>
+                    )}
+                    {task.recurrence && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-cyan-50 text-cyan-600 dark:bg-cyan-950/20 dark:text-cyan-400">
+                        <Repeat size={10} />
+                        {task.recurrence.pattern.charAt(0) +
+                          task.recurrence.pattern.slice(1).toLowerCase()}
+                      </span>
+                    )}
+                </div>
               </div>
               {task.description ? (
                 <p className="text-foreground/80 whitespace-pre-wrap">

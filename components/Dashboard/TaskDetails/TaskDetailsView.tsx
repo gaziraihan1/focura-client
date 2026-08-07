@@ -47,6 +47,9 @@ interface TaskDetailsViewProps {
   handlers: TaskHandlers;
   mutations: TaskMutations;
   workspaceSlug: string;
+  sections?: Array<{ id: string; name: string; status?: string }>;
+  sprints?: Array<{ id: string; name: string }>;
+  milestones?: Array<{ id: string; title: string }>;
 }
 
 export default function TaskDetailsView({
@@ -61,6 +64,9 @@ export default function TaskDetailsView({
   handlers,
   mutations,
   workspaceSlug,
+  sections,
+  sprints,
+  milestones,
 }: TaskDetailsViewProps) {
   const router = useRouter();
   const isArchived = task.project?.status === "ARCHIVED"
@@ -144,6 +150,9 @@ export default function TaskDetailsView({
         permissions={permissions}
         handlers={handlers}
         mutations={mutations}
+        sections={sections}
+        sprints={sprints}
+        milestones={milestones}
       />
     </div>
   );

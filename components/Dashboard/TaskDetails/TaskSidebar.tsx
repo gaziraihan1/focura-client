@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Clock, Calendar, User, Folder, Check, Lock, Link2, Unlink2, MessageSquare } from "lucide-react";
+import { Clock, Calendar, User, Folder, Check, Lock, Link2, Unlink2, MessageSquare, Sprout, Flag, Repeat } from "lucide-react";
 import { Task } from "@/types/task.types";
 import { getStatusColor, getPriorityColor } from "@/utils/task.utils";
 import { Avatar } from "@/components/Shared/Avatar";
@@ -28,6 +28,15 @@ interface TaskSidebarProps {
   onStatusChange: (status: Task["status"]) => void;
   canChangeStatus?: boolean;
   onTaskUpdated?: () => void;
+}
+
+function pluralizeInterval(pattern: string, interval: number) {
+  switch (pattern) {
+    case "DAILY":   return interval === 1 ? "day" : "days";
+    case "WEEKLY":  return interval === 1 ? "week" : "weeks";
+    case "MONTHLY": return interval === 1 ? "month" : "months";
+    default:        return "occurrences";
+  }
 }
 
 export const TaskSidebar = ({
@@ -158,6 +167,46 @@ export const TaskSidebar = ({
               <Link className="font-medium" style={{color: task.project.color}} href={`/dashboard/workspaces/${task.project.workspace?.slug}/projects/${task.project.slug}`}>
               {task.project.name}
               </Link>
+            </div>
+          </div>
+        )}
+
+        {task.sprint && (
+          <div className="flex items-center gap-3">
+            <Sprout size={16} className="text-muted-foreground" />
+            <div className="flex-1">
+              <p className="text-xs text-muted-foreground">Sprint</p>
+              <p className="text-sm font-medium text-foreground">{task.sprint.name}</p>
+            </div>
+          </div>
+        )}
+
+        {task.milestone && (
+          <div className="flex items-center gap-3">
+            <Flag size={16} className="text-muted-foreground" />
+            <div className="flex-1">
+              <p className="text-xs text-muted-foreground">Milestone</p>
+              <p className="text-sm font-medium text-foreground">{task.milestone.title}</p>
+            </div>
+          </div>
+        )}
+
+        {task.recurrence && (
+          <div className="flex items-center gap-3">
+            <Repeat size={16} className="text-muted-foreground" />
+            <div className="flex-1">
+              <p className="text-xs text-muted-foreground">Repeats</p>
+              <p className="text-sm font-medium text-foreground">
+                {task.recurrence.pattern.charAt(0) +
+                  task.recurrence.pattern.slice(1).toLowerCase()}
+                {task.recurrence.interval > 1 &&
+                  ` · every ${task.recurrence.interval} ${pluralizeInterval(
+                    task.recurrence.pattern,
+                    task.recurrence.interval,
+                  )}`}
+                {task.recurrence.endsAt &&
+                  ` · until ${new Date(task.recurrence.endsAt).toLocaleDateString("en-US", { timeZone: "UTC" })}`}
+              </p>
             </div>
           </div>
         )}
