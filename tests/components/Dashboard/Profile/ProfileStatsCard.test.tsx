@@ -69,6 +69,7 @@ vi.mock("lucide-react", () => {
     Info: icon("Info"),
     LayoutGrid: icon("LayoutGrid"),
     Link: icon("Link"),
+    KeyRound: icon("KeyRound"),
     Loader2: icon("Loader2"),
     Lock: icon("Lock"),
     LogOut: icon("LogOut"),
@@ -312,5 +313,27 @@ describe("ProfileStatsCard", () => {
     expect(screen.getByText("admin")).toBeInTheDocument();
     expect(screen.getByText("Role")).toBeInTheDocument();
     expect(screen.getByText("Member Since")).toBeInTheDocument();
+    expect(screen.getByText("Password Updated")).toBeInTheDocument();
+  });
+
+  it("shows no password change recorded when lastPasswordChange is null", async () => {
+    const { ProfileStatsCard } = await import("@/components/Dashboard/Profile/ProfileStatsCard");
+    render(<ProfileStatsCard role="ADMIN" createdAt="2026-01-15T00:00:00Z" />);
+    expect(screen.getByText("No password change recorded")).toBeInTheDocument();
+  });
+
+  it("shows the last password change with full date metadata", async () => {
+    const { ProfileStatsCard } = await import("@/components/Dashboard/Profile/ProfileStatsCard");
+    render(
+      <ProfileStatsCard
+        role="ADMIN"
+        createdAt="2026-01-15T00:00:00Z"
+        lastPasswordChange="2026-01-10T00:00:00.000Z"
+      />
+    );
+    const timeEl = screen.getByTitle("January 10, 2026");
+    expect(timeEl).toBeInTheDocument();
+    expect(timeEl.tagName).toBe("TIME");
+    expect(timeEl.getAttribute("dateTime")).toBe("2026-01-10T00:00:00.000Z");
   });
 });

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Sprout, Plus, MoreHorizontal, Target, Loader2, Trash2, ExternalLink } from "lucide-react";
 import { ConfirmModal } from "@/components/Shared/ConfirmModal";
+import FeatureListError from "@/components/Dashboard/ProjectDetails/FeatureListError";
 import {
   useProjectSprints,
   useCreateSprint,
@@ -25,7 +26,7 @@ interface SprintListProps {
 }
 
 export default function SprintList({ projectId }: SprintListProps) {
-  const { data: stats, isLoading } = useProjectSprints(projectId);
+  const { data: stats, isLoading, error } = useProjectSprints(projectId);
   const createSprint = useCreateSprint();
   const completeSprint = useCompleteSprint();
   const deleteSprint = useDeleteSprint();
@@ -74,6 +75,10 @@ export default function SprintList({ projectId }: SprintListProps) {
         <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
       </div>
     );
+  }
+
+  if (error) {
+    return <FeatureListError feature="sprints" error={error} />;
   }
 
   const sprints = stats?.sprints ?? [];

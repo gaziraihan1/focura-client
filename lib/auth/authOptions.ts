@@ -113,6 +113,10 @@ async function silentRefresh(
 }
 
 export const authOptions: NextAuthOptions = {
+  // NOTE: The `Session` model was intentionally removed from the Prisma schema.
+  // With session strategy "jwt" the adapter's session methods (createSession,
+  // getSessionAndUser, ...) are never invoked, so removing the model is safe.
+  // Do NOT switch to a database-session strategy without restoring it first.
   adapter: PrismaAdapter(prisma),
 
   providers: [
@@ -326,6 +330,14 @@ export const authOptions: NextAuthOptions = {
           });
 
           if (existing) {
+            // ─── Account-takeover guard ────────────────────────────────
+            // An UNVERIFIED Google email must never be able to assume
+            // control of an existing password-based account. Note: we return
+            // false (deny) rather than throwing — the catch below swallows
+            // errors and returns true, which would silently allow the link.
+            if (!isVerified && existing.password) {
+              return false;
+            }
             // Existing user — safe to update
             await prisma.user.update({
               where: { email: user.email! },

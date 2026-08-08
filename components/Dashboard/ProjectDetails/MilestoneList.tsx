@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Flag, Plus, MoreHorizontal, AlertTriangle, CheckCircle2, Loader2, Trash2, ExternalLink } from "lucide-react";
 import { ConfirmModal } from "@/components/Shared/ConfirmModal";
+import FeatureListError from "@/components/Dashboard/ProjectDetails/FeatureListError";
 import { useProjectMilestones, useCreateMilestone, useDeleteMilestone, useUpdateMilestoneProgress, MilestoneItem } from "@/hooks/useProjectFeatures";
 
 const STATUS_COLORS: Record<string, string> = {
@@ -26,7 +27,7 @@ interface MilestoneListProps {
 }
 
 export default function MilestoneList({ projectId }: MilestoneListProps) {
-  const { data: stats, isLoading } = useProjectMilestones(projectId);
+  const { data: stats, isLoading, error } = useProjectMilestones(projectId);
   const createMilestone = useCreateMilestone();
   const deleteMilestone = useDeleteMilestone();
   const updateProgress = useUpdateMilestoneProgress();
@@ -62,6 +63,10 @@ export default function MilestoneList({ projectId }: MilestoneListProps) {
         <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
       </div>
     );
+  }
+
+  if (error) {
+    return <FeatureListError feature="milestones" error={error} />;
   }
 
   const items = stats?.milestones ?? [];

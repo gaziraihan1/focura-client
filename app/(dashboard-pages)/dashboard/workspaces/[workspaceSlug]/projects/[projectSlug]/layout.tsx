@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, usePathname } from "next/navigation";
 
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
+import { AccessDeniedProject } from "@/components/Dashboard/ProjectDetails/AccessDeniedProject";
+import { qc } from "@/lib/react-query/query-client";
 import { ProjectData } from "@/types/project.types";
 import {
   MobileDrawer,
@@ -28,10 +30,36 @@ export default function ProjectLayout({
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const nav = useProjectNav(workspaceSlug, projectSlug);
-  const { data: project } = useProjectDetailsBySlug(projectSlug);
+  const { data: project, error } = useProjectDetailsBySlug(projectSlug);
 
   const projectColor = (project as ProjectData)?.color ?? "#667eea";
   const currentNavItem = nav.find((item) => item.match(pathname));
+  const accessStatus = (error as { response?: { status?: number } } | undefined)?.response?.status;
+  const accessDenied = accessStatus === 403 || accessStatus === 404;
+
+  const deniedRef = useRef(false);
+
+  useEffect(() => {
+    if (accessDenied) {
+      // A 403/404 from the gated project endpoints means this user no longer
+      // has access. Drop the cached project + feature data so a removed
+      // member's stale pages can't keep rendering from cache.
+      if (!deniedRef.current) {
+        deniedRef.current = true;
+        qc.removeQueries({ queryKey: ["projects", "detail"] });
+        qc.removeQueries({ queryKey: ["sections"] });
+        qc.removeQueries({ queryKey: ["sprints"] });
+        qc.removeQueries({ queryKey: ["milestones"] });
+        qc.removeQueries({ queryKey: ["project-views"] });
+      }
+    } else {
+      deniedRef.current = false;
+    }
+  }, [accessDenied]);
+
+  if (accessDenied) {
+    return <AccessDeniedProject projectName={project?.name} />;
+  }
 
   const contentProps: SidebarContentProps = {
     nav,

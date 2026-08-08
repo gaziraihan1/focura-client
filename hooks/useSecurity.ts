@@ -234,3 +234,32 @@ export function validatePasswordStrength(password: string): {
 
   return { score, feedback };
 }
+
+/**
+ * Format the last password change timestamp for the Security page.
+ * Returns a human-readable relative label, or null when the password has
+ * never been changed (e.g. OAuth-only accounts) or the value is invalid.
+ */
+export function formatLastPasswordChange(
+  lastPasswordChange: string | null | undefined,
+): string | null {
+  if (!lastPasswordChange) return null;
+  const changedAt = new Date(lastPasswordChange);
+  if (Number.isNaN(changedAt.getTime())) return null;
+
+  const seconds = Math.max(0, Math.floor((Date.now() - changedAt.getTime()) / 1000));
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (seconds < 60) return 'just now';
+  if (minutes < 60) return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+  if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+  if (days < 30) return `${days} day${days === 1 ? '' : 's'} ago`;
+
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months} month${months === 1 ? '' : 's'} ago`;
+
+  const years = Math.floor(months / 12);
+  return `${years} year${years === 1 ? '' : 's'} ago`;
+}

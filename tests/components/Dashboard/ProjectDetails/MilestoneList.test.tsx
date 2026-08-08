@@ -22,6 +22,16 @@ describe("MilestoneList", () => {
     expect(document.querySelector(".animate-spin")).toBeTruthy();
   });
 
+  it("should show an error state when the query fails (e.g. removed from project)", () => {
+    (useProjectMilestones as any).mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      error: new Error("Request failed with status code 404"),
+    });
+    render(<MilestoneList projectId="proj1" />);
+    expect(screen.getByText(/couldn't load milestones/i)).toBeDefined();
+  });
+
   it("should show empty state when no milestones", () => {
     (useProjectMilestones as any).mockReturnValue({
       data: { total: 0, completed: 0, atRisk: 0, delayed: 0, onTrack: 0, avgProgress: 0, milestones: [] },

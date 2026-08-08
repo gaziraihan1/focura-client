@@ -5,6 +5,7 @@ import { ProfileInformationCard } from "@/components/Dashboard/Profile/ProfileIn
 import { ProfileSidebar } from "@/components/Dashboard/Profile/ProfileSidebar";
 import { ProfileLoadingState } from "@/components/Dashboard/Profile/ProfileLoadingState";
 import { useProfilePage } from "@/hooks/useProfilePage";
+import { useSecuritySettings } from "@/hooks/useSecurity";
 
 export default function ProfilePage() {
   const {
@@ -21,6 +22,7 @@ export default function ProfilePage() {
     handleCancel,
     handleFormChange,
   } = useProfilePage();
+  const { data: securitySettings } = useSecuritySettings();
 
   if (loading) {
     return <ProfileLoadingState />;
@@ -57,6 +59,7 @@ export default function ProfilePage() {
           createdAt={profile.createdAt}
           storage={storage}
           ownedWorkspaces={profile.ownedWorkspaces}
+          lastPasswordChange={securitySettings?.lastPasswordChange ?? null}
         />
       </div>
     </div>

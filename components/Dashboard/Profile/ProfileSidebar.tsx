@@ -20,6 +20,7 @@ interface ProfileSidebarProps {
   createdAt: string;
   storage: StorageData | null;
   ownedWorkspaces?: Workspace[];
+  lastPasswordChange?: string | null;
 }
 
 export function ProfileSidebar({
@@ -27,10 +28,15 @@ export function ProfileSidebar({
   createdAt,
   storage,
   ownedWorkspaces,
+  lastPasswordChange,
 }: ProfileSidebarProps) {
   return (
     <div className="space-y-6">
-      <ProfileStatsCard role={role} createdAt={createdAt} />
+      <ProfileStatsCard
+        role={role}
+        createdAt={createdAt}
+        lastPasswordChange={lastPasswordChange ?? null}
+      />
       <ProfileStorageCard storage={storage} />
       <ProfilePlanCard ownedWorkspaces={ownedWorkspaces} />
     </div>

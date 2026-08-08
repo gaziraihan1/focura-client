@@ -69,6 +69,7 @@ vi.mock("lucide-react", () => {
     Info: icon("Info"),
     LayoutGrid: icon("LayoutGrid"),
     Link: icon("Link"),
+    KeyRound: icon("KeyRound"),
     Loader2: icon("Loader2"),
     Lock: icon("Lock"),
     LogOut: icon("LogOut"),

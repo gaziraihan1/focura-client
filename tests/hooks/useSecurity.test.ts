@@ -1,5 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { validatePasswordStrength } from '@/hooks/useSecurity';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import {
+  validatePasswordStrength,
+  formatLastPasswordChange,
+} from '@/hooks/useSecurity';
 
 // Mock fetch for 2FA hooks
 const mockFetch = vi.fn();
@@ -93,3 +96,59 @@ describe('validatePasswordStrength', () => {
     expect(result.feedback).toContain('Mix of uppercase and lowercase');
   });
 });
+
+describe('formatLastPasswordChange', () => {
+  const NOW = new Date('2026-01-15T12:00:00.000Z');
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(NOW);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('returns null for null/undefined', () => {
+    expect(formatLastPasswordChange(null)).toBeNull();
+    expect(formatLastPasswordChange(undefined)).toBeNull();
+  });
+
+  it('returns null for an invalid date', () => {
+    expect(formatLastPasswordChange('not-a-date')).toBeNull();
+  });
+
+  it('returns "just now" for changes under a minute ago', () => {
+    const d = new Date(NOW.getTime() - 30 * 1000).toISOString();
+    expect(formatLastPasswordChange(d)).toBe('just now');
+  });
+
+  it('returns minutes for changes under an hour ago', () => {
+    const d = new Date(NOW.getTime() - 5 * 60 * 1000).toISOString();
+    expect(formatLastPasswordChange(d)).toBe('5 minutes ago');
+    expect(formatLastPasswordChange(new Date(NOW.getTime() - 60 * 1000).toISOString())).toBe('1 minute ago');
+  });
+
+  it('returns hours for changes under a day ago', () => {
+    const d = new Date(NOW.getTime() - 3 * 60 * 60 * 1000).toISOString();
+    expect(formatLastPasswordChange(d)).toBe('3 hours ago');
+  });
+
+  it('returns days for changes under a month ago', () => {
+    const d = new Date(NOW.getTime() - 2 * 24 * 60 * 60 * 1000).toISOString();
+    expect(formatLastPasswordChange(d)).toBe('2 days ago');
+    expect(formatLastPasswordChange(new Date(NOW.getTime() - 24 * 60 * 60 * 1000).toISOString())).toBe('1 day ago');
+  });
+
+  it('returns months for changes under a year ago', () => {
+    const d = new Date(NOW.getTime() - 2 * 30 * 24 * 60 * 60 * 1000).toISOString();
+    expect(formatLastPasswordChange(d)).toBe('2 months ago');
+  });
+
+  it('returns years for changes a year or more ago', () => {
+    const d = new Date(NOW.getTime() - 2 * 365 * 24 * 60 * 60 * 1000).toISOString();
+    expect(formatLastPasswordChange(d)).toBe('2 years ago');
+    expect(formatLastPasswordChange(new Date(NOW.getTime() - 365 * 24 * 60 * 60 * 1000).toISOString())).toBe('1 year ago');
+  });
+});
+

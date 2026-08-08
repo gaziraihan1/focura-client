@@ -12,7 +12,12 @@ const loginSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-const registerSchema = loginSchema.extend({
+// Registration enforces the full password policy (8+). The login schema
+// stays lenient (min 6) so legacy accounts with shorter passwords can still
+// sign in — new/change passwords are always validated at 8+ server-side.
+const registerSchema = z.object({
+  email: z.string().email("Invalid email format"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
   name: z.string().min(4, "Name must be at least 4 characters"),
 });
 

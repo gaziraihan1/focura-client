@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ChevronDown, ChevronUp, Columns, Plus, MoreHorizontal, Loader2, Trash2, ListChecks } from "lucide-react";
 import { ConfirmModal } from "@/components/Shared/ConfirmModal";
+import FeatureListError from "@/components/Dashboard/ProjectDetails/FeatureListError";
 import {
   useProjectSections,
   useCreateSection,
@@ -36,7 +37,7 @@ const TASK_STATUS_OPTIONS: { value: TaskStatus; label: string }[] = [
 ];
 
 export default function SectionList({ projectId, tasksBaseHref }: SectionListProps) {
-  const { data: sections, isLoading } = useProjectSections(projectId);
+  const { data: sections, isLoading, error } = useProjectSections(projectId);
   const createSection = useCreateSection();
   const updateSection = useUpdateSection();
   const deleteSection = useDeleteSection();
@@ -128,6 +129,10 @@ export default function SectionList({ projectId, tasksBaseHref }: SectionListPro
         <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
       </div>
     );
+  }
+
+  if (error) {
+    return <FeatureListError feature="sections" error={error} />;
   }
 
   return (

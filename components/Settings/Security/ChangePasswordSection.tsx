@@ -2,7 +2,12 @@
 
 import { useState } from 'react';
 import { Lock, Save, Loader2, Eye, EyeOff } from 'lucide-react';
-import { useChangePassword, validatePasswordStrength } from '@/hooks/useSecurity';
+import {
+  useChangePassword,
+  useSecuritySettings,
+  validatePasswordStrength,
+  formatLastPasswordChange,
+} from '@/hooks/useSecurity';
 import { announce } from '@/lib/a11y';
 
 export function ChangePasswordSection() {
@@ -13,6 +18,18 @@ export function ChangePasswordSection() {
   const [showNew, setShowNew] = useState(false);
 
   const changePassword = useChangePassword();
+  const { data: securitySettings, isError } = useSecuritySettings();
+
+  const lastChangedLabel = formatLastPasswordChange(
+    securitySettings?.lastPasswordChange,
+  );
+  const lastChangedFull = securitySettings?.lastPasswordChange
+    ? new Date(securitySettings.lastPasswordChange).toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      })
+    : null;
 
   const passwordStrength = validatePasswordStrength(newPassword);
   const passwordsMatch = newPassword === confirmPassword && confirmPassword.length > 0;
@@ -46,6 +63,26 @@ export function ChangePasswordSection() {
           <p className="text-xs text-muted-foreground mt-0.5">
             Update your account password
           </p>
+          {(securitySettings !== undefined || isError) && (
+            <p
+              className="text-xs text-muted-foreground/70 mt-1"
+              data-testid="last-password-change"
+            >
+              {lastChangedLabel ? (
+                <time
+                  dateTime={securitySettings?.lastPasswordChange ?? undefined}
+                  title={lastChangedFull ?? undefined}
+                >
+                  Last changed {lastChangedLabel}
+                  {lastChangedFull && (
+                    <span className="sr-only"> on {lastChangedFull}</span>
+                  )}
+                </time>
+              ) : (
+                <span>No password change recorded</span>
+              )}
+            </p>
+          )}
         </div>
       </div>
 

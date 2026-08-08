@@ -72,9 +72,9 @@ export async function POST(req: Request) {
         { error: "Invalid email format" },
         { status: 400 }
       );
-    if (password.length < 6)
+    if (password.length < 8)
       return NextResponse.json(
-        { error: "Password must be at least 6 characters" },
+        { error: "Password must be at least 8 characters" },
         { status: 400 }
       );
 
@@ -93,6 +93,7 @@ export async function POST(req: Request) {
         email,
         password: hashedPassword,
         emailVerified: null, // not verified yet
+        lastPasswordChange: new Date(),
       },
     });
 

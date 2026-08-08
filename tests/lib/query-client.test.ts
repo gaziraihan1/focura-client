@@ -34,9 +34,20 @@ describe('react-query/query-client', () => {
     expect(defaults?.refetchOnWindowFocus).toBe(false)
   })
 
-  it('retries queries once by default', () => {
+  it('retries queries once for transient errors', () => {
     const defaults = qc.getDefaultOptions().queries
-    expect(defaults?.retry).toBe(1)
+    const retry = defaults?.retry as (failureCount: number, error: unknown) => boolean
+    expect(typeof retry).toBe('function')
+    expect(retry(0, { message: 'Network error' })).toBe(true)
+    // after one failed attempt it gives up (equivalent to the old retry: 1)
+    expect(retry(1, { message: 'Network error' })).toBe(false)
+  })
+
+  it('does not retry 404 or 403 responses (gated/removed access)', () => {
+    const defaults = qc.getDefaultOptions().queries
+    const retry = defaults?.retry as (failureCount: number, error: unknown) => boolean
+    expect(retry(0, { response: { status: 404 } })).toBe(false)
+    expect(retry(0, { response: { status: 403 } })).toBe(false)
   })
 
   it('has mutation onError handler configured', () => {

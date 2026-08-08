@@ -124,11 +124,6 @@ function rejectRequestQueue(error: Error): void {
   queue.forEach(({ reject }) => reject(error));
 }
 
-// ─── Token Version Tracking ─────────────────────────────────────────────────
-// Track token version to detect session fixation / rotation
-
-let tokenVersion = 0;
-
 // ─── BroadcastChannel for Multi-Tab Coordination ──────────────────────────────────
 // Per FRONTEND_AUTH_GUIDE.md Pitfall 6: coordinate refresh across tabs
 
@@ -339,15 +334,12 @@ function clearRefreshTimer(): void {
 function scheduleBackgroundRefresh(tokenExpiry: number): void {
   clearRefreshTimer();
 
-  // Refresh 90 seconds before expiry (guide recommends 1 minute, we use 90s for safety)
-  const refreshAt = tokenExpiry - 90_000;
-  const delay = Math.max(0, refreshAt - Date.now());
-
-  if (delay <= 0) {
-    // Token already expired or expiring very soon, trigger immediate refresh
-    attemptBackgroundRefresh();
-    return;
-  }
+  // NextAuth's jwt callback rotates the backend pair only when the token is
+  // within 60s of expiry, so firing earlier just yields a redundant session
+  // fetch. Schedule at the 60s mark with a 15s floor so a failed refresh
+  // cannot produce a tight immediate-refire loop.
+  const refreshAt = tokenExpiry - 60_000;
+  const delay = Math.max(15_000, refreshAt - Date.now());
 
   refreshTimer = setTimeout(() => {
     attemptBackgroundRefresh();
@@ -362,30 +354,24 @@ async function attemptBackgroundRefresh(): Promise<void> {
   broadcastAuthEvent({ type: "refresh-start" });
 
   try {
+    // Fetching a fresh session re-runs NextAuth's jwt callback, which
+    // silently rotates the backend token pair when the access token is
+    // within 60s of expiry (the refresh token lives in the httpOnly session
+    // cookie — the client never sees it). The returned session already
+    // carries the rotated access token.
     const session = await getFreshSession();
-    if (!session?.backendToken || !session?.backendTokenExpiry) {
-      return;
-    }
 
-    // Only refresh if within 2 minutes of expiry (avoid unnecessary refreshes)
-    const timeUntilExpiry = session.backendTokenExpiry - Date.now();
-    if (timeUntilExpiry > 120_000) {
-      // Reschedule for later
+    if (
+      session?.backendToken &&
+      session.backendToken.length > 10 &&
+      session.backendTokenExpiry
+    ) {
+      cachedBackendToken = session.backendToken;
+      cachedTokenExpiry = Date.now() + TOKEN_CACHE_TTL;
       scheduleBackgroundRefresh(session.backendTokenExpiry);
-      return;
-    }
-
-    const refreshed = await doBackgroundRefresh();
-    if (refreshed) {
-      // Successfully refreshed, schedule next refresh
-      const newSession = await getFreshSession();
-      if (newSession?.backendTokenExpiry) {
-        scheduleBackgroundRefresh(newSession.backendTokenExpiry);
-        // Broadcast completion to other tabs
-        broadcastAuthEvent({ type: "refresh-complete", tokenExpiry: newSession.backendTokenExpiry });
-        // Flush queued requests with new token
-        flushRequestQueue(newSession.backendToken);
-      }
+      broadcastAuthEvent({ type: "refresh-complete", tokenExpiry: session.backendTokenExpiry });
+      // Flush queued requests with the new token
+      flushRequestQueue(session.backendToken);
     } else {
       // Refresh failed — reject queued requests
       rejectRequestQueue(new Error("Token refresh failed"));
@@ -393,40 +379,6 @@ async function attemptBackgroundRefresh(): Promise<void> {
   } finally {
     isRefreshing = false;
     refreshPromise = null;
-  }
-}
-
-async function doBackgroundRefresh(): Promise<boolean> {
-  try {
-    // Call the backend refresh endpoint to get a new access token
-    const session = await getFreshSession();
-    if (!session?.backendToken) return false;
-
-    const backendUrl = API_BASE_URL;
-    const response = await fetch(`${backendUrl}/api/v1/auth/refresh`, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${session.backendToken}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) return false;
-
-    const data = await response.json();
-    if (data.success && data.data?.accessToken) {
-      // Invalidate cache so next getFreshSession picks up the new token
-      invalidateTokenCache();
-      tokenVersion++;
-      return true;
-    }
-
-    return false;
-  } catch {
-    // Refresh endpoint unreachable — fall back to session re-fetch
-    invalidateTokenCache();
-    const session = await getFreshSession();
-    return !!session?.backendToken;
   }
 }
 

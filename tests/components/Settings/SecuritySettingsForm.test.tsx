@@ -90,6 +90,8 @@ vi.mock('@/hooks/useSecurity', () => {
       score: password.length >= 12 ? 5 : password.length >= 8 ? 3 : 1,
       feedback: [],
     }),
+    formatLastPasswordChange: (date: string | null | undefined) =>
+      date ? '3 days ago' : null,
   }
 })
 
@@ -334,5 +336,37 @@ describe('SecuritySettingsForm', () => {
     // Smartphone icons appear in both the 2FA header and device icons
     const smartphoneIcons = screen.getAllByTestId('icon-Smartphone')
     expect(smartphoneIcons.length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('shows "no password change recorded" when lastPasswordChange is null', () => {
+    mockSecuritySettings.mockReturnValue({
+      data: { twoFactorEnabled: false, emailVerified: true, lastPasswordChange: null },
+      isLoading: false,
+    })
+
+    renderWithProviders(<SecuritySettingsForm />)
+
+    expect(screen.getByText('No password change recorded')).toBeInTheDocument()
+    expect(screen.queryByText(/Last changed/)).not.toBeInTheDocument()
+  })
+
+  it('shows the last password change date when recorded', () => {
+    mockSecuritySettings.mockReturnValue({
+      data: {
+        twoFactorEnabled: false,
+        emailVerified: true,
+        lastPasswordChange: '2026-01-10T00:00:00.000Z',
+      },
+      isLoading: false,
+    })
+
+    renderWithProviders(<SecuritySettingsForm />)
+
+    const display = screen.getByTestId('last-password-change')
+    expect(display).toHaveTextContent('Last changed 3 days ago')
+    const timeEl = display.querySelector('time')
+    expect(timeEl).toBeInTheDocument()
+    expect(timeEl?.getAttribute('dateTime')).toBe('2026-01-10T00:00:00.000Z')
+    expect(timeEl?.getAttribute('title')).toBe('January 10, 2026')
   })
 })

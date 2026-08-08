@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Check, Eye, ExternalLink, Plus, Loader2, Trash2 } from "lucide-react";
 import { ConfirmModal } from "@/components/Shared/ConfirmModal";
+import FeatureListError from "@/components/Dashboard/ProjectDetails/FeatureListError";
 import {
   useProjectViews,
   useCreateView,
@@ -17,7 +18,7 @@ interface ViewListProps {
 }
 
 export default function ViewList({ projectId }: ViewListProps) {
-  const { data: views, isLoading } = useProjectViews(projectId);
+  const { data: views, isLoading, error } = useProjectViews(projectId);
   const createView = useCreateView();
   const deleteView = useDeleteView();
   const updateView = useUpdateView();
@@ -52,6 +53,10 @@ export default function ViewList({ projectId }: ViewListProps) {
         <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
       </div>
     );
+  }
+
+  if (error) {
+    return <FeatureListError feature="views" error={error} />;
   }
 
   const items = views ?? [];

@@ -22,6 +22,16 @@ describe("SprintList", () => {
     expect(document.querySelector(".animate-spin")).toBeTruthy();
   });
 
+  it("should show an error state when the query fails (e.g. removed from project)", () => {
+    (useProjectSprints as any).mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      error: new Error("Request failed with status code 404"),
+    });
+    render(<SprintList projectId="proj1" />);
+    expect(screen.getByText(/couldn't load sprints/i)).toBeDefined();
+  });
+
   it("should show empty state when no sprints", () => {
     (useProjectSprints as any).mockReturnValue({
       data: { sprints: [], activeSprint: null, avgVelocity: 0 },

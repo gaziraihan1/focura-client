@@ -92,6 +92,81 @@ describe('lib/auth/authOptions', () => {
     expect(typeof authOptions.events?.linkAccount).toBe('function')
   })
 
+  it('signIn denies Google linking when email is unverified and the account is password-based', async () => {
+    const { authOptions } = await import('@/lib/auth/authOptions')
+    const signInCb = authOptions.callbacks!.signIn as unknown as (params: {
+      user: { email?: string }
+      account?: { provider?: string }
+      profile?: { email_verified?: boolean }
+    }) => Promise<boolean | string>
+
+    const { prisma } = await import('@/lib/prisma')
+    vi.mocked(prisma.user.findUnique).mockResolvedValue({
+      id: 'u1',
+      email: 'victim@test.com',
+      password: 'hashed-password',
+      emailVerified: new Date(),
+      name: 'Victim',
+    } as any)
+
+    const result = await signInCb({
+      user: { email: 'victim@test.com' },
+      account: { provider: 'google' },
+      profile: { email_verified: false },
+    })
+
+    expect(result).toBe(false)
+    expect(prisma.user.update).not.toHaveBeenCalled()
+  })
+
+  it('signIn allows Google linking when the email is verified', async () => {
+    const { authOptions } = await import('@/lib/auth/authOptions')
+    const signInCb = authOptions.callbacks!.signIn as unknown as (params: {
+      user: { email?: string }
+      account?: { provider?: string }
+      profile?: { email_verified?: boolean }
+    }) => Promise<boolean | string>
+
+    const { prisma } = await import('@/lib/prisma')
+    vi.mocked(prisma.user.findUnique).mockResolvedValue({
+      id: 'u1',
+      email: 'ok@test.com',
+      password: 'hashed-password',
+      emailVerified: new Date(),
+      name: 'User',
+    } as any)
+    vi.mocked(prisma.user.update).mockResolvedValue({} as any)
+
+    const result = await signInCb({
+      user: { email: 'ok@test.com' },
+      account: { provider: 'google' },
+      profile: { email_verified: true },
+    })
+
+    expect(result).toBe(true)
+    expect(prisma.user.update).toHaveBeenCalled()
+  })
+
+  it('signIn allows Google linking for a brand-new (non-existing) user even if unverified', async () => {
+    const { authOptions } = await import('@/lib/auth/authOptions')
+    const signInCb = authOptions.callbacks!.signIn as unknown as (params: {
+      user: { email?: string }
+      account?: { provider?: string }
+      profile?: { email_verified?: boolean }
+    }) => Promise<boolean | string>
+
+    const { prisma } = await import('@/lib/prisma')
+    vi.mocked(prisma.user.findUnique).mockResolvedValue(null)
+
+    const result = await signInCb({
+      user: { email: 'new-user@test.com' },
+      account: { provider: 'google' },
+      profile: { email_verified: false },
+    })
+
+    expect(result).toBe(true)
+  })
+
   it('jwt callback marks SESSION_EXPIRED instead of throwing when refresh token expired', async () => {
     // Simulate backend refresh endpoint being unreachable / returning failure
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }))
