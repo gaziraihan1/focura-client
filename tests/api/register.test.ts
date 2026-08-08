@@ -89,7 +89,7 @@ describe('POST /api/auth/register', () => {
     const data = await response.json()
 
     expect(response.status).toBe(400)
-    expect(data.error).toBe('Password must be at least 6 characters')
+    expect(data.error).toBe('Password must be at least 8 characters')
   })
 
   it('returns 400 for existing user', async () => {

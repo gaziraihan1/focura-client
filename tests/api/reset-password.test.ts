@@ -55,7 +55,7 @@ describe('POST /api/auth/reset-password', () => {
     const data = await response.json()
 
     expect(response.status).toBe(400)
-    expect(data.error).toBe('Password must be at least 6 characters')
+    expect(data.error).toBe('Password must be at least 8 characters')
   })
 
   it('returns 400 for invalid token', async () => {
@@ -113,7 +113,7 @@ describe('POST /api/auth/reset-password', () => {
     expect(data.message).toBe('Password reset successfully!')
     expect(prisma.user.update).toHaveBeenCalledWith({
       where: { email: 'user@test.com' },
-      data: { password: 'hashed-password' },
+      data: { password: 'hashed-password', lastPasswordChange: expect.any(Date) },
     })
     expect(prisma.passwordResetToken.delete).toHaveBeenCalled()
   })

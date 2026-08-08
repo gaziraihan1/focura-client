@@ -13,6 +13,7 @@ vi.mock('lucide-react', () => ({
   Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader-icon" {...props} />,
   Shield: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="shield-icon" {...props} />,
   Calendar: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="calendar-icon" {...props} />,
+  KeyRound: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="key-icon" {...props} />,
   HardDrive: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="harddrive-icon" {...props} />,
   Crown: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="crown-icon" {...props} />,
   Check: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-icon" {...props} />,
