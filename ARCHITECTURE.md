@@ -205,11 +205,11 @@ focura-client/
 │   │   ├── TaskFilters.tsx
 │   │   └── TaskActions.tsx
 │   │
-│   ├── Kanban/                          # Kanban board
+│   ├── KanbanView/                      # Kanban board (Dashboard)
 │   │   ├── KanbanBoard.tsx
 │   │   ├── KanbanColumn.tsx
 │   │   ├── KanbanCard.tsx
-│   │   └── DragDropContext.tsx
+│   │   └── KanbanInsightFooter.tsx
 │   │
 │   ├── Calendar/                        # Calendar components
 │   │   ├── CalendarView.tsx
@@ -284,7 +284,7 @@ focura-client/
 │       ├── ThemeProvider.tsx
 │       └── QueryProvider.tsx
 │
-├── hooks/                               # Custom React Hooks (80+)
+├── hooks/                               # Custom React Hooks (116)
 │   ├── useWorkspace.ts                  # Workspace operations
 │   ├── useTask.ts                       # Task CRUD
 │   ├── useProject.ts                    # Project management

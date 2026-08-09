@@ -6,12 +6,15 @@ import { cn } from '@/lib/utils';
 import { CATEGORY_META, COMPLEXITY_META } from '@/lib/templatesData';
 import { Template, TemplateAccessTier, TIER_META, canAccessTemplate } from '@/types/templates.types';
 import TemplateTierBadge from './TemplateTierBadge';
+import TemplateRatingStars from './TemplateRatingStars';
 
 interface TemplateCardProps {
-  template   : Template;
-  accessTier : TemplateAccessTier;
-  onUse      : (template: Template) => void;
-  onUpgrade  : (template: Template) => void;
+  template    : Template;
+  accessTier  : TemplateAccessTier;
+  onUse       : (template: Template) => void;
+  onUpgrade   : (template: Template) => void;
+  onRate?     : (template: Template, stars: number) => void;
+  ratePending?: boolean;
 }
 
 const VIEW_LABELS: Record<string, string> = {
@@ -21,7 +24,7 @@ const VIEW_LABELS: Record<string, string> = {
   TIMELINE: 'Timeline',
 };
 
-const TemplateCard = ({ template, accessTier, onUse, onUpgrade }: TemplateCardProps) => {
+const TemplateCard = ({ template, accessTier, onUse, onUpgrade, onRate, ratePending }: TemplateCardProps) => {
   const [expanded, setExpanded] = useState(false);
 
   const cat        = CATEGORY_META[template.category];
@@ -91,6 +94,18 @@ const TemplateCard = ({ template, accessTier, onUse, onUpgrade }: TemplateCardPr
           <span className='inline-flex items-center gap-1 text-[11px] text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 rounded-md px-2 py-1'>
             <Clock className='w-3 h-3 shrink-0' strokeWidth={1.8} />
             {template.estimatedSetupMinutes} min setup
+          </span>
+          <span className='inline-flex items-center text-[11px] text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 rounded-md px-2 py-1'>
+            <TemplateRatingStars
+              average={template.rating.average}
+              count={template.rating.count}
+              onRate={
+                !locked && template.status === 'available' && onRate
+                  ? (stars) => onRate(template, stars)
+                  : undefined
+              }
+              pending={ratePending}
+            />
           </span>
           {template.views.map((v) => (
             <span key={v} className='text-[11px] text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 rounded-md px-2 py-1'>

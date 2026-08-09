@@ -132,6 +132,8 @@ describe('TemplatesPageClient', () => {
     renderWithProviders(<TemplatesPageClient />)
     // MSW returns the catalog; both FREE + PRO templates appear.
     expect(await screen.findByText('Quarterly Goals')).toBeInTheDocument()
-    expect(await screen.findByText('Agile Sprint Board')).toBeInTheDocument()
+    // The featured mock is shown both in the featured strip and the grid.
+    expect((await screen.findAllByText('Agile Sprint Board')).length).toBeGreaterThan(0)
+    expect(screen.getByText('Featured templates')).toBeInTheDocument()
   })
 })

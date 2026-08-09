@@ -7,16 +7,18 @@ import { Template, TemplateAccessTier } from '@/types/templates.types';
 import TemplateCard from './TemplatesCard';
 
 interface TemplatesGridProps {
-  templates  : Template[];
-  category   : CategoryFilter;
-  tier       : TierFilter;
-  search     : string;
-  accessTier : TemplateAccessTier;
-  onUse      : (template: Template) => void;
-  onUpgrade  : (template: Template) => void;
+  templates   : Template[];
+  category    : CategoryFilter;
+  tier        : TierFilter;
+  search      : string;
+  accessTier  : TemplateAccessTier;
+  onUse       : (template: Template) => void;
+  onUpgrade   : (template: Template) => void;
+  onRate?     : (template: Template, stars: number) => void;
+  ratePending?: boolean;
 }
 
-const TemplatesGrid = ({ templates, category, tier, search, accessTier, onUse, onUpgrade }: TemplatesGridProps) => {
+const TemplatesGrid = ({ templates, category, tier, search, accessTier, onUse, onUpgrade, onRate, ratePending }: TemplatesGridProps) => {
   const filtered = useMemo(
     () => filterTemplates(templates, category, search, tier),
     [templates, category, search, tier]
@@ -56,6 +58,8 @@ const TemplatesGrid = ({ templates, category, tier, search, accessTier, onUse, o
             accessTier={accessTier}
             onUse={onUse}
             onUpgrade={onUpgrade}
+            onRate={onRate}
+            ratePending={ratePending}
           />
         ))}
       </div>

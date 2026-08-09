@@ -1,10 +1,10 @@
 # 🕳️ Focura — Focus & Burnout Feature Gap Analysis
 
-> **Generated:** July 30, 2026  ·  **Last reviewed / updated:** August 2, 2026
+> **Generated:** July 30, 2026  ·  **Last reviewed / updated:** August 9, 2026
 > **Scope:** Frontend (`Focura-client/focura`) & Backend (`Focura-backend`)
 > **Focus areas:** Focus Sessions, Burnout Detection, Capacity Management, Energy Levels, AI Features, Daily Tasks
 
-**Status summary (2026-08-02):** All previously-identified gaps have been implemented, tested, and documented. The only remaining item is the **AI feature suite**, which is **deferred by decision** (requires an external paid API — OpenAI — and the implementation guide estimates 2–3 weeks of work).
+**Status summary (2026-08-09):** All previously-identified gaps remain implemented, tested, and documented. Since the last review, **all five milestones in `FEATURE_PLANS.md` shipped end-to-end** — **Custom Workflows**, **Recurring Tasks**, **Automation Rules**, **Workspace Templates**, and now the **M5 public template gallery** (ratings, featured strip, author credits). The only remaining item is the **AI feature suite**, which is **deferred by decision** (requires an external paid API — OpenAI — and the implementation guide estimates 2–3 weeks of work).
 
 ---
 

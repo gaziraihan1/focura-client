@@ -1401,6 +1401,23 @@ axios.interceptors.response.use(null, async (error) => {
         tags       : ['templates'],
       },
       {
+        id         : 'templates-rate',
+        method     : 'POST',
+        path       : '/api/v1/templates/:slug/rate',
+        summary    : 'Rate a template (1–5 stars)',
+        description: 'Authenticated users can rate a public template once — re-rating replaces their previous stars. One rating per user per template; aggregates are recomputed from the rating table.',
+        auth       : 'auth',
+        pathParams : [ { name: "slug", type: "string", required: true, description: "Template slug" } ],
+        bodyFields : [ { name: 'stars', type: 'number', required: true, description: 'Rating between 1 and 5' } ],
+        responses  : [
+          { status: 200, description: '{ average, count } — updated rating summary' },
+          { status: 400, description: 'Invalid stars' },
+          { status: 404, description: 'Template not found' },
+        ],
+        examples   : [ { label: "cURL", code: "curl -X POST FULL_BASE/templates/engineering-sprint/rate -H 'Authorization: Bearer <token>' -H 'Content-Type: application/json' -d '{\"stars\":5}'" } ],
+        tags       : ['templates'],
+      },
+      {
         id         : 'templates-save',
         method     : 'POST',
         path       : '/api/v1/templates/save-as-template/:projectId',

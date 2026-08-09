@@ -9,8 +9,9 @@ import TemplatesForCreators   from './TemplatesForCreators';
 import TemplatesNotifyBanner  from './TemplatesNotifyBanner';
 import TemplatesCTA           from './TemplatesCTA';
 import TemplateImportModal    from './TemplateImportModal';
+import TemplatesFeatured       from './TemplatesFeatured';
 import { CategoryFilter, TierFilter, catalogItemToTemplate, TEMPLATES } from '@/lib/templatesData';
-import { useTemplateCatalog } from '@/hooks/useTemplates';
+import { useTemplateCatalog, useTemplateRate } from '@/hooks/useTemplates';
 import { useIsAuthenticated } from '@/hooks/useUser';
 import { useWorkspaces }      from '@/hooks/useWorkspaceQueries';
 import { useRouter }          from 'next/navigation';
@@ -29,6 +30,7 @@ import type { Template, TemplateAccessTier } from '@/types/templates.types';
 const TemplatesPageClient = () => {
   const router = useRouter();
   const { data: catalog, isLoading } = useTemplateCatalog();
+  const rateMutation = useTemplateRate();
   const { isAuthenticated } = useIsAuthenticated();
   const { data: workspaces = [] } = useWorkspaces();
 
@@ -44,6 +46,16 @@ const TemplatesPageClient = () => {
   }, [catalog]);
 
   const accessTier: TemplateAccessTier = catalog?.access?.tier ?? 'FREE';
+
+  // Curated strip at the top of the gallery — sorted inside TemplatesFeatured.
+  const featured: Template[] = useMemo(
+    () => templates.filter((t) => t.featured),
+    [templates],
+  );
+
+  const handleRate = (template: Template, stars: number) => {
+    rateMutation.mutate({ slug: template.slug, stars });
+  };
 
   const handleUpgrade = () => {
     // Upgrade CTA → workspace billing upgrade page; fall back to pricing.
@@ -74,6 +86,14 @@ const TemplatesPageClient = () => {
           />
 
           <section className='max-w-6xl mx-auto px-6 py-12'>
+            <TemplatesFeatured
+              templates={featured}
+              accessTier={accessTier}
+              onUse={setImporting}
+              onUpgrade={handleUpgrade}
+              onRate={handleRate}
+              ratePending={rateMutation.isPending}
+            />
             <TemplatesGrid
               templates={templates}
               category={category}
@@ -82,6 +102,8 @@ const TemplatesPageClient = () => {
               accessTier={accessTier}
               onUse={setImporting}
               onUpgrade={handleUpgrade}
+              onRate={handleRate}
+              ratePending={rateMutation.isPending}
             />
           </section>
         </>

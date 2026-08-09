@@ -59,7 +59,7 @@ A modern, full-stack productivity and collaboration SaaS platform built with **N
 
 #### **Multiple Work Views**
 - ✅ **List View** - Traditional task list with filters
-- ✅ **Kanban Board** - Drag-and-drop task board with status columns
+- ✅ **Kanban Board** - Status-driven columns with WIP limits and per-project custom workflows
 - ✅ **Calendar View** - Visual task scheduling and deadlines with burnout trend analysis
 - ✅ **Daily Tasks** - Focused daily planning workflow
 - ✅ **Team Tasks** - Cross-workspace team task management
@@ -121,13 +121,25 @@ The wellness dashboard (`/dashboard/wellness`) brings focus, energy, and burnout
 - ✅ Project archiving
 - ✅ Project slug-based routing
 
+#### **Automation Rules**
+- ✅ "When X happens, do Y" rules at workspace or project level (`/settings/automations`)
+- ✅ Triggers: status changed, task created (with from → to status filters)
+- ✅ Actions: assign user (by email or role), set priority, notify members (SSE)
+- ✅ Loop-safe by construction — rules fire only on user-initiated mutations
+- ✅ Plan-gated rule limits (Free 10 · Pro 50 · Business 200 · Enterprise unlimited) with upgrade prompts
+- ✅ Per-rule run history and activity logging
+
 #### **Project Templates**
 - ✅ Tier-gated template catalog (Free / Pro / Business) served live from the backend
 - ✅ One-click import — clone a full project structure (sections, tasks, labels, milestones, views) into any workspace
 - ✅ Templates surface inside the creation flow — pick one on the New Project page and import directly while creating
+- ✅ Sidebar quick-picker — start a project from any dashboard page via the sidebar "New project" button
 - ✅ Save any project as a reusable private workspace template from Project Settings → General
 - ✅ Tier badges, lock states and upgrade CTAs so paid templates show their value
 - ✅ Search, category and tier filters on the public templates page
+- ✅ Community ratings — 1–5 stars, one per user, with live averages on every card
+- ✅ Featured strip — a curated, rating-sorted highlight rail above the gallery
+- ✅ Author credits on public templates (share a saved template publicly)
 - ✅ Template email waitlist (request a template)
 
 #### **Analytics & Insights**
@@ -267,7 +279,7 @@ The wellness dashboard (`/dashboard/wellness`) brings focus, energy, and burnout
 ### **Infrastructure & Deployment**
 - **Hosting**: Vercel
 - **CDN**: Vercel Edge Network
-- **Database**: PostgreSQL (Prisma managed) — 38 models, 33 enums
+- **Database**: PostgreSQL (Prisma managed) — 59 models, 50 enums
 - **Cache/Redis**: Upstash Redis
 - **Pub/Sub**: Redis (ioredis TCP connection)
 - **Files**: Cloudinary
@@ -793,8 +805,8 @@ focura-client/
 │       └── WorkspacePlanContext.tsx   # Workspace plan tier context
 │
 ├── prisma/                            # Database Schema
-│   ├── schema.prisma                 # Full schema (1457 lines, 38 models, 33 enums)
-│   └── migrations/                   # 35 migrations (Feb 2026 - Jul 2026)
+│   ├── schema.prisma                 # Full schema (1600+ lines, 59 models, 50 enums)
+│   └── migrations/                   # 44 migrations (Feb 2026 - Aug 2026)
 │
 ├── tests/                             # Test setup
 │   ├── polyfill.js                   # Test polyfills
@@ -898,7 +910,7 @@ For detailed authentication documentation, see [AUTHENTICATION.md](./AUTHENTICAT
 
 ## 🗄 Database Schema
 
-### **38 Models**
+### **59 Models**
 
 | Category | Models |
 |----------|--------|
@@ -913,16 +925,17 @@ For detailed authentication documentation, see [AUTHENTICATION.md](./AUTHENTICAT
 | **Activity** | `Activity`, `Notification` |
 | **Billing** | `Plan`, `Subscription`, `Invoice`, `Payment`, `UsageRecord`, `BillingEvent` |
 | **Integrations** | `Integration` |
+| **Automation & Templates** | `AutomationRule`, `ProjectTemplate`, `TemplateRating` |
 | **CMS & Content** | `PopularResource`, `ProductUpdate`, `ContactMessage`, `JobPosting`, `TemplateList`, `SubscribeList` |
 | **Feature Requests** | `FeatureRequest`, `FeatureVote` |
 
-### **33 Enums**
+### **50 Enums**
 
-`UserRole`, `WorkspacePlan`, `WorkspaceRole`, `InvitationStatus`, `ProjectStatus`, `ProjectRole`, `ProjectViewType`, `TaskStatus`, `Priority`, `TaskEnergy`, `TaskEffort`, `TaskIntent`, `DependencyType`, `RecurrencePattern`, `DailyTaskType`, `MeetingVisibility`, `MeetingStatus`, `AnnouncementVisibility`, `GoalType`, `SystemEventType`, `BurnoutRisk`, `FocusType`, `ActivityType`, `EntityType`, `NotificationType`, `FeatureStatus`, `VoteType`, `BillingCycle`, `SubStatus`, `InvoiceStatus`, `PaymentStatus`, `UsageMetric`, `BillingEventType`, `ResourceStatus`, `TimeEntryCategory`, `RecommendationType`, `ContactCategory`, `ContactMessageStatus`, `JobDepartment`, `JobLocationType`, `JobType`, `JobExperience`, `JobStatus`
+`UserRole`, `WorkspacePlan`, `WorkspaceRole`, `InvitationStatus`, `ProjectStatus`, `ProjectRole`, `ProjectViewType`, `TaskStatus`, `Priority`, `TaskEnergy`, `TaskEffort`, `TaskIntent`, `DependencyType`, `RecurrencePattern`, `DailyTaskType`, `MeetingVisibility`, `MeetingStatus`, `AnnouncementVisibility`, `GoalType`, `SystemEventType`, `BurnoutRisk`, `FocusType`, `ActivityType`, `EntityType`, `NotificationType`, `FeatureStatus`, `VoteType`, `BillingCycle`, `SubStatus`, `InvoiceStatus`, `PaymentStatus`, `UsageMetric`, `BillingEventType`, `ResourceStatus`, `TimeEntryCategory`, `RecommendationType`, `ContactCategory`, `ContactMessageStatus`, `JobDepartment`, `JobLocationType`, `JobType`, `JobExperience`, `JobStatus`, `TemplateTier`, `AutomationTrigger`, `AutomationActionType`
 
-### **Migration History (35 migrations)**
+### **Migration History (44 migrations)**
 
-Spanning **Feb 2, 2026** to **Jul 16, 2026**, including:
+Spanning **Feb 2, 2026** to **Aug 9, 2026**, including:
 - Initial schema and daily tasks
 - Calendar intelligence and wellness models
 - Focus session task relations
@@ -935,6 +948,8 @@ Spanning **Feb 2, 2026** to **Jul 16, 2026**, including:
 - User banning and workspace soft-delete
 - Contact and job posting models
 - Template waitlist and newsletter subscriptions
+- Automation rules (triggers/actions) and tiered workspace templates
+- Template ratings and featured templates
 - Audit logging fields
 - Resource management (popular resources, product updates)
 - Energy tracking models
@@ -1021,7 +1036,25 @@ await api.upload('/api/v1/resources/upload', formData);
 | `PUT` | `/api/v1/projects/:id` | Update project |
 | `DELETE` | `/api/v1/projects/:id` | Delete project |
 | `PATCH` | `/api/v1/projects/:id/archive` | Archive/unarchive project |
+| `GET` | `/api/v1/projects/:projectId/sections` | List workflow sections |
+| `POST` | `/api/v1/projects/:projectId/sections` | Create workflow section |
+| `PUT` | `/api/v1/projects/:projectId/sections/reorder` | Reorder workflow sections |
+| `PATCH` | `/api/v1/projects/:projectId/sections/:sectionId` | Update section (rename/WIP/status) |
+| `DELETE` | `/api/v1/projects/:projectId/sections/:sectionId` | Delete section |
 | `GET` | `/api/v1/projects/:id/analytics` | Project analytics |
+
+#### Templates
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/v1/templates/catalog` | Public tier-gated catalog |
+| `GET` | `/api/v1/templates/:slug` | Public template detail |
+| `POST` | `/api/v1/templates` | Template waitlist signup (public) |
+| `POST` | `/api/v1/templates/:slug/use` | Import template into a workspace (tier-gated) |
+| `POST` | `/api/v1/templates/:slug/rate` | Rate a template (1–5 stars, one per user) |
+| `POST` | `/api/v1/templates/save-as-template/:projectId` | Save project as a private template |
+| `GET` | `/api/v1/templates/private` | List private workspace templates |
+| `PATCH` | `/api/v1/templates/:slug` | Update template (author/admin) |
+| `DELETE` | `/api/v1/templates/:slug` | Delete template (author/admin) |
 
 #### Tasks
 | Method | Endpoint | Description |
@@ -1034,6 +1067,8 @@ await api.upload('/api/v1/resources/upload', formData);
 | `DELETE` | `/api/v1/tasks/bulk` | Bulk delete tasks |
 | `PATCH` | `/api/v1/tasks/:id/status` | Update task status |
 | `PATCH` | `/api/v1/tasks/:id/assign` | Assign/unassign task |
+| `POST` | `/api/v1/tasks/:id/recurrence` | Upsert task recurrence schedule |
+| `DELETE` | `/api/v1/tasks/:id/recurrence` | Remove task recurrence |
 | `GET` | `/api/v1/tasks/stats` | Task statistics |
 | `GET` | `/api/v1/tasks/daily` | Daily tasks |
 | `GET` | `/api/v1/tasks/quota/personal` | Personal task quota |
@@ -1042,6 +1077,16 @@ await api.upload('/api/v1/resources/upload', formData);
 | `POST` | `/api/v1/tasks/:taskId/subtasks` | Create subtask |
 | `PUT` | `/api/v1/tasks/:taskId/subtasks/:subtaskId` | Update subtask |
 | `DELETE` | `/api/v1/tasks/:taskId/subtasks/:subtaskId` | Delete subtask |
+
+#### Automations
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/v1/automations` | List automation rules |
+| `POST` | `/api/v1/automations` | Create automation rule |
+| `GET` | `/api/v1/automations/:id` | Get rule detail |
+| `GET` | `/api/v1/automations/:id/runs` | Rule run history |
+| `PATCH` | `/api/v1/automations/:id` | Update / toggle rule |
+| `DELETE` | `/api/v1/automations/:id` | Delete rule |
 
 #### Comments
 | Method | Endpoint | Description |
@@ -1186,7 +1231,7 @@ For complete API documentation, see the [API Documentation](https://focura-clien
 | `useVerifyEmail` | Email verification flow |
 | `useUserProfile` | Profile fetch, update, avatar upload |
 
-### **Task Hooks (12)**
+### **Task Hooks (14)**
 | Hook | Purpose |
 |------|---------|
 | `useTaskQueries` | Task list, detail, stats queries |
@@ -1201,6 +1246,8 @@ For complete API documentation, see the [API Documentation](https://focura-clien
 | `useSubtasks` | Subtask CRUD operations |
 | `useDailyTasks` | Daily task planning |
 | `useKanbanPage` | Orchestrate Kanban board |
+| `useTask` | Single-task queries and orchestration |
+| `useTasksPage` | Orchestrate cross-workspace tasks list |
 
 ### **Workspace Hooks (14)**
 | Hook | Purpose |
@@ -1217,14 +1264,20 @@ For complete API documentation, see the [API Documentation](https://focura-clien
 | `useWorkspaceNewTaskPage` | Orchestrate workspace task creation |
 | `useWorkspaceTasksPage` | Orchestrate workspace tasks list |
 | `useWorkspaceKanbanPage` | Orchestrate workspace Kanban board |
+| `useWorkspace` | Current workspace detail + plan |
+| `useWorkspaceSections` | Workspace section / workflow data |
 
-### **Project Hooks (5)**
+### **Project Hooks (8)**
 | Hook | Purpose |
 |------|---------|
 | `useProjectQueries` | Project list and detail queries |
 | `useProjectMutations` | Create, update, delete, archive |
 | `useProjectsPage` | Orchestrate projects list page |
 | `useProjectAnalyticsPage` | Orchestrate project analytics page |
+| `useProjectAnalytics` | Project analytics queries |
+| `useProjectFeatures` | Project feature flags (sections, reorder) |
+| `useProjectRole` | Current user's role in a project |
+| `useProjects` | Cross-workspace projects queries |
 
 ### **Notification Hooks (7)**
 | Hook | Purpose |
@@ -1235,11 +1288,14 @@ For complete API documentation, see the [API Documentation](https://focura-clien
 | `useNotificationSSE` | Establish SSE connection |
 | `useNotificationPreferences` | Fetch and update preferences |
 | `useNotificationsPage` | Orchestrate notifications page |
+| `useNotifications` | Real-time notifications + unread state |
 
 ### **Other Domain Hooks**
 | Category | Hooks |
 |----------|-------|
-| **Kanban** | `useKanbanBoard` (drag-and-drop), `useKanbanCard`, `useKanbanInsightFooter` |
+| **Kanban** | `useKanbanBoard` (status-based columns), `useKanbanCard`, `useKanbanInsightFooter` |
+| **Templates** | `useTemplateCatalog`, `useTemplateDetail`, `useTemplateImport`, `useTemplateRate`, `useSaveAsTemplate`, `useWorkspacePrivateTemplates` |
+| **Automations** | `useAutomations`, `useAutomationRuns`, `useCreateAutomation`, `useUpdateAutomation`, `useDeleteAutomation` |
 | **Activity** | `useActivityFeed`, `useWorkspaceActivity`, `useUserActivity`, `useActivityPage` |
 | **Analytics** | `useAnalytics`, `useProjectAnalytics`, `useBurnoutTrends`, `useAnalyticsPage` |
 | **Calendar** | `useCalendarEvents`, `useCalenderDayView`, `useCalendarPage` |

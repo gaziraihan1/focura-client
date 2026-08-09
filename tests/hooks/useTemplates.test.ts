@@ -5,6 +5,7 @@ import {
   useTemplateCatalog,
   useTemplateImport,
   useSaveAsTemplate,
+  useTemplateRate,
 } from '@/hooks/useTemplates';
 import { templateKeys } from '@/hooks/templateKeys';
 
@@ -56,6 +57,47 @@ describe('useTemplateImport', () => {
         result.current.mutateAsync({ slug: 'engineering-sprint', workspaceId: '' }),
       ).rejects.toThrow();
     });
+  });
+});
+
+describe('useTemplateRate', () => {
+  it('rates a template and returns the updated summary', async () => {
+    const { result } = renderHookWithProviders(() => useTemplateRate());
+
+    let rated: unknown;
+    await act(async () => {
+      rated = await result.current.mutateAsync({ slug: 'engineering-sprint', stars: 5 });
+    });
+
+    expect(rated).toEqual({ average: 5, count: 43 });
+  });
+
+  it('rejects out-of-range stars', async () => {
+    const { result } = renderHookWithProviders(() => useTemplateRate());
+
+    await act(async () => {
+      await expect(
+        result.current.mutateAsync({ slug: 'engineering-sprint', stars: 9 }),
+      ).rejects.toThrow();
+    });
+  });
+
+  it('invalidates the catalog after a successful rating', async () => {
+    const { result } = renderHookWithProviders(() => ({
+      rate: useTemplateRate(),
+      catalog: useTemplateCatalog(),
+    }));
+
+    await waitFor(() => expect(result.current.catalog.isSuccess).toBe(true));
+    const before = result.current.catalog.dataUpdatedAt;
+
+    await act(async () => {
+      await result.current.rate.mutateAsync({ slug: 'engineering-sprint', stars: 4 });
+    });
+
+    await waitFor(() =>
+      expect(result.current.catalog.dataUpdatedAt).toBeGreaterThan(before),
+    );
   });
 });
 

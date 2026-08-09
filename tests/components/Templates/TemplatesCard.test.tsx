@@ -145,6 +145,8 @@ describe('TemplatesCard', () => {
     milestones: [{ title: 'Milestone 1', dueWeek: 1 }],
     views: ['KANBAN', 'LIST'],
     usageCount: 0,
+    rating: { average: 4.5, count: 12 },
+    featured: false,
     estimatedSetupMinutes: 5,
     tags: ['test'],
     author: { name: 'Test', role: 'Official' },
@@ -170,6 +172,25 @@ describe('TemplatesCard', () => {
   it('renders task count', () => {
     render(<TemplatesCard template={mockTemplate} accessTier="PRO" onUse={onUse} onUpgrade={onUpgrade} />)
     expect(screen.getByText('5 tasks')).toBeInTheDocument()
+  })
+
+  it('renders the community rating', () => {
+    render(<TemplatesCard template={mockTemplate} accessTier="PRO" onUse={onUse} onUpgrade={onUpgrade} />)
+    expect(screen.getByText('4.5')).toBeInTheDocument()
+    expect(screen.getByText('(12)')).toBeInTheDocument()
+  })
+
+  it('calls onRate when a star is clicked on an unlocked template', () => {
+    const onRate = vi.fn()
+    render(<TemplatesCard template={mockTemplate} accessTier="PRO" onUse={onUse} onUpgrade={onUpgrade} onRate={onRate} />)
+    fireEvent.click(screen.getByRole('radio', { name: '4 stars' }))
+    expect(onRate).toHaveBeenCalledWith(mockTemplate, 4)
+  })
+
+  it('does not offer star rating on a locked template', () => {
+    const onRate = vi.fn()
+    render(<TemplatesCard template={mockTemplate} accessTier="FREE" onUse={onUse} onUpgrade={onUpgrade} onRate={onRate} />)
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument()
   })
 
   it('renders setup time', () => {

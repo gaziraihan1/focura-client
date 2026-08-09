@@ -57,6 +57,8 @@ export interface Template {
   milestones  : TemplateMilestone[];
   views       : string[];       // which views to set up
   usageCount  : number;
+  rating      : { average: number; count: number };
+  featured    : boolean;
   estimatedSetupMinutes: number;
   tags        : string[];
   previewImage?: string;
@@ -94,10 +96,18 @@ export interface TemplateCatalogItem {
   color       : string | null;
   tags        : unknown;
   usageCount  : number;
+  rating      : { average: number; count: number };
+  featured    : boolean;
   estimatedSetupMinutes: number;
   status      : string;
   author      : { name: string; role: string } | null;
   content     : TemplateContent;
+}
+
+/** Response data for POST /api/v1/templates/:slug/rate. */
+export interface TemplateRateResult {
+  average: number;
+  count  : number;
 }
 
 export interface TemplateCatalogResponse {

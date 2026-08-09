@@ -71,6 +71,8 @@ export const TEMPLATES: Template[] = [
     usageCount: 0,
     estimatedSetupMinutes: 3,
     tags: ['agile', 'scrum', 'sprint', 'kanban', 'engineering'],
+    rating: { average: 4.8, count: 160 },
+    featured: true,
     author: { name: 'Focura Team', role: 'Official' },
   },
   {
@@ -105,6 +107,8 @@ export const TEMPLATES: Template[] = [
     usageCount: 0,
     estimatedSetupMinutes: 2,
     tags: ['bugs', 'qa', 'triage', 'engineering'],
+    rating: { average: 4.7, count: 90 },
+    featured: false,
     author: { name: 'Focura Team', role: 'Official' },
   },
 
@@ -146,6 +150,8 @@ export const TEMPLATES: Template[] = [
     usageCount: 0,
     estimatedSetupMinutes: 5,
     tags: ['product', 'roadmap', 'okr', 'strategy', 'planning'],
+    rating: { average: 4.7, count: 110 },
+    featured: true,
     author: { name: 'Focura Team', role: 'Official' },
   },
   {
@@ -188,6 +194,8 @@ export const TEMPLATES: Template[] = [
     usageCount: 0,
     estimatedSetupMinutes: 8,
     tags: ['launch', 'product', 'checklist', 'marketing', 'engineering'],
+    rating: { average: 4.9, count: 70 },
+    featured: true,
     author: { name: 'Focura Team', role: 'Official' },
   },
 
@@ -228,6 +236,8 @@ export const TEMPLATES: Template[] = [
     usageCount: 0,
     estimatedSetupMinutes: 3,
     tags: ['content', 'marketing', 'editorial', 'calendar', 'social'],
+    rating: { average: 4.6, count: 130 },
+    featured: true,
     author: { name: 'Focura Team', role: 'Official' },
   },
 
@@ -266,6 +276,8 @@ export const TEMPLATES: Template[] = [
     usageCount: 0,
     estimatedSetupMinutes: 4,
     tags: ['hiring', 'recruiting', 'hr', 'people', 'interviews'],
+    rating: { average: 4.6, count: 75 },
+    featured: false,
     author: { name: 'Focura Team', role: 'Official' },
   },
   {
@@ -304,6 +316,8 @@ export const TEMPLATES: Template[] = [
     usageCount: 0,
     estimatedSetupMinutes: 3,
     tags: ['onboarding', 'hr', 'new-hire', 'people'],
+    rating: { average: 4.8, count: 60 },
+    featured: false,
     author: { name: 'Focura Team', role: 'Official' },
   },
 
@@ -347,6 +361,8 @@ export const TEMPLATES: Template[] = [
     usageCount: 0,
     estimatedSetupMinutes: 10,
     tags: ['startup', 'launch', 'mvp', 'fundraising', 'product'],
+    rating: { average: 4.7, count: 40 },
+    featured: false,
     author: { name: 'Focura Team', role: 'Official' },
   },
 
@@ -388,6 +404,8 @@ export const TEMPLATES: Template[] = [
     usageCount: 0,
     estimatedSetupMinutes: 2,
     tags: ['goals', 'okr', 'personal', 'habits', 'productivity'],
+    rating: { average: 4.9, count: 210 },
+    featured: false,
     author: { name: 'Focura Team', role: 'Official' },
   },
 ];
@@ -454,6 +472,8 @@ export function catalogItemToTemplate(item: TemplateCatalogItem): Template {
     milestones  : (item.content?.milestones ?? []).map((m) => ({ ...m })),
     views       : (item.content?.views ?? []).map((v) => v.type),
     usageCount  : item.usageCount ?? 0,
+    rating      : item.rating ?? { average: 0, count: 0 },
+    featured    : item.featured ?? false,
     estimatedSetupMinutes: item.estimatedSetupMinutes ?? 5,
     tags        : Array.isArray(item.tags) ? (item.tags as string[]) : [],
     author      : item.author ?? { name: 'Focura Team', role: 'Official' },

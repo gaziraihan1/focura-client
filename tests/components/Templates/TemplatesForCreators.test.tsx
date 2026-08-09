@@ -132,6 +132,13 @@ describe('TemplatesForCreators', () => {
   it('renders roadmap items', () => {
     render(<TemplatesForCreators />)
     expect(screen.getByText('v1.0 (Shipped)')).toBeInTheDocument()
+    expect(screen.getAllByText('v1.2 (Shipped)').length).toBeGreaterThan(0)
+    expect(screen.getByText('v1.3 (Next)')).toBeInTheDocument()
+  })
+
+  it('marks the v1.2 gallery features as live', () => {
+    render(<TemplatesForCreators />)
+    expect(screen.getAllByText('Live now').length).toBeGreaterThanOrEqual(3)
   })
 
   it('renders "Request a template" link', () => {

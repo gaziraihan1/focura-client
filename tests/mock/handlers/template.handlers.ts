@@ -18,6 +18,8 @@ export const mockTemplateCatalogItem: TemplateCatalogItem = {
   color: '#3b82f6',
   tags: ['agile', 'sprint'],
   usageCount: 42,
+  rating: { average: 4.8, count: 42 },
+  featured: true,
   estimatedSetupMinutes: 3,
   status: 'available',
   author: { name: 'Focura Team', role: 'Official' },
@@ -54,6 +56,8 @@ export const mockFreeTemplateCatalogItem: TemplateCatalogItem = {
   color: '#ec4899',
   tags: ['goals', 'okr'],
   usageCount: 128,
+  rating: { average: 4.9, count: 128 },
+  featured: false,
   estimatedSetupMinutes: 2,
   content: {
     sections: [
@@ -121,6 +125,28 @@ export const templateHandlers = [
       },
       { status: 201 },
     );
+  }),
+
+  http.post(`${BASE}/api/v1/templates/:slug/rate`, async ({ request, params }) => {
+    const body = (await request.json()) as { stars?: number };
+    const stars = body?.stars;
+    if (typeof stars !== 'number' || stars < 1 || stars > 5) {
+      return HttpResponse.json(
+        { success: false, message: 'stars must be between 1 and 5' },
+        { status: 400 },
+      );
+    }
+    const item = [mockFreeTemplateCatalogItem, mockTemplateCatalogItem].find(
+      (t) => t.slug === params.slug,
+    );
+    if (!item) {
+      return HttpResponse.json({ success: false, message: 'Template not found' }, { status: 404 });
+    }
+    return HttpResponse.json({
+      success: true,
+      message: 'Template rated',
+      data: { average: stars, count: (item.rating?.count ?? 0) + 1 },
+    });
   }),
 
   http.post(`${BASE}/api/v1/templates/save-as-template/:projectId`, async () => {

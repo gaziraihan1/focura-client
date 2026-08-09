@@ -20,15 +20,15 @@ const features = [
     icon       : Share2,
     title      : 'Share publicly with the community',
     description: 'Opt-in to publish your template to the Focura public gallery. Other teams can discover and import it. You\'ll be credited as the template author.',
-    status     : 'Planned for v1.2',
-    statusColor: 'bg-violet-100 dark:bg-violet-950/50 text-violet-700 dark:text-violet-400',
+    status     : 'Live now',
+    statusColor: 'bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400',
   },
   {
     icon       : Star,
     title      : 'Ratings and usage stats',
-    description: 'Published templates will show usage count and star ratings from other teams. The most-used community templates will be featured on this page.',
-    status     : 'Planned for v1.2',
-    statusColor: 'bg-violet-100 dark:bg-violet-950/50 text-violet-700 dark:text-violet-400',
+    description: 'Published templates show usage counts and star ratings from other teams. The most-used community templates are featured on this page.',
+    status     : 'Live now',
+    statusColor: 'bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400',
   },
 ];
 
@@ -41,7 +41,7 @@ const TemplatesForCreators = () => {
           <div>
             <div className='inline-flex items-center gap-2 rounded-full border border-emerald-200 dark:border-emerald-800/50 bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400 mb-4'>
               <Sparkles className='w-3.5 h-3.5 shrink-0' />
-              v1.1 shipped · v1.2 next
+              v1.2 shipped · v1.3 next
             </div>
             <h2 className='text-2xl md:text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 mb-2'>
               Build your own templates.
@@ -52,7 +52,8 @@ const TemplatesForCreators = () => {
             </h2>
             <p className='text-sm text-neutral-500 dark:text-neutral-400 max-w-lg leading-relaxed'>
               Turn any Focura project into a reusable template — privately for
-              your team today, publicly for the whole community in v1.2.
+              your team, or published publicly for the whole community with
+              ratings, usage stats, and author credits.
             </p>
           </div>
 
@@ -106,8 +107,9 @@ const TemplatesForCreators = () => {
               { version: 'v1.0 (Shipped)', desc: 'Official template library — browse, preview, and filter by plan tier',    done: true  },
               { version: 'v1.1 (Shipped)', desc: 'One-click import into workspace — clone all tasks, labels, and sections', done: true  },
               { version: 'v1.1 (Shipped)', desc: 'Save any project as a private workspace template',                       done: true  },
-              { version: 'v1.2 (Next)',    desc: 'Publish templates publicly — community gallery + author credits',         done: false },
-              { version: 'v1.2 (Next)',    desc: 'Ratings, usage counts, and featured templates section',                   done: false },
+              { version: 'v1.2 (Shipped)', desc: 'Publish templates publicly — community gallery + author credits',        done: true  },
+              { version: 'v1.2 (Shipped)', desc: 'Ratings, usage counts, and featured templates section',                   done: true  },
+              { version: 'v1.3 (Next)',    desc: 'Community moderation and AI-powered template suggestions',                  done: false },
             ].map(({ version, desc, done }) => (
               <div key={desc} className='flex items-start gap-4 relative z-10'>
                 <div className={`shrink-0 w-5.5 h-5.5 rounded-full border-2 flex items-center justify-center mt-0.5 ${

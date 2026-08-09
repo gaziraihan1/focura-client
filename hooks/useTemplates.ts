@@ -10,6 +10,7 @@ import type {
   TemplateImportResult,
   SaveAsTemplateInput,
   SaveAsTemplateResult,
+  TemplateRateResult,
 } from '@/types/templates.types';
 
 /**
@@ -81,6 +82,28 @@ export function useSaveAsTemplate() {
     onSuccess: () => {
       // templateKeys.all ('templates') partial-matches the catalog, detail and
       // every workspace's private list, so a single invalidation refreshes all.
+      qc.invalidateQueries({ queryKey: templateKeys.all });
+    },
+  });
+}
+
+/** Rate a public template (1–5 stars). One rating per user — re-rating replaces it. */
+export function useTemplateRate() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: {
+      slug  : string;
+      stars : number;
+    }): Promise<TemplateRateResult> => {
+      const res = await api.post<TemplateRateResult>(
+        `/api/v1/templates/${input.slug}/rate`,
+        { stars: input.stars },
+        { showSuccessToast: true, showErrorToast: true },
+      );
+      return res!.data!;
+    },
+    onSuccess: () => {
+      // Refresh the catalog so cards/strips show the updated average.
       qc.invalidateQueries({ queryKey: templateKeys.all });
     },
   });
