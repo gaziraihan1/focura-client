@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, act, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import React, { createRef } from "react";
 
 // ─── Mocks ─────────────────────────────────────────────────────────────────
@@ -59,6 +59,8 @@ describe("ExportButton", () => {
     // Set up a real div in the ref
     chartRef.current = document.createElement("div");
     chartRef.current.innerHTML = "<span>Chart content</span>";
+    // Prevent jsdom from attempting a real navigation/download on anchor.click()
+    vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -144,17 +146,18 @@ describe("ExportButton", () => {
 
     await act(async () => {
       fireEvent.click(screen.getByText("Download as PNG"));
+      // captureElement waits 50ms before calling toPng, keep the test inside act
+      // until the export settles so no state updates leak past the test's end.
+      await new Promise((resolve) => setTimeout(resolve, 150));
     });
 
-    await waitFor(() => {
-      expect(toPng).toHaveBeenCalledWith(
-        expect.any(HTMLElement),
-        expect.objectContaining({
-          backgroundColor: "#ffffff",
-          pixelRatio: 2,
-        }),
-      );
-    });
+    expect(toPng).toHaveBeenCalledWith(
+      expect.any(HTMLElement),
+      expect.objectContaining({
+        backgroundColor: "#ffffff",
+        pixelRatio: 2,
+      }),
+    );
   });
 
   it("calls toPng and jsPDF on PDF export", async () => {
@@ -163,11 +166,11 @@ describe("ExportButton", () => {
 
     await act(async () => {
       fireEvent.click(screen.getByText("Download as PDF"));
+      // Let the 50ms capture delay and follow-up work settle inside act.
+      await new Promise((resolve) => setTimeout(resolve, 150));
     });
 
-    await waitFor(() => {
-      expect(toPng).toHaveBeenCalled();
-    });
+    expect(toPng).toHaveBeenCalled();
     expect(MockJsPDF).toHaveBeenCalledWith("landscape", "px", expect.any(Array));
     expect(mockAddImage).toHaveBeenCalled();
     expect(mockSave).toHaveBeenCalledWith(expect.stringContaining(".pdf"));
@@ -219,6 +222,8 @@ describe("ExportButton", () => {
 
     await act(async () => {
       fireEvent.click(screen.getByText("Download as PNG"));
+      // Wait for the export flow (50ms capture delay included) to fully finish.
+      await new Promise((resolve) => setTimeout(resolve, 150));
     });
 
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
