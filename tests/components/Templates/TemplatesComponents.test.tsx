@@ -3,9 +3,9 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import TemplatesHero from '@/components/Templates/TemplatesHero'
 
 describe('TemplatesHero', () => {
-  it('renders coming soon badge', () => {
+  it('renders live badge', () => {
     render(<TemplatesHero onSearch={vi.fn()} />)
-    expect(screen.getByText(/Project Templates — Coming Soon/)).toBeInTheDocument()
+    expect(screen.getByText(/Project Templates — Live/)).toBeInTheDocument()
   })
 
   it('renders heading', () => {
@@ -34,9 +34,9 @@ describe('TemplatesHero', () => {
 
   it('renders stat pills', () => {
     render(<TemplatesHero onSearch={vi.fn()} />)
+    expect(screen.getByText('12')).toBeInTheDocument()
+    expect(screen.getByText('Templates')).toBeInTheDocument()
     expect(screen.getByText('8')).toBeInTheDocument()
     expect(screen.getByText('Categories')).toBeInTheDocument()
-    expect(screen.getByText('9+')).toBeInTheDocument()
-    expect(screen.getByText('Templates planned')).toBeInTheDocument()
   })
 })

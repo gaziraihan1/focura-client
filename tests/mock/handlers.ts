@@ -17,6 +17,8 @@ import { focusSessionHandlers } from "./handlers/focusSession.handlers";
 import { billingHandlers } from "./handlers/billing.handlers";
 import { contactHandlers } from "./handlers/contact.handlers";
 import { jobsHandlers } from "./handlers/job.handlers";
+import { automationHandlers } from "./handlers/automation.handlers";
+import { templateHandlers } from "./handlers/template.handlers";
 
 export const handlers = [
   ...workspaceHandlers,
@@ -37,4 +39,6 @@ export const handlers = [
   ...billingHandlers,
   ...contactHandlers,
   ...jobsHandlers,
+  ...automationHandlers,
+  ...templateHandlers,
 ];

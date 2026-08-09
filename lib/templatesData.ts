@@ -1,4 +1,4 @@
-import { Template, TemplateCategory, TemplateComplexity } from "@/types/templates.types";
+import { Template, TemplateCategory, TemplateComplexity, TemplateTier, TemplateCatalogItem } from "@/types/templates.types";
 
 
 // ─── Category metadata ────────────────────────────────────────────────────────
@@ -36,7 +36,8 @@ export const TEMPLATES: Template[] = [
     longDescription: 'A battle-tested sprint board template for software engineering teams. Pre-configured with backlog grooming tasks, sprint planning, daily standups, and a retrospective. Uses Focura\'s Kanban view with WIP limits and the List view for backlog management. Labels cover story sizes (XS, S, M, L, XL) and types (Feature, Bug, Chore, Tech Debt).',
     category: 'engineering',
     complexity: 'starter',
-    status  : 'coming_soon',
+    status  : 'available',
+    tier    : 'PRO',
     icon    : '⚙️',
     color   : '#3b82f6',
     sections: ['Backlog', 'Sprint Ready', 'In Progress', 'In Review', 'Done'],
@@ -80,7 +81,8 @@ export const TEMPLATES: Template[] = [
     longDescription: 'A dedicated bug tracking project template. Bugs move from Reported → Triaged → In Fix → Needs Verification → Closed. Labels cover severity (Critical, High, Medium, Low), environment (Production, Staging, Dev), and browser/OS tags. Includes a recurring weekly triage task.',
     category: 'engineering',
     complexity: 'intermediate',
-    status  : 'coming_soon',
+    status  : 'available',
+    tier    : 'PRO',
     icon    : '🐛',
     color   : '#ef4444',
     sections: ['Reported', 'Triaged', 'In Fix', 'Needs Verification', 'Closed'],
@@ -115,7 +117,8 @@ export const TEMPLATES: Template[] = [
     longDescription: 'A high-level product roadmap for teams building software products. Organised into Now (this quarter), Next (next quarter), and Later (future) columns. Labels align features to OKR pillars. Includes a milestone for each quarterly planning cycle and a monthly leadership review.',
     category: 'product',
     complexity: 'intermediate',
-    status  : 'coming_soon',
+    status  : 'available',
+    tier    : 'PRO',
     icon    : '🗺️',
     color   : '#8b5cf6',
     sections: ['Now (This Quarter)', 'Next (Next Quarter)', 'Later (Future)', 'Shipped'],
@@ -153,7 +156,8 @@ export const TEMPLATES: Template[] = [
     longDescription: 'Everything needed to ship a product from internal beta to public launch. Covers engineering (feature freeze, load testing, monitoring), marketing (launch post, social, email), legal (T&Cs, privacy, GDPR), and customer success (support docs, FAQ, chatbot). Milestones mark T-30, T-14, T-7, and launch day.',
     category: 'product',
     complexity: 'advanced',
-    status  : 'coming_soon',
+    status  : 'available',
+    tier    : 'BUSINESS',
     icon    : '🚀',
     color   : '#7c3aed',
     sections: ['Engineering', 'Marketing', 'Legal & Compliance', 'Customer Success', 'Launch Day'],
@@ -196,7 +200,8 @@ export const TEMPLATES: Template[] = [
     longDescription: 'Plan, assign, and track all content production in one project. Sections map to content status (Ideas → Writing → Review → Scheduled → Published). Labels cover content type (Blog, LinkedIn, Twitter/X, Email, Video) and topic pillar. Calendar view makes scheduling visual.',
     category: 'marketing',
     complexity: 'starter',
-    status  : 'coming_soon',
+    status  : 'available',
+    tier    : 'FREE',
     icon    : '📅',
     color   : '#f43f5e',
     sections: ['Ideas', 'Writing', 'In Review', 'Scheduled', 'Published'],
@@ -235,7 +240,8 @@ export const TEMPLATES: Template[] = [
     longDescription: 'A structured recruiting pipeline for growing teams. Each open role becomes a section. Candidates move from Applied → Phone Screen → Technical Interview → Final Round → Offer → Hired / Rejected. Labels track role, department, and interview feedback score. Includes recurring tasks for weekly recruiter syncs.',
     category: 'hr',
     complexity: 'intermediate',
-    status  : 'coming_soon',
+    status  : 'available',
+    tier    : 'PRO',
     icon    : '🧑‍💼',
     color   : '#10b981',
     sections: ['Applied', 'Phone Screen', 'Technical', 'Final Round', 'Offer Stage', 'Hired', 'Rejected'],
@@ -270,7 +276,8 @@ export const TEMPLATES: Template[] = [
     longDescription: 'A structured first-30-days plan for new team members. Week 1 covers tools, accounts, and introductions. Week 2 is shadowing and learning. Weeks 3–4 are first real contributions. Includes daily check-in tasks, a buddy assignment, and a 30-day review milestone.',
     category: 'hr',
     complexity: 'starter',
-    status  : 'coming_soon',
+    status  : 'available',
+    tier    : 'PRO',
     icon    : '🎉',
     color   : '#06b6d4',
     sections: ['Day 1', 'Week 1', 'Week 2', 'Weeks 3–4', 'Completed'],
@@ -309,7 +316,8 @@ export const TEMPLATES: Template[] = [
     longDescription: 'An opinionated 90-day plan for early-stage startups getting to their first public launch. Covers company formation (legal, banking), product MVP scoping, investor deck prep, early user acquisition, and launch week execution. Uses Calendar view for milestone tracking.',
     category: 'startup',
     complexity: 'advanced',
-    status  : 'coming_soon',
+    status  : 'available',
+    tier    : 'PRO',
     icon    : '⚡',
     color   : '#f97316',
     sections: ['Legal & Company', 'Product', 'Marketing & Growth', 'Fundraising', 'Launch Week'],
@@ -351,7 +359,8 @@ export const TEMPLATES: Template[] = [
     longDescription: 'A personal OKR template for individuals. Define 3 objectives each with 3 key results. Weekly review tasks keep you accountable. Focus session integration lets you link deep work to specific goals. Daily tasks feed into the weekly view.',
     category: 'personal',
     complexity: 'starter',
-    status  : 'coming_soon',
+    status  : 'available',
+    tier    : 'FREE',
     icon    : '🎯',
     color   : '#ec4899',
     sections: ['Objectives', 'Key Results', 'Weekly Actions', 'Habits', 'Completed'],
@@ -387,16 +396,18 @@ export const TEMPLATES: Template[] = [
 export function filterTemplates(
   templates : Template[],
   category  : TemplateCategory | 'all',
-  search    : string
+  search    : string,
+  tier      : TemplateTier | 'all' = 'all'
 ): Template[] {
   return templates.filter((t) => {
     const matchCat    = category === 'all' || t.category === category;
+    const matchTier   = tier === 'all' || t.tier === tier;
     const q           = search.toLowerCase();
     const matchSearch = !q
       || t.title.toLowerCase().includes(q)
       || t.description.toLowerCase().includes(q)
       || t.tags.some((tag) => tag.includes(q));
-    return matchCat && matchSearch;
+    return matchCat && matchTier && matchSearch;
   });
 }
 
@@ -406,3 +417,45 @@ export const ALL_CATEGORIES = [
 ] as const;
 
 export type CategoryFilter = typeof ALL_CATEGORIES[number];
+
+// ─── Tier filter ──────────────────────────────────────────────────────────────
+export type TierFilter = TemplateTier | 'all';
+
+export const ALL_TIERS: TierFilter[] = ['all', 'FREE', 'PRO', 'BUSINESS'];
+
+export const TIER_LABELS: Record<TierFilter, string> = {
+  all: 'All tiers',
+  FREE: 'Free',
+  PRO: 'Pro',
+  BUSINESS: 'Business',
+};
+
+// ─── Catalog → card mapper ────────────────────────────────────────────────────
+/**
+ * Flatten a backend TemplateCatalogItem (content nested in `content`) into the
+ * card-friendly `Template` shape used by TemplatesCard.
+ */
+export function catalogItemToTemplate(item: TemplateCatalogItem): Template {
+  return {
+    id          : item.id,
+    slug        : item.slug,
+    title       : item.title,
+    description : item.description,
+    longDescription: item.longDescription ?? '',
+    category    : item.category as TemplateCategory,
+    complexity  : item.complexity as TemplateComplexity,
+    status      : item.status === 'available' ? 'available' : 'coming_soon',
+    tier        : item.tier,
+    icon        : item.icon ?? '📁',
+    color       : item.color ?? '#667eea',
+    sections    : (item.content?.sections ?? []).map((s) => s.name),
+    tasks       : (item.content?.tasks ?? []).map((t) => ({ ...t })),
+    labels      : (item.content?.labels ?? []).map((l) => ({ ...l })),
+    milestones  : (item.content?.milestones ?? []).map((m) => ({ ...m })),
+    views       : (item.content?.views ?? []).map((v) => v.type),
+    usageCount  : item.usageCount ?? 0,
+    estimatedSetupMinutes: item.estimatedSetupMinutes ?? 5,
+    tags        : Array.isArray(item.tags) ? (item.tags as string[]) : [],
+    author      : item.author ?? { name: 'Focura Team', role: 'Official' },
+  };
+}

@@ -1157,6 +1157,303 @@ axios.interceptors.response.use(null, async (error) => {
       },
     ],
   },
+
+  // ── AUTOMATIONS ────────────────────────────────────────────────────────────
+  {
+    id         : 'automations',
+    title      : 'Automations',
+    description: 'Create workspace automation rules that run configured actions when tasks change status or are created.',
+    endpoints  : [
+      {
+        id         : 'automations-list',
+        method     : 'GET',
+        path       : '/api/v1/automations',
+        summary    : 'List automation rules',
+        description: 'Lists rules for a workspace. Pass projectId to include the project\'s rules plus workspace-wide rules.',
+        auth       : 'auth',
+        queryParams: [
+          { name: 'workspaceId', type: 'string', required: true,  description: 'Workspace to list rules for' },
+          { name: 'projectId',   type: 'string', required: false, description: 'Scope to a project' },
+        ],
+        responses  : [
+          { status: 200, description: 'Array of automation rules' },
+          { status: 403, description: 'Not a member of the workspace' },
+        ],
+        examples   : [
+          { label: 'cURL', code: `curl "${FULL_BASE}/automations?workspaceId=cm_ws_abc" \\
+  -H "Authorization: Bearer <token>"` },
+        ],
+        tags       : ['automations'],
+      },
+      {
+        id         : 'automations-create',
+        method     : 'POST',
+        path       : '/api/v1/automations',
+        summary    : 'Create an automation rule',
+        description: 'Creates a rule for a workspace (optionally scoped to a project). Requires OWNER or ADMIN. Enforced against the plan\'s automation limit.',
+        auth       : 'auth',
+        bodyFields : [
+          { name: 'workspaceId',  type: 'string', required: true,  description: 'Parent workspace' },
+          { name: 'projectId',    type: 'string', required: false, description: 'Project scope (null = workspace-wide)' },
+          { name: 'name',         type: 'string', required: true,  description: 'Rule name' },
+          { name: 'triggerType',  type: 'string', required: true,  description: 'STATUS_CHANGED | TASK_CREATED' },
+          { name: 'triggerConfig',type: 'object', required: false, description: '{ fromStatus?, toStatus? } or { projectId? }' },
+          { name: 'actions',      type: 'array',  required: true,  description: '1–5 actions: ASSIGN_USER | SET_PRIORITY | NOTIFY_MEMBERS' },
+        ],
+        responses  : [
+          { status: 201, description: 'Rule created' },
+          { status: 403, description: 'Insufficient role or plan limit reached' },
+        ],
+        examples   : [
+          { label: 'cURL', code: `curl -X POST ${FULL_BASE}/automations \\
+  -H "Authorization: Bearer <token>" \\
+  -H "Content-Type: application/json" \\
+  -d '{"workspaceId":"cm_ws_abc","name":"Auto-assign","triggerType":"STATUS_CHANGED","triggerConfig":{"toStatus":"IN_REVIEW"},"actions":[{"type":"ASSIGN_USER","config":{"role":"project-owner"}}]}'` },
+        ],
+        tags       : ['automations'],
+      },
+      {
+        id         : 'automations-get',
+        method     : 'GET',
+        path       : '/api/v1/automations/:id',
+        summary    : 'Get an automation rule',
+        description: 'Returns a single rule. Any workspace member can read.',
+        auth       : 'auth',
+        pathParams : [
+          { name: 'id', type: 'string', required: true, description: 'Rule id' },
+        ],
+        responses  : [
+          { status: 200, description: 'The rule object' },
+          { status: 404, description: 'Rule not found' },
+        ],
+        examples   : [
+          { label: 'cURL', code: `curl ${FULL_BASE}/automations/cm_rule_1 \\
+  -H "Authorization: Bearer <token>"` },
+        ],
+        tags       : ['automations'],
+      },
+      {
+        id         : 'automations-update',
+        method     : 'PATCH',
+        path       : '/api/v1/automations/:id',
+        summary    : 'Update an automation rule',
+        description: 'Updates rule fields or toggles enabled. Requires OWNER or ADMIN.',
+        auth       : 'auth',
+        pathParams : [
+          { name: 'id', type: 'string', required: true, description: 'Rule id' },
+        ],
+        bodyFields : [
+          { name: 'enabled',   type: 'boolean', required: false, description: 'Pause/resume the rule' },
+          { name: 'name',      type: 'string',  required: false, description: 'New name' },
+          { name: 'actions',   type: 'array',   required: false, description: 'Replaced action list' },
+        ],
+        responses  : [
+          { status: 200, description: 'Rule updated' },
+          { status: 403, description: 'Insufficient role' },
+        ],
+        examples   : [
+          { label: 'cURL', code: `curl -X PATCH ${FULL_BASE}/automations/cm_rule_1 \\
+  -H "Authorization: Bearer <token>" \\
+  -H "Content-Type: application/json" \\
+  -d '{"enabled":false}'` },
+        ],
+        tags       : ['automations'],
+      },
+      {
+        id         : 'automations-delete',
+        method     : 'DELETE',
+        path       : '/api/v1/automations/:id',
+        summary    : 'Delete an automation rule',
+        description: 'Permanently deletes the rule. Requires OWNER or ADMIN.',
+        auth       : 'auth',
+        pathParams : [
+          { name: 'id', type: 'string', required: true, description: 'Rule id' },
+        ],
+        responses  : [
+          { status: 200, description: 'Rule deleted' },
+          { status: 403, description: 'Insufficient role' },
+        ],
+        examples   : [
+          { label: 'cURL', code: `curl -X DELETE ${FULL_BASE}/automations/cm_rule_1 \\
+  -H "Authorization: Bearer <token>"` },
+        ],
+        tags       : ['automations'],
+      },
+      {
+        id         : 'automations-runs',
+        method     : 'GET',
+        path       : '/api/v1/automations/:id/runs',
+        summary    : 'Recent run history',
+        description: 'Returns the 20 most recent executions of a rule, sourced from the activity feed.',
+        auth       : 'auth',
+        pathParams : [
+          { name: 'id', type: 'string', required: true, description: 'Rule id' },
+        ],
+        responses  : [
+          { status: 200, description: 'Array of run activity entries' },
+        ],
+        examples   : [
+          { label: 'cURL', code: `curl ${FULL_BASE}/automations/cm_rule_1/runs \\
+  -H "Authorization: Bearer <token>"` },
+        ],
+        tags       : ['automations'],
+      },
+    ],
+  },
+  {
+    id         : 'templates',
+    title      : 'Templates',
+    description: 'Public template catalog with plan-tier gating, one-click project import, save-as-template, and the template email waitlist.',
+    endpoints  : [
+      {
+        id         : 'templates-request',
+        method     : 'POST',
+        path       : '/api/v1/templates',
+        summary    : 'Request a template (email waitlist)',
+        description: 'Public email capture for the template waitlist. Duplicate emails return 400. Rate limited (5 / 10 min).',
+        auth       : 'public',
+        bodyFields : [ { name: 'email', type: 'string', required: true, description: 'Valid email address' } ],
+        responses  : [
+          { status: 200, description: '{ success, message }' },
+          { status: 400, description: 'Invalid or duplicate email' },
+        ],
+        examples   : [ { label: "cURL", code: "curl -X POST FULL_BASE/templates -H \"Content-Type: application/json\" -d \"{\"email\":\"you@example.com\"}\"" } ],
+        tags       : ['templates'],
+      },
+      {
+        id         : 'templates-requests',
+        method     : 'GET',
+        path       : '/api/v1/templates',
+        summary    : 'List template waitlist emails',
+        description: 'Focura-admin only. Returns all template waitlist emails.',
+        auth       : 'admin',
+        responses  : [
+          { status: 200, description: '[{ email }]' },
+          { status: 403, description: 'Non-admin forbidden' },
+        ],
+        examples   : [ { label: "cURL", code: "curl FULL_BASE/templates -H \"Authorization: Bearer <token>\"" } ],
+        tags       : ['templates'],
+      },
+      {
+        id         : 'templates-request-delete',
+        method     : 'DELETE',
+        path       : '/api/v1/templates/:email',
+        summary    : 'Remove a waitlist email',
+        description: 'Focura-admin only. Idempotent removal of a waitlist email by address.',
+        auth       : 'admin',
+        pathParams : [ { name: "email", type: "string", required: true, description: "Waitlist email (URL-encoded)" } ],
+        responses  : [
+          { status: 200, description: '{ success }' },
+          { status: 403, description: 'Non-admin forbidden' },
+        ],
+        examples   : [ { label: "cURL", code: "curl -X DELETE FULL_BASE/templates/you%40example.com -H \"Authorization: Bearer <token>\"" } ],
+        tags       : ['templates'],
+      },
+      {
+        id         : 'templates-catalog',
+        method     : 'GET',
+        path       : '/api/v1/templates/catalog',
+        summary    : 'Public template catalog',
+        description: 'Returns available templates plus the caller access tier (FREE/PRO/BUSINESS), resolved server-side from the workspaces the caller owns or belongs to. Supports category, tier and search filters.',
+        auth       : 'public',
+        queryParams: [
+          { name: 'category', type: 'string', required: false, description: 'Filter by template category' },
+          { name: 'tier', type: 'string', required: false, description: 'Filter by tier: FREE | PRO | BUSINESS' },
+          { name: 'search', type: 'string', required: false, description: 'Free-text search on title/description' },
+        ],
+        responses  : [
+          { status: 200, description: '{ templates, access: { tier } }' },
+        ],
+        examples   : [
+          { label: "cURL", code: "curl FULL_BASE/templates/catalog" },
+        ],
+        tags       : ['templates'],
+      },
+      {
+        id         : 'templates-detail',
+        method     : 'GET',
+        path       : '/api/v1/templates/:slug',
+        summary    : 'Template detail',
+        description: 'Public detail for a single template by slug.',
+        auth       : 'public',
+        pathParams : [ { name: "slug", type: "string", required: true, description: "Template slug" } ],
+        responses  : [ { status: 200, description: "Full template item" } ],
+        examples   : [ { label: "cURL", code: "curl FULL_BASE/templates/engineering-sprint" } ],
+        tags       : ['templates'],
+      },
+      {
+        id         : 'templates-use',
+        method     : 'POST',
+        path       : '/api/v1/templates/:slug/use',
+        summary    : 'Import a template as a new project',
+        description: 'Clones the template snapshot (sections, labels, tasks, milestones, views) into a workspace project inside a single transaction. Tier-gated by the workspace plan. Rate limited (10 / 10 min).',
+        auth       : 'auth',
+        pathParams : [ { name: "slug", type: "string", required: true, description: "Template slug" } ],
+        bodyFields : [
+          { name: 'workspaceId', type: 'string', required: true, description: 'Destination workspace' },
+          { name: 'projectName', type: 'string', required: false, description: 'Optional override name' },
+        ],
+        responses  : [
+          { status: 201, description: '{ projectSlug, workspaceSlug }' },
+          { status: 403, description: 'PlanLimitError when the workspace plan is below the template tier' },
+        ],
+        examples   : [ { label: "cURL", code: "curl -X POST FULL_BASE/templates/engineering-sprint/use -H \"Authorization: Bearer <token>\" -H \"Content-Type: application/json\" -d \"{\"workspaceId\":\"ws_1\"}\"" } ],
+        tags       : ['templates'],
+      },
+      {
+        id         : 'templates-save',
+        method     : 'POST',
+        path       : '/api/v1/templates/save-as-template/:projectId',
+        summary    : 'Save a project as a template',
+        description: 'Snapshots a project structure (sections, labels, tasks, milestones, views) into a private workspace template. Rate limited (20 / 10 min).',
+        auth       : 'auth',
+        pathParams : [ { name: "projectId", type: "string", required: true, description: "Source project id" } ],
+        bodyFields : [
+          { name: 'title', type: 'string', required: false, description: 'Optional template title' },
+          { name: 'visibility', type: 'string', required: false, description: 'PRIVATE (default) | PUBLIC' },
+        ],
+        responses  : [ { status: 201, description: "{ slug, title }" } ],
+        examples   : [ { label: "cURL", code: "curl -X POST FULL_BASE/templates/save-as-template/proj_1 -H \"Authorization: Bearer <token>\" -H \"Content-Type: application/json\" -d \"{}\"" } ],
+        tags       : ['templates'],
+      },
+      {
+        id         : 'templates-private',
+        method     : 'GET',
+        path       : '/api/v1/templates/private',
+        summary    : 'Workspace private templates',
+        description: 'Lists private templates saved inside a workspace (members only).',
+        auth       : 'auth',
+        queryParams: [ { name: "workspaceId", type: "string", required: true, description: "Workspace id" } ],
+        responses  : [ { status: 200, description: "Array of private template items" } ],
+        examples   : [ { label: "cURL", code: "curl \"FULL_BASE/templates/private?workspaceId=ws_1\" -H \"Authorization: Bearer <token>\"" } ],
+        tags       : ['templates'],
+      },
+      {
+        id         : 'templates-update',
+        method     : 'PATCH',
+        path       : '/api/v1/templates/:slug',
+        summary    : 'Update a private template',
+        description: 'Update title/description/tier/etc. of a template you authored (or a Focura admin).',
+        auth       : 'auth',
+        pathParams : [ { name: "slug", type: "string", required: true, description: "Template slug" } ],
+        responses  : [ { status: 200, description: "{ slug, title }" } ],
+        examples   : [ { label: "cURL", code: "curl -X DELETE FULL_BASE/templates/tpl-1 -H \"Authorization: Bearer <token>\"" } ],
+        tags       : ['templates'],
+      },
+      {
+        id         : 'templates-delete',
+        method     : 'DELETE',
+        path       : '/api/v1/templates/:slug',
+        summary    : 'Delete a private template',
+        description: 'Deletes a template you authored (or a Focura admin).',
+        auth       : 'auth',
+        pathParams : [ { name: "slug", type: "string", required: true, description: "Template slug" } ],
+        responses  : [ { status: 200, description: "{ success: true }" } ],
+        examples   : [ { label: "cURL", code: "curl -X DELETE FULL_BASE/templates/tpl-1 -H \"Authorization: Bearer <token>\"" } ],
+        tags       : ['templates'],
+      },
+    ],
+  },
 ];
 
 // ─── Flat list helper for search ──────────────────────────────────────────────

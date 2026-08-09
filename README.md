@@ -121,6 +121,15 @@ The wellness dashboard (`/dashboard/wellness`) brings focus, energy, and burnout
 - ✅ Project archiving
 - ✅ Project slug-based routing
 
+#### **Project Templates**
+- ✅ Tier-gated template catalog (Free / Pro / Business) served live from the backend
+- ✅ One-click import — clone a full project structure (sections, tasks, labels, milestones, views) into any workspace
+- ✅ Templates surface inside the creation flow — pick one on the New Project page and import directly while creating
+- ✅ Save any project as a reusable private workspace template from Project Settings → General
+- ✅ Tier badges, lock states and upgrade CTAs so paid templates show their value
+- ✅ Search, category and tier filters on the public templates page
+- ✅ Template email waitlist (request a template)
+
 #### **Analytics & Insights**
 - ✅ Workspace analytics dashboard
 - ✅ Task completion rates and status distribution
@@ -211,7 +220,7 @@ The wellness dashboard (`/dashboard/wellness`) brings focus, energy, and burnout
 - ✅ Pricing page with plan comparison and billing toggle
 - ✅ Features page with interactive demo
 - ✅ Solutions page with use cases
-- ✅ Templates gallery
+- ✅ Templates gallery (tier-gated live catalog + one-click import + save-as-template)
 - ✅ Careers page with job listings
 - ✅ Product roadmap
 - ✅ Help center with searchable knowledge base
@@ -288,7 +297,7 @@ The wellness dashboard (`/dashboard/wellness`) brings focus, energy, and burnout
 │                                                              │
 │  • Server Components for data fetching                       │
 │  • Client Components for interactivity                       │
-│  • Hook-based data abstraction (107 hooks)                   │
+│  • Hook-based data abstraction (116 hooks)                   │
 │  • Centralized API layer with interceptors                   │
 │  • React Query for caching & deduplication                   │
 │  • PWA with offline support (IndexedDB + Service Worker)     │
@@ -562,7 +571,7 @@ focura-client/
 │   ├── Features/                      # Features page (11 components)
 │   ├── Solutions/                     # Solutions page (6 components)
 │   ├── Pricing/                       # Pricing page (8 components)
-│   ├── Templates/                     # Templates gallery (9 components)
+│   ├── Templates/                     # Templates gallery (11 components)
 │   ├── Contact/                       # Contact page (6 components)
 │   ├── Careers/                       # Careers page (5 components)
 │   ├── Help/                          # Help center (7 components + data)
@@ -631,7 +640,7 @@ focura-client/
 │   ├── RefundPolicy/                  # Legal: Refund (11 files)
 │   └── Cookies/                       # Legal: Cookies (10 files)
 │
-├── hooks/                             # Custom React Hooks (107 files)
+├── hooks/                             # Custom React Hooks (116 files)
 │   ├── *Keys.ts                       # Query key factories (4 files)
 │   ├── useUser.ts                     # Current user
 │   ├── useAuthForm.ts                 # Auth forms
@@ -1158,11 +1167,14 @@ For complete API documentation, see the [API Documentation](https://focura-clien
 
 ## 🪝 Hooks
 
-### **Query Key Factories (4 files)**
+### **Query Key Factories (7 files)**
 - `taskKeys` — Task, comment, attachment, and overview cache keys
 - `workspaceKeys` — Workspace detail, members, stats, storage cache keys
 - `projectKeys` — Project list and detail cache keys
 - `notificationKeys` — Notification list and unread count cache keys
+- `templateKeys` — Template catalog, detail, and workspace-private cache keys
+- `automationKeys` — Automation-rule cache keys
+- `projectFeatureKeys` — Project feature-flag cache keys
 
 ### **Auth & User Hooks (6)**
 | Hook | Purpose |
@@ -1325,7 +1337,7 @@ npm run clean
    - Minimize client-side JavaScript
 
 2. **Use Custom Hooks**
-   - 107 hooks for data fetching, state management, and page orchestration
+   - 116 hooks for data fetching, state management, and page orchestration
    - Reuse across components
    - Easier testing
 

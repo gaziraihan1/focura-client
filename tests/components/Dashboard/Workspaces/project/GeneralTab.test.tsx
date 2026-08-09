@@ -159,6 +159,13 @@ vi.mock('@/hooks/useProjects', () => ({
   }),
 }));
 
+vi.mock('@/hooks/useTemplates', () => ({
+  useSaveAsTemplate: () => ({
+    mutateAsync: vi.fn().mockResolvedValue({ slug: 'tpl', title: 'Test Project' }),
+    isPending: false,
+  }),
+}));
+
 vi.mock('@/components/Dashboard/Workspaces/project/Settings/Section', () => ({
   Section: ({ title, description, children }: Record<string, unknown>) => (
     <div data-testid="section" data-title={title}>

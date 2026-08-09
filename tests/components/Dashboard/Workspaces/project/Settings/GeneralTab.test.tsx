@@ -18,6 +18,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 
+// Shared mock so we can assert the save-as-template call args.
+const { mockSaveAsTemplateMutate } = vi.hoisted(() => ({
+  mockSaveAsTemplateMutate: vi.fn().mockResolvedValue({ slug: 'tpl', title: 'P' }),
+}))
+
 // ─── Global mocks ──────────────────────────────────────────────────────────
 vi.mock('next/link', () => ({
   default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
@@ -276,6 +281,13 @@ vi.mock('@/hooks/useProjects', () => ({
   useDeleteProject: () => ({ mutateAsync: vi.fn(), isPending: false }),
 }))
 
+vi.mock('@/hooks/useTemplates', () => ({
+  useSaveAsTemplate: () => ({
+    mutateAsync: mockSaveAsTemplateMutate,
+    isPending: false,
+  }),
+}))
+
 vi.mock('@/hooks/useEnergyLevel', () => ({
   useEnergyLevel: () => ({ data: null, logEnergy: vi.fn(), refetch: vi.fn() }),
   useEnergyHistory: () => ({ data: [], pagination: null, loading: false }),
@@ -400,6 +412,10 @@ const makeTask = (overrides: Record<string, unknown> = {}) => ({
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('Workspaces/project/Settings – GeneralTab', () => {
+  beforeEach(() => {
+    mockSaveAsTemplateMutate.mockClear()
+  })
+
   it('renders project info section', async () => {
     const { GeneralTab } = await import('@/components/Dashboard/Workspaces/project/Settings/GeneralTab')
     render(<GeneralTab project={{ id: 'p1', name: 'My Project', description: 'Desc' } as any} canManage={true} />)
@@ -424,5 +440,27 @@ describe('Workspaces/project/Settings – GeneralTab', () => {
     const { GeneralTab } = await import('@/components/Dashboard/Workspaces/project/Settings/GeneralTab')
     render(<GeneralTab project={{ id: 'p1', name: 'P', description: '' } as any} canManage={true} />)
     expect(screen.getByText('Project Visibility')).toBeInTheDocument()
+  })
+  it('renders save as template section for editors', async () => {
+    const { GeneralTab } = await import('@/components/Dashboard/Workspaces/project/Settings/GeneralTab')
+    render(<GeneralTab project={{ id: 'p1', name: 'P', description: '' } as any} canManage={true} />)
+    expect(screen.getByRole('button', { name: 'Save as Template' })).toBeInTheDocument()
+  })
+  it('hides save as template when cannot manage', async () => {
+    const { GeneralTab } = await import('@/components/Dashboard/Workspaces/project/Settings/GeneralTab')
+    render(<GeneralTab project={{ id: 'p1', name: 'P', description: '' } as any} canManage={false} />)
+    expect(screen.queryByRole('button', { name: 'Save as Template' })).not.toBeInTheDocument()
+  })
+  it('snapshots the project when clicked', async () => {
+    const { GeneralTab } = await import('@/components/Dashboard/Workspaces/project/Settings/GeneralTab')
+    render(<GeneralTab project={{ id: 'p1', name: 'P', description: '' } as any} canManage={true} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Save as Template' }))
+    expect(mockSaveAsTemplateMutate).toHaveBeenCalledWith({ projectId: 'p1' })
+  })
+  it('shows success feedback after saving', async () => {
+    const { GeneralTab } = await import('@/components/Dashboard/Workspaces/project/Settings/GeneralTab')
+    render(<GeneralTab project={{ id: 'p1', name: 'P', description: '' } as any} canManage={true} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Save as Template' }))
+    expect(await screen.findByText('Template Saved!')).toBeInTheDocument()
   })
 })

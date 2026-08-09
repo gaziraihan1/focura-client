@@ -30,7 +30,7 @@ const steps = [
     title     : 'Customise & ship',
     description:
       'The imported project is yours — rename tasks, reassign labels, invite team members, and start focus sessions. Everything is editable after import.',
-    detail    : 'Templates are starting points, not constraints. Delete what you don\'t need, add what you do. You can also save your customised version as your own template (coming in v1.1).',
+    detail    : 'Templates are starting points, not constraints. Delete what you don\'t need, add what you do. You can also save your customised version as your own private workspace template any time.',
     color     : 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800/50',
     iconBg    : 'bg-emerald-100 dark:bg-emerald-900/60',
     iconColor : 'text-emerald-600 dark:text-emerald-400',

@@ -18,6 +18,7 @@ import {
   Activity,
   HeartPulse,
 } from "lucide-react";
+import SidebarNewProjectButton from "./SidebarNewProjectButton";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -155,6 +156,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         >
           <X size={18} />
         </button>
+      </div>
+
+      {/* Quick project start — opens the template quick-picker */}
+      <div className="px-3 pt-4 shrink-0">
+        <SidebarNewProjectButton />
       </div>
 
       <nav

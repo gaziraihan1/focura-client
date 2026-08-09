@@ -1,39 +1,43 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect } from 'vitest';
-import { userEvent } from '@testing-library/user-event'
+import { describe, it, expect, vi } from 'vitest'
+
+vi.mock('next/link', () => ({
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
+    <a href={href} {...props}>{children}</a>
+  ),
+}))
+
+vi.mock('lucide-react', () => {
+  const icon = (name: string) => {
+    const Component = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={`${name}-icon`} {...props} />
+    Component.displayName = name
+    return Component
+  }
+  return {
+    Crown: icon('Crown'),
+    Sparkles: icon('Sparkles'),
+    ArrowRight: icon('ArrowRight'),
+  }
+})
+
 import TemplatesNotifyBanner from '@/components/Templates/TemplatesNotifyBanner'
 
 describe('TemplatesNotifyBanner', () => {
   it('renders heading', () => {
     render(<TemplatesNotifyBanner />)
-    expect(screen.getByText(/be first when templates launch/i)).toBeInTheDocument()
+    expect(screen.getByText(/Every plan starts with free templates/)).toBeInTheDocument()
   })
 
-  it('renders email input', () => {
+  it('renders all three tier cards', () => {
     render(<TemplatesNotifyBanner />)
-    expect(screen.getByPlaceholderText('your@email.com')).toBeInTheDocument()
+    expect(screen.getByText('Free')).toBeInTheDocument()
+    expect(screen.getByText('Pro')).toBeInTheDocument()
+    expect(screen.getByText('Business')).toBeInTheDocument()
   })
 
-  it('renders submit button', () => {
+  it('renders a link to the pricing page', () => {
     render(<TemplatesNotifyBanner />)
-    expect(screen.getByRole('button', { name: /notify me/i })).toBeInTheDocument()
-  })
-
-  it('shows privacy note', () => {
-    render(<TemplatesNotifyBanner />)
-    expect(screen.getAllByText(/no spam/i).length).toBeGreaterThanOrEqual(1)
-  })
-
-  it('shows validation error for invalid email', async () => {
-    const user = userEvent.setup()
-    render(<TemplatesNotifyBanner />)
-    await user.type(screen.getByPlaceholderText('your@email.com'), 'invalid')
-    await user.click(screen.getByRole('button', { name: /notify me/i }))
-    expect(screen.getByText(/valid email/i)).toBeInTheDocument()
-  })
-
-  it('disables submit when email is empty', () => {
-    render(<TemplatesNotifyBanner />)
-    expect(screen.getByRole('button', { name: /notify me/i })).toBeDisabled()
+    const link = screen.getByText('Compare plans').closest('a')
+    expect(link).toHaveAttribute('href', '/pricing')
   })
 })

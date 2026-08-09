@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 
 // Polyfill IntersectionObserver for jsdom
@@ -105,6 +105,8 @@ vi.mock('lucide-react', () => {
     BookOpen: icon('BookOpen'),
     UserCheck: icon('UserCheck'),
     Pin: icon('Pin'),
+    Crown: icon('Crown'),
+    FolderPlus: icon('FolderPlus'),
   }
 })
 
@@ -114,29 +116,84 @@ vi.mock('@/lib/utils', () => ({
 
 
 import TemplatesCategories from '@/components/Templates/TemplatesCategories'
+import { TEMPLATES } from '@/lib/templatesData'
 
 describe('TemplatesCategories', () => {
   const onChange = vi.fn()
+  const onTierChange = vi.fn()
 
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
   it('renders the "All" tab', () => {
-    render(<TemplatesCategories active="all" onChange={onChange} />)
+    render(
+      <TemplatesCategories
+        active="all"
+        onChange={onChange}
+        activeTier="all"
+        onTierChange={onTierChange}
+        templates={TEMPLATES}
+      />
+    )
     expect(screen.getByText('All')).toBeInTheDocument()
   })
 
+  it('renders tier filter tabs', () => {
+    render(
+      <TemplatesCategories
+        active="all"
+        onChange={onChange}
+        activeTier="all"
+        onTierChange={onTierChange}
+        templates={TEMPLATES}
+      />
+    )
+    expect(screen.getByText('Free')).toBeInTheDocument()
+    expect(screen.getByText('Pro')).toBeInTheDocument()
+    expect(screen.getByText('Business')).toBeInTheDocument()
+  })
+
   it('calls onChange when a category is clicked', () => {
-    render(<TemplatesCategories active="all" onChange={onChange} />)
+    render(
+      <TemplatesCategories
+        active="all"
+        onChange={onChange}
+        activeTier="all"
+        onTierChange={onTierChange}
+        templates={TEMPLATES}
+      />
+    )
     const engineering = screen.getByText('Engineering')
     fireEvent.click(engineering)
     expect(onChange).toHaveBeenCalledWith('engineering')
   })
 
   it('calls onChange with "all" when All is clicked', () => {
-    render(<TemplatesCategories active="engineering" onChange={onChange} />)
+    render(
+      <TemplatesCategories
+        active="engineering"
+        onChange={onChange}
+        activeTier="all"
+        onTierChange={onTierChange}
+        templates={TEMPLATES}
+      />
+    )
     fireEvent.click(screen.getByText('All'))
     expect(onChange).toHaveBeenCalledWith('all')
+  })
+
+  it('calls onTierChange when a tier is clicked', () => {
+    render(
+      <TemplatesCategories
+        active="all"
+        onChange={onChange}
+        activeTier="all"
+        onTierChange={onTierChange}
+        templates={TEMPLATES}
+      />
+    )
+    fireEvent.click(screen.getByText('Business'))
+    expect(onTierChange).toHaveBeenCalledWith('BUSINESS')
   })
 })

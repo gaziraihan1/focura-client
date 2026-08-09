@@ -1,13 +1,17 @@
 'use client';
 
-import { useState }   from 'react';
-import { Clock, Layers, CheckCircle2, ChevronDown, ChevronUp, Bell } from 'lucide-react';
-import { cn }         from '@/lib/utils';
+import { useState } from 'react';
+import { Clock, Layers, CheckCircle2, ChevronDown, ChevronUp, Crown, ArrowRight, FolderPlus } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { CATEGORY_META, COMPLEXITY_META } from '@/lib/templatesData';
-import { Template } from '@/types/templates.types';
+import { Template, TemplateAccessTier, TIER_META, canAccessTemplate } from '@/types/templates.types';
+import TemplateTierBadge from './TemplateTierBadge';
+
 interface TemplateCardProps {
   template   : Template;
-  onNotify   : (template: Template) => void;
+  accessTier : TemplateAccessTier;
+  onUse      : (template: Template) => void;
+  onUpgrade  : (template: Template) => void;
 }
 
 const VIEW_LABELS: Record<string, string> = {
@@ -17,55 +21,60 @@ const VIEW_LABELS: Record<string, string> = {
   TIMELINE: 'Timeline',
 };
 
-const TemplateCard = ({ template, onNotify }: TemplateCardProps) => {
+const TemplateCard = ({ template, accessTier, onUse, onUpgrade }: TemplateCardProps) => {
   const [expanded, setExpanded] = useState(false);
-  const [notified, setNotified] = useState(false);
 
   const cat        = CATEGORY_META[template.category];
   const complexity = COMPLEXITY_META[template.complexity];
-
-  const handleNotify = () => {
-    onNotify(template);
-    setNotified(true);
-    setTimeout(() => setNotified(false), 3000);
-  };
+  const locked     = !canAccessTemplate(accessTier, template.tier);
+  const tierMeta   = TIER_META[template.tier];
 
   return (
     <article className={cn(
-      'group rounded-2xl border bg-white dark:bg-neutral-900 overflow-hidden transition-colors hover:shadow-sm flex flex-col',
-      cat.borderColor
+      'group rounded-2xl border bg-white dark:bg-neutral-900 overflow-hidden transition-all hover:shadow-md flex flex-col',
+      locked ? 'border-dashed border-neutral-300 dark:border-neutral-700' : cat.borderColor
     )}>
       {/* ── Colour strip + icon ───────────────────────────────────────────── */}
       <div
         className='h-1.5 w-full'
-        style={{ backgroundColor: template.color, opacity: 0.7 }}
+        style={{ backgroundColor: template.color, opacity: locked ? 0.25 : 0.7 }}
       />
 
       <div className='p-5 flex flex-col flex-1'>
         {/* Header row */}
         <div className='flex items-start justify-between gap-3 mb-3'>
-          <div className='flex items-center gap-2.5'>
-            <span className='text-2xl leading-none'>{template.icon}</span>
-            <div>
+          <div className='flex items-center gap-2.5 min-w-0'>
+            <span className='text-2xl leading-none shrink-0'>{template.icon}</span>
+            <div className='min-w-0'>
               <h3 className='text-sm font-bold text-neutral-900 dark:text-neutral-100 leading-snug'>
                 {template.title}
               </h3>
-              <span className={cn(
-                'inline-block text-[10px] font-bold uppercase tracking-wide rounded-full px-2 py-0.5 mt-0.5',
-                cat.bgColor, cat.color
-              )}>
-                {cat.label}
-              </span>
+              <div className='flex items-center gap-1.5 mt-1 flex-wrap'>
+                <span className={cn(
+                  'inline-block text-[10px] font-bold uppercase tracking-wide rounded-full px-2 py-0.5',
+                  cat.bgColor, cat.color
+                )}>
+                  {cat.label}
+                </span>
+                <TemplateTierBadge tier={template.tier} locked={locked} />
+              </div>
             </div>
           </div>
 
-          {/* Complexity badge */}
-          <span className={cn(
-            'shrink-0 text-[10px] font-bold rounded-full px-2.5 py-0.5 h-fit',
-            complexity.style
-          )}>
-            {complexity.label}
-          </span>
+          {/* Status + complexity badges */}
+          <div className='shrink-0 flex items-center gap-1.5'>
+            {template.status === 'coming_soon' && (
+              <span className='text-[10px] font-bold rounded-full px-2.5 py-0.5 h-fit bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700'>
+                Coming soon
+              </span>
+            )}
+            <span className={cn(
+              'text-[10px] font-bold rounded-full px-2.5 py-0.5 h-fit',
+              complexity.style
+            )}>
+              {complexity.label}
+            </span>
+          </div>
         </div>
 
         {/* Description */}
@@ -90,9 +99,8 @@ const TemplateCard = ({ template, onNotify }: TemplateCardProps) => {
           ))}
         </div>
 
-        {/* Expand: preview tasks + labels */}
+        {/* Expand: preview tasks + labels (kept visible for locked templates so users see the value) */}
         {expanded && (
-          /* react-doctor-disable-next-line react-doctor/no-transition-all -- tailwindcss-animate `animate-in` entry animation only animates opacity/transform/filter, not `all` (false positive) */
           <div className='mb-4 space-y-3 animate-in slide-in-from-top-2 duration-150'>
             {/* Sections */}
             <div>
@@ -183,29 +191,33 @@ const TemplateCard = ({ template, onNotify }: TemplateCardProps) => {
 
         {/* CTA */}
         <div className='border-t border-neutral-100 dark:border-neutral-800 pt-4'>
-          <div className='flex items-center justify-between gap-3'>
-            <div className='flex items-center gap-2'>
-              <span className='w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0' />
-              <span className='text-xs font-semibold text-amber-700 dark:text-amber-400'>
-                Coming soon
-              </span>
+          {template.status === 'coming_soon' ? (
+            <div className='w-full inline-flex items-center justify-center gap-1.5 text-xs font-bold rounded-xl px-3.5 py-2.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 cursor-not-allowed'>
+              <Clock className='w-3.5 h-3.5 shrink-0' /> Coming soon
             </div>
+          ) : locked ? (
+            <div className='flex items-center justify-between gap-3'>
+              <div className='flex items-center gap-2 min-w-0'>
+                <Crown className={cn('w-4 h-4 shrink-0', tierMeta.lockedStyle)} strokeWidth={2} />
+                <span className={cn('text-xs font-semibold', tierMeta.lockedStyle)}>
+                  {template.tier === 'BUSINESS' ? 'Business tier' : 'Pro tier'}
+                </span>
+              </div>
+              <button
+                onClick={() => onUpgrade(template)}
+                className='inline-flex items-center gap-1.5 text-xs font-bold rounded-xl px-3.5 py-2 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors'
+              >
+                Unlock <ArrowRight className='w-3.5 h-3.5 shrink-0' />
+              </button>
+            </div>
+          ) : (
             <button
-              onClick={handleNotify}
-              className={cn(
-                'inline-flex items-center gap-1.5 text-xs font-bold rounded-xl px-3.5 py-2 transition-colors',
-                notified
-                  ? 'bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400'
-                  : 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-300'
-              )}
+              onClick={() => onUse(template)}
+              className='w-full inline-flex items-center justify-center gap-1.5 text-xs font-bold rounded-xl px-3.5 py-2.5 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors'
             >
-              {notified ? (
-                <><CheckCircle2 className='w-3.5 h-3.5 shrink-0' /> Notified!</>
-              ) : (
-                <><Bell className='w-3.5 h-3.5 shrink-0' /> Notify me</>
-              )}
+              <FolderPlus className='w-3.5 h-3.5 shrink-0' /> Use template
             </button>
-          </div>
+          )}
         </div>
       </div>
     </article>

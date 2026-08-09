@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 // Polyfill IntersectionObserver for jsdom
@@ -105,6 +105,8 @@ vi.mock('lucide-react', () => {
     BookOpen: icon('BookOpen'),
     UserCheck: icon('UserCheck'),
     Pin: icon('Pin'),
+    Crown: icon('Crown'),
+    FolderPlus: icon('FolderPlus'),
   }
 })
 
@@ -114,15 +116,60 @@ vi.mock('@/lib/utils', () => ({
 
 
 import TemplatesGrid from '@/components/Templates/TemplatesGrid'
+import { TEMPLATES } from '@/lib/templatesData'
 
 describe('TemplatesGrid', () => {
+  const onUse = vi.fn()
+  const onUpgrade = vi.fn()
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
   it('renders templates', () => {
-    render(<TemplatesGrid category="all" search="" />)
+    render(
+      <TemplatesGrid
+        templates={TEMPLATES}
+        category="all"
+        tier="all"
+        search=""
+        accessTier="PRO"
+        onUse={onUse}
+        onUpgrade={onUpgrade}
+      />
+    )
     expect(screen.getByText(/templates/)).toBeInTheDocument()
   })
 
   it('renders empty state for no matches', () => {
-    render(<TemplatesGrid category="all" search="xyznonexistent123" />)
+    render(
+      <TemplatesGrid
+        templates={TEMPLATES}
+        category="all"
+        tier="all"
+        search="xyznonexistent123"
+        accessTier="PRO"
+        onUse={onUse}
+        onUpgrade={onUpgrade}
+      />
+    )
     expect(screen.getByText('No templates found')).toBeInTheDocument()
+  })
+
+  it('filters by tier', () => {
+    render(
+      <TemplatesGrid
+        templates={TEMPLATES}
+        category="all"
+        tier="FREE"
+        search=""
+        accessTier="FREE"
+        onUse={onUse}
+        onUpgrade={onUpgrade}
+      />
+    )
+    // Only FREE-tier templates should render a "Use template" button.
+    const freeCount = TEMPLATES.filter((t) => t.tier === 'FREE').length
+    expect(screen.getAllByText('Use template').length).toBe(freeCount)
   })
 })

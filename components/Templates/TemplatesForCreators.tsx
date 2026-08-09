@@ -6,15 +6,15 @@ const features = [
     icon       : GitFork,
     title      : 'Save any project as a template',
     description: 'Once you have a project structure you love, hit "Save as Template" from the project settings menu. Your tasks, sections, labels, views, and milestones are captured exactly as-is.',
-    status     : 'Planned for v1.1',
-    statusColor: 'bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400',
+    status     : 'Live now',
+    statusColor: 'bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400',
   },
   {
     icon       : Lock,
     title      : 'Private workspace templates',
     description: 'Save templates privately inside your workspace. Perfect for repeated processes — sprint boards, onboarding checklists, or campaign plans your team runs every cycle.',
-    status     : 'Planned for v1.1',
-    statusColor: 'bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400',
+    status     : 'Live now',
+    statusColor: 'bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400',
   },
   {
     icon       : Share2,
@@ -39,9 +39,9 @@ const TemplatesForCreators = () => {
         {/* Header */}
         <div className='flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12'>
           <div>
-            <div className='inline-flex items-center gap-2 rounded-full border border-violet-200 dark:border-violet-800/50 bg-violet-50 dark:bg-violet-950/30 px-3 py-1 text-xs font-semibold text-violet-700 dark:text-violet-400 mb-4'>
+            <div className='inline-flex items-center gap-2 rounded-full border border-emerald-200 dark:border-emerald-800/50 bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400 mb-4'>
               <Sparkles className='w-3.5 h-3.5 shrink-0' />
-              Coming in v1.1 & v1.2
+              v1.1 shipped · v1.2 next
             </div>
             <h2 className='text-2xl md:text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 mb-2'>
               Build your own templates.
@@ -51,9 +51,8 @@ const TemplatesForCreators = () => {
               </span>
             </h2>
             <p className='text-sm text-neutral-500 dark:text-neutral-400 max-w-lg leading-relaxed'>
-              The official templates are just the beginning. Soon you&apos;ll be able
-              to turn any Focura project into a reusable template — privately for
-              your team or publicly for the whole community.
+              Turn any Focura project into a reusable template — privately for
+              your team today, publicly for the whole community in v1.2.
             </p>
           </div>
 
@@ -104,11 +103,11 @@ const TemplatesForCreators = () => {
             {/* Connector line */}
             <div className='absolute left-2.75 top-3 bottom-3 w-px bg-neutral-200 dark:bg-neutral-700 pointer-events-none' />
             {[
-              { version: 'v1.0 (Now)',     desc: 'Official template library — browse, preview, and get notified',           done: true  },
-              { version: 'v1.1',           desc: 'One-click import into workspace — clone all tasks, labels, and sections', done: false },
-              { version: 'v1.1',           desc: 'Save any project as a private workspace template',                       done: false },
-              { version: 'v1.2',           desc: 'Publish templates publicly — community gallery + author credits',         done: false },
-              { version: 'v1.2',           desc: 'Ratings, usage counts, and featured templates section',                   done: false },
+              { version: 'v1.0 (Shipped)', desc: 'Official template library — browse, preview, and filter by plan tier',    done: true  },
+              { version: 'v1.1 (Shipped)', desc: 'One-click import into workspace — clone all tasks, labels, and sections', done: true  },
+              { version: 'v1.1 (Shipped)', desc: 'Save any project as a private workspace template',                       done: true  },
+              { version: 'v1.2 (Next)',    desc: 'Publish templates publicly — community gallery + author credits',         done: false },
+              { version: 'v1.2 (Next)',    desc: 'Ratings, usage counts, and featured templates section',                   done: false },
             ].map(({ version, desc, done }) => (
               <div key={desc} className='flex items-start gap-4 relative z-10'>
                 <div className={`shrink-0 w-5.5 h-5.5 rounded-full border-2 flex items-center justify-center mt-0.5 ${

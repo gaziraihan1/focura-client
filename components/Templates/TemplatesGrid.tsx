@@ -1,28 +1,26 @@
 'use client';
 
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { Layers } from 'lucide-react';
-import { filterTemplates, CategoryFilter, TEMPLATES } from '@/lib/templatesData';
-import { Template } from '@/types/templates.types';
+import { filterTemplates, CategoryFilter, TierFilter } from '@/lib/templatesData';
+import { Template, TemplateAccessTier } from '@/types/templates.types';
 import TemplateCard from './TemplatesCard';
 
 interface TemplatesGridProps {
-  category: CategoryFilter;
-  search: string;
+  templates  : Template[];
+  category   : CategoryFilter;
+  tier       : TierFilter;
+  search     : string;
+  accessTier : TemplateAccessTier;
+  onUse      : (template: Template) => void;
+  onUpgrade  : (template: Template) => void;
 }
 
-const TemplatesGrid = ({ category, search }: TemplatesGridProps) => {
-  // Track templates the user has been notified about without triggering re-renders.
-  const notifiedIds = useRef<Set<string>>(new Set());
-
+const TemplatesGrid = ({ templates, category, tier, search, accessTier, onUse, onUpgrade }: TemplatesGridProps) => {
   const filtered = useMemo(
-    () => filterTemplates(TEMPLATES, category, search),
-    [category, search]
+    () => filterTemplates(templates, category, search, tier),
+    [templates, category, search, tier]
   );
-
-  const handleNotify = (template: Template) => {
-    notifiedIds.current.add(template.id);
-  };
 
   if (filtered.length === 0) {
     return (
@@ -34,7 +32,7 @@ const TemplatesGrid = ({ category, search }: TemplatesGridProps) => {
           No templates found
         </h3>
         <p className='text-xs text-neutral-500 dark:text-neutral-400 max-w-xs leading-relaxed'>
-          No templates match your current filters. Try a different category or search term.
+          No templates match your current filters. Try a different category, tier, or search term.
         </p>
       </div>
     );
@@ -55,7 +53,9 @@ const TemplatesGrid = ({ category, search }: TemplatesGridProps) => {
           <TemplateCard
             key={template.id}
             template={template}
-            onNotify={handleNotify}
+            accessTier={accessTier}
+            onUse={onUse}
+            onUpgrade={onUpgrade}
           />
         ))}
       </div>

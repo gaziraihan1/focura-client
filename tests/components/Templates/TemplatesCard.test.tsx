@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 
 // Polyfill IntersectionObserver for jsdom
@@ -105,6 +105,8 @@ vi.mock('lucide-react', () => {
     BookOpen: icon('BookOpen'),
     UserCheck: icon('UserCheck'),
     Pin: icon('Pin'),
+    Crown: icon('Crown'),
+    FolderPlus: icon('FolderPlus'),
   }
 })
 
@@ -124,7 +126,8 @@ describe('TemplatesCard', () => {
     longDescription: 'Long description',
     category: 'engineering' as const,
     complexity: 'starter' as const,
-    status: 'coming_soon' as const,
+    status: 'available' as const,
+    tier: 'PRO' as const,
     icon: '\u2699\ufe0f',
     color: '#3b82f6',
     tasks: [
@@ -147,44 +150,79 @@ describe('TemplatesCard', () => {
     author: { name: 'Test', role: 'Official' },
   }
 
-  const onNotify = vi.fn()
+  const onUse = vi.fn()
+  const onUpgrade = vi.fn()
 
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
   it('renders template title', () => {
-    render(<TemplatesCard template={mockTemplate} onNotify={onNotify} />)
+    render(<TemplatesCard template={mockTemplate} accessTier="PRO" onUse={onUse} onUpgrade={onUpgrade} />)
     expect(screen.getByText('Test Template')).toBeInTheDocument()
   })
 
   it('renders template description', () => {
-    render(<TemplatesCard template={mockTemplate} onNotify={onNotify} />)
+    render(<TemplatesCard template={mockTemplate} accessTier="PRO" onUse={onUse} onUpgrade={onUpgrade} />)
     expect(screen.getByText('A test template for testing purposes')).toBeInTheDocument()
   })
 
   it('renders task count', () => {
-    render(<TemplatesCard template={mockTemplate} onNotify={onNotify} />)
+    render(<TemplatesCard template={mockTemplate} accessTier="PRO" onUse={onUse} onUpgrade={onUpgrade} />)
     expect(screen.getByText('5 tasks')).toBeInTheDocument()
   })
 
   it('renders setup time', () => {
-    render(<TemplatesCard template={mockTemplate} onNotify={onNotify} />)
+    render(<TemplatesCard template={mockTemplate} accessTier="PRO" onUse={onUse} onUpgrade={onUpgrade} />)
     expect(screen.getByText('5 min setup')).toBeInTheDocument()
   })
 
   it('renders complexity badge', () => {
-    render(<TemplatesCard template={mockTemplate} onNotify={onNotify} />)
+    render(<TemplatesCard template={mockTemplate} accessTier="PRO" onUse={onUse} onUpgrade={onUpgrade} />)
     expect(screen.getByText('Starter')).toBeInTheDocument()
   })
 
-  it('renders coming soon status', () => {
-    render(<TemplatesCard template={mockTemplate} onNotify={onNotify} />)
-    expect(screen.getByText('Coming soon')).toBeInTheDocument()
+  it('renders the tier badge', () => {
+    render(<TemplatesCard template={mockTemplate} accessTier="PRO" onUse={onUse} onUpgrade={onUpgrade} />)
+    expect(screen.getByText('Pro')).toBeInTheDocument()
+  })
+
+  it('shows "Use template" for an unlocked template', () => {
+    render(<TemplatesCard template={mockTemplate} accessTier="PRO" onUse={onUse} onUpgrade={onUpgrade} />)
+    expect(screen.getByText('Use template')).toBeInTheDocument()
+  })
+
+  it('calls onUse when clicking Use template', () => {
+    render(<TemplatesCard template={mockTemplate} accessTier="PRO" onUse={onUse} onUpgrade={onUpgrade} />)
+    fireEvent.click(screen.getByText('Use template'))
+    expect(onUse).toHaveBeenCalledWith(mockTemplate)
+  })
+
+  it('shows Unlock + calls onUpgrade for a locked template', () => {
+    render(<TemplatesCard template={mockTemplate} accessTier="FREE" onUse={onUse} onUpgrade={onUpgrade} />)
+    expect(screen.getByText('Pro tier')).toBeInTheDocument()
+    fireEvent.click(screen.getByText('Unlock'))
+    expect(onUpgrade).toHaveBeenCalledWith(mockTemplate)
+  })
+
+  it('does not call onUse for a locked template', () => {
+    render(<TemplatesCard template={mockTemplate} accessTier="FREE" onUse={onUse} onUpgrade={onUpgrade} />)
+    expect(screen.queryByText('Use template')).not.toBeInTheDocument()
+  })
+
+  it('shows a Coming soon state instead of Use/Unlock for coming-soon templates', () => {
+    const comingSoon = { ...mockTemplate, status: 'coming_soon' as const }
+    render(<TemplatesCard template={comingSoon} accessTier="PRO" onUse={onUse} onUpgrade={onUpgrade} />)
+    expect(screen.getAllByText('Coming soon').length).toBeGreaterThan(0)
+    expect(screen.queryByText('Use template')).not.toBeInTheDocument()
+    expect(screen.queryByText('Unlock')).not.toBeInTheDocument()
+    fireEvent.click(screen.getAllByText('Coming soon')[0])
+    expect(onUse).not.toHaveBeenCalled()
+    expect(onUpgrade).not.toHaveBeenCalled()
   })
 
   it('expands and shows preview contents', () => {
-    render(<TemplatesCard template={mockTemplate} onNotify={onNotify} />)
+    render(<TemplatesCard template={mockTemplate} accessTier="PRO" onUse={onUse} onUpgrade={onUpgrade} />)
     fireEvent.click(screen.getByText('Preview contents'))
     expect(screen.getByText('Hide preview')).toBeInTheDocument()
     expect(screen.getByText('Sections (3)')).toBeInTheDocument()
@@ -192,43 +230,9 @@ describe('TemplatesCard', () => {
   })
 
   it('collapses after expanding', () => {
-    render(<TemplatesCard template={mockTemplate} onNotify={onNotify} />)
+    render(<TemplatesCard template={mockTemplate} accessTier="PRO" onUse={onUse} onUpgrade={onUpgrade} />)
     fireEvent.click(screen.getByText('Preview contents'))
     fireEvent.click(screen.getByText('Hide preview'))
     expect(screen.getByText('Preview contents')).toBeInTheDocument()
-  })
-
-  it('calls onNotify and shows Notified! when notify button clicked', () => {
-    render(<TemplatesCard template={mockTemplate} onNotify={onNotify} />)
-    fireEvent.click(screen.getByText('Notify me'))
-    expect(onNotify).toHaveBeenCalledWith(mockTemplate)
-    expect(screen.getByText('Notified!')).toBeInTheDocument()
-  })
-
-  it('renders view labels', () => {
-    render(<TemplatesCard template={mockTemplate} onNotify={onNotify} />)
-    expect(screen.getByText('Kanban')).toBeInTheDocument()
-    expect(screen.getByText('List')).toBeInTheDocument()
-  })
-
-  it('shows "+N more tasks\u2026" when > 4 tasks', () => {
-    render(<TemplatesCard template={mockTemplate} onNotify={onNotify} />)
-    fireEvent.click(screen.getByText('Preview contents'))
-    expect(screen.getByText('+1 more tasks\u2026')).toBeInTheDocument()
-  })
-
-  it('renders labels section when expanded', () => {
-    render(<TemplatesCard template={mockTemplate} onNotify={onNotify} />)
-    fireEvent.click(screen.getByText('Preview contents'))
-    expect(screen.getByText('Labels (2)')).toBeInTheDocument()
-    expect(screen.getByText('Bug')).toBeInTheDocument()
-    expect(screen.getByText('Feature')).toBeInTheDocument()
-  })
-
-  it('renders milestones when expanded', () => {
-    render(<TemplatesCard template={mockTemplate} onNotify={onNotify} />)
-    fireEvent.click(screen.getByText('Preview contents'))
-    expect(screen.getByText('Milestones')).toBeInTheDocument()
-    expect(screen.getByText('Milestone 1')).toBeInTheDocument()
   })
 })

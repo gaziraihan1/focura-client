@@ -9,6 +9,7 @@ import {
   Palette,
   Shield,
   Clock,
+  Zap,
 } from "lucide-react";
 import { useUrlState } from "@/hooks/useUrlState";
 import { CapacityScheduleForm } from "@/components/Settings/CapacityScheduleForm";
@@ -17,6 +18,7 @@ import { AppearanceSettingsForm } from "@/components/Settings/AppearanceSettings
 import { NotificationsSettingsForm } from "@/components/Settings/NotificationsSettingsForm";
 import { IntegrationsSettingsForm } from "@/components/Settings/IntegrationsSettingsForm";
 import { ApiTokensSettingsForm } from "@/components/Settings/ApiTokensSettingsForm";
+import { AutomationsSettingsForm } from "@/components/Settings/AutomationsSettingsForm";
 import { SecuritySettingsForm } from "@/components/Settings/SecuritySettingsForm";
 import { SettingsSection } from "@/components/Settings/SettingsSection";
 
@@ -64,6 +66,13 @@ const globalSettings = [
     active: true,
   },
   {
+    title: "Automations",
+    description:
+      "Automate repetitive work with trigger-based rules across your workspaces.",
+    icon: Zap,
+    active: true,
+  },
+  {
     title: "Security",
     description:
       "Change your password, enable two-factor authentication, and manage active sessions.",
@@ -79,6 +88,7 @@ const GLOBAL_FORM_MAP: Record<string, React.ComponentType> = {
   "Integrations": IntegrationsSettingsForm,
   "API & Tokens": ApiTokensSettingsForm,
   "Capacity & Schedule": CapacityScheduleForm,
+  "Automations": AutomationsSettingsForm,
   "Security": SecuritySettingsForm,
 };
 

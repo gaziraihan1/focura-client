@@ -131,7 +131,7 @@ describe('TemplatesForCreators', () => {
 
   it('renders roadmap items', () => {
     render(<TemplatesForCreators />)
-    expect(screen.getByText('v1.0 (Now)')).toBeInTheDocument()
+    expect(screen.getByText('v1.0 (Shipped)')).toBeInTheDocument()
   })
 
   it('renders "Request a template" link', () => {

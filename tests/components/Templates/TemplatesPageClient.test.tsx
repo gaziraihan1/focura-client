@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, beforeAll } from 'vitest';
+import { screen } from '@testing-library/react';
 
 // Polyfill IntersectionObserver for jsdom
 beforeAll(() => {
@@ -23,6 +23,10 @@ vi.mock('next/image', () => ({
     const { fill, alt = "", ...imgProps } = props
     return <img alt={alt} {...imgProps} data-fill={fill} />
   },
+}))
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
 }))
 
 vi.mock('framer-motion', () => ({
@@ -105,6 +109,8 @@ vi.mock('lucide-react', () => {
     BookOpen: icon('BookOpen'),
     UserCheck: icon('UserCheck'),
     Pin: icon('Pin'),
+    Crown: icon('Crown'),
+    FolderPlus: icon('FolderPlus'),
   }
 })
 
@@ -114,10 +120,18 @@ vi.mock('@/lib/utils', () => ({
 
 
 import TemplatesPageClient from '@/components/Templates/TemplatesPageClient'
+import { renderWithProviders } from '@/tests/utils/renderWithProviders'
 
 describe('TemplatesPageClient', () => {
   it('renders the full page', () => {
-    render(<TemplatesPageClient />)
+    renderWithProviders(<TemplatesPageClient />)
     expect(screen.getByText('Start fast.')).toBeInTheDocument()
+  })
+
+  it('renders the template catalog from the API', async () => {
+    renderWithProviders(<TemplatesPageClient />)
+    // MSW returns the catalog; both FREE + PRO templates appear.
+    expect(await screen.findByText('Quarterly Goals')).toBeInTheDocument()
+    expect(await screen.findByText('Agile Sprint Board')).toBeInTheDocument()
   })
 })

@@ -1,4 +1,5 @@
 import { ProjectDetails, useUpdateProject } from "@/hooks/useProjects";
+import { useSaveAsTemplate } from "@/hooks/useTemplates";
 import { Check, Loader2, Save, Lock } from "lucide-react";
 import { useState } from "react";
 import { Section } from "./Section";
@@ -13,9 +14,13 @@ export function GeneralTab({
   const [name,        setName]        = useState(project?.name        ?? "");
   const [description, setDescription] = useState(project?.description ?? "");
   const [saved,       setSaved]       = useState(false);
+  const [templateSaved, setTemplateSaved] = useState(false);
  
   const updateProject = useUpdateProject();
   const saving = updateProject.isPending;
+
+  const saveAsTemplate = useSaveAsTemplate();
+  const savingTemplate = saveAsTemplate.isPending;
  
   const isDirty =
     name !== (project?.name ?? "") ||
@@ -29,6 +34,17 @@ export function GeneralTab({
     });
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
+  };
+
+  const handleSaveAsTemplate = async () => {
+    if (!project?.id || savingTemplate) return;
+    try {
+      await saveAsTemplate.mutateAsync({ projectId: project.id });
+      setTemplateSaved(true);
+      setTimeout(() => setTemplateSaved(false), 3000);
+    } catch {
+      // The api layer already surfaces the error toast.
+    }
   };
  
   return (
@@ -102,6 +118,38 @@ export function GeneralTab({
         </div>
       </Section>
  
+      {canManage && (
+        <Section
+          title="Save as Template"
+          description="Turn this project into a reusable template. Sections, labels, task structure, milestones and views are captured — assignees, comments, files and members are not."
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              The template is saved privately to your workspace and can be reused from the Templates library.
+            </p>
+            <button
+              onClick={handleSaveAsTemplate}
+              disabled={savingTemplate || templateSaved}
+              className={[
+                "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all shrink-0",
+                templateSaved
+                  ? "bg-emerald-500 text-white"
+                  : "bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed",
+              ].join(" ")}
+            >
+              {savingTemplate ? (
+                <Loader2 size={14} className="animate-spin" />
+              ) : templateSaved ? (
+                <Check size={14} />
+              ) : (
+                <Save size={14} />
+              )}
+              {templateSaved ? "Template Saved!" : savingTemplate ? "Saving…" : "Save as Template"}
+            </button>
+          </div>
+        </Section>
+      )}
+
       {/* Visibility info */}
       <Section
         title="Project Visibility"

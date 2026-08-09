@@ -1,6 +1,6 @@
 'use client';
 
-import { useState }           from 'react';
+import { useMemo, useState } from 'react';
 import TemplatesHero          from './TemplatesHero';
 import TemplatesCategories    from './TemplatesCategories';
 import TemplatesGrid          from './TemplatesGrid';
@@ -8,41 +8,97 @@ import TemplatesHowItWorks    from './TemplateshowItWorks';
 import TemplatesForCreators   from './TemplatesForCreators';
 import TemplatesNotifyBanner  from './TemplatesNotifyBanner';
 import TemplatesCTA           from './TemplatesCTA';
-import { CategoryFilter } from '@/lib/templatesData';
+import TemplateImportModal    from './TemplateImportModal';
+import { CategoryFilter, TierFilter, catalogItemToTemplate, TEMPLATES } from '@/lib/templatesData';
+import { useTemplateCatalog } from '@/hooks/useTemplates';
+import { useIsAuthenticated } from '@/hooks/useUser';
+import { useWorkspaces }      from '@/hooks/useWorkspaceQueries';
+import { useRouter }          from 'next/navigation';
+import { Loader2 }            from 'lucide-react';
+import type { Template, TemplateAccessTier } from '@/types/templates.types';
 
 /**
  * TemplatesPageClient
  *
  * Single 'use client' root for the templates page.
- * Owns:
- *   - search query state (passed down to hero + grid)
- *   - category filter state (passed down to category bar + grid)
- *
- * All heavy content sections (HowItWorks, ForCreators, etc.) are
- * plain React components with no client state — they could be RSCs.
+ *   - Fetches the live catalog from GET /api/v1/templates/catalog
+ *   - Owns search / category / tier filter state
+ *   - Opens the import modal for unlocked templates
+ *   - Routes upgrade CTAs to the workspace billing upgrade page
  */
 const TemplatesPageClient = () => {
-  const [search,   setSearch]   = useState('');
+  const router = useRouter();
+  const { data: catalog, isLoading } = useTemplateCatalog();
+  const { isAuthenticated } = useIsAuthenticated();
+  const { data: workspaces = [] } = useWorkspaces();
+
+  const [search, setSearch] = useState('');
   const [category, setCategory] = useState<CategoryFilter>('all');
+  const [tier, setTier] = useState<TierFilter>('all');
+  const [importing, setImporting] = useState<Template | null>(null);
+
+  // Live catalog (backend) with static TEMPLATES as an offline fallback.
+  const templates: Template[] = useMemo(() => {
+    const live = (catalog?.templates ?? []).map(catalogItemToTemplate);
+    return live.length > 0 ? live : TEMPLATES;
+  }, [catalog]);
+
+  const accessTier: TemplateAccessTier = catalog?.access?.tier ?? 'FREE';
+
+  const handleUpgrade = () => {
+    // Upgrade CTA → workspace billing upgrade page; fall back to pricing.
+    if (isAuthenticated && workspaces.length > 0) {
+      router.push(`/dashboard/workspaces/${workspaces[0].slug}/billing/upgrade`);
+    } else {
+      router.push('/pricing');
+    }
+  };
 
   return (
     <div className='min-h-screen bg-white dark:bg-neutral-950'>
-      {/* Search-aware hero */}
       <TemplatesHero onSearch={setSearch} />
 
-      {/* Sticky category filter */}
-      <TemplatesCategories active={category} onChange={setCategory} />
+      {isLoading ? (
+        <section className='max-w-6xl mx-auto px-6 py-16 flex flex-col items-center justify-center gap-3 text-neutral-400 dark:text-neutral-500'>
+          <Loader2 className='w-6 h-6 animate-spin' />
+          <p className='text-xs font-semibold'>Loading the template catalog…</p>
+        </section>
+      ) : (
+        <>
+          <TemplatesCategories
+            active={category}
+            onChange={setCategory}
+            activeTier={tier}
+            onTierChange={setTier}
+            templates={templates}
+          />
 
-      {/* Main grid */}
-      <section className='max-w-6xl mx-auto px-6 py-12'>
-        <TemplatesGrid category={category} search={search} />
-      </section>
+          <section className='max-w-6xl mx-auto px-6 py-12'>
+            <TemplatesGrid
+              templates={templates}
+              category={category}
+              tier={tier}
+              search={search}
+              accessTier={accessTier}
+              onUse={setImporting}
+              onUpgrade={handleUpgrade}
+            />
+          </section>
+        </>
+      )}
 
-      {/* Informational sections */}
       <TemplatesHowItWorks />
       <TemplatesForCreators />
       <TemplatesNotifyBanner />
       <TemplatesCTA />
+
+      {importing && (
+        <TemplateImportModal
+          template={importing}
+          accessTier={accessTier}
+          onClose={() => setImporting(null)}
+        />
+      )}
     </div>
   );
 };

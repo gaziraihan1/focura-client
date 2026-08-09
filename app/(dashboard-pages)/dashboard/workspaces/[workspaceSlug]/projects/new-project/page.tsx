@@ -6,6 +6,7 @@ import { NewProjectPageHeader } from "@/components/Dashboard/Projects/NewProject
 import { ProjectBasicInfoSection } from "@/components/Dashboard/Projects/NewProject/ProjectBasicInfoSection";
 import { ProjectFormActions } from "@/components/Dashboard/Projects/NewProject/ProjectFormActions";
 import { ProjectPlanningSection } from "@/components/Dashboard/Projects/NewProject/ProjectPlanningSection";
+import ProjectTemplateStarter from "@/components/Dashboard/Projects/NewProject/ProjectTemplateStarter";
 import { useWorkspaceNewProjectPage } from "@/hooks/useProjectsPage";
 import { useParams, useRouter } from "next/navigation";
 
@@ -65,6 +66,13 @@ export default function WorkspaceNewProjectPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <NewProjectPageHeader onCancel={handleCancel} />
+
+      {/* Start from a template — alternative to the blank form below */}
+      <ProjectTemplateStarter
+        workspaceId={workspace.id}
+        workspaceSlug={workspaceSlug}
+        plan={workspace.plan}
+      />
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <ProjectBasicInfoSection

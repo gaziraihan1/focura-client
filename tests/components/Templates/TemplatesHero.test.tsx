@@ -134,7 +134,7 @@ describe('TemplatesHero', () => {
 
   it('renders the badge', () => {
     render(<TemplatesHero onSearch={onSearch} />)
-    expect(screen.getByText('Project Templates \u2014 Coming Soon')).toBeInTheDocument()
+    expect(screen.getByText(/Project Templates — Live/)).toBeInTheDocument()
   })
 
   it('renders the search input', () => {
@@ -153,7 +153,8 @@ describe('TemplatesHero', () => {
     render(<TemplatesHero onSearch={onSearch} />)
     expect(screen.getByText('8')).toBeInTheDocument()
     expect(screen.getByText('Categories')).toBeInTheDocument()
-    expect(screen.getByText('9+')).toBeInTheDocument()
+    expect(screen.getByText('12')).toBeInTheDocument()
+    expect(screen.getByText('Templates')).toBeInTheDocument()
     expect(screen.getByText('1')).toBeInTheDocument()
     expect(screen.getByText('Click to import')).toBeInTheDocument()
   })

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState }    from 'react';
+import { useState } from 'react';
 import { Search, Layers } from 'lucide-react';
 
 interface TemplatesHeroProps {
@@ -32,7 +32,7 @@ const TemplatesHero = ({ onSearch }: TemplatesHeroProps) => {
         {/* Badge */}
         <div className='inline-flex items-center gap-2 rounded-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-4 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-7 shadow-sm'>
           <Layers className='w-3.5 h-3.5 text-violet-500' />
-          Project Templates — Coming Soon
+          Project Templates — Live
         </div>
 
         <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 mb-5 leading-[1.07]'>
@@ -67,10 +67,10 @@ const TemplatesHero = ({ onSearch }: TemplatesHeroProps) => {
         {/* Stat pills */}
         <div className='flex flex-wrap items-center justify-center gap-3'>
           {[
-            { value: '8',   label: 'Categories'         },
-            { value: '9+',  label: 'Templates planned'   },
-            { value: '1',   label: 'Click to import'     },
-            { value: '100%', label: 'Free for all plans' },
+            { value: '8',    label: 'Categories'     },
+            { value: '12',   label: 'Templates'      },
+            { value: '1',    label: 'Click to import' },
+            { value: '2',    label: 'Free templates' },
           ].map(({ value, label }) => (
             <div
               key={label}

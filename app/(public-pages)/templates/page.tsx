@@ -28,18 +28,19 @@ export const metadata: Metadata = {
  * All state (search, category filter) lives inside TemplatesPageClient.
  *
  * Component tree:
- *   TemplatesPageClient       ← 'use client' root — owns search + category state
+ *   TemplatesPageClient       ← 'use client' root — owns search + category + tier state
  *     TemplatesHero           ← Search input, stat pills
- *     TemplatesCategories     ← Sticky horizontal category filter bar
+ *     TemplatesCategories     ← Sticky filter bar (tier + category)
  *     TemplatesGrid           ← Filtered card grid + empty state
- *       TemplateCard × N      ← Individual card: preview, tags, notify CTA
+ *       TemplateCard × N      ← Individual card: preview, tier badge, Use/Unlock/Coming-soon CTA
  *     TemplatesHowItWorks     ← 3-step explainer + what gets cloned table
  *     TemplatesForCreators    ← User-created templates roadmap + feature cards
- *     TemplatesNotifyBanner   ← Email waitlist signup form
+ *     TemplatesNotifyBanner   ← Tier-value banner (why upgrade)
  *     TemplatesCTA            ← Final links: Try Focura, Request, Guides
  *
  * Data layer:
- *   templates-data.ts         ← Typed Template registry (9 templates, 8 categories)
+ *   useTemplates + templateKeys ← TanStack Query hooks hitting GET /templates/catalog
+ *   templates-data.ts          ← Typed Template registry (offline fallback, 9 templates)
  */
 const TemplatesPage = () => {
   return <TemplatesPageClient />;
