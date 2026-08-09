@@ -4,6 +4,9 @@ import Sidebar from '@/components/Dashboard/Sidebar'
 
 vi.mock('next/navigation', () => ({
   usePathname: () => '/dashboard',
+  useRouter: () => ({
+    push: vi.fn(),
+  }),
 }))
 
 vi.mock('next/link', () => ({
@@ -14,6 +17,10 @@ vi.mock('next/link', () => ({
 
 vi.mock('next/image', () => ({
   default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img alt="" {...props} />,
+}))
+
+vi.mock('@/components/Dashboard/SidebarNewProjectButton', () => ({
+  default: () => <button type="button">New project</button>,
 }))
 
 vi.mock('lucide-react', () => ({
