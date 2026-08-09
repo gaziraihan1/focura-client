@@ -24,12 +24,8 @@ export function MeetingFormModalInner({
   const isEditing    = !!editingMeeting;
   const displayError = validationError || error;
 
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
-      <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" onClick={onClose} />
+  return (    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" onClick={onClose} role="presentation" />
 
       <div className="relative z-10 w-full sm:max-w-2xl max-h-[95dvh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border bg-card shadow-xl">
         {/* Header */}
@@ -37,7 +33,7 @@ export function MeetingFormModalInner({
           <h2 className="text-base font-semibold text-foreground">
             {isEditing ? 'Edit Meeting' : 'New Meeting'}
           </h2>
-          <button
+          <button aria-label="Header"
             onClick={onClose}
             className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
           >
@@ -49,7 +45,7 @@ export function MeetingFormModalInner({
           {/* Basic info */}
           <section className="space-y-4 px-5 py-5">
             <FormField label="Title" required>
-              <input
+              <input aria-label="Basic info"
                 type="text"
                 value={form.title}
                 onChange={(e) => setField('title', e.target.value)}
@@ -59,7 +55,7 @@ export function MeetingFormModalInner({
               />
             </FormField>
             <FormField label="Description">
-              <textarea
+              <textarea aria-label="What"
                 value={form.description}
                 onChange={(e) => setField('description', e.target.value)}
                 placeholder="What's this meeting about?"
@@ -95,7 +91,7 @@ export function MeetingFormModalInner({
           <section className="space-y-4 px-5 py-5">
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Details</p>
             <FormField label="Meeting link" hint="Zoom, Google Meet, Teams, etc.">
-              <input
+              <input aria-label="https://meet.google.com/..."
                 type="url"
                 value={form.link}
                 onChange={(e) => setField('link', e.target.value)}
@@ -104,7 +100,7 @@ export function MeetingFormModalInner({
               />
             </FormField>
             <FormField label="Location">
-              <input
+              <input aria-label="Conference room A, building 2..."
                 type="text"
                 value={form.location}
                 onChange={(e) => setField('location', e.target.value)}

@@ -1,4 +1,4 @@
-export function TaskCardSkeleton() {
+function TaskCardSkeleton() {
   return (
     <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4 shadow-sm animate-pulse">
       {/* Title */}

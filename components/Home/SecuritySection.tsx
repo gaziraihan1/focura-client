@@ -1,28 +1,28 @@
 import { ShieldCheck, Lock, KeyRound, Server } from "lucide-react";
 
+const items = [
+  {
+    icon: ShieldCheck,
+    title: "Enterprise-grade protection",
+    desc: "Focura uses industry-standard encryption and zero-trust principles to keep your data secure.",
+  },
+  {
+    icon: Lock,
+    title: "End-to-end encryption",
+    desc: "All data is encrypted in transit and at rest using modern cryptographic standards.",
+  },
+  {
+    icon: Server,
+    title: "Secure cloud infrastructure",
+    desc: "Hosted on globally distributed, fault-tolerant cloud infrastructure with 99.9% uptime.",
+  },
+  {
+    icon: KeyRound,
+    title: "Role-based access control",
+    desc: "Granular permission levels ensure only the right people can access sensitive information.",
+  },
+];
 export default function SecuritySection() {
-  const items = [
-    {
-      icon: ShieldCheck,
-      title: "Enterprise-grade protection",
-      desc: "Focura uses industry-standard encryption and zero-trust principles to keep your data secure.",
-    },
-    {
-      icon: Lock,
-      title: "End-to-end encryption",
-      desc: "All data is encrypted in transit and at rest using modern cryptographic standards.",
-    },
-    {
-      icon: Server,
-      title: "Secure cloud infrastructure",
-      desc: "Hosted on globally distributed, fault-tolerant cloud infrastructure with 99.9% uptime.",
-    },
-    {
-      icon: KeyRound,
-      title: "Role-based access control",
-      desc: "Granular permission levels ensure only the right people can access sensitive information.",
-    },
-  ];
 
   return (
     <section className="relative py-24 md:py-28 bg-background border-t border-border/60">

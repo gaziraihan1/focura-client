@@ -134,7 +134,7 @@ export function LabelManager({ workspaceId, onClose }: LabelManagerProps) {
             </h2>
           </div>
           {onClose && (
-            <button
+            <button aria-label="Close"
               onClick={onClose}
               className="p-2 hover:bg-accent rounded-lg transition-colors"
             >
@@ -199,7 +199,7 @@ export function LabelManager({ workspaceId, onClose }: LabelManagerProps) {
       </div>
 
       {deleteConfirm && (
-        <div 
+        <div  role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.currentTarget.click(); } }}
           className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4"
           onClick={handleDeleteCancel}
         >

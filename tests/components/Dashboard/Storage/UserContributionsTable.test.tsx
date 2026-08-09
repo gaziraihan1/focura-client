@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { UserContributionsTable } from "@/components/Dashboard/Storage/UserContributionsTable";
 
 vi.mock("framer-motion", () => ({
-  motion: {
+  m: {
     div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props} />,
   },
 }));

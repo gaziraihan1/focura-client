@@ -14,7 +14,7 @@ vi.mock('next/navigation', () => ({
 }))
 
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
     button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...props}>{children}</button>,
   },
@@ -149,7 +149,7 @@ describe('ProjectAnnouncementCard', () => {
 
   it('calls onOpen when card clicked', () => {
     render(<ProjectAnnouncementCard {...defaultProps} />)
-    fireEvent.click(screen.getByRole('button', { name: /open announcement/i }))
+    fireEvent.click(screen.getByRole('group', { name: /open announcement/i }))
     expect(defaultProps.onOpen).toHaveBeenCalledWith(projectAnnouncement)
   })
 

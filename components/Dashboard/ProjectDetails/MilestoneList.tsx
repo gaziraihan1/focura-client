@@ -126,7 +126,7 @@ export default function MilestoneList({ projectId }: MilestoneListProps) {
         {/* New milestone form */}
         {showNew ? (
           <div className="rounded-xl border border-border bg-card p-4 space-y-3">
-            <input
+            <input aria-label="Milestone title..."
               className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
               placeholder="Milestone title..."
               value={title}
@@ -135,7 +135,7 @@ export default function MilestoneList({ projectId }: MilestoneListProps) {
               autoFocus
             />
             <div className="flex items-center gap-2">
-              <input
+              <input aria-label="Date"
                 type="date"
                 className="px-3 py-1.5 rounded-lg border border-border bg-background text-xs"
                 value={dueDate}
@@ -225,7 +225,7 @@ function MilestoneCard({
           )}
         </div>
         <div className="relative">
-          <button
+          <button aria-label="Delete"
             onClick={() => setMenuOpen(!menuOpen)}
             className="p-1 rounded-lg hover:bg-accent transition"
           >
@@ -233,7 +233,7 @@ function MilestoneCard({
           </button>
           {menuOpen && (
             <>
-              <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
+              <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} role="presentation" />
               <div className="absolute right-0 top-8 z-20 w-32 rounded-lg border border-border bg-popover shadow-lg py-1">
                 <button onClick={onDelete} className="w-full flex items-center gap-1.5 px-3 py-1.5 text-xs text-left text-red-500 hover:bg-accent transition">
                   <Trash2 size={12} /> Delete

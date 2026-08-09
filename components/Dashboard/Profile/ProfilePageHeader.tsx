@@ -8,6 +8,7 @@ interface ProfilePageHeaderProps {
   onSave: () => void;
 }
 
+// oxlint-disable-next-line react-doctor/prefer-explicit-variants -- loading-state flags render distinct sub-states
 export function ProfilePageHeader({
   isEditing,
   isSaving,

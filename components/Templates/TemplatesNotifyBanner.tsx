@@ -119,7 +119,7 @@ const TemplatesNotifyBanner = () => {
                     strokeWidth={1.8}
                   />
 
-                  <input
+                  <input aria-label="your@email.com"
                     type='email'
                     placeholder='your@email.com'
                     value={email}

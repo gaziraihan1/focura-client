@@ -1,6 +1,6 @@
 "use client";
 import { Label, useDeleteLabel } from "@/hooks/useLabels";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { AlertCircle, Loader2 } from "lucide-react";
 
 interface DeleteConfirmModalProps {
@@ -26,7 +26,7 @@ export default function DeleteConfirmModal({
 
   return (
     <>
-      <motion.div
+      <motion.div role="presentation"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}

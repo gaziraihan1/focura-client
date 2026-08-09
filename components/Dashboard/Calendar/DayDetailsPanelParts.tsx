@@ -1,6 +1,7 @@
 import { Clock, Zap, Target, Flame, Calendar as CalendarIcon, CheckCircle2 } from 'lucide-react';
 import type { CalendarDayAggregate, GoalCheckpoint, SystemCalendarEvent } from '@/types/calendar.types';
 
+// oxlint-disable-next-line react-doctor/only-export-components -- pure helpers imported by tests & sibling panels
 export const getBurnoutColor = (score: number): string => {
   if (score > 1.5) return 'text-red-600 dark:text-red-400 bg-red-500/10';
   if (score > 1.2) return 'text-orange-600 dark:text-orange-400 bg-orange-500/10';
@@ -8,6 +9,7 @@ export const getBurnoutColor = (score: number): string => {
   return 'text-green-600 dark:text-green-400 bg-green-500/10';
 };
 
+// oxlint-disable-next-line react-doctor/only-export-components -- pure helper imported by tests & sibling panels
 export const getBurnoutLabel = (score: number): string => {
   if (score > 1.5) return 'Critical';
   if (score > 1.2) return 'High Risk';

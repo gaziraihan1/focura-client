@@ -81,26 +81,28 @@ export function useOfflineStatus(): OfflineStatus {
     try {
       const pending = await getPendingMutations();
 
-      for (const mutation of pending) {
-        try {
-          const response = await fetch(mutation.endpoint, {
-            method: mutation.method,
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: mutation.data ? JSON.stringify(mutation.data) : undefined,
-          });
+      await Promise.all(
+        pending.map(async (mutation) => {
+          try {
+            const response = await fetch(mutation.endpoint, {
+              method: mutation.method,
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: mutation.data ? JSON.stringify(mutation.data) : undefined,
+            });
 
-          if (response.ok) {
-            await deletePendingMutation(mutation.id!);
-            setPendingCount((prev) => Math.max(0, prev - 1));
-          } else {
-            console.error(`Failed to sync mutation: ${response.statusText}`);
+            if (response.ok) {
+              await deletePendingMutation(mutation.id!);
+              setPendingCount((prev) => Math.max(0, prev - 1));
+            } else {
+              console.error(`Failed to sync mutation: ${response.statusText}`);
+            }
+          } catch (error) {
+            console.error("Failed to sync mutation:", error);
           }
-        } catch (error) {
-          console.error("Failed to sync mutation:", error);
-        }
-      }
+        }),
+      );
     } catch (error) {
       console.error("Failed to sync pending mutations:", error);
     }

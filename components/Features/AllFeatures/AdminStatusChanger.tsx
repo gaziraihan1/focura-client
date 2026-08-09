@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m as motion, AnimatePresence } from 'framer-motion';
 import { Settings2, Loader2, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUpdateFeatureStatus } from '@/hooks/useFeatures';
@@ -58,7 +58,7 @@ export function AdminStatusChanger({ feature }: { feature: FeatureRequest }) {
               <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">
                 Set status
               </span>
-              <button
+              <button aria-label="Close"
                 type="button"
                 onClick={() => setOpen(false)}
                 className="p-0.5 rounded text-muted-foreground hover:text-foreground"
@@ -67,7 +67,7 @@ export function AdminStatusChanger({ feature }: { feature: FeatureRequest }) {
               </button>
             </div>
 
-            <textarea
+            <textarea aria-label="Optional admin note…"
               value={adminNote}
               onChange={(e) => setAdminNote(e.target.value)}
               placeholder="Optional admin note…"

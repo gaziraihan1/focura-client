@@ -109,7 +109,7 @@ export const AttachmentsTab = ({
                     <Download size={16} className="text-foreground" />
                   </Link>
                   {isOwnAttachment && (
-                    <button
+                    <button aria-label="Close"
                       onClick={() =>
                         deleteAttachment.mutate({
                           taskId,

@@ -12,6 +12,8 @@ interface AdminJobTableProps {
   onToggleStatus: (job: JobPosting) => void;
 }
 
+const postedDateFormatter = new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric' });
+
 const statusBadge: Record<string, string> = {
   DRAFT  : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400',
   OPEN   : 'bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400',
@@ -77,7 +79,7 @@ const AdminJobTable = ({ jobs, onEdit, onDelete, onTogglePin, onToggleStatus }: 
                 <td className='px-4 py-3 align-middle whitespace-nowrap'>
                   <span className='text-xs text-neutral-400 dark:text-neutral-500'>
                     {job.publishedAt
-                      ? new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(job.publishedAt))
+                      ? postedDateFormatter.format(new Date(job.publishedAt))
                       : '—'}
                   </span>
                 </td>
@@ -111,7 +113,7 @@ const AdminJobTable = ({ jobs, onEdit, onDelete, onTogglePin, onToggleStatus }: 
                     </button>
 
                     {/* Edit */}
-                    <button
+                    <button aria-label="Edit"
                       onClick={() => onEdit(job)}
                       className='w-7 h-7 rounded-lg flex items-center justify-center text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors'
                     >
@@ -119,7 +121,7 @@ const AdminJobTable = ({ jobs, onEdit, onDelete, onTogglePin, onToggleStatus }: 
                     </button>
 
                     {/* Delete */}
-                    <button
+                    <button aria-label="Delete"
                       onClick={() => onDelete(job)}
                       className='w-7 h-7 rounded-lg flex items-center justify-center text-neutral-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors'
                     >

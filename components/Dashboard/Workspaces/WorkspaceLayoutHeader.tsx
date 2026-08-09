@@ -19,7 +19,7 @@ export function WorkspaceLayoutHeader({
   return (
     <header className="sticky top-0 z-30 flex flex-wrap items-center gap-3 px-4 sm:px-6 py-3 bg-card border-b border-border">
       {/* Mobile Menu Button */}
-      <button
+      <button aria-label="Mobile Menu Button"
         onClick={onSidebarOpen}
         className="lg:hidden p-2 rounded-lg hover:bg-accent transition"
       >
@@ -32,7 +32,7 @@ export function WorkspaceLayoutHeader({
           className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
           size={16}
         />
-        <input
+        <input aria-label="Search or press Cmd+K"
           type="text"
           placeholder="Search or press Cmd+K"
           onClick={onSwitcherOpen}

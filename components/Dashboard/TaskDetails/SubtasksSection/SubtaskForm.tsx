@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Check, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SubtaskPriority, CreateSubtaskDto } from "@/types/subtasks.types";
@@ -43,9 +43,8 @@ export function SubtaskForm({ onSubmit, onCancel, isLoading }: SubtaskFormProps)
       transition={{ duration: 0.18, ease: "easeOut" }}
       className="rounded-lg border border-border bg-background/80 backdrop-blur-sm p-3 space-y-3"
     >
-      <input
+      <input aria-label="Subtask title…"
         ref={inputRef}
-        autoFocus
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         onKeyDown={handleKeyDown}

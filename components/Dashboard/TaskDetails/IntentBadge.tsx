@@ -54,10 +54,6 @@ const INTENT_CONFIG = {
   },
 } as const;
 
-export function IntentBadge({ intent = "EXECUTION", size = "md", showLabel = true }: IntentBadgeProps) {
-  const config = INTENT_CONFIG[intent];
-  const Icon = config.icon;
-
   const sizeClasses = {
     sm: {
       container: "px-2 py-1 gap-1.5",
@@ -78,6 +74,9 @@ export function IntentBadge({ intent = "EXECUTION", size = "md", showLabel = tru
       dot: "w-2.5 h-2.5",
     },
   };
+export function IntentBadge({ intent = "EXECUTION", size = "md", showLabel = true }: IntentBadgeProps) {
+  const config = INTENT_CONFIG[intent];
+  const Icon = config.icon;
 
   const sizes = sizeClasses[size];
 

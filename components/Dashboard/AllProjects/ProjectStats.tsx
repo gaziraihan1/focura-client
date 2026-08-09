@@ -1,7 +1,7 @@
 // components/Projects/ProjectStats.tsx
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { FolderKanban, Sparkles, CheckCircle2, TrendingUp } from "lucide-react";
 
 interface ProjectStatsProps {
@@ -47,6 +47,12 @@ export function ProjectStats({ total, active, completed, totalTasks }: ProjectSt
   );
 }
 
+  const colorClasses = {
+    blue: "from-blue-500/10 to-blue-600/5 border-blue-500/20 text-blue-600 dark:text-blue-400",
+    purple: "from-purple-500/10 to-purple-600/5 border-purple-500/20 text-purple-600 dark:text-purple-400",
+    green: "from-green-500/10 to-green-600/5 border-green-500/20 text-green-600 dark:text-green-400",
+    orange: "from-orange-500/10 to-orange-600/5 border-orange-500/20 text-orange-600 dark:text-orange-400",
+  };
 function StatsCard({
   icon,
   label,
@@ -58,12 +64,6 @@ function StatsCard({
   value: number;
   color: "blue" | "purple" | "green" | "orange";
 }) {
-  const colorClasses = {
-    blue: "from-blue-500/10 to-blue-600/5 border-blue-500/20 text-blue-600 dark:text-blue-400",
-    purple: "from-purple-500/10 to-purple-600/5 border-purple-500/20 text-purple-600 dark:text-purple-400",
-    green: "from-green-500/10 to-green-600/5 border-green-500/20 text-green-600 dark:text-green-400",
-    orange: "from-orange-500/10 to-orange-600/5 border-orange-500/20 text-orange-600 dark:text-orange-400",
-  };
 
   return (
     <div

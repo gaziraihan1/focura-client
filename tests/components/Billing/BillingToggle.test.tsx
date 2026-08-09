@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import BillingToggle from '@/components/Pricing/BillingToggle'
 
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props}>{props.children}</div>,
   },
 }))

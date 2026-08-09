@@ -1,7 +1,7 @@
 // components/Dashboard/AllTasks/FocusModeBanner.tsx
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Zap, X, Clock, Target } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Avatar } from "@/components/Shared/Avatar";
@@ -15,6 +15,12 @@ interface FocusModeBannerProps {
   workspaceSlug?: string;
 }
 
+function formatTime(seconds: number): string {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
 export function FocusModeBanner({
   task,
   timeRemaining,
@@ -23,12 +29,6 @@ export function FocusModeBanner({
   workspaceSlug,
 }: FocusModeBannerProps) {
   const router = useRouter();
-
-  const formatTime = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
   const getProgress = (): number => {
     const totalSeconds = Math.max(1, sessionDuration * 60);

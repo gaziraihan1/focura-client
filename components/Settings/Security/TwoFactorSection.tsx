@@ -104,9 +104,9 @@ export function TwoFactorSection() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-muted-foreground mb-1.5">
+                <span className="block text-xs font-medium text-muted-foreground mb-1.5">
                   Setup Key
-                </label>
+                </span>
                 <div className="flex items-center gap-2">
                   <code className="flex-1 px-3 py-2 rounded-lg bg-muted text-xs font-mono break-all select-all">
                     {setupData.secret}

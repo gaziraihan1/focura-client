@@ -9,8 +9,17 @@ type Plans = {
   features: Record<string, boolean>;
 };
 
-export default function FeatureComparison() {
-  const plans: Plans[] = [
+const featureList = [
+  "Real-time Collaboration",
+  "Task Management",
+  "Unlimited Projects",
+  "Advanced Analytics",
+  "Priority Support",
+  "More Features",
+  "API Access",
+];
+
+const plans: Plans[] = [
     {
       name: "Free",
       price: "$0",
@@ -53,16 +62,7 @@ export default function FeatureComparison() {
     },
   ];
 
-  const featureList = [
-    "Real-time Collaboration",
-    "Task Management",
-    "Unlimited Projects",
-    "Advanced Analytics",
-    "Priority Support",
-    "More Features",
-    "API Access",
-  ];
-
+export default function FeatureComparison() {
   return (
     <section className="py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">

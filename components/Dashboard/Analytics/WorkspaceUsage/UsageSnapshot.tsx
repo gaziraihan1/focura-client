@@ -43,12 +43,6 @@ function KPICard({ icon: Icon, label, value, subtitle, accentClass, iconBgClass 
     </div>
   );
 }
-export function UsageSnapshot({ data }: UsageSnapshotProps) {
-  // ✅ 100% REAL DATA from backend snapshot
-  const snapshot = data.snapshot;
-
-  // Theme-aware chart tokens (defined in globals.css) — consistent with the rest
-  // of the analytics palette in both light and dark mode.
   const tokenClasses = [
     { accentClass: "text-chart-1", iconBgClass: "bg-chart-1/10" },
     { accentClass: "text-chart-2", iconBgClass: "bg-chart-2/10" },
@@ -56,6 +50,12 @@ export function UsageSnapshot({ data }: UsageSnapshotProps) {
     { accentClass: "text-chart-4", iconBgClass: "bg-chart-4/10" },
     { accentClass: "text-chart-5", iconBgClass: "bg-chart-5/10" },
   ];
+export function UsageSnapshot({ data }: UsageSnapshotProps) {
+  // ✅ 100% REAL DATA from backend snapshot
+  const snapshot = data.snapshot;
+
+  // Theme-aware chart tokens (defined in globals.css) — consistent with the rest
+  // of the analytics palette in both light and dark mode.
 
   const kpis: KPICardProps[] = [
     {

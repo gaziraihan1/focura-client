@@ -8,6 +8,17 @@ import { AnnouncementDetailSkeleton } from './AnnouncementDetailsSkeleton';
 import { AnnouncementAuthor } from './AnnouncementAuthor';
 import { AnnouncementTargets } from './AnnouncementTargets';
 
+const longDateTimeFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'UTC',
+  dateStyle: 'long',
+  timeStyle: 'short',
+});
+
+const mediumDateFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'UTC',
+  dateStyle: 'medium',
+});
+
 interface AnnouncementDetailProps {
   id: string;
   workspaceSlug: string;
@@ -37,11 +48,7 @@ export function AnnouncementDetail({ id, workspaceSlug }: AnnouncementDetailProp
   }
 
   const isPrivate   = announcement.visibility === 'PRIVATE';
-  const formattedDate = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'UTC',
-    dateStyle: 'long',
-    timeStyle: 'short',
-  }).format(new Date(announcement.createdAt));
+  const formattedDate = longDateTimeFormatter.format(new Date(announcement.createdAt));
 
   const wasEdited =
     announcement.updatedAt &&
@@ -121,10 +128,7 @@ export function AnnouncementDetail({ id, workspaceSlug }: AnnouncementDetailProp
                 </span>
                 {wasEdited && (
                   <span className="text-xs text-muted-foreground">
-                    Edited {new Intl.DateTimeFormat('en-US', {
-                      timeZone: 'UTC',
-                      dateStyle: 'medium',
-                    }).format(new Date(announcement.updatedAt))}
+                    Edited {mediumDateFormatter.format(new Date(announcement.updatedAt))}
                   </span>
                 )}
               </div>

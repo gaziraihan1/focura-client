@@ -1,5 +1,5 @@
 // components/StorageOverview/StorageWarningBanner.tsx
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import { AlertTriangle } from 'lucide-react';
 import type { StorageWarning } from '@/types/storage-overview.types';
 

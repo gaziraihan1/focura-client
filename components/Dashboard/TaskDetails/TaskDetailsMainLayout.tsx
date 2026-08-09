@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Flag, Repeat, Sprout } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { TaskDetailsForm } from "./TaskDetailsForm";

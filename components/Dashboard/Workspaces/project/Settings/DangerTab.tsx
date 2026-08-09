@@ -105,9 +105,9 @@ export function DangerTab({
 
             {/* Status picker */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Restore as
-              </label>
+              </span>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {STATUS_OPTIONS.map((s) => (
                   <button
@@ -158,10 +158,10 @@ export function DangerTab({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground">
+              <label className="text-xs font-semibold text-muted-foreground" htmlFor="fld-55">
                 Type <span className="font-mono bg-muted px-1 py-0.5 rounded text-foreground">{projectName}</span> to confirm
               </label>
-              <input
+              <input id="fld-55"
                 value={archiveConfirm}
                 onChange={(e) => setArchiveConfirm(e.target.value)}
                 placeholder={projectName}
@@ -236,10 +236,10 @@ export function DangerTab({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground">
+              <label className="text-xs font-semibold text-muted-foreground" htmlFor="fld-56">
                 Type <span className="font-mono bg-muted px-1 py-0.5 rounded text-foreground">{projectName}</span> to confirm deletion
               </label>
-              <input
+              <input id="fld-56"
                 value={deleteConfirm}
                 onChange={(e) => setDeleteConfirm(e.target.value)}
                 placeholder={projectName}

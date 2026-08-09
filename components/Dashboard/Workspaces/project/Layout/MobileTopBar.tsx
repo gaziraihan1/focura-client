@@ -11,6 +11,7 @@ export function MobileTopBar({ projectName, currentLabel, projectColor, onOpen }
   return (
     <div className="lg:hidden flex items-center gap-3 px-3 py-2.5 bg-card/95 backdrop-blur-sm border-b border-border sticky top-0 z-30">
       <button
+        aria-label="Open menu"
         onClick={onOpen}
         className="p-1.5 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors shrink-0"
       >

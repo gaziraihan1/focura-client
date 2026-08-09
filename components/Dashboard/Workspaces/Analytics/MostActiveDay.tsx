@@ -7,7 +7,6 @@ interface MostActiveDayProps {
   data: MostActiveDayType;
 }
 
-export function MostActiveDay({ data }: MostActiveDayProps) {
   const activityLabels: Record<string, string> = {
     CREATED: 'Creating',
     UPDATED: 'Updating',
@@ -16,6 +15,7 @@ export function MostActiveDay({ data }: MostActiveDayProps) {
     COMMENTED: 'Commenting',
     UPLOADED: 'Uploading',
   };
+export function MostActiveDay({ data }: MostActiveDayProps) {
 
   return (
     <div className="bg-card border rounded-lg p-6">

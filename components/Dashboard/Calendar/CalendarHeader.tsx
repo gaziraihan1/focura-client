@@ -50,6 +50,7 @@ export function CalendarHeader({
     <div
       className="border-b border-border bg-card sticky top-0 z-10"
       onKeyDown={handleKeyDown}
+      role="group"
       tabIndex={-1}
     >
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-6">
@@ -101,9 +102,8 @@ export function CalendarHeader({
             </button>
 
             {/* Navigation */}
-            <div
+            <nav
               className="flex items-center gap-1 border border-border rounded-lg p-1 bg-background"
-              role="navigation"
               aria-label="Calendar navigation"
             >
               <button
@@ -129,7 +129,7 @@ export function CalendarHeader({
               >
                 <ChevronRight className="w-4 h-4" aria-hidden="true" />
               </button>
-            </div>
+            </nav>
           </div>
         </div>
       </div>

@@ -1,41 +1,41 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Briefcase, Code2, PenTool, Users, Building2, Rocket } from "lucide-react";
 
+const useCases = [
+  {
+    icon: <Briefcase size={30} className="text-primary" />,
+    title: "Project Management Teams",
+    desc: "Plan, assign, track, and deliver projects with a centralized workflow everyone understands.",
+  },
+  {
+    icon: <Code2 size={30} className="text-primary" />,
+    title: "Engineering Teams",
+    desc: "Break tasks into sprints, track blockers, review progress, and ship faster with clarity.",
+  },
+  {
+    icon: <PenTool size={30} className="text-primary" />,
+    title: "Creative & Marketing Teams",
+    desc: "Organize assets, collaborate on ideas, and execute campaigns from one place.",
+  },
+  {
+    icon: <Users size={30} className="text-primary" />,
+    title: "Remote & Hybrid Teams",
+    desc: "Keep communication aligned and ensure everyone stays productive regardless of location.",
+  },
+  {
+    icon: <Building2 size={30} className="text-primary" />,
+    title: "Agencies & Clients",
+    desc: "Manage multiple clients, share updates transparently, and deliver work efficiently.",
+  },
+  {
+    icon: <Rocket size={30} className="text-primary" />,
+    title: "Startups & Founders",
+    desc: "Plan features, track progress, and scale your operations without chaos.",
+  },
+];
 export default function SolutionUseCases() {
-  const useCases = [
-    {
-      icon: <Briefcase size={30} className="text-primary" />,
-      title: "Project Management Teams",
-      desc: "Plan, assign, track, and deliver projects with a centralized workflow everyone understands.",
-    },
-    {
-      icon: <Code2 size={30} className="text-primary" />,
-      title: "Engineering Teams",
-      desc: "Break tasks into sprints, track blockers, review progress, and ship faster with clarity.",
-    },
-    {
-      icon: <PenTool size={30} className="text-primary" />,
-      title: "Creative & Marketing Teams",
-      desc: "Organize assets, collaborate on ideas, and execute campaigns from one place.",
-    },
-    {
-      icon: <Users size={30} className="text-primary" />,
-      title: "Remote & Hybrid Teams",
-      desc: "Keep communication aligned and ensure everyone stays productive regardless of location.",
-    },
-    {
-      icon: <Building2 size={30} className="text-primary" />,
-      title: "Agencies & Clients",
-      desc: "Manage multiple clients, share updates transparently, and deliver work efficiently.",
-    },
-    {
-      icon: <Rocket size={30} className="text-primary" />,
-      title: "Startups & Founders",
-      desc: "Plan features, track progress, and scale your operations without chaos.",
-    },
-  ];
 
   return (
     <section className="py-28 bg-background relative">

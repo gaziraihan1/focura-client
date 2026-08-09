@@ -17,11 +17,6 @@ export const mockSubscription: WorkspaceSubscription = {
   stripeSubscriptionId: 'stripe-sub-1',
 }
 
-export const mockSubscriptionCancelling: WorkspaceSubscription = {
-  ...mockSubscription,
-  cancelAtPeriodEnd: true,
-}
-
 export const mockInvoice: InvoiceData = {
   id:            'inv-1',
   amount:        1999,

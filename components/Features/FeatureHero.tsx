@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 
 const MOCK_NAV = ["Dashboard", "Tasks", "Projects", "Calendar", "Wellness"];
 
-function MiniDashboardMock() {
   const columns = [
     {
       name: "Planned",
@@ -34,6 +33,7 @@ function MiniDashboardMock() {
       tasks: [{ title: "Search UX polish", tag: "UX", tagColor: "bg-cyan-500/10 text-cyan-600" }],
     },
   ];
+function MiniDashboardMock() {
 
   return (
     <div

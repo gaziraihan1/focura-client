@@ -67,7 +67,7 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background" role="main" aria-label="Calendar">
+    <main className="min-h-screen bg-background" aria-label="Calendar">
       {/* Header with View Switcher */}
       <CalendarHeader
         currentDate={currentDate}
@@ -120,6 +120,6 @@ export default function CalendarPage() {
 
       {/* Floating energy quick-log */}
       <EnergyQuickLog />
-    </div>
+    </main>
   );
 }

@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import SolutionsMetrics from "@/components/Solutions/SolutionsMetrics";
 
 vi.mock("framer-motion", () => ({
-  motion: {
+  m: {
     div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props} />,
     span: (props: React.HTMLAttributes<HTMLSpanElement>) => <span {...props} />,
   },

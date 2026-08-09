@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m as motion, AnimatePresence } from 'framer-motion';
 import { Trash2, CornerDownRight, MessageSquare, ChevronDown, Loader2, Pencil, Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar } from '@/components/Shared/Avatar';
@@ -83,7 +83,7 @@ export function CommentItem({
           {/* Body — switches between view and edit mode */}
           {isEditing ? (
             <div className="space-y-2">
-              <textarea
+              <textarea aria-label="Comment"
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
                 rows={3}

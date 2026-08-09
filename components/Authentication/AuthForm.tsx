@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { AuthFormHeader } from "./AuthForm/AuthFormHeader";
 import { AuthFormFields } from "./AuthForm/AuthFormFields";
 import { AuthFormButtons } from "./AuthForm/AuthFormButtons";

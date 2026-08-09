@@ -1,7 +1,7 @@
 // components/Projects/ProjectFilters.tsx
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { m as motion, AnimatePresence } from "framer-motion";
 import { Search, Filter, Grid3x3, List } from "lucide-react";
 import { ViewMode, ProjectFilters as Filters, WorkspaceData } from "@/types/project.types";
 
@@ -44,7 +44,7 @@ export function ProjectFilters({
             className="absolute left-2 top-1/2 md:top-2/5 -translate-y-1/2 text-muted-foreground pointer-events-none sm:w-8 sm:h-8"
             size={12}
           />
-          <input
+          <input aria-label="Search"
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
@@ -75,7 +75,7 @@ export function ProjectFilters({
 
         {/* View Toggle */}
         <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-muted/50 border border-border/50">
-          <button
+          <button aria-label="View Toggle"
             onClick={() => onViewModeChange("grid")}
             className={`p-2.5 rounded-lg transition ${
               viewMode === "grid"
@@ -85,7 +85,7 @@ export function ProjectFilters({
           >
             <Grid3x3 size={18} />
           </button>
-          <button
+          <button aria-label="List view"
             onClick={() => onViewModeChange("list")}
             className={`p-2.5 rounded-lg transition ${
               viewMode === "list"
@@ -110,10 +110,10 @@ export function ProjectFilters({
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {/* Workspace Filter */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
+                <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-9">
                   Workspace
                 </label>
-                <select
+                <select id="fld-9"
                   value={filters.workspace}
                   onChange={(e) =>
                     onFiltersChange({ ...filters, workspace: e.target.value })
@@ -130,10 +130,10 @@ export function ProjectFilters({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
+                <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-10">
                   Status
                 </label>
-                <select
+                <select id="fld-10"
                   value={filters.status}
                   onChange={(e) =>
                     onFiltersChange({ ...filters, status: e.target.value })
@@ -150,10 +150,10 @@ export function ProjectFilters({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
+                <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-11">
                   Priority
                 </label>
-                <select
+                <select id="fld-11"
                   value={filters.priority}
                   onChange={(e) =>
                     onFiltersChange({ ...filters, priority: e.target.value })

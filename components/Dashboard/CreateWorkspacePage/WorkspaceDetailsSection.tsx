@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { AlertCircle } from "lucide-react";
 
 interface WorkspaceDetailsSectionProps {
@@ -35,10 +35,10 @@ export function WorkspaceDetailsSection({
     >
       {/* Name */}
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
+        <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-16">
           Workspace Name <span className="text-red-500">*</span>
         </label>
-        <input
+        <input id="fld-16"
           type="text"
           value={name}
           onChange={(e) => onNameChange(e.target.value)}
@@ -60,10 +60,10 @@ export function WorkspaceDetailsSection({
 
       {/* Description */}
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
+        <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-17">
           Description (Optional)
         </label>
-        <textarea
+        <textarea id="fld-17"
           value={description}
           onChange={(e) => onDescriptionChange(e.target.value)}
           rows={4}
@@ -79,14 +79,15 @@ export function WorkspaceDetailsSection({
 
       {/* Color */}
       <div>
-        <label className="block text-sm font-medium text-foreground mb-3">
+        <span className="block text-sm font-medium text-foreground mb-3">
           Workspace Color
-        </label>
+        </span>
         <div className="flex flex-wrap gap-3">
           {colors.map((colorOption) => (
             <button
               key={colorOption}
               type="button"
+              aria-label={`Select color ${colorOption}`}
               onClick={() => onColorChange(colorOption)}
               className={`w-10 h-10 rounded-lg transition-all ${
                 color === colorOption

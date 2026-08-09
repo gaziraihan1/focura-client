@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import { Database, HardDrive, AlertCircle, CheckCircle, Building2 } from 'lucide-react';
 import { StorageInfo } from '@/hooks/useStorage';
 import { formatStorageSize } from '@/hooks/useStoragePage';

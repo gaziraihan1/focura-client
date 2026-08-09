@@ -13,7 +13,7 @@ beforeAll(() => {
 
 // Mock framer-motion to avoid viewport animation issues
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...filterDomProps(props)}>{children}</div>,
     span: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <span {...filterDomProps(props)}>{children}</span>,
   },

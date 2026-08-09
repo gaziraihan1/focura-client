@@ -14,6 +14,10 @@ import {
 } from "@/types/project.types";
 
 // In useProjectsPage hook
+function handleRetry() {
+  window.location.reload();
+}
+
 export function useProjectsPage() {
   const router = useRouter();
   const { data: session } = useSession();
@@ -153,10 +157,6 @@ export function useProjectsPage() {
 
   const handleBrowseWorkspaces = () => {
     router.push("/dashboard/workspaces");
-  };
-
-  const handleRetry = () => {
-    window.location.reload();
   };
 
   const handleCloseAccessDeniedModal = () => {

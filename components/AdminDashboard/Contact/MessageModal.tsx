@@ -31,7 +31,7 @@ export function MessageModal({
               {formatDate(message.createdAt)}
             </p>
           </div>
-          <button
+          <button aria-label="Close"
             onClick={onClose}
             className="shrink-0 p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
           >

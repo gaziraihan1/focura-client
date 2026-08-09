@@ -20,33 +20,31 @@ import {
 } from '@/constants/admin.constants';
 import { useState } from 'react';
 import { BanUserModal } from '@/components/AdminDashboard/User/BanUserModal';
+import type { AdminUserDetail } from '@/types/admin.types';
 
-export default function AdminUserDetailPage() {
-  const { id } = useParams();
-  const { data: user, isLoading } = useAdminUserDetail(id as string);
-  const [banModalOpen, setBanModalOpen] = useState(false);
-  const { mutate: unban, isPending: unbanning } = useUnbanUser();
+interface AdminUserHeaderProps {
+  user: AdminUserDetail;
+  unbanning: boolean;
+  onUnban: () => void;
+  onOpenBanModal: () => void;
+}
 
-  if (isLoading) return <LoadingState />;
-  if (!user) return <EmptyState />;
-
+function AdminUserHeader({ user, unbanning, onUnban, onOpenBanModal }: AdminUserHeaderProps) {
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center gap-3 flex-wrap">
-        <Link
-          href="/admin-dashboard/users"
-          className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-        </Link>
-        <Avatar name={user.name} image={user.image} size="sm" />
-        <div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="text-xl font-bold text-foreground">{user.name}</h1>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted border border-border font-semibold uppercase">
-              {user.role}
-            </span>
+    <div className="flex items-center gap-3 flex-wrap">
+      <Link
+        href="/admin-dashboard/users"
+        className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" />
+      </Link>
+      <Avatar name={user.name} image={user.image} size="sm" />
+      <div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <h1 className="text-xl font-bold text-foreground">{user.name}</h1>
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted border border-border font-semibold uppercase">
+            {user.role}
+          </span>
 
 {user.bannedAt ? (
   <div className="flex items-center gap-2">
@@ -54,7 +52,7 @@ export default function AdminUserDetailPage() {
       BANNED
     </span>
     <button
-      onClick={() => unban(user.id)}
+      onClick={onUnban}
       disabled={unbanning}
       className="text-[11px] px-2.5 py-1 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-40"
     >
@@ -63,7 +61,7 @@ export default function AdminUserDetailPage() {
   </div>
 ) : (
   <button
-    onClick={() => setBanModalOpen(true)}
+    onClick={onOpenBanModal}
     className="text-[11px] px-2.5 py-1 rounded-lg border border-destructive/30 text-destructive hover:bg-destructive/10 transition-colors"
   >
     Ban User
@@ -86,6 +84,256 @@ export default function AdminUserDetailPage() {
           <p className="text-xs text-muted-foreground">{user.email}</p>
         </div>
       </div>
+  );
+}
+
+interface AdminUserMetaProps {
+  user: AdminUserDetail;
+}
+
+function AdminUserMetaGrid({ user }: AdminUserMetaProps) {
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-5 rounded-xl border border-border bg-card text-xs">
+      <div>
+        <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
+          Joined
+        </p>
+        <p className="font-medium text-foreground">
+          {format(new Date(user.createdAt), 'MMM d, yyyy')}
+        </p>
+        <p className="text-[10px] text-muted-foreground">
+          {formatDistanceToNow(new Date(user.createdAt), { addSuffix: true })}
+        </p>
+      </div>
+      <div>
+        <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
+          Last Login
+        </p>
+        <p className="font-medium text-foreground">
+          {user.lastLoginAt ? format(new Date(user.lastLoginAt), 'MMM d, yyyy') : 'Never'}
+        </p>
+        {user.lastLoginAt && (
+          <p className="text-[10px] text-muted-foreground">
+            {formatDistanceToNow(new Date(user.lastLoginAt), { addSuffix: true })}
+          </p>
+        )}
+      </div>
+      <div>
+        <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
+          Timezone
+        </p>
+        <p className="font-medium text-foreground">{user.timezone ?? '—'}</p>
+      </div>
+      <div>
+        <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
+          Profile Updated
+        </p>
+        <p className="font-medium text-foreground">
+          {user.lastProfileUpdateAt
+            ? formatDistanceToNow(new Date(user.lastProfileUpdateAt), { addSuffix: true })
+            : '—'}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+interface AdminUserStatsProps {
+  user: AdminUserDetail;
+}
+
+function AdminUserStatsGrid({ user }: AdminUserStatsProps) {
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <StatCard icon={CheckSquare} label="Tasks created" value={user._count.createdTasks} sub={`${user._count.assignedTasks} assigned to them`} />
+      <StatCard icon={MessageSquare} label="Comments" value={user._count.comments} />
+      <StatCard icon={Clock} label="Focus sessions" value={user._count.focusSessions} />
+      <StatCard icon={HardDrive} label="Files uploaded" value={user._count.files} sub={`${user.storage.usedMb.toLocaleString()} MB used`} />
+      <StatCard icon={User} label="Workspaces owned" value={user._count.ownedWorkspaces} />
+      <StatCard icon={User} label="Member of" value={user._count.workspaceMember} sub="workspaces" />
+      <StatCard icon={Lightbulb} label="Feature requests" value={user._count.featureRequests} />
+      <StatCard icon={HardDrive} label="Storage" value={`${user.storage.usedMb} MB`} sub={`${user.storage.fileCount} files`} />
+    </div>
+  );
+}
+
+interface AdminUserSectionsProps {
+  user: AdminUserDetail;
+}
+
+function AdminUserMembershipsSections({ user }: AdminUserSectionsProps) {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Owned workspaces */}
+      <SectionCard title="Owned Workspaces" count={user.ownedWorkspaces.length}>
+        {user.ownedWorkspaces.length === 0 ? (
+          <p className="px-5 py-4 text-xs text-muted-foreground">None</p>
+        ) : (
+          user.ownedWorkspaces.map((w) => (
+            <div key={w.id} className="flex items-center justify-between px-5 py-3 gap-3">
+              <div className="min-w-0">
+                <Link
+                  href={`/admin-dashboard/workspaces/${w.slug}`}
+                  className="text-xs font-medium text-foreground hover:text-primary transition-colors"
+                >
+                  {w.name}
+                </Link>
+                <p className="text-[10px] text-muted-foreground">
+                  {w._count.members} members · {w._count.projects} projects
+                </p>
+              </div>
+              <span
+                className={cn(
+                  'text-[10px] px-2 py-0.5 rounded-full border font-semibold uppercase shrink-0',
+                  PLAN_COLORS[w.plan] ?? PLAN_COLORS['FREE']
+                )}
+              >
+                {w.plan}
+              </span>
+            </div>
+          ))
+        )}
+      </SectionCard>
+
+      {/* Workspace memberships */}
+      <SectionCard title="Member Of" count={user.workspaceMemberships.length}>
+        {user.workspaceMemberships.length === 0 ? (
+          <p className="px-5 py-4 text-xs text-muted-foreground">None</p>
+        ) : (
+          user.workspaceMemberships.map((m) => (
+            <div key={m.workspace.id} className="flex items-center justify-between px-5 py-3 gap-3">
+              <div className="min-w-0">
+                <Link
+                  href={`/admin-dashboard/workspaces/${m.workspace.slug}`}
+                  className="text-xs font-medium text-foreground hover:text-primary transition-colors truncate block"
+                >
+                  {m.workspace.name}
+                </Link>
+                <p className="text-[10px] text-muted-foreground">
+                  Joined {formatDistanceToNow(new Date(m.joinedAt), { addSuffix: true })}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted border border-border font-medium uppercase">
+                  {m.role}
+                </span>
+                <span
+                  className={cn(
+                    'text-[10px] px-2 py-0.5 rounded-full border font-semibold uppercase',
+                    PLAN_COLORS[m.workspace.plan] ?? PLAN_COLORS['FREE']
+                  )}
+                >
+                  {m.workspace.plan}
+                </span>
+              </div>
+            </div>
+          ))
+        )}
+      </SectionCard>
+
+      {/* Project memberships */}
+      <SectionCard title="Project Memberships" count={user.projectMemberships.length}>
+        {user.projectMemberships.length === 0 ? (
+          <p className="px-5 py-4 text-xs text-muted-foreground">None</p>
+        ) : (
+          user.projectMemberships.map((m) => (
+            <div key={m.project.id} className="flex items-center justify-between px-5 py-3 gap-4">
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-foreground truncate">{m.project.name}</p>
+                <p className="text-[10px] text-muted-foreground truncate">
+                  {m.project.workspace.name}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted border border-border font-medium uppercase">
+                  {m.role}
+                </span>
+                <span className="text-[10px] text-muted-foreground uppercase">
+                  {m.project.status}
+                </span>
+              </div>
+            </div>
+          ))
+        )}
+      </SectionCard>
+
+      {/* Recent tasks */}
+      <SectionCard title="Recent Tasks Created" count={user._count.createdTasks}>
+        {user.recentTasks.length === 0 ? (
+          <p className="px-5 py-4 text-xs text-muted-foreground">None</p>
+        ) : (
+          user.recentTasks.map((t) => (
+            <div key={t.id} className="flex items-start justify-between px-5 py-3 gap-3">
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-foreground truncate">{t.title}</p>
+                <p className="text-[10px] text-muted-foreground">
+                  {t.project?.name ?? t.workspace?.name ?? '—'}
+                </p>
+              </div>
+              <span
+                className={cn(
+                  'text-[10px] px-2 py-0.5 rounded-md font-medium shrink-0',
+                  TASK_STATUS_COLORS[t.status] ?? 'text-muted-foreground bg-muted'
+                )}
+              >
+                {t.status.replace('_', ' ')}
+              </span>
+            </div>
+          ))
+        )}
+      </SectionCard>
+    </div>
+  );
+}
+
+interface AdminUserFeatureRequestsProps {
+  user: AdminUserDetail;
+}
+
+function AdminUserFeatureRequests({ user }: AdminUserFeatureRequestsProps) {
+  if (user.featureRequests.length === 0) return null;
+  return (
+    <SectionCard title="Feature Requests" count={user._count.featureRequests}>
+      {user.featureRequests.map((f) => (
+        <div key={f.id} className="flex items-center justify-between px-5 py-3 gap-3">
+          <div className="min-w-0">
+            <p className="text-xs text-foreground truncate">{f.title}</p>
+            <p className="text-[10px] text-muted-foreground">
+              {formatDistanceToNow(new Date(f.createdAt), { addSuffix: true })}
+            </p>
+          </div>
+          <span
+            className={cn(
+              'text-[10px] px-2 py-0.5 rounded-full border font-semibold uppercase shrink-0',
+              FEATURE_STATUS_COLORS[f.status] ?? FEATURE_STATUS_COLORS['PENDING']
+            )}
+          >
+            {f.status}
+          </span>
+        </div>
+      ))}
+    </SectionCard>
+  );
+}
+
+export default function AdminUserDetailPage() {
+  const { id } = useParams();
+  const { data: user, isLoading } = useAdminUserDetail(id as string);
+  const [banModalOpen, setBanModalOpen] = useState(false);
+  const { mutate: unban, isPending: unbanning } = useUnbanUser();
+
+  if (isLoading) return <LoadingState />;
+  if (!user) return <EmptyState />;
+
+  return (
+    <div className="space-y-6 max-w-6xl mx-auto">
+      {/* Header */}
+      <AdminUserHeader
+        user={user}
+        unbanning={unbanning}
+        onUnban={() => unban(user.id)}
+        onOpenBanModal={() => setBanModalOpen(true)}
+      />
 
       {/* User ID */}
       <div className="flex items-center gap-2">
@@ -94,48 +342,7 @@ export default function AdminUserDetailPage() {
       </div>
 
       {/* Meta info */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-5 rounded-xl border border-border bg-card text-xs">
-        <div>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
-            Joined
-          </p>
-          <p className="font-medium text-foreground">
-            {format(new Date(user.createdAt), 'MMM d, yyyy')}
-          </p>
-          <p className="text-[10px] text-muted-foreground">
-            {formatDistanceToNow(new Date(user.createdAt), { addSuffix: true })}
-          </p>
-        </div>
-        <div>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
-            Last Login
-          </p>
-          <p className="font-medium text-foreground">
-            {user.lastLoginAt ? format(new Date(user.lastLoginAt), 'MMM d, yyyy') : 'Never'}
-          </p>
-          {user.lastLoginAt && (
-            <p className="text-[10px] text-muted-foreground">
-              {formatDistanceToNow(new Date(user.lastLoginAt), { addSuffix: true })}
-            </p>
-          )}
-        </div>
-        <div>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
-            Timezone
-          </p>
-          <p className="font-medium text-foreground">{user.timezone ?? '—'}</p>
-        </div>
-        <div>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-0.5">
-            Profile Updated
-          </p>
-          <p className="font-medium text-foreground">
-            {user.lastProfileUpdateAt
-              ? formatDistanceToNow(new Date(user.lastProfileUpdateAt), { addSuffix: true })
-              : '—'}
-          </p>
-        </div>
-      </div>
+      <AdminUserMetaGrid user={user} />
 
       {/* Bio */}
       {user.bio && (
@@ -146,16 +353,7 @@ export default function AdminUserDetailPage() {
       )}
 
       {/* Activity stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <StatCard icon={CheckSquare} label="Tasks created" value={user._count.createdTasks} sub={`${user._count.assignedTasks} assigned to them`} />
-        <StatCard icon={MessageSquare} label="Comments" value={user._count.comments} />
-        <StatCard icon={Clock} label="Focus sessions" value={user._count.focusSessions} />
-        <StatCard icon={HardDrive} label="Files uploaded" value={user._count.files} sub={`${user.storage.usedMb.toLocaleString()} MB used`} />
-        <StatCard icon={User} label="Workspaces owned" value={user._count.ownedWorkspaces} />
-        <StatCard icon={User} label="Member of" value={user._count.workspaceMember} sub="workspaces" />
-        <StatCard icon={Lightbulb} label="Feature requests" value={user._count.featureRequests} />
-        <StatCard icon={HardDrive} label="Storage" value={`${user.storage.usedMb} MB`} sub={`${user.storage.fileCount} files`} />
-      </div>
+      <AdminUserStatsGrid user={user} />
 
       {/* Task breakdown */}
       <div className="p-5 rounded-xl border border-border bg-card space-y-3">
@@ -194,150 +392,10 @@ export default function AdminUserDetailPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Owned workspaces */}
-        <SectionCard title="Owned Workspaces" count={user.ownedWorkspaces.length}>
-          {user.ownedWorkspaces.length === 0 ? (
-            <p className="px-5 py-4 text-xs text-muted-foreground">None</p>
-          ) : (
-            user.ownedWorkspaces.map((w) => (
-              <div key={w.id} className="flex items-center justify-between px-5 py-3 gap-3">
-                <div className="min-w-0">
-                  <Link
-                    href={`/admin-dashboard/workspaces/${w.slug}`}
-                    className="text-xs font-medium text-foreground hover:text-primary transition-colors"
-                  >
-                    {w.name}
-                  </Link>
-                  <p className="text-[10px] text-muted-foreground">
-                    {w._count.members} members · {w._count.projects} projects
-                  </p>
-                </div>
-                <span
-                  className={cn(
-                    'text-[10px] px-2 py-0.5 rounded-full border font-semibold uppercase shrink-0',
-                    PLAN_COLORS[w.plan] ?? PLAN_COLORS['FREE']
-                  )}
-                >
-                  {w.plan}
-                </span>
-              </div>
-            ))
-          )}
-        </SectionCard>
-
-        {/* Workspace memberships */}
-        <SectionCard title="Member Of" count={user.workspaceMemberships.length}>
-          {user.workspaceMemberships.length === 0 ? (
-            <p className="px-5 py-4 text-xs text-muted-foreground">None</p>
-          ) : (
-            user.workspaceMemberships.map((m) => (
-              <div key={m.workspace.id} className="flex items-center justify-between px-5 py-3 gap-3">
-                <div className="min-w-0">
-                  <Link
-                    href={`/admin-dashboard/workspaces/${m.workspace.slug}`}
-                    className="text-xs font-medium text-foreground hover:text-primary transition-colors truncate block"
-                  >
-                    {m.workspace.name}
-                  </Link>
-                  <p className="text-[10px] text-muted-foreground">
-                    Joined {formatDistanceToNow(new Date(m.joinedAt), { addSuffix: true })}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted border border-border font-medium uppercase">
-                    {m.role}
-                  </span>
-                  <span
-                    className={cn(
-                      'text-[10px] px-2 py-0.5 rounded-full border font-semibold uppercase',
-                      PLAN_COLORS[m.workspace.plan] ?? PLAN_COLORS['FREE']
-                    )}
-                  >
-                    {m.workspace.plan}
-                  </span>
-                </div>
-              </div>
-            ))
-          )}
-        </SectionCard>
-
-        {/* Project memberships */}
-        <SectionCard title="Project Memberships" count={user.projectMemberships.length}>
-          {user.projectMemberships.length === 0 ? (
-            <p className="px-5 py-4 text-xs text-muted-foreground">None</p>
-          ) : (
-            user.projectMemberships.map((m) => (
-              <div key={m.project.id} className="flex items-center justify-between px-5 py-3 gap-4">
-                <div className="min-w-0">
-                  <p className="text-xs font-medium text-foreground truncate">{m.project.name}</p>
-                  <p className="text-[10px] text-muted-foreground truncate">
-                    {m.project.workspace.name}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted border border-border font-medium uppercase">
-                    {m.role}
-                  </span>
-                  <span className="text-[10px] text-muted-foreground uppercase">
-                    {m.project.status}
-                  </span>
-                </div>
-              </div>
-            ))
-          )}
-        </SectionCard>
-
-        {/* Recent tasks */}
-        <SectionCard title="Recent Tasks Created" count={user._count.createdTasks}>
-          {user.recentTasks.length === 0 ? (
-            <p className="px-5 py-4 text-xs text-muted-foreground">None</p>
-          ) : (
-            user.recentTasks.map((t) => (
-              <div key={t.id} className="flex items-start justify-between px-5 py-3 gap-3">
-                <div className="min-w-0">
-                  <p className="text-xs font-medium text-foreground truncate">{t.title}</p>
-                  <p className="text-[10px] text-muted-foreground">
-                    {t.project?.name ?? t.workspace?.name ?? '—'}
-                  </p>
-                </div>
-                <span
-                  className={cn(
-                    'text-[10px] px-2 py-0.5 rounded-md font-medium shrink-0',
-                    TASK_STATUS_COLORS[t.status] ?? 'text-muted-foreground bg-muted'
-                  )}
-                >
-                  {t.status.replace('_', ' ')}
-                </span>
-              </div>
-            ))
-          )}
-        </SectionCard>
-      </div>
+      <AdminUserMembershipsSections user={user} />
 
       {/* Feature requests */}
-      {user.featureRequests.length > 0 && (
-        <SectionCard title="Feature Requests" count={user._count.featureRequests}>
-          {user.featureRequests.map((f) => (
-            <div key={f.id} className="flex items-center justify-between px-5 py-3 gap-3">
-              <div className="min-w-0">
-                <p className="text-xs text-foreground truncate">{f.title}</p>
-                <p className="text-[10px] text-muted-foreground">
-                  {formatDistanceToNow(new Date(f.createdAt), { addSuffix: true })}
-                </p>
-              </div>
-              <span
-                className={cn(
-                  'text-[10px] px-2 py-0.5 rounded-full border font-semibold uppercase shrink-0',
-                  FEATURE_STATUS_COLORS[f.status] ?? FEATURE_STATUS_COLORS['PENDING']
-                )}
-              >
-                {f.status}
-              </span>
-            </div>
-          ))}
-        </SectionCard>
-      )}
+      <AdminUserFeatureRequests user={user} />
       <BanUserModal
       userId={user.id}
       userName={user.name}

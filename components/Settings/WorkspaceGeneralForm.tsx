@@ -119,10 +119,10 @@ export function WorkspaceGeneralForm({ workspaceSlug }: WorkspaceGeneralFormProp
 
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-2">
+            <label className="block text-xs font-medium text-muted-foreground mb-2" htmlFor="fld-66">
               Workspace Name
             </label>
-            <input
+            <input id="fld-66"
               type="text"
               value={form.name}
               onChange={(e) => dispatch({ type: 'setName', value: e.target.value })}
@@ -132,10 +132,10 @@ export function WorkspaceGeneralForm({ workspaceSlug }: WorkspaceGeneralFormProp
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-2">
+            <label className="block text-xs font-medium text-muted-foreground mb-2" htmlFor="fld-67">
               Description
             </label>
-            <textarea
+            <textarea id="fld-67"
               value={form.description}
               onChange={(e) => dispatch({ type: 'setDescription', value: e.target.value })}
               rows={3}
@@ -145,13 +145,14 @@ export function WorkspaceGeneralForm({ workspaceSlug }: WorkspaceGeneralFormProp
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-3">
+            <span className="block text-xs font-medium text-muted-foreground mb-3">
               Workspace Color
-            </label>
+            </span>
             <div className="flex flex-wrap gap-2">
               {PREDEFINED_COLORS.map((c) => (
                 <button
                   key={c}
+                  aria-label={`Select workspace color ${c}`}
                   onClick={() => dispatch({ type: 'setColor', value: c })}
                   className={`w-8 h-8 rounded-lg transition-all ${
                     form.color === c ? 'ring-2 ring-offset-2 ring-primary scale-110' : 'hover:scale-105'

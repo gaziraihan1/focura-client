@@ -8,24 +8,24 @@ interface WorkloadChartProps {
   data: WorkloadMember[];
 }
 
+const statusLabels = {
+  normal: 'Normal',
+  high: 'High Load',
+  overloaded: 'Overloaded',
+};
+
+const statusIcons = {
+  normal: <CheckCircle2 className="w-4 h-4" />,
+  high: <AlertCircle className="w-4 h-4" />,
+  overloaded: <AlertTriangle className="w-4 h-4" />,
+};
+
 export function WorkloadChart({ data }: WorkloadChartProps) {
   const maxTasks = Math.max(...data.map((m) => m.assignedTasks), 1);
   
   const overloaded = data.filter((m) => m.status === 'overloaded').length;
   const high = data.filter((m) => m.status === 'high').length;
   const normal = data.filter((m) => m.status === 'normal').length;
-
-  const statusIcons = {
-    normal: <CheckCircle2 className="w-4 h-4" />,
-    high: <AlertCircle className="w-4 h-4" />,
-    overloaded: <AlertTriangle className="w-4 h-4" />,
-  };
-
-  const statusLabels = {
-    normal: 'Normal',
-    high: 'High Load',
-    overloaded: 'Overloaded',
-  };
 
   return (
     <div className="bg-card border rounded-lg p-6">

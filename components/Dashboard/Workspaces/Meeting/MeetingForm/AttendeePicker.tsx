@@ -37,7 +37,7 @@ export function AttendeePicker({
         )}
       </div>
 
-      <input
+      <input aria-label="Search members..."
         type="text"
         value={search}
         onChange={(e) => onSearchChange(e.target.value)}

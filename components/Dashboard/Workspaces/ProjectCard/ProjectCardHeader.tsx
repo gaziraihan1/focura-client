@@ -57,7 +57,7 @@ export function ProjectCardHeader({
           </div>
         </div>
       </div>
-      <button
+      <button aria-label="More options"
         onClick={(e) => {
           e.preventDefault();
           // Add menu logic here

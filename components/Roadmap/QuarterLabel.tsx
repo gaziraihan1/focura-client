@@ -1,5 +1,5 @@
 "use client";
-import { useInView, motion } from "framer-motion";
+import { useInView, m as motion } from "framer-motion";
 import { useRef } from "react";
 
 export default function QuarterLabel({ quarter }: { quarter: string }) {

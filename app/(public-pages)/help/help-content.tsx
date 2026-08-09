@@ -9,16 +9,15 @@ import { HelpHero } from '@/components/Help/HelpHero';
 import { HelpSearchResults } from '@/components/Help/HelpSearchResults';
 import { useState }          from 'react';
 
+const scrollToCategory = (id: string) => {
+  const el = document.getElementById(id);
+  if (el) {
+    const top = el.getBoundingClientRect().top + window.scrollY - 96;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+};
 const HelpContent = () => {
   const [query, setQuery] = useState('');
-
-  const scrollToCategory = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      const top = el.getBoundingClientRect().top + window.scrollY - 96;
-      window.scrollTo({ top, behavior: 'smooth' });
-    }
-  };
 
   return (
     <div className='min-h-screen bg-white dark:bg-neutral-950'>

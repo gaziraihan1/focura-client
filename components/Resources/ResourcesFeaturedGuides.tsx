@@ -1,26 +1,26 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 
+const guides = [
+  {
+    title: "Organizing Projects the Smart Way",
+    desc: "Learn how teams structure projects inside Focura for maximum clarity.",
+  },
+  {
+    title: "Using Real-Time Collaboration",
+    desc: "Keep everyone aligned using live editing, comments, and auto-sync.",
+  },
+  {
+    title: "Setting Up Roles & Permissions",
+    desc: "Control access levels and manage who can view or edit workspaces.",
+  },
+  {
+    title: "Integrating Focura with Third-Party Apps",
+    desc: "Connect your favorite tools to build a cohesive workflow.",
+  },
+];
 export default function ResourcesFeaturedGuides() {
-  const guides = [
-    {
-      title: "Organizing Projects the Smart Way",
-      desc: "Learn how teams structure projects inside Focura for maximum clarity.",
-    },
-    {
-      title: "Using Real-Time Collaboration",
-      desc: "Keep everyone aligned using live editing, comments, and auto-sync.",
-    },
-    {
-      title: "Setting Up Roles & Permissions",
-      desc: "Control access levels and manage who can view or edit workspaces.",
-    },
-    {
-      title: "Integrating Focura with Third-Party Apps",
-      desc: "Connect your favorite tools to build a cohesive workflow.",
-    },
-  ];
 
   return (
     <section className="py-24 bg-background">

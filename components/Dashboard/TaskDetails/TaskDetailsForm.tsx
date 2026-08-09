@@ -50,7 +50,7 @@ export const TaskDetailsForm = ({
 }: TaskDetailsFormProps) => {
   return (
     <div className="space-y-4">
-      <input
+      <input aria-label="Task title"
         type="text"
         value={editData.title}
         onChange={(e) =>
@@ -59,7 +59,7 @@ export const TaskDetailsForm = ({
         className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground text-xl font-bold focus:ring-2 ring-primary outline-none"
       />
 
-      <textarea
+      <textarea aria-label="Add description..."
         value={editData.description}
         onChange={(e) =>
           onEditDataChange({ ...editData, description: e.target.value })
@@ -71,10 +71,10 @@ export const TaskDetailsForm = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-43">
             Status
           </label>
-          <select
+          <select id="fld-43"
             value={editData.status}
             onChange={(e) =>
               onEditDataChange({ ...editData, status: e.target.value })
@@ -106,10 +106,10 @@ export const TaskDetailsForm = ({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
+        <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-44">
           Estimated Hours
         </label>
-        <input
+        <input id="fld-44"
           type="number"
           value={editData.estimatedHours}
           onChange={(e) =>
@@ -134,10 +134,10 @@ export const TaskDetailsForm = ({
 
       {sections && sections.length > 0 && (
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-45">
             Section
           </label>
-          <select
+          <select id="fld-45"
             value={editData.sectionId ?? ""}
             onChange={(e) =>
               onEditDataChange({ ...editData, sectionId: e.target.value })
@@ -145,23 +145,25 @@ export const TaskDetailsForm = ({
             className={selectClass}
           >
             <option value="">No section</option>
-            {sections
-              .filter((section) => section.status === "ACTIVE")
-              .map((section) => (
-                <option key={section.id} value={section.id}>
-                  {section.name}
-                </option>
-              ))}
+            {sections.flatMap((section) =>
+              section.status === "ACTIVE"
+                ? [
+                    <option key={section.id} value={section.id}>
+                      {section.name}
+                    </option>,
+                  ]
+                : [],
+            )}
           </select>
         </div>
       )}
 
       {sprints && sprints.length > 0 && (
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-46">
             Sprint
           </label>
-          <select
+          <select id="fld-46"
             value={editData.sprintId ?? ""}
             onChange={(e) =>
               onEditDataChange({ ...editData, sprintId: e.target.value })
@@ -180,10 +182,10 @@ export const TaskDetailsForm = ({
 
       {milestones && milestones.length > 0 && (
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-47">
             Milestone
           </label>
-          <select
+          <select id="fld-47"
             value={editData.milestoneId ?? ""}
             onChange={(e) =>
               onEditDataChange({ ...editData, milestoneId: e.target.value })

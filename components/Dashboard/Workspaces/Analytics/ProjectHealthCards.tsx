@@ -8,12 +8,12 @@ interface ProjectHealthCardsProps {
   data: ProjectHealth[];
 }
 
-export function ProjectHealthCards({ data }: ProjectHealthCardsProps) {
   const healthIcons = {
     healthy: <CheckCircle2 className="w-4 h-4" />,
     'at-risk': <AlertCircle className="w-4 h-4" />,
     critical: <AlertCircle className="w-4 h-4" />,
   };
+export function ProjectHealthCards({ data }: ProjectHealthCardsProps) {
 
   return (
     <div className="bg-card border rounded-lg p-4">

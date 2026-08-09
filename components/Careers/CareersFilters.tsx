@@ -60,7 +60,7 @@ export const CareersFilters = ({
             className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 dark:text-neutral-500 shrink-0 pointer-events-none"
             strokeWidth={1.8}
           />
-          <input
+          <input aria-label="Search roles, skills, or location…"
             type="search"
             placeholder="Search roles, skills, or location…"
             value={filters.search}
@@ -82,7 +82,7 @@ export const CareersFilters = ({
       {/* Filter selects */}
       <div className="flex flex-wrap gap-2">
         {/* Department */}
-        <select
+        <select aria-label="Department"
           value={filters.department}
           onChange={(e) => set("department", e.target.value)}
           className={cn(
@@ -101,7 +101,7 @@ export const CareersFilters = ({
         </select>
 
         {/* Location type */}
-        <select
+        <select aria-label="Location type"
           value={filters.locationType}
           onChange={(e) => set("locationType", e.target.value)}
           className={cn(
@@ -120,7 +120,7 @@ export const CareersFilters = ({
         </select>
 
         {/* Job type */}
-        <select
+        <select aria-label="Job type"
           value={filters.type}
           onChange={(e) => set("type", e.target.value)}
           className={cn(

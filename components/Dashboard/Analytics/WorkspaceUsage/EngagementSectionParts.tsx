@@ -8,6 +8,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+// oxlint-disable-next-line react-doctor/prefer-dynamic-import -- recharts only ships when this chart mounts
 } from "recharts";
 import { TrendingUp, Search, UserX, Medal } from "lucide-react";
 import type {
@@ -237,7 +238,7 @@ export function CollaborationLeaderboard({
         </div>
         <div className="relative w-full sm:w-auto">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-          <input
+          <input aria-label="Search members..."
             type="text"
             placeholder="Search members..."
             value={searchQuery}

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Calendar, CheckCircle2, ChevronRight, Building2 } from "lucide-react";
 import { ProjectData } from "@/types/project.types";
 import { AccessDeniedModal } from "../Projects/WorkspaceProjects/AceessDeniedModal";
@@ -18,7 +18,7 @@ export function ProjectListItem({ project, index, onNavigate, showModal, onClose
 
   return (
     <> 
-    <motion.div
+    <motion.div role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.currentTarget.click(); } }}
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.03 }}

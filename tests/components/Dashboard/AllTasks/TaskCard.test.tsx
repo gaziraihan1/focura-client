@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { TaskCard } from '@/components/Dashboard/AllTasks/TaskCard'
 
 vi.mock('framer-motion', () => ({
-  motion: { div: (p: Record<string, unknown>) => <div {...p} /> },
+  m: { div: (p: Record<string, unknown>) => <div {...p} /> },
   AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 vi.mock('next/link', () => ({

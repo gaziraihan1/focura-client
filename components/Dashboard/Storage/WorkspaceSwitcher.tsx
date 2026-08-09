@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m as motion, AnimatePresence } from 'framer-motion';
 import { Check, ChevronDown, Building2, Crown, Shield, Users } from 'lucide-react';
 import { useWorkspacesSummary } from '@/hooks/useStorage';
 
@@ -10,28 +10,28 @@ interface WorkspaceSwitcherProps {
   onWorkspaceChange: (workspaceId: string) => void;
 }
 
+function getStorageColor(percentage: number) {
+  if (percentage >= 95) return 'bg-destructive';
+  if (percentage >= 80) return 'bg-amber-500';
+  return 'bg-primary';
+}
+
+function getRoleIcon(role: string) {
+  switch (role) {
+    case 'OWNER':
+      return <Crown className="w-3 h-3 text-amber-500" />;
+    case 'ADMIN':
+      return <Shield className="w-3 h-3 text-blue-500" />;
+    default:
+      return <Users className="w-3 h-3 text-muted-foreground" />;
+  }
+}
+
 export function WorkspaceSwitcher({ currentWorkspaceId, onWorkspaceChange }: WorkspaceSwitcherProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { data: workspaces = [], isLoading } = useWorkspacesSummary();
 
   const currentWorkspace = workspaces.find((w) => w.workspaceId === currentWorkspaceId);
-
-  const getRoleIcon = (role: string) => {
-    switch (role) {
-      case 'OWNER':
-        return <Crown className="w-3 h-3 text-amber-500" />;
-      case 'ADMIN':
-        return <Shield className="w-3 h-3 text-blue-500" />;
-      default:
-        return <Users className="w-3 h-3 text-muted-foreground" />;
-    }
-  };
-
-  const getStorageColor = (percentage: number) => {
-    if (percentage >= 95) return 'bg-destructive';
-    if (percentage >= 80) return 'bg-amber-500';
-    return 'bg-primary';
-  };
 
   if (isLoading) {
     return (
@@ -72,7 +72,7 @@ export function WorkspaceSwitcher({ currentWorkspaceId, onWorkspaceChange }: Wor
       <AnimatePresence>
         {isOpen && (
           <>
-            <div
+            <div role="presentation"
               className="fixed inset-0 z-40"
               onClick={() => setIsOpen(false)}
             />

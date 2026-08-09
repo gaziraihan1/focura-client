@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Timer, Hourglass, TrendingUp, AlertCircle, Clock } from "lucide-react";
 import { TimeTracking } from "@/types/task.types";
 import { formatTimeDuration, getTimeStatusColor } from "@/utils/task.utils";

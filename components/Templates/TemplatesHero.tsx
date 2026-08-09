@@ -55,7 +55,7 @@ const TemplatesHero = ({ onSearch }: TemplatesHeroProps) => {
             className='absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-neutral-400 dark:text-neutral-500 shrink-0 pointer-events-none'
             strokeWidth={1.8}
           />
-          <input
+          <input aria-label="Search templates by name, category, or tag…"
             type='search'
             placeholder='Search templates by name, category, or tag…'
             value={query}

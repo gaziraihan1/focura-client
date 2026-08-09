@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import TaskDetailsMainLayout from "@/components/Dashboard/TaskDetails/TaskDetailsMainLayout";
 
 vi.mock("framer-motion", () => ({
-  motion: {
+  m: {
     div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props} />,
   },
 }));

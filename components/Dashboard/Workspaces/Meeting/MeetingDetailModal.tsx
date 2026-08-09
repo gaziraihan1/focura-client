@@ -30,12 +30,8 @@ export function MeetingDetailModal({
   const canManage  = isAdmin || meeting.createdById === currentUserId;
   const isCancelled = meeting.status === 'CANCELLED';
 
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
-      <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" onClick={onClose} />
+  return (    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" onClick={onClose} role="presentation" />
 
       <div className="relative z-10 w-full sm:max-w-lg max-h-[95dvh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border bg-card shadow-xl">
         {/* Header */}
@@ -51,7 +47,7 @@ export function MeetingDetailModal({
               {meeting.title}
             </h2>
           </div>
-          <button
+          <button aria-label="Close"
             onClick={onClose}
             className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
           >

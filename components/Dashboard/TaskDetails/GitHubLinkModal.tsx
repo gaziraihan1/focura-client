@@ -163,7 +163,7 @@ export function GitHubLinkModal({ taskId, onClose, onLinked }: GitHubLinkModalPr
             <Link2 className="w-5 h-5 text-muted-foreground" />
             <h3 className="text-lg font-semibold">Link GitHub</h3>
           </div>
-          <button
+          <button aria-label="Close"
             onClick={onClose}
             className="p-1 rounded-lg hover:bg-accent transition-colors"
           >

@@ -1,5 +1,5 @@
 import { INTENT_OPTIONS } from "@/constants/intent.constants";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 
 // Intent options with icons and descriptions

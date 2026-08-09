@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import Link from "next/link";
 import { FocusBadge } from "./FocusTaskCard/FocusBadge";
 import { TaskStatusIcon } from "./FocusTaskCard/TaskStatusIcon";

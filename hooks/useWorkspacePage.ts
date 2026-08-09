@@ -17,6 +17,9 @@ const PLAN_BADGES: Record<string, PlanBadge> = {
   ENTERPRISE: { color: "bg-orange-500/10 text-orange-500", label: "Enterprise" },
 };
 
+const getPlanBadge = (plan: string): PlanBadge =>
+  PLAN_BADGES[plan] ?? PLAN_BADGES.FREE;
+
 export function useWorkspacesPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
@@ -32,9 +35,6 @@ export function useWorkspacesPage() {
       workspace.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [workspaces, searchQuery]);
-
-  const getPlanBadge = (plan: string): PlanBadge =>
-    PLAN_BADGES[plan] ?? PLAN_BADGES.FREE;
 
   const navigateToCreate = () =>
     router.push("/dashboard/workspaces/new-workspace");

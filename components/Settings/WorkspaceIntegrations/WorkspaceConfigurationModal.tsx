@@ -51,7 +51,7 @@ export function WorkspaceConfigurationModal({
           <h3 className="text-lg font-semibold">
             Configure {integration.name}
           </h3>
-          <button
+          <button aria-label="Close"
             onClick={onClose}
             className="p-1 rounded-lg hover:bg-accent transition-colors"
           >
@@ -62,7 +62,7 @@ export function WorkspaceConfigurationModal({
         <div className="space-y-6">
           {/* Sync Direction */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Sync Direction</label>
+            <span className="text-sm font-medium">Sync Direction</span>
             <div className="flex gap-2">
               {(['one-way', 'two-way'] as const).map((dir) => (
                 <button
@@ -90,6 +90,7 @@ export function WorkspaceConfigurationModal({
               </p>
             </div>
             <button
+              aria-label="Toggle automatic sync"
               onClick={() =>
                 setConfig({ ...config, autoSync: !config.autoSync })
               }
@@ -110,8 +111,8 @@ export function WorkspaceConfigurationModal({
           {/* Sync Interval (if auto sync enabled) */}
           {config.autoSync && (
             <div className="space-y-2">
-              <label className="text-sm font-medium">Sync Interval</label>
-              <select
+              <label className="text-sm font-medium" htmlFor="fld-68">Sync Interval</label>
+              <select id="fld-68"
                 value={config.syncInterval || 300}
                 onChange={(e) =>
                   setConfig({
@@ -146,6 +147,7 @@ export function WorkspaceConfigurationModal({
                 </p>
               </div>
               <button
+                aria-label="Toggle member notifications"
                 onClick={() =>
                   setConfig({
                     ...config,
@@ -169,10 +171,10 @@ export function WorkspaceConfigurationModal({
             {/* Notification Channel (for Slack) */}
             {integration.provider === 'slack' && (
               <div className="space-y-2">
-                <label className="text-sm font-medium">
+                <label className="text-sm font-medium" htmlFor="fld-69">
                   Notification Channel
                 </label>
-                <input
+                <input id="fld-69"
                   type="text"
                   placeholder="#general"
                   value={config.notificationChannel || ''}
@@ -196,9 +198,9 @@ export function WorkspaceConfigurationModal({
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm text-muted-foreground">
+              <span className="text-sm text-muted-foreground">
                 Restrict access to specific members (optional)
-              </label>
+              </span>
               <div className="max-h-40 overflow-y-auto border border-border rounded-lg p-2 space-y-1">
                 {members.map((member) => (
                   <label

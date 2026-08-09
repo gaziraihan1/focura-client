@@ -1,8 +1,34 @@
 "use client";
 
-import { motion, useMotionValue, animate } from "framer-motion";
+import { m as motion, useMotionValue, animate } from "framer-motion";
 import { useEffect, useState } from "react";
 
+  const metrics = [
+    {
+      value: 42,
+      suffix: "%",
+      label: "Faster project delivery",
+      desc: "Teams complete tasks significantly quicker with structured workflows.",
+    },
+    {
+      value: 3.1,
+      suffix: "x",
+      label: "Increase in productivity",
+      desc: "Clear visibility and real-time collaboration boosts execution speed.",
+    },
+    {
+      value: 28,
+      suffix: "%",
+      label: "Less time spent in meetings",
+      desc: "Async updates reduce unnecessary calls and long discussions.",
+    },
+    {
+      value: 19,
+      suffix: "hrs",
+      label: "Saved per team per week",
+      desc: "Automation removes repetitive tasks and manual updates.",
+    },
+  ];
 function Counter({ value, suffix }: { value: number; suffix: string }) {
   const count = useMotionValue(0);
   const [display, setDisplay] = useState("0");
@@ -32,32 +58,6 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
 }
 
 export default function SolutionsMetrics() {
-  const metrics = [
-    {
-      value: 42,
-      suffix: "%",
-      label: "Faster project delivery",
-      desc: "Teams complete tasks significantly quicker with structured workflows.",
-    },
-    {
-      value: 3.1,
-      suffix: "x",
-      label: "Increase in productivity",
-      desc: "Clear visibility and real-time collaboration boosts execution speed.",
-    },
-    {
-      value: 28,
-      suffix: "%",
-      label: "Less time spent in meetings",
-      desc: "Async updates reduce unnecessary calls and long discussions.",
-    },
-    {
-      value: 19,
-      suffix: "hrs",
-      label: "Saved per team per week",
-      desc: "Automation removes repetitive tasks and manual updates.",
-    },
-  ];
 
   return (
     <section className="py-28 bg-background">

@@ -1,6 +1,6 @@
 "use client"
 import { cn } from '@/lib/utils';
-import  { motion } from 'framer-motion'
+import { m as motion } from 'framer-motion'
 import { Check, Loader2, X } from 'lucide-react';
 export function InlineEditor({
   value,
@@ -22,8 +22,7 @@ export function InlineEditor({
 
   return (
     <div className="flex items-center gap-2">
-      <input
-        autoFocus
+      <input aria-label="Subtask title"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={handleKeyDown}

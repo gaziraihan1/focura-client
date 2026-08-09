@@ -13,10 +13,10 @@ export function LabelNameInput({
 }: LabelNameInputProps) {
   return (
     <div>
-      <label className="block text-sm font-medium text-foreground mb-2">
+      <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-19">
         Name <span className="text-destructive">*</span>
       </label>
-      <input
+      <input id="fld-19"
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}

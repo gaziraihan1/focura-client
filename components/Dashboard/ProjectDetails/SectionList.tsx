@@ -1,8 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
-import { ChevronDown, ChevronUp, Columns, Plus, MoreHorizontal, Loader2, Trash2, ListChecks } from "lucide-react";
+import { Columns, Plus, Loader2 } from "lucide-react";
 import { ConfirmModal } from "@/components/Shared/ConfirmModal";
 import FeatureListError from "@/components/Dashboard/ProjectDetails/FeatureListError";
 import {
@@ -14,6 +13,8 @@ import {
   type ProjectSectionItem,
   type TaskStatus,
 } from "@/hooks/useProjectFeatures";
+import { NewSectionForm } from "./NewSectionForm";
+import { SectionCard } from "./SectionCard"
 
 interface SectionListProps {
   projectId: string;
@@ -22,12 +23,12 @@ interface SectionListProps {
   tasksBaseHref?: string;
 }
 
-const SECTION_COLORS = [
+export const SECTION_COLORS = [
   "#667eea", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6",
   "#ec4899", "#14b8a6", "#f97316", "#6366f1", "#84cc16",
 ];
 
-const TASK_STATUS_OPTIONS: { value: TaskStatus; label: string }[] = [
+export const TASK_STATUS_OPTIONS: { value: TaskStatus; label: string }[] = [
   { value: "TODO", label: "To Do" },
   { value: "IN_PROGRESS", label: "In Progress" },
   { value: "IN_REVIEW", label: "In Review" },
@@ -35,6 +36,9 @@ const TASK_STATUS_OPTIONS: { value: TaskStatus; label: string }[] = [
   { value: "COMPLETED", label: "Completed" },
   { value: "CANCELLED", label: "Cancelled" },
 ];
+
+
+
 
 export default function SectionList({ projectId, tasksBaseHref }: SectionListProps) {
   const { data: sections, isLoading, error } = useProjectSections(projectId);
@@ -138,143 +142,28 @@ export default function SectionList({ projectId, tasksBaseHref }: SectionListPro
   return (
     <div className="space-y-2">
       {items.map((section, index) => (
-        <div
+        <SectionCard
           key={section.id}
-          className="rounded-xl border border-border bg-card p-4 hover:shadow-sm transition-shadow"
-        >
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3 flex-1 min-w-0">
-              <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: section.color ?? "#667eea" }} />
-              {editingId === section.id ? (
-                <input
-                  className="flex-1 px-2 py-1 rounded border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-                  value={editName}
-                  onChange={(e) => setEditName(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleRename(section.id)}
-                  autoFocus
-                />
-              ) : (
-                <div className="min-w-0">
-                  <h4 className="text-sm font-semibold text-foreground">{section.name}</h4>
-                  {section.description && (
-                    <p className="text-xs text-muted-foreground mt-0.5 truncate">{section.description}</p>
-                  )}
-                  {tasksBaseHref && (
-                    <Link
-                      href={`${tasksBaseHref}/tasks?section=${section.id}`}
-                      className="inline-flex items-center gap-1 text-[11px] font-medium text-primary hover:underline mt-1"
-                    >
-                      <ListChecks size={11} />
-                      View tasks
-                    </Link>
-                  )}
-                </div>
-              )}
-            </div>
-
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => move(index, -1)}
-                  disabled={index === 0 || reorderSections.isPending}
-                  aria-label={`Move ${section.name} left`}
-                  className="p-1 rounded-lg hover:bg-accent transition disabled:opacity-30"
-                >
-                  <ChevronUp size={14} className="text-muted-foreground" />
-                </button>
-                <button
-                  onClick={() => move(index, 1)}
-                  disabled={index === items.length - 1 || reorderSections.isPending}
-                  aria-label={`Move ${section.name} right`}
-                  className="p-1 rounded-lg hover:bg-accent transition disabled:opacity-30"
-                >
-                  <ChevronDown size={14} className="text-muted-foreground" />
-                </button>
-              </div>
-
-              <select
-                value={section.taskStatus ?? ""}
-                onChange={(e) =>
-                  handleStatusChange(section, e.target.value === "" ? null : (e.target.value as TaskStatus))
-                }
-                aria-label={`Status for ${section.name}`}
-                className="px-2 py-1 rounded-lg border border-border bg-background text-xs focus:outline-none focus:ring-2 focus:ring-primary/20"
-              >
-                <option value="">No status</option>
-                {TASK_STATUS_OPTIONS.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                    disabled={usedStatuses.has(option.value) && option.value !== section.taskStatus}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-
-              <input
-                type="number"
-                min={0}
-                defaultValue={section.wipLimit ?? 0}
-                onBlur={(e) => handleWipChange(section, e.target.value)}
-                aria-label={`WIP limit for ${section.name}`}
-                className="w-16 px-2 py-1 rounded-lg border border-border bg-background text-xs text-center focus:outline-none focus:ring-2 focus:ring-primary/20"
-              />
-
-              <span
-                className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
-                  section.status === "ACTIVE"
-                    ? "text-emerald-500 bg-emerald-50 dark:bg-emerald-950/20"
-                    : section.status === "COMPLETED"
-                      ? "text-blue-500 bg-blue-50 dark:bg-blue-950/20"
-                      : "text-muted-foreground bg-muted"
-                }`}
-              >
-                {section.status}
-              </span>
-
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold text-muted-foreground bg-muted">
-                {section._count?.tasks ?? 0} task{section._count?.tasks === 1 ? "" : "s"}
-              </span>
-
-              {editingId !== section.id && (
-                <button
-                  onClick={() => {
-                    setEditingId(section.id);
-                    setEditName(section.name);
-                  }}
-                  aria-label={`Edit ${section.name}`}
-                  className="flex size-7 items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-accent hover:text-foreground transition"
-                >
-                  <MoreHorizontal size={12} />
-                </button>
-              )}
-              {editingId === section.id && (
-                <>
-                  <button
-                    onClick={() => handleRename(section.id)}
-                    className="rounded-lg bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground hover:opacity-90 transition disabled:opacity-50"
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={() => setEditingId(null)}
-                    className="rounded-lg border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition"
-                  >
-                    Cancel
-                  </button>
-                </>
-              )}
-              <button
-                onClick={() => setConfirmingDeleteId(section.id)}
-                aria-label={`Delete ${section.name}`}
-                className="flex size-7 items-center justify-center rounded-lg border border-border text-muted-foreground hover:border-red-500/40 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/20 transition"
-              >
-                <Trash2 size={12} />
-              </button>
-            </div>
-          </div>
-        </div>
+          section={section}
+          index={index}
+          isLast={index === items.length - 1}
+          editingId={editingId}
+          editName={editName}
+          usedStatuses={usedStatuses}
+          reorderPending={reorderSections.isPending}
+          tasksBaseHref={tasksBaseHref}
+          onMove={move}
+          onRename={handleRename}
+          onStartEdit={(s) => {
+            setEditingId(s.id);
+            setEditName(s.name);
+          }}
+          onEditNameChange={setEditName}
+          onCancelEdit={() => setEditingId(null)}
+          onStatusChange={handleStatusChange}
+          onWipChange={handleWipChange}
+          onDelete={(sectionId) => setConfirmingDeleteId(sectionId)}
+        />
       ))}
 
       {items.length === 0 && !showNew && (
@@ -285,75 +174,23 @@ export default function SectionList({ projectId, tasksBaseHref }: SectionListPro
       )}
 
       {showNew ? (
-        <div className="rounded-xl border border-border bg-card p-4 space-y-3">
-          <input
-            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-            placeholder="Section name (e.g., Backend, Frontend, Design)"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            autoFocus
-          />
-          <input
-            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-xs focus:outline-none focus:ring-2 focus:ring-primary/20"
-            placeholder="Description (optional)"
-            value={desc}
-            onChange={(e) => setDesc(e.target.value)}
-          />
-          <div className="flex items-center gap-2">
-            {SECTION_COLORS.map((c) => (
-              <button
-                key={c}
-                onClick={() => setColor(c)}
-                className={`w-6 h-6 rounded-full transition-all ${color === c ? "ring-2 ring-offset-2 ring-primary" : "ring-1 ring-border"}`}
-                style={{ backgroundColor: c }}
-              />
-            ))}
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value as TaskStatus | "")}
-              aria-label="Status for new section"
-              className="px-2 py-1.5 rounded-lg border border-border bg-background text-xs focus:outline-none focus:ring-2 focus:ring-primary/20"
-            >
-              <option value="">No status</option>
-              {TASK_STATUS_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value} disabled={usedStatuses.has(option.value)}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              WIP
-              <input
-                type="number"
-                min={0}
-                value={wip}
-                onChange={(e) => setWip(e.target.value)}
-                className="w-16 px-2 py-1 rounded-lg border border-border bg-background text-xs text-center focus:outline-none focus:ring-2 focus:ring-primary/20"
-              />
-            </label>
-          </div>
-          <p className="text-[11px] text-muted-foreground">
-            Tip: a section with a task status becomes a board column. Leave it on &ldquo;No status&rdquo; for a
-            folder-only section — the board stays untouched.
-          </p>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleCreate}
-              disabled={!name.trim() || createSection.isPending}
-              className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition disabled:opacity-50"
-            >
-              {createSection.isPending ? "Adding..." : "Add Section"}
-            </button>
-            <button
-              onClick={() => setShowNew(false)}
-              className="px-3 py-1.5 rounded-lg border border-border text-xs hover:bg-accent transition"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
+        <NewSectionForm
+          name={name}
+          desc={desc}
+          color={color}
+          status={status}
+          wip={wip}
+          usedStatuses={usedStatuses}
+          isPending={createSection.isPending}
+          canSubmit={!!name.trim()}
+          onChangeName={setName}
+          onChangeDesc={setDesc}
+          onChangeColor={setColor}
+          onChangeStatus={setStatus}
+          onChangeWip={setWip}
+          onCreate={handleCreate}
+          onCancel={() => setShowNew(false)}
+        />
       ) : (
         <button
           onClick={() => setShowNew(true)}

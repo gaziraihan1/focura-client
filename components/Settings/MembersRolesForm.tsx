@@ -152,9 +152,9 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
           </div>
         </div>
 
-        <div className="space-y-3" role="list" aria-label="Team members">
+        <ul className="space-y-3" aria-label="Team members">
           {members.map((member) => (
-            <div key={member.id} role="listitem" className="flex items-center justify-between p-3 rounded-xl border border-border">
+            <li key={member.id} className="flex items-center justify-between p-3 rounded-xl border border-border">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center text-sm font-semibold">
                   {member.user?.name?.charAt(0)?.toUpperCase() || '?'}
@@ -191,9 +191,9 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
                   </button>
                 )}
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </div>
   );

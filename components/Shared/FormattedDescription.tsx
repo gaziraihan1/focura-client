@@ -1,7 +1,7 @@
 "use client";
 
 import { splitDescriptionIntoSentences } from "@/utils/resources.utils";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 
 type FormattedDescriptionProps = {
   description: string;

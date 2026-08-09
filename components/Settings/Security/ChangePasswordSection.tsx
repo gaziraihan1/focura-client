@@ -10,6 +10,15 @@ import {
 } from '@/hooks/useSecurity';
 import { announce } from '@/lib/a11y';
 
+// Hoisted so the formatter is created once instead of on every render.
+// timeZone is fixed to avoid hydration mismatches from server/local timezone drift.
+const lastChangedFullFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'UTC',
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+});
+
 export function ChangePasswordSection() {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -24,11 +33,7 @@ export function ChangePasswordSection() {
     securitySettings?.lastPasswordChange,
   );
   const lastChangedFull = securitySettings?.lastPasswordChange
-    ? new Date(securitySettings.lastPasswordChange).toLocaleDateString('en-US', {
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric',
-      })
+    ? lastChangedFullFormatter.format(new Date(securitySettings.lastPasswordChange))
     : null;
 
   const passwordStrength = validatePasswordStrength(newPassword);

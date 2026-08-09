@@ -1,7 +1,7 @@
 "use client";
 
 import { BackLink } from "@/components/Shared/BackLink";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Calendar, Clock } from "lucide-react";
 import { VersionStamp } from "./VersionStamp";
 import { formatDate } from "@/utils/resources.utils";

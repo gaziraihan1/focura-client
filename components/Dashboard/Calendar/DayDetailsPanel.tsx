@@ -77,7 +77,7 @@ function EnergyLevelSection({ date }: { date: Date }) {
       {showSlider && (
         <div className="mt-3 space-y-3">
           <div>
-            <input
+            <input aria-label="Value"
               type="range"
               min={1}
               max={10}
@@ -91,7 +91,7 @@ function EnergyLevelSection({ date }: { date: Date }) {
               <span>High</span>
             </div>
           </div>
-          <input
+          <input aria-label="How are you feeling? (optional)"
             type="text"
             placeholder="How are you feeling? (optional)"
             value={note}
@@ -111,6 +111,12 @@ function EnergyLevelSection({ date }: { date: Date }) {
   );
 }
 
+const getBarColor = (level: number): string => {
+  if (level >= 8) return 'bg-green-500';
+  if (level >= 5) return 'bg-yellow-500';
+  return 'bg-red-500';
+};
+
 function EnergyHistorySection({ date }: { date: Date }) {
   const rangeStart = new Date(date);
   rangeStart.setDate(rangeStart.getDate() - 90);
@@ -127,12 +133,6 @@ function EnergyHistorySection({ date }: { date: Date }) {
     } finally {
       setExporting(false);
     }
-  };
-
-  const getBarColor = (level: number): string => {
-    if (level >= 8) return 'bg-green-500';
-    if (level >= 5) return 'bg-yellow-500';
-    return 'bg-red-500';
   };
 
   return (
@@ -183,7 +183,7 @@ function EnergyHistorySection({ date }: { date: Date }) {
 
           {pagination && pagination.totalPages > 1 && (
             <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">
-              <button
+              <button aria-label="Previous page"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={!pagination.hasPrev}
                 className="p-1 rounded-md hover:bg-accent disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
@@ -193,7 +193,7 @@ function EnergyHistorySection({ date }: { date: Date }) {
               <span className="text-xs text-muted-foreground">
                 Page {pagination.page} of {pagination.totalPages} ({pagination.total} entries)
               </span>
-              <button
+              <button aria-label="Next page"
                 onClick={() => setPage((p) => p + 1)}
                 disabled={!pagination.hasNext}
                 className="p-1 rounded-md hover:bg-accent disabled:opacity-30 disabled:cursor-not-allowed transition-colors"

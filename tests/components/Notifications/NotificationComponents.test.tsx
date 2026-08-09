@@ -192,15 +192,15 @@ describe('NotificationItem', () => {
 
   it('applies unread styling when not read', () => {
     const { container } = render(<NotificationItem notification={mockNotification} onClick={vi.fn()} onDelete={vi.fn()} />)
-    const button = container.querySelector('[role="button"]')
-    expect(button?.className).toContain('bg-accent/30')
+    const item = container.querySelector('[role="group"]')
+    expect(item?.className).toContain('bg-accent/30')
   })
 
   it('applies read styling when read', () => {
     const readNotification = { ...mockNotification, read: true }
     const { container } = render(<NotificationItem notification={readNotification} onClick={vi.fn()} onDelete={vi.fn()} />)
-    const button = container.querySelector('[role="button"]')
-    expect(button?.className).toContain('bg-card')
+    const item = container.querySelector('[role="group"]')
+    expect(item?.className).toContain('bg-card')
   })
 
   it('shows unread dot when not read', () => {

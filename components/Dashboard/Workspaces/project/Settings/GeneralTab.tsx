@@ -40,10 +40,10 @@ export function GeneralTab({
         <div className="space-y-4">
           {/* Name */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider" htmlFor="fld-57">
               Project Name
             </label>
-            <input
+            <input id="fld-57"
               value={name}
               onChange={(e) => setName(e.target.value)}
               disabled={!canManage}
@@ -57,10 +57,10 @@ export function GeneralTab({
  
           {/* Description */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider" htmlFor="fld-58">
               Description
             </label>
-            <textarea
+            <textarea id="fld-58"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               disabled={!canManage}

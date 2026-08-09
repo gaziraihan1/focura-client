@@ -14,7 +14,7 @@ export function MobileColumnNavigator({
 }: MobileColumnNavigatorProps) {
   return (
     <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card">
-      <button
+      <button aria-label="Previous page"
         onClick={onPrevious}
         disabled={currentColumnIndex === 0}
         className="p-2 disabled:opacity-30 disabled:cursor-not-allowed"
@@ -24,7 +24,7 @@ export function MobileColumnNavigator({
       <span className="text-sm font-medium">
         {COLUMNS[currentColumnIndex].title}
       </span>
-      <button
+      <button aria-label="Next page"
         onClick={onNext}
         disabled={currentColumnIndex === COLUMNS.length - 1}
         className="p-2 disabled:opacity-30 disabled:cursor-not-allowed"

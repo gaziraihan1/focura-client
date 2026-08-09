@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Save, Loader2, AlertTriangle } from "lucide-react";
 import { WorkspaceForm, PREDEFINED_COLORS } from "@/hooks/useWorkspaceSettings";
 
@@ -119,9 +119,9 @@ export function GeneralSettingsTab({
 
         {/* Workspace Color */}
         <div>
-          <label className="block text-sm font-medium text-foreground mb-3">
+          <span className="block text-sm font-medium text-foreground mb-3">
             Workspace Color
-          </label>
+          </span>
           <div className="flex flex-wrap gap-3" role="radiogroup" aria-label="Workspace color">
             {PREDEFINED_COLORS.map((color) => {
               const colorName = COLOR_NAMES[color] || color;

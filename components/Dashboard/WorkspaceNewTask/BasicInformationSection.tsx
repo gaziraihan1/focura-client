@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { AlertCircle, FileText, Loader2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -48,10 +48,10 @@ export function BasicInformationSection({
 
       {/* Task Title */}
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
+        <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-48">
           Task Title <span className="text-red-500">*</span>
         </label>
-        <input
+        <input id="fld-48"
           type="text"
           value={title}
           onChange={(e) => onTitleChange(e.target.value)}
@@ -70,10 +70,10 @@ export function BasicInformationSection({
 
       {/* Description */}
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
+        <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-49">
           Description
         </label>
-        <textarea
+        <textarea id="fld-49"
           value={description}
           onChange={(e) => onDescriptionChange(e.target.value)}
           rows={6}
@@ -84,10 +84,10 @@ export function BasicInformationSection({
 
       {/* Project Selection */}
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
+        <span className="block text-sm font-medium text-foreground mb-2">
           <FileText size={16} className="inline mr-2" />
           Project <span className="text-red-500">*</span>
-        </label>
+        </span>
         {projectsLoading ? (
           <div className="flex items-center gap-2 text-muted-foreground">
             <Loader2 className="animate-spin" size={16} />
@@ -113,7 +113,7 @@ export function BasicInformationSection({
           </div>
         ) : (
           <>
-            <select
+            <select aria-label="Select an option"
               value={projectId || ""}
               onChange={(e) => onProjectChange(e.target.value)}
               className={`w-full px-4 py-3 rounded-lg bg-background border text-foreground focus:ring-2 ring-primary outline-none ${

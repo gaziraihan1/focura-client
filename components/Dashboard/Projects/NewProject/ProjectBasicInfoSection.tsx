@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { AlertCircle, Palette } from "lucide-react";
 import { CreateProjectDto } from "@/hooks/useProjects";
 
@@ -41,10 +41,10 @@ export function ProjectBasicInfoSection({
       <div className="space-y-4">
         {/* Project Name */}
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-32">
             Project Name <span className="text-red-500">*</span>
           </label>
-          <input
+          <input id="fld-32"
             type="text"
             value={form.name}
             onChange={(e) => onFieldChange("name", e.target.value)}
@@ -63,10 +63,10 @@ export function ProjectBasicInfoSection({
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-33">
             Description
           </label>
-          <textarea
+          <textarea id="fld-33"
             value={form.description}
             onChange={(e) => onFieldChange("description", e.target.value)}
             rows={5}
@@ -78,11 +78,11 @@ export function ProjectBasicInfoSection({
         {/* Color, Icon, Status */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
+            <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-34">
               <Palette size={16} className="inline mr-2" />
               Color (hex)
             </label>
-            <input
+            <input id="fld-34"
               type="text"
               value={form.color}
               onChange={(e) => onFieldChange("color", e.target.value)}
@@ -100,10 +100,10 @@ export function ProjectBasicInfoSection({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
+            <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-35">
               Icon (optional)
             </label>
-            <input
+            <input id="fld-35"
               type="text"
               value={form.icon}
               onChange={(e) => onFieldChange("icon", e.target.value)}
@@ -113,10 +113,10 @@ export function ProjectBasicInfoSection({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
+            <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-36">
               Status
             </label>
-            <select
+            <select id="fld-36"
               value={form.status}
               onChange={(e) =>
                 onFieldChange(

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Clock, Tag } from "lucide-react";
 import { PopularResourceDTO } from "@/types/resource.types";
 import { formatDate, getCategoryAccent } from "@/utils/resources.utils";

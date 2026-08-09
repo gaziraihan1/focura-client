@@ -24,7 +24,7 @@ vi.mock("next/navigation", () => ({
 }));
 
 vi.mock("framer-motion", () => ({
-  motion: {
+  m: {
     div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props} />,
     button: (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props} />,
   },

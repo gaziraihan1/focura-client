@@ -48,9 +48,9 @@ export function LabelPicker({
   return (
     <div className="space-y-2">
       {/* Label */}
-      <label className="block text-sm font-medium text-foreground">
+      <span className="block text-sm font-medium text-foreground">
         Labels
-      </label>
+      </span>
 
       {/* Selected Labels */}
       {selectedLabels.length > 0 && (
@@ -85,7 +85,7 @@ export function LabelPicker({
         {isOpen && (
           <>
             {/* Backdrop */}
-            <div
+            <div role="presentation"
               className="fixed inset-0 z-10"
               onClick={() => setIsOpen(false)}
             />

@@ -13,7 +13,7 @@ vi.mock('next/image', () => ({
 }));
 
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props}>{props.children}</div>,
     button: (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{props.children}</button>,
   },
@@ -315,8 +315,8 @@ describe('MeetingCard', () => {
         currentUserId="u1"
       />
     );
-    const article = container.querySelector('article');
-    expect(article?.className).toContain('opacity-60');
+    const card = container.querySelector('[role="group"]');
+    expect(card?.getAttribute('class')).toContain('opacity-60');
   });
 
   it('hides menu for cancelled meeting', () => {

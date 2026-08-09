@@ -10,6 +10,7 @@ import Link from "next/link";
 
 type TaskStatus   = Task['status'];
 
+// oxlint-disable-next-line react-doctor/only-export-components -- shared column config imported by StatsBar/ToolBar/hooks
 export const COLUMNS: {
   status: TaskStatus;
   label:  string;

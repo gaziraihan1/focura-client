@@ -9,7 +9,7 @@ export default function LabelFormHeader({onClose, isSubmitting, title}: LabelFor
   return (
     <div className="flex items-center justify-between p-6 border-b border-border">
             <h2 className="text-xl font-semibold text-foreground">{title}</h2>
-            <button
+            <button aria-label="Close"
               onClick={onClose}
               className="p-1 hover:bg-accent rounded transition-colors"
               disabled={isSubmitting}

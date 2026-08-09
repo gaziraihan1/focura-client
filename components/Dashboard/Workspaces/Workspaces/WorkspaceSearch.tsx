@@ -15,7 +15,7 @@ export function WorkspaceSearch({
         className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
         size={18}
       />
-      <input
+      <input aria-label="Search workspaces..."
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Search workspaces..."

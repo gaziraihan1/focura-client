@@ -23,9 +23,9 @@ export function AnnouncementContentEditor({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
           Content
-        </label>
+        </span>
         <button
           type="button"
           onClick={togglePreview}
@@ -54,7 +54,7 @@ export function AnnouncementContentEditor({
             <PreviewContent raw={value} />
           </div>
         ) : (
-          <textarea
+          <textarea aria-label="Write your announcement…\n\nTip: **bold**, //italic//, $mono$, {https://url.com|link}, > new line"
             ref={textareaRef}
             value={value}
             onChange={(e) => onChange(e.target.value)}

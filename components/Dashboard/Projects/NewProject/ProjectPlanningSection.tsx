@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { AlertCircle, Calendar, Flag } from "lucide-react";
 import { CreateProjectDto } from "@/hooks/useProjects";
 
@@ -46,9 +46,9 @@ export function ProjectPlanningSection({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Priority */}
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <span className="block text-sm font-medium text-foreground mb-2">
             Priority
-          </label>
+          </span>
           <div className="grid grid-cols-2 gap-2">
             {priorityOptions.map((priority) => (
               <button
@@ -70,11 +70,11 @@ export function ProjectPlanningSection({
 
         {/* Start Date */}
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-37">
             <Calendar size={16} className="inline mr-2" />
             Start Date
           </label>
-          <input
+          <input id="fld-37"
             type="date"
             value={form.startDate}
             onChange={(e) => onFieldChange("startDate", e.target.value)}
@@ -84,11 +84,11 @@ export function ProjectPlanningSection({
 
         {/* Due Date */}
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-38">
             <Calendar size={16} className="inline mr-2" />
             Due Date
           </label>
-          <input
+          <input id="fld-38"
             type="date"
             value={form.dueDate}
             onChange={(e) => onFieldChange("dueDate", e.target.value)}

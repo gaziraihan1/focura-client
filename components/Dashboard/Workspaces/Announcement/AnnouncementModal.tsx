@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { m as motion, AnimatePresence } from 'framer-motion';
 import { X, Megaphone, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AnnouncementForm } from './AnnouncementForm';
@@ -29,7 +29,7 @@ export function AnnouncementModal({
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div
+          <motion.div role="presentation"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -59,7 +59,7 @@ export function AnnouncementModal({
                     New Announcement
                   </h2>
                 </div>
-                <button
+                <button aria-label="Close"
                   type="button"
                   onClick={onClose}
                   disabled={isLoading}

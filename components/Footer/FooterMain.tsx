@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
 
+const socials = [
+  { icon: Facebook, label: "Facebook" },
+  { icon: Instagram, label: "Instagram" },
+  { icon: Twitter, label: "Twitter" },
+  { icon: Linkedin, label: "LinkedIn" },
+];
 export default function FooterMain() {
-  const socials = [
-    { icon: Facebook, label: "Facebook" },
-    { icon: Instagram, label: "Instagram" },
-    { icon: Twitter, label: "Twitter" },
-    { icon: Linkedin, label: "LinkedIn" },
-  ];
 
   return (
     <footer className="w-full border-t border-white/10 bg-black py-14">

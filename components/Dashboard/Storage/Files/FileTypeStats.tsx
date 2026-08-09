@@ -8,43 +8,43 @@ interface FileTypeStatsProps {
   stats: FileTypeStat[];
 }
 
+function getColor(type: string) {
+  switch (type.toLowerCase()) {
+    case 'images':
+      return 'text-purple-600 dark:text-purple-400 bg-purple-500/10';
+    case 'videos':
+      return 'text-red-600 dark:text-red-400 bg-red-500/10';
+    case 'audio':
+      return 'text-blue-600 dark:text-blue-400 bg-blue-500/10';
+    case 'documents':
+    case 'pdfs':
+      return 'text-blue-600 dark:text-blue-400 bg-blue-500/10';
+    case 'archives':
+      return 'text-amber-600 dark:text-amber-400 bg-amber-500/10';
+    default:
+      return 'text-gray-600 dark:text-gray-400 bg-gray-500/10';
+  }
+}
+
+function getIcon(type: string) {
+  switch (type.toLowerCase()) {
+    case 'images':
+      return <Img className="w-5 h-5" />;
+    case 'videos':
+      return <Film className="w-5 h-5" />;
+    case 'audio':
+      return <Music className="w-5 h-5" />;
+    case 'documents':
+    case 'pdfs':
+      return <FileText className="w-5 h-5" />;
+    case 'archives':
+      return <Archive className="w-5 h-5" />;
+    default:
+      return <HardDrive className="w-5 h-5" />;
+  }
+}
+
 export function FileTypeStats({ stats }: FileTypeStatsProps) {
-  const getIcon = (type: string) => {
-    switch (type.toLowerCase()) {
-      case 'images':
-        return <Img className="w-5 h-5" />;
-      case 'videos':
-        return <Film className="w-5 h-5" />;
-      case 'audio':
-        return <Music className="w-5 h-5" />;
-      case 'documents':
-      case 'pdfs':
-        return <FileText className="w-5 h-5" />;
-      case 'archives':
-        return <Archive className="w-5 h-5" />;
-      default:
-        return <HardDrive className="w-5 h-5" />;
-    }
-  };
-
-  const getColor = (type: string) => {
-    switch (type.toLowerCase()) {
-      case 'images':
-        return 'text-purple-600 dark:text-purple-400 bg-purple-500/10';
-      case 'videos':
-        return 'text-red-600 dark:text-red-400 bg-red-500/10';
-      case 'audio':
-        return 'text-blue-600 dark:text-blue-400 bg-blue-500/10';
-      case 'documents':
-      case 'pdfs':
-        return 'text-blue-600 dark:text-blue-400 bg-blue-500/10';
-      case 'archives':
-        return 'text-amber-600 dark:text-amber-400 bg-amber-500/10';
-      default:
-        return 'text-gray-600 dark:text-gray-400 bg-gray-500/10';
-    }
-  };
-
   const totalFiles = stats.reduce((sum, stat) => sum + stat.count, 0);
   const totalSize = stats.reduce((sum, stat) => sum + stat.sizeMB, 0);
 

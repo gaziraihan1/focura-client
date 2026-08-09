@@ -28,7 +28,7 @@ export function ResponsiveSidebar({
       </button>
 
       {isOpen && (
-        <div
+        <div role="presentation"
           className="lg:hidden fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
           onClick={() => setIsOpen(false)}
         />

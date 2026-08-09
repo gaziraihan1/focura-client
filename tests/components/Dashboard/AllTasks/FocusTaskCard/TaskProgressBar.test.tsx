@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     div: ({ children, animate, initial, transition, ...props }: Record<string, unknown>) => {
       const width =
         typeof animate?.scaleX === 'number' ? `${(animate.scaleX as number) * 100}%` : undefined;

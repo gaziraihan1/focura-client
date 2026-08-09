@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { CommentItem } from '@/components/Dashboard/TaskDetails/TaskTab/CommentsList/CommentItem';
 
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...filterProps(props)}>{props.children}</div>,
     span: (props: React.HTMLAttributes<HTMLSpanElement>) => <span {...filterProps(props)}>{props.children}</span>,
   },

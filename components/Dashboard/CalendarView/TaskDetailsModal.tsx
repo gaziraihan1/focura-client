@@ -14,7 +14,7 @@ export function TaskDetailsModal({ task, onClose }: TaskDetailsModalProps) {
     task.status !== "COMPLETED";
 
   return (
-    <div
+    <div role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.currentTarget.click(); } }}
       className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm px-4 py-6"
       onClick={onClose}
     >

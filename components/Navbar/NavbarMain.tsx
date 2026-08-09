@@ -113,7 +113,7 @@ export default function NavbarMain() {
             )}
           </div>
 
-          <button
+          <button aria-label="Close"
             onClick={() => setOpen(!open)}
             className="lg:hidden p-2 rounded-md border border-border/40"
           >

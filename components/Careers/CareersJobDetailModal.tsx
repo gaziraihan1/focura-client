@@ -12,6 +12,26 @@ interface CareersJobDetailModalProps {
   onClose: () => void;
 }
 
+const salaryFormatters = new Map<string, Intl.NumberFormat>();
+
+const getSalaryFormatter = (currency: string): Intl.NumberFormat => {
+  let formatter = salaryFormatters.get(currency);
+  if (!formatter) {
+    formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: 0 });
+    salaryFormatters.set(currency, formatter);
+  }
+  return formatter;
+};
+
+const formatSalary = (min: number | null, max: number | null, currency: string): string | null => {
+  if (!min && !max) return null;
+  const fmt = (n: number) => getSalaryFormatter(currency).format(n / 100);
+  if (min && max) return `${fmt(min)} – ${fmt(max)}`;
+  if (min) return `From ${fmt(min)}`;
+  if (max) return `Up to ${fmt(max)}`;
+  return null;
+};
+const closingDateFormatter = new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', day: 'numeric', month: 'long', year: 'numeric' });
 export const CareersJobDetailModal = ({ job, onClose }: CareersJobDetailModalProps) => {
   const trapRef = useFocusTrap(!!job);
 
@@ -24,19 +44,9 @@ export const CareersJobDetailModal = ({ job, onClose }: CareersJobDetailModalPro
 
   if (!job) return null;
 
-  const formatSalary = (min: number | null, max: number | null, currency: string): string | null => {
-    if (!min && !max) return null;
-    const fmt = (n: number) =>
-      new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: 0 }).format(n / 100);
-    if (min && max) return `${fmt(min)} – ${fmt(max)}`;
-    if (min) return `From ${fmt(min)}`;
-    if (max) return `Up to ${fmt(max)}`;
-    return null;
-  };
-
   const salary = formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency);
   const closingDate = job.closingDate
-    ? new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(job.closingDate))
+    ? closingDateFormatter.format(new Date(job.closingDate))
     : null;
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {

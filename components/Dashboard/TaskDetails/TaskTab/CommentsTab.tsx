@@ -8,6 +8,9 @@ import { CommentsList } from "./CommentsList";
 import { MentionUser } from "@/types/comment.types";
 import { useUpdateComment } from "@/hooks/useComment";
 
+// Module-scope default so prop comparisons stay stable across renders.
+const NO_MENTIONABLE_USERS: MentionUser[] = [];
+
 interface CommentsTabProps {
   taskId: string;
   comments: TaskComment[];
@@ -34,7 +37,7 @@ export const CommentsTab = ({
   currentUserId,
   currentUserName,
   currentUserImage,
-  mentionableUsers = [],
+  mentionableUsers = NO_MENTIONABLE_USERS,
   commentText,
   setCommentText,
   onAddComment,

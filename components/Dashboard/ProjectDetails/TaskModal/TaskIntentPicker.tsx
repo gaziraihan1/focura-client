@@ -11,10 +11,10 @@ interface TaskIntentPickerProps {
 export function TaskIntentPicker({ value, onChange }: TaskIntentPickerProps) {
   return (
     <div>
-      <label className="text-sm font-medium mb-2 block">
+      <span className="text-sm font-medium mb-2 block">
         <Brain size={14} className="inline mr-1" />
         Task Intent
-      </label>
+      </span>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {INTENT_OPTIONS.map((intent) => {

@@ -8,10 +8,10 @@ interface TaskDueDateInputProps {
 export function TaskDueDateInput({ value, onChange }: TaskDueDateInputProps) {
   return (
     <div>
-      <label className="block text-sm font-medium text-foreground mb-1">
+      <label className="block text-sm font-medium text-foreground mb-1" htmlFor="fld-28">
         Due Date
       </label>
-      <input
+      <input id="fld-28"
         type="date"
         value={value}
         onChange={(e) => onChange(e.target.value)}

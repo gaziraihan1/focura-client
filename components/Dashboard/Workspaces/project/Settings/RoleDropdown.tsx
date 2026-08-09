@@ -2,8 +2,9 @@
 
 import { LogOut, UserMinus, ChevronDown, Check } from "lucide-react";
 import { RoleBadge } from "./RoleBadge";
-import { ProjectRole } from "@/hooks/useProjects";
-import React, { useState, useRef, useEffect } from "react";
+import { ProjectRole } from "@/hooks/useProjects";import React, { useState, useRef, useEffect } from "react";
+
+const ROLES: ProjectRole[] = ["MANAGER", "COLLABORATOR", "VIEWER"];
 
 export function RoleDropdown({
   current,
@@ -25,8 +26,6 @@ export function RoleDropdown({
   const [activeIndex, setActiveIndex] = useState(-1);
   const btnRef = React.useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
- 
-  const roles: ProjectRole[] = ["MANAGER", "COLLABORATOR", "VIEWER"];
  
   const handleOpen = () => {
     if (!canManage) return;
@@ -110,7 +109,7 @@ export function RoleDropdown({
       {open && (
         <>
           {/* Full-screen backdrop */}
-          <div className="fixed inset-0 z-9998" onClick={() => setOpen(false)} />
+          <div className="fixed inset-0 z-9998" onClick={() => setOpen(false)} role="presentation" />
  
           {/* Portalled dropdown — fixed so it escapes overflow:hidden parents */}
           <div
@@ -122,7 +121,7 @@ export function RoleDropdown({
             onKeyDown={handleKeyDown}
           >
             <div className="p-1.5 space-y-0.5">
-              {roles.map((r, i) => (
+              {ROLES.map((r, i) => (
                 <button
                   key={r}
                   role="menuitem"
@@ -143,7 +142,7 @@ export function RoleDropdown({
             <div className="border-t border-border p-1.5">
               <button
                 role="menuitem"
-                tabIndex={activeIndex === roles.length ? 0 : -1}
+                tabIndex={activeIndex === ROLES.length ? 0 : -1}
                 onClick={() => { onRemove(memberId); setOpen(false); }}
                 className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-destructive hover:bg-destructive/10 transition-colors font-medium"
               >

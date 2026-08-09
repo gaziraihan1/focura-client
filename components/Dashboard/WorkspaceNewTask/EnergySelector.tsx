@@ -11,9 +11,9 @@ export function EnergySelector({
 }: EnergySelectorProps) {
   return (
     <div>
-      <label className="block text-sm font-medium text-foreground mb-2">
+      <span className="block text-sm font-medium text-foreground mb-2">
         Ideal Energy
-      </label>
+      </span>
 
       <div className="grid grid-cols-3 gap-3">
         {ENERGY_OPTIONS.map((energy) => {

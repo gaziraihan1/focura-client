@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { SubtaskForm } from '@/components/Dashboard/TaskDetails/SubtasksSection/SubtaskForm'
 
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
     button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...props}>{children}</button>,
   },

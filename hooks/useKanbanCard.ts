@@ -29,9 +29,7 @@ export function useKanbanCard({ task }: UseKanbanCardProps) {
     );
   }, [task.dueDate, task.status]);
 
-  const subtaskProgress = useMemo(() => {
-    return task._count.subtasks > 0 ? task._count.subtasks * 0.7 : 0;
-  }, [task._count.subtasks]);
+  const subtaskProgress = task._count.subtasks > 0 ? task._count.subtasks * 0.7 : 0;
 
   const getPriorityColor = (): string => {
     switch (task.priority) {

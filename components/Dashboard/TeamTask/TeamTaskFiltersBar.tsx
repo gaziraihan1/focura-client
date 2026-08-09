@@ -74,7 +74,7 @@ export function TeamTaskFiltersBar({
             size={14}
             className="absolute left-4 sm:left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
           />
-          <input
+          <input aria-label="Search"
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search team tasks..."
@@ -83,7 +83,7 @@ export function TeamTaskFiltersBar({
         </div>
 
         {/* Status */}
-        <select
+        <select aria-label="Status"
           value={status}
           onChange={(e) => onStatusChange(e.target.value)}
           className="text-xs sm:text-sm px-4 py-2 rounded-lg bg-background border border-border focus:ring-2 ring-primary outline-none"
@@ -97,7 +97,7 @@ export function TeamTaskFiltersBar({
         </select>
 
         {/* Priority */}
-        <select
+        <select aria-label="Priority"
           value={priority}
           onChange={(e) => onPriorityChange(e.target.value)}
           className="text-xs sm:text-sm px-4 py-2 rounded-lg bg-background border border-border focus:ring-2 ring-primary outline-none"

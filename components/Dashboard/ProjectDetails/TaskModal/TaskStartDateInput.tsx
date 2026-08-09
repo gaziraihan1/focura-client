@@ -8,10 +8,10 @@ interface TaskStartDateInputProps {
 export function TaskStartDateInput({ value, onChange }: TaskStartDateInputProps) {
   return (
     <div>
-      <label className="block text-sm font-medium text-foreground mb-1">
+      <label className="block text-sm font-medium text-foreground mb-1" htmlFor="fld-30">
         Start Date
       </label>
-      <input
+      <input id="fld-30"
         type="date"
         value={value}
         onChange={(e) => onChange(e.target.value)}

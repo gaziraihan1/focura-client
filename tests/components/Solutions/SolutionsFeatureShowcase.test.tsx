@@ -5,7 +5,7 @@ import React from 'react';
 // ─── Mocks ─────────────────────────────────────────────────────────────────
 
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => (
       <div {...filterDomProps(props)}>{children}</div>
     ),

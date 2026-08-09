@@ -4,7 +4,7 @@ import { userEvent } from '@testing-library/user-event'
 import { SubtaskRow } from '@/components/Dashboard/TaskDetails/SubtasksSection/SubtaskRow'
 
 vi.mock('framer-motion', () => ({
-  motion: { div: (p: Record<string, unknown>) => <div {...p} />, button: (p: Record<string, unknown>) => <button {...p} /> },
+  m: { div: (p: Record<string, unknown>) => <div {...p} />, button: (p: Record<string, unknown>) => <button {...p} /> },
   AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 vi.mock('@/components/Shared/Avatar', () => ({

@@ -23,6 +23,9 @@ interface Section {
   projectName: string;
 }
 
+// Module-scope defaults so prop comparisons stay stable across renders.
+const NO_SECTIONS: Section[] = [];
+
 interface FilterPanelProps {
   selectedStatus: string;
   onStatusChange: (status: string) => void;
@@ -60,7 +63,7 @@ export function FilterPanel({
   members,
   focusRequired,
   onFocusRequiredChange,
-  sections = [],
+  sections = NO_SECTIONS,
   selectedSection = "all",
   onSectionChange = () => {},
 }: FilterPanelProps) {
@@ -80,10 +83,10 @@ export function FilterPanel({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Status Filter */}
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-12">
             Status
           </label>
-          <select
+          <select id="fld-12"
             value={selectedStatus}
             onChange={(e) => onStatusChange(e.target.value)}
             className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
@@ -99,10 +102,10 @@ export function FilterPanel({
 
         {/* Priority Filter */}
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-13">
             Priority
           </label>
-          <select
+          <select id="fld-13"
             value={selectedPriority}
             onChange={(e) => onPriorityChange(e.target.value)}
             className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
@@ -117,10 +120,10 @@ export function FilterPanel({
 
         {/* Project Filter */}
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-14">
             Project
           </label>
-          <select
+          <select id="fld-14"
             value={selectedProject}
             onChange={(e) => onProjectChange(e.target.value)}
             className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
@@ -160,10 +163,10 @@ export function FilterPanel({
 
         {/* Assignee Filter */}
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-15">
             Assignee
           </label>
-          <select
+          <select id="fld-15"
             value={selectedAssignee}
             onChange={(e) => onAssigneeChange(e.target.value)}
             className="w-full px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
@@ -181,10 +184,10 @@ export function FilterPanel({
       {/* Labels Filter */}
       {labels.length > 0 && (
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <span className="block text-sm font-medium text-foreground mb-2">
             <Tag size={16} className="inline mr-2" />
             Labels
-          </label>
+          </span>
           <div className="flex flex-wrap gap-2">
             {labels.map((label) => (
               <button
@@ -210,10 +213,10 @@ export function FilterPanel({
 
       {/* Focus Required Filter */}
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
+        <span className="block text-sm font-medium text-foreground mb-2">
           <Brain size={16} className="inline mr-2 text-purple-500" />
           Focus Needed
-        </label>
+        </span>
         <button
           type="button"
           role="switch"

@@ -4,7 +4,7 @@ import { userEvent } from '@testing-library/user-event'
 import { FocusModeBanner } from '@/components/Dashboard/AllTasks/FocusModeBanner'
 
 vi.mock('framer-motion', () => ({
-  motion: { div: (p: Record<string, unknown>) => <div {...p} /> },
+  m: { div: (p: Record<string, unknown>) => <div {...p} /> },
   AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 vi.mock('next/navigation', () => ({

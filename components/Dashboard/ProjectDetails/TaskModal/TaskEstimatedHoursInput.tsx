@@ -12,11 +12,11 @@ export function TaskEstimatedHoursInput({
 }: TaskEstimatedHoursInputProps) {
   return (
     <div>
-      <label className="text-sm font-medium mb-1 block">
+      <label className="text-sm font-medium mb-1 block" htmlFor="fld-29">
         <Clock size={14} className="inline mr-1" />
         Estimated Hours
       </label>
-      <input
+      <input id="fld-29"
         type="number"
         min={0}
         step={0.5}

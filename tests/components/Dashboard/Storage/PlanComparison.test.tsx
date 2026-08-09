@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { PlanComparison } from '@/components/Dashboard/Storage/PlanComparison'
 
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }))

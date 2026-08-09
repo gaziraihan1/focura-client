@@ -18,9 +18,9 @@ export function IntentSelector({
 }: IntentSelectorProps) {
   return (
     <div>
-      <label className="block text-sm font-medium text-foreground mb-2">
+      <span className="block text-sm font-medium text-foreground mb-2">
         Task Intent
-      </label>
+      </span>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {INTENT_OPTIONS.map((intent) => {

@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { VerifyEmailContainer } from '@/components/VerifyEmail/VerifyEmailContainer'
 
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props}>{props.children}</div>,
   },
 }))

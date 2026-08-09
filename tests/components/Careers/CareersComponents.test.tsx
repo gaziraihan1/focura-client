@@ -326,7 +326,7 @@ describe('CareersJobCard', () => {
   it('handles keyboard Enter key', () => {
     const onClick = vi.fn()
     const { container } = render(<CareersJobCard job={mockJob} isNew={false} onClick={onClick} onApply={vi.fn()} />)
-    const card = container.querySelector('[role="button"][tabindex="0"]') as HTMLElement
+    const card = container.querySelector('[role="group"][tabindex="0"]') as HTMLElement
     fireEvent.keyDown(card, { key: 'Enter' })
     expect(onClick).toHaveBeenCalledWith(mockJob)
   })
@@ -334,7 +334,7 @@ describe('CareersJobCard', () => {
   it('handles keyboard Space key', () => {
     const onClick = vi.fn()
     const { container } = render(<CareersJobCard job={mockJob} isNew={false} onClick={onClick} onApply={vi.fn()} />)
-    const card = container.querySelector('[role="button"][tabindex="0"]') as HTMLElement
+    const card = container.querySelector('[role="group"][tabindex="0"]') as HTMLElement
     fireEvent.keyDown(card, { key: ' ' })
     expect(onClick).toHaveBeenCalledWith(mockJob)
   })

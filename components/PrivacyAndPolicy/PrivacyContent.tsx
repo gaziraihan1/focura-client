@@ -18,9 +18,9 @@ import {PrivacyList} from "./PrivacyList";
 import {PrivacyDataTable} from "./PrivacyDataTable";
 import {PrivacyRightsGrid} from "./PrivacyRightsGrid";
 
-export const PrivacyContent = () => {
+function PrivacySectionsPart1() {
   return (
-    <div className="space-y-10">
+    <>
       {/* 1. Overview */}
       <PrivacySection id="overview" title="Overview" icon={FileText} index={1}>
         <p>
@@ -179,7 +179,13 @@ export const PrivacyContent = () => {
           ]}
         />
       </PrivacySection>
+    </>
+  );
+}
 
+function PrivacySectionsPart2() {
+  return (
+    <>
       {/* 5. International Transfers */}
       <PrivacySection
         id="international-transfers"
@@ -301,7 +307,13 @@ export const PrivacyContent = () => {
           .
         </p>
       </PrivacySection>
+    </>
+  );
+}
 
+function PrivacySectionsPart3() {
+  return (
+    <>
       {/* 8. Your Rights */}
       <PrivacySection
         id="your-rights"
@@ -426,6 +438,16 @@ export const PrivacyContent = () => {
           within the EU) if you believe we have not handled your data lawfully.
         </p>
       </PrivacySection>
+    </>
+  );
+}
+
+export const PrivacyContent = () => {
+  return (
+    <div className="space-y-10">
+      <PrivacySectionsPart1 />
+      <PrivacySectionsPart2 />
+      <PrivacySectionsPart3 />
     </div>
   );
 };

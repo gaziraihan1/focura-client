@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { ProjectListItem } from "@/components/Dashboard/AllProjects/ProjectListItem";
 import { ProjectData } from "@/types/project.types";
 

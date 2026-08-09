@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { AnnouncementModal } from '@/components/Dashboard/Workspaces/Announcement/AnnouncementModal'
 
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
     button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...props}>{children}</button>,
   },

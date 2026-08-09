@@ -26,7 +26,7 @@ export function NotificationItem({
 }: NotificationItemProps) {
   return (
     <div
-      role="button"
+      role="group"
       tabIndex={0}
       onClick={onClick}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onClick(); }}

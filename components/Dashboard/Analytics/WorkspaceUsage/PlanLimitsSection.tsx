@@ -32,6 +32,8 @@ function formatStorage(mb: number): string {
   return mb >= 1024 ? `${(mb / 1024).toFixed(1)} GB` : `${Math.round(mb)} MB`;
 }
 
+const pct = (used: number, limit: number) =>
+  limit === -1 ? 0 : Math.round((used / limit) * 100);
 function LimitCard({ icon: Icon, label, current, max, unit, percentage }: LimitCardProps) {
   const isUnlimited = max === null || max === -1;
   const isCritical  = !isUnlimited && percentage >= 95;
@@ -147,8 +149,6 @@ function LimitCard({ icon: Icon, label, current, max, unit, percentage }: LimitC
 
 export function PlanLimitsSection({ planLimits, workspaceSlug }: PlanLimitsSectionProps) {
   // ✅ All percentages computed from real planLimits data
-  const pct = (used: number, limit: number) =>
-    limit === -1 ? 0 : Math.round((used / limit) * 100);
 
   const memberPct     = pct(planLimits.memberCount,    planLimits.memberLimit);
   const storagePct    = pct(planLimits.storageUsedMB,  planLimits.storageLimitMB);

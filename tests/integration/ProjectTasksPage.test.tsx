@@ -218,7 +218,7 @@ describe('ProjectTasksPage', () => {
     ;(useProjectViews as any).mockReturnValue({ data: [timelineView] })
     renderPage([makeTask('t1', 'Q3 roadmap', 'TODO', null)])
 
-    fireEvent.click(screen.getByRole('button', { name: /Roadmap/i }))
+    fireEvent.click(screen.getByRole('button', { name: 'Roadmap' }))
 
     expect(screen.getByText('Project Timeline')).toBeDefined()
   })

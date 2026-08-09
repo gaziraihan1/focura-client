@@ -1,5 +1,5 @@
 // components/TaskDetails/FocusRequirementsCard.tsx
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Brain, Zap, Shield, AlertCircle } from "lucide-react";
 import { EnergyType } from "@/types/task.types";
 import {

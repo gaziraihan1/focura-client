@@ -18,10 +18,10 @@ export function DateRangeFilter({
   return (
     <div className="flex flex-wrap items-end gap-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-4">
       <div className="flex-1 min-w-50">
-        <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="fld-7">
           From
         </label>
-        <input
+        <input id="fld-7"
           type="date"
           className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
           value={
@@ -34,10 +34,10 @@ export function DateRangeFilter({
       </div>
 
       <div className="flex-1 min-w-50">
-        <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="fld-8">
           To
         </label>
-        <input
+        <input id="fld-8"
           type="date"
           className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
           value={

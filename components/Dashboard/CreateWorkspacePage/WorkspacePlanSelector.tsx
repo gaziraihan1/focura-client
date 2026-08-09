@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import { Check, Zap, Crown, CreditCard } from 'lucide-react';
 import { plans } from '@/constants/pricing.constants';
 
@@ -59,9 +59,9 @@ export function WorkspacePlanSelector({
         <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
           <CreditCard className="w-4 h-4 text-primary" />
         </div>
-        <label className="text-sm font-semibold text-foreground">
+        <span className="text-sm font-semibold text-foreground">
           Choose your plan
-        </label>
+        </span>
       </div>
       <p className="text-xs text-muted-foreground mb-5 ml-10">
         Start free and upgrade anytime — no payment required to create.

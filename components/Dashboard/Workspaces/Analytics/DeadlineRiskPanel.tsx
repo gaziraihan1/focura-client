@@ -8,18 +8,19 @@ interface DeadlineRiskPanelProps {
   data: DeadlineRisk;
 }
 
-export function DeadlineRiskPanel({ data }: DeadlineRiskPanelProps) {
-  const riskIcon = {
-    low: <Clock className="w-5 h-5" />,
-    medium: <AlertTriangle className="w-5 h-5" />,
-    high: <Flame className="w-5 h-5" />,
-  };
+const riskLabel = {
+  low: 'Low Risk',
+  medium: 'Medium Risk',
+  high: 'High Risk',
+};
 
-  const riskLabel = {
-    low: 'Low Risk',
-    medium: 'Medium Risk',
-    high: 'High Risk',
-  };
+const riskIcon = {
+  low: <Clock className="w-5 h-5" />,
+  medium: <AlertTriangle className="w-5 h-5" />,
+  high: <Flame className="w-5 h-5" />,
+};
+
+export function DeadlineRiskPanel({ data }: DeadlineRiskPanelProps) {
 
   return (
     <div className="bg-card border rounded-lg p-6">

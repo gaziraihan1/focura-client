@@ -97,7 +97,7 @@ describe('SlackLinkModal', () => {
 
   it('renders the help link', () => {
     render(<SlackLinkModal {...defaultProps} />);
-    const helpLink = screen.getByText('Learn more');
+    const helpLink = screen.getByText(/Learn more/);
     expect(helpLink).toBeInTheDocument();
     expect(helpLink.closest('a')).toHaveAttribute(
       'href',

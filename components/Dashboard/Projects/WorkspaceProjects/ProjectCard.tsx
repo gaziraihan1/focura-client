@@ -6,6 +6,7 @@ import ProjectStatsCount from "./ProjectStatsCount";
 import ProjectDetails from "./ProjectDetails";
 import { ProjectDetails as Details } from "@/hooks/useProjects";
 
+// oxlint-disable-next-line react-doctor/only-export-components -- shared status palette imported by ProjectDetails
 export const statusColors: Record<string, string> = {
   PLANNING: "bg-purple-500/10 text-purple-500",
   ACTIVE: "bg-green-500/10 text-green-500",

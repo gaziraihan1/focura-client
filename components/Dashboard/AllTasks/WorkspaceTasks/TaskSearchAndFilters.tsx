@@ -1,5 +1,5 @@
 import { Search, Filter, ArrowUpDown, ArrowUp, ArrowDown, X } from "lucide-react";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { FilterPanel } from "./FilterPanel";
 
 interface Project {
@@ -25,6 +25,9 @@ interface Section {
 }
 
 type Sorting = "title" | "status" | "priority" | "dueDate" | "createdAt" | undefined;
+
+// Module-scope defaults so prop comparisons stay stable across renders.
+const NO_SECTIONS: Section[] = [];
 
 interface TaskSearchAndFiltersProps {
   searchQuery: string;
@@ -81,7 +84,7 @@ export function TaskSearchAndFilters({
   sortOrder,
   focusRequired,
   onFocusRequiredChange,
-  sections = [],
+  sections = NO_SECTIONS,
   selectedSection = "all",
   onSectionChange = () => {},
 }: TaskSearchAndFiltersProps) {
@@ -99,7 +102,7 @@ export function TaskSearchAndFilters({
             className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             size={18}
           />
-          <input
+          <input aria-label="Search Input"
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
@@ -131,7 +134,7 @@ export function TaskSearchAndFilters({
           <div className="text-muted-foreground">
             {getSortIcon()}
           </div>
-          <select
+          <select aria-label="Sort Dropdown"
             value={sortBy}
             onChange={(e) => onSortChange(e.target.value as Sorting)}
             className="px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"

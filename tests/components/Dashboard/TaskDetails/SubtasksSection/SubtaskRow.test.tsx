@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { SubtaskRow } from '@/components/Dashboard/TaskDetails/SubtasksSection/SubtaskRow';
 
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...filterDomProps(props)}>{props.children}</div>,
     button: (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...filterDomProps(props)}>{props.children}</button>,
   },

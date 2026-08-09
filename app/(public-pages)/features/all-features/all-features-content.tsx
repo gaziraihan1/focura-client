@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m as motion, AnimatePresence } from 'framer-motion';
 import { Lightbulb, Plus, Search, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -74,7 +74,7 @@ export default function AllFeaturesContent() {
       {/* Search */}
       <div className='relative'>
         <Search className='absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none' />
-        <input
+        <input aria-label="Search"
           type='text'
           value={searchInput}
           onChange={(e) => handleSearch(e.target.value)}

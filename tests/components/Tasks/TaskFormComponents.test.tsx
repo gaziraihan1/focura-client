@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { TaskFormHeader } from '@/components/Tasks/form/TaskFormHeader'
 import { FormActions } from '@/components/Tasks/form/FormActions'
@@ -15,7 +15,7 @@ vi.mock('lucide-react', () => ({
 }))
 
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }))

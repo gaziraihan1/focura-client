@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { m as motion, AnimatePresence } from 'framer-motion';
 import { X, Globe, Lock, Pin, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -26,7 +26,7 @@ export function AnnouncementDetailModal({
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div
+          <motion.div role="presentation"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -77,7 +77,7 @@ export function AnnouncementDetailModal({
                   </h2>
                 </div>
 
-                <button
+                <button aria-label="Close"
                   type="button"
                   onClick={onClose}
                   className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shrink-0"

@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { InvalidResetTokenState } from "./InvalidResetTokenState";
 import { ResetPasswordPageHeader } from "./ResetPasswordPageHeader";
 import { ResetPasswordPageAlerts } from "./ResetPasswordPageAlerts";

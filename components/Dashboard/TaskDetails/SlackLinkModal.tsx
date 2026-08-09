@@ -121,22 +121,21 @@ export function SlackLinkModal({ taskId, onClose, onLinked }: SlackLinkModalProp
               Select <strong>Copy link</strong>
             </li>
             <li>Paste the link below</li>
-          </ol>
-          <a
+          </ol>          <a
             href="https://slack.com/help/articles/201925137-Copy-links-to-messages"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
           >
             <ExternalLink className="w-3 h-3" />
-            Learn more
+            Learn more about copying Slack message links
           </a>
         </div>
 
         {/* Input */}
         <div className="space-y-2 mb-6">
-          <label className="text-sm font-medium">Slack Message URL</label>
-          <input
+          <label className="text-sm font-medium" htmlFor="fld-42">Slack Message URL</label>
+          <input id="fld-42"
             type="text"
             value={messageUrl}
             onChange={(e) => setMessageUrl(e.target.value)}

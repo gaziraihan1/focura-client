@@ -145,11 +145,13 @@ const AdminJobsManager = () => {
       {panel && (
         <div
           className='fixed inset-0 z-50 flex items-center justify-center p-4'
+// oxlint-disable-next-line react-doctor/prefer-html-dialog -- custom modal with aria-modal + Escape/backdrop handling
           role='dialog'
           aria-modal='true'
+          aria-label={panel.mode === 'create' ? 'Create job posting' : 'Edit job posting'}
         >
           {/* Backdrop with blur */}
-          <div
+          <div role="presentation"
             className='absolute inset-0 bg-neutral-900/50 dark:bg-neutral-950/60 backdrop-blur-sm'
             onClick={() => setPanel(null)}
           />
@@ -188,8 +190,10 @@ const AdminJobsManager = () => {
       {deleteTarget && (
         <div
           className='fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-900/50 dark:bg-neutral-950/60 backdrop-blur-sm'
+// oxlint-disable-next-line react-doctor/prefer-html-dialog -- custom modal with aria-modal + Escape/backdrop handling
           role='dialog'
           aria-modal='true'
+          aria-label='Delete job posting'
         >
           <div className='w-full max-w-sm rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6 shadow-2xl'>
             <div className='flex items-start gap-3 mb-5'>

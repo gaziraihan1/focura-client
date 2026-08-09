@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import { User, Users, Building2, Check } from 'lucide-react';
 import type { ElementType } from 'react';
 
@@ -54,9 +54,9 @@ export function WorkspaceTypeSelector({
       className="rounded-2xl bg-card border border-border p-6"
     >
       <div className="flex items-center gap-2 mb-5">
-        <label className="text-sm font-semibold text-foreground">
+        <span className="text-sm font-semibold text-foreground">
           What kind of workspace?
-        </label>
+        </span>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {WORKSPACE_TYPES.map((type) => {

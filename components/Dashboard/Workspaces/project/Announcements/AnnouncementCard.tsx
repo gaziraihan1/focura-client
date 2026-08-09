@@ -24,8 +24,8 @@ export function AnnouncementCard({
 }) {
   
   return (
-    <article
-      role="button"
+    <div
+      role="group"
       tabIndex={0}
       onClick={() => onOpen(a)}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(a); } }}
@@ -142,6 +142,6 @@ export function AnnouncementCard({
           </div>
         </div>
       )}
-    </article>
+    </div>
   );
 }

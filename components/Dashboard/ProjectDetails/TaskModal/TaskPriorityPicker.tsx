@@ -20,7 +20,7 @@ export function TaskPriorityPicker({
 }: TaskPriorityPickerProps) {
   return (
     <div>
-      <label className="text-sm font-medium mb-2 block">Priority</label>
+      <span className="text-sm font-medium mb-2 block">Priority</span>
       <div className="grid grid-cols-4 gap-2">
         {PRIORITY_OPTIONS.map((priority) => (
           <button

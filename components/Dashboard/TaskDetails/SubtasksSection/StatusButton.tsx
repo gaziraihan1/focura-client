@@ -1,5 +1,5 @@
 "use client"
-import {motion} from 'framer-motion'
+import {m as motion} from 'framer-motion'
 import { SubtaskStatus } from "@/types/subtasks.types";
 import { AlertCircle, CheckCircle2, Circle, X } from "lucide-react";
 import { cn } from '@/lib/utils';

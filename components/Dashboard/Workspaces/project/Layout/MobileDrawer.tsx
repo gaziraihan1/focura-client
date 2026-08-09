@@ -10,7 +10,7 @@ export function MobileDrawer({ open, onClose, ...contentProps }: MobileDrawerPro
   return (
     <>
       {/* Backdrop */}
-      <div
+      <div role="presentation"
         onClick={onClose}
         className={[
           "fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px] transition-opacity duration-200 lg:hidden",
@@ -29,7 +29,7 @@ export function MobileDrawer({ open, onClose, ...contentProps }: MobileDrawerPro
         ].join(" ")}
       >
         {/* Close btn */}
-        <button
+        <button aria-label="Close btn"
           onClick={onClose}
           className="absolute top-3 right-3 z-10 p-1.5 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
         >

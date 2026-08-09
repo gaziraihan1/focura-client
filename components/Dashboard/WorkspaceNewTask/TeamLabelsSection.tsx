@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Users, Tag, Plus, AlertCircle, Loader2 } from "lucide-react";
 import { LabelPicker } from "@/components/Labels/LabelPicker";
 
@@ -117,10 +117,10 @@ export function TeamLabelsSection({
       {/* Labels */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <label className="block text-sm font-medium text-foreground">
+          <span className="block text-sm font-medium text-foreground">
             <Tag size={16} className="inline mr-2" />
             Labels
-          </label>
+          </span>
           <button
             type="button"
             onClick={onOpenLabelManager}

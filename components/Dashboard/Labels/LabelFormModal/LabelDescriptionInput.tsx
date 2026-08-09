@@ -11,11 +11,11 @@ export function LabelDescriptionInput({
 }: LabelDescriptionInputProps) {
   return (
     <div>
-      <label className="block text-sm font-medium text-foreground mb-2">
+      <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-18">
         Description{" "}
         <span className="text-muted-foreground text-xs">(Optional)</span>
       </label>
-      <textarea
+      <textarea id="fld-18"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Add a description for this label..."

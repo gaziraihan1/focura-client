@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import DetailModal from '@/components/Roadmap/DetailModal'
 
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
   AnimatePresence: ({ children }: { children?: React.ReactNode }) => children,

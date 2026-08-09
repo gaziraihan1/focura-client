@@ -71,6 +71,7 @@ export function BrandingForm({ workspaceSlug }: BrandingFormProps) {
           {BRAND_COLORS.map((color) => (
             <button
               key={color}
+              aria-label={`Select brand color ${color}`}
               onClick={() => setBrandColor(color)}
               className={`w-10 h-10 rounded-xl transition-all ${
                 brandColor === color

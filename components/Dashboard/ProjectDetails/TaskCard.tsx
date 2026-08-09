@@ -18,19 +18,18 @@ interface TaskCardProps {
   section?: TaskSectionBadge | null
 }
 
+const priorityColors: Record<string, string> = {
+  URGENT: 'bg-red-500',
+  HIGH: 'bg-orange-500',
+  MEDIUM: 'bg-yellow-500',
+  LOW: 'bg-green-500',
+};
 export default function TaskCard({ task, workspaceSlug, section }: TaskCardProps) {
   const router = useRouter();
   const {projectSlug} = useParams();
 
-  const priorityColors: Record<string, string> = {
-    URGENT: 'bg-red-500',
-    HIGH: 'bg-orange-500',
-    MEDIUM: 'bg-yellow-500',
-    LOW: 'bg-green-500',
-  };
-
   return (
-    <div
+    <div role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.currentTarget.click(); } }}
       onClick={() => router.push(`/dashboard/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/${task.id}`)}
       className="p-4 rounded-lg bg-card border border-border hover:border-primary cursor-pointer transition space-y-3"
     >

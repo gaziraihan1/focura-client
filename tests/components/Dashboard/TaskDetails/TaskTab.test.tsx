@@ -39,7 +39,7 @@ vi.mock('framer-motion', () => {
     button: 'button',
     span: 'span',
     p: 'p',
-    motion: {
+    m: {
       div: 'div',
       button: 'button',
       span: 'span',
@@ -123,7 +123,7 @@ vi.mock('lucide-react', () => {
     Target: icon('Target'),
     Play: icon('Play'),
     ArchiveRestore: icon('ArchiveRestore'),
-    CheckCircle2: icon('CheckCircle2'),
+    // CheckCircle2: icon('CheckCircle2'),
     Link: icon('Link'),
     Trash: icon('Trash'),
     Tag: icon('Tag'),

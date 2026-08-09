@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import { Users, Crown, User as UserIcon, TrendingUp } from 'lucide-react';
 import { UserContribution } from '@/hooks/useStorage';
 import { formatStorageSize } from '@/hooks/useStoragePage';
@@ -10,15 +10,16 @@ interface UserContributionsTableProps {
   totalStorageMB: number;
 }
 
+function getProgressColor(percentage: number) {
+  if (percentage >= 40) return 'bg-amber-500';
+  if (percentage >= 25) return 'bg-blue-500';
+  return 'bg-primary';
+}
+
 export function UserContributionsTable({
   contributions,
   totalStorageMB,
 }: UserContributionsTableProps) {
-  const getProgressColor = (percentage: number) => {
-    if (percentage >= 40) return 'bg-amber-500';
-    if (percentage >= 25) return 'bg-blue-500';
-    return 'bg-primary';
-  };
 
   return (
     <motion.div

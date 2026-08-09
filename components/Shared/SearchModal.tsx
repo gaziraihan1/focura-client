@@ -93,7 +93,7 @@ function SearchModalBody({ isOpen, onClose }: SearchModalProps) {
   return (
     <div className="fixed inset-0 z-100 flex items-start justify-center pt-[15vh]">
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" onClick={onClose} role="presentation" />
 
       {/* Modal */}
       <div

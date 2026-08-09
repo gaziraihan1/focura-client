@@ -1,5 +1,5 @@
 "use client"
-import { motion } from 'framer-motion'
+import { m as motion } from 'framer-motion'
 import { Megaphone } from "lucide-react";
 import { EmptyState as SharedEmptyState } from "@/components/Shared/EmptyState";
 

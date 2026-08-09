@@ -9,7 +9,7 @@ interface StepProps {
   desc: string;
 }
 
-export function Step({ num, title, desc }: StepProps) {
+function Step({ num, title, desc }: StepProps) {
   return (
     <div className="flex gap-4 items-start">
       <div className="shrink-0 w-8 h-8 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-semibold">

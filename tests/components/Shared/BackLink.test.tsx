@@ -13,7 +13,7 @@ vi.mock('lucide-react', () => ({
 }))
 
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     span: (props: React.HTMLAttributes<HTMLSpanElement>) => <span {...props}>{props.children}</span>,
   },
 }))

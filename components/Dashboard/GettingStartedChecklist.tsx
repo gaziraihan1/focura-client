@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import {
   Check,
@@ -25,19 +25,39 @@ interface GettingStartedChecklistProps {
   totalMembers?: number;
 }
 
+const DISMISS_KEY = 'focura-onboarding-dismissed';
+
+function subscribe(callback: () => void) {
+  window.addEventListener('storage', callback);
+  window.addEventListener('focura-onboarding-dismissed', callback);
+  return () => {
+    window.removeEventListener('storage', callback);
+    window.removeEventListener('focura-onboarding-dismissed', callback);
+  };
+}
+
+function getDismissedSnapshot() {
+  return localStorage.getItem(DISMISS_KEY) === 'true';
+}
+
+const dismiss = () => {
+  localStorage.setItem('focura-onboarding-dismissed', 'true');
+  window.dispatchEvent(new Event('focura-onboarding-dismissed'));
+};
+function getServerSnapshot() {
+  return false;
+}
+
 export function GettingStartedChecklist({
   workspaces,
   totalProjects = 0,
   totalMembers = 0,
 }: GettingStartedChecklistProps) {
-  const [dismissed, setDismissed] = useState(
-    () => localStorage.getItem('focura-onboarding-dismissed') === 'true'
+  const dismissed = useSyncExternalStore(
+    subscribe,
+    getDismissedSnapshot,
+    getServerSnapshot
   );
-
-  const dismiss = () => {
-    setDismissed(true);
-    localStorage.setItem('focura-onboarding-dismissed', 'true');
-  };
 
   const hasWorkspace = workspaces.length > 0;
   const hasTeam = totalMembers > 1;

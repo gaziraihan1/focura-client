@@ -87,7 +87,7 @@ export function AppearanceTab({
 
           {/* Custom hex */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider" htmlFor="fld-3">
               Custom Hex
             </label>
             <div className="flex items-center gap-2">
@@ -95,7 +95,7 @@ export function AppearanceTab({
                 className="w-8 h-8 rounded-lg shrink-0 border border-border transition-colors"
                 style={{ backgroundColor: activeColor }}
               />
-              <input
+              <input aria-label="Custom hex" id="fld-3"
                 value={custom}
                 onChange={(e) => setCustom(e.target.value)}
                 disabled={!canManage}

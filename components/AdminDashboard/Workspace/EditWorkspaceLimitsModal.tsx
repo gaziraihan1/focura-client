@@ -125,15 +125,15 @@ export function EditWorkspaceLimitsModal({
           <h2 className="text-sm font-semibold text-foreground">
             Edit Limits — {workspaceName}
           </h2>
-          <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
+          <button onClick={onClose} className="text-muted-foreground hover:text-foreground" aria-label="Close">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-medium text-muted-foreground">Plan</label>
-            <select
+            <label className="text-xs font-medium text-muted-foreground" htmlFor="fld-4">Plan</label>
+            <select id="fld-4"
               {...register('plan', {
                 onChange: (e) => applyPreset(e.target.value as PlanOption),
               })}
@@ -150,9 +150,9 @@ export function EditWorkspaceLimitsModal({
 
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-medium text-muted-foreground">Max members</label>
+              <label className="text-xs font-medium text-muted-foreground" htmlFor="fld-5">Max members</label>
               <label className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                <input type="checkbox" {...register('unlimitedMembers')} className="rounded border-border" />
+                <input type="checkbox" {...register('unlimitedMembers')} className="rounded border-border" id="fld-5" />
                 Unlimited
               </label>
             </div>
@@ -173,9 +173,9 @@ export function EditWorkspaceLimitsModal({
 
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-medium text-muted-foreground">Max storage (MB)</label>
+              <label className="text-xs font-medium text-muted-foreground" htmlFor="fld-6">Max storage (MB)</label>
               <label className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                <input type="checkbox" {...register('unlimitedStorage')} className="rounded border-border" />
+                <input type="checkbox" {...register('unlimitedStorage')} className="rounded border-border" id="fld-6" />
                 Unlimited
               </label>
             </div>

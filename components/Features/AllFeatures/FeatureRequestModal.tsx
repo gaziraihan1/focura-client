@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m as motion, AnimatePresence } from 'framer-motion';
 import { X, Lightbulb, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCreateFeatureRequest } from '@/hooks/useFeatures';
@@ -34,7 +34,7 @@ export function FeatureRequestModal({ isOpen, onClose }: Props) {
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div
+          <motion.div role="presentation"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={handleClose}
@@ -56,7 +56,7 @@ export function FeatureRequestModal({ isOpen, onClose }: Props) {
                   </div>
                   <h2 className="text-base font-semibold text-foreground">Request a Feature</h2>
                 </div>
-                <button
+                <button aria-label="Close"
                   type="button" onClick={handleClose} disabled={isPending}
                   className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 >
@@ -67,10 +67,10 @@ export function FeatureRequestModal({ isOpen, onClose }: Props) {
               {/* Body */}
               <div className="px-6 py-5 flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide" htmlFor="fld-59">
                     Feature title
                   </label>
-                  <input
+                  <input id="fld-59"
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
@@ -87,10 +87,10 @@ export function FeatureRequestModal({ isOpen, onClose }: Props) {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide" htmlFor="fld-60">
                     Description
                   </label>
-                  <textarea
+                  <textarea id="fld-60"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     disabled={isPending}

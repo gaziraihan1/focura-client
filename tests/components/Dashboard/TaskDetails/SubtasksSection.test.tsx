@@ -6,7 +6,7 @@ import { SubtaskProgress } from '@/components/Dashboard/TaskDetails/SubtasksSect
 import { StatusButton } from '@/components/Dashboard/TaskDetails/SubtasksSection/StatusButton'
 
 vi.mock('framer-motion', () => ({
-  motion: { div: (p: Record<string, unknown>) => <div {...p} />, button: (p: Record<string, unknown>) => <button {...p} /> },
+  m: { div: (p: Record<string, unknown>) => <div {...p} />, button: (p: Record<string, unknown>) => <button {...p} /> },
   AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 

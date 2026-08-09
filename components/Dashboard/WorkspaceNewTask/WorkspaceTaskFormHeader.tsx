@@ -12,7 +12,7 @@ export function WorkspaceTaskFormHeader({
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <button
+        <button aria-label="Previous page"
           onClick={onCancel}
           className="p-2 rounded-lg hover:bg-accent transition"
         >
@@ -25,7 +25,7 @@ export function WorkspaceTaskFormHeader({
           </p>
         </div>
       </div>
-      <button
+      <button aria-label="Close"
         onClick={onCancel}
         className="p-2 rounded-lg hover:bg-accent transition"
       >

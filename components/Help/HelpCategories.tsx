@@ -15,6 +15,7 @@ export interface HelpCategory {
   iconColor: string;
 }
 
+// oxlint-disable-next-line react-doctor/only-export-components -- shared category data imported by HelpSearchResults
 export const HELP_CATEGORIES: HelpCategory[] = [
   {
     id         : 'getting-started',

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { CheckCircle2, AlertCircle } from "lucide-react";
 
 interface TaskDetailsSectionProps {
@@ -24,10 +24,10 @@ export function TaskDetailsSection({
       </div>
 
       <div>
-        <label className="block text-sm mb-2">
+        <label className="block text-sm mb-2" htmlFor="fld-75">
           Task Title <span className="text-red-500">*</span>
         </label>
-        <input
+        <input id="fld-75"
           value={title}
           onChange={(e) => onTitleChange(e.target.value)}
           className={`w-full px-4 py-3 rounded-lg border bg-background focus:ring-2 ring-primary ${
@@ -43,7 +43,7 @@ export function TaskDetailsSection({
         )}
       </div>
 
-      <textarea
+      <textarea aria-label="Optional details"
         value={description}
         onChange={(e) => onDescriptionChange(e.target.value)}
         rows={3}

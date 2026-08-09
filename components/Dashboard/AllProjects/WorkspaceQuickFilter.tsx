@@ -1,7 +1,7 @@
 // components/Projects/WorkspaceQuickFilter.tsx
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Building2 } from "lucide-react";
 import { WorkspaceData } from "@/types/project.types";
 

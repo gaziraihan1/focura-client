@@ -68,13 +68,12 @@ export function ActiveSessionsSection() {
           <p className="text-sm text-muted-foreground">No active sessions found</p>
         </div>
       ) : (
-        <div className="space-y-3" role="list" aria-label="Active sessions">
+        <ul className="space-y-3" aria-label="Active sessions">
           {sessions.map((session) => {
             const DeviceIcon = getDeviceIcon(session.device);
             return (
-              <div
+              <li
                 key={session.id}
-                role="listitem"
                 className={`flex items-center justify-between p-3 rounded-xl border ${
                   session.isCurrent
                     ? 'border-primary/30 bg-primary/5'
@@ -118,10 +117,10 @@ export function ActiveSessionsSection() {
                     )}
                   </button>
                 )}
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       )}
     </div>
   );

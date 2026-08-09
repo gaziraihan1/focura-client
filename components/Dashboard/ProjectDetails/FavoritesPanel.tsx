@@ -103,7 +103,7 @@ function FavoriteRow({ fav }: { fav: FavoriteItem }) {
             {fav.project.status}
           </span>
           <div className="relative">
-            <button
+            <button aria-label="More options"
               onClick={() => setShowMenu(!showMenu)}
               className="p-1 rounded hover:bg-accent transition opacity-0 group-hover:opacity-100"
             >
@@ -111,7 +111,7 @@ function FavoriteRow({ fav }: { fav: FavoriteItem }) {
             </button>
             {showMenu && (
               <>
-                <div className="fixed inset-0 z-10" onClick={() => setShowMenu(false)} />
+                <div className="fixed inset-0 z-10" onClick={() => setShowMenu(false)} role="presentation" />
                 <div className="absolute right-0 top-6 z-20 w-36 rounded-lg border border-border bg-popover shadow-lg py-1">
                   <button
                     onClick={() => { setShowMenu(false); setEditing(true); }}
@@ -128,7 +128,7 @@ function FavoriteRow({ fav }: { fav: FavoriteItem }) {
 
       {editing && (
         <div className="mt-2 flex items-center gap-2">
-          <input
+          <input aria-label="Group name (e.g., Active)"
             className="flex-1 px-2 py-1 rounded border border-border bg-background text-xs focus:outline-none focus:ring-2 focus:ring-primary/20"
             placeholder="Group name (e.g., Active)"
             value={group}

@@ -39,7 +39,7 @@ vi.mock('framer-motion', () => {
     button: 'button',
     span: 'span',
     p: 'p',
-    motion: {
+    m: {
       div: 'div',
       button: 'button',
       span: 'span',

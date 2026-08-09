@@ -35,10 +35,10 @@ export function AnnouncementForm({
 
       {/* Title */}
       <div className="flex flex-col gap-2">
-        <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+        <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide" htmlFor="fld-54">
           Title
         </label>
-        <input
+        <input id="fld-54"
           type="text"
           value={formState.title}
           onChange={(e) => onTitleChange(e.target.value)}
@@ -64,9 +64,9 @@ export function AnnouncementForm({
       {/* Scope — only shown when projects are passed and not locked */}
       {projects && projects.length > 0 && (
         <div className="flex flex-col gap-2">
-          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
             Scope
-          </label>
+          </span>
 
           {lockedProjectId ? (
             /* Locked — show read-only pill when opened from project page */
@@ -81,7 +81,7 @@ export function AnnouncementForm({
               </span>
             </div>
           ) : (
-            <select
+            <select aria-label="Select an option"
               disabled={disabled}
               value={formState.projectId ?? ''}
               onChange={(e) => onProjectChange?.(e.target.value || null)}
@@ -109,9 +109,9 @@ export function AnnouncementForm({
 
       {/* Audience */}
       <div className="flex flex-col gap-2">
-        <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
           Audience
-        </label>
+        </span>
         <div className="grid grid-cols-2 gap-2">
           {VISIBILITY_OPTIONS.map(({ value, label, icon: Icon, desc }) => (
             <button
@@ -149,9 +149,9 @@ export function AnnouncementForm({
       {formState.visibility === 'PRIVATE' && (
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               Recipients
-            </label>
+            </span>
             {formState.targetIds.length > 0 && (
               <span className="text-[11px] text-primary bg-primary/10 px-2 py-0.5 rounded-full">
                 {formState.targetIds.length} selected

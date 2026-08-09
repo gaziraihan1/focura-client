@@ -64,7 +64,7 @@ export function WorkspaceCard({ workspace }: WorkspaceCardProps) {
             {badge.label}
           </span>
 
-          <button
+          <button aria-label="Settings"
             onClick={(e) => {
               e.preventDefault();
               navigateToSettings(workspace.slug);

@@ -9,39 +9,39 @@ import {
   Users,
 } from "lucide-react";
 
+const highlights = [
+  {
+    icon: <Workflow className="text-primary" size={32} />,
+    title: "Streamlined workflows",
+    desc: "Organize tasks, assign team members, and keep every project flowing with clarity.",
+  },
+  {
+    icon: <Users className="text-primary" size={32} />,
+    title: "Real-time collaboration",
+    desc: "Comment, discuss, and update instantly without switching tools or losing context.",
+  },
+  {
+    icon: <ShieldCheck className="text-primary" size={32} />,
+    title: "Enterprise-grade security",
+    desc: "All your data is safely encrypted and protected across all devices.",
+  },
+  {
+    icon: <Clock className="text-primary" size={32} />,
+    title: "Smart scheduling",
+    desc: "Plan and track timelines with intelligent scheduling and reminders.",
+  },
+  {
+    icon: <Layers className="text-primary" size={32} />,
+    title: "Modular structure",
+    desc: "Use only the tools you need — drag, reorder, and customize your workspace.",
+  },
+  {
+    icon: <Sparkles className="text-primary" size={32} />,
+    title: "Automated productivity",
+    desc: "Let Focura handle repetitive work with automations and smart triggers.",
+  },
+];
 export default function FeaturesHighlights() {
-  const highlights = [
-    {
-      icon: <Workflow className="text-primary" size={32} />,
-      title: "Streamlined workflows",
-      desc: "Organize tasks, assign team members, and keep every project flowing with clarity.",
-    },
-    {
-      icon: <Users className="text-primary" size={32} />,
-      title: "Real-time collaboration",
-      desc: "Comment, discuss, and update instantly without switching tools or losing context.",
-    },
-    {
-      icon: <ShieldCheck className="text-primary" size={32} />,
-      title: "Enterprise-grade security",
-      desc: "All your data is safely encrypted and protected across all devices.",
-    },
-    {
-      icon: <Clock className="text-primary" size={32} />,
-      title: "Smart scheduling",
-      desc: "Plan and track timelines with intelligent scheduling and reminders.",
-    },
-    {
-      icon: <Layers className="text-primary" size={32} />,
-      title: "Modular structure",
-      desc: "Use only the tools you need — drag, reorder, and customize your workspace.",
-    },
-    {
-      icon: <Sparkles className="text-primary" size={32} />,
-      title: "Automated productivity",
-      desc: "Let Focura handle repetitive work with automations and smart triggers.",
-    },
-  ];
 
   return (
     <section className="relative py-28 bg-background">

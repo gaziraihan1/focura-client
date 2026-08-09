@@ -1,39 +1,39 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { AlertTriangle, CheckCircle2 } from "lucide-react";
 import { KanbanMock, ProgressMock, ThreadMock } from "./SolutionMocks";
 
+const items = [
+  {
+    title: "Scattered Tools & Misalignment",
+    problem:
+      "Teams juggle multiple apps for tasks, communication, and planning — causing confusion and slow decision-making.",
+    solution:
+      "Focura centralizes tasks, communication, and planning so your entire team stays aligned inside one unified workspace.",
+    Mock: KanbanMock,
+    mockProps: { project: "Northwind — Q3 Roadmap", sub: "Product · 4 members" },
+  },
+  {
+    title: "Slow Communication & Missing Context",
+    problem:
+      "Important updates get lost across chats, emails, and docs — leading to delays and repeated work.",
+    solution:
+      "Real-time collaboration keeps discussions, files, updates, and tasks connected to the same context.",
+    Mock: ThreadMock,
+    mockProps: { task: "Launch mobile app", status: "In Review" },
+  },
+  {
+    title: "Inefficient Execution & No Visibility",
+    problem:
+      "Teams don't know who is doing what, what's blocked, or what's next — reducing productivity.",
+    solution:
+      "Focura gives you powerful progress tracking, clear ownership, and automated status indicators.",
+    Mock: ProgressMock,
+    mockProps: {},
+  },
+];
 export default function SolutionProblems() {
-  const items = [
-    {
-      title: "Scattered Tools & Misalignment",
-      problem:
-        "Teams juggle multiple apps for tasks, communication, and planning — causing confusion and slow decision-making.",
-      solution:
-        "Focura centralizes tasks, communication, and planning so your entire team stays aligned inside one unified workspace.",
-      Mock: KanbanMock,
-      mockProps: { project: "Northwind — Q3 Roadmap", sub: "Product · 4 members" },
-    },
-    {
-      title: "Slow Communication & Missing Context",
-      problem:
-        "Important updates get lost across chats, emails, and docs — leading to delays and repeated work.",
-      solution:
-        "Real-time collaboration keeps discussions, files, updates, and tasks connected to the same context.",
-      Mock: ThreadMock,
-      mockProps: { task: "Launch mobile app", status: "In Review" },
-    },
-    {
-      title: "Inefficient Execution & No Visibility",
-      problem:
-        "Teams don't know who is doing what, what's blocked, or what's next — reducing productivity.",
-      solution:
-        "Focura gives you powerful progress tracking, clear ownership, and automated status indicators.",
-      Mock: ProgressMock,
-      mockProps: {},
-    },
-  ];
 
   return (
     <section className="relative bg-background py-24 sm:py-28">

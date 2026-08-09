@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { ShieldX, ArrowLeft, Home } from "lucide-react";
 import { useRouter } from "next/navigation";
 

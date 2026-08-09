@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Task } from "@/hooks/useTask";
 import { TaskCard } from "./TaskCard";
 

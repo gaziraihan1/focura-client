@@ -1,3 +1,9 @@
+const shortDateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+});
+
 export function splitDescriptionIntoSentences(description: string): string[] {
   return description
     .split(".")
@@ -9,11 +15,7 @@ export function splitDescriptionIntoSentences(description: string): string[] {
 export function formatDate(value: string | Date): string {
   const date = typeof value === "string" ? new Date(value) : value;
 
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(date);
+  return shortDateFormatter.format(date);
 }
 
 const CATEGORY_ACCENTS = [

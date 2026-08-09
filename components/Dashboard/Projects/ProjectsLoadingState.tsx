@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 
 export function ProjectsLoadingState() {

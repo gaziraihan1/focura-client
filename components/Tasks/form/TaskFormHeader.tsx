@@ -8,7 +8,7 @@ export function TaskFormHeader({ onCancel }: TaskFormHeaderProps) {
   return (
     <div className="flex items-center justify-between mb-8">
       <div className="flex items-center gap-4">
-        <button
+        <button aria-label="Previous page"
           onClick={onCancel}
           className="p-2 rounded-lg hover:bg-accent"
         >
@@ -21,7 +21,7 @@ export function TaskFormHeader({ onCancel }: TaskFormHeaderProps) {
           </p>
         </div>
       </div>
-      <button
+      <button aria-label="Close"
         onClick={onCancel}
         className="p-2 rounded-lg hover:bg-accent"
       >

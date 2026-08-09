@@ -8,6 +8,12 @@ interface FocusSessionCardProps {
   taskId: string;
 }
 
+function formatTime(seconds: number): string {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
 export function FocusSessionCard({ taskId }: FocusSessionCardProps) {
   const {
     activeSession,
@@ -66,12 +72,6 @@ export function FocusSessionCard({ taskId }: FocusSessionCardProps) {
 
   const handleComplete = () => {
     completeSession();
-  };
-
-  const formatTime = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   const getProgress = (): number => {

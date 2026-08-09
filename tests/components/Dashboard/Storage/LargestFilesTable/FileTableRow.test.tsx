@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     tr: ({ children, ...props }: React.PropsWithChildren<React.TdHTMLAttributes<HTMLTableRowElement>>) => (
       <tr {...props}>{children}</tr>
     ),

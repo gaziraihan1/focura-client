@@ -220,22 +220,24 @@ export function useHelpSearch() {
 
     const needles = tokenize(q);
 
-    const articleResults: HelpSearchResult[] = allArticles
-      .map((a) => {
-        const score =
-          scoreText(a.title, needles) * 3 +
-          scoreText(a.description, needles) * 2 +
-          scoreText(a.keywords.join(" "), needles);
-        return {
-          type: "article" as const,
-          id: a.id,
-          title: a.title,
-          description: a.description,
-          topicId: a.topicId,
-          score,
-        };
-      })
-      .filter((r) => r.score > 0);
+    const articleResults: HelpSearchResult[] = allArticles.flatMap((a) => {
+      const score =
+        scoreText(a.title, needles) * 3 +
+        scoreText(a.description, needles) * 2 +
+        scoreText(a.keywords.join(" "), needles);
+      return score > 0
+        ? [
+            {
+              type: "article" as const,
+              id: a.id,
+              title: a.title,
+              description: a.description,
+              topicId: a.topicId,
+              score,
+            },
+          ]
+        : [];
+    });
 
 
     return [...articleResults].sort((a, b) => b.score - a.score);

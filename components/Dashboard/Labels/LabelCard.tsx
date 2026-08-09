@@ -1,7 +1,7 @@
 "use client";
 
 import { useState }                from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m as motion } from "framer-motion";
 import { Label }                   from "@/hooks/useLabels";
 import { Edit2, MoreVertical, Tag, Trash2 } from "lucide-react";
 import Link                        from "next/link";

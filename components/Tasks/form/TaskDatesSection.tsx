@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { AlertCircle, Calendar, Clock } from "lucide-react";
 
 interface TaskDatesSectionProps {
@@ -23,11 +23,11 @@ export function TaskDatesSection({
   return (
     <motion.div className="rounded-xl bg-card border border-border p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
-        <label className="text-sm mb-2 block">
+        <label className="text-sm mb-2 block" htmlFor="fld-72">
           <Calendar size={14} className="inline mr-1" />
           Start Date
         </label>
-        <input
+        <input id="fld-72"
           type="date"
           value={startDate}
           onChange={(e) => onStartDateChange(e.target.value)}
@@ -43,11 +43,11 @@ export function TaskDatesSection({
       </div>
 
       <div>
-        <label className="text-sm mb-2 block">
+        <label className="text-sm mb-2 block" htmlFor="fld-73">
           <Calendar size={14} className="inline mr-1" />
           Due Date
         </label>
-        <input
+        <input id="fld-73"
           type="date"
           value={dueDate}
           onChange={(e) => onDueDateChange(e.target.value)}
@@ -63,11 +63,11 @@ export function TaskDatesSection({
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2">
+        <label className="block text-sm font-medium mb-2" htmlFor="fld-74">
           <Clock size={14} className="inline mr-1" />
           Estimated Time (hours)
         </label>
-        <input
+        <input id="fld-74"
           type="number"
           min={0}
           step={0.5}

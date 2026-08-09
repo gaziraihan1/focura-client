@@ -126,7 +126,7 @@ export const ApiDocsAuthentication = () => {
             <RefreshCw className='w-3.5 h-3.5 text-neutral-400' strokeWidth={1.8} />
             <p className='text-xs font-semibold text-neutral-600 dark:text-neutral-400'>JWT Access Token Payload</p>
           </div>
-          <button
+          <button aria-label="Copy"
             onClick={() => navigator.clipboard.writeText(tokenPayload)}
             className='text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors'
           >

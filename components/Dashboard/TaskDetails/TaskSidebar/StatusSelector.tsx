@@ -48,7 +48,7 @@ export function StatusSelector({
 
   return (
     <div>
-      <select
+      <select aria-label="Select an option"
         value={status}
         onChange={(e) => onStatusChange(e.target.value as Task["status"])}
         disabled={isUpdatingStatus}

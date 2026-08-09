@@ -12,10 +12,10 @@ export default function PriorityDetailsSection({
 }: PriorityDetailsSectionProps) {
   return (
     <div>
-      <label className="block text-sm font-medium text-foreground mb-2">
+      <span className="block text-sm font-medium text-foreground mb-2">
         <Flag size={16} className="inline mr-2" />
         Priority
-      </label>
+      </span>
       <div className="grid grid-cols-2 gap-2">
         {(["URGENT", "HIGH", "MEDIUM", "LOW"] as const).map((priorityLevel) => (
           <button

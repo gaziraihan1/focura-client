@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m as motion, AnimatePresence } from "framer-motion";
 import { Plus, ChevronDown, ListTodo, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SubtaskProgress }   from "./SubtaskProgress";

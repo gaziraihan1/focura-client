@@ -59,7 +59,7 @@ export function RoleDropdown(props: RoleDropdownProps) {
 
   return (
     <div className="relative" title={disabled && disabledReason ? disabledReason : undefined}>
-      <select
+      <select aria-label="Select an option"
         value={currentRole}
         onChange={handleChange}
         disabled={disabled}

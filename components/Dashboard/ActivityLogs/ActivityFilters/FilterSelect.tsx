@@ -16,7 +16,7 @@ export function FilterSelect<T extends string>({
 }: FilterSelectProps<T>) {
   return (
     <div className="flex-1 min-w-50">
-      <select
+      <select aria-label="Select an option"
         value={value || 'all'}
         onChange={(e) => onChange(e.target.value)}
         className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"

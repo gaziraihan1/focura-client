@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { StorageBreakdown } from "@/hooks/useStorage";
 import { formatStorageSize } from "@/hooks/useStoragePage";
 import { storageBreakdown } from "@/constants/storage.constants";

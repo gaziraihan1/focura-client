@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import { Globe, Lock, Pin, Trash2, Loader2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -22,6 +22,7 @@ interface AnnouncementCardProps {
 }
 
 
+// oxlint-disable-next-line react-doctor/prefer-explicit-variants -- loading-state flags render distinct sub-states
 export function AnnouncementCard({
   announcement,
   canManage,
@@ -62,6 +63,14 @@ export function AnnouncementCard({
         exit={{ opacity: 0, x: -16, transition: { duration: 0.18 } }}
         transition={{ duration: 0.22, ease: 'easeOut', delay: index * 0.04 }}
         onClick={onClick}
+        role="group"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClick();
+          }
+        }}
         className={cn(
           'group relative flex flex-col gap-3 p-5 rounded-xl cursor-pointer',
           'border border-border bg-card',

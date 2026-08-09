@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Label } from "@/hooks/useLabels";
 import { useLabelFormModal } from "@/hooks/useLabelPage";
 import LabelFormHeader from "./LabelFormModal/LabelFormHeader";
@@ -35,7 +35,7 @@ export default function LabelFormModal({
 
   return (
     <>
-      <motion.div
+      <motion.div role="presentation"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}

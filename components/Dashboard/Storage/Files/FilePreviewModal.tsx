@@ -113,7 +113,7 @@ export function FilePreviewModal({ file, onClose }: FilePreviewModalProps) {
       </div>
 
       {/* Backdrop */}
-      <div
+      <div role="presentation"
         className="absolute inset-0 -z-10"
         onClick={onClose}
       />

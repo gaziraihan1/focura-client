@@ -22,6 +22,11 @@ interface TaskFiltersBarProps {
   onFocusRequiredChange: (value: boolean) => void;
 }
 
+  const tabs = [
+    { value: "all", label: "All Tasks" },
+    { value: "personal", label: "Personal" },
+    { value: "assigned", label: "Assigned" },
+  ] as const;
 export function TaskFiltersBar({
   activeTab,
   onTabChange,
@@ -37,11 +42,6 @@ export function TaskFiltersBar({
   focusRequired,
   onFocusRequiredChange,
 }: TaskFiltersBarProps) {
-  const tabs = [
-    { value: "all", label: "All Tasks" },
-    { value: "personal", label: "Personal" },
-    { value: "assigned", label: "Assigned" },
-  ] as const;
 
   const getSortIcon = () => {
     if (!sortOrder) return <ArrowUpDown size={18} />;
@@ -74,7 +74,7 @@ export function TaskFiltersBar({
             className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             size={18}
           />
-          <input
+          <input aria-label="Search"
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
@@ -84,7 +84,7 @@ export function TaskFiltersBar({
         </div>
 
         {/* Status */}
-        <select
+        <select aria-label="Status"
           value={selectedStatus}
           onChange={(e) => onStatusChange(e.target.value)}
           className="text-xs sm:text-sm px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
@@ -98,7 +98,7 @@ export function TaskFiltersBar({
         </select>
 
         {/* Priority */}
-        <select
+        <select aria-label="Priority"
           value={selectedPriority}
           onChange={(e) => onPriorityChange(e.target.value)}
           className="text-xs sm:text-sm px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"
@@ -129,7 +129,7 @@ export function TaskFiltersBar({
           <div className="text-muted-foreground">
             {getSortIcon()}
           </div>
-          <select
+          <select aria-label="Sort Dropdown"
             value={sortBy}
             onChange={(e) => onSortChange(e.target.value as Sorting)}
             className="text-xs sm:text-sm px-4 py-2 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"

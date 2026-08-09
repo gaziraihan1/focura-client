@@ -5,9 +5,9 @@ const inputBase   = 'w-full rounded-xl border bg-background px-3.5 py-2.5 text-s
 const inputNormal = 'border-border focus:border-ring focus:ring-ring/30';
 const inputErr    = 'border-destructive focus:ring-destructive/30';
 
-export const jobInputBase   = inputBase;
-export const jobInputNormal = inputNormal;
-export const jobInputErr    = inputErr;
+const jobInputBase   = inputBase;
+const jobInputNormal = inputNormal;
+const jobInputErr    = inputErr;
 
 interface FieldProps {
   label: string;
@@ -20,9 +20,9 @@ interface FieldProps {
 export function JobField({ label, error, required, children, hint }: FieldProps) {
   return (
     <div className='space-y-1.5'>
-      <label className='block text-sm font-medium text-foreground'>
+      <span className='block text-sm font-medium text-foreground'>
         {label}{required && <span className='text-destructive ml-0.5' aria-hidden>*</span>}
-      </label>
+      </span>
       {children}
       {hint && !error && <p className='text-xs text-muted-foreground'>{hint}</p>}
       {error && (

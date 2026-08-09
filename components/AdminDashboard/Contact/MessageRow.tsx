@@ -12,7 +12,7 @@ export function MessageRow({
   const isUnread = message.status === "UNREAD";
 
   return (
-    <tr
+    <tr role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.currentTarget.click(); } }}
       onClick={onClick}
       className="group cursor-pointer hover:bg-accent/50 transition-colors border-b border-border last:border-none"
     >

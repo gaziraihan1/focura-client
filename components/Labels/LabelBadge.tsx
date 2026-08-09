@@ -32,7 +32,7 @@ export function LabelBadge({
       <Tag className={cn(size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5')} />
       <span>{label.name}</span>
       {onRemove && (
-        <button
+        <button aria-label="Close"
           type="button"
           onClick={(e) => {
             e.stopPropagation();

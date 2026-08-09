@@ -18,9 +18,9 @@ import {RefundTimeline} from "./RefundTimeline";
 import {RefundRequestCard} from "./RefundRequestCard";
 import {RefundPaddleNote} from "./RefundPaddleNote";
 
-const RefundContent = () => {
+function RefundSectionsPart1() {
   return (
-    <div className="space-y-10">
+    <>
       {/* 1. Overview */}
       <RefundSection id="overview" title="Overview" icon={FileText} index={1}>
         <p>
@@ -159,7 +159,13 @@ const RefundContent = () => {
           before the 7-day window closes. We are happy to discuss your case.
         </RefundHighlight>
       </RefundSection>
+    </>
+  );
+}
 
+function RefundSectionsPart2() {
+  return (
+    <>
       {/* 5. Usage Assessment */}
       <RefundSection
         id="usage-assessment"
@@ -268,7 +274,13 @@ const RefundContent = () => {
         </p>
         <RefundRequestCard />
       </RefundSection>
+    </>
+  );
+}
 
+function RefundSectionsPart3() {
+  return (
+    <>
       {/* 9. Exceptions */}
       <RefundSection
         id="exceptions"
@@ -362,6 +374,16 @@ const RefundContent = () => {
           </p>
         </div>
       </RefundSection>
+    </>
+  );
+}
+
+const RefundContent = () => {
+  return (
+    <div className="space-y-10">
+      <RefundSectionsPart1 />
+      <RefundSectionsPart2 />
+      <RefundSectionsPart3 />
     </div>
   );
 };

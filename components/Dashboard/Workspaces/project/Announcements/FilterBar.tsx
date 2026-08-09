@@ -2,6 +2,12 @@ import { RefreshCw } from "lucide-react";
 
 export type FilterType = "all" | "pinned" | "public" | "private";
 
+  const tabs: { key: FilterType; label: string }[] = [
+    { key: "all", label: "All" },
+    { key: "pinned", label: "Pinned" },
+    { key: "public", label: "Public" },
+    { key: "private", label: "Private" },
+  ];
 export function FilterBar({
   active,
   onChange,
@@ -13,12 +19,6 @@ export function FilterBar({
   total: number;
   isFetching: boolean;
 }) {
-  const tabs: { key: FilterType; label: string }[] = [
-    { key: "all", label: "All" },
-    { key: "pinned", label: "Pinned" },
-    { key: "public", label: "Public" },
-    { key: "private", label: "Private" },
-  ];
 
   return (
     <div className="flex items-center gap-1 p-1 rounded-xl bg-muted/50 border border-border w-fit">

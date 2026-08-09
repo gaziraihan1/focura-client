@@ -9,15 +9,27 @@ interface CareersJobCardProps {
   onApply : (job: JobListItem) => void;
 }
 
+const salaryFormatters = new Map<string, Intl.NumberFormat>();
+
+function getSalaryFormatter(currency: string): Intl.NumberFormat {
+  let formatter = salaryFormatters.get(currency);
+  if (!formatter) {
+    formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: 0 });
+    salaryFormatters.set(currency, formatter);
+  }
+  return formatter;
+}
+
 function formatSalary(min: number | null, max: number | null, currency: string): string | null {
   if (!min && !max) return null;
-  const fmt = (n: number) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: 0 }).format(n / 100);
+  const fmt = (n: number) => getSalaryFormatter(currency).format(n / 100);
   if (min && max) return `${fmt(min)} – ${fmt(max)}`;
   if (min)        return `From ${fmt(min)}`;
   if (max)        return `Up to ${fmt(max)}`;
   return null;
 }
+
+const closingDateFormatter = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
 const locationColors: Record<string, string> = {
   REMOTE : 'bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/40',
@@ -37,7 +49,7 @@ export const CareersJobCard = ({ job, isNew, onClick, onApply }: CareersJobCardP
           ? 'border-border'
           : 'border-border hover:border-muted-foreground/30'
       )}
-      role='button'
+      role='group'
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -110,7 +122,7 @@ export const CareersJobCard = ({ job, isNew, onClick, onApply }: CareersJobCardP
           {job.closingDate && (
             <p className='text-[11px] text-muted-foreground mt-3'>
               Applications close{' '}
-              {new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(job.closingDate))}
+              {closingDateFormatter.format(new Date(job.closingDate))}
             </p>
           )}
         </div>

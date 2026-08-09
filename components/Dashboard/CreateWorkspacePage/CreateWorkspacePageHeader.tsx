@@ -17,7 +17,7 @@ export function CreateWorkspacePageHeader({
           Set up a new workspace for your team
         </p>
       </div>
-      <button
+      <button aria-label="Close"
         onClick={onCancel}
         className="p-2 rounded-lg hover:bg-accent transition"
       >

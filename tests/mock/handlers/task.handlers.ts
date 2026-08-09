@@ -1,6 +1,6 @@
 // tests/mock/handlers/task.handlers.ts
 import { http, HttpResponse } from 'msw'
-import type { Task, TaskStats, TasksResponse, PersonalQuotaInfo, WorkspaceQuotaInfo } from '@/hooks/useTask'
+import type { Task, TaskStats, PersonalQuotaInfo, WorkspaceQuotaInfo } from '@/hooks/useTask'
 
 const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
@@ -58,18 +58,6 @@ export const mockWorkspaceQuota: WorkspaceQuotaInfo = {
   isUnlimited: false,
   resetAt: '2024-01-02T00:00:00.000Z',
   members: [],
-}
-
-export const mockTasksResponse: TasksResponse = {
-  data: [mockTask],
-  pagination: {
-    page: 1,
-    pageSize: 10,
-    totalCount: 1,
-    totalPages: 1,
-    hasNext: false,
-    hasPrev: false,
-  },
 }
 
 const ok = (data: unknown) => HttpResponse.json({ success: true, data })

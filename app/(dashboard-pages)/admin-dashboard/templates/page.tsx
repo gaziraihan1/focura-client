@@ -8,16 +8,15 @@ interface TemplateSubscriber {
   email: string;
 }
 
+const fetchSubscribers = async () => {
+  const res = await api.get<TemplateSubscriber[]>('/api/v1/templates');
+  if (res?.success && res.data) return res.data;
+  return [];
+};
 const TemplatesOwnerPage = () => {
   const [data, setData] = useState<TemplateSubscriber[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
-
-  const fetchSubscribers = async () => {
-    const res = await api.get<TemplateSubscriber[]>('/api/v1/templates');
-    if (res?.success && res.data) return res.data;
-    return [];
-  };
 
   useEffect(() => {
     let mounted = true;

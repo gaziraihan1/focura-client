@@ -1,6 +1,8 @@
 // utils/workspace-upgrade.util.ts
 import type { BillingCycle } from '@/types/billing.upgrade.types';
 
+const mediumDateFormatter = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' });
+
 export function formatPrice(cents: number, cycle: BillingCycle): string {
   if (cents === 0) return '$0';
   const perMonth = cycle === 'yearly' ? Math.round(cents / 12) : cents;
@@ -24,9 +26,7 @@ export function formatCents(cents: number, currency: string): string {
 
 export function formatDate(date: string | null | undefined): string {
   if (!date) return '—';
-  return new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(
-    new Date(date)
-  );
+  return mediumDateFormatter.format(new Date(date));
 }
 
 export function getInvoiceBadgeClass(status: string): string {

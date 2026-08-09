@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import {
   ShieldCheck,
   Sparkles,
@@ -10,39 +10,39 @@ import {
   CloudLightning,
 } from "lucide-react";
 
+const reasons = [
+  {
+    title: "Lightning-fast workflow",
+    desc: "Experience real-time updates, instant sync, and ultra-smooth navigation across all your work.",
+    icon: <Gauge size={34} className="text-primary" />,
+  },
+  {
+    title: "Effortless collaboration",
+    desc: "Bring teams together with comments, mentions, shared boards, and unified communication.",
+    icon: <Users size={34} className="text-primary" />,
+  },
+  {
+    title: "Built for clarity",
+    desc: "Everything stays clean, structured, and easy to understand — even as your team grows.",
+    icon: <Workflow size={34} className="text-primary" />,
+  },
+  {
+    title: "Secure by default",
+    desc: "Enterprise-grade security, encryption, and safe data handling built in from day one.",
+    icon: <ShieldCheck size={34} className="text-primary" />,
+  },
+  {
+    title: "Smart automation",
+    desc: "Automate repetitive tasks and let your team focus on what truly matters.",
+    icon: <CloudLightning size={34} className="text-primary" />,
+  },
+  {
+    title: "A beautiful experience",
+    desc: "A modern interface your team will *actually* enjoy using — fast, clean, and aesthetic.",
+    icon: <Sparkles size={34} className="text-primary" />,
+  },
+];
 export default function WhyChooseFocura() {
-  const reasons = [
-    {
-      title: "Lightning-fast workflow",
-      desc: "Experience real-time updates, instant sync, and ultra-smooth navigation across all your work.",
-      icon: <Gauge size={34} className="text-primary" />,
-    },
-    {
-      title: "Effortless collaboration",
-      desc: "Bring teams together with comments, mentions, shared boards, and unified communication.",
-      icon: <Users size={34} className="text-primary" />,
-    },
-    {
-      title: "Built for clarity",
-      desc: "Everything stays clean, structured, and easy to understand — even as your team grows.",
-      icon: <Workflow size={34} className="text-primary" />,
-    },
-    {
-      title: "Secure by default",
-      desc: "Enterprise-grade security, encryption, and safe data handling built in from day one.",
-      icon: <ShieldCheck size={34} className="text-primary" />,
-    },
-    {
-      title: "Smart automation",
-      desc: "Automate repetitive tasks and let your team focus on what truly matters.",
-      icon: <CloudLightning size={34} className="text-primary" />,
-    },
-    {
-      title: "A beautiful experience",
-      desc: "A modern interface your team will *actually* enjoy using — fast, clean, and aesthetic.",
-      icon: <Sparkles size={34} className="text-primary" />,
-    },
-  ];
 
   return (
     <section className="relative w-full py-28">

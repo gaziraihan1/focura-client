@@ -82,7 +82,7 @@ export function KanbanHeader({
             <span className="hidden md:inline">Focus</span>
           </button>
 
-          <button className="p-1.5 sm:p-2 hover:bg-accent rounded-lg transition-colors">
+          <button className="p-1.5 sm:p-2 hover:bg-accent rounded-lg transition-colors" aria-label="Settings">
             <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
           </button>
         </div>

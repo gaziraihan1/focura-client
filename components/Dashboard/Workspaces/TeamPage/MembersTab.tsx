@@ -52,7 +52,7 @@ export function MembersTab({ members, currentUserId, canManage, onRoleChange }: 
             className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
             strokeWidth={2}
           />
-          <input
+          <input aria-label="Search members…"
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}

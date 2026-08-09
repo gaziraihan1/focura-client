@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import { TrendingUp } from 'lucide-react';
 import { StorageTrend } from '@/hooks/useStorage';
 import { formatStorageSize } from '@/hooks/useStoragePage';

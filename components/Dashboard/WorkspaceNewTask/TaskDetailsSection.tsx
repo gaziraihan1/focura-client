@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Calendar, Clock, AlertCircle } from "lucide-react";
 import { IntentSelector } from "./IntentSelector";
 import { FocusEnergySection } from "@/components/Tasks/form/FocusEnergySection";
@@ -64,11 +64,11 @@ export function TaskDetailsSection({
       {/* Dates */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-50">
             <Calendar size={16} className="inline mr-2" />
             Start Date
           </label>
-          <input
+          <input id="fld-50"
             type="date"
             value={startDate}
             onChange={(e) => onStartDateChange(e.target.value)}
@@ -77,11 +77,11 @@ export function TaskDetailsSection({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-51">
             <Calendar size={16} className="inline mr-2" />
             Due Date
           </label>
-          <input
+          <input id="fld-51"
             type="date"
             value={dueDate}
             onChange={(e) => onDueDateChange(e.target.value)}
@@ -99,11 +99,11 @@ export function TaskDetailsSection({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
+        <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-52">
           <Clock size={16} className="inline mr-2" />
           Estimated Hours
         </label>
-        <input
+        <input id="fld-52"
           type="number"
           min="0"
           step="0.5"

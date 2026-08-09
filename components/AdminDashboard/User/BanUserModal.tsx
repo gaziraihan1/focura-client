@@ -1,7 +1,7 @@
 'use client';
 
 import { useState }            from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m as motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, Loader2, X } from 'lucide-react';
 import { cn }                  from '@/lib/utils';
 import { useBanUser }          from '@/hooks/useAdmin';
@@ -40,7 +40,7 @@ export function BanUserModal({ userId, userName, isOpen, onClose }: Props) {
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div
+          <motion.div role="presentation"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={handleClose}
             className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
@@ -66,7 +66,7 @@ export function BanUserModal({ userId, userName, isOpen, onClose }: Props) {
                     </p>
                   </div>
                 </div>
-                <button
+                <button aria-label="Close"
                   type="button" onClick={handleClose} disabled={isPending}
                   className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 >
@@ -76,10 +76,10 @@ export function BanUserModal({ userId, userName, isOpen, onClose }: Props) {
 
               {/* Reason */}
               <div className="flex flex-col gap-2">
-                <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide" htmlFor="fld-1">
                   Reason <span className="text-destructive">*</span>
                 </label>
-                <textarea
+                <textarea id="fld-1"
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   disabled={isPending}

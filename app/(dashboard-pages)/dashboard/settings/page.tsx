@@ -82,14 +82,13 @@ const GLOBAL_FORM_MAP: Record<string, React.ComponentType> = {
   "Security": SecuritySettingsForm,
 };
 
+const renderGlobalForm = (section: string) => {
+  const FormComponent = GLOBAL_FORM_MAP[section];
+  if (!FormComponent) return null;
+  return <FormComponent />;
+};
 export default function SettingsOverviewPage() {
   const [activeSection, setActiveSection] = useUrlState<string>("section", "");
-
-  const renderGlobalForm = (section: string) => {
-    const FormComponent = GLOBAL_FORM_MAP[section];
-    if (!FormComponent) return null;
-    return <FormComponent />;
-  };
 
   return (
     <div className="min-h-screen bg-background">

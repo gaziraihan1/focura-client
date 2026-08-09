@@ -20,9 +20,9 @@ export function LabelColorPicker({
 }: LabelColorPickerProps) {
   return (
     <div>
-      <label className="block text-sm font-medium text-foreground mb-2">
+      <span className="block text-sm font-medium text-foreground mb-2">
         Color <span className="text-destructive">*</span>
-      </label>
+      </span>
       <div className="grid grid-cols-9 gap-2">
         {colors.map((preset) => (
           <button

@@ -58,12 +58,17 @@ const ApiDocsContent = () => {
       { rootMargin: '-15% 0px -75% 0px', threshold: 0 }
     );
 
-    allIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
+    // Collect the observed elements so cleanup can unobserve each one
+    const observed = allIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
 
-    return () => observer.disconnect();
+    observed.forEach((el) => observer.observe(el));
+
+    return () => {
+      observed.forEach((el) => observer.unobserve(el));
+      observer.disconnect();
+    };
   }, []);
 
   // ── Smooth scroll helper ────────────────────────────────────────────────────
@@ -88,7 +93,7 @@ const ApiDocsContent = () => {
         <p className='text-sm font-semibold text-neutral-700 dark:text-neutral-300'>
           API Reference
         </p>
-        <button
+        <button aria-label="Mobile sidebar toggle"
           onClick={() => setMobileSidebarOpen((v) => !v)}
           className='w-8 h-8 rounded-lg flex items-center justify-center text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors'
         >
@@ -99,7 +104,7 @@ const ApiDocsContent = () => {
       {/* Mobile sidebar overlay */}
       {mobileSidebarOpen && (
         <div className='lg:hidden fixed inset-0 z-50 flex'>
-          <div
+          <div role="presentation"
             className='flex-1 bg-neutral-900/50 dark:bg-neutral-950/60 backdrop-blur-sm'
             onClick={() => setMobileSidebarOpen(false)}
           />

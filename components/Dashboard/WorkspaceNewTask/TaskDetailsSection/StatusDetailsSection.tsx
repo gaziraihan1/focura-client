@@ -8,10 +8,10 @@ interface StatusDetailsSectionProps {
 export default function StatusDetailsSection({status, onStatusChange}: StatusDetailsSectionProps) {
   return (
     <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-53">
                 Status
               </label>
-              <select
+              <select id="fld-53"
                 value={status}
                 onChange={(e) =>
                   onStatusChange(e.target.value as CreateTaskDto["status"])

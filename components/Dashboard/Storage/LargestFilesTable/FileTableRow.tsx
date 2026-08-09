@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import {
   File,
   CheckSquare,
@@ -21,6 +21,7 @@ interface FileTableRowProps {
   onDelete: () => void;
 }
 
+// oxlint-disable-next-line react-doctor/no-many-boolean-props -- shared component API with deliberate state flags
 export function FileTableRow({
   file,
   index,
@@ -39,7 +40,7 @@ export function FileTableRow({
       className="border-b hover:bg-muted/50 transition-colors"
     >
       <td className="py-3 px-2">
-        <button
+        <button aria-label="Toggle"
           onClick={onToggleSelect}
           className="hover:opacity-70 transition-opacity"
           disabled={!canDelete}

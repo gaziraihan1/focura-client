@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Crown, Check } from "lucide-react";
 import Link from "next/link";
 

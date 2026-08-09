@@ -80,16 +80,15 @@ interface EndpointTabsProps {
   onTabChange: (tab: EndpointTab) => void;
 }
 
-export function EndpointTabs({ endpoint, tab, onTabChange }: EndpointTabsProps) {
-  const hasParams = (endpoint.pathParams?.length ?? 0) + (endpoint.queryParams?.length ?? 0) > 0;
-  const hasBody = (endpoint.bodyFields?.length ?? 0) > 0;
-
   const TAB_LABELS: Record<EndpointTab, string> = {
     params: 'Parameters',
     body: 'Request Body',
     responses: 'Responses',
     examples: 'Code Examples',
   };
+export function EndpointTabs({ endpoint, tab, onTabChange }: EndpointTabsProps) {
+  const hasParams = (endpoint.pathParams?.length ?? 0) + (endpoint.queryParams?.length ?? 0) > 0;
+  const hasBody = (endpoint.bodyFields?.length ?? 0) > 0;
 
   const availableTabs: EndpointTab[] = [
     ...(hasParams ? ['params' as EndpointTab] : []),

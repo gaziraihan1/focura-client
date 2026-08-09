@@ -10,6 +10,7 @@ export interface RepeatValue {
   endsAt: string;
 }
 
+// oxlint-disable-next-line react-doctor/only-export-components -- shared default value imported by task hooks/forms
 export const EMPTY_REPEAT: RepeatValue = {
   pattern: "NONE",
   interval: 1,

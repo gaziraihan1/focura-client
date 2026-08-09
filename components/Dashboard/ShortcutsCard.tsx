@@ -2,19 +2,19 @@
 
 import { ReactNode } from "react";
 
-export function ShortcutsCard({ inner }: { inner: ReactNode }) {
-  const triggerSwitcher = () => {
-    // Dispatch the same keyboard event your useWorkspaceLayout listens for
-    document.dispatchEvent(
-      new KeyboardEvent("keydown", {
-        key: "k",
-        metaKey: true,
-        ctrlKey: true,
-        bubbles: true,
-      })
-    );
-  };
+function triggerSwitcher() {
+  // Dispatch the same keyboard event your useWorkspaceLayout listens for
+  document.dispatchEvent(
+    new KeyboardEvent("keydown", {
+      key: "k",
+      metaKey: true,
+      ctrlKey: true,
+      bubbles: true,
+    })
+  );
+}
 
+export function ShortcutsCard({ inner }: { inner: ReactNode }) {
   return (
     <button
       type="button"

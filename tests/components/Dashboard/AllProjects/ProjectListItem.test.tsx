@@ -4,7 +4,7 @@ import { ProjectListItem } from '@/components/Dashboard/AllProjects/ProjectListI
 import type { ProjectData } from '@/types/project.types'
 
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
   },
 }))

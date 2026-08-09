@@ -1,31 +1,31 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Folder, BookOpen, Lightbulb, Cpu } from "lucide-react";
 
+const categories = [
+  {
+    icon: Folder,
+    title: "Project Management",
+    desc: "Learn how to structure tasks, flows and teams using Focura.",
+  },
+  {
+    icon: BookOpen,
+    title: "Getting Started",
+    desc: "Everything new users need to learn about onboarding.",
+  },
+  {
+    icon: Lightbulb,
+    title: "Productivity Tips",
+    desc: "Level up your workflow with expert insights and shortcuts.",
+  },
+  {
+    icon: Cpu,
+    title: "Integrations",
+    desc: "Connect third-party tools and automate your workflow.",
+  },
+];
 export default function ResourcesCategories() {
-  const categories = [
-    {
-      icon: Folder,
-      title: "Project Management",
-      desc: "Learn how to structure tasks, flows and teams using Focura.",
-    },
-    {
-      icon: BookOpen,
-      title: "Getting Started",
-      desc: "Everything new users need to learn about onboarding.",
-    },
-    {
-      icon: Lightbulb,
-      title: "Productivity Tips",
-      desc: "Level up your workflow with expert insights and shortcuts.",
-    },
-    {
-      icon: Cpu,
-      title: "Integrations",
-      desc: "Connect third-party tools and automate your workflow.",
-    },
-  ];
 
   return (
     <section className="py-24 bg-background">

@@ -81,6 +81,7 @@ export function EnergyQuickLog() {
         <div
           ref={popupRef}
           className="fixed bottom-24 right-6 z-50 w-80 rounded-2xl border border-border bg-card p-5 shadow-xl"
+// oxlint-disable-next-line react-doctor/prefer-html-dialog -- custom modal with aria-modal + Escape/backdrop handling
           role="dialog"
           aria-label="Log today's energy level"
         >
@@ -131,7 +132,7 @@ export function EnergyQuickLog() {
           />
 
           {/* Note */}
-          <input
+          <input aria-label="Optional note (e.g. slept well)"
             type="text"
             placeholder="Optional note (e.g. slept well)"
             value={note}

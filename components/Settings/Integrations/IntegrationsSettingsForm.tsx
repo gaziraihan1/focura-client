@@ -6,14 +6,12 @@ import { api } from "@/lib/axios";
 import { invalidateCsrfToken } from "@/lib/csrf";
 import toast from "react-hot-toast";
 import { ConfirmModal } from "@/components/Shared/ConfirmModal";
-import {
-  IntegrationCard,
-  ConfigurationModal,
-  IntegrationStats,
-  OAuthNotice,
-  AVAILABLE_INTEGRATIONS,
-  type Integration, IntegrationConfig, Workspace ,
-} from "./index";
+import { IntegrationCard } from "./IntegrationCard";
+import { ConfigurationModal } from "./ConfigurationModal";
+import { IntegrationStats } from "./IntegrationStats";
+import { OAuthNotice } from "./OAuthNotice";
+import { AVAILABLE_INTEGRATIONS } from "./integration-definitions";
+import type { Integration, IntegrationConfig, Workspace } from "@/types/integration.types";
 
 export function IntegrationsSettingsForm() {
   const [integrations, setIntegrations] = useState<Integration[]>([]);

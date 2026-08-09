@@ -150,14 +150,14 @@ export default function SprintList({ projectId }: SprintListProps) {
         {/* New sprint form */}
         {showNew ? (
           <div className="rounded-xl border border-border bg-card p-4 space-y-3">
-            <input
+            <input aria-label="Sprint name (e.g., Sprint 1)"
               className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
               placeholder="Sprint name (e.g., Sprint 1)"
               value={name}
               onChange={(e) => setName(e.target.value)}
               autoFocus
             />
-            <input
+            <input aria-label="Sprint goal (optional)"
               className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
               placeholder="Sprint goal (optional)"
               value={goal}
@@ -165,8 +165,8 @@ export default function SprintList({ projectId }: SprintListProps) {
             />
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs text-muted-foreground mb-1 block">Start Date</label>
-                <input
+                <label className="text-xs text-muted-foreground mb-1 block" htmlFor="fld-25">Start Date</label>
+                <input id="fld-25"
                   type="date"
                   className="w-full px-3 py-1.5 rounded-lg border border-border bg-background text-xs"
                   value={startDate}
@@ -174,8 +174,8 @@ export default function SprintList({ projectId }: SprintListProps) {
                 />
               </div>
               <div>
-                <label className="text-xs text-muted-foreground mb-1 block">End Date</label>
-                <input
+                <label className="text-xs text-muted-foreground mb-1 block" htmlFor="fld-26">End Date</label>
+                <input id="fld-26"
                   type="date"
                   className="w-full px-3 py-1.5 rounded-lg border border-border bg-background text-xs"
                   value={endDate}
@@ -213,7 +213,7 @@ export default function SprintList({ projectId }: SprintListProps) {
           <div className="w-full max-w-md mx-4 rounded-2xl border border-border bg-card p-6 shadow-xl">
             <h3 className="text-base font-bold text-foreground mb-1">Complete: {retroModal.name}</h3>
             <p className="text-xs text-muted-foreground mb-4">Add any retrospective notes before closing the sprint.</p>
-            <textarea
+            <textarea aria-label="What went well? What could improve?"
               className="w-full h-24 px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
               placeholder="What went well? What could improve?"
               value={retroText}
@@ -322,12 +322,12 @@ function SprintCard({
           </div>
         </div>
         <div className="relative">
-          <button onClick={() => setMenuOpen(!menuOpen)} className="p-1 rounded-lg hover:bg-accent transition">
+          <button onClick={() => setMenuOpen(!menuOpen)} className="p-1 rounded-lg hover:bg-accent transition" aria-label="More options">
             <MoreHorizontal size={14} className="text-muted-foreground" />
           </button>
           {menuOpen && (
             <>
-              <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
+              <div className="fixed inset-0 z-10" role="presentation" onClick={() => setMenuOpen(false)} />
               <div className="absolute right-0 top-8 z-20 w-36 rounded-lg border border-border bg-popover shadow-lg py-1">
                 {sprint.status === "ACTIVE" && (
                   <button onClick={() => { setMenuOpen(false); onComplete(); }} className="w-full px-3 py-1.5 text-xs text-left text-emerald-500 hover:bg-accent transition">

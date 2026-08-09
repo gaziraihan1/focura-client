@@ -2,7 +2,7 @@
 
 import { PaginatedResult, PopularResourceDTO } from "@/types/resource.types";
 // import { fetchPublicPopularResources } from "@/hooks/useResource";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

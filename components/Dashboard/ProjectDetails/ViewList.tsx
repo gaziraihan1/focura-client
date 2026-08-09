@@ -128,14 +128,14 @@ export default function ViewList({ projectId }: ViewListProps) {
 
       {showNew ? (
         <div className="rounded-xl border border-border bg-card p-4 space-y-3">
-          <input
+          <input aria-label="View name (e.g., My Kanban)"
             className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
             placeholder="View name (e.g., My Kanban)"
             value={name}
             onChange={(e) => setName(e.target.value)}
             autoFocus
           />
-          <select
+          <select aria-label="Select an option"
             className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm"
             value={type}
             onChange={(e) => setType(e.target.value as any)}

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Users, UserPlus, X, Crown, LucideIcon } from "lucide-react";
 import Image from "next/image";
 import {
@@ -164,7 +164,7 @@ export function WorkspaceMembersTab({
 
                   <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                     {member.role !== "OWNER" && isAdmin ? (
-                      <select
+                      <select aria-label="Select an option"
                         value={member.role}
                         onChange={(e) =>
                           handleUpdateRole(

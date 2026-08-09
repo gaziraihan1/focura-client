@@ -57,8 +57,3 @@ export const dailyTaskHandlers = [
   http.delete(`${BASE}/api/v1/daily-tasks/:taskId`, () => ok(null)),
 ]
 
-export const emptyDailyTaskHandlers = [
-  http.get(`${BASE}/api/v1/daily-tasks`, () =>
-    ok({ primaryTask: null, secondaryTasks: [] })
-  ),
-]

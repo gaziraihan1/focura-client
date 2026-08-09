@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { memo } from "react";
 type TaskPriority = Task['priority'];
 
+// oxlint-disable-next-line react-doctor/only-export-components -- shared priority config imported by ToolBar
 export const PRIORITY_CONFIG: Record<TaskPriority, { label: string; dot: string; badge: string }> = {
   LOW:    { label: 'Low',    dot: 'bg-slate-400', badge: 'bg-slate-100 text-slate-600 dark:bg-slate-800/60 dark:text-slate-400' },
   MEDIUM: { label: 'Medium', dot: 'bg-blue-500',  badge: 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'     },

@@ -12,25 +12,25 @@ interface LabelFormProps {
   isSaving: boolean;
 }
 
+const PRESET_COLORS = [
+  '#ef4444', // red
+  '#f97316', // orange
+  '#f59e0b', // amber
+  '#eab308', // yellow
+  '#84cc16', // lime
+  '#22c55e', // green
+  '#10b981', // emerald
+  '#14b8a6', // teal
+  '#06b6d4', // cyan
+  '#0ea5e9', // sky
+  '#3b82f6', // blue
+  '#6366f1', // indigo
+  '#8b5cf6', // violet
+  '#a855f7', // purple
+  '#d946ef', // fuchsia
+  '#ec4899', // pink
+];
 export default function LabelForm({ label, workspaceId, onSave, onCancel, isSaving }: LabelFormProps) {
-    const PRESET_COLORS = [
-      '#ef4444', // red
-      '#f97316', // orange
-      '#f59e0b', // amber
-      '#eab308', // yellow
-      '#84cc16', // lime
-      '#22c55e', // green
-      '#10b981', // emerald
-      '#14b8a6', // teal
-      '#06b6d4', // cyan
-      '#0ea5e9', // sky
-      '#3b82f6', // blue
-      '#6366f1', // indigo
-      '#8b5cf6', // violet
-      '#a855f7', // purple
-      '#d946ef', // fuchsia
-      '#ec4899', // pink
-    ];
     
   const [name, setName] = useState(label?.name || '');
   const [color, setColor] = useState(label?.color || PRESET_COLORS[0]);
@@ -63,10 +63,10 @@ export default function LabelForm({ label, workspaceId, onSave, onCancel, isSavi
     <form onSubmit={handleSubmit} className="bg-muted p-4 rounded-lg space-y-4 mb-4">
       {/* Name Input */}
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
+        <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-61">
           Label Name *
         </label>
-        <input
+        <input id="fld-61"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -74,20 +74,20 @@ export default function LabelForm({ label, workspaceId, onSave, onCancel, isSavi
           className="w-full px-3 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
           maxLength={50}
           required
-          autoFocus
         />
       </div>
 
       {/* Color Picker */}
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
+        <span className="block text-sm font-medium text-foreground mb-2">
           Color
-        </label>
+        </span>
         <div className="grid grid-cols-8 gap-2">
           {PRESET_COLORS.map((presetColor) => (
             <button
               key={presetColor}
               type="button"
+              aria-label={`Select color ${presetColor}`}
               onClick={() => setColor(presetColor)}
               className={cn(
                 'w-8 h-8 rounded-full transition-all',
@@ -101,7 +101,7 @@ export default function LabelForm({ label, workspaceId, onSave, onCancel, isSavi
             </button>
           ))}
         </div>
-        <input
+        <input aria-label="Label color"
           type="color"
           value={color}
           onChange={(e) => setColor(e.target.value)}
@@ -111,10 +111,10 @@ export default function LabelForm({ label, workspaceId, onSave, onCancel, isSavi
 
       {/* Description Input */}
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
+        <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-62">
           Description (Optional)
         </label>
-        <textarea
+        <textarea id="fld-62"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="What is this label for?"

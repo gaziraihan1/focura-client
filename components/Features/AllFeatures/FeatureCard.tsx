@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import { Trash2, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -54,7 +54,7 @@ export function FeatureCard({ feature, isAdmin, isDeleting, onDelete, index }: P
           </div>
 
           {isAdmin && (
-            <button
+            <button aria-label="Delete"
               type="button"
               onClick={(e) => { e.stopPropagation(); setConfirmOpen(true); }}
               disabled={isDeleting}

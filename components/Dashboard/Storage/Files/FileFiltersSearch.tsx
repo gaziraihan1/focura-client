@@ -13,7 +13,7 @@ export default function FileFiltersSearch({
   return (
     <div className="relative flex-1">
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-      <input
+      <input aria-label="Search files by name..."
         type="text"
         placeholder="Search files by name..."
         value={filters.search || ""}
@@ -24,7 +24,7 @@ export default function FileFiltersSearch({
         className="w-full pl-10 pr-4 py-2.5 border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
       />
       {filters.search && (
-        <button
+        <button aria-label="Settings"
           onClick={() => onFiltersChange({ ...filters, search: "", page: 1 })}
           className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-muted rounded transition-colors"
         >

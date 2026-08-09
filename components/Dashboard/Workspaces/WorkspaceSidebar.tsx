@@ -161,7 +161,7 @@ const toggleExpanded = (name: string) => {
 
         {/* Chevron — separate toggle, only when there are children */}
         {hasChildren && (
-          <button
+          <button aria-label="Next page"
             onClick={() => toggleExpanded(item.name)}
             className={`shrink-0 p-0.5 rounded transition-colors  ${
               isActive
@@ -262,7 +262,7 @@ const toggleExpanded = (name: string) => {
       </aside>
 
       {sidebarOpen && (
-        <div
+        <div role="presentation"
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={onSidebarClose}
         />

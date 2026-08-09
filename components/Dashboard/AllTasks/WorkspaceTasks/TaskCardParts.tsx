@@ -19,6 +19,7 @@ import {
 } from "@/utils/task.utils";
 import { formatHoursSinceCreation } from "@/utils/taskcard.utils";
 
+// oxlint-disable-next-line react-doctor/no-many-boolean-props react-doctor/prefer-explicit-variants -- shared card API with deliberate state flags
 export function TaskCardHeader({
   task,
   showButtons,

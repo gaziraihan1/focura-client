@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef } from 'react';
 import { Layers } from 'lucide-react';
 import { filterTemplates, CategoryFilter, TEMPLATES } from '@/lib/templatesData';
 import { Template } from '@/types/templates.types';
@@ -12,7 +12,8 @@ interface TemplatesGridProps {
 }
 
 const TemplatesGrid = ({ category, search }: TemplatesGridProps) => {
-  const [notifiedIds, setNotifiedIds] = useState<string[]>([]);
+  // Track templates the user has been notified about without triggering re-renders.
+  const notifiedIds = useRef<Set<string>>(new Set());
 
   const filtered = useMemo(
     () => filterTemplates(TEMPLATES, category, search),
@@ -20,7 +21,7 @@ const TemplatesGrid = ({ category, search }: TemplatesGridProps) => {
   );
 
   const handleNotify = (template: Template) => {
-    setNotifiedIds((prev) => [...prev, template.id]);
+    notifiedIds.current.add(template.id);
   };
 
   if (filtered.length === 0) {

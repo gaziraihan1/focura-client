@@ -196,14 +196,14 @@ export default function AdminContactPage() {
                 </span>
               </p>
               <div className="flex items-center gap-1">
-                <button
+                <button aria-label="Previous page"
                   disabled={page <= 1}
                   onClick={() => setPage((p) => p - 1)}
                   className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-                <button
+                <button aria-label="Next page"
                   disabled={page >= pagination.totalPages}
                   onClick={() => setPage((p) => p + 1)}
                   className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent disabled:opacity-30 disabled:cursor-not-allowed transition-colors"

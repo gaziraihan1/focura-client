@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
   Legend,
   ReferenceLine,
+// oxlint-disable-next-line react-doctor/prefer-dynamic-import -- recharts only ships when this chart mounts
 } from "recharts";
 import {
   BarChart3,

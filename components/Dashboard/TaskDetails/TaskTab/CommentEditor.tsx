@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Send, Loader2, Lock, X, CornerDownRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Task, TaskComment } from "@/types/task.types";
@@ -9,6 +9,9 @@ import MentionTextarea, {
 } from "./MentionTextarea";
 import Image from "next/image";
 import { MentionTextareaHandle, MentionUser } from "@/types/comment.types";
+
+// Module-scope default so prop comparisons stay stable across renders.
+const NO_MENTIONABLE_USERS: MentionUser[] = [];
 
 interface CommentEditorProps {
   task: Task;
@@ -36,7 +39,7 @@ export const CommentEditor = ({
   onSubmit,
   loading,
   userImage,
-  mentionableUsers = [],
+  mentionableUsers = NO_MENTIONABLE_USERS,
   replyingTo,
   onCancelReply,
   autoFocus,
@@ -82,7 +85,7 @@ export const CommentEditor = ({
               {replyingTo.content.length > 60 ? "…" : ""}
             </span>
           </div>
-          <button
+          <button aria-label="Close"
             onClick={onCancelReply}
             className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shrink-0"
           >

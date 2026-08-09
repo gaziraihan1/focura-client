@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { getPlanLimits } from "@/hooks/useStoragePage";
 import { plans } from "@/constants/storage.constants";

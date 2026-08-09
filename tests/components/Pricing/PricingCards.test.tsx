@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import PricingCards from '@/components/Pricing/PricingCards'
 
 vi.mock('framer-motion', () => ({
-  motion: {
+  m: {
     div: (props: React.HTMLAttributes<HTMLDivElement>) => <div {...props}>{props.children}</div>,
     span: (props: React.HTMLAttributes<HTMLSpanElement>) => <span {...props}>{props.children}</span>,
   },

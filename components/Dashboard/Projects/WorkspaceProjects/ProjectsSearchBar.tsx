@@ -13,7 +13,7 @@ export function ProjectsSearchBar({
     <div className="rounded-xl bg-card border border-border p-4">
       <div className="flex items-center gap-3">
         <Search className="text-muted-foreground" size={18} />
-        <input
+        <input aria-label="Search projects by name or description..."
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}

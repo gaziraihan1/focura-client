@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 
 export default function ResourcesCTA() {
   return (
@@ -27,7 +27,7 @@ export default function ResourcesCTA() {
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-            <input
+            <input aria-label="Enter your email..."
               type="email"
               placeholder="Enter your email..."
               className="

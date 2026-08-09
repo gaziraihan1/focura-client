@@ -15,6 +15,7 @@ function isPersonal(q: PersonalQuotaInfo | WorkspaceQuotaInfo): q is PersonalQuo
   return "dailyLimit" in q && "remaining" in q && !("workspaceUsedToday" in q);
 }
 
+// oxlint-disable-next-line react-doctor/only-export-components -- pure helper shared across TaskQouta cards
 export function formatResetTime(resetAt: string): string {
   const reset = new Date(resetAt);
   const now   = new Date();
@@ -28,6 +29,7 @@ export function formatResetTime(resetAt: string): string {
 
 
 
+// oxlint-disable-next-line react-doctor/only-export-components -- pure helper shared across TaskQouta cards
 export function getPlanBadgeBg(plan: string): string {
   switch (plan) {
     case "ENTERPRISE": return "bg-chart-1/10 text-chart-1 border-chart-1/20";

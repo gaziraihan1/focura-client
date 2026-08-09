@@ -37,7 +37,7 @@ export function ProfilePictureUpload({
         </div>
         {isEditing && (
           <>
-            <button
+            <button aria-label="Upload"
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
               className="absolute bottom-0 right-0 p-2 rounded-full bg-primary text-primary-foreground hover:opacity-90 transition disabled:opacity-50"

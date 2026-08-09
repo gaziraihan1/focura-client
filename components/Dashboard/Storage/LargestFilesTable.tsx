@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import { CheckSquare, Square } from 'lucide-react';
 import { TableHeader } from './LargestFilesTable/TableHeader';
 import { LargestFilesTableProps } from '@/types/storage.types';
@@ -62,6 +62,7 @@ export function LargestFilesTable({
             <tr className="border-b">
               <th className="text-left py-3 px-2 w-10">
                 <button
+                  aria-label={allSelected ? "Clear selection" : "Select all files"}
                   onClick={allSelected ? clearSelection : selectAll}
                   className="hover:opacity-70 transition-opacity"
                 >

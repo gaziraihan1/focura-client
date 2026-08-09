@@ -10,6 +10,7 @@ interface TaskHeaderProps {
   canDelete?: boolean;   // NEW
 }
 
+// oxlint-disable-next-line react-doctor/no-many-boolean-props -- shared component API with deliberate state flags
 export const TaskHeader = ({
   isEditing,
   onBack,

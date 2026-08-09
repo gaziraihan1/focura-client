@@ -221,7 +221,7 @@ export default function AnnouncementsPage() {
             size={14}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
           />
-          <input
+          <input aria-label="Search announcements…"
             type="text"
             placeholder="Search announcements…"
             value={search}

@@ -11,16 +11,17 @@ const sizeClasses = {
     md: "w-8 h-8 text-xs",
     lg: "w-10 h-10 text-sm"
 }
-export default function UserAvatar({name, image, size = "md"}: UserAvatarProps) {
-    const getInitials = (fullname: string) => {
-        return fullname
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .slice(0,2)
-    }
 
+function getInitials(fullname: string) {
+    return fullname
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0,2)
+}
+
+export default function UserAvatar({name, image, size = "md"}: UserAvatarProps) {
     if(image) {
         return (
             <Image

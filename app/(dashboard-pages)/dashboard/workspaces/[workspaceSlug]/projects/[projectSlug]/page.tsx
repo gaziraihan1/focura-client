@@ -47,6 +47,298 @@ function daysUntil(dateStr: string | undefined): number | null {
   return Math.ceil(diff / (1000 * 60 * 60 * 24));
 }
 
+// ─── Sub-sections ─────────────────────────────────────────────────────────────
+
+interface StatsRibbonProps {
+  totalTasks: number;
+  completedTasks: number;
+  inProgressTasks: number;
+  totalMembers: number;
+  completionPct: number;
+  accentColor: string;
+}
+
+function StatsRibbon({
+  totalTasks,
+  completedTasks,
+  inProgressTasks,
+  totalMembers,
+  completionPct,
+  accentColor,
+}: StatsRibbonProps) {
+  return (
+    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+      <StatPill
+        icon={CheckSquare}
+        label="Total Tasks"
+        value={totalTasks}
+        sub={`${completedTasks} completed`}
+        accent={accentColor}
+      />
+      <StatPill
+        icon={CheckCircle2}
+        label="Completed"
+        value={completedTasks}
+        sub={`${completionPct}% rate`}
+        accent="#10b981"
+      />
+      <StatPill
+        icon={Loader2}
+        label="In Progress"
+        value={inProgressTasks}
+        sub="active tasks"
+        accent="#f59e0b"
+      />
+      <StatPill
+        icon={Users}
+        label="Members"
+        value={totalMembers}
+        sub="collaborators"
+        accent="#8b5cf6"
+      />
+    </div>
+  );
+}
+
+interface TaskProgressCardProps {
+  base: string;
+  totalTasks: number;
+  completedTasks: number;
+  inProgressTasks: number;
+  accentColor: string;
+  onViewAll: () => void;
+}
+
+function TaskProgressCard({
+  base,
+  totalTasks,
+  completedTasks,
+  inProgressTasks,
+  accentColor,
+  onViewAll,
+}: TaskProgressCardProps) {
+  return (
+    <div className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+      <div className="flex items-center justify-between mb-5">
+        <div>
+          <h2 className="text-base font-bold text-foreground">Task Progress</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            {totalTasks === 0
+              ? "No tasks created yet"
+              : `${totalTasks - completedTasks - inProgressTasks} remaining to start`}
+          </p>
+        </div>
+        <button
+          onClick={onViewAll}
+          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-border hover:bg-accent transition-colors"
+        >
+          View all
+          <ChevronRight size={12} />
+        </button>
+      </div>
+
+      {totalTasks === 0 ? (
+        <div className="py-8 flex flex-col items-center gap-2 text-center">
+          <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
+            <Circle size={18} className="text-muted-foreground" />
+          </div>
+          <p className="text-sm text-muted-foreground">No tasks yet — create your first task to get started.</p>
+          <button
+            onClick={() => onViewAll()}
+            className="mt-1 text-xs font-semibold px-4 py-1.5 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
+          >
+            Go to Tasks
+          </button>
+        </div>
+      ) : (
+        <StatusBar
+          completed={completedTasks}
+          inProgress={inProgressTasks}
+          total={totalTasks}
+          accentColor={accentColor}
+        />
+      )}
+    </div>
+  );
+}
+
+interface QuickAccessGridProps {
+  base: string;
+  totalTasks: number;
+  totalAnnouncements: number;
+  totalMembers: number;
+  accentColor: string;
+  milestoneCount: number;
+  sprintCount: number;
+  sectionCount: number;
+  viewCount: number;
+  onNavigate: (path: string) => void;
+}
+
+function QuickAccessGrid({
+  base,
+  totalTasks,
+  totalAnnouncements,
+  totalMembers,
+  accentColor,
+  milestoneCount,
+  sprintCount,
+  sectionCount,
+  viewCount,
+  onNavigate,
+}: QuickAccessGridProps) {
+  return (
+    <div>
+      <h2 className="text-base font-bold text-foreground mb-3">Quick Access</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <QuickAccessCard
+          icon={CheckSquare}
+          title="Tasks"
+          description="Manage, assign and track every task in this project. Filter by status, priority or assignee."
+          stat={totalTasks}
+          statLabel="tasks"
+          accent={accentColor}
+          onClick={() => onNavigate(`${base}/tasks`)}
+        />
+
+        <QuickAccessCard
+          icon={Megaphone}
+          title="Announcements"
+          description="Post updates, pin important notices and keep your team informed in one place."
+          stat={totalAnnouncements}
+          statLabel="posts"
+          accent="#f59e0b"
+          onClick={() => onNavigate(`${base}/announcements`)}
+        />
+
+        <QuickAccessCard
+          icon={Users}
+          title="Members"
+          description="View collaborators, manage roles and invite new people to the project."
+          stat={totalMembers}
+          statLabel="members"
+          accent="#8b5cf6"
+          onClick={() => onNavigate(`${base}/members`)}
+        />
+
+        <QuickAccessCard
+          icon={Flag}
+          title="Milestones"
+          description="Track key milestones with health status (on track / at risk / delayed) and progress."
+          stat={milestoneCount}
+          statLabel="milestones"
+          accent="#f59e0b"
+          onClick={() => onNavigate(`${base}/milestones`)}
+        />
+
+        <QuickAccessCard
+          icon={Sprout}
+          title="Sprints"
+          description="Plan time-boxed iterations, track velocity and run retrospectives."
+          stat={sprintCount}
+          statLabel="sprints"
+          accent="#10b981"
+          onClick={() => onNavigate(`${base}/sprints`)}
+        />
+
+        <QuickAccessCard
+          icon={Columns}
+          title="Sections"
+          description="Organize tasks into sections — map any section to a board column with WIP limits."
+          stat={sectionCount}
+          statLabel="sections"
+          accent="#8b5cf6"
+          onClick={() => onNavigate(`${base}/sections`)}
+        />
+
+        <QuickAccessCard
+          icon={Eye}
+          title="Views"
+          description="Save custom views (Kanban, List, Calendar, Timeline) to switch perspectives instantly."
+          stat={viewCount}
+          statLabel="views"
+          accent="#14b8a6"
+          onClick={() => onNavigate(`${base}/views`)}
+        />
+      </div>
+    </div>
+  );
+}
+
+interface AtAGlanceProps {
+  project: ProjectData;
+  isOverdue: boolean;
+  dueLabel: string;
+  totalMembers: number;
+  onManage: () => void;
+}
+
+function AtAGlanceCards({ project, isOverdue, dueLabel, totalMembers, onManage }: AtAGlanceProps) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+      {/* Deadline card */}
+      <div className="rounded-2xl border border-border bg-card p-5">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
+            <Flame size={15} className={isOverdue ? "text-destructive" : "text-muted-foreground"} />
+          </div>
+          <p className="text-sm font-semibold text-foreground">Deadline</p>
+        </div>
+
+        {project.dueDate ? (
+          <div className="space-y-1">
+            <p className="text-2xl font-black text-foreground">
+              {formatDate(project.dueDate)}
+            </p>
+            <p
+              className={[
+                "text-sm font-semibold",
+                isOverdue ? "text-destructive" : "text-muted-foreground",
+              ].join(" ")}
+            >
+              {dueLabel}
+            </p>
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground italic">No deadline set.</p>
+        )}
+      </div>
+
+      {/* Team card */}
+      <div className="rounded-2xl border border-border bg-card p-5">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
+              <Users size={15} className="text-muted-foreground" />
+            </div>
+            <p className="text-sm font-semibold text-foreground">Team</p>
+          </div>
+          <button
+            onClick={onManage}
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+          >
+            Manage <ChevronRight size={11} />
+          </button>
+        </div>
+
+        {totalMembers > 0 ? (
+          <div className="flex items-center gap-3">
+            <MemberAvatars members={project.members ?? []} max={7} />
+            <span className="text-sm text-muted-foreground">
+              {totalMembers} member{totalMembers !== 1 ? "s" : ""}
+            </span>
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground italic">No members yet.</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
 export default function ProjectOverviewPage() {
   const params = useParams();
   const router = useRouter();
@@ -127,6 +419,8 @@ export default function ProjectOverviewPage() {
 
   const isOverdue = dueIn !== null && dueIn < 0;
 
+  const navigate = (path: string) => router.push(path);
+
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
 
@@ -134,216 +428,47 @@ export default function ProjectOverviewPage() {
       
 <ProjectHeader project={project} accentColor={accentColor} completionPct={completionPct} isOverdue={isOverdue} dueLabel={dueLabel} totalMembers={totalMembers} />
       {/* ── Top stats ribbon ─────────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-        <StatPill
-          icon={CheckSquare}
-          label="Total Tasks"
-          value={totalTasks}
-          sub={`${completedTasks} completed`}
-          accent={accentColor}
-        />
-        <StatPill
-          icon={CheckCircle2}
-          label="Completed"
-          value={completedTasks}
-          sub={`${completionPct}% rate`}
-          accent="#10b981"
-        />
-        <StatPill
-          icon={Loader2}
-          label="In Progress"
-          value={inProgressTasks}
-          sub="active tasks"
-          accent="#f59e0b"
-        />
-        <StatPill
-          icon={Users}
-          label="Members"
-          value={totalMembers}
-          sub="collaborators"
-          accent="#8b5cf6"
-        />
-      </div>
+      <StatsRibbon
+        totalTasks={totalTasks}
+        completedTasks={completedTasks}
+        inProgressTasks={inProgressTasks}
+        totalMembers={totalMembers}
+        completionPct={completionPct}
+        accentColor={accentColor}
+      />
 
       {/* ── Task breakdown ───────────────────────────────────────────────── */}
-      <div className="rounded-2xl border border-border bg-card p-5 sm:p-6">
-        <div className="flex items-center justify-between mb-5">
-          <div>
-            <h2 className="text-base font-bold text-foreground">Task Progress</h2>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {totalTasks === 0
-                ? "No tasks created yet"
-                : `${totalTasks - completedTasks - inProgressTasks} remaining to start`}
-            </p>
-          </div>
-          <button
-            onClick={() => router.push(`${base}/tasks`)}
-            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-border hover:bg-accent transition-colors"
-          >
-            View all
-            <ChevronRight size={12} />
-          </button>
-        </div>
-
-        {totalTasks === 0 ? (
-          <div className="py-8 flex flex-col items-center gap-2 text-center">
-            <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
-              <Circle size={18} className="text-muted-foreground" />
-            </div>
-            <p className="text-sm text-muted-foreground">No tasks yet — create your first task to get started.</p>
-            <button
-              onClick={() => router.push(`${base}/tasks`)}
-              className="mt-1 text-xs font-semibold px-4 py-1.5 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
-            >
-              Go to Tasks
-            </button>
-          </div>
-        ) : (
-          <StatusBar
-            completed={completedTasks}
-            inProgress={inProgressTasks}
-            total={totalTasks}
-            accentColor={accentColor}
-          />
-        )}
-      </div>
+      <TaskProgressCard
+        base={base}
+        totalTasks={totalTasks}
+        completedTasks={completedTasks}
+        inProgressTasks={inProgressTasks}
+        accentColor={accentColor}
+        onViewAll={() => navigate(`${base}/tasks`)}
+      />
 
       {/* ── Quick access cards ────────────────────────────────────────────── */}
-      <div>
-        <h2 className="text-base font-bold text-foreground mb-3">Quick Access</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <QuickAccessCard
-            icon={CheckSquare}
-            title="Tasks"
-            description="Manage, assign and track every task in this project. Filter by status, priority or assignee."
-            stat={totalTasks}
-            statLabel="tasks"
-            accent={accentColor}
-            onClick={() => router.push(`${base}/tasks`)}
-          />
-
-          <QuickAccessCard
-            icon={Megaphone}
-            title="Announcements"
-            description="Post updates, pin important notices and keep your team informed in one place."
-            stat={totalAnnouncements}
-            statLabel="posts"
-            accent="#f59e0b"
-            onClick={() => router.push(`${base}/announcements`)}
-          />
-
-          <QuickAccessCard
-            icon={Users}
-            title="Members"
-            description="View collaborators, manage roles and invite new people to the project."
-            stat={totalMembers}
-            statLabel="members"
-            accent="#8b5cf6"
-            onClick={() => router.push(`${base}/members`)}
-          />
-
-          <QuickAccessCard
-            icon={Flag}
-            title="Milestones"
-            description="Track key milestones with health status (on track / at risk / delayed) and progress."
-            stat={milestoneStats?.total ?? 0}
-            statLabel="milestones"
-            accent="#f59e0b"
-            onClick={() => router.push(`${base}/milestones`)}
-          />
-
-          <QuickAccessCard
-            icon={Sprout}
-            title="Sprints"
-            description="Plan time-boxed iterations, track velocity and run retrospectives."
-            stat={sprintStats?.sprints?.length ?? 0}
-            statLabel="sprints"
-            accent="#10b981"
-            onClick={() => router.push(`${base}/sprints`)}
-          />
-
-          <QuickAccessCard
-            icon={Columns}
-            title="Sections"
-            description="Organize tasks into sections — map any section to a board column with WIP limits."
-            stat={sectionItems.length}
-            statLabel="sections"
-            accent="#8b5cf6"
-            onClick={() => router.push(`${base}/sections`)}
-          />
-
-          <QuickAccessCard
-            icon={Eye}
-            title="Views"
-            description="Save custom views (Kanban, List, Calendar, Timeline) to switch perspectives instantly."
-            stat={viewItems.length}
-            statLabel="views"
-            accent="#14b8a6"
-            onClick={() => router.push(`${base}/views`)}
-          />
-        </div>
-      </div>
+      <QuickAccessGrid
+        base={base}
+        totalTasks={totalTasks}
+        totalAnnouncements={totalAnnouncements}
+        totalMembers={totalMembers}
+        accentColor={accentColor}
+        milestoneCount={milestoneStats?.total ?? 0}
+        sprintCount={sprintStats?.sprints?.length ?? 0}
+        sectionCount={sectionItems.length}
+        viewCount={viewItems.length}
+        onNavigate={navigate}
+      />
 
       {/* ── At a glance info ─────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-        {/* Deadline card */}
-        <div className="rounded-2xl border border-border bg-card p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
-              <Flame size={15} className={isOverdue ? "text-destructive" : "text-muted-foreground"} />
-            </div>
-            <p className="text-sm font-semibold text-foreground">Deadline</p>
-          </div>
-
-          {(project as ProjectData).dueDate ? (
-            <div className="space-y-1">
-              <p className="text-2xl font-black text-foreground">
-                {formatDate((project as ProjectData).dueDate)}
-              </p>
-              <p
-                className={[
-                  "text-sm font-semibold",
-                  isOverdue ? "text-destructive" : "text-muted-foreground",
-                ].join(" ")}
-              >
-                {dueLabel}
-              </p>
-            </div>
-          ) : (
-            <p className="text-sm text-muted-foreground italic">No deadline set.</p>
-          )}
-        </div>
-
-        {/* Team card */}
-        <div className="rounded-2xl border border-border bg-card p-5">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
-                <Users size={15} className="text-muted-foreground" />
-              </div>
-              <p className="text-sm font-semibold text-foreground">Team</p>
-            </div>
-            <button
-              onClick={() => router.push(`${base}/settings`)}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
-            >
-              Manage <ChevronRight size={11} />
-            </button>
-          </div>
-
-          {totalMembers > 0 ? (
-            <div className="flex items-center gap-3">
-              <MemberAvatars members={project.members ?? []} max={7} />
-              <span className="text-sm text-muted-foreground">
-                {totalMembers} member{totalMembers !== 1 ? "s" : ""}
-              </span>
-            </div>
-          ) : (
-            <p className="text-sm text-muted-foreground italic">No members yet.</p>
-          )}
-        </div>
-      </div>
+      <AtAGlanceCards
+        project={project as ProjectData}
+        isOverdue={isOverdue}
+        dueLabel={dueLabel}
+        totalMembers={totalMembers}
+        onManage={() => navigate(`${base}/settings`)}
+      />
 
     </div>
   );

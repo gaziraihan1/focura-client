@@ -38,9 +38,9 @@ export function FiltersPanel({
     <div className="border-t border-border bg-muted/50 px-3 sm:px-4 lg:px-6 py-3">
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
         <div className="flex-1">
-          <label className="text-xs font-semibold text-muted-foreground mb-2 block">
+          <span className="text-xs font-semibold text-muted-foreground mb-2 block">
             Priority
-          </label>
+          </span>
           <div className="flex flex-wrap gap-2">
             {PRIORITIES.map((priority) => {
               const isActive = filters.priority?.includes(priority) || false;

@@ -14,20 +14,20 @@ interface FileListProps {
   workspaceId: string;
 }
 
+function getFileIcon(mimeType: string) {
+  if (mimeType.startsWith('image/')) return <ImageIcon className="w-4 h-4" />;
+  if (mimeType.startsWith('video/')) return <Film className="w-4 h-4" />;
+  if (mimeType.startsWith('audio/')) return <Music className="w-4 h-4" />;
+  if (mimeType.includes('pdf') || mimeType.includes('document')) return <FileText className="w-4 h-4" />;
+  if (mimeType.includes('zip') || mimeType.includes('rar')) return <Archive className="w-4 h-4" />;
+  return <File className="w-4 h-4" />;
+}
+
 export function FileList({ files, isAdmin, workspaceId }: FileListProps) {
   const [selectedFile, setSelectedFile] = useState<FileWithDetails | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const { mutate: deleteFile, isPending } = useDeleteFile(workspaceId);
-
-  const getFileIcon = (mimeType: string) => {
-    if (mimeType.startsWith('image/')) return <ImageIcon className="w-4 h-4" />;
-    if (mimeType.startsWith('video/')) return <Film className="w-4 h-4" />;
-    if (mimeType.startsWith('audio/')) return <Music className="w-4 h-4" />;
-    if (mimeType.includes('pdf') || mimeType.includes('document')) return <FileText className="w-4 h-4" />;
-    if (mimeType.includes('zip') || mimeType.includes('rar')) return <Archive className="w-4 h-4" />;
-    return <File className="w-4 h-4" />;
-  };
 
   const handleDelete = () => {
     if (selectedFile) {

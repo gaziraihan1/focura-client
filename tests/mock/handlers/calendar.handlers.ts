@@ -63,16 +63,6 @@ export const mockInsights: CalendarInsights = {
   },
 }
 
-export const mockInsightsHighRisk: CalendarInsights = {
-  totalPlannedHours: 58,
-  totalCapacityHours: 40,
-  commitmentGap: -18,
-  overloadedDays: 5,
-  focusDays: 0,
-  burnoutRisk: 'CRITICAL',
-  timeAllocation: null,
-}
-
 export const mockGoalCheckpoint: GoalCheckpoint = {
   id: 'goal-1',
   userId: 'user-1',

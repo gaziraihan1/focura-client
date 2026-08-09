@@ -17,10 +17,10 @@ export function TaskAssigneePicker({
   const selectedSet = new Set(selectedUserIds);
   return (
     <div>
-      <label className="text-sm font-medium mb-2 block">
+      <span className="text-sm font-medium mb-2 block">
         <Users size={16} className="inline mr-1" />
         Assign Members
-      </label>
+      </span>
 
       <div className="space-y-2 max-h-40 overflow-y-auto">
         {projectMembers.map((member) => {

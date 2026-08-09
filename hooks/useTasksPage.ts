@@ -11,9 +11,9 @@ export function useTasksPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<"all" | "personal" | "assigned">(
-    (searchParams.get("tab") as "all" | "personal" | "assigned") || "all"
+    () => (searchParams.get("tab") as "all" | "personal" | "assigned") || "all"
   );
-  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") ?? "");
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get("search") ?? "");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedPriority, setSelectedPriority] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);

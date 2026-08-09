@@ -33,7 +33,7 @@ export default function AdminProjectsPage() {
         </div>
         <div className="relative w-full sm:w-64">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-          <input
+          <input aria-label="Search project name…"
             value={input}
             onChange={(e) => { setInput(e.target.value); handleSearch(e.target.value); }}
             placeholder="Search project name…"

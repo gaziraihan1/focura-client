@@ -18,6 +18,16 @@ import {CookiesBrowserGuide} from "./CookiesBrowserGuide";
 export const CookiesContent = () => {
   return (
     <div className="space-y-10">
+      <CookiesBasicsSections />
+      <CookiesConsentSections />
+    </div>
+  );
+};
+
+/** Sections 1–4: what cookies are, categories, full list, third-party services. */
+function CookiesBasicsSections() {
+  return (
+    <>
       {/* 1. What Are Cookies */}
       <CookiesSection
         id="what-are-cookies"
@@ -151,7 +161,14 @@ export const CookiesContent = () => {
           advertising networks, social media trackers, or data brokers.
         </CookiesHighlight>
       </CookiesSection>
+    </>
+  );
+}
 
+/** Sections 5–8: consent controls, browser guides, policy changes, contact. */
+function CookiesConsentSections() {
+  return (
+    <>
       {/* 5. Managing Consent */}
       <CookiesSection
         id="managing-consent"
@@ -366,6 +383,6 @@ export const CookiesContent = () => {
           2026
         </p>
       </CookiesSection>
-    </div>
+    </>
   );
-};
+}

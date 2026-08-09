@@ -12,6 +12,13 @@ interface LegalNavProps {
   items: LegalNavItem[];
 }
 
+function scrollTo(id: string) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const top = el.getBoundingClientRect().top + window.scrollY - 100;
+  window.scrollTo({ top, behavior: "smooth" });
+}
+
 export function LegalNav({ items }: LegalNavProps) {
   const [activeId, setActiveId] = useState<string>(items[0]?.id ?? "");
 
@@ -24,20 +31,18 @@ export function LegalNav({ items }: LegalNavProps) {
       { rootMargin: "-20% 0px -70% 0px", threshold: 0 }
     );
 
-    items.forEach(({ id }) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
+    // Collect the observed elements so cleanup can unobserve each one
+    const observed = items
+      .map(({ id }) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
 
-    return () => observer.disconnect();
+    observed.forEach((el) => observer.observe(el));
+
+    return () => {
+      observed.forEach((el) => observer.unobserve(el));
+      observer.disconnect();
+    };
   }, [items]);
-
-  const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY - 100;
-    window.scrollTo({ top, behavior: "smooth" });
-  };
 
   return (
     <nav className="sticky top-24 w-full">

@@ -10,6 +10,14 @@ export interface StorageUIState {
   sortOrder: 'asc' | 'desc';
 }
 
+function getCategory(mimeType: string): string {
+  if (mimeType.startsWith('image/')) return 'images';
+  if (mimeType.startsWith('video/')) return 'videos';
+  if (mimeType.includes('pdf')) return 'pdfs';
+  if (mimeType.includes('word') || mimeType.includes('document')) return 'documents';
+  return 'other';
+}
+
 export function useStoragePage(files: LargestFile[] = [], currentUserId?: string) {
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
   const [filterType, setFilterType] = useState<string>('all');
@@ -30,13 +38,6 @@ export function useStoragePage(files: LargestFile[] = [], currentUserId?: string
   };
 
   // Get category from mime type
-  const getCategory = (mimeType: string): string => {
-    if (mimeType.startsWith('image/')) return 'images';
-    if (mimeType.startsWith('video/')) return 'videos';
-    if (mimeType.includes('pdf')) return 'pdfs';
-    if (mimeType.includes('word') || mimeType.includes('document')) return 'documents';
-    return 'other';
-  };
 
   // Filter files - React Compiler compatible
   const filteredFiles = useMemo(() => {

@@ -13,6 +13,7 @@ import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   RadialBarChart, RadialBar,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+// oxlint-disable-next-line react-doctor/prefer-dynamic-import -- recharts only ships when this chart mounts
 } from 'recharts';
 
 const VIZ = {
@@ -61,6 +62,7 @@ function GlassTooltip({ active, payload, label }: {
   );
 }
 
+  const axisTick = { fill: 'var(--color-muted-foreground)', fontSize: 11 } as const;
 export function AdminCharts() {
   const { data: stats, isLoading } = useAdminStats();
 
@@ -89,8 +91,6 @@ export function AdminCharts() {
     { name: 'Pending', value: stats.featureRequests.pending, fill: VIZ.pink },
     { name: 'Rejected', value: stats.featureRequests.rejected, fill: VIZ.red },
   ].map((d) => ({ ...d, value: frTotal ? Math.round((d.value / frTotal) * 100) : 0 }));
-
-  const axisTick = { fill: 'var(--color-muted-foreground)', fontSize: 11 } as const;
 
   return (
     <>

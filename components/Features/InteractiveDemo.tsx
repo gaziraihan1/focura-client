@@ -1,16 +1,16 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { PlayCircle } from "lucide-react";
 
 /* ─── Mini workspace preview (pure CSS — replaces the missing demo-preview.png) ─── */
 
-function DemoPreview() {
   const rows = [
     { name: "Design system audit", status: "Done", bar: "w-2/3 bg-green-500", color: "text-green-600" },
     { name: "Mobile nav refactor", status: "In progress", bar: "w-1/2 bg-foreground", color: "text-foreground" },
     { name: "Onboarding flow v2", status: "Planned", bar: "w-1/3 bg-foreground/40", color: "text-muted-foreground" },
   ];
+function DemoPreview() {
 
   return (
     <div role="img" aria-label="Focura Demo" className="overflow-hidden rounded-3xl border border-border bg-background shadow-2xl shadow-foreground/10">

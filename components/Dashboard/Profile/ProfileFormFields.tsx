@@ -20,11 +20,11 @@ export function ProfileFormFields({
   return (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
+        <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-20">
           Full Name
         </label>
         {isEditing ? (
-          <input
+          <input id="fld-20"
             type="text"
             value={formData.name}
             onChange={(e) => onFormChange("name", e.target.value)}
@@ -37,9 +37,9 @@ export function ProfileFormFields({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
+        <span className="block text-sm font-medium text-foreground mb-2">
           Email Address
-        </label>
+        </span>
         <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-muted/50 border border-border">
           <Mail size={18} className="text-muted-foreground" />
           <p className="text-foreground">{email}</p>
@@ -50,11 +50,11 @@ export function ProfileFormFields({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
+        <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-21">
           Bio
         </label>
         {isEditing ? (
-          <textarea
+          <textarea id="fld-21"
             value={formData.bio}
             onChange={(e) => onFormChange("bio", e.target.value)}
             rows={4}
@@ -69,11 +69,11 @@ export function ProfileFormFields({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
+        <label className="block text-sm font-medium text-foreground mb-2" htmlFor="fld-22">
           Timezone
         </label>
         {isEditing ? (
-          <select
+          <select id="fld-22"
             value={formData.timezone}
             onChange={(e) => onFormChange("timezone", e.target.value)}
             className="w-full px-4 py-2.5 rounded-lg bg-background border border-border text-foreground focus:ring-2 ring-primary outline-none"

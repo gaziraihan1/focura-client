@@ -43,7 +43,7 @@ export function HelpSearchBar({
         strokeWidth={1.75}
       />
 
-      <input
+      <input aria-label="Search guides, topics, shortcuts…"
         ref={inputRef}
         type="text"
         value={query}

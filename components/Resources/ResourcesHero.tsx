@@ -1,10 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Search } from "lucide-react";
 
+const filters = ["Guides", "Tutorials", "Blogs", "Product Updates"];
 export default function ResourcesHero() {
-  const filters = ["Guides", "Tutorials", "Blogs", "Product Updates"];
 
   return (
     <section className="w-full pt-32 pb-24 bg-background overflow-hidden">
@@ -34,7 +34,7 @@ export default function ResourcesHero() {
               <Search className="text-foreground/60" size={20} />
             </div>
 
-            <input
+            <input aria-label="Search resources..."
               type="text"
               placeholder="Search resources..."
               className="

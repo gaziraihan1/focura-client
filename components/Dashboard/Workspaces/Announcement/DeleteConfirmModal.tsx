@@ -1,6 +1,6 @@
 "use client"
 import { cn } from '@/lib/utils';
-import {AnimatePresence, motion} from 'framer-motion'
+import {AnimatePresence, m as motion} from 'framer-motion'
 import { AlertTriangle, Loader2, Trash2 } from 'lucide-react';
 interface DeleteConfirmProps {
   title:      string;

@@ -51,7 +51,7 @@ export default function CreateTaskModal({
           <h2 className="text-xl font-semibold text-foreground">
             Create Project Task
           </h2>
-          <button
+          <button aria-label="Header"
             onClick={onClose}
             className="p-2 hover:bg-accent rounded-lg transition"
           >
@@ -133,13 +133,15 @@ export default function CreateTaskModal({
                 className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
               >
                 <option value="">No section</option>
-                {sections
-                  .filter((section) => section.status === "ACTIVE")
-                  .map((section) => (
-                    <option key={section.id} value={section.id}>
-                      {section.name}
-                    </option>
-                  ))}
+                {sections.flatMap((section) =>
+                  section.status === "ACTIVE"
+                    ? [
+                        <option key={section.id} value={section.id}>
+                          {section.name}
+                        </option>,
+                      ]
+                    : [],
+                )}
               </select>
             </div>
           )}

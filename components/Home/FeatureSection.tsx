@@ -1,23 +1,23 @@
 import { Zap, Layers, Shield } from "lucide-react";
 
+const cards = [
+  {
+    icon: Zap,
+    title: "Lightning Fast",
+    desc: "Designed for speed — instant interactions and seamless performance across your entire workflow.",
+  },
+  {
+    icon: Layers,
+    title: "All-in-One Workspace",
+    desc: "Tasks, docs, teams, and communication in one unified, clean workspace built to scale.",
+  },
+  {
+    icon: Shield,
+    title: "Secure by Default",
+    desc: "Enterprise-grade protection keeps your data safe, private, and always accessible.",
+  },
+];
 export default function FeatureSection() {
-  const cards = [
-    {
-      icon: Zap,
-      title: "Lightning Fast",
-      desc: "Designed for speed — instant interactions and seamless performance across your entire workflow.",
-    },
-    {
-      icon: Layers,
-      title: "All-in-One Workspace",
-      desc: "Tasks, docs, teams, and communication in one unified, clean workspace built to scale.",
-    },
-    {
-      icon: Shield,
-      title: "Secure by Default",
-      desc: "Enterprise-grade protection keeps your data safe, private, and always accessible.",
-    },
-  ];
 
   return (
     <section className="relative py-24 bg-background overflow-hidden">

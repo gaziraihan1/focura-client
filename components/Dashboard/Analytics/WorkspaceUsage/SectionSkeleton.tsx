@@ -25,25 +25,4 @@ export function SectionSkeleton({ rows = 3, className = "" }: SectionSkeletonPro
   );
 }
 
-export function ChartSkeleton({ className = "" }: { className?: string }) {
-  return (
-    <div className={`animate-pulse ${className}`}>
-      <div className="h-4 w-32 bg-muted rounded mb-4" />
-      <div className="h-48 w-full bg-muted rounded-xl" />
-    </div>
-  );
-}
 
-export function KPISkeleton({ count = 4 }: { count?: number }) {
-  return (
-    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3">
-      {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="animate-pulse bg-card border border-border rounded-xl p-3 sm:p-5">
-          <div className="h-8 w-8 rounded-lg bg-muted mb-3" />
-          <div className="h-2 w-20 bg-muted rounded mb-2" />
-          <div className="h-6 w-16 bg-muted rounded" />
-        </div>
-      ))}
-    </div>
-  );
-}

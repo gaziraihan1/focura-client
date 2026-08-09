@@ -27,6 +27,7 @@ beforeEach(() => {
       observerCallback = cb;
     }
     observe() {}
+    unobserve() {}
     disconnect() {
       observerDisconnect();
     }
@@ -63,7 +64,7 @@ vi.mock("next/image", () => ({
 }));
 
 vi.mock("framer-motion", () => ({
-  motion: {
+  m: {
     div: ({
       children,
       ...props
@@ -293,6 +294,7 @@ describe("TermsNav", () => {
         observe(el: Element) {
           observeSpy(el);
         }
+        unobserve() {}
         disconnect() {}
       }
       // @ts-expect-error mock

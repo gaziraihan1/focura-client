@@ -46,7 +46,7 @@ export function ConfigurationModal({
           <h3 className="text-lg font-semibold">
             Configure {integration.name}
           </h3>
-          <button
+          <button aria-label="Close"
             onClick={onClose}
             className="p-1 rounded-lg hover:bg-accent transition-colors"
           >
@@ -57,8 +57,8 @@ export function ConfigurationModal({
         <div className="space-y-6">
           {/* Workspace Selection */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Workspace</label>
-            <select
+            <label className="text-sm font-medium" htmlFor="fld-64">Workspace</label>
+            <select id="fld-64"
               value={config.workspaceId || ''}
               onChange={(e) =>
                 setConfig({ ...config, workspaceId: e.target.value })
@@ -76,7 +76,7 @@ export function ConfigurationModal({
 
           {/* Sync Direction */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Sync Direction</label>
+            <span className="text-sm font-medium">Sync Direction</span>
             <div className="flex gap-2">
               {(['one-way', 'two-way'] as const).map((dir) => (
                 <button
@@ -104,6 +104,7 @@ export function ConfigurationModal({
               </p>
             </div>
             <button
+              aria-label="Toggle automatic sync"
               onClick={() =>
                 setConfig({ ...config, autoSync: !config.autoSync })
               }
@@ -124,8 +125,8 @@ export function ConfigurationModal({
           {/* Sync Interval (if auto sync enabled) */}
           {config.autoSync && (
             <div className="space-y-2">
-              <label className="text-sm font-medium">Sync Interval</label>
-              <select
+              <label className="text-sm font-medium" htmlFor="fld-65">Sync Interval</label>
+              <select id="fld-65"
                 value={config.syncInterval || 300}
                 onChange={(e) =>
                   setConfig({
@@ -153,6 +154,7 @@ export function ConfigurationModal({
               </p>
             </div>
             <button
+              aria-label="Toggle notifications"
               onClick={() =>
                 setConfig({
                   ...config,

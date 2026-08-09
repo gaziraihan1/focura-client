@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Users, UserPlus, Crown, X } from "lucide-react";
 import { WorkspaceRole } from "@/hooks/useWorkspaceSettings";
 import { Avatar } from "@/components/Shared/Avatar";
@@ -59,11 +59,10 @@ export function MembersSettingsTab({
           </h3>
         </div>
 
-        <div className="divide-y divide-border" role="list" aria-label="Team members">
+        <ul className="divide-y divide-border" aria-label="Team members">
           {members.map((member) => (
-            <div
+            <li
               key={member.id}
-              role="listitem"
               className="p-4 sm:p-6 flex sm:items-center justify-between"
             >
               <div className="flex flex-wrap items-center gap-3">
@@ -120,9 +119,9 @@ export function MembersSettingsTab({
                   </button>
                 )}
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </motion.div>
   );

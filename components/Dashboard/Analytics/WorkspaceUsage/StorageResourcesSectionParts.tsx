@@ -19,6 +19,7 @@ import {
   Cell,
   LineChart,
   Line,
+// oxlint-disable-next-line react-doctor/prefer-dynamic-import -- recharts only ships when this chart mounts
 } from "recharts";
 import type { ResourceUsageMetrics } from "@/types/workspace-usage.types";
 

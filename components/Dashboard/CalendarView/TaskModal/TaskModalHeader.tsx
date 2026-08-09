@@ -81,7 +81,7 @@ export function TaskModalHeader({
           </div>
         </div>
 
-        <button
+        <button aria-label="Close"
           onClick={onClose}
           className="p-2 hover:bg-accent rounded-lg transition-colors"
         >

@@ -1,22 +1,22 @@
+const steps = [
+  {
+    title: "Plan with clarity",
+    desc: "Create organized roadmaps and align your team with a clear overview.",
+  },
+  {
+    title: "Collaborate in real time",
+    desc: "Discuss tasks, share updates, and collaborate without losing context.",
+  },
+  {
+    title: "Execute with confidence",
+    desc: "Track progress, manage tasks, and deliver work efficiently.",
+  },
+  {
+    title: "Review & improve",
+    desc: "Refine your workflow with insights, analytics, and actionable feedback.",
+  },
+];
 export default function WorkflowSteps() {
-  const steps = [
-    {
-      title: "Plan with clarity",
-      desc: "Create organized roadmaps and align your team with a clear overview.",
-    },
-    {
-      title: "Collaborate in real time",
-      desc: "Discuss tasks, share updates, and collaborate without losing context.",
-    },
-    {
-      title: "Execute with confidence",
-      desc: "Track progress, manage tasks, and deliver work efficiently.",
-    },
-    {
-      title: "Review & improve",
-      desc: "Refine your workflow with insights, analytics, and actionable feedback.",
-    },
-  ];
 
   return (
     <section className="relative py-24 md:py-28 bg-background">

@@ -58,80 +58,80 @@ const NAV = [
 
 /* ─── 1. Workspace / Project board mock ───────────────────────────────────── */
 
+const columns = [
+  {
+    name: "Planned",
+    count: 2,
+    color: "bg-foreground/40",
+    tasks: [
+      {
+        title: "Design system audit",
+        tag: "Design",
+        tagColor: "bg-blue-500/10 text-blue-600",
+        priority: "High",
+        priorityColor: "bg-orange-500/10 text-orange-600",
+        due: "Mar 2",
+        avatars: ["JT", "AK"],
+        comments: 4,
+      },
+      {
+        title: "API rate limiting",
+        tag: "Backend",
+        tagColor: "bg-purple-500/10 text-purple-600",
+        priority: "Urgent",
+        priorityColor: "bg-red-500/10 text-red-600",
+        due: "Today",
+        avatars: ["MS"],
+        comments: 2,
+      },
+    ],
+  },
+  {
+    name: "In progress",
+    count: 2,
+    color: "bg-foreground",
+    tasks: [
+      {
+        title: "Mobile nav refactor",
+        tag: "Mobile",
+        tagColor: "bg-emerald-500/10 text-emerald-600",
+        priority: "Medium",
+        priorityColor: "bg-yellow-500/10 text-yellow-600",
+        due: "Mar 5",
+        avatars: ["SR", "DL", "AK"],
+        comments: 7,
+      },
+      {
+        title: "Onboarding flow v2",
+        tag: "Product",
+        tagColor: "bg-pink-500/10 text-pink-600",
+        priority: "High",
+        priorityColor: "bg-orange-500/10 text-orange-600",
+        due: "Mar 8",
+        avatars: ["JT"],
+        comments: 1,
+      },
+    ],
+  },
+  {
+    name: "Done",
+    count: 1,
+    color: "bg-green-500",
+    tasks: [
+      {
+        title: "Search UX polish",
+        tag: "UX",
+        tagColor: "bg-cyan-500/10 text-cyan-600",
+        priority: "Low",
+        priorityColor: "bg-blue-500/10 text-blue-600",
+        due: "Done",
+        avatars: ["DL"],
+        comments: 0,
+      },
+    ],
+  },
+];
 function WorkspaceMock() {
-  const columns = [
-    {
-      name: "Planned",
-      count: 2,
-      color: "bg-foreground/40",
-      tasks: [
-        {
-          title: "Design system audit",
-          tag: "Design",
-          tagColor: "bg-blue-500/10 text-blue-600",
-          priority: "High",
-          priorityColor: "bg-orange-500/10 text-orange-600",
-          due: "Mar 2",
-          avatars: ["JT", "AK"],
-          comments: 4,
-        },
-        {
-          title: "API rate limiting",
-          tag: "Backend",
-          tagColor: "bg-purple-500/10 text-purple-600",
-          priority: "Urgent",
-          priorityColor: "bg-red-500/10 text-red-600",
-          due: "Today",
-          avatars: ["MS"],
-          comments: 2,
-        },
-      ],
-    },
-    {
-      name: "In progress",
-      count: 2,
-      color: "bg-foreground",
-      tasks: [
-        {
-          title: "Mobile nav refactor",
-          tag: "Mobile",
-          tagColor: "bg-emerald-500/10 text-emerald-600",
-          priority: "Medium",
-          priorityColor: "bg-yellow-500/10 text-yellow-600",
-          due: "Mar 5",
-          avatars: ["SR", "DL", "AK"],
-          comments: 7,
-        },
-        {
-          title: "Onboarding flow v2",
-          tag: "Product",
-          tagColor: "bg-pink-500/10 text-pink-600",
-          priority: "High",
-          priorityColor: "bg-orange-500/10 text-orange-600",
-          due: "Mar 8",
-          avatars: ["JT"],
-          comments: 1,
-        },
-      ],
-    },
-    {
-      name: "Done",
-      count: 1,
-      color: "bg-green-500",
-      tasks: [
-        {
-          title: "Search UX polish",
-          tag: "UX",
-          tagColor: "bg-cyan-500/10 text-cyan-600",
-          priority: "Low",
-          priorityColor: "bg-blue-500/10 text-blue-600",
-          due: "Done",
-          avatars: ["DL"],
-          comments: 0,
-        },
-      ],
-    },
-  ];
 
   return (
     <div className="w-full overflow-hidden rounded-xl border border-border bg-background shadow-sm">
@@ -255,7 +255,6 @@ function WorkspaceMock() {
 
 /* ─── 2. Collaborate / task discussion mock ───────────────────────────────── */
 
-function CollaborateMock() {
   const messages = [
     {
       name: "Amira Khan",
@@ -282,6 +281,7 @@ function CollaborateMock() {
       self: false,
     },
   ];
+function CollaborateMock() {
 
   return (
     <div className="w-full overflow-hidden rounded-xl border border-border bg-background shadow-sm">
@@ -380,7 +380,6 @@ function CollaborateMock() {
 
 /* ─── 3. Automations mock ─────────────────────────────────────────────────── */
 
-function AutomationMock() {
   const rules = [
     {
       title: "When a task is marked done",
@@ -404,6 +403,7 @@ function AutomationMock() {
       runs: "12 runs",
     },
   ];
+function AutomationMock() {
 
   return (
     <div className="w-full overflow-hidden rounded-xl border border-border bg-background shadow-sm">

@@ -8,9 +8,9 @@ interface PriorityDisplayProps {
 export function PriorityDisplay({ priority }: PriorityDisplayProps) {
   return (
     <div>
-      <label className="block text-sm font-medium text-foreground mb-2">
+      <span className="block text-sm font-medium text-foreground mb-2">
         Priority
-      </label>
+      </span>
       <div
         className={`px-4 py-2 rounded-lg border ${getPriorityColor(
           priority

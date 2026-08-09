@@ -72,18 +72,6 @@ export async function getDB(): Promise<IDBDatabase> {
 
 // ─── Generic CRUD operations ─────────────────────────────────────────────────
 
-export async function getItem<T>(storeName: string, key: string): Promise<T | null> {
-  const db = await getDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(storeName, "readonly");
-    const store = tx.objectStore(storeName);
-    const request = store.get(key);
-
-    request.onsuccess = () => resolve(request.result ?? null);
-    request.onerror = () => reject(request.error);
-  });
-}
-
 export async function getAllItems<T>(storeName: string): Promise<T[]> {
   const db = await getDB();
   return new Promise((resolve, reject) => {
@@ -96,49 +84,12 @@ export async function getAllItems<T>(storeName: string): Promise<T[]> {
   });
 }
 
-export async function putItem<T>(storeName: string, item: T): Promise<void> {
-  const db = await getDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(storeName, "readwrite");
-    const store = tx.objectStore(storeName);
-    const request = store.put(item);
-
-    request.onsuccess = () => resolve();
-    request.onerror = () => reject(request.error);
-  });
-}
-
-export async function putItems<T>(storeName: string, items: T[]): Promise<void> {
-  const db = await getDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(storeName, "readwrite");
-    const store = tx.objectStore(storeName);
-
-    items.forEach((item) => store.put(item));
-
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-  });
-}
-
 export async function deleteItem(storeName: string, key: string): Promise<void> {
   const db = await getDB();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(storeName, "readwrite");
     const store = tx.objectStore(storeName);
     const request = store.delete(key);
-
-    request.onsuccess = () => resolve();
-    request.onerror = () => reject(request.error);
-  });
-}
-
-export async function clearStore(storeName: string): Promise<void> {
-  const db = await getDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(storeName, "readwrite");
-    const store = tx.objectStore(storeName);
-    const request = store.clear();
 
     request.onsuccess = () => resolve();
     request.onerror = () => reject(request.error);
@@ -179,40 +130,4 @@ export async function deletePendingMutation(id: number): Promise<void> {
   return deleteItem(STORES.PENDING_MUTATIONS, String(id));
 }
 
-export async function clearPendingMutations(): Promise<void> {
-  return clearStore(STORES.PENDING_MUTATIONS);
-}
 
-// ─── Task-specific helpers ───────────────────────────────────────────────────
-
-export async function cacheTasks(tasks: unknown[]): Promise<void> {
-  return putItems(STORES.TASKS, tasks);
-}
-
-export async function getCachedTasks(): Promise<unknown[]> {
-  return getAllItems(STORES.TASKS);
-}
-
-export async function cacheTask(task: unknown): Promise<void> {
-  return putItem(STORES.TASKS, task);
-}
-
-// ─── Project-specific helpers ────────────────────────────────────────────────
-
-export async function cacheProjects(projects: unknown[]): Promise<void> {
-  return putItems(STORES.PROJECTS, projects);
-}
-
-export async function getCachedProjects(): Promise<unknown[]> {
-  return getAllItems(STORES.PROJECTS);
-}
-
-// ─── Notification-specific helpers ───────────────────────────────────────────
-
-export async function cacheNotifications(notifications: unknown[]): Promise<void> {
-  return putItems(STORES.NOTIFICATIONS, notifications);
-}
-
-export async function getCachedNotifications(): Promise<unknown[]> {
-  return getAllItems(STORES.NOTIFICATIONS);
-}

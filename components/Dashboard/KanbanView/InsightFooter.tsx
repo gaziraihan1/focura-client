@@ -19,7 +19,7 @@ export function InsightFooter({ tasks, onClose }: InsightFooterProps) {
             <TrendingUp className="w-5 h-5 text-primary" />
             Execution Insights
           </h3>
-          <button
+          <button aria-label="Close"
             onClick={onClose}
             className="p-1.5 hover:bg-accent rounded-lg transition-colors"
           >

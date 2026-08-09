@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Loader2, Shield, Lock, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -137,9 +137,9 @@ function TwoFactorContent() {
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
             {/* Email display (read-only) */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold tracking-wide text-muted-foreground/80 uppercase">
+              <span className="text-xs font-semibold tracking-wide text-muted-foreground/80 uppercase">
                 Account
-              </label>
+              </span>
               <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-muted/50 border border-border/50 text-sm text-foreground/80">
                 <Shield size={16} className="text-primary/60 shrink-0" />
                 <span className="truncate">{email}</span>
@@ -148,7 +148,7 @@ function TwoFactorContent() {
 
             {/* Password field */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold tracking-wide text-muted-foreground/80 uppercase">
+              <label className="text-xs font-semibold tracking-wide text-muted-foreground/80 uppercase" htmlFor="fld-1">
                 Password
               </label>
               <div className="relative">
@@ -156,7 +156,7 @@ function TwoFactorContent() {
                   size={16}
                   className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/60 pointer-events-none"
                 />
-                <input
+                <input id="fld-1"
                   type="password"
                   placeholder="Re-enter your password"
                   {...register("password")}
@@ -177,7 +177,7 @@ function TwoFactorContent() {
 
             {/* TOTP Code field */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold tracking-wide text-muted-foreground/80 uppercase">
+              <label className="text-xs font-semibold tracking-wide text-muted-foreground/80 uppercase" htmlFor="fld-2">
                 Authentication code
               </label>
               <div className="relative">
@@ -185,7 +185,7 @@ function TwoFactorContent() {
                   size={16}
                   className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/60 pointer-events-none"
                 />
-                <input
+                <input id="fld-2"
                   type="text"
                   inputMode="numeric"
                   maxLength={6}

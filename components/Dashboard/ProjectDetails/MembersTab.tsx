@@ -35,6 +35,29 @@ interface MembersTabProps {
   setShowAddMember: (show: boolean) => void;
 }
 
+const getRoleBadge = (role: ProjectMemberRole) => {
+  const badges = {
+    MANAGER: {
+      label: "Manager",
+      icon: Crown,
+      color:
+        "bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400",
+    },
+    COLLABORATOR: {
+      label: "Collaborator",
+      icon: Users,
+      color:
+        "bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400",
+    },
+    VIEWER: {
+      label: "Viewer",
+      icon: Eye,
+      color:
+        "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400",
+    },
+  };
+  return badges[role];
+};
 export default function MembersTab({
   project,
   showAddMember,
@@ -46,30 +69,6 @@ export default function MembersTab({
   const { data: workspaceMembers = [] } = useWorkspaceMembers(
     project.workspace?.id
   );
-
-  const getRoleBadge = (role: ProjectMemberRole) => {
-    const badges = {
-      MANAGER: {
-        label: "Manager",
-        icon: Crown,
-        color:
-          "bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400",
-      },
-      COLLABORATOR: {
-        label: "Collaborator",
-        icon: Users,
-        color:
-          "bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400",
-      },
-      VIEWER: {
-        label: "Viewer",
-        icon: Eye,
-        color:
-          "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400",
-      },
-    };
-    return badges[role];
-  };
 
   const handleUpdateRole = (memberId: string, role: ProjectMemberRole) => {
     updateRole.mutate({ projectId: project.id, memberId, role });
@@ -146,7 +145,7 @@ export default function MembersTab({
                 {/* Right: Role + Actions */}
                 <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                   {project.isAdmin && member.role !== "MANAGER" ? (
-                    <select
+                    <select aria-label="Select an option"
                       value={member.role}
                       onChange={(e) =>
                         handleUpdateRole(
@@ -171,7 +170,7 @@ export default function MembersTab({
                   )}
 
                   {project.isAdmin && member.role !== "MANAGER" && (
-                    <button
+                    <button aria-label="Close"
                       onClick={() => handleRemoveMember(member.id)}
                       disabled={removeMember.isPending}
                       className="p-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition disabled:opacity-50"

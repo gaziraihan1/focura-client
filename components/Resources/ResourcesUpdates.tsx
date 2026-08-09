@@ -1,7 +1,7 @@
 "use client";
 
 import { PaginatedResult, ProductUpdateDTO } from "@/types/resource.types";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 

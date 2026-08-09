@@ -1,5 +1,5 @@
 // components/MentionTextarea/MentionDropdown.tsx
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar } from '@/components/Shared/Avatar';
 import type { MentionUser, DropdownPosition } from '@/types/comment.types';

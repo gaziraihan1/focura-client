@@ -158,7 +158,7 @@ export default function TopNavbar({
 
               {showUserMenu && (
                 <>
-                  <div
+                  <div role="presentation"
                     className="fixed inset-0 z-40"
                     onClick={() => setShowUserMenu(false)}
                   />
