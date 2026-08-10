@@ -9,6 +9,7 @@ import MentionTextarea, {
 } from "./MentionTextarea";
 import Image from "next/image";
 import { MentionTextareaHandle, MentionUser } from "@/types/comment.types";
+import { AiCommentAssist } from "@/components/AI/AiCommentAssist";
 
 // Module-scope default so prop comparisons stay stable across renders.
 const NO_MENTIONABLE_USERS: MentionUser[] = [];
@@ -127,7 +128,12 @@ export const CommentEditor = ({
             minRows={replyingTo ? 2 : 3}
           />
 
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-between gap-2">
+            <AiCommentAssist
+              text={value}
+              workspaceId={task.project?.workspace?.id ?? null}
+              onAssist={onChange}
+            />
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={onSubmit}

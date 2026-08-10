@@ -508,6 +508,66 @@ export const GUIDE_SECTIONS: GuideSection[] = [
     ],
   },
   {
+    id: "ai-features",
+    icon: "✦",
+    label: "AI Features",
+    color: "cyan",
+    title: "AI Features",
+    subtitle: "Suggestions, goal breakdowns, daily plans & weekly insights",
+    articles: [
+      {
+        title: "What Focura AI can do for you",
+        content:
+          "Focura AI (powered by Google Gemini) helps you plan faster. While typing a task title, it suggests a description, priority, energy type, estimated hours, due date, and subtasks. On the Wellness page it breaks a big goal into a Low/Medium/High energy task list, and in the comment editor it can polish, shorten, or rephrase your message. Everything runs server-side — your data is only used to answer your own request.",
+      },
+      {
+        title: "Using AI task suggestions",
+        content:
+          "On the Add Task form, type a descriptive title (at least 4 characters) and wait a moment. The AI suggestion bar appears under the title with an expanded description, priority, energy level, and suggested subtasks. Click Apply to fill everything into the form, or click a single chip to apply just that field. Suggested subtasks are created automatically after the task is saved.",
+      },
+      {
+        title: "Breaking goals into manageable tasks",
+        content:
+          "On the Wellness page, describe a goal (for example \"plan the quarterly team offsite\") and click Generate. Focura AI breaks it into a sequence of small tasks with energy types (Low, Medium, High) and estimated hours, so you can tackle it without overwhelm. Review the list, tweak anything, and save the tasks you want.",
+      },
+      {
+        title: "Polishing comments with AI",
+        content:
+          "In any task comment box, write a draft and open the AI assist toolbar. Choose a style — Professional, Friendly, Concise, Formal, or Persuasive — and Focura rewrites your comment in that tone. You stay in control: the rewrite fills the box for you to edit before posting.",
+      },
+      {
+        title: "AI usage limits",
+        content:
+          "AI credits are shared across the workspace and reset daily. Free workspaces get a small daily allowance (3 calls per minute, 60 per day). The badge next to AI features shows how many credits remain today. If you run out, upgrade to Pro or Business for higher limits, or simply try again tomorrow.",
+      },
+      {
+        title: "Planning your day with AI",
+        content:
+          "On the workspace Tasks page (Pro and Business plans), open a set of tasks and click \"Plan my day with AI\". Focura AI orders them into a recommended sequence — urgent work first, high-energy tasks in your peak windows, lighter work in between — with a short reason for each slot. It is purely advisory: nothing is changed automatically, so you stay in control of your plan.",
+      },
+      {
+        title: "Summarizing meetings with AI",
+        content:
+          "On any meeting detail page (Pro and Business plans), the \"Summarize with AI\" card turns the meeting title, description, and any notes you paste into concise minutes plus action items. Action items are only assigned to people who actually attended the meeting. The result is display-only — review it before sharing.",
+      },
+      {
+        title: "Weekly insights (Business plan)",
+        content:
+          "On the Wellness page, the AI Insights card (Business plan) analyses your workspace's real weekly activity — tasks completed, overdue work, focus minutes, energy levels, and each member's workload — and summarises what went well and what to watch. Burnout warnings are flagged with a severity level (low, medium, high). Everything is advisory: Focura only suggests, it never changes your tasks or schedule. If you are in more than one workspace, the insights card analyses your first workspace.",
+      },
+      {
+        title: "AI usage reports (owners & admins)",
+        content:
+          "Workspace owners and admins can see exactly how their team uses Focura AI from the workspace-usage page (Workspace Usage → AI Usage). The section shows total AI calls, tokens used, and an estimated cost for the last 7, 30, or 90 days, plus a breakdown of calls by feature (task autocomplete, goal breakdown, daily plans, meeting summaries, weekly insights) and by model. A recent-calls list shows the latest calls with their token counts. Costs are estimates calculated from token usage — the provider invoice is the source of truth. Regular members cannot see this section.",
+      },
+      {
+        title: "Upgrading for more AI",
+        content:
+          "When your daily AI credits are exhausted, Focura shows an upgrade prompt. Upgrade from Settings to increase your AI limits, and unlock higher caps on every feature. If the AI service is temporarily unavailable you will see a clear message and can retry shortly — your data stays safe.",
+      },
+    ],
+  },
+  {
     id: "troubleshooting",
     icon: "⚠",
     label: "Troubleshooting",

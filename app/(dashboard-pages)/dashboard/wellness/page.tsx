@@ -7,6 +7,8 @@ import { WellnessRecommendations } from "@/components/Dashboard/WellnessRecommen
 import { BurnoutTrendsChart } from "@/components/Dashboard/Calendar/BurnoutTrendsChart";
 import { EnergyTrendChart } from "@/components/Dashboard/Calendar/EnergyTrendChart";
 import { EnergyQuickLog } from "@/components/Dashboard/Calendar/EnergyQuickLog";
+import { AiGoalBreakdown } from "@/components/AI/AiGoalBreakdown";
+import { AiWeeklyInsights } from "@/components/AI/AiWeeklyInsights";
 
 export default function WellnessPage() {
   return (
@@ -52,6 +54,24 @@ export default function WellnessPage() {
           <BurnoutTrendsChart />
           <EnergyTrendChart />
         </div>
+      </div>
+
+      {/* AI planning — cognitive breakdown of goals into energy-matched tasks */}
+      <div>
+        <div className="flex items-center gap-2 mb-3">
+          <Sparkles className="w-4 h-4 text-muted-foreground" />
+          <h2 className="text-sm font-semibold text-foreground">AI Planning</h2>
+        </div>
+        <AiGoalBreakdown />
+      </div>
+
+      {/* AI insights — weekly productivity summary + burnout warnings (Business) */}
+      <div>
+        <div className="flex items-center gap-2 mb-3">
+          <Brain className="w-4 h-4 text-muted-foreground" />
+          <h2 className="text-sm font-semibold text-foreground">AI Insights</h2>
+        </div>
+        <AiWeeklyInsights />
       </div>
 
       {/* Floating energy quick-log (fixed bottom-right) */}

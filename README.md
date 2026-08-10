@@ -84,6 +84,15 @@ A modern, full-stack productivity and collaboration SaaS platform built with **N
 - ✅ Wellness recommendations
 - ✅ Capacity scheduling and work schedule preferences
 
+#### **AI Assistant (Google Gemini)**
+Server-side AI via the Focura backend — the client never talks to Google directly:
+
+- ✅ **AI task suggestions** — autocomplete description, priority, energy, est. hours, due date & subtasks while typing a task title (debounced, deduped)
+- ✅ **AI goal breakdown** — big goals → Low/Medium/High energy task list on the wellness page
+- ✅ **AI comment assist** — rephrase a comment as professional, friendly, concise, formal or persuasive
+- ✅ **AI quota badge** — remaining daily credits with low-quota warnings and an upgrade CTA
+- ✅ **Tier-based quota** — per-plan burst/hourly/daily request limits + daily/monthly token caps (see `AI_IMPLEMENTATION_GUIDE.md`)
+
 #### **Focus & Wellness System**
 The wellness dashboard (`/dashboard/wellness`) brings focus, energy, and burnout data into one view:
 

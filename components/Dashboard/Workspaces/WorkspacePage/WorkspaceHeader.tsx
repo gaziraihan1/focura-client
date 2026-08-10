@@ -1,4 +1,4 @@
-import { ArrowLeft, Plus, Settings } from "lucide-react";
+import { ArrowLeft, BarChart3, Plus, Settings } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -92,6 +92,17 @@ export function WorkspaceHeader({
             <span className="hidden xs:inline">New Project</span>
             <span className="xs:hidden">New Project</span>
           </button>
+        )}
+
+        {(isAdmin || isOwner) && (
+          <Link
+            href={`/dashboard/workspaces/${workspaceSlug}/workspace-usage`}
+            className="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-accent transition flex items-center justify-center gap-2 text-sm sm:text-base shrink-0"
+            aria-label="AI usage"
+          >
+            <BarChart3 size={16} />
+            <span>AI usage</span>
+          </Link>
         )}
 
         {(isAdmin || isOwner) && (

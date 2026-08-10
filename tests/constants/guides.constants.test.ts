@@ -3,8 +3,8 @@ import { COLOR_MAP, GUIDE_SECTIONS } from "@/constants/guides.constants";
 
 describe("guides.constants", () => {
   describe("COLOR_MAP", () => {
-    it("has 12 color themes", () => {
-      expect(Object.keys(COLOR_MAP)).toHaveLength(12);
+    it("has 13 color themes", () => {
+      expect(Object.keys(COLOR_MAP)).toHaveLength(13);
     });
 
     it("includes expected colors", () => {
@@ -26,8 +26,8 @@ describe("guides.constants", () => {
   });
 
   describe("GUIDE_SECTIONS", () => {
-    it("has 12 guide sections", () => {
-      expect(GUIDE_SECTIONS).toHaveLength(12);
+    it("has 13 guide sections", () => {
+      expect(GUIDE_SECTIONS).toHaveLength(13);
     });
 
     it("each section has metadata and at least one article", () => {

@@ -4,6 +4,7 @@ import { TaskStatusPrioritySection } from "@/components/Tasks/form/TaskStatusPri
 import { FocusEnergySection } from "@/components/Tasks/form/FocusEnergySection";
 import { TaskDatesSection } from "@/components/Tasks/form/TaskDatesSection";
 import { FormActions } from "@/components/Tasks/form/FormActions";
+import type { AiTaskSuggestion } from "@/types/ai.types";
 
 interface FormData {
   title: string;
@@ -27,6 +28,12 @@ interface AddTaskFormProps {
   onSubmit: (e: React.FormEvent) => void;
   onCancel: () => void;
   onFieldChange: (field: string, value: unknown) => void;
+  /** Workspace for AI rate limiting — omitted for personal tasks. */
+  workspaceId?: string | null;
+  /** Enables AI task suggestions (autocomplete). */
+  onApplyAiSuggestion?: (suggestion: AiTaskSuggestion) => void;
+  /** Applies a single suggested field. */
+  onApplyAiPartial?: (patch: Partial<AiTaskSuggestion>) => void;
 }
 
 export function AddTaskForm({
@@ -36,6 +43,9 @@ export function AddTaskForm({
   onSubmit,
   onCancel,
   onFieldChange,
+  workspaceId,
+  onApplyAiSuggestion,
+  onApplyAiPartial,
 }: AddTaskFormProps) {
   return (
     <form onSubmit={onSubmit} className="space-y-6">
@@ -47,6 +57,9 @@ export function AddTaskForm({
         onDescriptionChange={(description) =>
           onFieldChange("description", description)
         }
+        workspaceId={workspaceId}
+        onApplyAiSuggestion={onApplyAiSuggestion}
+        onApplyAiPartial={onApplyAiPartial}
       />
 
       <TaskIntentSection

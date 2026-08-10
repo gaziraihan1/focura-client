@@ -1,5 +1,7 @@
 import { m as motion } from "framer-motion";
 import { CheckCircle2, AlertCircle } from "lucide-react";
+import { AiSuggestionBar } from "@/components/AI/AiSuggestionBar";
+import type { AiTaskSuggestion } from "@/types/ai.types";
 
 interface TaskDetailsSectionProps {
   title: string;
@@ -7,6 +9,12 @@ interface TaskDetailsSectionProps {
   errors: Record<string, string>;
   onTitleChange: (title: string) => void;
   onDescriptionChange: (description: string) => void;
+  /** Workspace for AI rate limiting — omitted for personal tasks. */
+  workspaceId?: string | null;
+  /** Enables the AI suggestion bar under the title. */
+  onApplyAiSuggestion?: (suggestion: AiTaskSuggestion) => void;
+  /** Applies a single suggested field (chip click). */
+  onApplyAiPartial?: (patch: Partial<AiTaskSuggestion>) => void;
 }
 
 export function TaskDetailsSection({
@@ -15,6 +23,9 @@ export function TaskDetailsSection({
   errors,
   onTitleChange,
   onDescriptionChange,
+  workspaceId,
+  onApplyAiSuggestion,
+  onApplyAiPartial,
 }: TaskDetailsSectionProps) {
   return (
     <motion.div className="rounded-xl bg-card border border-border p-6 space-y-6">
@@ -40,6 +51,15 @@ export function TaskDetailsSection({
             <AlertCircle size={14} />
             {errors.title}
           </p>
+        )}
+
+        {onApplyAiSuggestion && (
+          <AiSuggestionBar
+            title={title}
+            workspaceId={workspaceId}
+            onApply={onApplyAiSuggestion}
+            onApplyPartial={onApplyAiPartial ?? ((patch) => onApplyAiSuggestion(patch as AiTaskSuggestion))}
+          />
         )}
       </div>
 

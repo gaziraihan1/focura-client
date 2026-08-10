@@ -111,6 +111,14 @@ export const DEV_SECTIONS: DevSection[] = [
     title: "Code Conventions",
     subtitle: "TypeScript rules, naming & commit guidelines",
   },
+  {
+    id: "ai",
+    icon: "✦",
+    label: "AI (Gemini)",
+    color: "cyan",
+    title: "AI (Gemini)",
+    subtitle: "Server-side AI module, quota system & frontend hooks",
+  },
 ];
 
 export { COLOR_MAP } from "@/constants/guides.constants";

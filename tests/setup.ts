@@ -10,9 +10,29 @@ vi.mock('@/lib/axios', () => {
   const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000';
   const jsonHeaders = { 'Content-Type': 'application/json' };
 
+  /** Error carrying the response body so components can branch on error codes. */
+  class HttpError extends Error {
+    status?: number;
+    response?: { status?: number; data?: unknown };
+    constructor(status: number, data: unknown) {
+      super(`HTTP ${status}`);
+      this.name = 'HttpError';
+      this.status = status;
+      this.response = { status, data };
+    }
+  }
+
   async function makeFetch<T>(url: string, init?: RequestInit): Promise<T> {
     const res = await fetch(`${BASE_URL}${url}`, init);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) {
+      let data: unknown;
+      try {
+        data = await res.json();
+      } catch {
+        data = undefined;
+      }
+      throw new HttpError(res.status, data);
+    }
     return res.json();
   }
 

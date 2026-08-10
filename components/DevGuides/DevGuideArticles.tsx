@@ -16,6 +16,7 @@ import {
   envVarsArticles,
   testingArticles,
 } from "./WorkflowSection";
+import { aiArticles } from "./AiSection";
 
 /** Rich article content per dev-guide section, keyed by section id. */
 export const DEV_ARTICLE_MAP: Record<string, GuideArticle[]> = {
@@ -32,4 +33,5 @@ export const DEV_ARTICLE_MAP: Record<string, GuideArticle[]> = {
   testing: testingArticles,
   "env-vars": envVarsArticles,
   conventions: conventionsArticles,
+  ai: aiArticles,
 };

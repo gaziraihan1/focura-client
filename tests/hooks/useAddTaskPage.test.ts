@@ -137,8 +137,9 @@ describe('useAddTaskPage', () => {
       } catch (e) {}
     })
 
+    // The server-provided message is surfaced (error bodies are preserved).
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith('Failed to create task')
+      expect(toast.error).toHaveBeenCalledWith('API Error Message')
     })
     expect(result.current.errors).toEqual({})
   })

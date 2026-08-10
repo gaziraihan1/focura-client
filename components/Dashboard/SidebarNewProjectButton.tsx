@@ -127,7 +127,7 @@ const SidebarNewProjectButton = () => {
             modalRef.current = node;
             trapRef.current = node;
           }}
-          className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[70] p-4'
+          className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-70 p-4'
           role='dialog'
           aria-modal='true'
           aria-label='New project'
@@ -207,7 +207,7 @@ const SidebarNewProjectButton = () => {
                     No templates available right now.
                   </p>
                 ) : (
-                  <div className='grid sm:grid-cols-2 gap-2'>
+                  <div className='grid gap-2'>
                     {available.map((template) => {
                       const locked = !canAccessTemplate(
                         resolveAccessTier(selectedWorkspace?.plan),

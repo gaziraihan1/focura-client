@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 import { MeetingDetailsSkeleton, DetailCard, VisibilityBadge, HostChip, InfoRow, AttendeeAvatar } from "@/components/Dashboard/MeetingDetails";
 import { formatDate, formatTime, getDuration } from "@/utils/meetingDetails.utils";
 import { StatusBadge } from "@/components/Dashboard/MeetingDetails/StatusBadge";
+import { AiMeetingSummary } from "@/components/AI/AiMeetingSummary";
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 
@@ -208,6 +209,14 @@ export default function MeetingDetailsPage() {
             </div>
           )}
         </DetailCard>
+
+        {/* ── AI summary (PRO/BUSINESS) ── */}
+        <AiMeetingSummary
+          meetingId={meeting.id}
+          workspaceId={meeting.workspaceId}
+          workspaceSlug={params.workspaceSlug as string}
+          className="mt-4"
+        />
 
         {/* ── Footer meta ── */}
         <p className="mt-6 text-center text-xs text-muted-foreground">

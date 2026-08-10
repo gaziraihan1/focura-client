@@ -8,6 +8,7 @@ import { TaskTabs } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskTab
 import { useWorkspaceTasksPage } from "@/hooks/useTasksPage";
 import TaskQuotaDetails from "@/components/Dashboard/AllTasks/TaskQoutaDetails";
 import { FocusModeBanner } from "@/components/Dashboard/AllTasks/FocusModeBanner";
+import { AiDailyPlan } from "@/components/AI/AiDailyPlan";
 import { LoadingState } from "@/components/Shared/LoadingState";
 
 const TasksContentArea = dynamic(
@@ -65,6 +66,19 @@ export default function WorkspaceTasksPage() {
         onToggleLabel={toggleLabel} onClearFilters={clearFilters} focusRequired={focusRequired}
         onFocusRequiredChange={setFocusRequired} projects={projects} labels={labels} members={members}
         sections={sections} selectedSection={selectedSection} onSectionChange={setSelectedSection}
+      />
+
+      <AiDailyPlan
+        tasks={(tasks ?? []).map((task) => ({
+          id: task.id,
+          title: task.title,
+          priority: task.priority ?? null,
+          energyType: task.energyType ?? null,
+          estimatedHours: task.estimatedHours ?? null,
+          dueDate: task.dueDate ?? null,
+        }))}
+        workspaceId={workspace.id}
+        workspaceSlug={workspaceSlug}
       />
 
       <TaskTabs

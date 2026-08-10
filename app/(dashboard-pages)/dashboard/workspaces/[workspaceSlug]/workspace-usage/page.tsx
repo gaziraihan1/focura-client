@@ -44,6 +44,13 @@ const GrowthInsightsSection = dynamic(
     loading: () => <SectionSkeleton rows={3} />,
   }
 );
+const AiUsageSection = dynamic(
+  () => import("@/components/Dashboard/Analytics/WorkspaceUsage/AiUsageSection").then((m) => m.AiUsageSection),
+  {
+    ssr: false,
+    loading: () => <SectionSkeleton rows={3} />,
+  }
+);
 
 export default function WorkspaceUsagePage() {
   const { workspaceSlug } = useParams();
@@ -151,6 +158,12 @@ export default function WorkspaceUsagePage() {
       <SectionErrorBoundary sectionName="Feature Usage">
         <FeatureUsageSection featureUsage={data.featureUsage} />
       </SectionErrorBoundary>
+
+      {data.isAdmin && (
+        <SectionErrorBoundary sectionName="AI Usage">
+          <AiUsageSection workspaceId={workspaceId!} />
+        </SectionErrorBoundary>
+      )}
 
       <SectionErrorBoundary sectionName="Plan Limits">
         <PlanLimitsSection planLimits={data.planLimits} workspaceSlug={workspaceSlug as string} />

@@ -88,6 +88,8 @@ vi.mock('lucide-react', () => {
     ArrowLeft: icon('ArrowLeft'),
     Edit: icon('Edit'),
     Zap: icon('Zap'),
+    Wand2: icon('Wand2'),
+    Sparkles: icon('Sparkles'),
     Brain: icon('Brain'),
     Shield: icon('Shield'),
     Eye: icon('Eye'),
@@ -262,6 +264,16 @@ vi.mock('@/hooks/useCommentPage', () => ({
     mentionQuery: null, filteredUsers: [], activeIndex: 0, dropdownPos: null,
     handleChange: vi.fn(), insertMention: vi.fn(), handleKeyDown: vi.fn(),
   }),
+}))
+
+// CommentEditor renders the AI rewrite toolbar, which needs a query client.
+vi.mock('@/hooks/useAi', () => ({
+  useAiCommentAssist: () => ({ mutateAsync: vi.fn(), isPending: false }),
+  useAiQuota: () => ({ data: null }),
+  useAiTaskSuggestions: () => ({
+    data: null, isFetching: false, error: null, fetchStatus: 'idle',
+  }),
+  useAiTaskBreakdown: () => ({ mutateAsync: vi.fn(), isPending: false }),
 }))
 
 vi.mock('@/hooks/useFocusSession', () => ({

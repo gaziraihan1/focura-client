@@ -141,6 +141,27 @@ describe('WorkspaceHeader', () => {
     expect(settingsLink.getAttribute('href')).toBe('/dashboard/workspaces/test-workspace/settings')
   })
 
+  it('shows AI usage CTA when isAdmin is true', () => {
+    render(<WorkspaceHeader {...defaultProps} />)
+    expect(screen.getByLabelText('AI usage')).toBeInTheDocument()
+  })
+
+  it('shows AI usage CTA when isOwner is true', () => {
+    render(<WorkspaceHeader {...defaultProps} isAdmin={false} isOwner={true} />)
+    expect(screen.getByLabelText('AI usage')).toBeInTheDocument()
+  })
+
+  it('hides AI usage CTA when not admin and not owner', () => {
+    render(<WorkspaceHeader {...defaultProps} isAdmin={false} isOwner={false} />)
+    expect(screen.queryByLabelText('AI usage')).not.toBeInTheDocument()
+  })
+
+  it('links AI usage CTA to the workspace usage page', () => {
+    render(<WorkspaceHeader {...defaultProps} />)
+    const usageLink = screen.getByLabelText('AI usage')
+    expect(usageLink.getAttribute('href')).toBe('/dashboard/workspaces/test-workspace/workspace-usage')
+  })
+
   it('back button navigates to workspaces list', () => {
     render(<WorkspaceHeader {...defaultProps} />)
     fireEvent.click(screen.getByLabelText('Back to workspaces'))

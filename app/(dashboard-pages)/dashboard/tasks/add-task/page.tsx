@@ -12,6 +12,8 @@ export default function AddTaskPage() {
     handleSubmit,
     handleCancel,
     updateFormData,
+    applyAiSuggestion,
+    applyAiPartial,
   } = useAddTaskPage();
 
   return (
@@ -25,6 +27,9 @@ export default function AddTaskPage() {
         onSubmit={handleSubmit}
         onCancel={handleCancel}
         onFieldChange={updateFormData}
+        workspaceId={null}
+        onApplyAiSuggestion={applyAiSuggestion}
+        onApplyAiPartial={applyAiPartial}
       />
     </div>
   );

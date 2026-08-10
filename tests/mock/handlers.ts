@@ -19,6 +19,7 @@ import { contactHandlers } from "./handlers/contact.handlers";
 import { jobsHandlers } from "./handlers/job.handlers";
 import { automationHandlers } from "./handlers/automation.handlers";
 import { templateHandlers } from "./handlers/template.handlers";
+import { aiHandlers } from "./handlers/ai.handlers";
 
 export const handlers = [
   ...workspaceHandlers,
@@ -41,4 +42,5 @@ export const handlers = [
   ...jobsHandlers,
   ...automationHandlers,
   ...templateHandlers,
+  ...aiHandlers,
 ];
