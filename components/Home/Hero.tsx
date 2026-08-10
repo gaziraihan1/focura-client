@@ -101,7 +101,7 @@ function HeroCopy() {
       </div>
 
       {/* Stat strip */}
-      <div className="mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-sm text-muted-foreground">
+      <div className="mt-10 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-sm text-muted-foreground">
         <span><strong className="font-semibold text-foreground">8,000+</strong> focused teams</span>
         <span className="hidden sm:block h-4 w-px bg-border" aria-hidden="true" />
         <span><strong className="font-semibold text-foreground">99.9%</strong> uptime</span>
@@ -115,7 +115,7 @@ function HeroCopy() {
 function HeroDashboardMockup() {
   return (
     <div
-      className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 pb-24 pointer-events-none select-none mt-1"
+      className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 pb-24 pointer-events-none select-none "
       aria-hidden="true"
     >
       <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-2xl shadow-foreground/10">

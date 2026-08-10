@@ -1,5 +1,5 @@
-export { ApiLayerSection } from "./ApiLayerSection";
-export { AuthSection } from "./AuthSection";
-export { CachingSection } from "./CachingSection";
-export { DatabaseSection } from "./DatabaseSection";
-export { RealtimeSection } from "./RealTimeSection";
+export { authArticles } from "./AuthSection";
+export { apiLayerArticles } from "./ApiLayerSection";
+export { databaseArticles } from "./DatabaseSection";
+export { cachingArticles } from "./CachingSection";
+export { realtimeArticles } from "./RealTimeSection";

@@ -1,2 +1,2 @@
-export { OverviewSection } from "./OverviewSection";
-export { SetupSection } from "./SetupSection";
+export { overviewArticles } from "./OverviewSection";
+export { setupArticles } from "./SetupSection";

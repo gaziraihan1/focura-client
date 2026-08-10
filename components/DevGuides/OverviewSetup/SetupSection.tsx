@@ -1,39 +1,70 @@
 "use client";
 
+import type { GuideArticle } from "@/types/guides.types";
 import { CodeBlock, IC, Prose, RowList, SectionH, StepList, Tip } from "../";
-export function SetupSection() {
-  return (
-    <div>
-      <SectionH>Prerequisites</SectionH>
-      <RowList items={[
-        { label: "Node.js", desc: "v20 or higher" },
-        { label: "npm", desc: "v10+ (comes with Node 20)" },
-        { label: "PostgreSQL", desc: "Supabase project (free tier works)" },
-        { label: "Redis", desc: "Upstash Redis instance (free tier works)" },
-        { label: "Google OAuth", desc: "OAuth 2.0 credentials for Google sign-in" },
-      ]} />
 
-      <SectionH>1 — Clone both repos</SectionH>
+export const setupArticles: GuideArticle[] = [
+  {
+    id: "prerequisites",
+    title: "Prerequisites",
+    summary:
+      "Node.js v20+, npm v10+, a Supabase PostgreSQL project, an Upstash Redis instance and Google OAuth 2.0 credentials.",
+    content: (
+      <>
+        <SectionH>Prerequisites</SectionH>
+        <RowList
+          items={[
+            { label: "Node.js", desc: "v20 or higher" },
+            { label: "npm", desc: "v10+ (comes with Node 20)" },
+            { label: "PostgreSQL", desc: "Supabase project (free tier works)" },
+            { label: "Redis", desc: "Upstash Redis instance (free tier works)" },
+            { label: "Google OAuth", desc: "OAuth 2.0 credentials for Google sign-in" },
+          ]}
+        />
+      </>
+    ),
+  },
+  {
+    id: "clone-repos",
+    title: "1 — Clone both repos",
+    summary:
+      "Clone focura-backend and focura-client from GitHub with two git clone commands.",
+    content: (
       <CodeBlock label="terminal">{`git clone https://github.com/gaziraihan1/focura-backend.git
 git clone https://github.com/gaziraihan1/focura-client.git`}</CodeBlock>
-
-      <SectionH>2 — Backend setup</SectionH>
-      <StepList steps={[
-        {
-          title: "Install dependencies",
-          desc: <CodeBlock label="focura-backend/">{`cd focura-backend
+    ),
+  },
+  {
+    id: "backend-setup",
+    title: "2 — Backend setup",
+    summary:
+      "Install dependencies, generate the RSA key pair, configure environment variables, run Prisma migrations and seed, then start the backend on port 5000.",
+    content: (
+      <>
+        <SectionH>2 — Backend setup</SectionH>
+        <StepList
+          steps={[
+            {
+              title: "Install dependencies",
+              desc: <CodeBlock label="focura-backend/">{`cd focura-backend
 npm install`}</CodeBlock>,
-        },
-        {
-          title: "Generate RSA key pair",
-          desc: <>
-            <Prose>Run the one-time key generator. This writes <IC>keys/private.pem</IC> and <IC>keys/public.pem</IC>.</Prose>
-            <CodeBlock label="focura-backend/">{`node scripts/generate-keys.js`}</CodeBlock>
-          </>,
-        },
-        {
-          title: "Configure environment variables",
-          desc: <CodeBlock label=".env (backend)">{`# Runtime (pooler)
+            },
+            {
+              title: "Generate RSA key pair",
+              desc: (
+                <>
+                  <Prose>
+                    Run the one-time key generator. This writes <IC>keys/private.pem</IC> and{" "}
+                    <IC>keys/public.pem</IC>.
+                  </Prose>
+                  <CodeBlock label="focura-backend/">{`node scripts/generate-keys.js`}</CodeBlock>
+                </>
+              ),
+            },
+            {
+              title: "Configure environment variables",
+              desc: (
+                <CodeBlock label=".env (backend)">{`# Runtime (pooler)
 DATABASE_URL="postgresql://..."
 # Direct (for migrations / introspection)
 DIRECT_URL="postgresql://..."
@@ -95,30 +126,43 @@ CACHE_TTL_ANALYTICS=3600             # Analytics data (default: 1 hour)
 CACHE_TTL_WORKSPACE_OVERVIEW=3600    # Workspace overview (default: 1 hour)
 CACHE_TTL_WORKSPACE_STATS=1800  
 
-FOCURA_ADMIN_IDS="comma-separated list of user IDs that can access the admin dashboard"`}</CodeBlock>,
-        },
-        {
-          title: "Run Prisma migrations and seed",
-          desc: <CodeBlock label="focura-backend/">{`npx prisma migrate dev
+FOCURA_ADMIN_IDS="comma-separated list of user IDs that can access the admin dashboard"`}</CodeBlock>
+              ),
+            },
+            {
+              title: "Run Prisma migrations and seed",
+              desc: <CodeBlock label="focura-backend/">{`npx prisma migrate dev
 npx prisma db seed`}</CodeBlock>,
-        },
-        {
-          title: "Start the backend",
-          desc: <CodeBlock label="focura-backend/">{`npm run dev
+            },
+            {
+              title: "Start the backend",
+              desc: <CodeBlock label="focura-backend/">{`npm run dev
 # Server running on http://localhost:5000`}</CodeBlock>,
-        },
-      ]} />
-
-      <SectionH>3 — Frontend setup</SectionH>
-      <StepList steps={[
-        {
-          title: "Install dependencies",
-          desc: <CodeBlock label="focura-client/">{`cd focura-client
+            },
+          ]}
+        />
+      </>
+    ),
+  },
+  {
+    id: "frontend-setup",
+    title: "3 — Frontend setup",
+    summary:
+      "Install client dependencies, configure .env.local with NEXTAUTH, Google OAuth and Cloudinary values, then start the frontend on port 3000.",
+    content: (
+      <>
+        <SectionH>3 — Frontend setup</SectionH>
+        <StepList
+          steps={[
+            {
+              title: "Install dependencies",
+              desc: <CodeBlock label="focura-client/">{`cd focura-client
 npm install`}</CodeBlock>,
-        },
-        {
-          title: "Configure environment variables",
-          desc: <CodeBlock label=".env.local (client)">{`DATABASE_URL="postgresql://..."
+            },
+            {
+              title: "Configure environment variables",
+              desc: (
+                <CodeBlock label=".env.local (client)">{`DATABASE_URL="postgresql://..."
 DIRECT_URL="postgresql://..."
 NODE_ENV="development"
 NEXTAUTH_URL="http://localhost:3000"
@@ -135,18 +179,23 @@ EMAIL_FROM="From <your email here></your>"
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="your-cloud-name"
 CLOUDINARY_API_KEY="your-api-key"
 CLOUDINARY_API_SECRET="your-api-secret"
-NODE_OPTIONS=--dns-result-order=ipv4first`}</CodeBlock>,
-        },
-        {
-          title: "Start the frontend",
-          desc: <CodeBlock label="focura-client/">{`npm run dev
+NODE_OPTIONS=--dns-result-order=ipv4first`}</CodeBlock>
+              ),
+            },
+            {
+              title: "Start the frontend",
+              desc: <CodeBlock label="focura-client/">{`npm run dev
 # App running on http://localhost:3000`}</CodeBlock>,
-        },
-      ]} />
+            },
+          ]}
+        />
 
-      <Tip>
-        <IC>NEXT_PUBLIC_API_URL</IC> is used in browser-side Axios calls. <IC>BACKEND_URL</IC> (no prefix) is used only in server components and NextAuth callbacks — never expose it to the client.
-      </Tip>
-    </div>
-  );
-}
+        <Tip>
+          <IC>NEXT_PUBLIC_API_URL</IC> is used in browser-side Axios calls. <IC>BACKEND_URL</IC>{" "}
+          (no prefix) is used only in server components and NextAuth callbacks — never expose it to
+          the client.
+        </Tip>
+      </>
+    ),
+  },
+];

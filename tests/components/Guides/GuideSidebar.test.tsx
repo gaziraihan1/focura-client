@@ -1,154 +1,88 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { GuideSidebar } from "@/components/Guides/GuideSidebar";
+import { guideSections } from "./fixtures";
 
-// Polyfill IntersectionObserver for jsdom
-beforeAll(() => {
-  class MockIntersectionObserver {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  }
-  // @ts-expect-error jsdom does not support IntersectionObserver
-  globalThis.IntersectionObserver = MockIntersectionObserver
-})
-
-vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
-    <a href={href} {...props}>{children}</a>
-  ),
-}))
-
-vi.mock('next/image', () => ({
-  default: (props: Record<string, unknown>) => {
-    const { fill, alt = "", ...imgProps } = props
-    return <img alt={alt} {...imgProps} data-fill={fill} />
-  },
-}))
-
-vi.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...props}>{children}</button>,
-  },
-  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
-}))
-
-vi.mock('lucide-react', () => {
-  const icon = (name: string) => {
-    const Component = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={`${name}-icon`} {...props} />
-    Component.displayName = name
-    return Component
-  }
-  return {
-    ShieldCheck: icon('ShieldCheck'),
-    Scale: icon('Scale'),
-    Cookie: icon('Cookie'),
-    ReceiptText: icon('ReceiptText'),
-    Layers: icon('Layers'),
-    Search: icon('Search'),
-    Bell: icon('Bell'),
-    CheckCircle2: icon('CheckCircle2'),
-    Loader2: icon('Loader2'),
-    Mail: icon('Mail'),
-    Clock: icon('Clock'),
-    CreditCard: icon('CreditCard'),
-    Calendar: icon('Calendar'),
-    FileText: icon('FileText'),
-    MessageSquare: icon('MessageSquare'),
-    Copy: icon('Copy'),
-    User: icon('User'),
-    ChevronDown: icon('ChevronDown'),
-    ChevronUp: icon('ChevronUp'),
-    ExternalLink: icon('ExternalLink'),
-    Database: icon('Database'),
-    Settings2: icon('Settings2'),
-    Share2: icon('Share2'),
-    Globe: icon('Globe'),
-    Lock: icon('Lock'),
-    UserCog: icon('UserCog'),
-    Baby: icon('Baby'),
-    RefreshCw: icon('RefreshCw'),
-    Eye: icon('Eye'),
-    Pencil: icon('Pencil'),
-    Trash2: icon('Trash2'),
-    Download: icon('Download'),
-    Ban: icon('Ban'),
-    HandMetal: icon('HandMetal'),
-    Megaphone: icon('Megaphone'),
-    AlertTriangle: icon('AlertTriangle'),
-    Info: icon('Info'),
-    CheckCircle: icon('CheckCircle'),
-    XCircle: icon('XCircle'),
-    Scissors: icon('Scissors'),
-    BarChart2: icon('BarChart2'),
-    AlertCircle: icon('AlertCircle'),
-    ToggleRight: icon('ToggleRight'),
-    MonitorSmartphone: icon('MonitorSmartphone'),
-    ArrowRight: icon('ArrowRight'),
-    Zap: icon('Zap'),
-    Rocket: icon('Rocket'),
-    MousePointerClick: icon('MousePointerClick'),
-    Sparkles: icon('Sparkles'),
-    GitFork: icon('GitFork'),
-    Star: icon('Star'),
-    PlayCircle: icon('PlayCircle'),
-    Check: icon('Check'),
-    Minus: icon('Minus'),
-    Users: icon('Users'),
-    Workflow: icon('Workflow'),
-    Gauge: icon('Gauge'),
-    CloudLightning: icon('CloudLightning'),
-    ThumbsUp: icon('ThumbsUp'),
-    ThumbsDown: icon('ThumbsDown'),
-    X: icon('X'),
-    Lightbulb: icon('Lightbulb'),
-    BookOpen: icon('BookOpen'),
-    UserCheck: icon('UserCheck'),
-    Pin: icon('Pin'),
-  }
-})
-
-vi.mock('@/lib/utils', () => ({
-  cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(' '),
-}))
-
-
-import { GuideSidebar } from '@/components/Guides/GuideSidebar'
-
-const guideSections = [
-  { id: 'getting-started', icon: '\u2726', label: 'Getting Started', color: 'blue', title: 'Welcome', subtitle: 'Guide' },
-  { id: 'workspace', icon: '\u2b21', label: 'Workspace', color: 'violet', title: 'Workspace', subtitle: 'Guide' },
-  { id: 'projects', icon: '\u25c8', label: 'Projects', color: 'emerald', title: 'Projects', subtitle: 'Guide' },
-]
-
-describe('GuideSidebar', () => {
-  const onNavigate = vi.fn()
+describe("GuideSidebar", () => {
+  const onNavigate = vi.fn();
+  const onClose = vi.fn();
 
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
-  it('renders all section labels', () => {
-    render(<GuideSidebar sections={guideSections} activeId="getting-started" mobileOpen={false} onNavigate={onNavigate} />)
-    expect(screen.getByText('Getting Started')).toBeInTheDocument()
-    expect(screen.getByText('Workspace')).toBeInTheDocument()
-    expect(screen.getByText('Projects')).toBeInTheDocument()
-  })
+  it("renders all section labels and the Topics header", () => {
+    render(
+      <GuideSidebar
+        sections={guideSections}
+        activeId="tasks"
+        mobileOpen={false}
+        onNavigate={onNavigate}
+        onClose={onClose}
+      />
+    );
+    expect(screen.getByText("Topics")).toBeInTheDocument();
+    expect(screen.getByText("Getting Started")).toBeInTheDocument();
+    expect(screen.getByText("Tasks & Subtasks")).toBeInTheDocument();
+    expect(screen.getByText("Billing & Plans")).toBeInTheDocument();
+  });
 
-  it('renders "Topics" header', () => {
-    render(<GuideSidebar sections={guideSections} activeId="getting-started" mobileOpen={false} onNavigate={onNavigate} />)
-    expect(screen.getByText('Topics')).toBeInTheDocument()
-  })
+  it("renders article counts per section", () => {
+    render(
+      <GuideSidebar
+        sections={guideSections}
+        activeId="tasks"
+        mobileOpen={false}
+        onNavigate={onNavigate}
+        onClose={onClose}
+      />
+    );
+    expect(screen.getAllByText("2")).toHaveLength(2); // getting-started + tasks
+    expect(screen.getByText("1")).toBeInTheDocument(); // billing
+  });
 
-  it('calls onNavigate when a section is clicked', () => {
-    render(<GuideSidebar sections={guideSections} activeId="getting-started" mobileOpen={false} onNavigate={onNavigate} />)
-    fireEvent.click(screen.getByText('Workspace'))
-    expect(onNavigate).toHaveBeenCalledWith('workspace')
-  })
+  it("marks the active section with aria-current", () => {
+    render(
+      <GuideSidebar
+        sections={guideSections}
+        activeId="tasks"
+        mobileOpen={false}
+        onNavigate={onNavigate}
+        onClose={onClose}
+      />
+    );
+    expect(screen.getByRole("button", { name: /Tasks & Subtasks/ })).toHaveAttribute(
+      "aria-current",
+      "page"
+    );
+  });
 
-  it('shows mobile overlay when mobileOpen is true', () => {
-    render(<GuideSidebar sections={guideSections} activeId="getting-started" mobileOpen={true} onNavigate={onNavigate} />)
-    const labels = screen.getAllByText('Getting Started')
-    expect(labels.length).toBeGreaterThanOrEqual(2)
-  })
-})
+  it("calls onNavigate when a section is clicked", () => {
+    render(
+      <GuideSidebar
+        sections={guideSections}
+        activeId="tasks"
+        mobileOpen={false}
+        onNavigate={onNavigate}
+        onClose={onClose}
+      />
+    );
+    fireEvent.click(screen.getByRole("button", { name: /Billing & Plans/ }));
+    expect(onNavigate).toHaveBeenCalledWith("billing");
+  });
+
+  it("renders the mobile drawer and closes it", () => {
+    render(
+      <GuideSidebar
+        sections={guideSections}
+        activeId="tasks"
+        mobileOpen={true}
+        onNavigate={onNavigate}
+        onClose={onClose}
+      />
+    );
+    expect(screen.getByRole("button", { name: "Close guide topics" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Close guide topics" }));
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+});

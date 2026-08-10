@@ -24,6 +24,7 @@ model Plan {
   analyticsAccess      Boolean        @default(false)
   prioritySupport      Boolean        @default(false)
   apiAccess            Boolean        @default(false)
+  businessOnlyAccess   Boolean        @default(false)
   customBranding       Boolean        @default(false)
   advancedReports      Boolean        @default(false)
   maxWorkspacesOwned   Int            @default(3)
@@ -694,11 +695,11 @@ model TaskDependency {
 }
 
 model TaskRecurrence {
-  id             String            @id @default(cuid())
-  taskId         String            @unique
-  pattern        RecurrencePattern
-  interval       Int               @default(1)
-  days           Json?
+  id       String            @id @default(cuid())
+  taskId   String            @unique
+  pattern  RecurrencePattern
+  interval Int               @default(1)
+  days     Json?
   endsAt         DateTime?
   lastOccurredAt DateTime?
   task           Task              @relation(fields: [taskId], references: [id], onDelete: Cascade)
@@ -943,6 +944,25 @@ model BurnoutSignal {
   user                 User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, weekStart])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  event     String
+  severity  String
+  userId    String?
+  email     String?
+  ip        String?
+  userAgent String?
+  sessionId String?
+  jti       String?
+  reason    String?
+  meta      Json?
+  timestamp DateTime @default(now())
+
+  @@index([event])
+  @@index([userId])
+  @@index([timestamp])
 }
 
 model Label {
@@ -1608,6 +1628,20 @@ model ProjectTemplate {
   @@index([workspaceId])
 }
 
+model TemplateRating {
+  id         String   @id @default(cuid())
+  templateId String
+  userId     String
+  stars      Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  template ProjectTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@unique([templateId, userId])
+  @@index([templateId])
+}
+
 enum TemplateTier {
   FREE
   PRO
@@ -1659,17 +1693,4 @@ enum JobStatus {
   OPEN
   PAUSED
   CLOSED
-}
-model TemplateRating {
-  id         String   @id @default(cuid())
-  templateId String
-  userId     String
-  stars      Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  template ProjectTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
-
-  @@unique([templateId, userId])
-  @@index([templateId])
 }

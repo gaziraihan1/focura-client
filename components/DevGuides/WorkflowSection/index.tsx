@@ -1,4 +1,4 @@
-export { AddingFeatureSection } from "./AddingFeatureSection";
-export { TestingSection } from "./TestingSection";
-export { EnvVarsSection } from "./EnvVarsSection";
-export { ConventionsSection } from "./ConventionsSection";
+export { addingFeatureArticles } from "./AddingFeatureSection";
+export { testingArticles } from "./TestingSection";
+export { envVarsArticles } from "./EnvVarsSection";
+export { conventionsArticles } from "./ConventionsSection";

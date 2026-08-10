@@ -1,11 +1,6 @@
 import { COLOR_MAP } from "@/lib/devGuides";
 import type { ReactNode } from "react";
 
-export { OverviewSection, SetupSection } from "./OverviewSetup";
-export { FrontendArchSection, BackendArchSection } from "./ArchSection";
-export { AuthSection, ApiLayerSection, DatabaseSection, CachingSection, RealtimeSection } from "./TechSection";
-export { AddingFeatureSection, TestingSection, EnvVarsSection, ConventionsSection } from "./WorkflowSection";
-
 export function SectionH({ children }: { children: ReactNode }) {
   return (
     <h3 className="text-xs font-bold text-foreground mb-3 mt-7 first:mt-0 uppercase tracking-widest">
@@ -56,7 +51,7 @@ export function CodeBlock({ children, label }: { children: string; label?: strin
           <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">{label}</span>
         </div>
       )}
-      <pre className={`bg-muted border border-border text-xs font-mono leading-relaxed text-wrap p-4 ${label ? "rounded-b-lg" : "rounded-lg"}`}>
+      <pre className={`bg-muted border border-border text-xs font-mono leading-relaxed whitespace-pre-wrap [overflow-wrap:anywhere] overflow-x-auto p-4 ${label ? "rounded-b-lg" : "rounded-lg"}`}>
         <code className="text-foreground">{children}</code>
       </pre>
     </div>
@@ -86,7 +81,7 @@ export function Step({ num, title, desc }: { num: number; title: string; desc: R
       <div className="shrink-0 w-7 h-7 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-semibold">
         {num}
       </div>
-      <div className="pb-5 border-b border-border flex-1 last:border-0 last:pb-0">
+      <div className="pb-5 border-b border-border flex-1 min-w-0 last:border-0 last:pb-0">
         <p className="text-sm font-semibold text-foreground mb-1">{title}</p>
         <div className="text-sm text-muted-foreground leading-relaxed">{desc}</div>
       </div>
@@ -104,7 +99,7 @@ export function StepList({ steps }: { steps: Array<{ title: string; desc: ReactN
 
 export function Table({ headers, rows }: { headers: string[]; rows: string[][] }) {
   return (
-    <div className="rounded-xl border border-border overflow-hidden mb-4">
+    <div className="rounded-xl border border-border overflow-x-auto mb-4">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border bg-muted/60">
@@ -156,8 +151,8 @@ export function RowList({ items }: { items: Array<{ label: string; desc: string 
     <div className="rounded-xl border border-border overflow-hidden mb-4">
       {items.map(({ label, desc }, i) => (
         <div key={label} className={`flex items-start gap-3 px-4 py-3 ${i < items.length - 1 ? "border-b border-border" : ""}`}>
-          <span className="text-xs font-mono text-muted-foreground shrink-0 w-44 mt-0.5 truncate">{label}</span>
-          <span className="text-sm text-muted-foreground">{desc}</span>
+          <span className="text-xs font-mono text-muted-foreground shrink-0 w-32 sm:w-44 mt-0.5 truncate">{label}</span>
+          <span className="text-sm text-muted-foreground min-w-0">{desc}</span>
         </div>
       ))}
     </div>

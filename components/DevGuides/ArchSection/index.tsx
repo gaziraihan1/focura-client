@@ -1,2 +1,2 @@
-export { FrontendArchSection } from "./FrontendArchSection";
-export { BackendArchSection } from "./BackendArchSection";
+export { frontendArchArticles } from "./FrontendArchSection";
+export { backendArchArticles } from "./BackendArchSection";

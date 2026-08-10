@@ -7,6 +7,7 @@ vi.mock('@/lib/prisma', () => ({
     verificationToken: {
       findUnique: vi.fn(),
       delete: vi.fn(),
+      deleteMany: vi.fn(),
     },
     user: {
       update: vi.fn(),
@@ -55,7 +56,7 @@ describe('POST /api/auth/verify-email', () => {
       identifier: 'user@test.com',
       expires: new Date('2020-01-01'), // Already expired
     } as any as Record<string, unknown>)
-    vi.mocked(prisma.verificationToken.delete).mockResolvedValue({} as any as Record<string, unknown>)
+    vi.mocked(prisma.verificationToken.deleteMany).mockResolvedValue({ count: 1 } as any as Record<string, unknown>)
 
     const req = createRequest({ token: 'expired-token' })
     const response = await POST(req)
@@ -63,7 +64,9 @@ describe('POST /api/auth/verify-email', () => {
 
     expect(response.status).toBe(400)
     expect(data.error).toBe('Token has expired')
-    expect(prisma.verificationToken.delete).toHaveBeenCalled()
+    expect(prisma.verificationToken.deleteMany).toHaveBeenCalledWith({
+      where: { token: 'expired-token' },
+    })
   })
 
   it('verifies email successfully', async () => {
@@ -77,7 +80,7 @@ describe('POST /api/auth/verify-email', () => {
       expires: futureDate,
     } as any as Record<string, unknown>)
     vi.mocked(prisma.user.update).mockResolvedValue({} as any as Record<string, unknown>)
-    vi.mocked(prisma.verificationToken.delete).mockResolvedValue({} as any as Record<string, unknown>)
+    vi.mocked(prisma.verificationToken.deleteMany).mockResolvedValue({ count: 0 } as any as Record<string, unknown>)
 
     const req = createRequest({ token: 'valid-token' })
     const response = await POST(req)
@@ -90,6 +93,31 @@ describe('POST /api/auth/verify-email', () => {
       where: { email: 'user@test.com' },
       data: { emailVerified: expect.any(Date) },
     })
+    expect(prisma.verificationToken.deleteMany).toHaveBeenCalledWith({
+      where: { token: 'valid-token' },
+    })
+  })
+
+  it('verifies email successfully even if token is already deleted (race condition)', async () => {
+    const { prisma } = await import('@/lib/prisma')
+    const futureDate = new Date()
+    futureDate.setHours(futureDate.getHours() + 24)
+
+    vi.mocked(prisma.verificationToken.findUnique).mockResolvedValue({
+      token: 'replayed-token',
+      identifier: 'user@test.com',
+      expires: futureDate,
+    } as any as Record<string, unknown>)
+    vi.mocked(prisma.user.update).mockResolvedValue({} as any as Record<string, unknown>)
+    // Simulate the token already having been deleted by the first request
+    vi.mocked(prisma.verificationToken.deleteMany).mockResolvedValue({ count: 0 } as any as Record<string, unknown>)
+
+    const req = createRequest({ token: 'replayed-token' })
+    const response = await POST(req)
+    const data = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(data.success).toBe(true)
   })
 
   it('returns 500 on internal error', async () => {

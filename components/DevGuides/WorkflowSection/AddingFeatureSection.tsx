@@ -1,15 +1,36 @@
 "use client";
 
-import { CodeBlock, FileTree, Prose, SectionH,  Tip,  } from "../";
-export function AddingFeatureSection() {
-  return (
-    <div>
-      <Prose>
-        This is an end-to-end walkthrough of adding a new feature — using a hypothetical &quot;Reaction&quot; feature (emoji reactions on tasks) as the example.
-      </Prose>
+import type { GuideArticle } from "@/types/guides.types";
+import { CodeBlock, FileTree, Prose, SectionH, Tip } from "../";
 
-      <SectionH>Step 1 — Backend: create the module</SectionH>
-      <FileTree>{`src/modules/reaction/
+export const addingFeatureArticles: GuideArticle[] = [
+  {
+    id: "walkthrough-overview",
+    title: "Walkthrough overview",
+    summary:
+      "An end-to-end guide to adding a new feature, using a hypothetical Reaction (emoji reactions on tasks) feature as the example.",
+    content: (
+      <>
+        <Prose>
+          This is an end-to-end walkthrough of adding a new feature — using a hypothetical
+          &quot;Reaction&quot; feature (emoji reactions on tasks) as the example.
+        </Prose>
+        <Tip>
+          Follow this exact order every time: schema → migration → access → mutation/query →
+          controller → routes → types → hook → component. Skipping layers causes cascading issues.
+        </Tip>
+      </>
+    ),
+  },
+  {
+    id: "backend-steps",
+    title: "Backend — module, schema, access & routes",
+    summary:
+      "Create the reaction module folder structure, define the Prisma model with a unique constraint, implement access checks, and register routes in src/index.ts.",
+    content: (
+      <>
+        <SectionH>Step 1 — Backend: create the module</SectionH>
+        <FileTree>{`src/modules/reaction/
 ├── reaction.routes.ts
 ├── reaction.controller.ts
 ├── reaction.access.ts
@@ -20,8 +41,8 @@ export function AddingFeatureSection() {
 ├── reaction.types.ts
 └── index.ts`}</FileTree>
 
-      <SectionH>Step 2 — Backend: define the Prisma model</SectionH>
-      <CodeBlock label="prisma/schema.prisma">{`model Reaction {
+        <SectionH>Step 2 — Backend: define the Prisma model</SectionH>
+        <CodeBlock label="prisma/schema.prisma">{`model Reaction {
   id          String   @id @default(cuid())
   emoji       String
   userId      String
@@ -35,10 +56,10 @@ export function AddingFeatureSection() {
 
   @@unique([userId, taskId, emoji])
 }`}</CodeBlock>
-      <CodeBlock label="terminal">{`npx prisma migrate dev --name add-reaction`}</CodeBlock>
+        <CodeBlock label="terminal">{`npx prisma migrate dev --name add-reaction`}</CodeBlock>
 
-      <SectionH>Step 3 — Backend: implement access + mutation + query</SectionH>
-      <CodeBlock label="reaction.access.ts">{`export class ReactionAccess {
+        <SectionH>Step 3 — Backend: implement access + mutation + query</SectionH>
+        <CodeBlock label="reaction.access.ts">{`export class ReactionAccess {
   static async canReact(workspaceId: string, userId: string) {
     const member = await prisma.workspaceMember.findUnique({
       where: { workspaceId_userId: { workspaceId, userId } },
@@ -47,12 +68,21 @@ export function AddingFeatureSection() {
   }
 }`}</CodeBlock>
 
-      <SectionH>Step 4 — Backend: register routes in src/index.ts</SectionH>
-      <CodeBlock label="src/index.ts">{`import reactionRoutes from "./modules/reaction";
+        <SectionH>Step 4 — Backend: register routes in src/index.ts</SectionH>
+        <CodeBlock label="src/index.ts">{`import reactionRoutes from "./modules/reaction";
 app.use("/api/v1/workspaces/:workspaceId/reactions", authenticate, reactionRoutes);`}</CodeBlock>
-
-      <SectionH>Step 5 — Frontend: add types</SectionH>
-      <CodeBlock label="types/reaction.types.ts">{`export interface Reaction {
+      </>
+    ),
+  },
+  {
+    id: "frontend-steps",
+    title: "Frontend — types, hook & component",
+    summary:
+      "Add the Reaction types, build a useAddReaction mutation hook with keyed cache invalidation, and wire up a React component.",
+    content: (
+      <>
+        <SectionH>Step 5 — Frontend: add types</SectionH>
+        <CodeBlock label="types/reaction.types.ts">{`export interface Reaction {
   id: string;
   emoji: string;
   userId: string;
@@ -64,8 +94,8 @@ export interface AddReactionInput {
   taskId: string;
 }`}</CodeBlock>
 
-      <SectionH>Step 6 — Frontend: create the hook</SectionH>
-      <CodeBlock label="hooks/useReactions.ts">{`export const reactionKeys = {
+        <SectionH>Step 6 — Frontend: create the hook</SectionH>
+        <CodeBlock label="hooks/useReactions.ts">{`export const reactionKeys = {
   task: (workspaceId: string, taskId: string) =>
     ["reactions", workspaceId, taskId] as const,
 };
@@ -85,8 +115,8 @@ export function useAddReaction(workspaceId: string) {
   });
 }`}</CodeBlock>
 
-      <SectionH>Step 7 — Frontend: build the component</SectionH>
-      <CodeBlock label="components/Task/ReactionPicker.tsx">{`"use client";
+        <SectionH>Step 7 — Frontend: build the component</SectionH>
+        <CodeBlock label="components/Task/ReactionPicker.tsx">{`"use client";
 
 export function ReactionPicker({ workspaceId, taskId }: Props) {
   const { mutate: addReaction } = useAddReaction(workspaceId);
@@ -105,8 +135,7 @@ export function ReactionPicker({ workspaceId, taskId }: Props) {
     </div>
   );
 }`}</CodeBlock>
-
-      <Tip>Follow this exact order every time: schema → migration → access → mutation/query → controller → routes → types → hook → component. Skipping layers causes cascading issues.</Tip>
-    </div>
-  );
-}
+      </>
+    ),
+  },
+];

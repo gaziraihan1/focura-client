@@ -1,30 +1,58 @@
 "use client";
-import { CodeBlock, IC, Prose, RowList, SectionH, Warn, } from "../";
-export function BackendArchSection() {
-  return (
-    <div>
+
+import type { GuideArticle } from "@/types/guides.types";
+import { CodeBlock, IC, Prose, RowList, SectionH, Warn } from "../";
+
+export const backendArchArticles: GuideArticle[] = [
+  {
+    id: "modular-monolith",
+    title: "Modular monolith",
+    summary:
+      "Every domain is a self-contained module under src/modules. Modules share one Express server and one Prisma client instance.",
+    content: (
       <Prose>
-        The backend is a modular monolith. Every domain (task, project, workspace, etc.) is a self-contained module under <IC>src/modules/</IC>. Modules share one Express server and one Prisma client instance.
+        The backend is a modular monolith. Every domain (task, project, workspace, etc.) is a
+        self-contained module under <IC>src/modules/</IC>. Modules share one Express server and one
+        Prisma client instance.
       </Prose>
-
-      <SectionH>Module file conventions</SectionH>
-      <Prose>Each module follows this exact file naming pattern:</Prose>
-      <RowList items={[
-        { label: "[module].routes.ts", desc: "Express router — defines HTTP routes and attaches middleware" },
-        { label: "[module].controller.ts", desc: "Thin request handlers. Parses req, calls service layer, sends res" },
-        { label: "[module].query.ts", desc: "All read operations — Prisma findMany, findUnique, counts" },
-        { label: "[module].mutation.ts", desc: "All write operations — create, update, delete via Prisma" },
-        { label: "[module].access.ts", desc: "Authorization checks — throws 403 if the caller lacks permission" },
-        { label: "[module].validators.ts", desc: "Input validation using Zod or manual checks" },
-        { label: "[module].types.ts", desc: "TypeScript interfaces and types local to this module" },
-        { label: "[module].selects.ts", desc: "Prisma select objects — reusable field projections" },
-        { label: "[module].activity.ts", desc: "Activity log helpers called after mutations (modules that track changes)" },
-        { label: "[module].notifications.ts", desc: "SSE notification helpers (modules that emit events)" },
-        { label: "index.ts", desc: "Barrel — re-exports the router for registration in src/index.ts" },
-      ]} />
-
-      <SectionH>Request flow</SectionH>
-      <CodeBlock label="request lifecycle">{`Request
+    ),
+  },
+  {
+    id: "module-file-conventions",
+    title: "Module file conventions",
+    summary:
+      "Each module follows a fixed file naming pattern: routes, controller, query, mutation, access, validators, types, selects, activity, notifications and index.",
+    content: (
+      <>
+        <SectionH>Module file conventions</SectionH>
+        <Prose>Each module follows this exact file naming pattern:</Prose>
+        <RowList
+          items={[
+            { label: "[module].routes.ts", desc: "Express router — defines HTTP routes and attaches middleware" },
+            { label: "[module].controller.ts", desc: "Thin request handlers. Parses req, calls service layer, sends res" },
+            { label: "[module].query.ts", desc: "All read operations — Prisma findMany, findUnique, counts" },
+            { label: "[module].mutation.ts", desc: "All write operations — create, update, delete via Prisma" },
+            { label: "[module].access.ts", desc: "Authorization checks — throws 403 if the caller lacks permission" },
+            { label: "[module].validators.ts", desc: "Input validation using Zod or manual checks" },
+            { label: "[module].types.ts", desc: "TypeScript interfaces and types local to this module" },
+            { label: "[module].selects.ts", desc: "Prisma select objects — reusable field projections" },
+            { label: "[module].activity.ts", desc: "Activity log helpers called after mutations (modules that track changes)" },
+            { label: "[module].notifications.ts", desc: "SSE notification helpers (modules that emit events)" },
+            { label: "index.ts", desc: "Barrel — re-exports the router for registration in src/index.ts" },
+          ]}
+        />
+      </>
+    ),
+  },
+  {
+    id: "request-flow",
+    title: "Request flow",
+    summary:
+      "Requests flow through authenticate, authorize, routes, controller, access, validators, query or mutation, activity, notifications, then a JSON response.",
+    content: (
+      <>
+        <SectionH>Request flow</SectionH>
+        <CodeBlock label="request lifecycle">{`Request
   → authenticate middleware   (validates RS256 JWT, attaches req.user)
   → authorize middleware      (checks workspace role if needed)
   → [module].routes.ts        (matches the route)
@@ -35,12 +63,19 @@ export function BackendArchSection() {
   → [module].activity.ts      (logs what changed)
   → [module].notifications.ts (emits SSE event if needed)
   → res.json(result)`}</CodeBlock>
-
-      <SectionH>resolveWorkspaceId helper</SectionH>
-      <Prose>
-        Many routes accept workspaceId from different places. Use the shared helper to normalize it:
-      </Prose>
-      <CodeBlock label="middleware/auth.ts">{`// Resolves workspaceId from params, body, or query — in that priority order
+      </>
+    ),
+  },
+  {
+    id: "resolve-workspace-id",
+    title: "resolveWorkspaceId helper",
+    summary:
+      "Shared helper that normalizes workspaceId from params, body, or query in that priority order, throwing a 400 if missing.",
+    content: (
+      <>
+        <SectionH>resolveWorkspaceId helper</SectionH>
+        <Prose>Many routes accept workspaceId from different places. Use the shared helper to normalize it:</Prose>
+        <CodeBlock label="middleware/auth.ts">{`// Resolves workspaceId from params, body, or query — in that priority order
 export function resolveWorkspaceId(req: Request): string {
   const id =
     req.params.workspaceId ??
@@ -51,9 +86,18 @@ export function resolveWorkspaceId(req: Request): string {
   if (!id) throw new AppError("workspaceId is required", 400);
   return id;
 }`}</CodeBlock>
-
-      <SectionH>Controller pattern</SectionH>
-      <CodeBlock label="task.controller.ts">{`export class TaskController {
+      </>
+    ),
+  },
+  {
+    id: "controller-pattern",
+    title: "Controller pattern",
+    summary:
+      "Thin controllers: resolve the workspace, authorize, validate, mutate, log activity, notify, and respond. Conditional logic belongs in access or mutation files.",
+    content: (
+      <>
+        <SectionH>Controller pattern</SectionH>
+        <CodeBlock label="task.controller.ts">{`export class TaskController {
   static async createTask(req: Request, res: Response) {
     const workspaceId = resolveWorkspaceId(req);
     const { userId } = req.user!;
@@ -68,9 +112,12 @@ export function resolveWorkspaceId(req: Request): string {
   }
 }`}</CodeBlock>
 
-      <Warn>
-        Keep controllers thin. If you find yourself writing conditional logic or Prisma queries inside a controller, move it to <IC>[module].access.ts</IC> or <IC>[module].mutation.ts</IC>.
-      </Warn>
-    </div>
-  );
-}
+        <Warn>
+          Keep controllers thin. If you find yourself writing conditional logic or Prisma queries
+          inside a controller, move it to <IC>[module].access.ts</IC> or{" "}
+          <IC>[module].mutation.ts</IC>.
+        </Warn>
+      </>
+    ),
+  },
+];

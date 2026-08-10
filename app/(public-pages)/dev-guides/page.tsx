@@ -1,56 +1,104 @@
 "use client";
 
-import { DevGuideHeader } from "@/components/DevGuides/DevGuideHeader";
-import { DevGuideSidebar } from "@/components/DevGuides/DevGuideSidebar";
-import { DevSectionHero, DevSectionPagination } from "@/components/DevGuides/DevSectionHero";
-import { useDevSectionContent } from "@/components/DevGuides/UseDevSectionContent";
+import { useEffect, useMemo, useState } from "react";
+import type { GuideSection } from "@/types/guides.types";
+import { GuideHeader } from "@/components/Guides/GuideHeader";
+import { GuideSidebar } from "@/components/Guides/GuideSidebar";
+import { SectionHero } from "@/components/Guides/SectionHero";
+import { GuideSectionList } from "@/components/Guides/GuideSectionList";
+import { GuideSearchResults } from "@/components/Guides/GuideSearchResults";
+import { GuideSearchInput } from "@/components/Guides/GuideSearchInput";
+import { SectionPagination } from "@/components/Guides/SectionPagination";
 import { DEV_SECTIONS } from "@/lib/devGuides";
-import { useRef, useState } from "react";
+import { DEV_ARTICLE_MAP } from "@/components/DevGuides/DevGuideArticles";
+import { searchGuides } from "@/utils/guides.utils";
+
+/** Merge section metadata with the rich article content once, at module scope. */
+const SECTIONS: GuideSection[] = DEV_SECTIONS.map((section) => ({
+  ...section,
+  articles: DEV_ARTICLE_MAP[section.id] ?? [],
+}));
 
 export default function DevGuidePage() {
-  const [activeId, setActiveId] = useState(DEV_SECTIONS[0].id);
+  const [activeId, setActiveId] = useState(SECTIONS[0].id);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const [query, setQuery] = useState("");
+  const [openArticle, setOpenArticle] = useState<string | null>(null);
 
-  const currentSection = DEV_SECTIONS.find(s => s.id === activeId)!;
-  const sectionContent = useDevSectionContent(activeId);
+  const currentSection = SECTIONS.find((section) => section.id === activeId) ?? SECTIONS[0];
+  const trimmedQuery = query.trim();
 
-  function navigate(id: string) {
+  const results = useMemo(() => searchGuides(SECTIONS, trimmedQuery), [trimmedQuery]);
+
+  // Close the mobile drawer with Escape for keyboard users.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setMobileOpen(false);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [mobileOpen]);
+
+  function navigate(id: string, articleKey: string | null = null) {
     setActiveId(id);
+    setOpenArticle(articleKey);
     setMobileOpen(false);
+    setQuery("");
     window.scrollTo({ top: 0, behavior: "smooth" });
-    if (contentRef.current) contentRef.current.scrollTop = 0;
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <DevGuideHeader
+    <div className="min-h-screen bg-background text-foreground overflow-x-clip">
+      <GuideHeader
         current={currentSection}
         mobileOpen={mobileOpen}
-        onMobileToggle={() => setMobileOpen(v => !v)}
+        onMobileToggle={() => setMobileOpen((value) => !value)}
+        query={query}
+        onQueryChange={setQuery}
+        label="Developer Guide"
       />
 
-      <div className="max-w-6xl mx-auto px-4 py-8 flex gap-6 lg:gap-8 items-start">
-        <DevGuideSidebar
-          sections={DEV_SECTIONS}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 flex gap-8 items-start">
+        <GuideSidebar
+          sections={SECTIONS}
           activeId={activeId}
           mobileOpen={mobileOpen}
           onNavigate={navigate}
+          onClose={() => setMobileOpen(false)}
         />
 
-        <main ref={contentRef} className="flex-1 min-w-0">
-          <DevSectionHero section={currentSection} />
-
-          {/* react-doctor-disable-next-line react-doctor/no-transition-all -- tailwindcss-animate `animate-in` entry animation only animates opacity/transform/filter, not `all` (false positive) */}
-          <div key={activeId} className="animate-in fade-in slide-in-from-bottom-2 duration-200">
-            {sectionContent}
-          </div>
-
-          <DevSectionPagination
-            sections={DEV_SECTIONS}
-            activeId={activeId}
-            onNavigate={navigate}
+        <main className="flex-1 min-w-0">
+          <GuideSearchInput
+            value={query}
+            onChange={setQuery}
+            id="dev-guide-search-mobile"
+            className="mb-4 sm:hidden"
           />
+
+          {trimmedQuery ? (
+            <GuideSearchResults
+              query={trimmedQuery}
+              results={results}
+              onOpen={(sectionId, key) => navigate(sectionId, key)}
+            />
+          ) : (
+            <>
+              <SectionHero section={currentSection} />
+              <GuideSectionList
+                section={currentSection}
+                openArticle={openArticle}
+                onToggleArticle={(key) =>
+                  setOpenArticle((current) => (current === key ? null : key))
+                }
+              />
+              <SectionPagination
+                sections={SECTIONS}
+                activeId={activeId}
+                onNavigate={(id) => navigate(id)}
+              />
+            </>
+          )}
         </main>
       </div>
     </div>

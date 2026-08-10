@@ -18,7 +18,7 @@ export async function POST(req: Request) {
       );
 
     if (verificationToken.expires < new Date()) {
-      await prisma.verificationToken.delete({ where: { token } });
+      await prisma.verificationToken.deleteMany({ where: { token } });
       return NextResponse.json({ error: "Token has expired" }, { status: 400 });
     }
 
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       data: { emailVerified: new Date() },
     });
 
-    await prisma.verificationToken.delete({ where: { token } });
+    await prisma.verificationToken.deleteMany({ where: { token } });
 
     return NextResponse.json({
       success: true,
