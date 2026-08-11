@@ -48,7 +48,7 @@ export function ProjectCard({
   const taskCount = project?._count?.tasks || 0;
 
   const CardContent = (
-    <div className="p-5 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-lg transition cursor-pointer h-full flex flex-col gap-4">
+    <div className="p-4 sm:p-5 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-lg transition cursor-pointer h-full flex flex-col gap-4">
       <ProjectDetails project={project} joined={joined} />
       
       <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">

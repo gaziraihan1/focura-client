@@ -43,15 +43,15 @@ export function ProjectCardHeader({
           <h3 className="text-base sm:text-lg font-semibold text-foreground group-hover:text-primary transition truncate">
             {name}
           </h3>
-          <div className="flex items-center gap-2 mt-1">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
             <span
-              className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+              className={`px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${
                 statusColors[status] || statusColors.PLANNING
               }`}
             >
               {status.replace("_", " ")}
             </span>
-            <span className={`text-xs font-medium ${priorityColors[priority]}`}>
+            <span className={`text-xs font-medium whitespace-nowrap ${priorityColors[priority]}`}>
               {priority}
             </span>
           </div>

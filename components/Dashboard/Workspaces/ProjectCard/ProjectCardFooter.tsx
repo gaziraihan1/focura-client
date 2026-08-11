@@ -24,7 +24,7 @@ export function ProjectCardFooter({
   dueDate,
 }: ProjectCardFooterProps) {
   return (
-    <div className="flex items-center justify-between pt-3 sm:pt-4 border-t border-border">
+    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 pt-3 sm:pt-4 border-t border-border">
       <ProjectCardMembers members={members} totalMembers={totalMembers} />
       <ProjectCardDueDate dueDate={dueDate} />
     </div>

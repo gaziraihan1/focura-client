@@ -48,11 +48,11 @@ export function TaskCardHeader({
   const isCompleted = task.status === "COMPLETED";
 
   return (
-    <div className="flex items-start gap-3">
+    <div className="flex items-start gap-2.5 sm:gap-3">
       {/* Status orb */}
       <div
         className={`
-          shrink-0 mt-0.5 w-9 h-9 rounded-xl flex items-center justify-center
+          shrink-0 mt-0.5 w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center
           ${getStatusColor(task.status)}
           shadow-sm ring-1 ring-inset ring-white/10
         `}
@@ -83,7 +83,7 @@ export function TaskCardHeader({
       </div>
 
       {/* Right-side controls */}
-      <div className="flex items-center gap-2 shrink-0 ml-1">
+      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-1">
         {/* Priority flag — always visible */}
         <Flag
           size={16}
@@ -246,7 +246,7 @@ export function TaskCardProgressAssignees({
   if (!(progress !== null || task.assignees.length > 0)) return null;
 
   return (
-    <div className="mt-3.5 flex items-center gap-3">
+    <div className="mt-3.5 flex flex-wrap items-center gap-x-3 gap-y-2">
       {/* Progress */}
       {progress !== null && task.estimatedHours && (
         <div className="flex items-center gap-2 flex-1 min-w-0">

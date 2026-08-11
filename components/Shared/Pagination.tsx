@@ -109,7 +109,7 @@ export function Pagination({
       )}
 
       {/* Pagination Controls */}
-      <div className="flex items-center justify-center gap-2">
+      <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
         {/* Previous Button */}
         <button
           disabled={currentPage === 1}

@@ -86,22 +86,22 @@ export function WorkspaceHeader({
         {canCreateProjects && (
           <button
             onClick={() => router.push(`/dashboard/workspaces/${workspaceSlug}/projects/new-project`)}
-            className="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center justify-center gap-2 text-sm sm:text-base"
+            className="shrink-0 w-10 sm:w-auto h-10 sm:h-auto sm:px-4 sm:py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition inline-flex items-center justify-center gap-2 text-sm sm:text-base"
+            aria-label="New Project"
           >
-            <Plus size={16} className="sm:w-4.5 sm:h-4.5" />
-            <span className="hidden xs:inline">New Project</span>
-            <span className="xs:hidden">New Project</span>
+            <Plus size={16} />
+            <span className="hidden sm:inline">New Project</span>
           </button>
         )}
 
         {(isAdmin || isOwner) && (
           <Link
             href={`/dashboard/workspaces/${workspaceSlug}/workspace-usage`}
-            className="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-accent transition flex items-center justify-center gap-2 text-sm sm:text-base shrink-0"
+            className="shrink-0 px-3 sm:px-4 py-2 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-accent transition inline-flex items-center justify-center gap-2 text-sm sm:text-base"
             aria-label="AI usage"
           >
             <BarChart3 size={16} />
-            <span>AI usage</span>
+            <span className="hidden sm:inline">AI usage</span>
           </Link>
         )}
 

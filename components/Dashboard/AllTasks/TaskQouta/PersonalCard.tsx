@@ -29,7 +29,7 @@ export function PersonalCard({ q }: { q: PersonalQuotaInfo }) {
       </div>
 
       {/* Ring + stats row */}
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row items-center gap-4">
         {/* Progress ring */}
         <div className="relative shrink-0">
           <ProgressRing used={q.usedToday} limit={q.dailyLimit} size={64} strokeWidth={6} />
@@ -41,7 +41,7 @@ export function PersonalCard({ q }: { q: PersonalQuotaInfo }) {
         </div>
 
         {/* Stats pills */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap justify-center sm:justify-start gap-2">
           <StatPill label="Used" value={q.usedToday} sub="today" />
           <StatPill label="Remaining" value={q.remaining} sub="tasks" />
           <StatPill label="Daily limit" value={q.dailyLimit} />

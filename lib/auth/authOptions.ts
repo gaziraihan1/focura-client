@@ -253,11 +253,24 @@ export const authOptions: NextAuthOptions = {
     }
 
     // Subsequent requests: silently refresh when near expiry
+    const now = Date.now();
     const nearExpiry =
       !token.backendTokenExpiry ||
-      Date.now() > (token.backendTokenExpiry as number) - 60_000;
+      now > (token.backendTokenExpiry as number) - 60_000;
 
     if (nearExpiry && token.refreshToken) {
+      // Throttle retry attempts: while the network is flaky we must not
+      // hammer /refresh on every session read. But throttle ONLY while the
+      // current access token still works — once it has truly expired, the
+      // 401-retry path depends on this refresh, so always attempt it.
+      const tokenStillValid =
+        !!token.backendTokenExpiry && now < (token.backendTokenExpiry as number);
+      const lastAttempt = (token.lastRefreshAttempt as number) ?? 0;
+      if (tokenStillValid && now - lastAttempt < 30_000) {
+        return token;
+      }
+      token.lastRefreshAttempt = now;
+
       console.log("🔄 Attempting silent refresh...");
       
       const tokens = await silentRefresh(
@@ -291,10 +304,13 @@ export const authOptions: NextAuthOptions = {
           token.refreshTokenExpiry = 0;
         }
 
-        // Refresh failed but token not expired - degrade session
-        console.warn("⚠️ Silent refresh failed - degrading session");
-        token.backendToken = "";
-        token.backendTokenExpiry = 0;
+        // Refresh failed but the refresh token is still valid. KEEP the
+        // current tokens — zeroing them here degrades the session to empty
+        // and the next API call force-logs-out the user on a transient
+        // blip (network hiccup, 5xx). The old access token stays valid
+        // until it truly expires; lib/axios's 401-retry path then re-attempts
+        // this refresh (throttled above).
+        console.warn("⚠️ Silent refresh failed (transient) - keeping current token");
       }
     }
 
@@ -406,6 +422,7 @@ declare module "next-auth/jwt" {
     backendTokenExpiry: number;
     refreshToken: string;
     refreshTokenExpiry: number;
+    lastRefreshAttempt?: number;
     error?: string;
   }
 }

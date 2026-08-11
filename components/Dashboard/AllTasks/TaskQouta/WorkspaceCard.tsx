@@ -49,7 +49,7 @@ export function WorkspaceCard({ q }: { q: WorkspaceQuotaInfo }) {
           </div>
         </div>
       ) : (
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center gap-4">
           <div className="relative shrink-0">
             <ProgressRing used={wsUsed} limit={wsLimit} size={64} strokeWidth={6} />
             <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -58,7 +58,7 @@ export function WorkspaceCard({ q }: { q: WorkspaceQuotaInfo }) {
               </span>
             </div>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap justify-center sm:justify-start gap-2">
             <StatPill label="Used" value={wsUsed} sub="today" />
             <StatPill label="Remaining" value={q.workspaceRemaining ?? "∞"} sub="tasks" />
             {wsLimit && <StatPill label="Daily limit" value={wsLimit} />}
@@ -115,7 +115,7 @@ export function WorkspaceCard({ q }: { q: WorkspaceQuotaInfo }) {
       )}
 
       {/* Footer */}
-      <div className="flex items-center justify-between pt-1 border-t border-border">
+      <div className="flex flex-wrap items-center justify-between gap-y-1.5 pt-1 border-t border-border">
         <div className="flex items-center gap-1.5 text-muted-foreground">
           <Clock className="w-3.5 h-3.5" />
           <span className="text-xs">Resets in {formatResetTime(q.resetAt)}</span>

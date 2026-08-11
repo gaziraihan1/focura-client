@@ -63,9 +63,9 @@ Browser (React)            Next.js (NextAuth)           Express Backend
 
 | Tier | Responsibilities |
 |------|-----------------|
-| **Browser (React)** | Stores access token in memory. Sends `Authorization` and `x-csrf-token` headers. Triggers refresh before expiry. Handles `401` by redirecting to login. |
+| **Browser (React)** | Stores access token in memory. Sends `Authorization` and `x-csrf-token` headers. Triggers refresh before expiry. Resets the inactivity clock on real user interaction and pings the activity heartbeat. Handles `401` by redirecting to login. |
 | **Next.js (NextAuth)** | Manages user session via HTTP-only cookie. Generates HMAC-signed proof on login. Silently refreshes backend tokens. Proxies API calls server-side. |
-| **Express Backend** | Signs RS256 JWTs. Verifies HMAC proofs. Stores refresh tokens in Redis. Enforces CSRF, rate limiting, session binding. |
+| **Express Backend** | Signs RS256 JWTs. Verifies HMAC proofs. Stores refresh tokens in Redis. Enforces CSRF, rate limiting, session binding. Exposes `GET /api/v1/auth/activity` so the client can refresh the server-side inactivity clock. |
 
 ---
 
@@ -911,7 +911,31 @@ Each login creates a **session** with:
 - A unique `sessionId` (UUID)
 - A **device fingerprint** (SHA-256 hash of User-Agent + Accept-Language + Accept-Encoding)
 - An **IP address**
-- A **last activity** timestamp (updated on every request)
+- A **last activity** timestamp — updated by API requests and by the frontend activity heartbeat (see [Activity & Heartbeat](#activity--heartbeat))
+
+### Activity & Heartbeat
+
+> **TL;DR:** "Active" means the user is actually using the app — not merely
+> that requests are flowing. The session must not expire while the user is
+> clicking, typing, or scrolling, even on pages whose data is fully cached.
+
+**What counts as activity:**
+
+| Signal | Resets the 30-min clock | How |
+|--------|------------------------|-----|
+| API request | Client + server | The request interceptor calls `updateActivity()`; the backend `sessionTimeout` middleware refreshes the Redis TTL |
+| User interaction (`pointerdown`, `keydown`, `touchstart`, `scroll`, throttled `mousemove`) | Client | `lib/axios.ts` calls `updateActivity()` on these events, resetting the frontend 30-minute inactivity timer |
+| Heartbeat ping | Server | While the tab is visible and the user has been active recently, `lib/axios.ts` sends `GET /api/v1/auth/activity` every **5 minutes** to keep the Redis inactivity key alive |
+
+**The heartbeat endpoint — `GET /api/v1/auth/activity`**
+
+- Authenticated (`authenticate` + `sessionTimeout`), no CSRF required (GET).
+- Each call simply bumps the server-side inactivity TTL; the handler returns `{ success: true }`.
+- The client pings only while **both** of these hold:
+  1. the tab is **visible** (a hidden tab must not extend the timeout for a user who walked away), and
+  2. the user has **interacted within the last 30 minutes**.
+- Hidden tabs do **not** ping and do **not** enforce inactivity — a background tab can never kill the session you are actively using in the foreground tab. When a tab becomes visible again it re-syncs with the live session (`getSession`) before restarting its timers, and force-logs-out immediately if the session is genuinely dead (`SESSION_EXPIRED`).
+- **Refresh resilience:** a transient network failure during a silent token refresh no longer degrades the session. The client keeps the current access token and retries (throttled to once per 30s while the token is still valid); only a genuinely expired/revoked refresh token ends the session.
 
 ### Session Binding
 
@@ -929,8 +953,10 @@ The backend validates that each request comes from the same device and a reasona
 
 ```typescript
 // The backend returns 401 with code "SESSION_TIMEOUT" when:
-// - Inactivity timeout (30 min) exceeded
+// - Inactivity timeout (30 min with no interaction or heartbeat) exceeded
 // - Absolute timeout (7 days) exceeded
+// While the user is active, the frontend keeps the session alive via the
+// activity heartbeat (GET /api/v1/auth/activity) — see "Activity & Heartbeat".
 
 api.interceptors.response.use(
   (response) => response,
@@ -954,7 +980,7 @@ api.interceptors.response.use(
 | User logs out from all devices | ALL sessions revoked |
 | Device fingerprint changes | ALL refresh tokens revoked (hijack detection) |
 | IP changes within 5 min | Current request rejected |
-| 30 min inactivity | Session expires |
+| 30 min without user interaction or heartbeat | Session expires |
 | 7 days absolute | Session expires |
 | More than 5 concurrent sessions | Oldest session evicted |
 | Account banned | All sessions invalid (cache invalidated) |

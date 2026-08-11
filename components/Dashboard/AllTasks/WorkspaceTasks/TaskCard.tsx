@@ -73,7 +73,7 @@ export function TaskCard({
           ${isCompleted ? "opacity-70" : ""}
         `}
       >
-        <div className="p-5">
+        <div className="p-4 sm:p-5">
           <TaskCardHeader
             task={task}
             showButtons={showButtons}

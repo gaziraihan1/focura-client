@@ -528,7 +528,7 @@ describe('useDeleteWorkspace', () => {
 
   it('enters error state when delete fails', async () => {
     server.use(
-      http.post(`${BASE}/api/v1/admin/workspaces/:slug/delete`, () =>
+      http.post(`${BASE}/api/v1/admin/workspaces/:slug`, () =>
         new HttpResponse(null, { status: 403 })
       )
     )

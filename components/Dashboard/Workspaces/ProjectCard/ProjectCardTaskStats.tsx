@@ -10,7 +10,7 @@ export function ProjectCardTaskStats({
   overdueTasks,
 }: ProjectCardTaskStatsProps) {
   return (
-    <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm">
+    <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-4 gap-y-1 text-xs sm:text-sm">
       <div className="flex items-center gap-1 text-muted-foreground">
         <CheckCircle2 size={14} className="text-green-500" />
         <span>{completedTasks} done</span>

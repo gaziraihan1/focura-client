@@ -50,7 +50,7 @@ export function WorkspaceStats({ stats, maxMembers }: WorkspaceStatsProps) {
             <CheckCircle2 className="text-green-500" size={16} />
           </div>
           <span className="text-xs sm:text-sm text-muted-foreground">
-            {stats.completionRate}%
+            {Number(stats.completionRate.toFixed(2))}%
           </span>
         </div>
         <p className="text-xl sm:text-2xl font-bold text-foreground mb-0.5 sm:mb-1">

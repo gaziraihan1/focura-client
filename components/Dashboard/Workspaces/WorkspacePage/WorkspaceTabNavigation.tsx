@@ -23,7 +23,7 @@ export function WorkspaceTabNavigation({
 }: WorkspaceTabNavigationProps) {
   return (
     <div className="border-b border-border -mx-3 sm:mx-0">
-      <div className="flex flex-wrap gap-2 sm:gap-4 overflow-x-auto scrollbar-hide px-3 sm:px-0">
+      <div className="flex gap-2 sm:gap-4 overflow-x-auto scrollbar-hide px-3 sm:px-0">
         {tabs.map((tab) => (
           <button
             key={tab.id}

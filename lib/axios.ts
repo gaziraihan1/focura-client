@@ -192,6 +192,14 @@ if (typeof window !== "undefined") {
 
 /** Awaits both NextAuth sign-out and backend logout, then redirects */
 async function forceLogout(reason = "Session expired. Please login again."): Promise<never> {
+  // A hidden tab must never kill a session the user is actively using in
+  // another tab. Defer the logout; handleVisibilityChange re-syncs with the
+  // live session when the tab becomes visible again.
+  if (typeof document !== "undefined" && document.visibilityState === "hidden") {
+    stopSessionTimers();
+    return Promise.reject(new Error("SESSION_EXPIRED_DEFERRED"));
+  }
+
   // Broadcast logout to other tabs before cleaning up
   broadcastAuthEvent({ type: "logout-all" });
   
@@ -319,6 +327,94 @@ export function stopSessionTimers(): void {
   clearAllSessionTimers();
 }
 
+// ─── User Activity Tracking ─────────────────────────────────────────────────
+// "Activity" must mean the user actually using the app (clicking, typing,
+// scrolling), not merely API traffic. Otherwise a user browsing cached pages
+// gets force-logged-out by the 30-minute inactivity timer while clearly
+// active. Interaction events reset the client timer immediately; a low-rate
+// heartbeat keeps the server-side Redis activity key alive while active.
+
+let lastInteractionAt = 0;
+let lastThrottledInteraction = 0;
+
+const ACTIVITY_HEARTBEAT_MS = 5 * 60 * 1000; // 5 minutes
+let heartbeatTimer: ReturnType<typeof setInterval> | null = null;
+
+function sendActivityHeartbeat(): void {
+  if (!cachedBackendToken) return;
+  // Only a visible tab pings. A hidden tab must not extend the 30-minute
+  // inactivity window for a user who walked away — the visible tab's client
+  // timer already enforces the policy for genuinely active users.
+  if (typeof document !== "undefined" && document.visibilityState === "hidden") return;
+  // Only ping while the user has been active recently; a fully idle user
+  // should still hit the 30-minute inactivity timeout.
+  if (Date.now() - lastInteractionAt > INACTIVITY_TIMEOUT) return;
+  axiosInstance.get("/api/v1/auth/activity").catch(() => {});
+}
+
+function startHeartbeat(): void {
+  if (heartbeatTimer) return;
+  heartbeatTimer = setInterval(sendActivityHeartbeat, ACTIVITY_HEARTBEAT_MS);
+}
+
+function stopHeartbeat(): void {
+  if (heartbeatTimer) {
+    clearInterval(heartbeatTimer);
+    heartbeatTimer = null;
+  }
+}
+
+/** Called on real user interaction — resets the client inactivity timer. */
+function markInteraction(): void {
+  lastInteractionAt = Date.now();
+  updateActivity();
+}
+
+/** Throttled variant for high-frequency events (mousemove/scroll). */
+function markThrottledInteraction(): void {
+  const now = Date.now();
+  if (now - lastThrottledInteraction < 30_000) return;
+  lastThrottledInteraction = now;
+  markInteraction();
+}
+
+/**
+ * Hidden tabs must not enforce inactivity: the user may be active in another
+ * tab sharing the same session. On return to a visible tab, re-sync with the
+ * live session before restarting the timers.
+ */
+function handleVisibilityChange(): void {
+  if (typeof document === "undefined") return;
+
+  if (document.visibilityState === "hidden") {
+    stopSessionTimers();
+    return;
+  }
+
+  stopSessionTimers();
+  getFreshSession()
+    .then((session) => {
+      if (session?.error === "SESSION_EXPIRED") {
+        void forceLogout("Session expired. Please login again.");
+        return;
+      }
+      if (session?.backendTokenExpiry) {
+        initializeBackgroundRefresh(session.backendTokenExpiry);
+      }
+      // No session → the next API call 401s and forceLogout handles it.
+    })
+    .catch(() => {});
+}
+
+if (typeof window !== "undefined" && typeof document !== "undefined") {
+  window.addEventListener("pointerdown", markInteraction, { passive: true });
+  window.addEventListener("keydown", markInteraction);
+  window.addEventListener("touchstart", markInteraction, { passive: true });
+  window.addEventListener("scroll", markThrottledInteraction, { passive: true });
+  window.addEventListener("mousemove", markThrottledInteraction, { passive: true });
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+}
+
 // ─── Proactive Background Token Refresh ─────────────────────────────────────────
 
 let refreshTimer: ReturnType<typeof setTimeout> | null = null;
@@ -386,12 +482,15 @@ async function attemptBackgroundRefresh(): Promise<void> {
 export function initializeBackgroundRefresh(tokenExpiry: number): void {
   scheduleBackgroundRefresh(tokenExpiry);
   initializeSessionTimers(tokenExpiry);
+  if (!lastInteractionAt) lastInteractionAt = Date.now();
+  startHeartbeat();
 }
 
 export function stopBackgroundRefresh(): void {
   clearRefreshTimer();
   isRefreshing = false;
   stopSessionTimers();
+  stopHeartbeat();
 }
 
 // ─── Token cache ──────────────────────────────────────────────────────────────

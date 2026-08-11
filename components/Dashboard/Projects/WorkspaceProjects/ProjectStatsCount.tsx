@@ -7,7 +7,7 @@ interface ProjectStatsCountProps {
 
 export default function ProjectStatsCount({taskCount, memberCount}: ProjectStatsCountProps) {
   return (
-    <div className="flex items-center justify-between text-sm">
+    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-sm">
           <span className="flex items-center gap-2 text-muted-foreground">
             <FolderKanban size={16} />
             <span className="font-medium text-foreground">{taskCount}</span>
