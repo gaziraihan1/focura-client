@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { Check, Loader2, Wand2 } from "lucide-react";
 import { useAiCommentAssist, useWorkspaceSlug } from "@/hooks/useAi";
 import { cn } from "@/lib/utils";
@@ -66,6 +67,11 @@ export function AiCommentAssist({
         setQuotaError(true);
       } else if (code === AI_ERROR_CODES.featureNotAvailable) {
         setFeatureError(true);
+      } else if (code === AI_ERROR_CODES.providerRateLimit) {
+        // Google-side rate limit — transient, prompt to retry (not a plan issue).
+        toast.error(
+          "AI is receiving too many requests right now. Please wait a moment and try again.",
+        );
       } else {
         // Service down / bad response — surface it briefly instead of silently
         // doing nothing.

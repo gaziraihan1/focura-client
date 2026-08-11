@@ -23,7 +23,7 @@ export function DeleteWorkspaceModal({
 
   const { mutate: deleteWs, isPending } = useDeleteWorkspace();
 
-  const isValid = confirmed === workspaceName && (hardDelete ? true : true);
+  const isValid = confirmed === workspaceName;
 
   const handleDelete = () => {
     if (!isValid) return;

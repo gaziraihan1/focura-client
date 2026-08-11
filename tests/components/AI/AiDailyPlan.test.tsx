@@ -4,6 +4,12 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import { AiDailyPlan } from "@/components/AI/AiDailyPlan";
 
+vi.mock("react-hot-toast", () => ({
+  default: { success: vi.fn(), error: vi.fn() },
+}));
+
+import toast from "react-hot-toast";
+
 function wrapper() {
   const qc = new QueryClient({
     defaultOptions: { queries: { retry: false } },
@@ -73,6 +79,36 @@ describe("AiDailyPlan", () => {
 
     await waitFor(() => {
       expect(screen.getByText(/AI assistant limit reached/)).toBeInTheDocument();
+    });
+  });
+
+  it("shows a friendly retry toast when the AI provider rate-limits", async () => {
+    const { http, HttpResponse } = await import("msw");
+    const { server } = await import("@/tests/mock/server");
+
+    server.use(
+      http.post("*/api/v1/ai/plan/daily", () =>
+        HttpResponse.json(
+          {
+            success: false,
+            code: "AI_PROVIDER_RATE_LIMIT",
+            message:
+              "The AI provider is receiving too many requests right now. Please try again in a moment.",
+            retryAfter: 60,
+          },
+          { status: 429 },
+        ),
+      ),
+    );
+
+    render(<AiDailyPlan tasks={TASKS} />, { wrapper: wrapper() });
+
+    fireEvent.click(screen.getByText("Generate order"));
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        expect.stringContaining("too many requests"),
+      );
     });
   });
 });

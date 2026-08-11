@@ -74,6 +74,17 @@ export function AiSuggestionBar({
     );
   }
 
+  // Provider-side 429 (Google rate limit) — transient; the debounced query
+  // refires as the user types, so just surface a short retry hint.
+  if (errorCode === AI_ERROR_CODES.providerRateLimit) {
+    return (
+      <p className="mt-3 rounded-xl border border-border bg-muted/50 px-3 py-2.5 text-xs text-muted-foreground">
+        AI is receiving too many requests right now — suggestions will resume
+        automatically as you keep typing.
+      </p>
+    );
+  }
+
   return (
     <div className="mt-3 rounded-xl border border-primary/20 bg-primary/5 px-3 py-2.5">
       <div className="flex items-center justify-between gap-2">

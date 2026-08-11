@@ -37,6 +37,33 @@ export const mockAdminStats: AdminStats = {
     rejected: 1,
   },
   totalStorageUsedMb: 512,
+  growth: [
+    { label: 'Jan', users: 5, workspaces: 1, projects: 3 },
+    { label: 'Feb', users: 12, workspaces: 3, projects: 6 },
+    { label: 'Mar', users: 18, workspaces: 4, projects: 9 },
+    { label: 'Apr', users: 25, workspaces: 6, projects: 14 },
+    { label: 'May', users: 31, workspaces: 7, projects: 18 },
+    { label: 'Jun', users: 37, workspaces: 9, projects: 22 },
+    { label: 'Jul', users: 42, workspaces: 10, projects: 25 },
+  ],
+  taskActivity: [
+    { label: 'Mon', todo: 8, inProgress: 5, completed: 12 },
+    { label: 'Tue', todo: 6, inProgress: 7, completed: 10 },
+    { label: 'Wed', todo: 9, inProgress: 4, completed: 14 },
+    { label: 'Thu', todo: 5, inProgress: 8, completed: 11 },
+    { label: 'Fri', todo: 4, inProgress: 6, completed: 13 },
+    { label: 'Sat', todo: 2, inProgress: 1, completed: 6 },
+    { label: 'Sun', todo: 1, inProgress: 2, completed: 4 },
+  ],
+  growthByPlan: [
+    { label: 'Jan', FREE: 1, PRO: 0, BUSINESS: 0, ENTERPRISE: 0 },
+    { label: 'Feb', FREE: 2, PRO: 1, BUSINESS: 0, ENTERPRISE: 0 },
+    { label: 'Mar', FREE: 2, PRO: 1, BUSINESS: 1, ENTERPRISE: 0 },
+    { label: 'Apr', FREE: 3, PRO: 2, BUSINESS: 1, ENTERPRISE: 0 },
+    { label: 'May', FREE: 3, PRO: 2, BUSINESS: 1, ENTERPRISE: 1 },
+    { label: 'Jun', FREE: 4, PRO: 3, BUSINESS: 1, ENTERPRISE: 1 },
+    { label: 'Jul', FREE: 4, PRO: 3, BUSINESS: 2, ENTERPRISE: 1 },
+  ],
   recentSignups: [
     {
       id: 'user-1',
@@ -293,8 +320,8 @@ export const adminHandlers = [
     return ok(mockAdminWorkspaceDetail)
   }),
 
-  // POST /api/v1/admin/workspaces/:slug/delete  → { success, message }
-  http.post(`${BASE}/api/v1/admin/workspaces/:slug/delete`, () =>
+  // POST /api/v1/admin/workspaces/:slug  → { success, message }
+  http.post(`${BASE}/api/v1/admin/workspaces/:slug`, () =>
     okMessage('Workspace deleted successfully')
   ),
 

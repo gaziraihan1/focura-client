@@ -1,4 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+
+const { mockDeleteWorkspace } = vi.hoisted(() => ({ mockDeleteWorkspace: vi.fn() }));
 import { render, screen, fireEvent } from "@testing-library/react";
 
 // ─── Global Mocks ────────────────────────────────────────────────────────────
@@ -13,7 +15,7 @@ vi.mock("next/link", () => ({
 vi.mock("next/image", () => ({
   default: (props: Record<string, unknown>) => {
     const { fill, priority, alt = "", ...rest } = props;
-    return <img alt={alt} {...rest} data-fill={fill} />;
+    return <img alt={alt} {...rest} data-fill={fill} data-priority={String(priority)} />;
   },
 }));
 
@@ -213,7 +215,7 @@ vi.mock("@/types/announcement.types", () => ({}));
 
 vi.mock("@/hooks/useAdmin", () => ({
   useBanUser: () => ({ mutate: vi.fn(), isPending: false }),
-  useDeleteWorkspace: () => ({ mutate: vi.fn(), isPending: false }),
+  useDeleteWorkspace: () => ({ mutate: mockDeleteWorkspace, isPending: false }),
   useUpdateWorkspaceLimits: () => ({ mutate: vi.fn(), isPending: false }),
 }));
 
@@ -344,5 +346,66 @@ describe("DeleteWorkspaceModal", () => {
     const input = screen.getByPlaceholderText("Test WS");
     fireEvent.change(input, { target: { value: "Wrong" } });
     expect(screen.getByText("Name doesn't match")).toBeInTheDocument();
+  });
+
+  beforeEach(() => {
+    mockDeleteWorkspace.mockReset();
+  });
+
+  it("keeps the action disabled until the workspace name is typed", async () => {
+    const { DeleteWorkspaceModal } = await import("@/components/AdminDashboard/Workspace/DeleteWorkspaceModal");
+    render(
+      <DeleteWorkspaceModal workspaceSlug="ws" workspaceName="Test WS" isOpen onClose={vi.fn()} />
+    );
+    const submit = screen.getByRole("button", { name: "Suspend" });
+    expect(submit).toBeDisabled();
+
+    fireEvent.change(screen.getByPlaceholderText("Test WS"), { target: { value: "Test WS" } });
+    expect(submit).toBeEnabled();
+  });
+
+  it("submits a suspend (soft delete) with reason and closes on success", async () => {
+    const { DeleteWorkspaceModal } = await import("@/components/AdminDashboard/Workspace/DeleteWorkspaceModal");
+    const onClose = vi.fn();
+    const onSuccess = vi.fn();
+    mockDeleteWorkspace.mockImplementation((_args: unknown, opts: { onSuccess?: () => void }) => {
+      opts.onSuccess?.();
+    });
+    render(
+      <DeleteWorkspaceModal
+        workspaceSlug="my-ws" workspaceName="Test WS" isOpen
+        onClose={onClose} onSuccess={onSuccess}
+      />
+    );
+
+    fireEvent.change(screen.getByLabelText(/Reason/), { target: { value: "  Policy violation  " } });
+    fireEvent.change(screen.getByPlaceholderText("Test WS"), { target: { value: "Test WS" } });
+    fireEvent.click(screen.getByRole("button", { name: "Suspend" }));
+
+    expect(mockDeleteWorkspace).toHaveBeenCalledWith(
+      { slug: "my-ws", reason: "Policy violation", hardDelete: false },
+      expect.objectContaining({ onSuccess: expect.any(Function) }),
+    );
+    expect(onClose).toHaveBeenCalled();
+    expect(onSuccess).toHaveBeenCalled();
+  });
+
+  it("submits a permanent delete when hard-delete mode is selected", async () => {
+    const { DeleteWorkspaceModal } = await import("@/components/AdminDashboard/Workspace/DeleteWorkspaceModal");
+    mockDeleteWorkspace.mockImplementation((_args: unknown, opts: { onSuccess?: () => void }) => {
+      opts.onSuccess?.();
+    });
+    render(
+      <DeleteWorkspaceModal workspaceSlug="my-ws" workspaceName="Test WS" isOpen onClose={vi.fn()} />
+    );
+
+    fireEvent.click(screen.getByText("Permanent").closest("button")!);
+    fireEvent.change(screen.getByPlaceholderText("Test WS"), { target: { value: "Test WS" } });
+    fireEvent.click(screen.getByRole("button", { name: "Delete Forever" }));
+
+    expect(mockDeleteWorkspace).toHaveBeenCalledWith(
+      { slug: "my-ws", reason: undefined, hardDelete: true },
+      expect.objectContaining({ onSuccess: expect.any(Function) }),
+    );
   });
 });

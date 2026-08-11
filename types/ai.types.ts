@@ -131,6 +131,8 @@ export const AI_ERROR_CODES = {
   rateLimit: "AI_RATE_LIMIT_EXCEEDED",
   dailyQuota: "AI_DAILY_QUOTA_EXCEEDED",
   monthlyQuota: "AI_MONTHLY_QUOTA_EXCEEDED",
+  /** Provider-side 429 (Google rate limit / quota) — transient, retry shortly. */
+  providerRateLimit: "AI_PROVIDER_RATE_LIMIT",
   serviceUnavailable: "AI_RATE_LIMIT_SERVICE_UNAVAILABLE",
   serviceDown: "AI_SERVICE_UNAVAILABLE",
   invalidResponse: "AI_INVALID_RESPONSE",

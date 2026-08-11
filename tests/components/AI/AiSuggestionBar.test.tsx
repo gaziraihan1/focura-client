@@ -100,4 +100,29 @@ describe("AiSuggestionBar", () => {
       ).toBeInTheDocument();
     });
   });
+
+  it("shows a retry hint when the AI provider rate-limits", async () => {
+    server.use(
+      http.post("*/api/v1/ai/tasks/autocomplete", () =>
+        HttpResponse.json(
+          {
+            success: false,
+            code: "AI_PROVIDER_RATE_LIMIT",
+            message:
+              "The AI provider is receiving too many requests right now. Please try again in a moment.",
+            retryAfter: 60,
+          },
+          { status: 429 },
+        ),
+      ),
+    );
+
+    renderBar("Fix login redirect");
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/receiving too many requests/i),
+      ).toBeInTheDocument();
+    });
+  });
 });

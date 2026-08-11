@@ -3,6 +3,12 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { AiMeetingSummary } from "@/components/AI/AiMeetingSummary";
 
+vi.mock("react-hot-toast", () => ({
+  default: { success: vi.fn(), error: vi.fn() },
+}));
+
+import toast from "react-hot-toast";
+
 function renderCard() {
   const qc = new QueryClient({
     defaultOptions: { queries: { retry: false } },
@@ -54,6 +60,36 @@ describe("AiMeetingSummary", () => {
 
     await waitFor(() => {
       expect(screen.getByText(/AI assistant limit reached/)).toBeInTheDocument();
+    });
+  });
+
+  it("shows a friendly retry toast when the AI provider rate-limits", async () => {
+    const { http, HttpResponse } = await import("msw");
+    const { server } = await import("@/tests/mock/server");
+
+    server.use(
+      http.post("*/api/v1/ai/meetings/summarize", () =>
+        HttpResponse.json(
+          {
+            success: false,
+            code: "AI_PROVIDER_RATE_LIMIT",
+            message:
+              "The AI provider is receiving too many requests right now. Please try again in a moment.",
+            retryAfter: 60,
+          },
+          { status: 429 },
+        ),
+      ),
+    );
+
+    renderCard();
+
+    fireEvent.click(screen.getByText("Summarize meeting"));
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        expect.stringContaining("too many requests"),
+      );
     });
   });
 });

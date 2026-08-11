@@ -12,7 +12,7 @@ import {
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   RadialBarChart, RadialBar,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LabelList,
 // oxlint-disable-next-line react-doctor/prefer-dynamic-import -- recharts only ships when this chart mounts
 } from 'recharts';
 
@@ -24,25 +24,7 @@ const VIZ = {
 const PLAN_COLORS = [VIZ.indigo, VIZ.emerald, VIZ.orange, VIZ.pink] as const;
 const TASK_COLORS = { todo: VIZ.indigo, inProgress: VIZ.orange, completed: VIZ.emerald } as const;
 
-const growthData = [
-  { month: 'Jan', users: 120, workspaces: 34, projects: 89 },
-  { month: 'Feb', users: 145, workspaces: 41, projects: 104 },
-  { month: 'Mar', users: 178, workspaces: 52, projects: 131 },
-  { month: 'Apr', users: 203, workspaces: 60, projects: 158 },
-  { month: 'May', users: 267, workspaces: 78, projects: 192 },
-  { month: 'Jun', users: 312, workspaces: 94, projects: 241 },
-  { month: 'Jul', users: 389, workspaces: 112, projects: 298 },
-];
 
-const taskActivityData = [
-  { day: 'Mon', todo: 24, inProgress: 18, completed: 31 },
-  { day: 'Tue', todo: 18, inProgress: 22, completed: 28 },
-  { day: 'Wed', todo: 30, inProgress: 15, completed: 42 },
-  { day: 'Thu', todo: 22, inProgress: 27, completed: 38 },
-  { day: 'Fri', todo: 16, inProgress: 20, completed: 45 },
-  { day: 'Sat', todo: 10, inProgress: 8, completed: 22 },
-  { day: 'Sun', todo: 8, inProgress: 5, completed: 14 },
-];
 
 function GlassTooltip({ active, payload, label }: {
   active?: boolean; payload?: Array<{ dataKey: string; color: string; value: number }>; label?: string;
@@ -63,6 +45,23 @@ function GlassTooltip({ active, payload, label }: {
 }
 
   const axisTick = { fill: 'var(--color-muted-foreground)', fontSize: 11 } as const;
+
+/**
+ * Small value label rendered directly on chart points.
+ * Returns null for 0 so empty months stay clean.
+ */
+function ChartLabel({ x, y, value, dy = -2 }: { x?: number; y?: number; value?: unknown; dy?: number }) {
+  if (typeof value !== 'number' || value === 0) return null;
+  return (
+    <text x={x} y={(y ?? 0) + dy} textAnchor="middle" fontSize={10} fontWeight={600} fill="var(--color-muted-foreground)">
+      {value}
+    </text>
+  );
+}
+
+  /** "Jan - Jul" style label for the last-7-months series (falls back when empty). */
+  const monthRangeLabel = (data: { label: string }[]) =>
+    data.length ? `${data[0].label} - ${data[data.length - 1].label}` : 'Last 7 months';
 export function AdminCharts() {
   const { data: stats, isLoading } = useAdminStats();
 
@@ -92,13 +91,17 @@ export function AdminCharts() {
     { name: 'Rejected', value: stats.featureRequests.rejected, fill: VIZ.red },
   ].map((d) => ({ ...d, value: frTotal ? Math.round((d.value / frTotal) * 100) : 0 }));
 
+  const growthData = stats.growth ?? [];
+  const taskActivityData = stats.taskActivity ?? [];
+  const growthByPlanData = stats.growthByPlan ?? [];
+
   return (
     <>
       {/* Growth area chart */}
       <div className="rounded-2xl border border-border bg-card/40 backdrop-blur-md p-5">
         <div className="mb-4">
           <h2 className="text-sm font-semibold text-foreground">Platform Growth</h2>
-          <p className="text-[11px] text-muted-foreground mt-0.5">Jan - Jul 2025</p>
+          <p className="text-[11px] text-muted-foreground mt-0.5">{monthRangeLabel(growthData)}</p>
         </div>
         <ResponsiveContainer width="100%" height={220}>
           <AreaChart data={growthData} margin={{ top: 4, right: 4, bottom: 0, left: -20 }}>
@@ -117,14 +120,42 @@ export function AdminCharts() {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-            <XAxis dataKey="month" tick={axisTick} axisLine={false} tickLine={false} />
+            <XAxis dataKey="label" tick={axisTick} axisLine={false} tickLine={false} />
             <YAxis tick={axisTick} axisLine={false} tickLine={false} />
             <Tooltip content={<GlassTooltip />} />
             <Legend iconType="circle" iconSize={7} formatter={(v) => <span style={{ color: 'var(--color-muted-foreground)', fontSize: 11 }}>{v}</span>} />
-            <Area type="monotone" dataKey="users" name="Users" stroke={VIZ.indigo} strokeWidth={2} fill="url(#gradUsers)" dot={false} activeDot={{ r: 4, fill: VIZ.indigo }} />
-            <Area type="monotone" dataKey="workspaces" name="Workspaces" stroke={VIZ.emerald} strokeWidth={2} fill="url(#gradWs)" dot={false} activeDot={{ r: 4, fill: VIZ.emerald }} />
-            <Area type="monotone" dataKey="projects" name="Projects" stroke={VIZ.orange} strokeWidth={2} fill="url(#gradProj)" dot={false} activeDot={{ r: 4, fill: VIZ.orange }} />
+            {/* Value labels on each point (zeros hidden by ChartLabel); staggered dy keeps the three series apart */}
+            <Area type="monotone" dataKey="users" name="Users" stroke={VIZ.indigo} strokeWidth={2} fill="url(#gradUsers)" dot={false} activeDot={{ r: 4, fill: VIZ.indigo }}>
+              <LabelList dataKey="users" content={<ChartLabel dy={-2} />} />
+            </Area>
+            <Area type="monotone" dataKey="workspaces" name="Workspaces" stroke={VIZ.emerald} strokeWidth={2} fill="url(#gradWs)" dot={false} activeDot={{ r: 4, fill: VIZ.emerald }}>
+              <LabelList dataKey="workspaces" content={<ChartLabel dy={-16} />} />
+            </Area>
+            <Area type="monotone" dataKey="projects" name="Projects" stroke={VIZ.orange} strokeWidth={2} fill="url(#gradProj)" dot={false} activeDot={{ r: 4, fill: VIZ.orange }}>
+              <LabelList dataKey="projects" content={<ChartLabel dy={-30} />} />
+            </Area>
           </AreaChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Growth by plan — stacked workspaces-per-plan per month */}
+      <div className="rounded-2xl border border-border bg-card/40 backdrop-blur-md p-5">
+        <div className="mb-4">
+          <h2 className="text-sm font-semibold text-foreground">Growth by Plan</h2>
+          <p className="text-[11px] text-muted-foreground mt-0.5">{monthRangeLabel(growthByPlanData)}</p>
+        </div>
+        <ResponsiveContainer width="100%" height={200}>
+          <BarChart data={growthByPlanData} margin={{ top: 0, right: 4, bottom: 0, left: -20 }} barSize={16}>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+            <XAxis dataKey="label" tick={axisTick} axisLine={false} tickLine={false} />
+            <YAxis tick={axisTick} axisLine={false} tickLine={false} />
+            <Tooltip content={<GlassTooltip />} />
+            <Legend iconType="circle" iconSize={7} formatter={(v) => <span style={{ color: 'var(--color-muted-foreground)', fontSize: 11 }}>{v}</span>} />
+            <Bar dataKey="FREE" name="Free" stackId="plan" fill={PLAN_COLORS[0]} radius={[0, 0, 0, 0]} />
+            <Bar dataKey="PRO" name="Pro" stackId="plan" fill={PLAN_COLORS[1]} radius={[0, 0, 0, 0]} />
+            <Bar dataKey="BUSINESS" name="Business" stackId="plan" fill={PLAN_COLORS[2]} radius={[0, 0, 0, 0]} />
+            <Bar dataKey="ENTERPRISE" name="Enterprise" stackId="plan" fill={PLAN_COLORS[3]} radius={[4, 4, 0, 0]} />
+          </BarChart>
         </ResponsiveContainer>
       </div>
 
@@ -207,7 +238,7 @@ export function AdminCharts() {
           <ResponsiveContainer width="100%" height={190}>
             <BarChart data={taskActivityData} margin={{ top: 0, right: 0, bottom: 0, left: -28 }} barSize={10}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
-              <XAxis dataKey="day" tick={{ ...axisTick, fontSize: 10 }} axisLine={false} tickLine={false} />
+              <XAxis dataKey="label" tick={{ ...axisTick, fontSize: 10 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ ...axisTick, fontSize: 10 }} axisLine={false} tickLine={false} />
               <Tooltip content={<GlassTooltip />} />
               <Bar dataKey="todo" name="Todo" stackId="a" fill={TASK_COLORS.todo} radius={[0, 0, 0, 0]} />

@@ -56,6 +56,7 @@ export function AiWeeklyInsights({ workspaceId, className }: AiWeeklyInsightsPro
   const [quotaError, setQuotaError] = useState(false);
   const [featureError, setFeatureError] = useState(false);
   const [serviceError, setServiceError] = useState(false);
+  const [providerBusyError, setProviderBusyError] = useState(false);
   const [pickedWorkspaceId, setPickedWorkspaceId] = useState<string | null>(null);
 
   const weeklyInsights = useAiWeeklyInsights();
@@ -80,6 +81,7 @@ export function AiWeeklyInsights({ workspaceId, className }: AiWeeklyInsightsPro
     setQuotaError(false);
     setFeatureError(false);
     setServiceError(false);
+    setProviderBusyError(false);
     try {
       const result = await weeklyInsights.mutateAsync({
         workspaceId: resolvedWorkspaceId,
@@ -95,6 +97,9 @@ export function AiWeeklyInsights({ workspaceId, className }: AiWeeklyInsightsPro
         setQuotaError(true);
       } else if (code === AI_ERROR_CODES.featureNotAvailable) {
         setFeatureError(true);
+      } else if (code === AI_ERROR_CODES.providerRateLimit) {
+        // Provider-side 429 (Google rate limit) — transient, prompt to retry.
+        setProviderBusyError(true);
       } else {
         // Any other failure (service down, bad response, network) — surface it
         // instead of silently doing nothing.
@@ -154,6 +159,7 @@ export function AiWeeklyInsights({ workspaceId, className }: AiWeeklyInsightsPro
               setQuotaError(false);
               setFeatureError(false);
               setServiceError(false);
+              setProviderBusyError(false);
             }}
             className="min-w-0 flex-1 rounded-lg border border-border bg-background px-2 py-1.5 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
           >
@@ -193,6 +199,7 @@ export function AiWeeklyInsights({ workspaceId, className }: AiWeeklyInsightsPro
               setQuotaError(false);
               setFeatureError(false);
               setServiceError(false);
+              setProviderBusyError(false);
             }}
             className="inline-flex items-center gap-1 rounded-lg px-2.5 py-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
@@ -221,6 +228,14 @@ export function AiWeeklyInsights({ workspaceId, className }: AiWeeklyInsightsPro
           className="mt-4 rounded-lg border border-border bg-muted/50 px-3 py-2 text-xs text-muted-foreground"
         >
           AI couldn&apos;t generate insights right now. Please try again shortly.
+        </p>
+      )}
+      {providerBusyError && (
+        <p
+          role="alert"
+          className="mt-4 rounded-lg border border-border bg-muted/50 px-3 py-2 text-xs text-muted-foreground"
+        >
+          The AI provider is busy right now. Please wait a moment and try again.
         </p>
       )}
 

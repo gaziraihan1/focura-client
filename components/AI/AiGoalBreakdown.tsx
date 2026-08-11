@@ -58,6 +58,12 @@ export function AiGoalBreakdown() {
         code === AI_ERROR_CODES.rateLimit
       ) {
         setQuotaError(true);
+      } else if (code === AI_ERROR_CODES.providerRateLimit) {
+        // Google-side rate limit — transient, tell the user to retry shortly
+        // (no upgrade CTA — this is not a plan issue).
+        toast.error(
+          "AI is receiving too many requests right now. Please wait a moment and try again.",
+        );
       } else if (!code || !String(code).startsWith("AI_")) {
         // Silent for structured AI errors (unavailable / invalid response)
         // — the query-level notice handles those. Only surface unexpected ones.

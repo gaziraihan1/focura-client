@@ -291,13 +291,14 @@ export function useDeleteWorkspace() {
       slug, reason, hardDelete,
     }: { slug: string; reason?: string; hardDelete: boolean }) => {
       const res = await api.post(
-        `/api/v1/admin/workspaces/${slug}/delete`,
+        `/api/v1/admin/workspaces/${slug}`,
         { reason, hardDelete },
       );
       return res as unknown as { success: boolean; message: string };
     },
-    onSuccess: () => {
+    onSuccess: (_data, { slug }) => {
       qc.invalidateQueries({ queryKey: ['admin', 'workspaces'] });
+      qc.invalidateQueries({ queryKey: adminKeys.workspaceDetail(slug) });
     },
   });
 }
@@ -309,8 +310,9 @@ export function useRestoreWorkspace() {
       const res = await api.patch(`/api/v1/admin/workspaces/${slug}/restore`, {});
       return res as unknown as { success: boolean; message: string };
     },
-    onSuccess: () => {
+    onSuccess: (_data, slug) => {
       qc.invalidateQueries({ queryKey: ['admin', 'workspaces'] });
+      qc.invalidateQueries({ queryKey: adminKeys.workspaceDetail(slug) });
     },
   });
 }

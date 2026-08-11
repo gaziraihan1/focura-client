@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { CalendarClock, Loader2, ListOrdered, Sparkles, Wand2 } from "lucide-react";
 import { useAiDailyPlan, useWorkspaceSlug } from "@/hooks/useAi";
 import { cn } from "@/lib/utils";
@@ -73,6 +74,11 @@ export function AiDailyPlan({ tasks, workspaceId, workspaceSlug, className }: Ai
         code === AI_ERROR_CODES.rateLimit
       ) {
         setQuotaError(true);
+      } else if (code === AI_ERROR_CODES.providerRateLimit) {
+        // Google-side rate limit — transient, prompt to retry (not a plan issue).
+        toast.error(
+          "AI is receiving too many requests right now. Please wait a moment and try again.",
+        );
       }
       // Other AI errors stay silent — the card simply keeps its prior state.
     }

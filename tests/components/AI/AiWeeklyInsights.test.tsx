@@ -224,4 +224,34 @@ describe("AiWeeklyInsights", () => {
       ).toBeInTheDocument();
     });
   });
+
+  it("shows a retry notice when the AI provider rate-limits", async () => {
+    const { http, HttpResponse } = await import("msw");
+    const { server } = await import("@/tests/mock/server");
+
+    server.use(
+      http.post("*/api/v1/ai/insights/weekly", () =>
+        HttpResponse.json(
+          {
+            success: false,
+            code: "AI_PROVIDER_RATE_LIMIT",
+            message:
+              "The AI provider is receiving too many requests right now. Please try again in a moment.",
+            retryAfter: 60,
+          },
+          { status: 429 },
+        ),
+      ),
+    );
+
+    renderCard("ws-1");
+
+    fireEvent.click(screen.getByText("Generate weekly insights"));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/The AI provider is busy right now/i),
+      ).toBeInTheDocument();
+    });
+  });
 });

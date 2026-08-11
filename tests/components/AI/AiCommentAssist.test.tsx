@@ -5,6 +5,12 @@ import { AiCommentAssist } from "@/components/AI/AiCommentAssist";
 import { http, HttpResponse } from "msw";
 import { server } from "@/tests/mock/server";
 
+vi.mock("react-hot-toast", () => ({
+  default: { success: vi.fn(), error: vi.fn() },
+}));
+
+import toast from "react-hot-toast";
+
 const onAssist = vi.fn();
 
 beforeEach(() => {
@@ -114,5 +120,32 @@ describe("AiCommentAssist", () => {
     expect(screen.getByText(/couldn't rewrite right now/)).toBeInTheDocument();
     expect(screen.queryByText(/Upgrade for more AI/)).not.toBeInTheDocument();
     expect(onAssist).not.toHaveBeenCalled();
+  });
+
+  it("shows a friendly retry toast when the AI provider rate-limits", async () => {
+    server.use(
+      http.post("*/api/v1/ai/comments/assist", () =>
+        HttpResponse.json(
+          {
+            success: false,
+            code: "AI_PROVIDER_RATE_LIMIT",
+            message:
+              "The AI provider is receiving too many requests right now. Please try again in a moment.",
+            retryAfter: 60,
+          },
+          { status: 429 },
+        ),
+      ),
+    );
+
+    renderAssist();
+
+    await rewrite();
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        expect.stringContaining("too many requests"),
+      );
+    });
   });
 });

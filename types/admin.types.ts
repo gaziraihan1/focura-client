@@ -15,6 +15,25 @@ export interface AdminStats {
     completed: number;
     rejected: number;
   };
+  growth: {
+    label: string;
+    users: number;
+    workspaces: number;
+    projects: number;
+  }[];
+  taskActivity: {
+    label: string;
+    todo: number;
+    inProgress: number;
+    completed: number;
+  }[];
+  growthByPlan: {
+    label: string;
+    FREE: number;
+    PRO: number;
+    BUSINESS: number;
+    ENTERPRISE: number;
+  }[];
   totalStorageUsedMb: number;
   recentSignups: {
     id: string;
