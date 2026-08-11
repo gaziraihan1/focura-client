@@ -15,8 +15,20 @@ const rows: DataRow[] = [
   {
     category: "Usage Data",
     examples: "Pages visited, features used, session duration",
-    purpose: "Product improvement, analytics",
-    retention: "13 months",
+    purpose: "Product improvement, analytics (Google Analytics)",
+    retention: "14 months",
+  },
+  {
+    category: "AI Assistant Data",
+    examples: "Prompts you send to the AI assistant, generated responses, token usage",
+    purpose: "AI-powered features (autocomplete, planning, summaries, insights)",
+    retention: "Until account deletion",
+  },
+  {
+    category: "Integration Data",
+    examples: "Connected accounts (GitHub, Slack, Google Calendar, Trello), synced data, encrypted access tokens",
+    purpose: "Integrations you connect",
+    retention: "Until you disconnect or delete your account",
   },
   {
     category: "Device & Log Data",

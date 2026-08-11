@@ -11,61 +11,53 @@ interface CookieRow {
 const cookies: CookieRow[] = [
   // Strictly Necessary
   {
-    name: "focura_session",
+    name: "next-auth.session-token",
     type: "Strictly Necessary",
-    purpose: "Maintains your authenticated session so you stay logged in across page navigations.",
-    duration: "Session",
+    purpose:
+      "Maintains your authenticated session. Stores your login state and the encrypted backend tokens used to call the Focura API, so you stay signed in and your access token is renewed silently.",
+    duration: "7 days (rolling)",
     required: true,
   },
   {
-    name: "focura_csrf",
+    name: "next-auth.csrf-token",
     type: "Strictly Necessary",
-    purpose: "CSRF protection token — prevents cross-site request forgery attacks on form submissions.",
+    purpose:
+      "CSRF protection for the NextAuth sign-in flow — prevents cross-site request forgery attacks during authentication.",
     duration: "Session",
-    required: true,
-  },
-  {
-    name: "focura_auth_refresh",
-    type: "Strictly Necessary",
-    purpose: "Stores an encrypted refresh token to silently renew your access token without re-login.",
-    duration: "30 days",
     required: true,
   },
   // Functional
   {
-    name: "focura_theme",
+    name: "theme",
     type: "Functional",
-    purpose: "Remembers your chosen theme (light / dark / system) so it persists between sessions.",
+    purpose:
+      "Remembers your light / dark theme preference so it persists between visits. Also mirrored in localStorage.",
     duration: "1 year",
     required: false,
   },
+  // Analytics — set by Google Analytics when a measurement ID is configured
   {
-    name: "focura_sidebar",
-    type: "Functional",
-    purpose: "Saves your sidebar collapsed/expanded state and last-visited workspace.",
-    duration: "6 months",
-    required: false,
-  },
-  {
-    name: "focura_locale",
-    type: "Functional",
-    purpose: "Stores your preferred language and date/time format settings.",
-    duration: "1 year",
-    required: false,
-  },
-  // Analytics
-  {
-    name: "_fp_analytics",
+    name: "_ga",
     type: "Analytics",
-    purpose: "Tracks anonymous page views, feature interactions, and session duration to improve the product.",
-    duration: "13 months",
+    purpose:
+      "Google Analytics — distinguishes unique visitors and throttles request rate. Aggregated, anonymised usage statistics.",
+    duration: "2 years",
     required: false,
   },
   {
-    name: "_fp_distinct_id",
+    name: "_ga_<MEASUREMENT_ID>",
     type: "Analytics",
-    purpose: "A randomly generated anonymous identifier used to distinguish unique visitors in aggregated reports.",
-    duration: "13 months",
+    purpose:
+      "Google Analytics — stores session and campaign data for the specific measurement property.",
+    duration: "2 years",
+    required: false,
+  },
+  {
+    name: "_gid",
+    type: "Analytics",
+    purpose:
+      "Google Analytics — identifies the user across page views within a 24-hour period.",
+    duration: "24 hours",
     required: false,
   },
 ];
@@ -135,14 +127,14 @@ export const CookiesTypeTable = () => {
               </td>
               <td className="px-4 py-3 align-top whitespace-nowrap">
                 {row.required ? (
-                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-neutral-500 dark:text-neutral-400">
-                    <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-500 inline-block" />
-                    Not required
-                  </span>
-                ) : (
                   <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-violet-600 dark:text-violet-400">
                     <span className="w-1.5 h-1.5 rounded-full bg-violet-500 inline-block" />
                     Required
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-neutral-500 dark:text-neutral-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-500 inline-block" />
+                    Not required
                   </span>
                 )}
               </td>

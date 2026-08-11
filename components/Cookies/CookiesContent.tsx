@@ -120,6 +120,37 @@ function CookiesBasicsSections() {
         </p>
         <CookiesList
           items={[
+            <span key="google">
+              <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
+                Google
+              </strong>{" "}
+              — we use Google Analytics to measure aggregate usage (page views,
+              session duration, feature usage) and Google OAuth for sign-in.
+              Google Analytics sets the{" "}
+              <span className="font-mono text-xs">_ga</span>,{" "}
+              <span className="font-mono text-xs">_ga_&lt;MEASUREMENT_ID&gt;</span> and{" "}
+              <span className="font-mono text-xs">_gid</span> cookies listed
+              above, and sign-in with Google may set cookies on
+              accounts.google.com governed by Google&apos;s own policies. See{" "}
+              <a
+                href="https://policies.google.com/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-600 transition-colors"
+              >
+                Google&apos;s Privacy Policy
+              </a>{" "}
+              and{" "}
+              <a
+                href="https://support.google.com/analytics/answer/6004245"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-600 transition-colors"
+              >
+                Google&apos;s Analytics Data Policy
+              </a>
+              .
+            </span>,
             <span key="paddle">
               <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
                 Paddle
@@ -137,12 +168,31 @@ function CookiesBasicsSections() {
               </a>
               .
             </span>,
+            <span key="cloudinary">
+              <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
+                Cloudinary
+              </strong>{" "}
+              — our image and file storage provider. Cloudinary stores the
+              files you upload (e.g. avatars, attachments) so they can be
+              served to your team. Files are transmitted and stored securely;
+              Cloudinary does not set cookies on Focura pages. See{" "}
+              <a
+                href="https://cloudinary.com/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-600 transition-colors"
+              >
+                Cloudinary&apos;s Privacy Policy
+              </a>
+              .
+            </span>,
             <span key="vercel">
               <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
                 Vercel
               </strong>{" "}
-              — our hosting and CDN provider. Vercel may set a cookie for Edge
-              network routing. No personal data is stored in this cookie. See{" "}
+              — our hosting and CDN provider. Vercel also powers Speed
+              Insights, which measures Core Web Vitals without setting
+              cookies. See{" "}
               <a
                 href="https://vercel.com/legal/privacy-policy"
                 target="_blank"
@@ -185,36 +235,40 @@ function CookiesConsentSections() {
           {/* Header */}
           <div className="px-5 py-4 border-b border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/80">
             <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-              In-App Cookie Preferences
+              Current Cookie Controls
             </p>
             <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-0.5">
-              Toggle non-essential categories without leaving Focura
+              What Focura sets today and how to control it
             </p>
           </div>
 
-          {/* Toggle rows */}
+          {/* Current status per category — honest, not fake toggles */}
           {[
             {
               label: "Strictly Necessary",
-              description: "Required for authentication and core functionality.",
-              locked: true,
-              defaultOn: true,
+              status: "Always On",
+              statusClass:
+                "text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800",
+              description:
+                "Required for authentication, sessions, and security. These cannot be disabled.",
             },
             {
               label: "Functional",
+              status: "Opt-Out",
+              statusClass:
+                "text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-950/40",
               description:
-                "Remembers theme, sidebar state, and language preferences.",
-              locked: false,
-              defaultOn: true,
+                "Theme preference — stored in a small cookie and mirrored in localStorage. Block it in your browser to reset your preference each visit.",
             },
             {
               label: "Analytics",
+              status: "Opt-Out",
+              statusClass:
+                "text-violet-600 dark:text-violet-400 bg-violet-100 dark:bg-violet-950/40",
               description:
-                "Anonymous usage data to help us improve the product.",
-              locked: false,
-              defaultOn: false,
+                "Google Analytics usage data — opt out at any time via the browser controls below or Google's official opt-out browser add-on.",
             },
-          ].map(({ label, description, locked, defaultOn }) => (
+          ].map(({ label, status, statusClass, description }) => (
             <div
               key={label}
               className="flex items-center justify-between gap-4 px-5 py-4 border-b border-neutral-100 dark:border-neutral-800 last:border-0"
@@ -222,47 +276,32 @@ function CookiesConsentSections() {
               <div className="min-w-0">
                 <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
                   {label}
-                  {locked && (
-                    <span className="ml-2 text-[10px] font-bold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
-                      Always On
-                    </span>
-                  )}
                 </p>
                 <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
                   {description}
                 </p>
               </div>
-              {/* Visual toggle — not wired; actual toggle lives in-app */}
-              <div
-                className={`shrink-0 w-10 h-5.5 rounded-full relative transition-colors ${
-                  defaultOn
-                    ? "bg-neutral-900 dark:bg-neutral-100"
-                    : "bg-neutral-200 dark:bg-neutral-700"
-                } ${locked ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
+              <span
+                className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ${statusClass}`}
               >
-                <span
-                  className={`absolute top-0.5 w-4.5 h-4.5 rounded-full bg-white dark:bg-neutral-900 shadow transition-all ${
-                    defaultOn ? "left-4.5" : "left-0.5"
-                  }`}
-                />
-              </div>
+                {status}
+              </span>
             </div>
           ))}
 
           <div className="px-5 py-3 bg-neutral-50 dark:bg-neutral-900/60 border-t border-neutral-100 dark:border-neutral-800">
             <p className="text-xs text-neutral-400 dark:text-neutral-500">
-              To update preferences, go to{" "}
-              <span className="font-mono text-neutral-600 dark:text-neutral-300">
-                Settings → Privacy → Cookie Preferences
-              </span>{" "}
-              inside your Focura account.
+              In-app consent toggles are planned. Until then, the browser
+              controls in the next section are the way to opt out of
+              non-essential cookies.
             </p>
           </div>
         </div>
         <CookiesHighlight variant="warning">
-          Withdrawing consent for functional or analytics cookies takes effect
-          immediately. Your previously stored preference cookies will be deleted
-          at the start of your next session.
+          Strictly necessary cookies are exempt from consent under the ePrivacy
+          Directive — blocking them in your browser will prevent Focura from
+          authenticating your session. Functional and analytics cookies can be
+          blocked at any time without breaking core functionality.
         </CookiesHighlight>
       </CookiesSection>
 
@@ -282,8 +321,7 @@ function CookiesConsentSections() {
         <CookiesHighlight variant="warning">
           Blocking strictly necessary cookies at the browser level will prevent
           Focura from authenticating your session. You will be signed out and
-          unable to log back in until cookies are re-enabled for{" "}
-          <span className="font-mono font-semibold">focura.app</span>.
+          unable to log back in until cookies are re-enabled for{" "}            <span className="font-mono font-semibold">focura-client.vercel.app</span>.
         </CookiesHighlight>
         <p>
           You can also opt out of analytics tracking across many websites using
@@ -327,7 +365,7 @@ function CookiesConsentSections() {
           items={[
             'We update the "Last Updated" date at the top of this page.',
             "We add new cookies to the Complete Cookie Reference table within 7 days of deployment.",
-            "For changes that require renewed consent, we will display an updated consent banner on your next visit.",
+            "For changes that require renewed consent under GDPR or the ePrivacy Directive, we will update this page and notify you where required.",
           ]}
         />
         <p>
@@ -379,7 +417,7 @@ function CookiesConsentSections() {
           </div>
         </div>
         <p className="text-xs text-neutral-400 dark:text-neutral-500">
-          Last Updated: April 25, 2026 · Version 1.0 · Effective: January 1,
+          Last Updated: August 11, 2026 · Version 1.1 · Effective: January 1,
           2026
         </p>
       </CookiesSection>

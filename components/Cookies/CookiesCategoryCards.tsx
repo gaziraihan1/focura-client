@@ -11,10 +11,10 @@ const categories = [
     badge:
       "bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-400",
     badgeLabel: "Always On",
-    count: 3,
+    count: 2,
     description:
       "Essential for authentication, session management, and security. These cannot be disabled — without them the platform will not function.",
-    examples: ["Session tokens", "CSRF tokens", "Auth refresh tokens"],
+    examples: ["Session tokens", "CSRF tokens"],
   },
   {
     icon: Settings2,
@@ -26,10 +26,10 @@ const categories = [
     badge:
       "bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-400",
     badgeLabel: "Opt-Out",
-    count: 3,
+    count: 1,
     description:
-      "Remember your personal preferences such as theme and sidebar state. Disabling these will not break the app, but your preferences will reset on each visit.",
-    examples: ["Theme preference", "Sidebar state", "Language / locale"],
+      "Remember your personal preferences such as theme. Disabling these will not break the app, but your preferences will reset on each visit.",
+    examples: ["Theme preference"],
   },
   {
     icon: BarChart2,
@@ -40,11 +40,11 @@ const categories = [
     iconBg: "bg-violet-100 dark:bg-violet-900/60",
     badge:
       "bg-violet-100 dark:bg-violet-900/60 text-violet-700 dark:text-violet-400",
-    badgeLabel: "Consent Required",
-    count: 2,
+    badgeLabel: "Opt-Out",
+    count: 3,
     description:
-      "Collect anonymised, aggregated data about how users interact with Focura. All data is non-identifiable and used solely to improve the product. Requires your explicit consent.",
-    examples: ["Page views", "Feature interactions", "Session duration"],
+      "Anonymised, aggregated usage data collected via Google Analytics to help us improve the product. All data is non-identifiable and you can opt out using the browser controls below or Google's opt-out add-on.",
+    examples: ["Page views", "Session duration", "Feature usage"],
   },
 ];
 

@@ -40,7 +40,7 @@ export const TermsHero = () => {
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 inline-block" />
-            Last Updated: April 24, 2026
+            Last Updated: August 11, 2026
           </span>
           <span className="hidden sm:block text-neutral-300 dark:text-neutral-700">
             •

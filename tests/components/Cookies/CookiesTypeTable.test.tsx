@@ -126,23 +126,29 @@ describe('CookiesTypeTable', () => {
 
   it('renders all cookie names', () => {
     render(<CookiesTypeTable />)
-    expect(screen.getByText('focura_session')).toBeInTheDocument()
-    expect(screen.getByText('focura_csrf')).toBeInTheDocument()
-    expect(screen.getByText('focura_auth_refresh')).toBeInTheDocument()
-    expect(screen.getByText('focura_theme')).toBeInTheDocument()
-    expect(screen.getByText('focura_sidebar')).toBeInTheDocument()
-    expect(screen.getByText('focura_locale')).toBeInTheDocument()
-    expect(screen.getByText('_fp_analytics')).toBeInTheDocument()
-    expect(screen.getByText('_fp_distinct_id')).toBeInTheDocument()
+    expect(screen.getByText('next-auth.session-token')).toBeInTheDocument()
+    expect(screen.getByText('next-auth.csrf-token')).toBeInTheDocument()
+    expect(screen.getByText('theme')).toBeInTheDocument()
+    expect(screen.getByText('_ga')).toBeInTheDocument()
+    expect(screen.getByText('_ga_<MEASUREMENT_ID>')).toBeInTheDocument()
+    expect(screen.getByText('_gid')).toBeInTheDocument()
   })
 
   it('renders type badges', () => {
     render(<CookiesTypeTable />)
     const strictlyNecessary = screen.getAllByText('Strictly Necessary')
-    expect(strictlyNecessary.length).toBeGreaterThanOrEqual(3)
+    expect(strictlyNecessary.length).toBeGreaterThanOrEqual(2)
     const functional = screen.getAllByText('Functional')
-    expect(functional.length).toBeGreaterThanOrEqual(3)
+    expect(functional.length).toBeGreaterThanOrEqual(1)
     const analytics = screen.getAllByText('Analytics')
-    expect(analytics.length).toBeGreaterThanOrEqual(2)
+    expect(analytics.length).toBeGreaterThanOrEqual(3)
+  })
+
+  it('marks strictly necessary cookies as Required and the rest as Not required', () => {
+    render(<CookiesTypeTable />)
+    // Strictly necessary cookies (2) must be marked Required — not inverted
+    expect(screen.getAllByText('Required').length).toBeGreaterThanOrEqual(2)
+    // Functional + analytics cookies (4) must be marked Not required
+    expect(screen.getAllByText('Not required').length).toBeGreaterThanOrEqual(4)
   })
 })

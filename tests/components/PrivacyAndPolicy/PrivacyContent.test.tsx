@@ -139,8 +139,10 @@ describe('PrivacyContent', () => {
 
   it('renders email links', () => {
     render(<PrivacyContent />)
-    const mailLinks = screen.getAllByText('focurabusiness@gmail.com')
-    expect(mailLinks.length).toBeGreaterThan(0)
+    const privacy = screen.getAllByText('privacy@focura.app')
+    expect(privacy.length).toBeGreaterThan(0)
+    const security = screen.getAllByText('security@focura.app')
+    expect(security.length).toBeGreaterThan(0)
   })
 
   it('renders contact cards', () => {

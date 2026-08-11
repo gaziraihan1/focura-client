@@ -126,16 +126,18 @@ describe('CookiesCategoryCards', () => {
   it('renders badge labels', () => {
     render(<CookiesCategoryCards />)
     expect(screen.getByText('Always On')).toBeInTheDocument()
-    expect(screen.getByText('Opt-Out')).toBeInTheDocument()
-    expect(screen.getByText('Consent Required')).toBeInTheDocument()
+    const optOut = screen.getAllByText('Opt-Out')
+    expect(optOut.length).toBeGreaterThanOrEqual(2)
   })
 
   it('renders cookie counts', () => {
     render(<CookiesCategoryCards />)
     const threeCookies = screen.getAllByText('3 cookies')
     expect(threeCookies.length).toBeGreaterThanOrEqual(1)
-    const analyticsCount = screen.getAllByText('2 cookies')
-    expect(analyticsCount.length).toBeGreaterThanOrEqual(1)
+    const twoCookies = screen.getAllByText('2 cookies')
+    expect(twoCookies.length).toBeGreaterThanOrEqual(1)
+    const oneCookie = screen.getAllByText('1 cookie')
+    expect(oneCookie.length).toBeGreaterThanOrEqual(1)
   })
 
   it('renders example lists', () => {

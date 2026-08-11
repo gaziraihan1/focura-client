@@ -56,10 +56,10 @@ const TermsContent = () => {
           You are responsible for all actions taken through your account. Notify us
           immediately at{" "}
           <a
-            href="mailto:focurabusiness@gmail.com"
+            href="mailto:security@focura.app"
             className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
           >
-            focurabusiness@gmail.com
+            security@focura.app
           </a>{" "}
           if you suspect any unauthorized access.
         </p>
@@ -113,7 +113,7 @@ const TermsContent = () => {
           items={[
             "You are solely responsible for the legality and accuracy of your User Content.",
             "We do not claim ownership of any data, files, or work products you create.",
-            "You may export your data at any time through your account settings.",
+            "You may request a copy of your data at any time by contacting privacy@focura.app.",
           ]}
         />
       </TermsSection>
@@ -128,7 +128,7 @@ const TermsContent = () => {
           ordered
           items={[
             "Billing is processed monthly or annually depending on the plan selected at checkout.",
-            "All payments are handled by our third-party payment processor (Stripe) and are subject to their terms.",
+            "All payments are handled by our third-party payment processor (Paddle) and are subject to their terms.",
             "Subscription fees are non-refundable except as required by applicable law or expressly stated in our Refund Policy.",
             "We reserve the right to modify pricing with 30 days advance notice to existing subscribers.",
             "Failure to pay may result in downgrade to the free plan or suspension of your account.",
@@ -150,8 +150,14 @@ const TermsContent = () => {
           <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
             By You:
           </strong>{" "}
-          You may delete your account at any time through your account settings.
-          Upon deletion, your data will be permanently removed within 30 days,
+          You may request account deletion at any time by contacting{" "}
+          <a
+            href="mailto:privacy@focura.app"
+            className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
+          >
+            privacy@focura.app
+          </a>
+          . Upon deletion, your data will be permanently removed within 30 days,
           subject to our data retention obligations under applicable law.
         </p>
         <p>

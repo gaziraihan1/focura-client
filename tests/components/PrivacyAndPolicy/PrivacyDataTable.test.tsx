@@ -132,11 +132,13 @@ describe('PrivacyDataTable', () => {
     expect(screen.getByText('Workspace Content')).toBeInTheDocument()
     expect(screen.getByText('Payment Data')).toBeInTheDocument()
     expect(screen.getByText('Communications')).toBeInTheDocument()
+    expect(screen.getByText('AI Assistant Data')).toBeInTheDocument()
+    expect(screen.getByText('Integration Data')).toBeInTheDocument()
   })
 
   it('renders retention info', () => {
     render(<PrivacyDataTable />)
-    expect(screen.getByText('13 months')).toBeInTheDocument()
+    expect(screen.getByText('14 months')).toBeInTheDocument()
     expect(screen.getByText('90 days')).toBeInTheDocument()
   })
 })

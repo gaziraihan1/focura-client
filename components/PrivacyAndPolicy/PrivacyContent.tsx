@@ -35,14 +35,15 @@ function PrivacySectionsPart1() {
           to third parties.
         </p>
         <PrivacyHighlight variant="success">
-          Focura is compliant with the General Data Protection Regulation (GDPR),
-          California Consumer Privacy Act (CCPA), and other applicable data
-          protection laws. You can exercise your rights at any time by contacting{" "}
+          Focura is designed to comply with the General Data Protection Regulation
+          (GDPR), the California Consumer Privacy Act (CCPA), and other applicable
+          data protection laws. You can exercise your rights at any time by
+          contacting{" "}
           <a
-            href="mailto:focurabusiness@gmail.com"
+            href="mailto:privacy@focura.app"
             className="underline underline-offset-2 font-medium"
           >
-            focurabusiness@gmail.com
+            privacy@focura.app
           </a>
           .
         </PrivacyHighlight>
@@ -145,11 +146,14 @@ function PrivacySectionsPart1() {
               <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
                 Service Providers
               </strong>{" "}
-              — trusted vendors who help us operate the Service (e.g., Vercel
-              for hosting, Stripe for payments, Cloudinary for file storage,
-              Upstash for caching). These parties are bound by Data Processing
-              Agreements (DPAs) and may only use data to perform services for
-              us.
+              — trusted vendors who help us operate the Service. These include
+              Paddle (payment processing), Google (OAuth sign-in, the AI
+              assistant powered by Google Gemini, and Google Analytics),
+              Cloudinary (file storage), Vercel (frontend hosting), Render
+              (backend hosting), Supabase (database), Upstash (Redis caching),
+              and Sentry (error monitoring). These parties are bound by Data
+              Processing Agreements (DPAs) and may only use data to perform
+              services for us.
             </span>,
             <span key="workspace">
               <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
@@ -210,10 +214,10 @@ function PrivacySectionsPart2() {
           You may request details of the specific safeguards applied to your
           data transfers by contacting us at{" "}
           <a
-            href="mailto:focurabusiness@gmail.com"
+            href="mailto:privacy@focura.app"
             className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
           >
-             focurabusiness@gmail.com
+             privacy@focura.app
           </a>
           .
         </p>
@@ -246,10 +250,10 @@ function PrivacySectionsPart2() {
           secure. If you discover a security vulnerability, please report it
           responsibly to{" "}
           <a
-            href="mailto:focurabusiness@gmail.com"
+            href="mailto:security@focura.app"
             className="underline underline-offset-2 font-medium"
           >
-            focurabusiness@gmail.com
+            security@focura.app
           </a>{" "}
           rather than opening a public issue.
         </PrivacyHighlight>
@@ -286,15 +290,17 @@ function PrivacySectionsPart2() {
               <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
                 Analytics
               </strong>{" "}
-              — collect aggregated, anonymised usage data to help us improve the
-              product. Requires consent.
+              — collect aggregated, anonymised usage data via Google Analytics
+              to help us improve the product. You can opt out via your browser
+              settings or Google&apos;s opt-out browser add-on.
             </span>,
           ]}
         />
         <p>
-          You can manage cookie preferences via your browser settings or our
-          in-app Cookie Preferences panel. Note that disabling non-essential
-          cookies will not affect your ability to use core features.
+          You can manage non-essential cookies through your browser settings
+          and block analytics tracking with Google&apos;s opt-out browser add-on.
+          Blocking non-essential cookies will not affect your ability to use
+          core features.
         </p>
         <p>
           For full details, see our{" "}
@@ -330,10 +336,10 @@ function PrivacySectionsPart3() {
         <p className="mt-2">
           To exercise any of these rights, email us at{" "}
           <a
-            href="mailto:focurabusiness@gmail.com"
+            href="mailto:privacy@focura.app"
             className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
           >
-            focurabusiness@gmail.com
+            privacy@focura.app
           </a>{" "}
           with the subject line &quot;Privacy Request&quot;. We may ask you to verify
           your identity before processing the request. We will not discriminate
@@ -354,10 +360,10 @@ function PrivacySectionsPart3() {
           child has provided us with personal information without parental
           consent, please contact us immediately at{" "}
           <a
-            href="mailto:focurabusiness@gmail.com"
+            href="mailto:privacy@focura.app"
             className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
           >
-            focurabusiness@gmail.com
+            privacy@focura.app
           </a>{" "}
           and we will take steps to delete such data promptly.
         </p>
@@ -404,10 +410,10 @@ function PrivacySectionsPart3() {
             <p className="text-neutral-500 dark:text-neutral-400">
               Email:{" "}
               <a
-                href="mailto:focurabusiness@gmail.com"
+                href="mailto:privacy@focura.app"
                 className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
               >
-                focurabusiness@gmail.com
+                privacy@focura.app
               </a>
             </p>
             <p className="text-neutral-500 dark:text-neutral-400">
@@ -421,10 +427,10 @@ function PrivacySectionsPart3() {
             <p className="text-neutral-500 dark:text-neutral-400">
               Email:{" "}
               <a
-                href="mailto:focurabusiness@gmail.com"
+                href="mailto:security@focura.app"
                 className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
               >
-                focurabusiness@gmail.com
+                security@focura.app
               </a>
             </p>
             <p className="text-neutral-500 dark:text-neutral-400">
@@ -436,6 +442,9 @@ function PrivacySectionsPart3() {
           You also have the right to lodge a complaint with your local
           supervisory authority (e.g., the ICO in the UK, or your national DPA
           within the EU) if you believe we have not handled your data lawfully.
+        </p>
+        <p className="text-xs text-neutral-400 dark:text-neutral-500">
+          Last Updated: August 11, 2026 · Version 1.1
         </p>
       </PrivacySection>
     </>

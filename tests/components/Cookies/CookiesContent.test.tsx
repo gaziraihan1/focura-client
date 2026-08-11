@@ -128,9 +128,9 @@ describe('CookiesContent', () => {
     expect(screen.getByText('Contact Us')).toBeInTheDocument()
   })
 
-  it('renders in-app cookie preferences section', () => {
+  it('renders current cookie controls section', () => {
     render(<CookiesContent />)
-    expect(screen.getByText('In-App Cookie Preferences')).toBeInTheDocument()
+    expect(screen.getByText('Current Cookie Controls')).toBeInTheDocument()
     const strictlyNecessary = screen.getAllByText('Strictly Necessary')
     expect(strictlyNecessary.length).toBeGreaterThanOrEqual(1)
     const functional = screen.getAllByText('Functional')
@@ -147,8 +147,12 @@ describe('CookiesContent', () => {
 
   it('renders third party services', () => {
     render(<CookiesContent />)
+    const googles = screen.getAllByText(/Google/)
+    expect(googles.length).toBeGreaterThanOrEqual(1)
     const paddles = screen.getAllByText(/Paddle/)
     expect(paddles.length).toBeGreaterThanOrEqual(1)
+    const cloudinarys = screen.getAllByText(/Cloudinary/)
+    expect(cloudinarys.length).toBeGreaterThanOrEqual(1)
     const vercels = screen.getAllByText(/Vercel/)
     expect(vercels.length).toBeGreaterThanOrEqual(1)
   })

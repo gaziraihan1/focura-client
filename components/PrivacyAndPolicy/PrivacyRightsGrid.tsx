@@ -32,7 +32,7 @@ const rights = [
     icon: Download,
     title: "Right to Portability",
     description:
-      "Export your data in a structured, machine-readable format at any time.",
+      "Request a copy of your data in a structured, machine-readable format, provided within 30 days.",
   },
   {
     icon: Ban,
