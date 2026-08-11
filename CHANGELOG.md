@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Planned for v1.2.0
+- Added a cookie-consent banner — Google Analytics now loads only after explicit opt-in
+- Notification streams now authenticate with a short-lived, single-use token
+- Added Data Export and Account Deletion to Settings
+
 ## [1.1.0] - 2026-08-11
 
 ### Added
