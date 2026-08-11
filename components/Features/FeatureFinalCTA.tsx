@@ -23,7 +23,7 @@ export default function FeatureFinalCTA() {
           className="mt-10 flex flex-col items-center justify-center gap-5 sm:flex-row"
         >
           <Link
-            href="/signup"
+            href="/authentication/registration"
             className="flex items-center gap-2 rounded-xl bg-primary px-7 py-3 text-lg font-semibold text-primary-foreground transition-opacity hover:opacity-90"
           >
             Get Started Free

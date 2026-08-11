@@ -86,14 +86,14 @@ function HeroCopy() {
       {/* CTAs */}
       <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
         <Link
-          href="/get-started"
+          href="/authentication/registration"
           className="group inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-foreground px-6 py-3 text-sm font-semibold text-background shadow-sm transition hover:opacity-90"
         >
           Start for Free
           <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
         </Link>
         <Link
-          href="/demo"
+          href="/contact"
           className="inline-flex w-full sm:w-auto items-center justify-center rounded-lg border border-border bg-card px-6 py-3 text-sm font-semibold text-foreground shadow-sm transition hover:bg-muted"
         >
           Get a Demo

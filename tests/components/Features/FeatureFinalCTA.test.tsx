@@ -121,9 +121,10 @@ describe('FeatureFinalCTA', () => {
     expect(screen.getByText(/Ready to supercharge/)).toBeInTheDocument()
   })
 
-  it('renders "Get Started Free" link', () => {
+  it('renders "Get Started Free" link to the registration page', () => {
     render(<FeatureFinalCTA />)
-    expect(screen.getByText('Get Started Free')).toBeInTheDocument()
+    const link = screen.getByText('Get Started Free').closest('a')
+    expect(link).toHaveAttribute('href', '/authentication/registration')
   })
 
   it('renders "Talk to Sales" link', () => {

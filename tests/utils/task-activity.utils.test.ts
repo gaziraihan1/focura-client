@@ -70,6 +70,17 @@ describe('getActivityDescription', () => {
     expect(getActivityDescription('UPDATED', undefined, 'COMMENT')).toBe('edited a comment')
   })
 
+  it('returns a friendly label for Focura-admin workspace-limit changes', () => {
+    const metadata = {
+      source: 'focura-admin',
+      changes: {
+        aiDailyCalls: { from: null, to: 9000 },
+        plan: { from: 'PRO', to: 'ENTERPRISE' },
+      },
+    }
+    expect(getActivityDescription('UPDATED', metadata, 'WORKSPACE')).toBe('updated workspace limits')
+  })
+
   it('returns correct description for COMPLETED', () => {
     expect(getActivityDescription('COMPLETED')).toBe('completed this task')
   })

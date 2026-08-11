@@ -4,6 +4,7 @@ import { render, screen } from "@testing-library/react";
 vi.mock("lucide-react", () => ({
   X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="icon-X" {...props} />,
   Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="icon-Loader2" {...props} />,
+  Sparkles: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="icon-Sparkles" {...props} />,
 }));
 
 vi.mock("@/hooks/useAdmin", () => ({

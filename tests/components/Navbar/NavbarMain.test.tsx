@@ -62,7 +62,7 @@ describe('NavbarMain', () => {
     render(<NavbarMain />)
 
     const link = screen.getByText('Get Started')
-    expect(link).toHaveAttribute('href', '/get-started')
+    expect(link).toHaveAttribute('href', '/authentication/registration')
   })
 
   it('renders ThemeSwitcher', () => {

@@ -53,17 +53,19 @@ describe('billing.upgrade.constants', () => {
       expect(PLAN_RANK.FREE).toBe(0)
       expect(PLAN_RANK.PRO).toBe(1)
       expect(PLAN_RANK.BUSINESS).toBe(2)
+      expect(PLAN_RANK.ENTERPRISE).toBe(3)
     })
 
-    it('FREE < PRO < BUSINESS', () => {
+    it('FREE < PRO < BUSINESS < ENTERPRISE', () => {
       expect(PLAN_RANK.FREE).toBeLessThan(PLAN_RANK.PRO)
       expect(PLAN_RANK.PRO).toBeLessThan(PLAN_RANK.BUSINESS)
+      expect(PLAN_RANK.BUSINESS).toBeLessThan(PLAN_RANK.ENTERPRISE)
     })
   })
 
   describe('PLAN_META', () => {
-    it('has 3 plan metas', () => {
-      expect(Object.keys(PLAN_META)).toHaveLength(3)
+    it('has 4 plan metas', () => {
+      expect(Object.keys(PLAN_META)).toHaveLength(4)
     })
 
     it('each meta has label and icon', () => {
@@ -71,6 +73,10 @@ describe('billing.upgrade.constants', () => {
         expect(meta.label).toBeTruthy()
         expect(meta.icon).toBeTruthy()
       })
+    })
+
+    it('ENTERPRISE meta has an Enterprise label', () => {
+      expect(PLAN_META.ENTERPRISE.label).toBe('Enterprise')
     })
   })
 

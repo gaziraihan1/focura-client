@@ -45,6 +45,13 @@ describe('PricingPlans', () => {
     expect(buttons).toHaveLength(3)
   })
 
+  it('links every "Get Started" CTA to the registration page', () => {
+    render(<PricingPlans />)
+    screen.getAllByText('Get Started').forEach((btn) => {
+      expect(btn.closest('a')).toHaveAttribute('href', '/authentication/registration')
+    })
+  })
+
   it('renders plan features', () => {
     render(<PricingPlans />)
     expect(screen.getByText('100 task everyday')).toBeInTheDocument()

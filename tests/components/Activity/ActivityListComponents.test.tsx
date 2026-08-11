@@ -14,6 +14,7 @@ vi.mock('lucide-react', () => ({
   Users: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="users-icon" {...props} />,
   MessageSquare: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="message-icon" {...props} />,
   AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-icon" {...props} />,
+  ShieldCheck: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="shieldcheck-icon" {...props} />,
 }))
 
 vi.mock('date-fns', () => ({

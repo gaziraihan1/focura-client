@@ -32,6 +32,11 @@ describe('AboutHero', () => {
     expect(screen.getByText('View on GitHub')).toBeInTheDocument()
   })
 
+  it('links Try Focura Live to the registration page', () => {
+    render(<AboutHero />)
+    expect(screen.getByText('Try Focura Live').closest('a')).toHaveAttribute('href', '/authentication/registration')
+  })
+
   it('renders stat pills', () => {
     render(<AboutHero />)
     expect(screen.getByText('Source Available')).toBeInTheDocument()
@@ -54,6 +59,12 @@ describe('AboutCTA', () => {
   it('renders start for free button', () => {
     render(<AboutCTA />)
     expect(screen.getByText('Start for Free')).toBeInTheDocument()
+  })
+
+  it('links start for free to the registration page', () => {
+    render(<AboutCTA />)
+    const link = screen.getByText('Start for Free').closest('a')
+    expect(link).toHaveAttribute('href', '/authentication/registration')
   })
 
   it('renders secondary links', () => {

@@ -1,5 +1,6 @@
 "use client"
 
+import Link from 'next/link'
 import {m as motion} from 'framer-motion'
 import { Check } from 'lucide-react';
 
@@ -82,15 +83,16 @@ export default function PricingCard({
         ))}
       </ul>
 
-      <button
+      <Link
+        href="/authentication/registration"
         className="
           w-full py-2.5 rounded-xl font-medium
           bg-primary/80 hover:bg-primary transition
-          text-primary-foreground
+          text-primary-foreground inline-flex items-center justify-center
         "
       >
         {buttonText}
-      </button>
+      </Link>
     </motion.div>
   );
 }

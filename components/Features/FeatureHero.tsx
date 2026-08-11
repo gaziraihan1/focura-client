@@ -1,7 +1,5 @@
-"use client";
-
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 /* ─── Mini dashboard mockup (pure CSS, mirrors real app structure) ───────── */
 
@@ -118,7 +116,6 @@ function MiniDashboardMock() {
 /* ─── Hero ────────────────────────────────────────────────────────────────── */
 
 export default function FeaturesHero() {
-  const router = useRouter();
   return (
     <section className="relative overflow-hidden bg-background pt-32 pb-24">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-linear-to-b from-primary/10 to-transparent" />
@@ -139,20 +136,20 @@ export default function FeaturesHero() {
         </p>
 
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <button
-            onClick={() => router.push("/signup")}
+          <Link
+            href="/authentication/registration"
             className="flex items-center gap-2 rounded-xl bg-primary px-7 py-3 text-lg font-semibold text-primary-foreground transition-opacity hover:opacity-90"
           >
             Get Started
             <ArrowRight size={20} />
-          </button>
+          </Link>
 
-          <button
-            onClick={() => router.push("/features/all-features")}
+          <Link
+            href="/features/all-features"
             className="rounded-xl border border-border/60 px-7 py-3 text-lg font-semibold text-foreground backdrop-blur-md transition-colors hover:bg-foreground/5 hover:cursor-pointer"
           >
             Explore All Features
-          </button>
+          </Link>
         </div>
 
         <div className="relative mx-auto mt-20 max-w-4xl">

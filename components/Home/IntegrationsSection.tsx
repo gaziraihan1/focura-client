@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { integrations } from "@/constants/home.constants";
 
@@ -23,7 +24,9 @@ export default function IntegrationsSection() {
               key={item.name}
               className="group flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-muted px-4 py-6 transition-colors transition-transform duration-300 hover:-translate-y-1 hover:border-foreground/30 hover:shadow-lg hover:shadow-foreground/5"
             >
-              <div className="relative h-10 w-10 opacity-70 grayscale transition-opacity duration-300 group-hover:opacity-100 group-hover:grayscale-0">
+              {/* Grayscale + dim only applies on devices that support hover (desktop);
+                  touch devices show the brand color immediately since there is no hover state. */}
+              <div className="relative h-10 w-10 transition-[opacity,filter] duration-300 [@media(hover:hover)]:opacity-70 [@media(hover:hover)]:grayscale group-hover:opacity-100 group-hover:grayscale-0">
                 <Image
                   src={item.logo}
                   alt={item.name}
@@ -38,10 +41,13 @@ export default function IntegrationsSection() {
         </div>
 
         <div className="mt-12">
-          <button className="group inline-flex items-center gap-2 rounded-lg border border-border bg-card px-6 py-3 text-sm font-semibold text-foreground shadow-sm transition hover:bg-muted">
+          <Link
+            href="/features"
+            className="group inline-flex items-center gap-2 rounded-lg border border-border bg-card px-6 py-3 text-sm font-semibold text-foreground shadow-sm transition hover:bg-muted"
+          >
             Explore All Integrations
             <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
-          </button>
+          </Link>
         </div>
       </div>
     </section>

@@ -6,6 +6,7 @@ vi.mock('framer-motion', () => ({
   m: {
     div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...filterDomProps(props)}>{children}</div>,
     button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...filterDomProps(props)}>{children}</button>,
+    a: ({ children, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => <a {...filterDomProps(props)}>{children}</a>,
     span: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <span {...filterDomProps(props)}>{children}</span>,
   },
   AnimatePresence: ({ children }: { children?: React.ReactNode }) => children,
@@ -49,5 +50,15 @@ describe('SolutionsHero', () => {
     render(<SolutionsHero />)
     expect(screen.getByText('Explore Solutions')).toBeInTheDocument()
     expect(screen.getByText('Watch Demo')).toBeInTheDocument()
+  })
+
+  it('links Explore Solutions to the features page', () => {
+    render(<SolutionsHero />)
+    expect(screen.getByText('Explore Solutions').closest('a')).toHaveAttribute('href', '/features')
+  })
+
+  it('links Watch Demo to the contact page', () => {
+    render(<SolutionsHero />)
+    expect(screen.getByText('Watch Demo').closest('a')).toHaveAttribute('href', '/contact')
   })
 })

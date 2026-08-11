@@ -22,10 +22,13 @@ export const mockAiQuota: AiQuota = {
   hourly: 15,
   dailyTokens: 40_000,
   monthlyTokens: 500_000,
+  maxOutputTokens: 512,
   tokensUsedToday: 1_200,
   tokensUsedThisMonth: 18_000,
   features: ["tasks.autocomplete", "goals.breakdown", "comments.assist"],
   resetAt: "2026-08-11T00:00:00.000Z",
+  defaults: { daily: 60, monthlyTokens: 500_000, maxOutputTokens: 512 },
+  overrides: {},
 };
 
 export const mockAiSuggestion: AiTaskSuggestion = {

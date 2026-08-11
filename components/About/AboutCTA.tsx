@@ -54,9 +54,7 @@ export const AboutCTA = () => {
             {/* Primary CTA */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-12">
               <Link
-                href="https://focura-client.vercel.app"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/authentication/registration"
                 className="inline-flex items-center gap-2 bg-primary text-primary-foreground rounded-xl px-6 py-3.5 text-sm font-bold hover:bg-primary/90 transition-colors"
               >
                 <Zap className="w-4 h-4 shrink-0" strokeWidth={2} />

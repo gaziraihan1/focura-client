@@ -104,7 +104,7 @@ export default function NavbarMain() {
                 </Link>
                 <ThemeSwitcher />
                 <Link
-                  href="/get-started"
+                  href="/authentication/registration"
                   className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition"
                 >
                   Get Started
@@ -188,7 +188,7 @@ export default function NavbarMain() {
                   <ThemeSwitcher />
                 </div>
                 <Link
-                  href="/get-started"
+                  href="/authentication/registration"
                   className="w-full text-center px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition"
                   onClick={() => setOpen(false)}
                 >

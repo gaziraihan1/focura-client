@@ -162,9 +162,9 @@ describe('Hero', () => {
   it('links to correct URLs', () => {
     render(<Hero />)
     const startBtn = screen.getByText('Start for Free').closest('a')
-    expect(startBtn).toHaveAttribute('href', '/get-started')
+    expect(startBtn).toHaveAttribute('href', '/authentication/registration')
     const demoBtn = screen.getByText('Get a Demo').closest('a')
-    expect(demoBtn).toHaveAttribute('href', '/demo')
+    expect(demoBtn).toHaveAttribute('href', '/contact')
   })
 })
 
@@ -244,10 +244,13 @@ describe('FeatureShowcase', () => {
     })
   })
 
-  it('renders Learn more buttons', () => {
+  it('renders Learn more links pointing to the features page', () => {
     render(<FeatureShowcase />)
-    const learnMoreButtons = screen.getAllByText('Learn more')
-    expect(learnMoreButtons.length).toBe(features.length)
+    const learnMoreLinks = screen.getAllByText('Learn more')
+    expect(learnMoreLinks.length).toBe(features.length)
+    learnMoreLinks.forEach((link) => {
+      expect(link.closest('a')).toHaveAttribute('href', '/features')
+    })
   })
 })
 
@@ -270,6 +273,21 @@ describe('IntegrationsSection', () => {
   it('renders the explore button', () => {
     render(<IntegrationsSection />)
     expect(screen.getByText('Explore All Integrations')).toBeInTheDocument()
+  })
+
+  it('links the explore button to the features page', () => {
+    render(<IntegrationsSection />)
+    const explore = screen.getByText('Explore All Integrations').closest('a')
+    expect(explore).toHaveAttribute('href', '/features')
+  })
+
+  it('shows full-color logos on touch devices (grayscale only under hover-capable media)', () => {
+    render(<IntegrationsSection />)
+    const iconWrap = screen.getByAltText(integrations[0].name).closest('div')
+    const tokens = iconWrap!.className.split(/\s+/)
+    expect(tokens).toContain('[@media(hover:hover)]:grayscale')
+    // No unconditional grayscale token — touch devices render full color by default
+    expect(tokens).not.toContain('grayscale')
   })
 })
 
@@ -305,6 +323,13 @@ describe('PricingSection', () => {
     render(<PricingSection />)
     const buttons = screen.getAllByText('Get Started')
     expect(buttons.length).toBe(3)
+  })
+
+  it('links every Get Started CTA to the registration page', () => {
+    render(<PricingSection />)
+    screen.getAllByText('Get Started').forEach((btn) => {
+      expect(btn.closest('a')).toHaveAttribute('href', '/authentication/registration')
+    })
   })
 
   it('renders feature lists for plans', () => {

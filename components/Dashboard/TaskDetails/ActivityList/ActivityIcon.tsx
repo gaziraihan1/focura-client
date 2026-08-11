@@ -8,6 +8,7 @@ import {
   Users,
   MessageSquare,
   AlertCircle,
+  ShieldCheck,
 } from 'lucide-react';
 
 const ICON_MAP = {
@@ -19,6 +20,7 @@ const ICON_MAP = {
   MessageSquare,
   AlertCircle,
   Circle,
+  ShieldCheck,
 };
 
 interface ActivityIconProps {

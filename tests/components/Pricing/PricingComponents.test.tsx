@@ -65,6 +65,11 @@ describe('PricingCard', () => {
     expect(screen.getByText('Get Started')).toBeInTheDocument()
   })
 
+  it('links the CTA to the registration page', () => {
+    render(<PricingCard {...defaultProps} />)
+    expect(screen.getByText('Get Started').closest('a')).toHaveAttribute('href', '/authentication/registration')
+  })
+
   it('renders monthly billing text', () => {
     render(<PricingCard {...defaultProps} />)
     expect(screen.getByText('Billed monthly')).toBeInTheDocument()

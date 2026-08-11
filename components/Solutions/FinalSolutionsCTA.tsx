@@ -39,7 +39,7 @@ export default function FinalSolutionsCTA() {
           className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5"
         >
           <Link
-            href="/signup"
+            href="/authentication/registration"
             className="inline-flex items-center gap-2 rounded-xl bg-primary px-7 py-3 font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-opacity hover:opacity-90"
           >
             Get Started Free

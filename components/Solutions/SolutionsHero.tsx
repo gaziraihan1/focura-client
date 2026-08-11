@@ -37,21 +37,23 @@ export default function SolutionsHero() {
             </p>
 
             <div className="mt-8 flex flex-wrap gap-4">
-              <motion.button
+              <motion.a
+                href="/features"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
-                className="rounded-xl bg-primary px-7 py-3 font-semibold text-primary-foreground shadow-lg shadow-primary/20"
+                className="inline-flex items-center rounded-xl bg-primary px-7 py-3 font-semibold text-primary-foreground shadow-lg shadow-primary/20"
               >
                 Explore Solutions
-              </motion.button>
+              </motion.a>
 
-              <motion.button
+              <motion.a
+                href="/contact"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
-                className="rounded-xl border border-border px-7 py-3 font-medium text-foreground/80 backdrop-blur"
+                className="inline-flex items-center rounded-xl border border-border px-7 py-3 font-medium text-foreground/80 backdrop-blur"
               >
                 Watch Demo
-              </motion.button>
+              </motion.a>
             </div>
           </motion.div>
 

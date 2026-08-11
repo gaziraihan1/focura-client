@@ -37,7 +37,7 @@ describe('PricingCard', () => {
 
   it('renders the button text', () => {
     render(<PricingCard {...defaultProps} />)
-    expect(screen.getByRole('button', { name: /upgrade to pro/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /upgrade to pro/i })).toBeInTheDocument()
   })
 
   it('shows "Most Popular" badge when popular', () => {

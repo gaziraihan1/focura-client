@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Check } from "lucide-react";
 import { plans } from "@/constants/pricing.constants";
 
@@ -69,9 +70,11 @@ export default function PricingPlans() {
                 ))}
               </ul>
 
-              <button
+              <Link
+                href="/authentication/registration"
                 className={`
                   mt-10 w-full py-3 rounded-xl font-medium border transition-all
+                  inline-flex items-center justify-center
                   ${
                     plan.highlighted
                       ? "bg-primary text-primary-foreground border-primary hover:opacity-90"
@@ -80,7 +83,7 @@ export default function PricingPlans() {
                 `}
               >
                 Get Started
-              </button>
+              </Link>
             </div>
           ))}
         </div>

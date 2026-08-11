@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Check } from "lucide-react";
 import { plans } from "@/constants/home.constants";
 
@@ -64,15 +65,16 @@ export default function PricingSection() {
                 </ul>
               </div>
 
-              <button
-                className={`mt-10 w-full py-3 rounded-lg font-semibold transition ${
+              <Link
+                href="/authentication/registration"
+                className={`mt-10 w-full py-3 rounded-lg font-semibold transition inline-flex items-center justify-center ${
                   plan.highlighted
                     ? "bg-primary text-primary-foreground hover:opacity-90"
                     : "border border-border hover:bg-muted"
                 }`}
               >
                 Get Started
-              </button>
+              </Link>
             </div>
           ))}
         </div>

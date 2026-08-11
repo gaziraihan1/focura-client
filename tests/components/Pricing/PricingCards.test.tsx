@@ -43,6 +43,13 @@ describe('PricingCards', () => {
     expect(screen.getByText('Get Business')).toBeInTheDocument()
   })
 
+  it('links every card CTA to the registration page', () => {
+    render(<PricingCards billing="monthly" />)
+    ;['Get Started', 'Upgrade to Pro', 'Get Business'].forEach((text) => {
+      expect(screen.getByText(text).closest('a')).toHaveAttribute('href', '/authentication/registration')
+    })
+  })
+
   it('renders features for each card', () => {
     render(<PricingCards billing="monthly" />)
     expect(screen.getAllByText('Unlimited Projects').length).toBeGreaterThanOrEqual(1)

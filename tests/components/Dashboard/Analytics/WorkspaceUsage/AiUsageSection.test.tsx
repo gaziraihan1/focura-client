@@ -81,6 +81,73 @@ describe("AiUsageSection", () => {
     expect(screen.getAllByText("Goal breakdown").length).toBeGreaterThan(0);
   });
 
+  it("shows the effective AI limits card with usage bars", async () => {
+    renderSection();
+
+    await waitFor(() => {
+      expect(screen.getByText("Current AI limits")).toBeInTheDocument();
+    });
+
+    // FREE mock: no admin overrides → no "custom" hints, plan default shown.
+    expect(screen.getByText("FREE plan")).toBeInTheDocument();
+    expect(screen.getByText("Calls per day")).toBeInTheDocument();
+    expect(screen.getByText("Monthly tokens")).toBeInTheDocument();
+    expect(screen.getByText(/Rate & response/)).toBeInTheDocument();
+    expect(screen.getByText(/3\/min · 15\/hr · 512 tokens\/response/)).toBeInTheDocument();
+    expect(screen.queryByText(/customized by Focura admin/i)).not.toBeInTheDocument();
+  });
+
+  it("flags admin-raised caps with the plan default alongside", async () => {
+    const { http, HttpResponse } = await import("msw");
+    const { server } = await import("@/tests/mock/server");
+
+    server.use(
+      http.get("*/api/v1/ai/quota", () =>
+        HttpResponse.json({
+          success: true,
+          data: {
+            plan: "ENTERPRISE",
+            dailyLimit: 10000,
+            usedToday: 42,
+            remaining: 9958,
+            burstPerMinute: 30,
+            hourly: 200,
+            dailyTokens: 2000000,
+            monthlyTokens: 50000000,
+            maxOutputTokens: 4096,
+            tokensUsedToday: 4200,
+            tokensUsedThisMonth: 500000,
+            features: ["*"],
+            resetAt: "2026-08-12T00:00:00.000Z",
+            defaults: {
+              daily: 2000,
+              monthlyTokens: 25000000,
+              maxOutputTokens: 2048,
+            },
+            overrides: {
+              daily: 10000,
+              monthlyTokens: 50000000,
+              maxOutputTokens: 4096,
+            },
+          },
+        }),
+      ),
+    );
+
+    renderSection();
+
+    await waitFor(() => {
+      expect(screen.getByText("Current AI limits")).toBeInTheDocument();
+    });
+
+    expect(screen.getByText("ENTERPRISE plan")).toBeInTheDocument();
+    // The raised caps are surfaced with the tier default for comparison.
+    expect(screen.getByText("Customized by Focura admin")).toBeInTheDocument();
+    expect(screen.getAllByText(/Plan default:/).length).toBeGreaterThan(0);
+    expect(screen.getByText(/10,000/)).toBeInTheDocument();
+    expect(screen.getByText(/2,000/)).toBeInTheDocument();
+  });
+
   it("switches the period with the 7d/30d/90d buttons", async () => {
     renderSection();
 
@@ -109,7 +176,7 @@ describe("AiUsageSection", () => {
     await waitFor(() => {
       expect(downloads.getAnchor()?.download).toContain("ai-usage-30d-");
     });
-    expect(downloads.getAnchor()?.download).toMatch(/\.csv$/);
+    expect(downloads.getAnchor()?.download).toMatch(/.csv$/);
 
     const blob = downloads.createObjectURL.mock.calls[0][0] as Blob;
     const text = await readBlobText(blob);
@@ -131,7 +198,7 @@ describe("AiUsageSection", () => {
     fireEvent.click(screen.getByText("Export as JSON"));
 
     await waitFor(() => {
-      expect(downloads.getAnchor()?.download).toMatch(/\.json$/);
+      expect(downloads.getAnchor()?.download).toMatch(/.json$/);
     });
 
     const blob = downloads.createObjectURL.mock.calls[0][0] as Blob;

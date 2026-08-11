@@ -274,6 +274,7 @@ vi.mock('@/hooks/useAi', () => ({
     data: null, isFetching: false, error: null, fetchStatus: 'idle',
   }),
   useAiTaskBreakdown: () => ({ mutateAsync: vi.fn(), isPending: false }),
+  useWorkspaceSlug: () => undefined,
 }))
 
 vi.mock('@/hooks/useFocusSession', () => ({

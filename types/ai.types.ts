@@ -106,7 +106,7 @@ export interface AiWeeklyInsights {
 }
 
 export interface AiQuota {
-  plan: "FREE" | "PRO" | "BUSINESS";
+  plan: "FREE" | "PRO" | "BUSINESS" | "ENTERPRISE";
   dailyLimit: number;
   usedToday: number;
   remaining: number;
@@ -114,10 +114,16 @@ export interface AiQuota {
   hourly: number;
   dailyTokens: number;
   monthlyTokens: number;
+  /** Effective per-response output cap (honors Focura-admin overrides). */
+  maxOutputTokens: number;
   tokensUsedToday: number;
   tokensUsedThisMonth: number;
   features: string[];
   resetAt: string;
+  /** Plan defaults for the overrideable fields — what the tier gives without admin changes. */
+  defaults: { daily: number; monthlyTokens: number; maxOutputTokens: number };
+  /** Per-workspace Focura-admin overrides currently active (absent field = plan default). */
+  overrides: Partial<{ daily: number; monthlyTokens: number; maxOutputTokens: number }>;
 }
 
 /** Error codes the backend returns for AI endpoints (see `X-AI-RateLimit-*`). */

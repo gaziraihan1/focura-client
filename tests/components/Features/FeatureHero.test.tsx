@@ -121,14 +121,16 @@ describe('FeaturesHero', () => {
     expect(screen.getByText(/Powerful features designed/)).toBeInTheDocument()
   })
 
-  it('renders "Get Started" button', () => {
+  it('renders "Get Started" link to the registration page', () => {
     render(<FeaturesHero />)
-    expect(screen.getByText('Get Started')).toBeInTheDocument()
+    const link = screen.getByText('Get Started').closest('a')
+    expect(link).toHaveAttribute('href', '/authentication/registration')
   })
 
-  it('renders "Explore All Features" button', () => {
+  it('renders "Explore All Features" link to the all-features page', () => {
     render(<FeaturesHero />)
-    expect(screen.getByText('Explore All Features')).toBeInTheDocument()
+    const link = screen.getByText('Explore All Features').closest('a')
+    expect(link).toHaveAttribute('href', '/features/all-features')
   })
 
   it('renders the dashboard preview mockup', () => {

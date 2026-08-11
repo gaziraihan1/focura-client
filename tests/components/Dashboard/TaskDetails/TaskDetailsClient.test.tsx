@@ -134,6 +134,7 @@ vi.mock('lucide-react', () => {
     GitPullRequest: icon('GitPullRequest'),
     GitBranch: icon('GitBranch'),
     GitCommit: icon('GitCommit'),
+    ShieldCheck: icon('ShieldCheck'),
   }
 })
 

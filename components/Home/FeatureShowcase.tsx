@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   ArrowRight,
   Calendar,
@@ -526,10 +527,13 @@ export default function FeatureShowcase() {
                   {f.title}
                 </h3>
                 <p className="mt-4 text-muted-foreground text-lg leading-relaxed">{f.desc}</p>
-                <button className="group mt-6 inline-flex items-center gap-2 text-sm font-semibold text-foreground transition hover:opacity-70">
+                <Link
+                  href="/features"
+                  className="group mt-6 inline-flex items-center gap-2 text-sm font-semibold text-foreground transition hover:opacity-70"
+                >
                   Learn more
                   <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
-                </button>
+                </Link>
               </div>
             </div>
           ))}

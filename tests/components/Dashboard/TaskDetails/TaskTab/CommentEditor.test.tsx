@@ -7,6 +7,17 @@ vi.mock('next/image', () => ({
   default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img alt="" {...props} />,
 }));
 
+vi.mock('next/link', () => ({
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
+    <a href={href} {...props}>{children}</a>
+  ),
+}));
+
+vi.mock('@/hooks/useAi', () => ({
+  useAiCommentAssist: () => ({ mutateAsync: vi.fn(), isPending: false }),
+  useWorkspaceSlug: () => undefined,
+}));
+
 vi.mock('@/components/Dashboard/TaskDetails/TaskTab/MentionTextarea', () => ({
   default: React.forwardRef(({ value, onChange, onSubmit, placeholder, ...props }: Record<string, unknown>, ref: Record<string, unknown>) => (
     <textarea

@@ -57,12 +57,15 @@ export const PLANS: readonly Plan[] = [
   },
 ] as const;
 
-export const PLAN_RANK = { FREE: 0, PRO: 1, BUSINESS: 2 } as const;
+// ENTERPRISE is Focura-admin granted (not self-serve purchasable), so it is
+// ranked above BUSINESS for gating comparisons but has no PLANS card.
+export const PLAN_RANK = { FREE: 0, PRO: 1, BUSINESS: 2, ENTERPRISE: 3 } as const;
 
 export const PLAN_META = {
   FREE: { label: 'Free', icon: Rocket },
   PRO: { label: 'Pro', icon: Zap },
   BUSINESS: { label: 'Business', icon: Building2 },
+  ENTERPRISE: { label: 'Enterprise', icon: Building2 },
 } as const;
 
 export const STATUS_CONFIGS = {

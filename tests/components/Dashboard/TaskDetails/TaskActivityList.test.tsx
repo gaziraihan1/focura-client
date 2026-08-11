@@ -90,6 +90,7 @@ vi.mock('lucide-react', () => {
     Zap: icon('Zap'),
     Brain: icon('Brain'),
     Shield: icon('Shield'),
+    ShieldCheck: icon('ShieldCheck'),
     Eye: icon('Eye'),
     BookOpen: icon('BookOpen'),
     Lightbulb: icon('Lightbulb'),

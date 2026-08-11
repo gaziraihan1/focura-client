@@ -100,23 +100,44 @@ export function useUpdateWorkspaceLimits() {
   return useMutation({
     mutationFn: async ({
       slug, plan, maxMembers, maxStorage,
-    }: { slug: string; plan: string; maxMembers: number; maxStorage: number }) => {
+      aiDailyCalls = null, aiMonthlyTokens = null, aiMaxOutputTokens = null,
+    }: {
+      slug: string;
+      plan: string;
+      maxMembers: number;
+      maxStorage: number;
+      aiDailyCalls?: number | null;
+      aiMonthlyTokens?: number | null;
+      aiMaxOutputTokens?: number | null;
+    }) => {
       const res = await api.patch(`/api/v1/admin/workspaces/${slug}/limits`, {
         plan, maxMembers, maxStorage,
+        aiDailyCalls, aiMonthlyTokens, aiMaxOutputTokens,
       });
       return res as unknown as {
         success: boolean;
         message: string;
-        data: { id: string; slug: string; plan: string; maxMembers: number; maxStorage: number };
+        data: {
+          id: string; slug: string; plan: string;
+          maxMembers: number; maxStorage: number;
+          aiDailyCalls: number | null;
+          aiMonthlyTokens: number | null;
+          aiMaxOutputTokens: number | null;
+        };
       };
     },
-    onSuccess: (_, { slug, plan, maxMembers, maxStorage }) => {
+    onSuccess: (_, { slug, plan, maxMembers, maxStorage, aiDailyCalls, aiMonthlyTokens, aiMaxOutputTokens }) => {
       const updatedPlan = plan as 'FREE' | 'PRO' | 'BUSINESS' | 'ENTERPRISE';
       
       // Update the workspace detail cache immediately
       qc.setQueryData(workspaceKeys.detail(slug), (old: any) => {
         if (!old) return old;
-        return { ...old, plan: updatedPlan, maxMembers, maxStorage };
+        return {
+          ...old, plan: updatedPlan, maxMembers, maxStorage,
+          aiDailyCalls: aiDailyCalls ?? null,
+          aiMonthlyTokens: aiMonthlyTokens ?? null,
+          aiMaxOutputTokens: aiMaxOutputTokens ?? null,
+        };
       });
 
       // Update the workspace overview cache immediately (this is what useWorkspaceOverview uses)

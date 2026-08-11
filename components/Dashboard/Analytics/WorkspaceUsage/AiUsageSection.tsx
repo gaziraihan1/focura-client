@@ -8,13 +8,16 @@ import {
   Download,
   FileJson,
   FileSpreadsheet,
+  Gauge,
   Hash,
   ShieldAlert,
+  SlidersHorizontal,
   Sparkles,
   Wand2,
 } from "lucide-react";
 import {
   aiFeatureLabel,
+  useAiQuota,
   useAiUsageReport,
   useExportAiUsage,
 } from "@/hooks/useAi";
@@ -47,15 +50,99 @@ function StatCard({ icon: Icon, label, value, accent }: StatCardProps) {
   );
 }
 
+/** 1_200 → "1.2K", 500_000 → "500K", 25_000_000 → "25M". */
+function formatCompact(n: number): string {
+  if (n >= 1_000_000) {
+    const m = n / 1_000_000;
+    return `${Number.isInteger(m) ? m : m.toFixed(1)}M`;
+  }
+  if (n >= 1_000) {
+    const k = n / 1_000;
+    return `${Number.isInteger(k) ? k : k.toFixed(1)}K`;
+  }
+  return n.toLocaleString();
+}
+
+/** Small amber "custom" tag with the plan default in a tooltip. */
+function CustomTag({ defaultLimit, format }: { defaultLimit: number; format: (n: number) => string }) {
+  return (
+    <span
+      title={`Plan default: ${format(defaultLimit)}`}
+      className="ml-1.5 inline-flex items-center gap-0.5 rounded bg-amber-500/15 px-1 py-px text-[10px] font-semibold text-amber-600 dark:text-amber-400"
+    >
+      <SlidersHorizontal className="h-2.5 w-2.5" aria-hidden="true" />
+      custom
+    </span>
+  );
+}
+
+interface LimitRowProps {
+  label: string;
+  used: number;
+  limit: number;
+  /** Plan default — shown in the hint when an admin override is active. */
+  defaultLimit: number;
+  /** Whether a Focura-admin override is active for this field. */
+  overridden: boolean;
+  format?: (n: number) => string;
+}
+
+/**
+ * One quota row: usage bar plus a "Plan default: X — customized by Focura
+ * admin" hint whenever the effective limit was raised (or lowered) from the
+ * workspace's tier default by an admin.
+ */
+function LimitRow({
+  label,
+  used,
+  limit,
+  defaultLimit,
+  overridden,
+  format = formatCompact,
+}: LimitRowProps) {
+  const ratio = limit > 0 ? Math.min(1, used / limit) : 1;
+  const barTone =
+    ratio >= 1 ? "bg-destructive" : ratio >= 0.8 ? "bg-amber-500" : "bg-primary";
+
+  return (
+    <li>
+      <div className="flex items-baseline justify-between gap-2 text-xs">
+        <span className="font-medium text-foreground">{label}</span>
+        <span className="shrink-0 tabular-nums text-muted-foreground">
+          {format(used)}
+          <span className="opacity-70"> / {format(limit)}</span>
+          {overridden && <CustomTag defaultLimit={defaultLimit} format={format} />}
+        </span>
+      </div>
+      <div
+        className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted"
+        role="img"
+        aria-label={`${label}: ${format(used)} of ${format(limit)} used`}
+      >
+        <div
+          className={cn("h-full rounded-full transition-all duration-500", barTone)}
+          style={{ width: `${ratio * 100}%` }}
+        />
+      </div>
+      {overridden && (
+        <p className="mt-1 text-[10px] text-amber-600/80 dark:text-amber-400/80">
+          Plan default: {format(defaultLimit)} — customized by Focura admin
+        </p>
+      )}
+    </li>
+  );
+}
+
 interface AiUsageSectionProps {
   workspaceId: string;
 }
 
 /**
  * "AI Usage" section — a workspace's AI spend report (calls, tokens, estimated
- * cost) read from `AiUsageLog`. The backend restricts this endpoint to
- * workspace owners and admins; the section is also only rendered for
- * admins/owners by the parent page. Purely read-only.
+ * cost) read from `AiUsageLog`, plus the effective AI limits (plan defaults,
+ * honoring any Focura-admin overrides) so owners see their raised caps. The
+ * backend restricts this endpoint to workspace owners and admins; the section
+ * is also only rendered for admins/owners by the parent page. Purely read-only.
  */
 export function AiUsageSection({ workspaceId }: AiUsageSectionProps) {
   const [periodDays, setPeriodDays] = useState(30);
@@ -66,6 +153,7 @@ export function AiUsageSection({ workspaceId }: AiUsageSectionProps) {
     true,
     periodDays,
   );
+  const { data: quota } = useAiQuota(workspaceId, true);
   const { exportToCSV, exportToJSON } = useExportAiUsage();
 
   async function handleExport(format: "csv" | "json") {
@@ -101,6 +189,15 @@ export function AiUsageSection({ workspaceId }: AiUsageSectionProps) {
 
   const maxFeatureCalls = Math.max(1, ...data.byFeature.map((f) => f.calls));
   const hasUsage = data.total.calls > 0;
+
+  const maxOutputOverridden =
+    quota != null && quota.defaults.maxOutputTokens !== quota.maxOutputTokens;
+
+  // Single source of truth for "customized": the backend's `overrides` object
+  // only contains fields a Focura admin actually set on this workspace.
+  const hasOverrides = Boolean(
+    quota && Object.keys(quota.overrides).length > 0,
+  );
 
   return (
     <section className="space-y-3 sm:space-y-4">
@@ -199,6 +296,69 @@ export function AiUsageSection({ workspaceId }: AiUsageSectionProps) {
           </div>
         </div>
       </div>
+
+      {/* Effective AI limits — plan defaults plus any Focura-admin overrides */}
+      {quota && (
+        <div className="rounded-xl sm:rounded-2xl border border-border bg-card p-3.5 sm:p-5">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <Gauge className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              <h3 className="text-sm font-semibold text-foreground">
+                Current AI limits
+              </h3>
+              {hasOverrides && (
+                <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/25 bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold text-amber-600 dark:text-amber-400">
+                  <SlidersHorizontal className="h-3 w-3" aria-hidden="true" />
+                  Customized by Focura admin
+                </span>
+              )}
+            </div>
+            <span className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              {quota.plan} plan
+            </span>
+          </div>
+
+          <ul className="mt-3 space-y-3">
+            <LimitRow
+              label="Calls per day"
+              used={quota.usedToday}
+              limit={quota.dailyLimit}
+              defaultLimit={quota.defaults.daily}
+              overridden={quota.overrides.daily != null}
+              format={(n) => n.toLocaleString()}
+            />
+            <LimitRow
+              label="Monthly tokens"
+              used={quota.tokensUsedThisMonth}
+              limit={quota.monthlyTokens}
+              defaultLimit={quota.defaults.monthlyTokens}
+              overridden={quota.overrides.monthlyTokens != null}
+            />
+          </ul>
+
+          <div className="mt-3 border-t border-border/60 pt-3">
+            <div className="flex items-center justify-between gap-2 text-xs">
+              <span className="font-medium text-foreground">Rate &amp; response</span>
+              <span className="shrink-0 tabular-nums text-muted-foreground">
+                {quota.burstPerMinute}/min · {quota.hourly}/hr ·{" "}
+                {quota.maxOutputTokens.toLocaleString()} tokens/response
+                {maxOutputOverridden && (
+                  <CustomTag
+                    defaultLimit={quota.defaults.maxOutputTokens}
+                    format={(n) => n.toLocaleString()}
+                  />
+                )}
+              </span>
+            </div>
+            {maxOutputOverridden && (
+              <p className="mt-1 text-right text-[10px] text-amber-600/80 dark:text-amber-400/80">
+                Plan default: {quota.defaults.maxOutputTokens.toLocaleString()}{" "}
+                tokens/response — customized by Focura admin
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Totals */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">

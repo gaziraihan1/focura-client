@@ -5,6 +5,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { useAdminActivity, useAdminPagination } from '@/hooks/useAdmin';
 import { Avatar }              from '@/components/Shared/Avatar';
 import { Pagination }          from '@/components/Shared/Pagination';
+import { getWorkspaceLimitParts } from '@/utils/workspace-limits';
 import { cn }                  from '@/lib/utils';
 import Link from 'next/link';
 
@@ -34,40 +35,57 @@ export default function AdminActivityPage() {
           ? Array.from({ length: 10 }).map((_, i) => (
               <div key={i} className="h-16 rounded-xl bg-muted animate-pulse" />
             ))
-          : data?.data.map((a) => (
-              <div
-                key={a.id}
-                className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card hover:border-primary/20 transition-colors"
-              >
-                <Avatar name={a.user.name} image={a.user.image} size="sm" />
-                <div className="flex-1 min-w-0 space-y-0.5">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-xs font-medium text-foreground">{a.user.name}</span>
-                    <span className={cn(
-                      'text-[10px] px-1.5 py-0.5 rounded font-semibold uppercase',
-                      ACTION_COLORS[a.action] ?? 'text-muted-foreground bg-muted',
-                    )}>
-                      {a.action}
-                    </span>
-                    <span className="text-xs text-muted-foreground">{a.entityType}</span>
-                    {a.workspace && (
-                      <span className="text-[10px] text-muted-foreground">
-                        <Link
-                          href={`/admin/workspaces/${a.workspace.id}`}
-                          className="hover:text-primary transition-colors"
-                        >
-                          {a.workspace.name}
-                        </Link>
+          : data?.data.map((a) => {
+              const limitParts = getWorkspaceLimitParts(a.metadata?.changes);
+              return (
+                <div
+                  key={a.id}
+                  className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card hover:border-primary/20 transition-colors"
+                >
+                  <Avatar name={a.user.name} image={a.user.image} size="sm" />
+                  <div className="flex-1 min-w-0 space-y-0.5">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-xs font-medium text-foreground">{a.user.name}</span>
+                      <span className={cn(
+                        'text-[10px] px-1.5 py-0.5 rounded font-semibold uppercase',
+                        ACTION_COLORS[a.action] ?? 'text-muted-foreground bg-muted',
+                      )}>
+                        {a.action}
                       </span>
+                      <span className="text-xs text-muted-foreground">{a.entityType}</span>
+                      {a.workspace && (
+                        <span className="text-[10px] text-muted-foreground">
+                          <Link
+                            href={`/admin/workspaces/${a.workspace.id}`}
+                            className="hover:text-primary transition-colors"
+                          >
+                            {a.workspace.name}
+                          </Link>
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">{a.user.email}</p>
+                    {limitParts.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 pt-0.5">
+                        {limitParts.map((part) => (
+                          <span
+                            key={part.field}
+                            className="text-[10px] px-1.5 py-0.5 rounded-md bg-muted text-muted-foreground border border-border"
+                          >
+                            <span className="font-semibold">{part.label}:</span>{' '}
+                            {part.from} <span className="text-muted-foreground/60">→</span>{' '}
+                            {part.to}
+                          </span>
+                        ))}
+                      </div>
                     )}
                   </div>
-                  <p className="text-[10px] text-muted-foreground">{a.user.email}</p>
+                  <span className="text-[10px] text-muted-foreground shrink-0">
+                    {formatDistanceToNow(new Date(a.createdAt), { addSuffix: true })}
+                  </span>
                 </div>
-                <span className="text-[10px] text-muted-foreground shrink-0">
-                  {formatDistanceToNow(new Date(a.createdAt), { addSuffix: true })}
-                </span>
-              </div>
-            ))}
+              );
+            })}
       </div>
 
       <Pagination

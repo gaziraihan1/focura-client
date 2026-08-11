@@ -44,9 +44,7 @@ export const AboutHero = () => {
         {/* CTA row */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-12">
           <Link
-            href="https://focura-client.vercel.app"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/authentication/registration"
             className="inline-flex items-center gap-2 bg-primary text-primary-foreground rounded-xl px-5 py-3 text-sm font-semibold hover:bg-primary/90 transition-colors"
           >
             <Zap className="w-4 h-4" strokeWidth={2} />

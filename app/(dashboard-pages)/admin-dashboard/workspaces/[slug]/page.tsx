@@ -271,6 +271,9 @@ export default function AdminWorkspaceDetailPage() {
   currentPlan={ws.plan as 'FREE' | 'PRO' | 'BUSINESS' | 'ENTERPRISE'}
   currentMaxMembers={ws.maxMembers}
   currentMaxStorage={ws.maxStorageMb}
+  currentAiDailyCalls={ws.aiDailyCalls}
+  currentAiMonthlyTokens={ws.aiMonthlyTokens}
+  currentAiMaxOutputTokens={ws.aiMaxOutputTokens}
   isOpen={editLimitsOpen}
   onClose={() => setEditLimitsOpen(false)}
 />

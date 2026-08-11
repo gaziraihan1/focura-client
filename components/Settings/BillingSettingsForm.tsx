@@ -36,7 +36,7 @@ const PLANS = [
 
 export function BillingSettingsForm({ workspaceSlug }: BillingSettingsFormProps) {
   const { data: workspace } = useWorkspace(workspaceSlug);
-  const { isFree, isPro, isBusiness } = useWorkspacePlan();
+  const { isFree, isPro, isBusiness, isEnterprise } = useWorkspacePlan();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
@@ -101,7 +101,8 @@ export function BillingSettingsForm({ workspaceSlug }: BillingSettingsFormProps)
           {PLANS.map((plan) => {
             const isCurrent = (isFree && plan.name === 'FREE') ||
               (isPro && plan.name === 'PRO') ||
-              (isBusiness && plan.name === 'BUSINESS');
+              (isBusiness && plan.name === 'BUSINESS') ||
+              (isEnterprise && plan.name === 'ENTERPRISE');
 
             return (
               <div

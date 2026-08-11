@@ -19,9 +19,14 @@ export const billingKeys = {
 // Types
 // ---------------------------------------------------------------------------
 
+export type PlanName    = 'FREE' | 'PRO' | 'BUSINESS' | 'ENTERPRISE';
+/** Plans a workspace owner can self-serve purchase/change to — ENTERPRISE is Focura-admin granted only. */
+export type SelfServePlan = Exclude<PlanName, 'ENTERPRISE'>;
+export type BillingCycle = 'MONTHLY' | 'YEARLY';
+
 export interface WorkspaceSubscription {
   workspaceId:           string;
-  planName:              'FREE' | 'PRO' | 'BUSINESS';
+  planName:              PlanName;
   status:                string;
   billingCycle:          'MONTHLY' | 'YEARLY';
   currentPeriodEnd:      string;
@@ -51,8 +56,6 @@ type ReactivateSubscriptionResponse = {
   success: boolean;
   message?: string;
 };
-export type PlanName    = 'FREE' | 'PRO' | 'BUSINESS';
-export type BillingCycle = 'MONTHLY' | 'YEARLY';
 
 // ---------------------------------------------------------------------------
 // Hooks
@@ -95,7 +98,7 @@ export function useWorkspaceInvoices(workspaceId: string) {
  */
 export function useCreateCheckout(workspaceId: string) {
   return useMutation({
-    mutationFn: async (vars: { planName: Exclude<PlanName, 'FREE'>; billingCycle: BillingCycle }) => {
+    mutationFn: async (vars: { planName: Exclude<SelfServePlan, 'FREE'>; billingCycle: BillingCycle }) => {
       const res = await api.post<{ url: string }>(
         `/api/v1/workspaces/${workspaceId}/billing/create-checkout-session`,
         vars,
@@ -138,7 +141,7 @@ export function useCreatePortal(workspaceId: string) {
 export function useChangePlan(workspaceId: string, workspaceSlug?: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (vars: { newPlanName: PlanName; billingCycle?: BillingCycle }) => {
+    mutationFn: async (vars: { newPlanName: SelfServePlan; billingCycle?: BillingCycle }) => {
       const res = await api.post(
         `/api/v1/workspaces/${workspaceId}/billing/change-plan`,
         vars,
