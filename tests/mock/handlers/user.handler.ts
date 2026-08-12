@@ -16,5 +16,11 @@ export const mockUserProfile:UserProfile = {
 const ok = (data: unknown) => HttpResponse.json({ success: true, data });
 
 export const userHandler = [
-    http.get(`${BASE}/api/v1/user/profile`, () => ok({user: mockUserProfile}))
+    http.get(`${BASE}/api/v1/user/profile`, () => ok({user: mockUserProfile})),
+    http.post(`${BASE}/api/v1/user/export-data`, () =>
+      HttpResponse.json({ success: true, message: 'Data export requested' })
+    ),
+    http.delete(`${BASE}/api/v1/user/account`, () =>
+      HttpResponse.json({ success: true, message: 'Account deleted successfully.' })
+    ),
 ]

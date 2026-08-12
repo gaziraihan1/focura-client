@@ -52,6 +52,16 @@ export default function TopNavbar({
     return () => document.removeEventListener("keydown", handler);
   }, []);
 
+  // Close the user menu with the Escape key.
+  useEffect(() => {
+    if (!showUserMenu) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowUserMenu(false);
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [showUserMenu]);
+
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
@@ -102,10 +112,11 @@ export default function TopNavbar({
 
             <Link
               href="/dashboard/tasks/add-task"
-              className="hidden sm:flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-primary-foreground transition hover:opacity-90 active:scale-95"
+              aria-label="New Task"
+              className="flex items-center justify-center gap-1.5 rounded-xl bg-primary px-2 sm:px-3.5 py-2 text-primary-foreground transition hover:opacity-90 active:scale-95"
             >
               <Plus size={16} strokeWidth={2.5} />
-              <span className="text-[13px] font-semibold">New Task</span>
+              <span className="hidden sm:inline text-[13px] font-semibold">New Task</span>
             </Link>
 
             <ThemeSwitcher />
@@ -117,7 +128,7 @@ export default function TopNavbar({
                 onClick={() => setShowUserMenu((prev) => !prev)}
                 aria-label="User menu"
                 aria-expanded={showUserMenu}
-                aria-haspopup="true"
+                aria-haspopup="menu"
                 className="flex items-center gap-2 rounded-xl px-2 py-1.5 transition hover:bg-accent"
               >
                 <div

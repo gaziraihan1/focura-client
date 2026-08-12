@@ -126,8 +126,9 @@ describe('CookiesCategoryCards', () => {
   it('renders badge labels', () => {
     render(<CookiesCategoryCards />)
     expect(screen.getByText('Always On')).toBeInTheDocument()
+    expect(screen.getByText('Opt-In')).toBeInTheDocument()
     const optOut = screen.getAllByText('Opt-Out')
-    expect(optOut.length).toBeGreaterThanOrEqual(2)
+    expect(optOut.length).toBeGreaterThanOrEqual(1)
   })
 
   it('renders cookie counts', () => {

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { GoogleAnalytics } from "@/components/Analytics/GoogleAnalytics";
+import { ConsentProvider } from "@/components/Consent/ConsentProvider";
 import Providers from "@/components/Providers/SessionProvider";
 // import { OfflineProvider } from "@/components/Providers/OfflineProvider";
 
@@ -77,15 +77,16 @@ export default async function RootLayout({
         <Providers>
           {/* <OfflineProvider> */}
             {/* Skip to main content - accessibility */}
-            <a
-              href="#main-content"
-              className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-9999 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg focus:outline-none"
-            >
-              Skip to main content
-            </a>
-            {children}
-            <SpeedInsights />
-            <GoogleAnalytics />
+            <ConsentProvider>
+              <a
+                href="#main-content"
+                className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-9999 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg focus:outline-none"
+              >
+                Skip to main content
+              </a>
+              {children}
+              <SpeedInsights />
+            </ConsentProvider>
           {/* </OfflineProvider> */}
         </Providers>
       </body>

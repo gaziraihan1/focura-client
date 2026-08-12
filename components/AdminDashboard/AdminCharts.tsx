@@ -122,7 +122,7 @@ export function AdminCharts() {
             <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
             <XAxis dataKey="label" tick={axisTick} axisLine={false} tickLine={false} />
             <YAxis tick={axisTick} axisLine={false} tickLine={false} />
-            <Tooltip content={<GlassTooltip />} />
+            <Tooltip content={<GlassTooltip />} cursor={false} />
             <Legend iconType="circle" iconSize={7} formatter={(v) => <span style={{ color: 'var(--color-muted-foreground)', fontSize: 11 }}>{v}</span>} />
             {/* Value labels on each point (zeros hidden by ChartLabel); staggered dy keeps the three series apart */}
             <Area type="monotone" dataKey="users" name="Users" stroke={VIZ.indigo} strokeWidth={2} fill="url(#gradUsers)" dot={false} activeDot={{ r: 4, fill: VIZ.indigo }}>
@@ -149,7 +149,7 @@ export function AdminCharts() {
             <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
             <XAxis dataKey="label" tick={axisTick} axisLine={false} tickLine={false} />
             <YAxis tick={axisTick} axisLine={false} tickLine={false} />
-            <Tooltip content={<GlassTooltip />} />
+            <Tooltip content={<GlassTooltip />} cursor={false} />
             <Legend iconType="circle" iconSize={7} formatter={(v) => <span style={{ color: 'var(--color-muted-foreground)', fontSize: 11 }}>{v}</span>} />
             <Bar dataKey="FREE" name="Free" stackId="plan" fill={PLAN_COLORS[0]} radius={[0, 0, 0, 0]} />
             <Bar dataKey="PRO" name="Pro" stackId="plan" fill={PLAN_COLORS[1]} radius={[0, 0, 0, 0]} />
@@ -240,7 +240,7 @@ export function AdminCharts() {
               <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
               <XAxis dataKey="label" tick={{ ...axisTick, fontSize: 10 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ ...axisTick, fontSize: 10 }} axisLine={false} tickLine={false} />
-              <Tooltip content={<GlassTooltip />} />
+              <Tooltip content={<GlassTooltip />} cursor={false} />
               <Bar dataKey="todo" name="Todo" stackId="a" fill={TASK_COLORS.todo} radius={[0, 0, 0, 0]} />
               <Bar dataKey="inProgress" name="In Progress" stackId="a" fill={TASK_COLORS.inProgress} radius={[0, 0, 0, 0]} />
               <Bar dataKey="completed" name="Completed" stackId="a" fill={TASK_COLORS.completed} radius={[4, 4, 0, 0]} />

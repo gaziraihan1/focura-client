@@ -72,8 +72,14 @@ export default function DashboardShell({
   const isWorkspaceRoute =
     segments[0] === "dashboard" && segments[1] === "workspaces";
   const thirdSegment = segments[2];
+  // Static root pages under /dashboard/workspaces keep the global dashboard
+  // shell. Only real workspace routes ([workspaceSlug]) hide it — those render
+  // their own full-screen workspace layout (see [workspaceSlug]/layout.tsx).
+  const WORKSPACE_ROOT_PAGES = ["new-workspace", "browse"];
   const hideLayout =
-    isWorkspaceRoute && thirdSegment && thirdSegment !== "new-workspace";
+    isWorkspaceRoute &&
+    !!thirdSegment &&
+    !WORKSPACE_ROOT_PAGES.includes(thirdSegment);
 
   if (status === "loading") return <FullPageSpinner />;
 

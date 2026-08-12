@@ -78,23 +78,57 @@ const bottomNavigation: NavItem[] = [
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [collapsedItems, setCollapsedItems] = useState<string[]>([]);
   const navRef = useRef<HTMLElement>(null);
-
-  const toggleExpand = (name: string) => {
-    setExpandedItems((prev) =>
-      prev.includes(name) ? prev.filter((i) => i !== name) : [...prev, name]
-    );
-  };
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === href;
     return pathname.startsWith(href);
   };
 
+  // Returns the most specific active child for a group (handles nested routes
+  // such as /dashboard/tasks/[id]) or null when nothing matches.
+  const getActiveChild = (item: NavItem) => {
+    if (!item.children) return null;
+    return (
+      item.children
+        .filter(
+          (c) => pathname === c.href || pathname.startsWith(c.href + "/")
+        )
+        .sort((a, b) => b.href.length - a.href.length)[0] ?? null
+    );
+  };
+
   const isGroupActive = (item: NavItem) => {
     if (item.href && isActive(item.href)) return true;
-    if (item.children) return item.children.some((c) => pathname === c.href);
-    return false;
+    return getActiveChild(item) !== null;
+  };
+
+  // A group is visible when it contains the active route (unless the user
+  // explicitly collapsed it) or when the user manually expanded it.
+  const isGroupVisible = (item: NavItem) => {
+    const active = isGroupActive(item);
+    return active
+      ? !collapsedItems.includes(item.name)
+      : expandedItems.includes(item.name);
+  };
+
+  const toggleGroup = (item: NavItem) => {
+    const name = item.name;
+    const active = isGroupActive(item);
+    const visible = active
+      ? !collapsedItems.includes(name)
+      : expandedItems.includes(name);
+
+    if (visible) {
+      setExpandedItems((prev) => prev.filter((i) => i !== name));
+      if (active) {
+        setCollapsedItems((prev) => (prev.includes(name) ? prev : [...prev, name]));
+      }
+    } else {
+      setCollapsedItems((prev) => prev.filter((i) => i !== name));
+      setExpandedItems((prev) => (prev.includes(name) ? prev : [...prev, name]));
+    }
   };
 
   // Arrow key roving within sidebar nav
@@ -172,14 +206,16 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       >
         {navigation.map((item) => {
           const active = isGroupActive(item);
+          const visible = isGroupVisible(item);
+          const activeChild = item.children ? getActiveChild(item) : null;
 
           return (
             <div key={item.name}>
               {item.children ? (
                 <>
                   <button
-                    onClick={() => toggleExpand(item.name)}
-                    aria-expanded={expandedItems.includes(item.name)}
+                    onClick={() => toggleGroup(item)}
+                    aria-expanded={visible}
                     className={`
                       w-full flex items-center justify-between px-3 py-2.5 rounded-xl
                       text-sm font-medium transition-colors duration-150 group
@@ -201,15 +237,15 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     <ChevronDown
                       size={14}
                       className={`transition-transform duration-200 opacity-60 ${
-                        expandedItems.includes(item.name) ? "rotate-180" : ""
+                        visible ? "rotate-180" : ""
                       }`}
                     />
                   </button>
 
-                  {expandedItems.includes(item.name) && (
+                  {visible && (
                     <div className="ml-8 mt-0.5 mb-1 space-y-0.5 border-l border-sidebar-border/60 pl-3" role="group" aria-label={`${item.name} submenu`}>
                       {item.children.map((child) => {
-                        const childActive = pathname === child.href;
+                        const childActive = activeChild?.href === child.href;
                         return (
                           <Link
                             key={child.href}

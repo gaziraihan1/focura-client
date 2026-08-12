@@ -14,9 +14,11 @@ vi.mock('next-auth/react', () => ({
 }))
 
 vi.mock('next/navigation', () => ({
-  usePathname: () => '/dashboard',
+  usePathname: vi.fn(() => '/dashboard'),
   useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
 }))
+
+import { usePathname } from 'next/navigation'
 
 vi.mock('@/hooks/useUserProfile', () => ({
   useUserProfile: () => ({
@@ -27,14 +29,18 @@ vi.mock('@/hooks/useUserProfile', () => ({
 }))
 
 vi.mock('@/components/Dashboard/Sidebar', () => ({
-  default: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="Sidebar">Sidebar</div>,
+  default: () => <div data-testid="Sidebar">Sidebar</div>,
 }))
 
 vi.mock('@/components/Dashboard/TopNavbar', () => ({
-  default: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="TopNavbar">TopNavbar</div>,
+  default: () => <div data-testid="TopNavbar">TopNavbar</div>,
 }))
 
 describe('DashboardShell', () => {
+  beforeEach(() => {
+    vi.mocked(usePathname).mockReturnValue('/dashboard')
+  })
+
   it('renders children when authenticated', () => {
     render(
       <DashboardShell>
@@ -52,5 +58,40 @@ describe('DashboardShell', () => {
     )
     expect(screen.getByTestId('Sidebar')).toBeInTheDocument()
     expect(screen.getByTestId('TopNavbar')).toBeInTheDocument()
+  })
+
+  it('keeps the dashboard shell on the workspaces browse page', () => {
+    vi.mocked(usePathname).mockReturnValue('/dashboard/workspaces/browse')
+    render(
+      <DashboardShell>
+        <div>Browse Content</div>
+      </DashboardShell>
+    )
+    expect(screen.getByTestId('Sidebar')).toBeInTheDocument()
+    expect(screen.getByTestId('TopNavbar')).toBeInTheDocument()
+    expect(screen.getByText('Browse Content')).toBeInTheDocument()
+  })
+
+  it('keeps the dashboard shell on the new-workspace page', () => {
+    vi.mocked(usePathname).mockReturnValue('/dashboard/workspaces/new-workspace')
+    render(
+      <DashboardShell>
+        <div>New Workspace Content</div>
+      </DashboardShell>
+    )
+    expect(screen.getByTestId('Sidebar')).toBeInTheDocument()
+    expect(screen.getByTestId('TopNavbar')).toBeInTheDocument()
+  })
+
+  it('hides the global shell on workspace slug routes (workspace layout provides its own)', () => {
+    vi.mocked(usePathname).mockReturnValue('/dashboard/workspaces/acme')
+    render(
+      <DashboardShell>
+        <div>Workspace Content</div>
+      </DashboardShell>
+    )
+    expect(screen.queryByTestId('Sidebar')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('TopNavbar')).not.toBeInTheDocument()
+    expect(screen.getByText('Workspace Content')).toBeInTheDocument()
   })
 })

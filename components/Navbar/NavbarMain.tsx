@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, LogOut, Loader2 } from "lucide-react";
 import ThemeSwitcher from "../Themes/ThemeSwitcher";
 import Image from "next/image";
@@ -18,17 +19,45 @@ const navLinks = [
   { name: "Guides", href: "/guides" },
 ];
 
+const desktopLinkClass = (active: boolean) =>
+  `rounded-lg px-3 py-2 text-sm font-medium transition ${
+    active
+      ? "bg-accent text-foreground"
+      : "text-foreground/70 hover:bg-accent/50 hover:text-foreground"
+  }`;
+
+const mobileLinkClass = (active: boolean) =>
+  `flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition ${
+    active
+      ? "bg-accent text-foreground"
+      : "text-foreground/75 hover:bg-accent/50 hover:text-foreground"
+  }`;
+
 export default function NavbarMain() {
   const { data: isAdmin = false } = useIsFocuraAdmin();
   const [open, setOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { status } = useSession();
+  const pathname = usePathname();
 
   const isLoading = status === "loading";
   // A user is logged in once NextAuth reports an authenticated session.
   // The backend token is only required for API calls (handled elsewhere),
   // so it must not gate navbar link visibility.
   const isAuthenticated = status === "authenticated";
+
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
+
+  // Close the mobile menu with the Escape key.
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -40,23 +69,26 @@ export default function NavbarMain() {
     }
   };
 
-  
-
   return (
-    <nav className="w-full border-b border-border/40 bg-background/60 backdrop-blur-md sticky top-0 z-9999">
+    <nav className="w-full border-b border-border/40 bg-background/80 backdrop-blur-xl sticky top-0 z-9999">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <Link href="/" className="text-xl font-semibold flex gap-1">
-            <Image src={"/focura.png"} width={32} height={32} alt="logo" />
+        <div className="flex justify-between items-center h-16 gap-4">
+          <Link
+            href="/"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2 text-lg sm:text-xl font-semibold shrink-0"
+          >
+            <Image src={"/focura.png"} width={32} height={32} alt="logo" className="rounded-md" />
             Focura
           </Link>
 
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-foreground/80 hover:text-foreground transition"
+                aria-current={isActive(link.href) ? "page" : undefined}
+                className={desktopLinkClass(isActive(link.href))}
               >
                 {link.name}
               </Link>
@@ -64,19 +96,22 @@ export default function NavbarMain() {
             {isAdmin && (
               <Link
                 href={"/admin-dashboard"}
-                className="text-sm font-medium text-foreground/80 hover:text-foreground transition"
+                aria-current={isActive("/admin-dashboard") ? "page" : undefined}
+                className={desktopLinkClass(isActive("/admin-dashboard"))}
               >
                 Admin Dashboard
               </Link>
             )}
+          </div>
 
+          <div className="hidden lg:flex items-center gap-3">
             {isLoading ? (
               <Loader2 size={18} className="animate-spin text-muted-foreground" />
             ) : isAuthenticated ? (
               <>
                 <Link
                   href="/dashboard"
-                  className="text-sm font-medium text-foreground/80 hover:text-foreground transition"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-foreground/70 transition hover:bg-accent/50 hover:text-foreground"
                 >
                   Dashboard
                 </Link>
@@ -84,7 +119,7 @@ export default function NavbarMain() {
                 <button
                   onClick={handleLogout}
                   disabled={isLoggingOut}
-                  className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoggingOut ? (
                     <Loader2 size={16} className="animate-spin" />
@@ -98,7 +133,7 @@ export default function NavbarMain() {
               <>
                 <Link
                   href="/authentication/login"
-                  className="text-sm font-medium text-foreground/80 hover:text-foreground transition"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-foreground/70 transition hover:bg-accent/50 hover:text-foreground"
                 >
                   Login
                 </Link>
@@ -113,9 +148,13 @@ export default function NavbarMain() {
             )}
           </div>
 
-          <button aria-label="Close"
-            onClick={() => setOpen(!open)}
-            className="lg:hidden p-2 rounded-md border border-border/40"
+          <button
+            type="button"
+            onClick={() => setOpen((prev) => !prev)}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls={open ? "mobile-nav" : undefined}
+            className="lg:hidden inline-flex items-center justify-center p-2 rounded-xl border border-border/60 text-foreground hover:bg-accent hover:border-border transition active:scale-95"
           >
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -123,49 +162,67 @@ export default function NavbarMain() {
       </div>
 
       {open && (
-        <div className="lg:hidden border-t border-border/40 bg-background">
-          <div className="flex flex-col space-y-2 px-4 py-4">
+        <div
+          id="mobile-nav"
+          className="lg:hidden border-t border-border/40 bg-background/95 backdrop-blur-xl animate-in slide-in-from-top-4 fade-in duration-200"
+        >
+          <nav className="px-4 sm:px-6 py-4 flex flex-col gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm py-2 font-medium text-foreground/80 hover:text-foreground transition"
                 onClick={() => setOpen(false)}
+                aria-current={isActive(link.href) ? "page" : undefined}
+                className={mobileLinkClass(isActive(link.href))}
               >
                 {link.name}
+                {isActive(link.href) && (
+                  <span className="h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
+                )}
               </Link>
             ))}
             {isAdmin && (
               <Link
                 href={"/admin-dashboard"}
-                className="text-sm py-2 font-medium text-foreground/80 hover:text-foreground transition"
                 onClick={() => setOpen(false)}
+                aria-current={isActive("/admin-dashboard") ? "page" : undefined}
+                className={mobileLinkClass(isActive("/admin-dashboard"))}
               >
                 Admin Dashboard
+                {isActive("/admin-dashboard") && (
+                  <span className="h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
+                )}
               </Link>
             )}
+          </nav>
+
+          <div className="border-t border-border/40 px-4 sm:px-6 py-4 space-y-3">
+            <div className="flex items-center justify-between rounded-lg border border-border/60 px-3 py-2.5">
+              <span className="text-sm text-foreground/70">Appearance</span>
+              <ThemeSwitcher />
+            </div>
 
             {isLoading ? (
-              <Loader2 size={18} className="animate-spin text-muted-foreground" />
+              <div className="flex justify-center py-3">
+                <Loader2 size={20} className="animate-spin text-muted-foreground" />
+              </div>
             ) : isAuthenticated ? (
               <>
                 <Link
                   href="/dashboard"
-                  className="text-sm py-2 font-medium text-foreground/80 hover:text-foreground transition"
                   onClick={() => setOpen(false)}
+                  className="w-full flex items-center justify-center rounded-lg border border-border bg-accent/40 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-accent transition"
                 >
                   Dashboard
                 </Link>
-                <div className="py-4">
-                  <ThemeSwitcher />
-                </div>
                 <button
+                  type="button"
                   onClick={() => {
                     setOpen(false);
                     handleLogout();
                   }}
                   disabled={isLoggingOut}
-                  className="w-full text-center px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoggingOut ? (
                     <Loader2 size={16} className="animate-spin" />
@@ -179,18 +236,15 @@ export default function NavbarMain() {
               <>
                 <Link
                   href="/authentication/login"
-                  className="text-sm py-2 font-medium text-foreground/80 hover:text-foreground transition"
                   onClick={() => setOpen(false)}
+                  className="w-full flex items-center justify-center rounded-lg border border-border bg-accent/40 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-accent transition"
                 >
                   Login
                 </Link>
-                <div className="py-4">
-                  <ThemeSwitcher />
-                </div>
                 <Link
                   href="/authentication/registration"
-                  className="w-full text-center px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition"
                   onClick={() => setOpen(false)}
+                  className="w-full flex items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 transition"
                 >
                   Get Started
                 </Link>

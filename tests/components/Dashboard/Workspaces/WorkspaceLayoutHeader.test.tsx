@@ -58,6 +58,7 @@ vi.mock("lucide-react", () => {
     Eye: icon("Eye"),
     EyeOff: icon("EyeOff"),
     File: icon("File"),
+    FileText: icon("FileText"),
     Flag: icon("Flag"),
     Flame: icon("Flame"),
     Folder: icon("Folder"),
@@ -109,6 +110,10 @@ vi.mock("lucide-react", () => {
 
 vi.mock("@/lib/utils", () => ({
   cn: (...classes: (string | boolean | undefined | null)[]) => classes.filter(Boolean).join(" "),
+}));
+
+vi.mock("@/lib/auth/logout", () => ({
+  logout: vi.fn(),
 }));
 
 vi.mock("@/lib/apiData", () => ({

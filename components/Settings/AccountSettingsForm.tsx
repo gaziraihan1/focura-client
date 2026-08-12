@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { User, Mail, Save, Loader2, Camera, ExternalLink } from 'lucide-react';
+import { User, Save, Loader2, Camera, ExternalLink } from 'lucide-react';
 import { useUserProfile, useInvalidateProfile } from '@/hooks/useUserProfile';
+import { DataExportCard } from '@/components/Settings/DataExportCard';
+import { DeleteAccountCard } from '@/components/Settings/DeleteAccountCard';
 import { api } from '@/lib/axios';
 import toast from 'react-hot-toast';
 import { announce } from '@/lib/a11y';
@@ -190,6 +192,12 @@ export function AccountSettingsForm() {
           </div>
         </div>
       </div>
+
+      {/* Privacy & Data */}
+      <DataExportCard />
+
+      {/* Danger Zone */}
+      <DeleteAccountCard />
 
       {/* Save */}
       <div className="flex justify-end">

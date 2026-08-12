@@ -32,6 +32,8 @@ export interface ApiOptions {
   showSuccessToast?: boolean;
   showErrorToast?: boolean;
   params?: Record<string, unknown>;
+  /** Request body for methods that support it (e.g. DELETE with re-auth payload). */
+  data?: unknown;
 }
 
 interface ApiErrorResponse {
@@ -880,7 +882,7 @@ export const api = {
 
   delete: async <T = unknown>(endpoint: string, options?: ApiOptions) => {
     const res = await axiosInstance
-      .delete<ApiResponse<T>>(endpoint, { headers: mergeHeaders(options) })
+      .delete<ApiResponse<T>>(endpoint, { headers: mergeHeaders(options), data: options?.data })
       .catch((err) => handleAxiosError(err, options?.showErrorToast));
     if (options?.showSuccessToast && res?.data?.message) toast.success(res.data.message);
     return res?.data;

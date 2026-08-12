@@ -40,10 +40,10 @@ const categories = [
     iconBg: "bg-violet-100 dark:bg-violet-900/60",
     badge:
       "bg-violet-100 dark:bg-violet-900/60 text-violet-700 dark:text-violet-400",
-    badgeLabel: "Opt-Out",
+    badgeLabel: "Opt-In",
     count: 3,
     description:
-      "Anonymised, aggregated usage data collected via Google Analytics to help us improve the product. All data is non-identifiable and you can opt out using the browser controls below or Google's opt-out add-on.",
+      "Anonymised, aggregated usage data collected via Google Analytics to help us improve the product. All data is non-identifiable and it only loads after you accept the consent banner — decline or clear your choice to keep it off.",
     examples: ["Page views", "Session duration", "Feature usage"],
   },
 ];

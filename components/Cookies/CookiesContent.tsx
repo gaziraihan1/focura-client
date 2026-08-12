@@ -227,7 +227,9 @@ function CookiesConsentSections() {
         index={5}
       >
         <p>
-          You are in control. You can manage non-essential cookie categories at
+          You are in control. On your first visit, a consent banner appears at
+          the bottom of the screen where you can accept or decline analytics
+          cookies. Your choice is stored on your device and can be changed at
           any time without affecting your ability to use the core features of
           Focura.
         </p>
@@ -262,11 +264,11 @@ function CookiesConsentSections() {
             },
             {
               label: "Analytics",
-              status: "Opt-Out",
+              status: "Opt-In",
               statusClass:
                 "text-violet-600 dark:text-violet-400 bg-violet-100 dark:bg-violet-950/40",
               description:
-                "Google Analytics usage data — opt out at any time via the browser controls below or Google's official opt-out browser add-on.",
+                "Google Analytics usage data — loads only after you accept the consent banner. Decline, or clear your stored choice, to keep it off.",
             },
           ].map(({ label, status, statusClass, description }) => (
             <div
@@ -291,9 +293,11 @@ function CookiesConsentSections() {
 
           <div className="px-5 py-3 bg-neutral-50 dark:bg-neutral-900/60 border-t border-neutral-100 dark:border-neutral-800">
             <p className="text-xs text-neutral-400 dark:text-neutral-500">
-              In-app consent toggles are planned. Until then, the browser
-              controls in the next section are the way to opt out of
-              non-essential cookies.
+              Your consent choice is stored on this device (
+              <span className="font-mono font-semibold">focura-consent</span>{" "}
+              in localStorage). To change it later, clear your saved
+              preferences using the browser controls in the next section — the
+              banner will reappear on your next visit.
             </p>
           </div>
         </div>

@@ -5,6 +5,22 @@ import { WorkspaceLayoutHeader } from '@/components/Dashboard/Workspaces/Workspa
 vi.mock('lucide-react', () => ({
   Menu: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
   Search: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  ChevronDown: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  User: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Settings: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  FileText: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  LogOut: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,
+}))
+
+vi.mock('next/link', () => ({
+  default: ({ children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+    <a {...props}>{children}</a>
+  ),
+}))
+
+vi.mock('@/lib/auth/logout', () => ({
+  logout: vi.fn(),
 }))
 
 vi.mock('next/image', () => ({

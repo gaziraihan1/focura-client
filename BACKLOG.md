@@ -1,8 +1,7 @@
 # v1.2.0 Backlog
 
 Items for v1.2.0. Status:
-- **DONE** — SSE token hardening (item 2)
-- **PLANNED** — GA consent banner (item 1), data export + account deletion (item 3)
+- **DONE** — SSE token hardening (item 2), GA consent banner (item 1), data export + account deletion (item 3)
 
 This file is mirrored in both repos (`Focura-backend` / `Focura-client`). The
 backend copy also tracks the notification-coverage work (meeting reminders,
@@ -16,6 +15,10 @@ Changelog entries live in each repo's `CHANGELOG.md` under `[Unreleased]`.
 **Why:** Google Analytics loads unconditionally on every page
 (`app/layout.tsx` → `components/Analytics/GoogleAnalytics.tsx`). The legal
 pages describe analytics as opt-out; a real consent gate is the proper fix.
+
+**Status:** implemented — consent banner with localStorage persistence and
+GA gating behind explicit opt-in, with component tests for the banner and
+GA gating.
 
 **Approach**
 - New `components/Consent/ConsentBanner.tsx` (client component): fixed
@@ -105,6 +108,10 @@ without a refresh). See the implementation notes below.
 **Why:** the Privacy/Terms pages and help docs promise self-service export
 and deletion, but the backend has neither. The legal pages currently say
 "request via email"; self-service makes those promises real.
+
+**Status:** implemented — backend export/delete endpoints with ownership
+guards, email delivery, audit logging and tests; frontend Privacy + Danger
+Zone cards in Settings with ownership-transfer surfacing.
 
 **Backend**
 - Export: `POST /api/v1/user/export-data` (authenticated). Build a JSON

@@ -27,7 +27,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Close mobile menu on route change
+  // Close the mobile menu with the Escape key.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen]);
+
+  const isActive = (href: string) =>
+    pathname === href || pathname.startsWith(href + "/");
 
   // Redirect gate on async admin-status query (useIsFocuraAdmin) — no
   // event-handler or server component has this client-fetched info; per the
@@ -63,58 +74,71 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 Focura Admin
               </span>
             </div>
-            <ThemeToggle />
 
-            {/* Desktop links */}
-            <nav className="hidden md:flex items-center gap-1">
-              {NAV_LINKS.map(({ href, label }) => {
-                const isActive = pathname === href;
-                return (
-                  <Link
-                    key={href}
-                    href={href}
-                    className={cn(
-                      'px-3 py-1.5 rounded-md text-sm transition-colors',
-                      isActive
-                        ? 'bg-primary/10 text-primary font-medium'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-muted',
-                    )}
-                  >
-                    {label}
-                  </Link>
-                );
-              })}
-            </nav>
+            <div className="flex items-center gap-2 shrink-0">
+              <ThemeToggle />
 
-            {/* Mobile hamburger */}
-            <button
-              onClick={() => setMenuOpen((o) => !o)}
-              className="md:hidden flex items-center justify-center h-8 w-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              aria-label="Toggle menu"
-            >
-              {menuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-            </button>
+              {/* Desktop links */}
+              <nav className="hidden lg:flex items-center gap-1">
+                {NAV_LINKS.map(({ href, label }) => {
+                  const active = isActive(href);
+                  return (
+                    <Link
+                      key={href}
+                      href={href}
+                      aria-current={active ? "page" : undefined}
+                      className={cn(
+                        'px-2.5 py-1.5 rounded-md text-sm transition-colors whitespace-nowrap',
+                        active
+                          ? 'bg-primary/10 text-primary font-medium'
+                          : 'text-muted-foreground hover:text-foreground hover:bg-muted',
+                      )}
+                    >
+                      {label}
+                    </Link>
+                  );
+                })}
+              </nav>
+
+              {/* Mobile hamburger */}
+              <button
+                onClick={() => setMenuOpen((o) => !o)}
+                className="lg:hidden flex items-center justify-center h-9 w-9 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                aria-label={menuOpen ? "Close Admin menu" : "Open Admin menu"}
+                aria-expanded={menuOpen}
+                aria-controls={menuOpen ? "admin-mobile-nav" : undefined}
+              >
+                {menuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Mobile dropdown */}
         {menuOpen && (
-          <div className="md:hidden border-t border-border bg-card px-4 py-2 space-y-0.5">
+          <div
+            id="admin-mobile-nav"
+            className="lg:hidden border-t border-border bg-card px-4 py-3 space-y-0.5 animate-in slide-in-from-top-4 fade-in duration-200"
+          >
             {NAV_LINKS.map(({ href, label }) => {
-              const isActive = pathname === href;
+              const active = isActive(href);
               return (
                 <Link
                   key={href}
                   href={href}
                   onClick={() => setMenuOpen(false)}
+                  aria-current={active ? "page" : undefined}
                   className={cn(
-                    'flex items-center px-3 py-2 rounded-md text-sm transition-colors',
-                    isActive
+                    'flex items-center gap-2 px-3 py-2.5 rounded-md text-sm transition-colors',
+                    active
                       ? 'bg-primary/10 text-primary font-medium'
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted',
                   )}
                 >
                   {label}
+                  {active && (
+                    <span className="ml-auto h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />
+                  )}
                 </Link>
               );
             })}
