@@ -6,6 +6,7 @@ vi.mock('next/script', () => ({
     const { src, id, children, strategy, ...rest } = props;
     return (
       <script
+        defer
         data-testid={src ? 'gtag-loader' : 'gtag-inline'}
         data-strategy={String(strategy)}
         src={src as string | undefined}
