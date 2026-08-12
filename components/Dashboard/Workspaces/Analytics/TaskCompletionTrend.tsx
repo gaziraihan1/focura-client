@@ -19,7 +19,7 @@ interface TaskCompletionTrendProps {
 }
 
 interface TrendDatum {
-  date: Date;
+  date: Date | string;
   label: string;
   count: number;
 }
