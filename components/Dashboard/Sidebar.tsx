@@ -54,6 +54,7 @@ const navigation: NavItem[] = [
     children: [
       { name: "Workspaces", href: "/dashboard/workspaces" },
       { name: "Create Workspace", href: "/dashboard/workspaces/new-workspace" },
+      { name: "Browse Public", href: "/dashboard/workspaces/browse" },
     ],
   },
   {

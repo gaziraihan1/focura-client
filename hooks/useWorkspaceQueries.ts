@@ -1,10 +1,61 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { Workspace, WorkspaceMember, WorkspaceStats, WorkspaceOverview, WorkspaceStorageInfo } from "./useWorkspace";
 import { workspaceKeys } from "./workspaceKeys";
 import { projectKeys } from "./useProjects";
 
-export function useWorkspaces() {
+export interface PublicWorkspacesResult {
+  items: Workspace[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export function usePublicWorkspaces(params: {
+  search?: string;
+  pageSize?: number;
+  enabled?: boolean;
+}) {
+  const search = params.search ?? "";
+  const pageSize = params.pageSize ?? 12;
+
+  return useInfiniteQuery<PublicWorkspacesResult, Error>({
+    queryKey: [...workspaceKeys.all, "public", search, pageSize] as const,
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await api.get<PublicWorkspacesResult>(
+        "/api/v1/workspaces/public",
+        {
+          showErrorToast: true,
+          params: {
+            search: search || undefined,
+            page: pageParam,
+            limit: pageSize,
+          },
+        },
+      );
+      // The api wrapper unwraps the { success, data } envelope and can
+      // return undefined on failure — fall back to an empty page so the
+      // infinite query always yields a well-formed page.
+      return (
+        response.data ?? {
+          items: [],
+          total: 0,
+          page: pageParam as number,
+          pageSize,
+        }
+      );
+    },
+    getNextPageParam: (lastPage) => {
+      const loaded = lastPage.page * lastPage.pageSize;
+      return loaded < lastPage.total ? lastPage.page + 1 : undefined;
+    },
+    initialPageParam: 1,
+    staleTime: 60 * 1000,
+    enabled: params.enabled,
+  });
+}
+
+export function useWorkspaces(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: workspaceKeys.lists(),
     queryFn: async () => {
@@ -12,6 +63,7 @@ export function useWorkspaces() {
       return response.data || [];
     },
     staleTime: 5 * 60 * 1000,
+    enabled: options?.enabled,
   });
 }
 

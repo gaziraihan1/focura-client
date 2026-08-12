@@ -13,6 +13,7 @@ import {
 } from "@/types/notification.types";
 import { notificationKeys } from "./notificationKeys";
 import { playNotificationSound, showBrowserNotification } from "./useNotificationPreferences";
+import axiosInstance from "@/lib/axios";
 
 const INITIAL_RETRY_DELAY = 1000;
 const MAX_RETRY_DELAY = 30000;
@@ -27,21 +28,42 @@ function getExponentialBackoff(attempt: number): number {
   return Math.floor(baseDelay + jitter);
 }
 
+/**
+ * Mint a fresh single-use SSE token from the backend. Every stream connection
+ * must use a brand-new token (each one opens exactly one connection), so this
+ * runs before each (re)connect instead of reusing the session token — a reused
+ * token is rejected with 401 TOKEN_REUSED.
+ */
+async function fetchFreshSseToken(): Promise<string | null> {
+  try {
+    const res = await axiosInstance.get<{ success: boolean; sseToken: string }>(
+      "/api/v1/notifications/sse-token",
+    );
+    const token = res.data?.sseToken;
+    return typeof token === "string" && token.length > 0 ? token : null;
+  } catch {
+    return null;
+  }
+}
+
 interface UseNotificationSSEOptions {
   backendToken: string | null;
+  /** Session-provided single-use token — fallback when minting fails. */
+  sseToken: string | null;
   preferences: NotificationPreferences;
   onNotification?: (notification: Notification) => void;
 }
 
 export function useNotificationSSE({
   backendToken,
+  sseToken,
   preferences,
   onNotification,
 }: UseNotificationSSEOptions) {
   const qc = useQueryClient();
   const eventSourceRef = useRef<EventSource | null>(null);
-  const currentTokenRef = useRef<string | null>(null);
   const connectRef = useRef<(() => void) | null>(null);
+  const connectingRef = useRef(false);
   const retryCountRef = useRef(0);
   const heartbeatTimerRef = useRef<NodeJS.Timeout | null>(null);
   const retryTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -135,8 +157,14 @@ export function useNotificationSSE({
   );
 
   // SSE connection
-  const connect = useCallback(() => {
+  const connect = useCallback(async () => {
     if (!backendToken) return;
+    // In-flight guard: connect() is fired from several paths (mount, onerror
+    // backoff, heartbeat, online/visibility). Without this, overlapping calls
+    // during the mint await would each open a stream and the last would clobber
+    // the rest — leaving orphaned connections and duplicate notifications.
+    if (connectingRef.current) return;
+    connectingRef.current = true;
 
     const backendUrl =
       process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -151,14 +179,29 @@ export function useNotificationSSE({
       retryCountRef.current > 0 ? "reconnecting" : "connecting"
     );
 
+    // Each connection needs a brand-new single-use token — a reused one is
+    // rejected with 401 TOKEN_REUSED. Mint a fresh token (fallback: session).
+    const streamToken = (await fetchFreshSseToken()) ?? sseToken;
+    if (!streamToken) {
+      // No token yet (session warming up / backend unreachable) — retry with backoff
+      connectingRef.current = false;
+      retryCountRef.current++;
+      setConnectionStatus("reconnecting");
+      retryTimerRef.current = setTimeout(
+        () => connectRef.current?.(),
+        getExponentialBackoff(retryCountRef.current),
+      );
+      return;
+    }
+
     // The EventSource is closed by the token effect's cleanup below
     // (eventSourceRef.current?.close()), so the resource is released on unmount.
     // react-doctor-disable-next-line react-doctor/effect-needs-cleanup
     const es = new EventSource(
-      `${backendUrl}/api/v1/notifications/stream?token=${backendToken}`
+      `${backendUrl}/api/v1/notifications/stream?token=${streamToken}`
     );
     eventSourceRef.current = es;
-    currentTokenRef.current = backendToken;
+    connectingRef.current = false;
 
     es.onopen = () => {
       setConnectionStatus("connected");
@@ -209,32 +252,26 @@ export function useNotificationSSE({
       stopHeartbeat();
       es.close();
       eventSourceRef.current = null;
-
-      // Check if error is due to token expiry (401/403)
-      const wasTokenRefreshed = currentTokenRef.current !== backendToken;
+      connectingRef.current = false;
 
       if (!backendToken) {
         setConnectionStatus("disconnected");
         return; // logged out
       }
 
-      if (wasTokenRefreshed) {
-        // Token refreshed - reconnect immediately with new token
-        retryCountRef.current = 0;
-        setTimeout(() => connectRef.current?.(), 100);
-      } else {
-        // Regular reconnect with exponential backoff
-        const delay = getExponentialBackoff(retryCountRef.current);
-        retryCountRef.current++;
-        setConnectionStatus("reconnecting");
+      // Reconnect with exponential backoff — every attempt mints a fresh
+      // single-use token, so a 401 (consumed/expired) self-heals.
+      const delay = getExponentialBackoff(retryCountRef.current);
+      retryCountRef.current++;
+      setConnectionStatus("reconnecting");
 
-        retryTimerRef.current = setTimeout(() => {
-          if (backendToken) connectRef.current?.();
-        }, delay);
-      }
+      retryTimerRef.current = setTimeout(() => {
+        if (backendToken) connectRef.current?.();
+      }, delay);
     };
   }, [
     backendToken,
+    sseToken,
     prependNotification,
     incrementUnreadCount,
     invalidateTaskQueries,
@@ -249,15 +286,15 @@ export function useNotificationSSE({
     connectRef.current = connect;
   });
 
-  // Establish connection when token is available
+  // Establish connection when credentials are available
   useEffect(() => {
     if (!backendToken) return;
     let cancelled = false;
 
     function connectIfNeeded() {
       if (cancelled || !backendToken) return;
-      // Only connect if we don't already have a connection for this token
-      if (currentTokenRef.current !== backendToken) {
+      // Only connect if we don't already have a connection
+      if (!eventSourceRef.current) {
         connect();
       }
     }
@@ -273,24 +310,10 @@ export function useNotificationSSE({
       }
       eventSourceRef.current?.close();
       eventSourceRef.current = null;
-      currentTokenRef.current = null;
       retryCountRef.current = 0;
     };
   }, [backendToken, connect, stopHeartbeat]);
 
-  // Handle token refresh - triggers reconnect when backendToken changes
-  useEffect(() => {
-    if (!backendToken) return;
-
-    // If we have an existing connection with a different token, reconnect
-    if (eventSourceRef.current && currentTokenRef.current !== backendToken) {
-      eventSourceRef.current.close();
-      eventSourceRef.current = null;
-      // Defer connect to avoid calling setState synchronously within an effect
-      const timer = setTimeout(() => connect(), 0);
-      return () => clearTimeout(timer);
-    }
-  }, [backendToken, connect]);
 
   // Offline/Online detection
   useEffect(() => {

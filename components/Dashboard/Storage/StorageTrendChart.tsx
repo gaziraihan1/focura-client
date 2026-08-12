@@ -2,6 +2,16 @@
 
 import { m as motion } from 'framer-motion';
 import { TrendingUp } from 'lucide-react';
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+// oxlint-disable-next-line react-doctor/prefer-dynamic-import -- recharts only ships when this chart mounts
+} from 'recharts';
 import { StorageTrend } from '@/hooks/useStorage';
 import { formatStorageSize } from '@/hooks/useStoragePage';
 
@@ -9,11 +19,48 @@ interface StorageTrendChartProps {
   trend: StorageTrend[];
 }
 
-export function StorageTrendChart({ trend }: StorageTrendChartProps) {
-  const maxValue = Math.max(...trend.map((t) => t.usageMB), 1);
+interface TrendDatum {
+  date: Date;
+  label: string;
+  usageMB: number;
+}
 
-  const firstValue = trend[0]?.usageMB || 0;
-  const lastValue = trend[trend.length - 1]?.usageMB || 0;
+function TrendTooltip({
+  active,
+  payload,
+  label,
+}: {
+  active?: boolean;
+  payload?: Array<{ value?: number }>;
+  label?: string;
+}) {
+  if (!active || !payload?.length || payload[0].value == null) return null;
+  return (
+    <div className="rounded-lg border border-border bg-popover/90 backdrop-blur-md px-3 py-2 text-xs shadow-lg">
+      <p className="text-muted-foreground mb-1">{label}</p>
+      <p className="font-semibold">{formatStorageSize(payload[0].value)}</p>
+    </div>
+  );
+}
+
+const compactSize = (value: number) =>
+  value >= 1024 ? `${(value / 1024).toFixed(1)}GB` : `${Math.round(value)}MB`;
+
+export function StorageTrendChart({ trend }: StorageTrendChartProps) {
+  const list = trend ?? [];
+
+  const chartData: TrendDatum[] = list.map((point) => ({
+    date: point.date,
+    label: new Date(point.date).toLocaleDateString('en-US', {
+      timeZone: 'UTC',
+      month: 'short',
+      day: 'numeric',
+    }),
+    usageMB: point.usageMB,
+  }));
+
+  const firstValue = chartData[0]?.usageMB || 0;
+  const lastValue = chartData[chartData.length - 1]?.usageMB || 0;
   const trendDirection = lastValue > firstValue ? 'up' : lastValue < firstValue ? 'down' : 'stable';
   const trendPercentage = firstValue > 0 ? Math.round(((lastValue - firstValue) / firstValue) * 100) : 0;
 
@@ -53,77 +100,58 @@ export function StorageTrendChart({ trend }: StorageTrendChartProps) {
         </div>
       </div>
 
-      <div className="relative h-48 flex items-end gap-1">
-        {trend.map((point, index) => {
-          const height = (point.usageMB / maxValue) * 100;
-          const isRecent = index >= trend.length - 7;
+      {chartData.length === 0 ? (
+        <p className="text-sm text-muted-foreground">No trend data available yet.</p>
+      ) : (
+        <>
+          <div className="h-48 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={chartData} margin={{ top: 4, right: 4, bottom: 0, left: -20 }}>
+                <defs>
+                  <linearGradient id="storageTrendGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="var(--color-primary)" stopOpacity={0.35} />
+                    <stop offset="100%" stopColor="var(--color-primary)" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+                <XAxis
+                  dataKey="label"
+                  tick={{ fontSize: 10, fill: 'var(--color-muted-foreground)' }}
+                  tickLine={false}
+                  axisLine={{ stroke: 'var(--color-border)' }}
+                  interval="preserveStartEnd"
+                  minTickGap={24}
+                />
+                <YAxis
+                  tick={{ fontSize: 10, fill: 'var(--color-muted-foreground)' }}
+                  tickLine={false}
+                  axisLine={{ stroke: 'var(--color-border)' }}
+                  tickFormatter={compactSize}
+                />
+                <Tooltip content={<TrendTooltip />} />
+                <Area
+                  type="monotone"
+                  dataKey="usageMB"
+                  stroke="var(--color-primary)"
+                  strokeWidth={2}
+                  fill="url(#storageTrendGradient)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
 
-          return (
-            <motion.div
-              key={String(point.date)}
-              initial={{ scaleY: 0 }}
-              animate={{ scaleY: 1 }}
-              transition={{ duration: 0.5, delay: index * 0.02 }}
-              className="group relative flex-1 origin-bottom"
-              style={{ height: `${height}%` }}
-            >
-              <div
-                className={`w-full rounded-t transition-colors ${
-                  isRecent ? 'bg-primary' : 'bg-primary/40'
-                } hover:bg-primary`}
-              />
-
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                <div className="bg-popover border rounded-lg shadow-lg p-3 whitespace-nowrap">
-                  <p className="text-xs text-muted-foreground">
-                    {new Date(point.date).toLocaleDateString('en-US', {
-                      timeZone: 'UTC',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </p>
-                  <p className="text-sm font-semibold mt-1">{formatStorageSize(point.usageMB)}</p>
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
-
-      <div className="flex justify-between mt-4 text-xs text-muted-foreground">
-        <span>
-          {new Date(trend[0]?.date).toLocaleDateString('en-US', {
-            timeZone: 'UTC',
-            month: 'short',
-            day: 'numeric',
-          })}
-        </span>
-        <span>
-          {new Date(trend[Math.floor(trend.length / 2)]?.date).toLocaleDateString('en-US', {
-            timeZone: 'UTC',
-            month: 'short',
-            day: 'numeric',
-          })}
-        </span>
-        <span>
-          {new Date(trend[trend.length - 1]?.date).toLocaleDateString('en-US', {
-            timeZone: 'UTC',
-            month: 'short',
-            day: 'numeric',
-          })}
-        </span>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t">
-        <div>
-          <p className="text-xs text-muted-foreground">Current</p>
-          <p className="text-lg font-semibold mt-1">{formatStorageSize(lastValue)}</p>
-        </div>
-        <div>
-          <p className="text-xs text-muted-foreground">30 Days Ago</p>
-          <p className="text-lg font-semibold mt-1">{formatStorageSize(firstValue)}</p>
-        </div>
-      </div>
+          <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t">
+            <div>
+              <p className="text-xs text-muted-foreground">Current</p>
+              <p className="text-lg font-semibold mt-1">{formatStorageSize(lastValue)}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">30 Days Ago</p>
+              <p className="text-lg font-semibold mt-1">{formatStorageSize(firstValue)}</p>
+            </div>
+          </div>
+        </>
+      )}
     </motion.div>
   );
 }

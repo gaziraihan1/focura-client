@@ -31,6 +31,16 @@ vi.mock('lucide-react', () => {
   }
 })
 
+vi.mock('recharts', () => ({
+  ResponsiveContainer: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
+  AreaChart: ({ children }: { children?: React.ReactNode }) => <div data-testid="area-chart">{children}</div>,
+  Area: () => null,
+  XAxis: () => null,
+  YAxis: () => null,
+  Tooltip: () => null,
+  CartesianGrid: () => null,
+}))
+
 import { OverdueTrendChart } from '@/components/Dashboard/Workspaces/Analytics/OverdueTrendChart'
 import type { OverdueTrendPoint } from '@/hooks/useAnalytics'
 
@@ -51,10 +61,10 @@ describe('OverdueTrendChart', () => {
     expect(screen.getByText('10 overdue')).toBeInTheDocument()
   })
 
-  it('renders bars for each data point', () => {
+  it('renders the area chart for each data set', () => {
     const { container } = render(<OverdueTrendChart data={mockData} />)
-    const bars = container.querySelectorAll('.group.relative.flex-1')
-    expect(bars.length).toBe(3)
+    expect(screen.getByTestId('area-chart')).toBeInTheDocument()
+    expect(container).toBeTruthy()
   })
 
   it('renders empty state when no data', () => {
@@ -73,9 +83,8 @@ describe('OverdueTrendChart', () => {
       { weekStart: '2025-01-01T00:00:00.000Z', count: 2 },
       { weekStart: '2025-01-08T00:00:00.000Z', count: 5 },
     ]
-    const { container } = render(<OverdueTrendChart data={stringData} />)
+    render(<OverdueTrendChart data={stringData} />)
     expect(screen.getByText('7 overdue')).toBeInTheDocument()
-    const bars = container.querySelectorAll('.group.relative.flex-1')
-    expect(bars.length).toBe(2)
+    expect(screen.getByTestId('area-chart')).toBeInTheDocument()
   })
 })

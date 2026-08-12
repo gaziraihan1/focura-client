@@ -92,7 +92,7 @@ export default function CalendarPage() {
       </div>
 
       {/* Calendar Grid */}
-      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-8">
+      <div className="px-2 sm:px-6 lg:px-8 py-8">
         <CalendarGrid
           calendarDays={calendarDays}
           getAggregateForDate={getAggregateForDate}

@@ -12,6 +12,7 @@ import { MyContributionCard } from './MyContributionCard';
 import { UserContributionsTable } from './UserContributionsTable';
 import { StorageBreakdownChart } from './StorageBreakdownChart';
 import { StorageTrendChart } from './StorageTrendChart';
+import { FileTypeChart } from './FileTypeChart';
 import { LargestFilesTable } from './LargestFilesTable';
 import { PlanComparison } from './PlanComparison';
 
@@ -82,12 +83,6 @@ export function StorageOverviewPage() {
       {/* Storage Summary */}
       <StorageSummaryCards storageInfo={data.storageInfo} />
 
-      {/* My Contribution */}
-      <MyContributionCard
-        contribution={data.myContribution}
-        workspaceName={data.storageInfo.workspaceName}
-      />
-
       {/* User Contributions (Admin Only) */}
       {data.isAdmin && data.userContributions && (
         <UserContributionsTable
@@ -97,9 +92,25 @@ export function StorageOverviewPage() {
       )}
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <StorageBreakdownChart breakdown={data.breakdown} />
-        <StorageTrendChart trend={data.trend} />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-1">
+          <StorageBreakdownChart breakdown={data.breakdown} />
+        </div>
+
+        <div className="lg:col-span-2">
+          <StorageTrendChart trend={data.trend} />
+        </div>
+
+        <div className="lg:col-span-1">
+          <FileTypeChart types={data.fileTypes ?? []} />
+        </div>
+
+        <div className="lg:col-span-2">
+          <MyContributionCard
+            contribution={data.myContribution}
+            workspaceName={data.storageInfo.workspaceName}
+          />
+        </div>
       </div>
 
       {/* Largest Files */}

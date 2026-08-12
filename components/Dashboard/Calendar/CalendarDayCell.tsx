@@ -49,7 +49,7 @@ export function CalendarDayCell({
       onClick={onClick}
       onKeyDown={onKeyDown}
       className={`
-        min-h-27.5 sm:min-h-30 p-2 sm:p-3 border-r border-b last:border-r-0 border-border
+        min-h-24 sm:min-h-30 p-1.5 sm:p-3 border-r border-b last:border-r-0 border-border
         ${!isCurrentMonth ? "opacity-40" : ""}
         ${isToday ? "ring-2 ring-primary ring-inset" : ""}
         ${isSelected ? "ring-2 ring-primary bg-accent/50" : ""}

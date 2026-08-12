@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, AppError } from "@/lib/axios";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 export interface UserProfile {
   id: string;
@@ -46,9 +46,11 @@ export function useUserProfile() {
     retry: (failureCount, error: AppError) => {
       const code   = error?.response?.data?.code;
       const status = error?.response?.status;
-      // Don't retry auth errors — sign out immediately
+      // Don't retry auth errors. Sign-out is owned by lib/axios's
+      // handleAxiosError (it forceLogouts on terminal codes and stays silent
+      // on transient refresh failures) — signing out here would log out an
+      // active user on a transient blip.
       if (AUTH_ERROR_CODES.has(code!) || status === 401 || status === 403) {
-        signOut({ callbackUrl: "/authentication/login" });
         return false;
       }
       return failureCount < 2;

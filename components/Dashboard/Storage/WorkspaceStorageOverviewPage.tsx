@@ -8,6 +8,7 @@ import { MyContributionCard } from './MyContributionCard';
 import { UserContributionsTable } from './UserContributionsTable';
 import { StorageBreakdownChart } from './StorageBreakdownChart';
 import { StorageTrendChart } from './StorageTrendChart';
+import { FileTypeChart } from './FileTypeChart';
 import { LargestFilesTable } from './LargestFilesTable';
 import { PlanComparison } from './PlanComparison';
 import { UpgradeSectionCard } from '@/components/Shared/UpgradeSectionCard';
@@ -123,12 +124,6 @@ export function WorkspaceStorageOverviewPage({ workspaceId, isPro = false }: Wor
       {/* Summary Cards */}
       <StorageSummaryCards storageInfo={data.storageInfo} />
 
-      {/* My Contribution Card (Always Visible) */}
-      <MyContributionCard
-        contribution={data.myContribution}
-        workspaceName={data.storageInfo.workspaceName}
-      />
-
       {/* User Contributions Table (Admin Only) */}
       {data.isAdmin && data.userContributions && (
         <UserContributionsTable
@@ -138,19 +133,36 @@ export function WorkspaceStorageOverviewPage({ workspaceId, isPro = false }: Wor
       )}
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Breakdown Chart — Business-only for PRO workspaces */}
-        {isPro ? (
-          <UpgradeSectionCard
-            title="Storage Breakdown Chart"
-            description="Visualize what's using your storage — file types, project breakdown, and user share — upgrade to Business to see more storage data."
-          />
-        ) : (
-          <StorageBreakdownChart breakdown={data.breakdown} />
-        )}
+        <div className="lg:col-span-1">
+          {isPro ? (
+            <UpgradeSectionCard
+              title="Storage Breakdown Chart"
+              description="Visualize what's using your storage — file types, project breakdown, and user share — upgrade to Business to see more storage data."
+            />
+          ) : (
+            <StorageBreakdownChart breakdown={data.breakdown} />
+          )}
+        </div>
 
         {/* Trend Chart */}
-        <StorageTrendChart trend={data.trend} />
+        <div className="lg:col-span-2">
+          <StorageTrendChart trend={data.trend} />
+        </div>
+
+        {/* File Type Distribution */}
+        <div className="lg:col-span-1">
+          {data.fileTypes?.length ? <FileTypeChart types={data.fileTypes} /> : null}
+        </div>
+
+        {/* My Contribution Card (Always Visible) */}
+        <div className="lg:col-span-2">
+          <MyContributionCard
+            contribution={data.myContribution}
+            workspaceName={data.storageInfo.workspaceName}
+          />
+        </div>
       </div>
 
       {/* Largest Files */}

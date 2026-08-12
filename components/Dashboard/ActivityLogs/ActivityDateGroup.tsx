@@ -9,12 +9,10 @@ interface ActivityDateGroupProps {
 export function ActivityDateGroup({ date, activities }: ActivityDateGroupProps) {
   return (
     <div>
-      <div className="mb-3 flex items-center gap-2">
-        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
-          {date}
-        </h3>
-        <div className="h-px flex-1 bg-gray-200 dark:bg-gray-800" />
-        <span className="text-xs text-gray-500 dark:text-gray-400">
+      <div className="mb-3 flex items-center gap-3">
+        <h3 className="text-sm font-semibold text-foreground">{date}</h3>
+        <div className="h-px flex-1 bg-border" />
+        <span className="text-xs text-muted-foreground">
           {activities.length}{" "}
           {activities.length === 1 ? "activity" : "activities"}
         </span>

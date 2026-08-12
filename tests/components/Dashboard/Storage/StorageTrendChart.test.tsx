@@ -16,6 +16,20 @@ vi.mock('@/hooks/useStoragePage', () => ({
   formatStorageSize: (mb: number) => `${mb} MB`,
 }))
 
+vi.mock('recharts', () => ({
+  ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="responsive-container">{children}</div>
+  ),
+  AreaChart: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="area-chart">{children}</div>
+  ),
+  Area: () => <div data-testid="area" />,
+  XAxis: () => <div data-testid="x-axis" />,
+  YAxis: () => <div data-testid="y-axis" />,
+  CartesianGrid: () => <div data-testid="cartesian-grid" />,
+  Tooltip: () => <div data-testid="tooltip" />,
+}))
+
 const trend = [
   { date: new Date('2025-01-01'), usageMB: 100 },
   { date: new Date('2025-01-15'), usageMB: 200 },

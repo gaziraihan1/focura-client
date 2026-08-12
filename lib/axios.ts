@@ -104,7 +104,7 @@ type QueuedRequest = {
 };
 
 let requestQueue: QueuedRequest[] = [];
-let refreshPromise: Promise<void> | null = null;
+let refreshPromise: Promise<boolean> | null = null;
 
 function queueRequest(): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -190,6 +190,20 @@ if (typeof window !== "undefined") {
 
 // ─── Helper functions ──────────────────────────────────────────────────────────────
 
+/**
+ * Public marketing pages (templates, pricing, …) must never surface
+ * authentication-related messages. If the session dies while a user is
+ * browsing one, silently clear client state and let them keep browsing;
+ * the next protected-page visit redirects to login via DashboardShell.
+ */
+function isPublicPage(pathname: string): boolean {
+  return (
+    !pathname.startsWith("/dashboard") &&
+    !pathname.startsWith("/admin-dashboard") &&
+    !pathname.startsWith("/authentication")
+  );
+}
+
 /** Awaits both NextAuth sign-out and backend logout, then redirects */
 async function forceLogout(reason = "Session expired. Please login again."): Promise<never> {
   // A hidden tab must never kill a session the user is actively using in
@@ -198,6 +212,17 @@ async function forceLogout(reason = "Session expired. Please login again."): Pro
   if (typeof document !== "undefined" && document.visibilityState === "hidden") {
     stopSessionTimers();
     return Promise.reject(new Error("SESSION_EXPIRED_DEFERRED"));
+  }
+
+  // Public pages: stay silent — no toast, no redirect, no cross-tab logout.
+  // Clearing the NextAuth session client-side makes useSession() flip to
+  // "unauthenticated" so the next dashboard visit redirects to login.
+  if (typeof window !== "undefined" && isPublicPage(window.location.pathname)) {
+    stopBackgroundRefresh();
+    stopSessionTimers();
+    invalidateTokenCache();
+    await signOut({ redirect: false }).catch(() => {});
+    return Promise.reject(new Error("SESSION_EXPIRED"));
   }
 
   // Broadcast logout to other tabs before cleaning up
@@ -238,8 +263,10 @@ export const axiosInstance = axios.create({
 // ─── Session Timeout Management (Inactivity + Absolute) ──────────────────────────
 // Per guide: 30 min inactivity timeout, 7 days absolute timeout
 
-const INACTIVITY_TIMEOUT = 30 * 60 * 1000; // 30 minutes
-const INACTIVITY_WARNING_TIME = 5 * 60 * 1000; // Warn 5 min before logout (25 min mark)
+// Inactivity is aligned with the absolute lifetime (7 days) so users are
+// never logged out while browsing the site; the 7-day absolute cap ends it.
+const INACTIVITY_TIMEOUT = 7 * 24 * 60 * 60 * 1000; // 7 days (matches backend SESSION_INACTIVITY_TIMEOUT)
+const INACTIVITY_WARNING_TIME = 5 * 60 * 1000; // Warn 5 min before logout
 const ABSOLUTE_TIMEOUT = 7 * 24 * 60 * 60 * 1000; // 7 days
 const ABSOLUTE_WARNING_TIME = 60 * 60 * 1000; // Warn 1 hour before absolute timeout
 
@@ -315,7 +342,12 @@ function initializeSessionTimers(tokenExpiry: number): void {
   // Store for potential future use (e.g., debugging, session analytics)
   void estimatedSessionStart;
 
-  scheduleInactivityLogout();
+  // Inactivity is aligned with the absolute lifetime (7 days), so running
+  // both timers would fire duplicate warnings at the 7-day mark. Only run
+  // the inactivity timer when it is meaningfully shorter than the cap.
+  if (INACTIVITY_TIMEOUT < ABSOLUTE_TIMEOUT) {
+    scheduleInactivityLogout();
+  }
   scheduleAbsoluteTimeout();
 }
 
@@ -442,36 +474,57 @@ function scheduleBackgroundRefresh(tokenExpiry: number): void {
   }, delay);
 }
 
-async function attemptBackgroundRefresh(): Promise<void> {
-  if (isRefreshing) return;
+/**
+ * A refresh only counts as success when the backend actually ROTATED the pair.
+ * On a transient failure the NextAuth jwt callback keeps the previous (possibly
+ * already expired) access token, so a non-empty backendToken is NOT proof of
+ * success — handing that stale token out would retry with a dead token and then
+ * force-logout an active user. Returns true only when a new token was minted.
+ */
+async function attemptBackgroundRefresh(
+  failedToken?: string | null,
+): Promise<boolean> {
+  if (isRefreshing) return false;
   isRefreshing = true;
 
   // Broadcast refresh start to other tabs
   broadcastAuthEvent({ type: "refresh-start" });
 
   try {
+    const previousToken = cachedBackendToken;
+
     // Fetching a fresh session re-runs NextAuth's jwt callback, which
     // silently rotates the backend token pair when the access token is
     // within 60s of expiry (the refresh token lives in the httpOnly session
     // cookie — the client never sees it). The returned session already
     // carries the rotated access token.
     const session = await getFreshSession();
+    const newToken = session?.backendToken;
 
-    if (
-      session?.backendToken &&
-      session.backendToken.length > 10 &&
-      session.backendTokenExpiry
-    ) {
-      cachedBackendToken = session.backendToken;
+    // Rotation happened: the session returned a token that is neither the one
+    // we had cached nor the one that just failed.
+    const rotated =
+      !!newToken &&
+      newToken.length > 10 &&
+      !!session?.backendTokenExpiry &&
+      newToken !== previousToken &&
+      newToken !== failedToken;
+
+    if (rotated) {
+      cachedBackendToken = newToken;
       cachedTokenExpiry = Date.now() + TOKEN_CACHE_TTL;
       scheduleBackgroundRefresh(session.backendTokenExpiry);
       broadcastAuthEvent({ type: "refresh-complete", tokenExpiry: session.backendTokenExpiry });
       // Flush queued requests with the new token
-      flushRequestQueue(session.backendToken);
-    } else {
-      // Refresh failed — reject queued requests
-      rejectRequestQueue(new Error("Token refresh failed"));
+      flushRequestQueue(newToken);
+      return true;
     }
+
+    // Refresh failed (transient blip, or genuinely dead session). Never hand
+    // out a stale token — reject queued requests so callers decide instead of
+    // retrying with a token that cannot authenticate.
+    rejectRequestQueue(new Error("Token refresh failed"));
+    return false;
   } finally {
     isRefreshing = false;
     refreshPromise = null;
@@ -556,6 +609,7 @@ axiosInstance.interceptors.response.use(
     // ── TOKEN_EXPIRED: attempt session refresh then retry once ────────────────
     if (code === "TOKEN_EXPIRED" && config && !config._retried) {
       config._retried = true;
+      const failedToken = extractBearerToken(config.headers?.Authorization);
       invalidateTokenCache();
 
       // If a refresh is already in progress, queue this request
@@ -565,13 +619,16 @@ axiosInstance.interceptors.response.use(
           config.headers.Authorization = `Bearer ${newToken}`;
           return axiosInstance(config);
         } catch {
-          return Promise.reject(error);
+          // Refresh failed while queued — let handleAxiosError decide whether
+          // the session is truly dead (forceLogout) or it was a transient blip
+          // (stay logged in).
+          return handleRefreshOutcome(error);
         }
       }
 
       // Start refresh (or join existing)
       if (!refreshPromise) {
-        refreshPromise = attemptBackgroundRefresh();
+        refreshPromise = attemptBackgroundRefresh(failedToken);
       }
 
       await refreshPromise;
@@ -579,7 +636,7 @@ axiosInstance.interceptors.response.use(
       // Check if refresh succeeded by looking for a valid token
       const session = await getFreshSession();
       const token = session?.backendToken;
-      if (token) {
+      if (token && token !== failedToken) {
         cachedBackendToken = token;
         cachedTokenExpiry = Date.now() + TOKEN_CACHE_TTL;
         config.headers.Authorization = `Bearer ${token}`;
@@ -592,10 +649,8 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(config);
       }
 
-      // Refresh failed — fall through to handleAxiosError as a
-      // terminal auth error (TOKEN_EXPIRED will trigger forceLogout there)
-      rejectRequestQueue(new Error("Token refresh failed"));
-      return Promise.reject(error);
+      // Refresh did not rotate the token — rejectRequestQueue already fired.
+      return handleRefreshOutcome(error);
     }
 
     // ── CSRF_VALIDATION_FAILED: refresh CSRF token then retry once ────────────
@@ -614,6 +669,48 @@ axiosInstance.interceptors.response.use(
   },
 );
 
+// ─── Refresh-outcome helpers ──────────────────────────────────────────────────
+// Decides whether a failed refresh is a genuinely dead session (force logout)
+// or a transient blip (stay logged in — the next request will retry refresh).
+
+function extractBearerToken(authHeader: unknown): string | null {
+  if (typeof authHeader !== "string" || !authHeader.startsWith("Bearer ")) {
+    return null;
+  }
+  return authHeader.slice(7).trim();
+}
+
+function isSessionDead(session: AppSession | null): boolean {
+  return (
+    !session ||
+    session.error === "SESSION_EXPIRED" ||
+    !session.backendToken ||
+    session.backendToken.length <= 10
+  );
+}
+
+/**
+ * After a failed TOKEN_EXPIRED refresh:
+ *  - truly dead session (refresh token expired/cleared) → reject normally so
+ *    handleAxiosError forceLogouts;
+ *  - session still has a token (transient failure) → tag the error so
+ *    handleAxiosError rejects silently WITHOUT forceLogout or toast.
+ */
+async function handleRefreshOutcome(
+  error: AxiosError<ApiErrorResponse>,
+): Promise<never> {
+  try {
+    const session = await getFreshSession();
+    if (isSessionDead(session)) {
+      return Promise.reject(error);
+    }
+  } catch {
+    // Cannot read session (network) — assume transient, stay logged in.
+  }
+  (error as { __transientAuth?: boolean }).__transientAuth = true;
+  return Promise.reject(error);
+}
+
 // ─── Error display handler ────────────────────────────────────────────────────
 // Called after the interceptor has exhausted retries.
 // Owns: toasts, forced logout for terminal auth failures.
@@ -626,6 +723,12 @@ const handleAxiosError = async (
   const data = error.response?.data;
   const code = data?.code;
   const message = data?.message || error.message || "Unknown error";
+
+  // A transient refresh failure (backend blip) must never log an active user
+  // out — the session is still alive and the next request will retry refresh.
+  if ((error as { __transientAuth?: boolean }).__transientAuth) {
+    return Promise.reject(error);
+  }
 
   // ── Terminal auth failures → force logout ─────────────────────────────────
   if (code && TERMINAL_AUTH_CODES.has(code)) {
@@ -687,7 +790,8 @@ const handleAxiosError = async (
   const suppressToast =
     !showErrorToast ||
     (code && INTERCEPTOR_HANDLED_CODES.has(code)) ||
-    url.includes("/analytics/");
+    url.includes("/analytics/") ||
+    status === 401; // Auth failures never toast — terminal codes forceLogout above, NO_TOKEN on public pages stays silent
 
   if (suppressToast) return Promise.reject(error);
 

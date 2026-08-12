@@ -53,6 +53,25 @@ vi.mock('@/hooks/useStoragePage', () => ({
   useStorageWarning: vi.fn(() => ({ level: 'normal', message: null })),
 }));
 
+vi.mock('recharts', () => ({
+  ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="responsive-container">{children}</div>
+  ),
+  AreaChart: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="area-chart">{children}</div>
+  ),
+  Area: () => <div data-testid="area" />,
+  XAxis: () => <div data-testid="x-axis" />,
+  YAxis: () => <div data-testid="y-axis" />,
+  CartesianGrid: () => <div data-testid="cartesian-grid" />,
+  Tooltip: () => <div data-testid="tooltip" />,
+  PieChart: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="pie-chart">{children}</div>
+  ),
+  Pie: ({ children }: { children: React.ReactNode }) => <div data-testid="pie">{children}</div>,
+  Cell: () => <div data-testid="cell" />,
+}));
+
 vi.mock('@/components/Dashboard/Storage/StorageSummaryCards', () => ({ StorageSummaryCards: () => <div data-testid="summary-cards" /> }));
 vi.mock('@/components/Dashboard/Storage/MyContributionCard', () => ({ MyContributionCard: () => <div data-testid="my-contribution" /> }));
 vi.mock('@/components/Dashboard/Storage/UserContributionsTable', () => ({ UserContributionsTable: () => <div data-testid="user-contributions" /> }));

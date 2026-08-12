@@ -32,7 +32,9 @@ const TemplatesPageClient = () => {
   const { data: catalog, isLoading } = useTemplateCatalog();
   const rateMutation = useTemplateRate();
   const { isAuthenticated } = useIsAuthenticated();
-  const { data: workspaces = [] } = useWorkspaces();
+  // Gate on auth so the protected /workspaces call never fires for logged-out
+  // visitors — public pages must not surface "Authentication required" errors.
+  const { data: workspaces = [] } = useWorkspaces({ enabled: isAuthenticated });
 
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<CategoryFilter>('all');

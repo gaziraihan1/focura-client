@@ -18,11 +18,20 @@ interface GoogleProfile {
 type TokenResponse = {
   accessToken: string;
   refreshToken: string;
+  sseToken: string;
   accessTokenExpiry: number;
   refreshTokenExpiry: number;
 };
 
-const refreshLocks = new Map<string, Promise<TokenResponse | null>>();
+// A refresh attempt either returns a new token pair or fails. On failure we
+// keep the server's error code so the jwt callback can tell a transient blip
+// (network, 5xx) apart from a genuinely dead session (TOKEN_REVOKED,
+// SESSION_TIMEOUT, replay, invalid) — only the latter must force-logout.
+type RefreshResult =
+  | { ok: true; tokens: TokenResponse }
+  | { ok: false; code?: string };
+
+const refreshLocks = new Map<string, Promise<RefreshResult>>();
 // ─── HMAC exchange proof ──────────────────────────────────────────────────────
 function createExchangeProof(
   userId: string,
@@ -45,6 +54,7 @@ async function exchangeForTokens(
 ): Promise<{
   accessToken: string;
   refreshToken: string;
+  sseToken: string;
   accessTokenExpiry: number;
   refreshTokenExpiry: number;
 } | null> {
@@ -82,13 +92,13 @@ async function exchangeForTokens(
 async function silentRefresh(
   sessionId: string,
   refreshToken: string,
-): Promise<TokenResponse | null> {
+): Promise<RefreshResult> {
   const existing = refreshLocks.get(sessionId);
-  if (existing) return existing.catch(() => null);
+  if (existing) return existing.catch(() => ({ ok: false } as RefreshResult));
 
-  let resolve!: (value: TokenResponse | null) => void;
+  let resolve!: (value: RefreshResult) => void;
 
-  const promise = new Promise<TokenResponse | null>((res) => {
+  const promise = new Promise<RefreshResult>((res) => {
     resolve = res;
   });
 
@@ -101,12 +111,31 @@ async function silentRefresh(
       body: JSON.stringify({ refreshToken }),
     });
 
-    const result: TokenResponse | null = res.ok ? await res.json() : null;
+    if (res.ok) {
+      const tokens: TokenResponse = await res.json();
+      const result: RefreshResult = { ok: true, tokens };
+      resolve(result);
+      return result;
+    }
+
+    // Surface the server's rejection code (TOKEN_REVOKED, SESSION_TIMEOUT,
+    // TOKEN_REPLAY_DETECTED, INVALID_TOKEN, TOKEN_EXPIRED, …) so the jwt
+    // callback can distinguish a dead session from a transient blip.
+    let code: string | undefined;
+    try {
+      const body = (await res.json()) as { code?: string };
+      code = body?.code;
+    } catch {
+      // non-JSON error body — leave code undefined (treated as transient)
+    }
+    const result: RefreshResult = { ok: false, code };
     resolve(result);
     return result;
   } catch {
-    resolve(null);
-    return null;
+    // Network error / timeout — transient; never force-logout on this.
+    const result: RefreshResult = { ok: false };
+    resolve(result);
+    return result;
   } finally {
     refreshLocks.delete(sessionId);
   }
@@ -240,12 +269,14 @@ export const authOptions: NextAuthOptions = {
         token.backendTokenExpiry = tokens.accessTokenExpiry;
         token.refreshToken = tokens.refreshToken;
         token.refreshTokenExpiry = tokens.refreshTokenExpiry;
+        token.sseToken = tokens.sseToken;
         console.log("✅ Exchange successful on sign-in");
       } else {
         token.backendToken = "";
         token.backendTokenExpiry = 0;
         token.refreshToken = "";
         token.refreshTokenExpiry = 0;
+        token.sseToken = "";
         console.error("⚠️ Exchange failed on sign-in — session degraded");
       }
 
@@ -273,44 +304,61 @@ export const authOptions: NextAuthOptions = {
 
       console.log("🔄 Attempting silent refresh...");
       
-      const tokens = await silentRefresh(
+      const refresh = await silentRefresh(
         token.sessionId as string,
         token.refreshToken as string,
       );
 
-      if (tokens) {
-        token.backendToken = tokens.accessToken;
-        token.backendTokenExpiry = tokens.accessTokenExpiry;
-        token.refreshToken = tokens.refreshToken;
-        token.refreshTokenExpiry = tokens.refreshTokenExpiry;
+      if (refresh.ok) {
+        token.backendToken = refresh.tokens.accessToken;
+        token.backendTokenExpiry = refresh.tokens.accessTokenExpiry;
+        token.refreshToken = refresh.tokens.refreshToken;
+        token.refreshTokenExpiry = refresh.tokens.refreshTokenExpiry;
+        token.sseToken = refresh.tokens.sseToken;
         console.log("✅ Silent refresh successful");
       } else {
         const refreshExpired =
           !token.refreshTokenExpiry ||
           Date.now() > (token.refreshTokenExpiry as number);
 
-        if (refreshExpired) {
+        // Server explicitly rejected this session as dead — the session was
+        // revoked, timed out, or the refresh token is invalid/replayed. These
+        // are NOT transient: retrying will keep failing, so mark the session
+        // expired so lib/axios forceLogouts instead of leaving a zombie that
+        // silently 401s on every request.
+        const serverRejected =
+          !!refresh.code &&
+          ["TOKEN_REVOKED", "SESSION_TIMEOUT", "TOKEN_REPLAY_DETECTED", "INVALID_TOKEN", "TOKEN_EXPIRED"].includes(
+            refresh.code,
+          );
+
+        if (refreshExpired || serverRejected) {
           // Never throw from a NextAuth callback: an uncaught error makes
           // /api/auth/session return Next's HTML 500 page instead of JSON,
           // which breaks useSession() with CLIENT_FETCH_ERROR
           // ("Unexpected token '<', <!DOCTYPE..."). Instead mark the token
           // as expired and clear backend credentials so the session callback
           // surfaces `error` and DashboardShell forces a graceful logout.
-          console.error("❌ Refresh token expired - marking session expired");
+          console.error(
+            refreshExpired
+              ? "❌ Refresh token expired - marking session expired"
+              : `❌ Session rejected by server (${refresh.code}) - marking session expired`,
+          );
           token.error = "SESSION_EXPIRED";
           token.backendToken = "";
           token.backendTokenExpiry = 0;
           token.refreshToken = "";
           token.refreshTokenExpiry = 0;
+          token.sseToken = "";
+        } else {
+          // Refresh failed but the session is still valid (network hiccup, 5xx,
+          // or a non-terminal code). KEEP the current tokens — zeroing them here
+          // degrades the session to empty and the next API call force-logs-out
+          // the user on a transient blip. The old access token stays valid until
+          // it truly expires; lib/axios's 401-retry path then re-attempts this
+          // refresh (throttled above).
+          console.warn("⚠️ Silent refresh failed (transient) - keeping current token");
         }
-
-        // Refresh failed but the refresh token is still valid. KEEP the
-        // current tokens — zeroing them here degrades the session to empty
-        // and the next API call force-logs-out the user on a transient
-        // blip (network hiccup, 5xx). The old access token stays valid
-        // until it truly expires; lib/axios's 401-retry path then re-attempts
-        // this refresh (throttled above).
-        console.warn("⚠️ Silent refresh failed (transient) - keeping current token");
       }
     }
 
@@ -321,6 +369,7 @@ export const authOptions: NextAuthOptions = {
     session.user.id = token.id as string;
     session.user.role = token.role as string;
     session.backendToken = token.backendToken as string;
+    session.sseToken = token.sseToken as string;
     session.sessionId = token.sessionId as string;
     session.error = token.error as string | undefined;
     
@@ -404,6 +453,7 @@ declare module "next-auth" {
       emailVerified?: Date | null;
     };
     backendToken: string;
+    sseToken: string;
     sessionId: string;
     error?: string;
   }
@@ -422,6 +472,7 @@ declare module "next-auth/jwt" {
     backendTokenExpiry: number;
     refreshToken: string;
     refreshTokenExpiry: number;
+    sseToken: string;
     lastRefreshAttempt?: number;
     error?: string;
   }

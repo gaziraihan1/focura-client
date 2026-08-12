@@ -1,8 +1,12 @@
 # v1.2.0 Backlog
 
-Three items planned for v1.2.0. Status: **PLANNED** — none implemented yet.
+Items for v1.2.0. Status:
+- **DONE** — SSE token hardening (item 2)
+- **PLANNED** — GA consent banner (item 1), data export + account deletion (item 3)
 
-This file is mirrored in both repos (`Focura-backend` / `Focura-client`).
+This file is mirrored in both repos (`Focura-backend` / `Focura-client`). The
+backend copy also tracks the notification-coverage work (meeting reminders,
+task-completion/assignment/subtask notifications, attendee access checks).
 Changelog entries live in each repo's `CHANGELOG.md` under `[Unreleased]`.
 
 ---
@@ -38,11 +42,14 @@ pages describe analytics as opt-out; a real consent gate is the proper fix.
 
 ---
 
-## 2. SSE token hardening (backend + frontend)
+## 2. SSE token hardening (backend + frontend) — ✅ DONE
 
 **Why:** `GET /api/v1/notifications/stream?token=<15-minute access token>`
 puts a full access token in URLs (proxy logs, browser history). The 30-second
 single-use SSE token infrastructure already exists but is unused.
+
+**Status:** implemented and verified live (notifications arrive in the bell
+without a refresh). See the implementation notes below.
 
 **Backend**
 - `src/lib/auth/backendToken.ts`: `createSseToken()` exists (30s expiry,
@@ -76,6 +83,20 @@ single-use SSE token infrastructure already exists but is unused.
 > longer appear in URLs or logs.
 > Frontend: Notification streams now authenticate with a short-lived,
 > single-use token.
+
+**Implementation notes (frontend)**
+- `lib/auth/authOptions.ts`: `sseToken` carried from the `/exchange` and
+  `/refresh` responses into the NextAuth session (`session.sseToken`),
+  including type augmentations and the failure paths.
+- SSE hook (`hooks/useNotificationSSE.ts`): mints a fresh single-use token
+  via `GET /api/v1/notifications/sse-token` before **every** connection,
+  falls back to `session.sseToken` when minting fails, retries with
+  exponential backoff, and has an in-flight guard against duplicate
+  concurrent connects. Dead `currentTokenRef` removed.
+- `hooks/useNotifications.ts` passes `sseToken` through (only call site).
+- The backend's data-carrying heartbeat keeps the stream alive past the
+  client's 60s watchdog, so idle connections no longer reconnect every
+  minute (which used to miss publishes).
 
 ---
 

@@ -1,3 +1,5 @@
+import { AlertTriangle, Loader2 } from "lucide-react";
+
 interface ClearActivitiesDialogProps {
   isOpen: boolean;
   isPending: boolean;
@@ -14,27 +16,46 @@ export function ClearActivitiesDialog({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-lg bg-white dark:bg-gray-900 p-6 shadow-xl">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-          Clear all activities?
-        </h2>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-          This will permanently delete all activity logs. This action cannot be
-          undone.
-        </p>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4"
+      role="presentation"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Clear all activities"
+        className="w-full max-w-md rounded-2xl bg-card border border-border p-6 shadow-xl"
+      >
+        <div className="flex items-start gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-destructive/10">
+            <AlertTriangle className="h-5 w-5 text-destructive" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-foreground mb-2">
+              Clear all activities?
+            </h2>
+            <p className="text-sm text-muted-foreground mb-6">
+              This will permanently delete all activity logs. This action cannot
+              be undone.
+            </p>
+          </div>
+        </div>
         <div className="flex justify-end gap-3">
           <button
             onClick={onClose}
-            className="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+            className="rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-accent transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
             disabled={isPending}
-            className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-lg bg-destructive px-4 py-2 text-sm font-medium text-white hover:bg-destructive/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
+            {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
             {isPending ? "Clearing..." : "Clear Activities"}
           </button>
         </div>

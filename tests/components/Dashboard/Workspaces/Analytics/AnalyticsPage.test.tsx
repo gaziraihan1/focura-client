@@ -84,6 +84,8 @@ vi.mock('lucide-react', () => {
     RotateCcw: mock('rotate-ccw'),
     ArrowLeft: mock('arrow-left'),
     UserCircle2: mock('user-circle2'),
+    ChevronDown: mock('chevron-down'),
+    ChevronUp: mock('chevron-up'),
   }
 })
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 
 vi.mock('next/link', () => ({
   default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
@@ -73,6 +73,8 @@ vi.mock('lucide-react', () => {
     RotateCcw: mock('rotate-ccw'),
     ArrowLeft: mock('arrow-left'),
     UserCircle2: mock('user-circle2'),
+    ChevronDown: mock('chevron-down'),
+    ChevronUp: mock('chevron-up'),
   }
 })
 
@@ -120,15 +122,22 @@ const mockProjectHealthData: ProjectHealth[] = [
 ]
 
 describe('ProjectHealthCards', () => {
+  const expandAll = () => {
+    fireEvent.click(screen.getByRole('button', { name: /See More Project Health/ }))
+  }
+
   it('renders the title', () => {
     render(<ProjectHealthCards data={mockProjectHealthData} />)
     expect(screen.getByText('Project Health')).toBeInTheDocument()
   })
 
-  it('renders all project names', () => {
+  it('renders the default subset and reveals the rest via See More', () => {
     render(<ProjectHealthCards data={mockProjectHealthData} />)
     expect(screen.getByText('Project Alpha')).toBeInTheDocument()
     expect(screen.getByText('Project Beta')).toBeInTheDocument()
+    expect(screen.queryByText('Project Gamma')).not.toBeInTheDocument()
+
+    expandAll()
     expect(screen.getByText('Project Gamma')).toBeInTheDocument()
   })
 
@@ -142,6 +151,9 @@ describe('ProjectHealthCards', () => {
     render(<ProjectHealthCards data={mockProjectHealthData} />)
     expect(screen.getByText('healthy')).toBeInTheDocument()
     expect(screen.getByText('at-risk')).toBeInTheDocument()
+    expect(screen.queryByText('critical')).not.toBeInTheDocument()
+
+    expandAll()
     expect(screen.getByText('critical')).toBeInTheDocument()
   })
 
@@ -149,14 +161,20 @@ describe('ProjectHealthCards', () => {
     render(<ProjectHealthCards data={mockProjectHealthData} />)
     expect(screen.getByText('75%')).toBeInTheDocument()
     expect(screen.getByText('30%')).toBeInTheDocument()
+    expect(screen.queryByText('10%')).not.toBeInTheDocument()
+
+    expandAll()
     expect(screen.getByText('10%')).toBeInTheDocument()
   })
 
   it('shows project status', () => {
     render(<ProjectHealthCards data={mockProjectHealthData} />)
     const activeStatuses = screen.getAllByText('ACTIVE')
-    expect(activeStatuses.length).toBe(2)
+    expect(activeStatuses.length).toBe(1)
     expect(screen.getByText('PLANNING')).toBeInTheDocument()
+
+    expandAll()
+    expect(screen.getAllByText('ACTIVE').length).toBe(2)
   })
 
   it('shows due date when present', () => {

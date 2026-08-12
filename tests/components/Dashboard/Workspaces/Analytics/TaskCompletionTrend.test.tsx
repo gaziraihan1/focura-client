@@ -36,8 +36,8 @@ vi.mock('lucide-react', () => {
 
 vi.mock('recharts', () => ({
   ResponsiveContainer: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
-  BarChart: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="bar-chart" {...props} />,
-  Bar: () => null,
+  AreaChart: ({ children }: { children?: React.ReactNode }) => <div data-testid="area-chart">{children}</div>,
+  Area: () => null,
   XAxis: () => null,
   YAxis: () => null,
   Tooltip: () => null,

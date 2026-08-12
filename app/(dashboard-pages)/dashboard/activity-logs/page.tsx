@@ -25,7 +25,7 @@ export default function ActivityPage({ workspaceId }: ActivityPageProps) {
   } = useActivityPage({ workspaceId });
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 py-8">
+    <div className="mx-auto max-w-5xl space-y-6">
       <ActivityPageHeader
         onRefresh={handleRefresh}
         onClearAll={() => setShowDeleteDialog(true)}

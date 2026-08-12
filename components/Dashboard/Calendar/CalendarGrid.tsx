@@ -85,50 +85,55 @@ export function CalendarGrid({
 
   return (
     <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
-      {/* Day Headers */}
-      <div className="grid grid-cols-7 border-b border-border bg-muted/30" role="row">
-        {DAY_HEADERS.map((day) => (
-          <div
-            key={day}
-            className="p-3 sm:p-4 text-center text-sm font-semibold text-muted-foreground border-r last:border-r-0 border-border"
-            role="columnheader"
-            aria-label={day}
-          >
-            <span className="hidden sm:inline">{day}</span>
-            <span className="sm:hidden">{day.charAt(0)}</span>
+      {/* Scrollable wrapper keeps the 7 columns readable on small screens */}
+      <div className="overflow-x-auto">
+        <div className="min-w-[620px]">
+          {/* Day Headers */}
+          <div className="grid grid-cols-7 border-b border-border bg-muted/30" role="row">
+            {DAY_HEADERS.map((day) => (
+              <div
+                key={day}
+                className="p-2 sm:p-4 text-center text-xs sm:text-sm font-semibold text-muted-foreground border-r last:border-r-0 border-border"
+                role="columnheader"
+                aria-label={day}
+              >
+                <span className="hidden sm:inline">{day}</span>
+                <span className="sm:hidden">{day.charAt(0)}</span>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      {/* Calendar Grid */}
-      <div
-        ref={gridRef}
-        className="grid grid-cols-7"
-        role="grid"
-        aria-label="Calendar"
-      >
-        {calendarDays.map((day, index) => {
-          const aggregate = getAggregateForDate(day);
-          const workloadColor = aggregate
-            ? getWorkloadColor(aggregate.workloadScore, aggregate.overCapacity)
-            : "bg-background";
-          const goals = getGoalsForDate(day);
+          {/* Calendar Grid */}
+          <div
+            ref={gridRef}
+            className="grid grid-cols-7"
+            role="grid"
+            aria-label="Calendar"
+          >
+            {calendarDays.map((day, index) => {
+              const aggregate = getAggregateForDate(day);
+              const workloadColor = aggregate
+                ? getWorkloadColor(aggregate.workloadScore, aggregate.overCapacity)
+                : "bg-background";
+              const goals = getGoalsForDate(day);
 
-          return (
-            <CalendarDayCell
-              key={day.toISOString()}
-              date={day}
-              aggregate={aggregate}
-              goals={goals}
-              isToday={isToday(day)}
-              isCurrentMonth={isCurrentMonth(day)}
-              workloadColor={workloadColor}
-              isSelected={selectedIndex === index}
-              onClick={() => onDateClick(day)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
-            />
-          );
-        })}
+              return (
+                <CalendarDayCell
+                  key={day.toISOString()}
+                  date={day}
+                  aggregate={aggregate}
+                  goals={goals}
+                  isToday={isToday(day)}
+                  isCurrentMonth={isCurrentMonth(day)}
+                  workloadColor={workloadColor}
+                  isSelected={selectedIndex === index}
+                  onClick={() => onDateClick(day)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                />
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );

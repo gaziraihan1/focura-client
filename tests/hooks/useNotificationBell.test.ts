@@ -65,6 +65,13 @@ const notificationsResponse = {
 describe('useNotificationBell', () => {
   beforeEach(() => {
     MockEventSource.instances = []
+    // useNotificationSSE mints a fresh single-use token before every stream
+    // connection, so every test needs this endpoint mocked.
+    server.use(
+      http.get('*/api/v1/notifications/sse-token', () => {
+        return HttpResponse.json({ success: true, sseToken: 'test-sse-token' })
+      })
+    )
   })
 
   it('returns recent notifications (max 5)', async () => {

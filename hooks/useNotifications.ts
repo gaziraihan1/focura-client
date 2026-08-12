@@ -24,6 +24,7 @@ export { notificationKeys } from "./notificationKeys";
 export function useNotifications() {
   const { data: session } = useSession();
   const backendToken = session?.backendToken ?? null;
+  const sseToken = session?.sseToken ?? null;
 
   // Preferences
   const {
@@ -52,7 +53,7 @@ export function useNotifications() {
   const deleteAllReadMutation = useDeleteAllRead();
 
   // SSE connection
-  const { connectionStatus } = useNotificationSSE({ backendToken, preferences });
+  const { connectionStatus } = useNotificationSSE({ backendToken, sseToken, preferences });
 
   // Derived state
   const notifications = data?.pages.flatMap((page) => page?.items ?? []) ?? [];

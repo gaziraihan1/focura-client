@@ -139,7 +139,7 @@ export function AnalyticsPage({
         <MemberLeaderboard data={memberContribution} />
       ) : null}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         {taskTrends && taskTrends.overdueTrend.length > 0 && (
           <OverdueTrendChart data={taskTrends.overdueTrend} />
         )}

@@ -16,14 +16,14 @@ export function DateRangeFilter({
   onClose,
 }: DateRangeFilterProps) {
   return (
-    <div className="flex flex-wrap items-end gap-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-4">
+    <div className="flex flex-wrap items-end gap-3 rounded-xl border border-border bg-card p-4">
       <div className="flex-1 min-w-50">
-        <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="fld-7">
+        <label className="mb-2 block text-sm font-medium text-muted-foreground" htmlFor="fld-7">
           From
         </label>
         <input id="fld-7"
           type="date"
-          className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
+          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
           value={
             filters.startDate
               ? new Date(filters.startDate).toISOString().split('T')[0]
@@ -34,12 +34,12 @@ export function DateRangeFilter({
       </div>
 
       <div className="flex-1 min-w-50">
-        <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="fld-8">
+        <label className="mb-2 block text-sm font-medium text-muted-foreground" htmlFor="fld-8">
           To
         </label>
         <input id="fld-8"
           type="date"
-          className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
+          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
           value={
             filters.endDate
               ? new Date(filters.endDate).toISOString().split('T')[0]
@@ -51,7 +51,7 @@ export function DateRangeFilter({
 
       <button
         onClick={onClose}
-        className="rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-800"
+        className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-3 py-2 text-foreground hover:bg-accent transition-colors"
         aria-label="Close custom date range"
       >
         <X className="h-4 w-4" />

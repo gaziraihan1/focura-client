@@ -1,26 +1,34 @@
 'use client';
 
+import { useState } from 'react';
 import { ProjectHealth } from '@/hooks/useAnalytics';
 import { formatDate, getHealthColor } from '@/utils/analytics.utils';
-import { Folder, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
+import { Folder, AlertCircle, CheckCircle2, Clock, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface ProjectHealthCardsProps {
   data: ProjectHealth[];
 }
 
-  const healthIcons = {
-    healthy: <CheckCircle2 className="w-4 h-4" />,
-    'at-risk': <AlertCircle className="w-4 h-4" />,
-    critical: <AlertCircle className="w-4 h-4" />,
-  };
+const healthIcons = {
+  healthy: <CheckCircle2 className="w-4 h-4" />,
+  'at-risk': <AlertCircle className="w-4 h-4" />,
+  critical: <AlertCircle className="w-4 h-4" />,
+};
+
+const DEFAULT_VISIBLE = 2;
+
 export function ProjectHealthCards({ data }: ProjectHealthCardsProps) {
+  const [expanded, setExpanded] = useState(false);
+
+  const hiddenCount = Math.max(data.length - DEFAULT_VISIBLE, 0);
+  const visibleProjects = expanded ? data : data.slice(0, DEFAULT_VISIBLE);
 
   return (
-    <div className="bg-card border rounded-lg p-4">
+    <div className="bg-card border rounded-lg p-4 sm:p-6 w-full min-w-0 flex flex-col">
       <h2 className="sm:text-lg font-semibold mb-6">Project Health</h2>
 
-      <div className="space-y-4">
-        {data.map((project) => (
+      <div className="space-y-4 flex-1">
+        {visibleProjects.map((project) => (
           <div
             key={project.projectId}
             className="p-4 rounded-lg border hover:bg-muted/50 transition-colors"
@@ -94,6 +102,27 @@ export function ProjectHealthCards({ data }: ProjectHealthCardsProps) {
           </div>
         )}
       </div>
+
+      {hiddenCount > 0 && (
+        <button
+          type="button"
+          onClick={() => setExpanded((prev) => !prev)}
+          aria-expanded={expanded}
+          className="mt-6 w-full flex items-center justify-center gap-1.5 py-2 text-sm font-medium text-muted-foreground rounded-lg border border-border transition-colors hover:bg-accent hover:text-foreground"
+        >
+          {expanded ? (
+            <>
+              <ChevronUp className="w-4 h-4" />
+              Show Less
+            </>
+          ) : (
+            <>
+              <ChevronDown className="w-4 h-4" />
+              See More Project Health ({hiddenCount})
+            </>
+          )}
+        </button>
+      )}
     </div>
   );
 }

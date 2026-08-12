@@ -23,7 +23,7 @@ export function CalendarInsightsBar({ insights }: CalendarInsightsBarProps) {
     insights.focusDays === 0;
 
   return (
-    <div className="border-b border-border bg-card">
+    <div className="">
       <div className="max-w-400 mx-auto px-2 sm:px-6 lg:px-8 py-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <InsightCard

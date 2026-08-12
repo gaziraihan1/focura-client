@@ -48,12 +48,12 @@ export function CalendarHeader({
 
   return (
     <div
-      className="border-b border-border bg-card sticky top-0 z-10"
+      className="sticky top-14 z-10 bg-background/70 backdrop-blur-xl"
       onKeyDown={handleKeyDown}
       role="group"
       tabIndex={-1}
     >
-      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-6">
+      <div className="mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           {/* Title */}
           <div>
@@ -66,7 +66,7 @@ export function CalendarHeader({
           </div>
 
           {/* Controls */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             {/* View Switcher */}
             <div
               className="flex items-center gap-0.5 p-1 rounded-lg bg-muted border border-border"
@@ -115,7 +115,7 @@ export function CalendarHeader({
               </button>
 
               <span
-                className="px-2 sm:px-4 text-sm font-medium min-w-30 sm:min-w-35 text-center"
+                className="px-2 sm:px-4 text-sm font-medium min-w-24 sm:min-w-35 text-center whitespace-nowrap"
                 aria-live="polite"
                 aria-atomic="true"
               >

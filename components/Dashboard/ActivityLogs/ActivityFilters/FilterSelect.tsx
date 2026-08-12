@@ -19,7 +19,7 @@ export function FilterSelect<T extends string>({
       <select aria-label="Select an option"
         value={value || 'all'}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
       >
         {placeholder && <option value="">{placeholder}</option>}
         {options.map((option) => (

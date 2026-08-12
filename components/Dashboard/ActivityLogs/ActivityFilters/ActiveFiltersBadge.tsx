@@ -13,11 +13,11 @@ export function ActiveFiltersBadge({
   onClear,
 }: ActiveFiltersBadgeProps) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-md bg-gray-100 dark:bg-gray-800 px-2 py-1 text-xs font-medium text-gray-700 dark:text-gray-300">
+    <span className="inline-flex items-center gap-1 rounded-full bg-accent px-2 py-1 text-xs font-medium text-foreground">
       {label}: {value}
       <button
         onClick={onClear}
-        className="ml-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+        className="ml-1 rounded-full text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
         aria-label={`Clear ${label.toLowerCase()} filter`}
       >
         <X className="h-3 w-3" />

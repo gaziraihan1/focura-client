@@ -785,7 +785,7 @@ useEffect(() => {
 | `401` | `PROOF_EXPIRED` | Exchange proof timestamp > 60s old | Retry exchange with fresh timestamp |
 | `401` | `INVALID_PROOF` | HMAC signature mismatch | Check `NEXTAUTH_SECRET` matches |
 | `401` | `SESSION_HIJACK_DETECTED` | Device fingerprint or IP changed suspiciously | Clear all state, redirect to login |
-| `401` | `SESSION_TIMEOUT` | Inactivity (30 min) or absolute (7 day) timeout | Redirect to login |
+| `401` | `SESSION_TIMEOUT` | Inactivity or absolute (7 day) timeout | Redirect to login |
 | `401` | `NOT_AUTHENTICATED` | Auth middleware not applied or user not attached | Code bug — ensure `authenticate` middleware |
 | `403` | `EMAIL_NOT_VERIFIED` | User's email is not verified | Show "verify your email" page |
 | `403` | `ACCOUNT_BANNED` | User account is suspended | Show ban message, clear state |
@@ -902,7 +902,7 @@ function handle429(retryAfter: number): void {
 |-----------|-------|
 | Max concurrent sessions per user | **5** |
 | Session TTL | **7 days** |
-| Inactivity timeout | **30 minutes** |
+| Inactivity timeout | **7 days** (aligned with absolute — users stay logged in while active) |
 | Absolute timeout | **7 days** |
 
 ### How Sessions Work
@@ -953,7 +953,7 @@ The backend validates that each request comes from the same device and a reasona
 
 ```typescript
 // The backend returns 401 with code "SESSION_TIMEOUT" when:
-// - Inactivity timeout (30 min with no interaction or heartbeat) exceeded
+// - Inactivity timeout (7 days, aligned with absolute) exceeded
 // - Absolute timeout (7 days) exceeded
 // While the user is active, the frontend keeps the session alive via the
 // activity heartbeat (GET /api/v1/auth/activity) — see "Activity & Heartbeat".
@@ -980,7 +980,7 @@ api.interceptors.response.use(
 | User logs out from all devices | ALL sessions revoked |
 | Device fingerprint changes | ALL refresh tokens revoked (hijack detection) |
 | IP changes within 5 min | Current request rejected |
-| 30 min without user interaction or heartbeat | Session expires |
+| 7 days without user interaction or heartbeat | Session expires |
 | 7 days absolute | Session expires |
 | More than 5 concurrent sessions | Oldest session evicted |
 | Account banned | All sessions invalid (cache invalidated) |

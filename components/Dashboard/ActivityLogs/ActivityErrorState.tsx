@@ -1,7 +1,10 @@
+import { AlertCircle } from "lucide-react";
+
 export function ActivityErrorState() {
   return (
-    <div className="rounded-lg border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/20 p-4 text-center">
-      <p className="text-sm text-red-600 dark:text-red-400">
+    <div className="flex flex-col items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 p-6 text-center">
+      <AlertCircle className="h-8 w-8 text-destructive" />
+      <p className="text-sm font-medium text-destructive">
         Failed to load activities. Please try again.
       </p>
     </div>

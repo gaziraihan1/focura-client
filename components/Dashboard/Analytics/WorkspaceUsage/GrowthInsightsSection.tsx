@@ -75,6 +75,33 @@ function GrowthMetric({ label, value, change, icon: Icon }: GrowthMetricProps) {
   );
 }
 
+function GrowthTooltip({
+  active,
+  payload,
+  label,
+}: {
+  active?: boolean;
+  payload?: Array<{ name?: string; value?: number; color?: string }>;
+  label?: string;
+}) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="rounded-lg border border-border bg-popover/90 backdrop-blur-md px-3 py-2 text-xs shadow-lg space-y-1">
+      <p className="text-muted-foreground font-medium mb-1">{label}</p>
+      {payload.map((p) => (
+        <div key={p.name} className="flex items-center gap-2">
+          <span
+            className="w-2 h-2 rounded-full shrink-0"
+            style={{ background: p.color }}
+          />
+          <span className="text-muted-foreground">{p.name}:</span>
+          <span className="font-semibold">{Number(p.value ?? 0).toLocaleString()}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 const insightStyles: Record<GrowthInsightType, { wrapper: string; dot: string; text: string }> = {
   positive: {
     wrapper: "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800",
@@ -124,46 +151,59 @@ export function GrowthInsightsSection({ workspaceGrowth }: GrowthInsightsSection
           <h3 className="text-sm font-semibold text-foreground mb-3 sm:mb-4">
             6-Month Trend
           </h3>
-          <div className="h-44 sm:h-56">
+          <div className="h-44 sm:h-56 w-full min-w-0">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={trend} margin={{ bottom: 0 }}>
+              <BarChart data={trend} margin={{ top: 4, right: 4, bottom: 0, left: -10 }}>
                 <CartesianGrid
                   strokeDasharray="3 3"
-                  stroke="var(--border)"
+                  stroke="var(--color-border)"
                   opacity={0.5}
                 />
                 <XAxis
                   dataKey="month"
-                  tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
-                  stroke="var(--border)"
+                  tick={{ fontSize: 10, fill: "var(--color-muted-foreground)" }}
+                  stroke="var(--color-border)"
                   tickLine={false}
+                  axisLine={{ stroke: "var(--color-border)" }}
+                  interval="preserveStartEnd"
+                  minTickGap={12}
                 />
                 <YAxis
-                  tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
-                  stroke="var(--border)"
+                  tick={{ fontSize: 10, fill: "var(--color-muted-foreground)" }}
+                  stroke="var(--color-border)"
                   tickLine={false}
                   axisLine={false}
                   allowDecimals={false}
                   width={30}
                 />
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: "var(--card)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "8px",
-                    color: "var(--foreground)",
-                    fontSize: "12px",
-                  }}
+                  content={<GrowthTooltip />}
+                  cursor={{ fill: "var(--color-accent)", opacity: 0.3 }}
                 />
                 <Legend
-                  wrapperStyle={{
-                    fontSize: "12px",
-                    color: "var(--muted-foreground)",
-                  }}
+                  wrapperStyle={{ fontSize: "12px", color: "var(--color-muted-foreground)" }}
                 />
-                <Bar dataKey="tasks"    name="Tasks"    fill="var(--chart-1)" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="users"    name="Users"    fill="var(--chart-3)" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="projects" name="Projects" fill="var(--chart-2)" radius={[3, 3, 0, 0]} />
+                <Bar
+                  dataKey="tasks"
+                  name="Tasks"
+                  fill="var(--color-chart-1)"
+                  radius={[3, 3, 0, 0]}
+                  maxBarSize={24}
+                />
+                <Bar
+                  dataKey="users"
+                  name="Users"
+                  fill="var(--color-chart-3)"
+                  radius={[3, 3, 0, 0]}
+                  maxBarSize={24}
+                />
+                <Bar
+                  dataKey="projects"
+                  name="Projects"
+                  fill="var(--color-chart-2)"
+                  radius={[3, 3, 0, 0]}
+                  maxBarSize={24}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>

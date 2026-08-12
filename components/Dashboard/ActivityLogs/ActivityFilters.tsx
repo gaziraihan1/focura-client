@@ -39,51 +39,55 @@ export function ActivityFilters({
 
   return (
     <div className="space-y-4">
-      {/* Filter Controls */}
-      <div className="flex flex-wrap items-center gap-3">
-        {/* Action Filter */}
-        <FilterSelect
-          value={filters.action}
-          options={ACTION_OPTIONS}
-          onChange={handleActionChange}
-        />
-
-        {/* Entity Type Filter */}
-        <FilterSelect
-          value={filters.entityType}
-          options={ENTITY_OPTIONS}
-          onChange={handleEntityTypeChange}
-        />
-
-        {/* Date Filter - NO ANY! */}
-        {showDateFilters && (
-          <DatePresetSelect
-            options={DATE_PRESETS}
-            onChange={handleDatePresetChange}
+      <div className="rounded-2xl border border-border bg-card p-4">
+        {/* Filter Controls */}
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Action Filter */}
+          <FilterSelect
+            value={filters.action}
+            options={ACTION_OPTIONS}
+            onChange={handleActionChange}
           />
-        )}
 
-        {/* Clear All Filters Button */}
-        {activeFiltersCount > 0 && (
-          <button
-            onClick={handleClearFilters}
-            className="inline-flex items-center gap-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-          >
-            <X className="h-4 w-4" />
-            Clear ({activeFiltersCount})
-          </button>
+          {/* Entity Type Filter */}
+          <FilterSelect
+            value={filters.entityType}
+            options={ENTITY_OPTIONS}
+            onChange={handleEntityTypeChange}
+          />
+
+          {/* Date Filter - NO ANY! */}
+          {showDateFilters && (
+            <DatePresetSelect
+              options={DATE_PRESETS}
+              onChange={handleDatePresetChange}
+            />
+          )}
+
+          {/* Clear All Filters Button */}
+          {activeFiltersCount > 0 && (
+            <button
+              onClick={handleClearFilters}
+              className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+            >
+              <X className="h-4 w-4" />
+              Clear ({activeFiltersCount})
+            </button>
+          )}
+        </div>
+
+        {/* Custom Date Range */}
+        {showCustomDateRange && (
+          <div className="mt-4">
+            <DateRangeFilter
+              filters={filters}
+              onStartDateChange={handleStartDateChange}
+              onEndDateChange={handleEndDateChange}
+              onClose={handleClearDateRange}
+            />
+          </div>
         )}
       </div>
-
-      {/* Custom Date Range */}
-      {showCustomDateRange && (
-        <DateRangeFilter
-          filters={filters}
-          onStartDateChange={handleStartDateChange}
-          onEndDateChange={handleEndDateChange}
-          onClose={handleClearDateRange}
-        />
-      )}
 
       {/* Active Filters Display */}
       <ActiveFiltersDisplay

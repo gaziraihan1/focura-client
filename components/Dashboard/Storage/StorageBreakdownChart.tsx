@@ -6,12 +6,27 @@ import { formatStorageSize } from "@/hooks/useStoragePage";
 import { storageBreakdown } from "@/constants/storage.constants";
 
 interface StorageBreakdownChartProps {
-  breakdown: StorageBreakdown;
+  breakdown: StorageBreakdown | null;
 }
 
 export function StorageBreakdownChart({
   breakdown,
 }: StorageBreakdownChartProps) {
+  if (!breakdown) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-card border rounded-lg p-6"
+      >
+        <h2 className="sm:text-lg font-semibold mb-6">Storage Breakdown</h2>
+        <p className="text-sm text-muted-foreground">
+          No storage breakdown available yet.
+        </p>
+      </motion.div>
+    );
+  }
+
   const { total } = breakdown;
 
   const { data } = storageBreakdown({ breakdown });
