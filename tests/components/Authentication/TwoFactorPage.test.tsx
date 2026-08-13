@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 
 vi.mock('next-auth/react', () => ({
   signIn: vi.fn(),
+  useSession: vi.fn(),
 }));
 
 vi.mock('next/navigation', () => ({
@@ -27,17 +28,24 @@ vi.mock('framer-motion', () => ({
 
 import TwoFactorPage from '@/app/authentication/2fa/page';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 
 describe('TwoFactorPage', () => {
   const mockPush = vi.fn();
+  const mockReplace = vi.fn();
   const mockGet = vi.fn();
+  const mockUpdate = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useRouter as any).mockReturnValue({ push: mockPush });
+    (useRouter as any).mockReturnValue({ push: mockPush, replace: mockReplace });
     (useSearchParams as any).mockReturnValue({ get: mockGet });
+    (useSession as any).mockReturnValue({
+      data: null,
+      status: 'unauthenticated',
+      update: mockUpdate,
+    });
   });
 
   it('shows expired session fallback when no email is provided', () => {
