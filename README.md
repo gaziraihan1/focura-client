@@ -483,10 +483,6 @@ GOOGLE_CLIENT_SECRET=<your-google-client-secret>
 # File Upload
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=<your-cloudinary-name>
 
-# Redis (Upstash REST — for rate limiting and caching)
-UPSTASH_REDIS_REST_URL=<your-upstash-url>
-UPSTASH_REDIS_REST_TOKEN=<your-upstash-token>
-
 # Email (SMTP — for verification and password reset)
 EMAIL_SERVER_HOST="smtp.gmail.com"
 EMAIL_SERVER_PORT=587
@@ -837,7 +833,6 @@ focura-client/
 ├── CODE_OF_CONDUCT.md                # Code of conduct
 ├── AI_IMPLEMENTATION_GUIDE.md         # AI implementation guide
 ├── FRONTEND_ANALYSIS.md               # Frontend analysis
-├── FRONTEND_AUTH_GUIDE.md             # Frontend auth guide
 └── INTEGRATIONS_CONNECTOR.md         # Integration connector docs
 ```
 
@@ -878,8 +873,8 @@ focura-client/
    - All tabs stay in sync for token state and logout
 
 7. **Session Timeout**
-   - 30-minute inactivity timeout (warns at 25 min)
-   - 7-day absolute timeout (warns at 6 days 23 hours)
+   - 7-day inactivity timeout (warns 5 min before)
+   - 7-day absolute timeout (warns 1 hour before)
    - Automatic force logout on expiry
 
 ### **Protected Routes**
@@ -976,7 +971,7 @@ The Axios instance in `lib/axios.ts` handles:
 - Silent token refresh on `TOKEN_EXPIRED` responses
 - CSRF token attachment for mutating requests
 - Type-safe API responses via `ApiResponse<T>` wrapper
-- Session timeout management (30-min inactivity, 7-day absolute)
+- Session timeout management (7-day inactivity, 7-day absolute)
 - Multi-tab coordination via BroadcastChannel
 - Terminal auth code detection (force logout on suspicious activity)
 
@@ -1459,8 +1454,6 @@ BACKEND_URL=https://your-api.com
 NEXT_PUBLIC_API_URL=https://your-api.com
 GOOGLE_CLIENT_ID=<production-id>
 GOOGLE_CLIENT_SECRET=<production-secret>
-UPSTASH_REDIS_REST_URL=<upstash-url>
-UPSTASH_REDIS_REST_TOKEN=<upstash-token>
 EMAIL_SERVER_HOST="smtp.gmail.com"
 EMAIL_SERVER_PORT=587
 EMAIL_SERVER_USER=<email>
@@ -1520,7 +1513,6 @@ For more details, see [AUTHENTICATION.md](./AUTHENTICATION.md)
 - [**CODE_OF_CONDUCT.md**](./CODE_OF_CONDUCT.md) - Code of conduct
 - [**AI_IMPLEMENTATION_GUIDE.md**](./AI_IMPLEMENTATION_GUIDE.md) - AI implementation guide
 - [**FRONTEND_ANALYSIS.md**](./FRONTEND_ANALYSIS.md) - Frontend analysis
-- [**FRONTEND_AUTH_GUIDE.md**](./FRONTEND_AUTH_GUIDE.md) - Frontend auth guide
 - [**INTEGRATIONS_CONNECTOR.md**](./INTEGRATIONS_CONNECTOR.md) - Integration connector docs
 - [**Backend README**](https://github.com/gaziraihan1/focura-backend) - Backend API documentation
 - [**API Documentation**](https://focura-client.vercel.app/api-docs) - Interactive API docs (in-app)

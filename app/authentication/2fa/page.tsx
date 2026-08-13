@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,7 +10,7 @@ import { toast } from "react-hot-toast";
 import { m as motion } from "framer-motion";
 import { Loader2, Shield, Lock, ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const twoFactorSchema = z.object({
   password: z.string().min(1, "Password is required"),
@@ -26,6 +26,11 @@ function TwoFactorContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
+  const { data: session, status, update } = useSession();
+  // Google sign-in with 2FA: the session is authenticated but marked pending
+  // until the TOTP code is verified (credentials sign-in re-enters password).
+  const isGooglePending =
+    status === "authenticated" && session?.twoFactorPending === true;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -36,7 +41,57 @@ function TwoFactorContent() {
     resolver: zodResolver(twoFactorSchema),
   });
 
+  // Authenticated and not pending → already verified (or the credentials
+  // email flow, which needs the password step). Unauthenticated → sign in.
+  useEffect(() => {
+    if (status === "loading") return;
+    if (status === "authenticated" && !session?.twoFactorPending && !email) {
+      router.replace("/dashboard");
+    } else if (status === "unauthenticated" && !email) {
+      router.replace("/authentication/login");
+    }
+  }, [status, session?.twoFactorPending, email, router]);
+
   const onSubmit = async (values: TwoFactorFormData) => {
+    // Google pending flow: the session is authenticated — only the code is
+    // missing. The server verifies it and mints the marker the jwt callback
+    // consumes; update() re-runs the callback and completes the exchange.
+    if (isGooglePending) {
+      if (!session?.user?.email) {
+        toast.error("Session expired. Please sign in again.");
+        router.push("/authentication/login");
+        return;
+      }
+      setIsSubmitting(true);
+      try {
+        const res = await fetch("/api/auth/verify-2fa", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ totpCode: values.totpCode }),
+        });
+        const body = (await res.json().catch(() => ({}))) as { error?: string };
+        if (!res.ok) {
+          toast.error(body?.error || "Invalid verification code. Please try again.");
+          return;
+        }
+        const updated = await update();
+        if (updated?.twoFactorPending) {
+          // Marker consumed but the token exchange failed — re-submitting
+          // re-verifies and mints a fresh marker.
+          toast.error("Verification succeeded, but completing your session failed. Please try the code again.");
+          return;
+        }
+        toast.success("Verified successfully! Welcome back.");
+        router.replace("/dashboard");
+      } catch (err) {
+        console.error("2FA verification error:", err);
+        toast.error("Something went wrong. Please try again.");
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
     if (!email) {
       toast.error("Session expired. Please sign in again.");
       router.push("/authentication/login");
@@ -130,7 +185,9 @@ function TwoFactorContent() {
               <span className="text-primary"> identity</span>
             </h1>
             <p className="text-sm text-muted-foreground pt-1">
-              Enter your password and the 6-digit code from your authenticator app.
+              {isGooglePending
+                ? "Enter the 6-digit code from your authenticator app to finish signing in."
+                : "Enter your password and the 6-digit code from your authenticator app."}
             </p>
           </div>
 
@@ -142,38 +199,40 @@ function TwoFactorContent() {
               </span>
               <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-muted/50 border border-border/50 text-sm text-foreground/80">
                 <Shield size={16} className="text-primary/60 shrink-0" />
-                <span className="truncate">{email}</span>
+                <span className="truncate">{email || session?.user?.email || ""}</span>
               </div>
             </div>
 
-            {/* Password field */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold tracking-wide text-muted-foreground/80 uppercase" htmlFor="fld-1">
-                Password
-              </label>
-              <div className="relative">
-                <Lock
-                  size={16}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/60 pointer-events-none"
-                />
-                <input id="fld-1"
-                  type="password"
-                  placeholder="Re-enter your password"
-                  {...register("password")}
-                  className={`
-                    w-full pl-11 pr-4 py-3 rounded-xl text-sm
-                    bg-transparent border
-                    placeholder:text-muted-foreground/40
-                    focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/60
-                    transition-colors duration-200
-                    ${errors.password ? "border-destructive/70 focus:ring-destructive/30 focus:border-destructive" : "border-border/70"}
-                  `}
-                />
+            {/* Password field — only the credentials flow needs it */}
+            {!isGooglePending && (
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold tracking-wide text-muted-foreground/80 uppercase" htmlFor="fld-1">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock
+                    size={16}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/60 pointer-events-none"
+                  />
+                  <input id="fld-1"
+                    type="password"
+                    placeholder="Re-enter your password"
+                    {...register("password")}
+                    className={`
+                      w-full pl-11 pr-4 py-3 rounded-xl text-sm
+                      bg-transparent border
+                      placeholder:text-muted-foreground/40
+                      focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/60
+                      transition-colors duration-200
+                      ${errors.password ? "border-destructive/70 focus:ring-destructive/30 focus:border-destructive" : "border-border/70"}
+                    `}
+                  />
+                </div>
+                {errors.password && (
+                  <p className="text-xs text-destructive/80 mt-1">{errors.password.message}</p>
+                )}
               </div>
-              {errors.password && (
-                <p className="text-xs text-destructive/80 mt-1">{errors.password.message}</p>
-              )}
-            </div>
+            )}
 
             {/* TOTP Code field */}
             <div className="space-y-1.5">
@@ -231,13 +290,24 @@ function TwoFactorContent() {
 
           {/* Back link */}
           <div className="mt-6 text-center">
-            <Link
-              href="/authentication/login"
-              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors duration-150"
-            >
-              <ArrowLeft size={14} />
-              Back to sign in
-            </Link>
+            {isGooglePending ? (
+              <button
+                type="button"
+                onClick={() => signOut({ callbackUrl: "/authentication/login" })}
+                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors duration-150 cursor-pointer"
+              >
+                <ArrowLeft size={14} />
+                Sign out & use another account
+              </button>
+            ) : (
+              <Link
+                href="/authentication/login"
+                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors duration-150"
+              >
+                <ArrowLeft size={14} />
+                Back to sign in
+              </Link>
+            )}
           </div>
         </div>
       </motion.div>

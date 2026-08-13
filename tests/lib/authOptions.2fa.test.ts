@@ -189,3 +189,129 @@ describe('authOptions authorize - 2FA enforcement', () => {
     );
   });
 });
+
+describe('authOptions jwt callback - Google sign-in 2FA gate', () => {
+  let jwt: (
+    params: Record<string, unknown>
+  ) => Promise<Record<string, unknown>>;
+
+  beforeEach(async () => {
+    vi.clearAllMocks();
+    const { authOptions } = await import('@/lib/auth/authOptions');
+    jwt = (authOptions.callbacks as Record<string, unknown>)
+      .jwt as (params: Record<string, unknown>) => Promise<Record<string, unknown>>;
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  });
+
+  it('marks the session pending and mints NO tokens for a Google login on a 2FA account', async () => {
+    const { prisma } = await import('@/lib/prisma');
+    vi.mocked(prisma.user.findUnique).mockResolvedValue({
+      id: 'user-1',
+      email: 'test@example.com',
+      role: 'USER',
+      twoFactorEnabled: true,
+    } as never);
+
+    const token = await jwt({
+      token: {},
+      user: { id: 'user-1', email: 'test@example.com', role: 'USER' },
+      account: { provider: 'google' },
+    });
+
+    expect(token.twoFactorPending).toBe(true);
+    expect(token.backendToken).toBeUndefined();
+    expect(vi.mocked(prisma.user.findUnique)).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: 'user-1' } }),
+    );
+  });
+
+  it('does NOT gate Google logins when 2FA is disabled', async () => {
+    const { prisma } = await import('@/lib/prisma');
+    vi.mocked(prisma.user.findUnique).mockResolvedValue({
+      id: 'user-1',
+      email: 'test@example.com',
+      role: 'USER',
+      twoFactorEnabled: false,
+    } as never);
+
+    const token = await jwt({
+      token: {},
+      user: { id: 'user-1', email: 'test@example.com', role: 'USER' },
+      account: { provider: 'google' },
+    });
+
+    expect(token.twoFactorPending).not.toBe(true);
+  });
+
+  it('completes the exchange when the 2FA marker is verified on session update', async () => {
+    vi.stubEnv('NODE_ENV', 'development');
+    vi.stubEnv('NEXTAUTH_SECRET', 'test-secret');
+    const tokens = {
+      accessToken: 'AT-123',
+      refreshToken: 'RT-123',
+      sseToken: 'SSE-123',
+      accessTokenExpiry: 123,
+      refreshTokenExpiry: 456,
+    };
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        if (url.includes('/internal/2fa-check')) {
+          return { ok: true, json: async () => ({ success: true, verified: true }) };
+        }
+        if (url.includes('/auth/exchange')) {
+          return { ok: true, json: async () => tokens };
+        }
+        return { ok: false, json: async () => ({}) };
+      }),
+    );
+
+    const token = await jwt({
+      token: {
+        twoFactorPending: true,
+        id: 'user-1',
+        role: 'USER',
+        sessionId: 'sess-1',
+        email: 'test@example.com',
+      },
+      trigger: 'update',
+    });
+
+    expect(token.twoFactorPending).toBe(false);
+    expect(token.backendToken).toBe('AT-123');
+    expect(token.refreshToken).toBe('RT-123');
+    expect(token.sseToken).toBe('SSE-123');
+  });
+
+  it('stays pending when the 2FA marker is not yet verified', async () => {
+    vi.stubEnv('NODE_ENV', 'development');
+    vi.stubEnv('NEXTAUTH_SECRET', 'test-secret');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        if (url.includes('/internal/2fa-check')) {
+          return { ok: true, json: async () => ({ success: true, verified: false }) };
+        }
+        return { ok: false, json: async () => ({}) };
+      }),
+    );
+
+    const token = await jwt({
+      token: {
+        twoFactorPending: true,
+        id: 'user-1',
+        role: 'USER',
+        sessionId: 'sess-1',
+        email: 'test@example.com',
+      },
+      trigger: 'update',
+    });
+
+    expect(token.twoFactorPending).toBe(true);
+    expect(token.backendToken).toBeUndefined();
+  });
+});

@@ -5,7 +5,7 @@ import { stopBackgroundRefresh } from "@/lib/axios";
 export async function logout(logoutAll = false): Promise<void> {
   const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
   try {
-    // Per FRONTEND_AUTH_GUIDE.md §6: logout accepts an optional Bearer token
+    // logout accepts an optional Bearer token
     // (best-effort) and always returns 200. We attach it so the backend can
     // revoke the access token JTI. No cookies are sent (withCredentials:false).
     const session = await getSession();

@@ -45,6 +45,14 @@ export default function DashboardShell({
       return;
     }
 
+    // Google sign-in with 2FA: the session exists but has no backend tokens
+    // yet — route to the 2FA page instead of treating it as a dead session.
+    if (status === "authenticated" && session?.twoFactorPending) {
+      // react-doctor-disable-next-line react-doctor/nextjs-no-client-side-redirect
+      router.replace("/authentication/2fa");
+      return;
+    }
+
     if (status === "authenticated") {
       const hasBackendToken =
         !!session?.backendToken && session.backendToken.length > 10;
@@ -60,7 +68,7 @@ export default function DashboardShell({
         signOut({ callbackUrl: "/authentication/login" });
       }
     }
-  }, [status, session?.backendToken, router, pathname]);
+  }, [status, session?.backendToken, session?.twoFactorPending, router, pathname]);
 
   const {
     data: profile,

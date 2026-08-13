@@ -92,7 +92,7 @@ async function exchangeForTokens(
 // The credentials check lives in Next.js, but the Redis-backed account
 // lockout and the audit log live in the Express backend. These calls are
 // strictly best-effort: they must never block or break a login.
-async function callInternal<T = Record<string, unknown>>(
+export async function callInternal<T = Record<string, unknown>>(
   path: string,
   fields: Record<string, unknown>,
 ): Promise<T | null> {
@@ -341,36 +341,89 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 
   callbacks: {
-    async jwt({ token, user }) {
-    if (user && !token.backendToken) {
-      const sessionId = crypto.randomUUID();
-      token.id = user.id;
-      token.role = user.role ?? "USER";
-      token.sessionId = sessionId;
-
-      const tokens = await exchangeForTokens(
-        { id: user.id, email: user.email!, role: user.role ?? "USER" },
-        sessionId,
-      );
-
-      if (tokens) {
-        token.backendToken = tokens.accessToken;
-        token.backendTokenExpiry = tokens.accessTokenExpiry;
-        token.refreshToken = tokens.refreshToken;
-        token.refreshTokenExpiry = tokens.refreshTokenExpiry;
-        token.sseToken = tokens.sseToken;
-        console.log("✅ Exchange successful on sign-in");
-      } else {
-        token.backendToken = "";
-        token.backendTokenExpiry = 0;
-        token.refreshToken = "";
-        token.refreshTokenExpiry = 0;
-        token.sseToken = "";
-        console.error("⚠️ Exchange failed on sign-in — session degraded");
+    async jwt({ token, user, account, trigger }) {
+      // ─── Google sign-in 2FA gate ───────────────────────────────────────
+      // Google accounts with twoFactorEnabled get a PENDING session (no
+      // backend tokens). The 2FA page verifies the TOTP code via the
+      // backend, which mints a short-lived single-use Redis marker; the
+      // explicit session update() below consumes the marker and completes
+      // the token exchange. While pending the session carries no
+      // credentials, so it can never reach protected API calls — the client
+      // routes the user to /authentication/2fa instead. The marker is
+      // consumed only on trigger === "update" (never by session polls), so
+      // polling cannot race the verification, and a stale marker can never
+      // auto-complete a later sign-in.
+      if (token.twoFactorPending) {
+        if (trigger === "update") {
+          const check = await callInternal<{ verified?: boolean }>(
+            "/2fa-check",
+            { userId: token.id },
+          );
+          if (check?.verified) {
+            const tokens = await exchangeForTokens(
+              { id: token.id, email: token.email ?? "", role: token.role },
+              token.sessionId as string,
+            );
+            if (tokens) {
+              token.twoFactorPending = false;
+              token.backendToken = tokens.accessToken;
+              token.backendTokenExpiry = tokens.accessTokenExpiry;
+              token.refreshToken = tokens.refreshToken;
+              token.refreshTokenExpiry = tokens.refreshTokenExpiry;
+              token.sseToken = tokens.sseToken;
+              console.log("✅ Exchange successful after 2FA verification");
+            }
+            // Exchange failed → keep pending; the 2FA page detects the still-
+            // pending session and re-verifies (minting a fresh marker).
+          }
+        }
+        return token;
       }
 
-      return token;
-    }
+      if (user && !token.backendToken) {
+        const sessionId = crypto.randomUUID();
+        token.id = user.id;
+        token.role = user.role ?? "USER";
+        token.sessionId = sessionId;
+
+        // Google sign-in on an account with 2FA enabled → require the TOTP
+        // code before minting tokens (credentials sign-in already enforces
+        // TOTP inside authorize()).
+        if (account?.provider === "google") {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: { twoFactorEnabled: true },
+          });
+          if (dbUser?.twoFactorEnabled) {
+            token.twoFactorPending = true;
+            token.email = user.email ?? "";
+            return token;
+          }
+        }
+
+        const tokens = await exchangeForTokens(
+          { id: user.id, email: user.email!, role: user.role ?? "USER" },
+          sessionId,
+        );
+
+        if (tokens) {
+          token.backendToken = tokens.accessToken;
+          token.backendTokenExpiry = tokens.accessTokenExpiry;
+          token.refreshToken = tokens.refreshToken;
+          token.refreshTokenExpiry = tokens.refreshTokenExpiry;
+          token.sseToken = tokens.sseToken;
+          console.log("✅ Exchange successful on sign-in");
+        } else {
+          token.backendToken = "";
+          token.backendTokenExpiry = 0;
+          token.refreshToken = "";
+          token.refreshTokenExpiry = 0;
+          token.sseToken = "";
+          console.error("⚠️ Exchange failed on sign-in — session degraded");
+        }
+
+        return token;
+      }
 
     // Subsequent requests: silently refresh when near expiry
     const now = Date.now();
@@ -457,10 +510,12 @@ export const authOptions: NextAuthOptions = {
   async session({ session, token }) {
     session.user.id = token.id as string;
     session.user.role = token.role as string;
-    session.backendToken = token.backendToken as string;
+    // Pending-2FA sessions carry no backend credentials.
+    session.backendToken = token.twoFactorPending ? "" : (token.backendToken as string);
     session.sseToken = token.sseToken as string;
     session.sessionId = token.sessionId as string;
     session.error = token.error as string | undefined;
+    session.twoFactorPending = token.twoFactorPending === true;
     
     // Log session state for debugging
     if (process.env.NODE_ENV === "development") {
@@ -554,6 +609,7 @@ declare module "next-auth" {
     sseToken: string;
     sessionId: string;
     error?: string;
+    twoFactorPending?: boolean;
   }
   interface User {
     role?: string;
@@ -573,5 +629,6 @@ declare module "next-auth/jwt" {
     sseToken: string;
     lastRefreshAttempt?: number;
     error?: string;
+    twoFactorPending?: boolean;
   }
 }

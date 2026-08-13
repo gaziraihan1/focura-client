@@ -36,7 +36,7 @@ This document provides a comprehensive technical analysis of the **Focura Client
 
 ## 1. Executive Summary
 
-Focura is a **Next.js 16 App Router** + **React 19** productivity platform with **88 page routes**, **96 custom hooks** (refactored into focused sub-modules), **774 component files** (502 in Dashboard alone), **31 type definitions**, **124 test files**, **12 fully functional settings modules**, **code splitting on 5 major pages**, and **restricted image patterns**. The frontend is tightly coupled to a custom Express/Prisma backend via a hand-rolled auth + SSE + Axios interceptor stack.
+Focura is a **Next.js 16 App Router** + **React 19** productivity platform with **97 page routes**, **119 custom hooks** (refactored into focused sub-modules), **860 component files** (542 in Dashboard alone), **29 type definitions**, **865 test files**, **12 fully functional settings modules**, **code splitting on 5 major pages**, **restricted image patterns**, a **modularized Axios auth layer** (`lib/axios/`, 6 modules), and **2FA enforced on Google sign-in** (alongside credentials). The frontend is tightly coupled to a custom Express/Prisma backend via a hand-rolled auth + SSE + Axios interceptor stack.
 
 **Overall System Grade: S | Overall Rate: 9.5/10** (up from A+/9.5)
 
@@ -47,10 +47,10 @@ The project is **production-ready** for pilot deployments. All major features ar
 ## 2. Technical Stack (Verified)
 
 **Grade: A- | Rate: 8.5/10**
-*Justification: Modern, cutting-edge versions are present. Next.js bumped to 16.2.10. Redux removed. Dead dependencies cleaned (`react-sparklines`, `@playwright/test`). Clean dependency list.*
+*Justification: Modern, cutting-edge versions are present. Next.js bumped to 16.3.0. Redux removed. Dead dependencies cleaned (`react-sparklines`, `@playwright/test`, `@upstash/ratelimit`). `@upstash/redis` retained solely for the login rate limiter (see §6). Clean dependency list.*
 
 ### Frameworks & Core
-- **Next.js 16.2.10**: App Router with route groups (`(dashboard-pages)`, `(public-pages)`). Supports MDX via `@next/mdx`. Version bumped from 16.0.10.
+- **Next.js 16.3.0**: App Router with route groups (`(dashboard-pages)`, `(public-pages)`). Supports MDX via `@next/mdx`. Version bumped from 16.0.10.
 - **React 19.2.0**: Latest React with `react-jsx` transform.
 - **TypeScript 5.x**: `strict: true`, path alias `@/*` -> `./*`, incremental builds enabled.
 
@@ -71,7 +71,7 @@ The project is **production-ready** for pilot deployments. All major features ar
 - **NextAuth v4 + Prisma Adapter**: Session handling with custom `backendToken` exchange.
 - **Axios 1.13**: Custom instance with token cache, CSRF, and retry interceptors.
 - **Cloudinary**: Configured for image uploads.
-- **Upstash (Redis + Ratelimit)**: Frontend imports exist for rate-limiting config; runtime verification unclear.
+- **Upstash Redis**: `@upstash/redis` retained for the production login rate limiter in `lib/limiter.ts` (in-memory fallback in dev). `@upstash/ratelimit` removed. The backend consolidated to ioredis — this is the last Upstash consumer.
 
 ---
 
@@ -98,8 +98,8 @@ components/
   Themes/               # Custom theme components
   ui/                   # Custom-only (no shadcn) — 8 marketing components
 
-hooks/                  # 80 files (up from 74)
-lib/                    # Axios, auth, query client, API fetchers (21 files)
+hooks/                  # 119 files (117 root + 2 subdirs)
+lib/                    # 30 files: lib/axios/ (6 modules), lib/auth/, lib/security/, offline, react-query, API fetchers
 types/                  # 31 domain type files
 utils/                  # 15 domain-specific utils
 constants/              # 15 constants files
@@ -128,18 +128,20 @@ context/                # 3 providers: Query, Toast, WorkspacePlan
 
 ### Authentication & Session
 **Grade: S | Rate: 9.5/10** (up from A/8.0)
-*Industry-leading auth: proactive refresh, request queuing, multi-tab coordination, session timeouts, CSRF handling, security headers.*
+*Industry-leading auth: proactive refresh, request queuing, multi-tab coordination, session timeouts, CSRF handling, security headers, Google 2FA enforcement, modular client.*
 - NextAuth validates credentials -> HMAC proof -> Express backend -> RS256 JWT exchange.
 - Axios interceptor caches the `backendToken`, auto-refreshes on `TOKEN_EXPIRED`, handles `CSRF_VALIDATION_FAILED`, and handles `TOKEN_REPLAY_DETECTED` with dedicated retry logic.
 - **Request queuing during refresh**: When a refresh is in progress, subsequent TOKEN_EXPIRED requests are queued and replayed after refresh completes — prevents thundering herd.
 - **Proactive background refresh**: Token refresh scheduled 90 seconds before expiry via `scheduleBackgroundRefresh()`.
 - **Multi-tab coordination**: BroadcastChannel synchronizes refresh across tabs — only one tab refreshes at a time.
-- **Session timeout management**: 30-minute inactivity timeout with 5-minute warning; 7-day absolute timeout with 1-hour warning.
+- **Session timeout management**: 7-day inactivity timeout with 5-minute warning; 7-day absolute timeout with 1-hour warning.
 - **Activity tracking**: Each API request resets the inactivity timer via `updateActivity()`.
 - **CSRF protection**: Dedicated CSRF token with 55-minute cache; automatic retry on `CSRF_VALIDATION_FAILED`.
 - **Security headers in proxy**: X-Frame-Options DENY, X-Content-Type-Options nosniff, Referrer-Policy, X-XSS-Protection, HSTS (production), CSP (production), X-Robots-Tag noindex on protected routes.
 - **Admin role enforcement**: Proxy validates admin role for `/admin-dashboard/*` routes — non-admins redirected.
 - **Token version tracking**: Token version incremented on refresh to detect session fixation.
+- **Google sign-in 2FA enforcement**: accounts with `twoFactorEnabled` get a pending-2FA session (`twoFactorPending` in the `jwt` callback) carrying **zero backend tokens**. `POST /api/auth/verify-2fa` verifies the TOTP server-side, calls the backend internal `/2fa-verify` (HMAC-proof, rate-limited) to mint a **single-use** Redis marker, then `update()` re-runs the `jwt` callback which consumes the marker via `/2fa-check` and completes the token exchange. Fail-closed — an outage can never skip 2FA.
+- **Modular Axios client**: `lib/axios.ts` (901 lines) is now a 14-line barrel re-exporting 6 focused modules under `lib/axios/` (`types`, `instance`, `broadcast`, `refresh`, `session`, `client`) — identical public surface, zero import-site changes, no circular imports.
 - `serverApi()` in `lib/api/server.ts` provides a thin Node.js fetch wrapper for Server Components.
 
 **Previous Weak (now fixed)**: Token refresh was reactive — now proactive with request queuing and backend refresh endpoint call.
@@ -312,6 +314,7 @@ context/                # 3 providers: Query, Toast, WorkspacePlan
 - **Container/Presenter**: Hooks own queries/mutations; components render. This is enforced in most Task/Dashboard components.
 - **Pagination**: Cursor-based pagination used in notifications; offset-based in task lists.
 - **`next/dynamic` introduced**: `workspace-usage/page.tsx` uses dynamic imports for 4 heavy chart sections (`EngagementSection`, `StorageResourcesSection`, `FeatureUsageSection`, `GrowthInsightsSection`).
+- **Auth API routes**: `POST /api/auth/verify-2fa` added for the Google 2FA flow — server-side TOTP verification, then an HMAC `callInternal()` bridge to the backend's `/2fa-verify` / `/2fa-check`.
 
 ---
 
@@ -325,7 +328,7 @@ context/                # 3 providers: Query, Toast, WorkspacePlan
 - **HTTP-only + SameSite cookies** required for session (correctly configured on backend; trust assumed).
 - **React auto-escaping** provides baseline XSS protection.
 - **Zod validation** present in forms; API responses are typed with `ApiResponse<T>`.
-- **Rate limiting**: Upstash Redis config exists in `lib/limiter.ts`; actual invocation path requires backend coordination.
+- **Login rate limiting (verified)**: `limitLogin()` in `lib/limiter.ts` is invoked by `app/api/auth/register/route.ts` and `app/api/auth/[...nextauth]/route.ts` — 5 attempts/min per IP+email. Production uses Upstash Redis; dev falls back to in-memory. **Note**: the backend now enforces per-IP limits on `/exchange`/`/refresh`/`/logout` — the frontend limiter is defense-in-depth on top.
 
 ### What Is Assumed or Missing
 - **Route protection via `proxy.ts`**: Next.js 16 uses `proxy.ts` instead of `middleware.ts`. The project already has this implemented at `proxy.ts` (57 lines) with proper auth redirects, callback URL preservation, and debug headers in development.
@@ -364,25 +367,27 @@ context/                # 3 providers: Query, Toast, WorkspacePlan
 
 ## 8. Testing & Quality Gates
 
-**Grade: A | Rate: 9.0/10** (up from A-/8.5)
-*Massive test expansion: 52 -> 124 test files. Console.log cleaned from hooks.*
+**Grade: A+ | Rate: 9.5/10** (up from A-/8.5)
+*Explosive test expansion: 52 -> 124 -> 865 test files, driven by exhaustive component coverage. Console.log cleaned from hooks (2 registration-only logs remain).*
 
 ### Test Suite
 - **Framework**: Vitest + jsdom + React Testing Library + MSW.
-- **124 test files** (up from 52) covering hooks, utils, API routes, constants, lib utilities, and components.
+- **865 test files** (up from 124, +7x) covering hooks, utils, API routes, constants, lib utilities, and components.
 - **Test breakdown**:
-  - `hooks/`: 68 test files (up from ~20) — covers virtually every hook
-  - `lib/`: 19 test files — covers axios, auth, csrf, email, hash, limiter, prisma, query-client, sanitize, tokens, utils
-  - `utils/`: 15 test files — covers all utility modules
+  - `components/`: 694 test files (new) — exhaustive per-component coverage
+  - `hooks/`: 103 test files (up from 68) — covers virtually every hook
+  - `lib/`: 24 test files — covers axios (incl. `authOptions.2fa`), auth, csrf, email, hash, limiter, prisma, query-client, sanitize, tokens, utils
+  - `utils/`: 18 test files — covers all utility modules
   - `constants/`: 15 test files — covers all constant files
-  - `api/`: 5 test files — covers nextauth, register, forgot-password, reset-password, verify-email
-  - `components/`: 2 test files
-- **Coverage**: `utils/**` at 94.69% lines, `lib/**` at 71.87% lines. Overall targeted coverage is **90.81% lines** (70% minimum met).
+  - `api/`: 6 test files — covers nextauth, register, forgot-password, reset-password, verify-email, verify-2fa
+  - `context/`: 3 test files (new)
+  - `integration/`: 2 test files (new) — `CreateWorkspacePage`, `ProjectTasksPage`
+- **Coverage (last measured at the 124-file baseline)**: `utils/**` at 94.69% lines, `lib/**` at 71.87% lines, overall targeted **90.81% lines** (70% minimum met). Not re-measured after the component-test expansion.
 - **CI**: GitHub Actions runs `lint` -> `test:run` -> `build` on PR/push.
 
 ### Gaps
-- **Playwright**: Installed in devDependencies (`^1.61.1`) but **no config file, no test files, no `e2e/` directory**. Zero E2E coverage.
-- **Console logging**: `console.log` and `console.error` have been **cleaned from hooks/**. One remaining instance in `workspace-usage/page.tsx` (`console.log("Exporting CSV...")`) — a placeholder for CSV export functionality.
+- **E2E coverage**: Playwright is **not installed** — no config, no tests, no `e2e/` directory. Zero browser-level coverage remains the top testing gap.
+- **Console logging**: `console.log` removed from hooks except 2 registration-success logs in `useServiceWorker.ts`; 28 `console.error` calls remain on error paths (acceptable, but they bypass the toast/error infrastructure).
 
 ---
 
@@ -400,14 +405,15 @@ context/                # 3 providers: Query, Toast, WorkspacePlan
 - **NEW**: Console.log removed from hooks/ directory.
 - **NEW**: `next/dynamic` used for code splitting in workspace-usage page.
 - **NEW**: `WorkspacePlanContext` provides centralized plan-aware feature gating.
+- **NEW**: `lib/axios.ts` modularized into 6 focused modules (barrel re-export, zero import-site churn).
 
 ### What Was Removed
 - **Redux Toolkit & React Redux**: Successfully removed from `package.json`. No store, slices, providers, or `useSelector`/`useDispatch` usage existed. Global UI state is handled by React Context + local `useState`.
-- **Console.log in hooks**: All `console.log` and `console.error` statements removed from hooks/ directory.
+- **Console.log in hooks**: `console.log` removed from hooks/ except 2 registration logs in `useServiceWorker.ts`.
 
 ### What Remains Problematic
-- **Playwright**: Still installed as a devDependency but has no config, no tests, and no `e2e/` directory.
-- **`react-sparklines`**: Present in dependencies but no usage found in the component tree.
+- **Zero E2E coverage**: Playwright is not installed — no config, no tests, no `e2e/` directory.
+- **Upstash split-brain**: `lib/limiter.ts` still depends on `@upstash/redis` in production while the backend moved entirely to ioredis — two Redis stacks to operate.
 - **Unused shadcn/ui config**: `components.json` is configured for `@/components/ui`, but `components/ui/` only contains 8 custom marketing components and no actual shadcn primitives.
 
 ---
@@ -419,7 +425,7 @@ context/                # 3 providers: Query, Toast, WorkspacePlan
 |------|-----|
 | **Axios interceptor design** | Token cache, CSRF, replay protection, request queuing during refresh, and graceful retry logic are genuinely sophisticated for a frontend team. Grade: A (8.0) → S (9.5). |
 | **SSE notification layer** | Industry-leading SSE implementation with exponential backoff, connection status tracking, browser notifications, offline/online handling, visibility change detection, and heartbeat monitoring. Grade: A (8.0) → S (10.0). |
-| **Test culture** | 124 test files + CI integration + MSW mocking = solid foundation. Coverage doubled since last analysis. |
+| **Test culture** | 865 test files + CI integration + MSW mocking = solid foundation. Suite grew 7x since last analysis (694 component tests). |
 | **Rich domain model** | Tasks, projects, workspaces, meetings, focus sessions, announcements, labels, storage, analytics — the type system is comprehensive (31 type files). |
 | **Complete Settings System** | All 12 settings modules fully implemented with live forms (Account, Appearance, Notifications, Integrations, API & Tokens, Capacity & Schedule, Security, Workspace General, Members & Roles, Billing, Workspace Integrations, Branding). Workspace Settings upgraded to S (9.0) with ARIA tabs, type-to-confirm, skeleton loading, dirty state. |
 | **Admin dashboard** | Fully functional and visually polished with Recharts visualizations. |
@@ -431,6 +437,8 @@ context/                # 3 providers: Query, Toast, WorkspacePlan
 | **WorkspacePlanContext** | Centralized plan-aware feature gating prevents scattered `workspace.plan === "FREE"` checks. |
 | **Architecture** | Feature-based layout with route-level loading/error/not-found states, shared EmptyState/SkeletonLoader/CardSkeleton components, admin role enforcement in proxy. Grade: B+ (7.5) → S (9.0). |
 | **Task & Workspace Management** | Full optimistic UI with rollback on all mutations, batch operations, smart quota polling, retry with exponential backoff, comprehensive permission system, workspace role-based access. Grade: B+ (7.5) → A (9.0). |
+| **Modular Axios client** | 901-line `lib/axios.ts` split into 6 focused modules with a 14-line barrel — same public surface, zero import-site changes, no circular imports. |
+| **Google 2FA enforcement** | TOTP challenge enforced after Google sign-in for 2FA-enabled accounts — pending session with zero tokens, single-use Redis marker, fail-closed design. |
 | **Accessibility** | WCAG 2.1 AA fully met + AAA contrast ratios (7:1) — skip nav, focus traps on all 12 modals, ARIA annotations, combobox pattern, form labels, reduced-motion, forced-colors, global focus-visible ring, arrow key nav in sidebar + dropdowns, live announcer utility, FAQ ARIA regions, all icon buttons labeled. Grade: C (4.0) → S (10.0). |
 
 ### Weak
@@ -447,8 +455,8 @@ context/                # 3 providers: Query, Toast, WorkspacePlan
 | Module / Category | Grade | Rate | Key Strength | Critical Gap |
 | :--- | :---: | :---: | :--- | :--- |
 | **Tech Stack** | A- | 8.0 | Next 16.2 / React 19 / TS strict | Clean deps (react-sparklines removed) |
-| **Architecture** | S | 9.0 | Feature-based, 36 dirs, all hooks <250 lines, route-level loading/error/not-found, shared EmptyState/SkeletonLoader, admin role enforcement in proxy, typo fixed | Workspaces/ mega-module could be split further; types/types.ts monolith could be decomposed |
-| **Authentication** | S | 9.5 | Proactive refresh, request queuing, multi-tab BroadcastChannel, session timeouts (30min inactivity + 7day absolute), CSRF retry, security headers (HSTS, CSP, X-Frame-Options), admin role enforcement, token version tracking | None — production-ready |
+| **Architecture** | S | 9.0 | Feature-based, 36 dirs, all hooks <250 lines, route-level loading/error/not-found, shared EmptyState/SkeletonLoader, admin role enforcement in proxy, lib/axios/ modularized, typo fixed | Workspaces/ mega-module could be split further; types/types.ts monolith could be decomposed |
+| **Authentication** | S | 9.5 | Proactive refresh, request queuing, multi-tab BroadcastChannel, session timeouts (7-day inactivity + 7-day absolute), CSRF retry, security headers (HSTS, CSP, X-Frame-Options), admin role enforcement, token version tracking, Google 2FA enforcement, modular lib/axios/ (6 modules) | None — production-ready |
 | **Real-time** | S | 10.0 | SSE + exponential backoff with jitter + connection status tracking + browser notifications + offline/online detection + visibility change handling + heartbeat monitoring + persistent preferences | Industry-leading; optional WebSocket upgrade for bidirectional communication |
 | **Settings** | S | 9.0 | All 12 settings modules fully implemented with live forms, ARIA tab pattern, type-to-confirm deletion, skeleton loading, dirty state tracking, color picker with radiogroup ARIA | Needs integration tests for API-backed forms |
 | **Task & Workspace** | A | 9.0 | Full optimistic UI with rollback on all mutations, batch operations, smart quota polling, retry with backoff, permission system, workspace role-based access | Optional: conflict detection for concurrent edits |
@@ -459,9 +467,9 @@ context/                # 3 providers: Query, Toast, WorkspacePlan
 | **Project Analytics** | A- | 8.0 | 8 chart components, member leaderboard | New module, battle-testing needed |
 | **Public Pages** | A- | 8.5 | 20+ marketing/docs pages | No i18n |
 | **API Layer** | A- | 8.0 | Type-safe, 6 HTTP verbs, upload, dynamic imports | Could add more code splitting to smaller pages |
-| **Security** | A+ | 9.0 | Replay/CSRF/token handling, proxy.ts, restricted image patterns | No E2E tests |
+| **Security** | A+ | 9.0 | Replay/CSRF/token handling, proxy.ts, restricted image patterns, login rate limiting (prod) | No E2E tests; frontend/backend Redis split-brain (Upstash vs ioredis) |
 | **Performance** | A | 8.5 | Code splitting on 5 major pages, loading skeletons, restricted images | No PWA |
-| **Testing** | A | 9.0 | 124 test files + CI, 90.81% coverage | Zero E2E tests |
+| **Testing** | A+ | 9.5 | 865 test files + CI (694 component tests) | Zero E2E tests |
 | **Eng. Standards** | A+ | 9.0 | Console cleaned, dynamic imports, plan context, all hooks refactored, clean config | Clean architecture |
 | **Accessibility** | S | 10.0 | WCAG 2.1 AA fully met + AAA contrast (7:1): skip nav, focus traps on all 12 modals, ARIA on all modals, combobox on SearchModal, form labels, reduced-motion, aria-live + live announcer utility, arrow key nav in sidebar + dropdowns, forced-colors, global focus-visible ring, FAQ ARIA regions, all icon buttons labeled | Industry-leading; optional third-party audit for AAA certification |
 
@@ -562,17 +570,18 @@ None required for production. Optional enhancements for full WCAG 2.1 AAA certif
 
 | Metric | Previous | Current | Change |
 |--------|----------|---------|--------|
-| **Next.js version** | 16.0.10 | 16.2.10 | +0.2.0 |
-| **Page routes** | 66 | 88 | +22 (+33%) |
-| **Hooks** | 74 | 80 | +6 (+8%) |
-| **Component files** | ~750 | 774 | +24 (+3%) |
-| **Dashboard components** | 488 | 502 | +14 (+3%) |
-| **Type files** | 31 | 31 | unchanged |
-| **Test files** | 52 | 124 | +72 (+138%) |
+| **Next.js version** | 16.0.10 | 16.3.0 | +0.3.0 |
+| **Page routes** | 66 | 97 | +31 (+47%) |
+| **Hooks** | 74 | 119 | +45 (+61%) |
+| **Component files** | ~750 | 860 | +110 (+15%) |
+| **Dashboard components** | 488 | 542 | +54 (+11%) |
+| **Type files** | 31 | 29 | -2 (consolidated) |
+| **Test files** | 52 | 865 | +813 (+1563%) |
 | **Prisma models** | unknown | 59 | new data |
 | **Context providers** | 2 | 3 | +1 (WorkspacePlanContext) |
-| **Console.log in hooks** | present | cleaned | removed |
+| **Console.log in hooks** | present | 2 remaining | cleaned |
 | **next/dynamic usage** | 0 | 1 page (4 imports) | introduced |
+| **lib/axios.ts** | monolith | 901 -> 14-line barrel | modularized into 6 modules |
 
 ### New Features Shipped
 1. **Workspace Usage Analytics** — Full analytics module with plan gating, code splitting, 14 components, and `useWorkspaceUsage` hook
@@ -583,6 +592,10 @@ None required for production. Optional enhancements for full WCAG 2.1 AAA certif
 6. **Project Analytics** — 8 chart components for project health, member leaderboard, deadline risk
 7. **Team Tasks** — 13 components for team-level task management
 8. **AI Implementation Guide** — `AI_IMPLEMENTATION_GUIDE.md` with 7 planned AI features
+9. **Google 2FA enforcement** — 2FA-required TOTP challenge after Google sign-in (pending-2FA session → `/api/auth/verify-2fa` → single-use Redis marker → exchange completes on `update()`)
+10. **Modular Axios client** — `lib/axios.ts` (901 lines) → 14-line barrel + 6 modules under `lib/axios/`
+11. **Canonical auth docs** — frontend `AUTHENTICATION.md` → pointer stub to backend `AUTHENTICATION.md`; `FRONTEND_AUTH_GUIDE.md` retired
+12. **Component test expansion** — 694 component test files; suite grew 124 → 865 files
 
 ### New Hooks
 | Hook | Lines | Purpose |
@@ -701,7 +714,7 @@ None required for production. Optional enhancements for full WCAG 2.1 AAA certif
 
 ## 14. Final Assessment & Recommendations
 
-Focura's frontend has reached **A+ quality** with all major features fully implemented and architectural debt resolved. The complete settings system (12 modules), workspace analytics, storage management, calendar views, comprehensive testing (124 test files), refactored hooks (all <250 lines), code splitting on 5 major pages, restricted image patterns, and clean dependency list position it as **production-ready for pilot deployments**.
+Focura's frontend has reached **A+ quality** with all major features fully implemented and architectural debt resolved. The complete settings system (12 modules), workspace analytics, storage management, calendar views, comprehensive testing (865 test files), refactored hooks (all <250 lines), code splitting on 5 major pages, restricted image patterns, a modularized Axios auth layer, Google 2FA enforcement, and a clean dependency list position it as **production-ready for pilot deployments**.
 
 ### Immediate Priorities (Do First)
 1. ~~**Accessibility remediation (WCAG 2.1 AA)**~~ **DONE** — Skip navigation, focus traps, modal ARIA, form labels, reduced-motion, and aria-live regions implemented. Remaining P2 items in next sprint.
@@ -717,4 +730,4 @@ Focura's frontend has reached **A+ quality** with all major features fully imple
 7. **Accessibility AAA certification** (optional): Third-party audit with assistive technology testing for formal WCAG 2.1 AAA certification.
 8. **AI Integration**: Per `AI_IMPLEMENTATION_GUIDE.md`, 7 AI features are planned (task suggestions, breakdown, daily recommendations, natural language search, description generation, workload analysis, project health scoring). Start with Features 1 and 5 (highest impact, lowest complexity).
 
-**Bottom Line**: Strong foundation with comprehensive quality improvements. The test culture (124 files), new analytics modules, plan-gating infrastructure, refactored hooks, code splitting, and restricted image policies position Focura well for scaling. Architecture has been elevated to S (9.0) with route-level loading/error/not-found states, shared EmptyState/SkeletonLoader components, admin role enforcement in proxy, and typo fixes. Accessibility has been comprehensively addressed to WCAG 2.1 Level AA with AAA contrast ratios (7:1) — all 12 WCAG criteria pass with skip navigation, focus traps on all 12 modals, ARIA annotations on all interactive elements, combobox pattern on SearchModal, form label associations, reduced-motion support, forced-colors support, global focus-visible ring, live announcer utility for dynamic content, FAQ accordions with proper ARIA regions, arrow key navigation in sidebar and dropdowns, and all icon buttons labeled. The accessibility grade has improved from C (4.0) to S (10.0). The real-time notification system has been upgraded to S (10.0) with industry-leading features: exponential backoff with jitter, connection status tracking, browser notifications, offline/online detection, visibility change handling, and heartbeat monitoring. Task & Workspace Management has been upgraded to A (9.0) with full optimistic UI on all mutations, batch operations, smart quota polling, retry with exponential backoff, and comprehensive permission system. Workspace Usage Analytics has been upgraded to A (9.0) with date range filtering, CSV export, section error boundaries, skeleton loading, and ARIA labels. Only E2E testing remains as an immediate priority.
+**Bottom Line**: Strong foundation with comprehensive quality improvements. The test culture (865 files), new analytics modules, plan-gating infrastructure, refactored hooks, code splitting, restricted image policies, modularized Axios auth, and Google 2FA enforcement position Focura well for scaling. Architecture has been elevated to S (9.0) with route-level loading/error/not-found states, shared EmptyState/SkeletonLoader components, admin role enforcement in proxy, and typo fixes. Accessibility has been comprehensively addressed to WCAG 2.1 Level AA with AAA contrast ratios (7:1) — all 12 WCAG criteria pass with skip navigation, focus traps on all 12 modals, ARIA annotations on all interactive elements, combobox pattern on SearchModal, form label associations, reduced-motion support, forced-colors support, global focus-visible ring, live announcer utility for dynamic content, FAQ accordions with proper ARIA regions, arrow key navigation in sidebar and dropdowns, and all icon buttons labeled. The accessibility grade has improved from C (4.0) to S (10.0). The real-time notification system has been upgraded to S (10.0) with industry-leading features: exponential backoff with jitter, connection status tracking, browser notifications, offline/online detection, visibility change handling, and heartbeat monitoring. Task & Workspace Management has been upgraded to A (9.0) with full optimistic UI on all mutations, batch operations, smart quota polling, retry with exponential backoff, and comprehensive permission system. Workspace Usage Analytics has been upgraded to A (9.0) with date range filtering, CSV export, section error boundaries, skeleton loading, and ARIA labels. Only E2E testing remains as an immediate priority.
