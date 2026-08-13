@@ -21,6 +21,7 @@ export default defineConfig({
         'utils/**/*.{ts,tsx}',
         'lib/**/*.{ts,tsx}',
         'components/**/*.{ts,tsx}',
+        'hooks/**/*.{ts,tsx}',
       ],
       exclude: [
         '**/node_modules/**',
@@ -36,7 +37,6 @@ export default defineConfig({
         'lib/axios.ts',
         'lib/email.ts',
         'lib/error/**',
-        'hooks/**/*.{ts,tsx}',
       ],
     },
     env: {
