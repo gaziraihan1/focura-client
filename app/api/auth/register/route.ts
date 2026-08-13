@@ -42,8 +42,15 @@ export async function POST(req: Request) {
 
     const { name, email, password } = body;
 
+    // Trusted IP: the RIGHTMOST X-Forwarded-For entry is the one the hosting
+    // proxy appended; earlier entries are client-spoofable.
     const ip =
-      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers
+        .get("x-forwarded-for")
+        ?.split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .pop() ||
       req.headers.get("x-real-ip") ||
       "unknown";
 

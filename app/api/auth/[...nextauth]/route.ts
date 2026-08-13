@@ -29,11 +29,16 @@ function sessionErrorResponse(err: unknown) {
 }
 
 function getClientIp(req: Request): string {
+  // Behind the hosting proxy, X-Forwarded-For is appended hop by hop — the
+  // RIGHTMOST entry is the one the trusted proxy wrote, so earlier
+  // (client-spoofable) entries must not win. Mirrors the backend's
+  // trust-proxy logic.
   const header =
     req.headers.get("x-forwarded-for") ||
     req.headers.get("x-real-ip") ||
     "";
-  return header.split(",")[0]?.trim() || "unknown";
+  const entries = header.split(",").map((s) => s.trim()).filter(Boolean);
+  return entries[entries.length - 1] || "unknown";
 }
 
 function isLoginPath(path: string): boolean {

@@ -1,6 +1,37 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import * as argon2 from "argon2";
+import crypto from "crypto";
+
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
+
+// Ask the Express backend to revoke every session after a password reset.
+// Best-effort and fire-and-forget: the password has already been rotated, so
+// the reset must succeed even if the backend is unreachable (lingering
+// sessions then die with their 7-day token/session expiry).
+function revokeAllSessions(email: string): void {
+  // Unit tests have no backend to talk to — skip the network call entirely.
+  if (process.env.NODE_ENV === "test") return;
+  void (async () => {
+    try {
+      const timestamp = Date.now();
+      const signature = crypto
+        .createHmac("sha256", process.env.NEXTAUTH_SECRET!)
+        .update(JSON.stringify({ email }))
+        .digest("hex");
+      await fetch(`${BACKEND_URL}/api/v1/internal/revoke-sessions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, timestamp, signature }),
+        signal: AbortSignal.timeout(4000),
+      });
+    } catch (err) {
+      if (process.env.NODE_ENV !== "test") {
+        console.error("Failed to revoke sessions after password reset:", err);
+      }
+    }
+  })();
+}
 
 export async function POST(req: Request) {
   try {
@@ -51,6 +82,8 @@ export async function POST(req: Request) {
     await prisma.passwordResetToken.delete({
       where: { token },
     });
+
+    revokeAllSessions(resetToken.email);
 
     return NextResponse.json({
       success: true,

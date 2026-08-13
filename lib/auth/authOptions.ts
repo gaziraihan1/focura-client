@@ -88,6 +88,60 @@ async function exchangeForTokens(
   }
 }
 
+// ─── Internal backend bridge (login audit + account lockout) ────────────────
+// The credentials check lives in Next.js, but the Redis-backed account
+// lockout and the audit log live in the Express backend. These calls are
+// strictly best-effort: they must never block or break a login.
+async function callInternal<T = Record<string, unknown>>(
+  path: string,
+  fields: Record<string, unknown>,
+): Promise<T | null> {
+  // Unit tests have no backend to talk to — skip the network call entirely.
+  if (process.env.NODE_ENV === "test") return null;
+  try {
+    const timestamp = Date.now();
+    // Same HMAC scheme as the /exchange proof: signed with NEXTAUTH_SECRET,
+    // the shared secret the backend already uses to verify exchange requests.
+    const signature = crypto
+      .createHmac("sha256", process.env.NEXTAUTH_SECRET!)
+      .update(JSON.stringify(fields))
+      .digest("hex");
+    const res = await fetch(`${BACKEND_URL}/api/v1/internal${path}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...fields, timestamp, signature }),
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!res.ok) return null;
+    return (await res.json()) as T;
+  } catch {
+    return null; // never fail a login over an internal audit/lockout call
+  }
+}
+
+type FailedAttemptResult = {
+  success?: boolean;
+  locked?: boolean;
+  unlocksAt?: string;
+  attempts?: number;
+};
+
+/** Record a failed login with the backend and surface the lock status (if any). */
+async function recordLoginFailure(
+  email: string,
+): Promise<FailedAttemptResult | null> {
+  const result = await callInternal<FailedAttemptResult>("/failed-attempt", {
+    email,
+  });
+  void callInternal("/audit", {
+    event: "LOGIN_FAILED",
+    email,
+    reason: "Invalid credentials",
+    meta: { attempts: result?.attempts ?? 0 },
+  });
+  return result;
+}
+
 
 async function silentRefresh(
   sessionId: string,
@@ -191,6 +245,11 @@ export const authOptions: NextAuthOptions = {
           },
         });
         if (!user || !user.password) {
+          // Timing-safe dummy verify prevents user enumeration. Deliberately
+          // NOT counted against the lockout: recording failures for accounts
+          // that don't exist (or have no password) would let an attacker lock
+          // out a real account by spamming its email. IP-based rate limiting
+          // already covers unknown-account brute force.
           await argon2.verify(DUMMY_HASH, "invalid");
           throw new Error("Invalid credentials.");
         }
@@ -200,7 +259,27 @@ export const authOptions: NextAuthOptions = {
           user.password,
           credentials.password,
         );
-        if (!isValid) throw new Error("Invalid credentials.");
+        if (!isValid) {
+          const lock = await recordLoginFailure(email);
+          if (lock?.locked) {
+            const unlocksAt = Date.parse(lock.unlocksAt ?? "") || Date.now();
+            const minutes = Math.max(
+              1,
+              Math.ceil((unlocksAt - Date.now()) / 60_000),
+            );
+            // This attempt was blocked by an active lock — record it.
+            void callInternal("/audit", {
+              event: "LOGIN_BLOCKED",
+              email,
+              reason: "Account locked",
+              meta: { unlocksAt: lock.unlocksAt ?? null },
+            });
+            throw new Error(
+              `Account temporarily locked due to too many failed attempts. Please try again in ${minutes} minute${minutes === 1 ? "" : "s"}.`,
+            );
+          }
+          throw new Error("Invalid credentials.");
+        }
 
         // ─── 2FA enforcement ────────────────────────────────────────────
         if (user.twoFactorEnabled) {
@@ -227,6 +306,16 @@ export const authOptions: NextAuthOptions = {
           where: { id: user.id },
           data: { lastLoginAt: new Date() },
         });
+
+        // Login audit + lockout reset — best-effort, fire-and-forget.
+        void callInternal("/clear-attempts", { email });
+        void callInternal("/audit", {
+          event: "LOGIN_SUCCESS",
+          email,
+          userId: user.id,
+          reason: "credentials",
+        });
+
         const { password: _pw, twoFactorSecret: _secret, ...safeUser } = user;
         return safeUser;
       },
@@ -419,6 +508,15 @@ export const authOptions: NextAuthOptions = {
           // ↑ New users: adapter creates them; emailVerified is handled
           //   by the `linkAccount` event which already fires for Google.
           //   No else branch needed — the broken update() is removed.
+
+          // Best-effort login audit + lockout reset for OAuth sign-ins.
+          void callInternal("/clear-attempts", { email: user.email! });
+          void callInternal("/audit", {
+            event: "LOGIN_SUCCESS",
+            email: user.email!,
+            userId: user.id,
+            reason: "google_oauth",
+          });
 
           return true;
         } catch (err) {
