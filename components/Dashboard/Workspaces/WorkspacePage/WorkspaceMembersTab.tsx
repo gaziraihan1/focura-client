@@ -163,7 +163,7 @@ export function WorkspaceMembersTab({
                   </div>
 
                   <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-                    {member.role !== "OWNER" && isAdmin ? (
+                    {isOwner && member.role !== "OWNER" ? (
                       <select aria-label="Select an option"
                         value={member.role}
                         onChange={(e) =>
@@ -188,7 +188,10 @@ export function WorkspaceMembersTab({
                       </span>
                     )}
 
-                    {member.role !== "OWNER" && isAdmin && (
+                    {(isOwner
+                      ? member.role !== "OWNER"
+                      : isAdmin &&
+                        (member.role === "MEMBER" || member.role === "GUEST")) && (
                       <button
                         onClick={() => handleRemoveMember(member.id)}
                         disabled={removeMember.isPending}

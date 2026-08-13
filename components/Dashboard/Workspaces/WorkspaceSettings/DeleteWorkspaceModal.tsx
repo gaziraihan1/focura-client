@@ -72,8 +72,9 @@ export function DeleteWorkspaceModal({
         </div>
 
         <p id="delete-workspace-desc" className="text-muted-foreground mb-4">
-          This will permanently delete <strong>{workspaceName}</strong> and all
-          its projects, tasks, and data. This action cannot be undone.
+          This will remove <strong>{workspaceName}</strong> and its content from
+          your dashboard. Your data is kept so it can be restored by Focura
+          support if this was a mistake.
         </p>
 
         {/* Type-to-confirm */}
@@ -102,14 +103,14 @@ export function DeleteWorkspaceModal({
             onClick={onDelete}
             disabled={isDeleting || !isConfirmed}
             className="flex-1 px-4 py-3 rounded-lg bg-red-500 text-white hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            aria-label={`Delete ${workspaceName} permanently`}
+            aria-label={`Delete ${workspaceName}`}
           >
             {isDeleting ? (
               <Loader2 className="animate-spin" size={18} />
             ) : (
               <Trash2 size={18} />
             )}
-            Delete Permanently
+            Delete Workspace
           </button>
           <button
             onClick={onClose}

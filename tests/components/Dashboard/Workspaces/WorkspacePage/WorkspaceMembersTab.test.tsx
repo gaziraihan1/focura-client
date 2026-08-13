@@ -55,7 +55,7 @@ describe('WorkspaceMembersTab', () => {
     workspaceId: 'ws-1',
     members,
     isAdmin: true,
-    isOwner: false,
+    isOwner: true,
     onInviteClick: vi.fn(),
   }
 
@@ -131,10 +131,15 @@ describe('WorkspaceMembersTab', () => {
     expect(svgs.length).toBeGreaterThan(0)
   })
 
-  it('shows role select for non-owner members when admin', () => {
+  it('shows role select for non-owner members when owner', () => {
     render(<WorkspaceMembersTab {...defaultProps} />)
     const selects = screen.getAllByRole('combobox')
     expect(selects.length).toBe(3) // Bob, null-name member, Dave
+  })
+
+  it('does not show role select for admins (role changes are owner-only)', () => {
+    render(<WorkspaceMembersTab {...defaultProps} isOwner={false} isAdmin={true} />)
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument()
   })
 
   it('shows role badge for non-admin owners', () => {
@@ -178,10 +183,17 @@ describe('WorkspaceMembersTab', () => {
     expect(mockRemove).not.toHaveBeenCalled()
   })
 
-  it('shows remove buttons for non-owner members when admin', () => {
+  it('shows remove buttons for all non-owner members when owner', () => {
     render(<WorkspaceMembersTab {...defaultProps} />)
     const removeButtons = screen.getAllByLabelText('Remove member')
     expect(removeButtons.length).toBe(3) // Bob, null-name, Dave
+  })
+
+  it('shows remove buttons for MEMBER and GUEST only to admins (not ADMINs)', () => {
+    render(<WorkspaceMembersTab {...defaultProps} isOwner={false} isAdmin={true} />)
+    const removeButtons = screen.getAllByLabelText('Remove member')
+    // Bob (ADMIN) is not removable by an admin — only the null-name MEMBER and Dave GUEST
+    expect(removeButtons.length).toBe(2)
   })
 
   it('hides remove buttons for OWNER', () => {

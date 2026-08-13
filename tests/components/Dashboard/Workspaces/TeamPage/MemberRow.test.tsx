@@ -157,7 +157,7 @@ describe('MemberRow', () => {
         <MemberRow
           member={member}
           isCurrentUser={false}
-          canManage={false}
+          canChangeRoles={false}
           isOnlyOwner={false}
           onRoleChange={vi.fn()}
           {...overrides}
@@ -185,13 +185,13 @@ describe('MemberRow', () => {
     expect(screen.queryByText('(you)')).not.toBeInTheDocument()
   })
 
-  it('shows RoleBadge when cannot manage', () => {
-    renderRow({ canManage: false })
+  it('shows RoleBadge when cannot change roles', () => {
+    renderRow({ canChangeRoles: false })
     expect(screen.getByText('Member')).toBeInTheDocument()
   })
 
-  it('shows RoleDropdown when can manage', () => {
-    renderRow({ canManage: true })
+  it('shows RoleDropdown when owner can change roles', () => {
+    renderRow({ canChangeRoles: true })
     expect(screen.getByRole('combobox')).toBeInTheDocument()
   })
 
@@ -204,24 +204,24 @@ describe('MemberRow', () => {
 
   it('calls onRoleChange with correct args when dropdown changes', () => {
     const onRoleChange = vi.fn()
-    renderRow({ canManage: true, onRoleChange })
+    renderRow({ canChangeRoles: true, onRoleChange })
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'ADMIN' } })
     expect(onRoleChange).toHaveBeenCalledWith('m-1', 'ADMIN')
   })
 
   it('disables dropdown for current user', () => {
-    renderRow({ canManage: true, isCurrentUser: true })
+    renderRow({ canChangeRoles: true, isCurrentUser: true })
     expect(screen.getByRole('combobox')).toBeDisabled()
   })
 
   it('disables dropdown for only owner', () => {
     const ownerMember = { ...member, role: 'OWNER' as const }
-    renderRow({ canManage: true, isOnlyOwner: true, member: ownerMember })
+    renderRow({ canChangeRoles: true, isOnlyOwner: true, member: ownerMember })
     expect(screen.getByRole('combobox')).toBeDisabled()
   })
 
   it('enables dropdown for non-current user who is not only owner', () => {
-    renderRow({ canManage: true, isCurrentUser: false, isOnlyOwner: false })
+    renderRow({ canChangeRoles: true, isCurrentUser: false, isOnlyOwner: false })
     expect(screen.getByRole('combobox')).not.toBeDisabled()
   })
 })

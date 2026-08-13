@@ -10,7 +10,8 @@ import { WorkspaceMemberRow }  from '@/hooks/useTeamPage';
 interface MembersTabProps {
   members: WorkspaceMemberRow[];
   currentUserId: string | null;
-  canManage: boolean;
+  /** Role changes are OWNER-only on the backend (updateMemberRole). */
+  canChangeRoles: boolean;
   onRoleChange: (memberId: string, role: WorkspaceRoleOption) => void;
 }
 
@@ -22,7 +23,7 @@ const ROLE_FILTERS: { label: string; value: string | null }[] = [
   { label: 'Guests',  value: 'GUEST' },
 ];
 
-export function MembersTab({ members, currentUserId, canManage, onRoleChange }: MembersTabProps) {
+export function MembersTab({ members, currentUserId, canChangeRoles, onRoleChange }: MembersTabProps) {
   const [search, setSearch]         = useState('');
   const [roleFilter, setRoleFilter] = useState<string | null>(null);
 
@@ -121,7 +122,7 @@ export function MembersTab({ members, currentUserId, canManage, onRoleChange }: 
                     key={member.id}
                     member={member}
                     isCurrentUser={member.userId === currentUserId}
-                    canManage={canManage}
+                    canChangeRoles={canChangeRoles}
                     isOnlyOwner={member.role === 'OWNER' && ownerCount === 1}
                     onRoleChange={onRoleChange}
                   />

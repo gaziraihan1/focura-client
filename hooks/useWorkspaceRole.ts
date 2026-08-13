@@ -13,7 +13,8 @@ export function useWorkspaceRole(workspaceId?: string | null): WorkspaceRoleResu
     if (!workspaceId || !userId) {
       return {
         role: null, isOwner: false, isAdmin: false, isMember: false, isGuest: false,
-        canManageWorkspace: false, canManageMembers: false, canCreateProjects: false,
+        canManageWorkspace: false, canManageMembers: false, canChangeRoles: false,
+        canCreateProjects: false,
         canEditProjects: false, canDeleteProjects: false, canInviteMembers: false,
         canRemoveMembers: false, canEditSettings: false, canDeleteWorkspace: false,
         canViewContent: false, currentMember: null, userId: userId || null,
@@ -31,6 +32,7 @@ export function useWorkspaceRole(workspaceId?: string | null): WorkspaceRoleResu
     return {
       role, isOwner, isAdmin, isMember, isGuest,
       canManageWorkspace: isOwner || isAdmin, canManageMembers: isOwner || isAdmin,
+      canChangeRoles: isOwner,
       canCreateProjects: isOwner || isAdmin, canEditProjects: isOwner || isAdmin,
       canDeleteProjects: isOwner || isAdmin, canInviteMembers: isOwner || isAdmin,
       canRemoveMembers: isOwner || isAdmin, canEditSettings: isOwner,
@@ -62,7 +64,8 @@ export function useWorkspaceRoleFromWorkspace(workspaceSlug: string): WorkspaceR
   return useMemo(() => {
     const empty = {
       role: null, isOwner: false, isAdmin: false, isMember: false, isGuest: false,
-      canManageWorkspace: false, canManageMembers: false, canCreateProjects: false,
+      canManageWorkspace: false, canManageMembers: false, canChangeRoles: false,
+      canCreateProjects: false,
       canEditProjects: false, canDeleteProjects: false, canInviteMembers: false,
       canRemoveMembers: false, canEditSettings: false, canDeleteWorkspace: false,
       canViewContent: false, currentMember: null, userId: userId || null,
@@ -81,6 +84,7 @@ export function useWorkspaceRoleFromWorkspace(workspaceSlug: string): WorkspaceR
     return {
       role, isOwner, isAdmin, isMember, isGuest,
       canManageWorkspace: isOwner || isAdmin, canManageMembers: isOwner || isAdmin,
+      canChangeRoles: isOwner,
       canCreateProjects: isOwner || isAdmin, canEditProjects: isOwner || isAdmin,
       canDeleteProjects: isOwner || isAdmin, canInviteMembers: isOwner || isAdmin,
       canRemoveMembers: isOwner || isAdmin, canEditSettings: isOwner,

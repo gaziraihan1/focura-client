@@ -33,9 +33,9 @@ export function useCreateWorkspacePage() {
     isPublic: false,
   });
 
-  // BUG FIX: selectedPlan is kept separate from formData.
-  // The backend always receives plan: "FREE" on creation.
-  // The selected plan only controls post-creation redirect logic.
+  // selectedPlan is kept separate from formData — the backend never accepts
+  // a plan on creation (workspaces always start FREE). The selected plan only
+  // controls post-creation redirect logic (routing Pro intent to upgrade).
   const [selectedPlan, setSelectedPlan] = useState<PlanChoice>("FREE");
   const [selectedType, setSelectedType] = useState("team");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -67,10 +67,9 @@ export function useCreateWorkspacePage() {
     }
 
     try {
-      // BUG FIX: Always send plan: "FREE" — the user cannot get Pro without paying.
+      // The backend hard-defaults new workspaces to FREE — no plan is sent.
       const workspace = await createWorkspace.mutateAsync({
         ...formData,
-        plan: "FREE" as const,
       });
 
       // Redirect to billing upgrade only if user *intended* Pro — they still need to pay.

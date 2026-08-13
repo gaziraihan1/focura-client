@@ -23,7 +23,7 @@ describe('MembersTab', () => {
   const defaultProps = {
     members: mockMembers,
     currentUserId: 'u-1',
-    canManage: true,
+    canChangeRoles: true,
     onRoleChange: vi.fn(),
   }
 

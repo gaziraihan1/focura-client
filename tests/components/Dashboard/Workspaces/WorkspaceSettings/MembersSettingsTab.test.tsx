@@ -38,6 +38,7 @@ describe('MembersSettingsTab', () => {
   const defaultProps = {
     members,
     isAdmin: true,
+    isOwner: true,
     isRemovingMember: false,
     onInviteClick: vi.fn(),
     onRemoveMember: vi.fn(),
@@ -143,17 +144,31 @@ describe('MembersSettingsTab', () => {
   })
 
   it('does not show role select for non-admin viewers', () => {
-    render(<MembersSettingsTab {...defaultProps} isAdmin={false} />)
+    render(<MembersSettingsTab {...defaultProps} isAdmin={false} isOwner={false} />)
     expect(screen.queryByRole('combobox')).not.toBeInTheDocument()
   })
 
   it('shows role as span for non-admin viewers', () => {
-    render(<MembersSettingsTab {...defaultProps} isAdmin={false} />)
+    render(<MembersSettingsTab {...defaultProps} isAdmin={false} isOwner={false} />)
     expect(screen.getByText('ADMIN')).toBeInTheDocument()
     expect(screen.getByText('MEMBER')).toBeInTheDocument()
     expect(screen.getByText('GUEST')).toBeInTheDocument()
     // OWNER is also shown
     expect(screen.getByText('OWNER')).toBeInTheDocument()
+  })
+
+  it('does not show role select to admins (role changes are owner-only)', () => {
+    render(<MembersSettingsTab {...defaultProps} isOwner={false} isAdmin={true} />)
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument()
+  })
+
+  it('shows remove buttons for MEMBER and GUEST only to admins (not ADMINs)', () => {
+    render(<MembersSettingsTab {...defaultProps} isOwner={false} isAdmin={true} />)
+    const removeButtons = screen.getAllByRole('button').filter(
+      btn => btn.className.includes('text-red-500')
+    )
+    // Bob (ADMIN) is not removable by an admin — only Charlie (MEMBER) and Guest
+    expect(removeButtons.length).toBe(2)
   })
 
   it('renders empty member list', () => {

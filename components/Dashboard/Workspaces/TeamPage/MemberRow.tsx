@@ -8,7 +8,8 @@ import { WorkspaceMemberRow } from '@/hooks/useTeamPage';
 interface MemberRowProps {
   member: WorkspaceMemberRow;
   isCurrentUser: boolean;
-  canManage: boolean;
+  /** Role changes are OWNER-only on the backend (updateMemberRole). */
+  canChangeRoles: boolean;
   isOnlyOwner: boolean;
   onRoleChange: (memberId: string, role: WorkspaceRoleOption) => void;
 }
@@ -16,11 +17,11 @@ interface MemberRowProps {
 export function MemberRow({
   member,
   isCurrentUser,
-  canManage,
+  canChangeRoles,
   isOnlyOwner,
   onRoleChange,
 }: MemberRowProps) {
-  const showDropdown    = canManage;
+  const showDropdown    = canChangeRoles;
   const dropdownDisabled = isCurrentUser || (member.role === 'OWNER' && isOnlyOwner);
   const disabledReason  = isCurrentUser
     ? 'You cannot change your own role'

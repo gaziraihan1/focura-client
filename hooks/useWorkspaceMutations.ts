@@ -97,22 +97,8 @@ export function useUpdateMemberRole() {
   });
 }
 
-export function useAcceptInvitation() {
-  const qc = useQueryClient();
-  const router = useRouter();
-
-  return useMutation<Workspace, unknown, string>({
-    mutationFn: async (token): Promise<Workspace> => {
-      const response = await api.post<Workspace>(`/api/v1/workspaces/invitations/${token}/accept`, {}, { showSuccessToast: true, showErrorToast: true });
-      return response.data as Workspace;
-    },
-    onSuccess: (workspace) => {
-      qc.invalidateQueries({ queryKey: workspaceKeys.lists() });
-      if (workspace.slug) router.push(`/dashboard/${workspace.slug}`);
-    },
-  });
-}
-
+// NOTE: invitation acceptance lives in `useInvitation` (hooks/useInvitation.ts)
+// — it drives the invitation page and routes to the workspace correctly.
 export function useLeaveWorkspace() {
   const qc = useQueryClient();
   const router = useRouter();

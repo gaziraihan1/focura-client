@@ -57,7 +57,8 @@ export function DangerZoneTab({
               <div>
                 <p className="font-medium text-foreground">Delete Workspace</p>
                 <p className="text-sm text-muted-foreground">
-                  Permanently delete this workspace and all its data
+                  Remove this workspace from your dashboard (data is kept and
+                  can be restored by Focura support)
                 </p>
               </div>
               <button

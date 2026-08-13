@@ -19,6 +19,8 @@ interface Member {
 interface MembersSettingsTabProps {
   members: Member[];
   isAdmin: boolean;
+  /** Role changes are OWNER-only on the backend (updateMemberRole). */
+  isOwner: boolean;
   isRemovingMember: boolean;
   onInviteClick: () => void;
   onRemoveMember: (memberId: string) => void;
@@ -28,6 +30,7 @@ interface MembersSettingsTabProps {
 export function MembersSettingsTab({
   members,
   isAdmin,
+  isOwner,
   isRemovingMember,
   onInviteClick,
   onRemoveMember,
@@ -84,7 +87,7 @@ export function MembersSettingsTab({
               </div>
 
               <div className="flex items-start gap-3">
-                {member.role !== "OWNER" && isAdmin ? (
+                {isOwner && member.role !== "OWNER" ? (
                   <>
                     <label htmlFor={`role-${member.id}`} className="sr-only">
                       Role for {member.user.name}
@@ -108,7 +111,10 @@ export function MembersSettingsTab({
                   </span>
                 )}
 
-                {member.role !== "OWNER" && isAdmin && (
+                {(isOwner
+                  ? member.role !== "OWNER"
+                  : isAdmin &&
+                    (member.role === "MEMBER" || member.role === "GUEST")) && (
                   <button
                     onClick={() => onRemoveMember(member.id)}
                     disabled={isRemovingMember}

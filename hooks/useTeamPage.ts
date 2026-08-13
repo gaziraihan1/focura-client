@@ -55,6 +55,8 @@ export interface UpdateProjectMemberRoleArgs {
 export interface UseTeamPageReturn {
   isLoading: boolean;
   canManageWorkspace: boolean;
+  /** Role changes are OWNER-only on the backend (updateMemberRole). */
+  canChangeWorkspaceRoles: boolean;
   canManageProjects: boolean;
 
   workspaceId: string;       
@@ -82,7 +84,7 @@ export function useTeamPage(): UseTeamPageReturn {
   const { data: members = [], isLoading: membersLoading } =
     useWorkspaceMembers(workspaceId || undefined);
 
-  const { canManageWorkspace, isOwner, isAdmin } =
+  const { canManageWorkspace, canChangeRoles, isOwner, isAdmin } =
     useWorkspaceRole(workspaceId || undefined);
 
   const updateWorkspaceMemberRole = useUpdateMemberRole();
@@ -135,6 +137,7 @@ export function useTeamPage(): UseTeamPageReturn {
   return {
     isLoading: workspaceLoading || membersLoading || projectsLoading,
     canManageWorkspace,
+    canChangeWorkspaceRoles: canChangeRoles,
     canManageProjects: isOwner || isAdmin,
 
     workspaceId,

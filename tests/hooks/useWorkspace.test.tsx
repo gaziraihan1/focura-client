@@ -16,7 +16,6 @@ import {
   useInviteMember,
   useRemoveMember,
   useUpdateMemberRole,
-  useAcceptInvitation,
   useLeaveWorkspace,
   useWorkspaceOverview,
   useWorkspacePermission,
@@ -162,18 +161,6 @@ describe('useUpdateMemberRole', () => {
     
     await act(async () => {
       result.current.mutate({ workspaceId: 'ws-1', memberId: 'member-1', role: 'ADMIN' })
-    })
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true))
-  })
-})
-
-describe('useAcceptInvitation', () => {
-  it('accepts invitation', async () => {
-    const { result } = renderHook(() => useAcceptInvitation(), { wrapper: createWrapper() })
-    
-    await act(async () => {
-      result.current.mutate('token-123')
     })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))

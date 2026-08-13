@@ -126,6 +126,7 @@ export default function WorkspaceSettingsPage() {
           <MembersSettingsTab
             members={members}
             isAdmin={isAdmin}
+            isOwner={isOwner}
             isRemovingMember={mutations.removeMember.isPending}
             onInviteClick={() => setShowInviteModal(true)}
             onRemoveMember={handleRemoveMember}

@@ -33,14 +33,14 @@ describe('DeleteWorkspaceModal', () => {
 
   it('displays delete warning text', () => {
     render(<DeleteWorkspaceModal {...defaultProps} />)
-    expect(screen.getByText(/permanently delete/)).toBeInTheDocument()
-    expect(screen.getByText(/This action cannot be undone/)).toBeInTheDocument()
+    expect(screen.getByText(/remove .* from your dashboard/)).toBeInTheDocument()
+    expect(screen.getByText(/restored by Focura support/)).toBeInTheDocument()
   })
 
   it('calls onDelete when delete button is clicked', () => {
     render(<DeleteWorkspaceModal {...defaultProps} />)
     fireEvent.change(screen.getByPlaceholderText('My Workspace'), { target: { value: 'My Workspace' } })
-    const deleteBtn = screen.getByText('Delete Permanently').closest('button')!
+    const deleteBtn = screen.getByText('Delete Workspace').closest('button')!
     fireEvent.click(deleteBtn)
     expect(defaultProps.onDelete).toHaveBeenCalledTimes(1)
   })
@@ -70,7 +70,7 @@ describe('DeleteWorkspaceModal', () => {
 
   it('shows Loader2 spinner when isDeleting is true', () => {
     render(<DeleteWorkspaceModal {...defaultProps} isDeleting={true} />)
-    const deleteBtn = screen.getByText('Delete Permanently').closest('button')!
+    const deleteBtn = screen.getByText('Delete Workspace').closest('button')!
     const svg = deleteBtn.querySelector('svg')
     expect(svg).toBeInTheDocument()
     expect(svg!.getAttribute('class')).toContain('animate-spin')
@@ -78,14 +78,14 @@ describe('DeleteWorkspaceModal', () => {
 
   it('disables delete button when isDeleting is true', () => {
     render(<DeleteWorkspaceModal {...defaultProps} isDeleting={true} />)
-    const deleteBtn = screen.getByText('Delete Permanently').closest('button')!
+    const deleteBtn = screen.getByText('Delete Workspace').closest('button')!
     expect(deleteBtn).toBeDisabled()
   })
 
   it('delete button is not disabled when isDeleting is false', () => {
     render(<DeleteWorkspaceModal {...defaultProps} isDeleting={false} />)
     fireEvent.change(screen.getByPlaceholderText('My Workspace'), { target: { value: 'My Workspace' } })
-    const deleteBtn = screen.getByText('Delete Permanently').closest('button')!
+    const deleteBtn = screen.getByText('Delete Workspace').closest('button')!
     expect(deleteBtn).not.toBeDisabled()
   })
 
@@ -97,7 +97,7 @@ describe('DeleteWorkspaceModal', () => {
 
   it('delete button has red background', () => {
     render(<DeleteWorkspaceModal {...defaultProps} />)
-    const deleteBtn = screen.getByText('Delete Permanently').closest('button')!
+    const deleteBtn = screen.getByText('Delete Workspace').closest('button')!
     expect(deleteBtn.className).toContain('bg-red-500')
   })
 })

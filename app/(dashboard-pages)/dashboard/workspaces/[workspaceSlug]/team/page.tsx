@@ -29,6 +29,7 @@ export default function MainTeamPage() {
   const {
     isLoading,
     canManageWorkspace,
+    canChangeWorkspaceRoles,
     canManageProjects,
     workspaceId,
     workspaceName,
@@ -111,7 +112,7 @@ export default function MainTeamPage() {
         <MembersTab
           members={members}
           currentUserId={currentUserId}
-          canManage={canManageWorkspace}
+          canChangeRoles={canChangeWorkspaceRoles}
           onRoleChange={handleWorkspaceRoleChange}
         />
       )}

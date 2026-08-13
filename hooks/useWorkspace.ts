@@ -37,7 +37,9 @@ export interface CreateWorkspaceDto {
   color?: string;
   logo?: string;
   isPublic?: boolean;
-  plan?: Workspace["plan"];
+  // NOTE: `plan` is intentionally absent — the backend ignores/strips it on
+  // creation and always starts workspaces on FREE (a paid tier can only be
+  // granted by the billing flow or a Focura admin).
 }
 
 export interface WorkspaceStats {
@@ -59,6 +61,8 @@ export interface WorkspaceRoleResult {
   isGuest: boolean;
   canManageWorkspace: boolean;
   canManageMembers: boolean;
+  /** Backend enforces role changes (updateMemberRole) as OWNER-only. */
+  canChangeRoles: boolean;
   canCreateProjects: boolean;
   canEditProjects: boolean;
   canDeleteProjects: boolean;
@@ -117,7 +121,6 @@ export {
   useInviteMember,
   useRemoveMember,
   useUpdateMemberRole,
-  useAcceptInvitation,
   useLeaveWorkspace,
 } from "./useWorkspaceMutations";
 export {
