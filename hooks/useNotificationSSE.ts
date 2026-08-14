@@ -68,6 +68,7 @@ export function useNotificationSSE({
   const heartbeatTimerRef = useRef<NodeJS.Timeout | null>(null);
   const retryTimerRef = useRef<NodeJS.Timeout | null>(null);
   const preferencesRef = useRef(preferences);
+  const cancelledRef = useRef(false);
   const [connectionStatus, setConnectionStatus] =
     useState<ConnectionStatus>("disconnected");
 
@@ -158,7 +159,7 @@ export function useNotificationSSE({
 
   // SSE connection
   const connect = useCallback(async () => {
-    if (!backendToken) return;
+    if (!backendToken || cancelledRef.current) return;
     // In-flight guard: connect() is fired from several paths (mount, onerror
     // backoff, heartbeat, online/visibility). Without this, overlapping calls
     // during the mint await would each open a stream and the last would clobber
@@ -182,11 +183,19 @@ export function useNotificationSSE({
     // Each connection needs a brand-new single-use token — a reused one is
     // rejected with 401 TOKEN_REUSED. Mint a fresh token (fallback: session).
     const streamToken = (await fetchFreshSseToken()) ?? sseToken;
+    if (cancelledRef.current) {
+      connectingRef.current = false;
+      return;
+    }
     if (!streamToken) {
       // No token yet (session warming up / backend unreachable) — retry with backoff
       connectingRef.current = false;
       retryCountRef.current++;
       setConnectionStatus("reconnecting");
+      if (retryTimerRef.current) {
+        clearTimeout(retryTimerRef.current);
+        retryTimerRef.current = null;
+      }
       retryTimerRef.current = setTimeout(
         () => connectRef.current?.(),
         getExponentialBackoff(retryCountRef.current),
@@ -204,12 +213,17 @@ export function useNotificationSSE({
     connectingRef.current = false;
 
     es.onopen = () => {
+      if (cancelledRef.current) {
+        es.close();
+        return;
+      }
       setConnectionStatus("connected");
       retryCountRef.current = 0;
       startHeartbeat();
     };
 
     es.onmessage = (event: MessageEvent) => {
+      if (cancelledRef.current) return;
       try {
         const parsed = JSON.parse(event.data as string) as
           | { type: "connected"; userId: string }
@@ -251,10 +265,12 @@ export function useNotificationSSE({
     es.onerror = () => {
       stopHeartbeat();
       es.close();
-      eventSourceRef.current = null;
+      if (eventSourceRef.current === es) {
+        eventSourceRef.current = null;
+      }
       connectingRef.current = false;
 
-      if (!backendToken) {
+      if (!backendToken || cancelledRef.current) {
         setConnectionStatus("disconnected");
         return; // logged out
       }
@@ -265,8 +281,12 @@ export function useNotificationSSE({
       retryCountRef.current++;
       setConnectionStatus("reconnecting");
 
+      if (retryTimerRef.current) {
+        clearTimeout(retryTimerRef.current);
+        retryTimerRef.current = null;
+      }
       retryTimerRef.current = setTimeout(() => {
-        if (backendToken) connectRef.current?.();
+        if (backendToken && !cancelledRef.current) connectRef.current?.();
       }, delay);
     };
   }, [
@@ -289,6 +309,7 @@ export function useNotificationSSE({
   // Establish connection when credentials are available
   useEffect(() => {
     if (!backendToken) return;
+    cancelledRef.current = false;
     let cancelled = false;
 
     function connectIfNeeded() {
@@ -303,6 +324,9 @@ export function useNotificationSSE({
 
     return () => {
       cancelled = true;
+      cancelledRef.current = true;
+      connectingRef.current = false;
+      connectRef.current = null;
       stopHeartbeat();
       if (retryTimerRef.current) {
         clearTimeout(retryTimerRef.current);
