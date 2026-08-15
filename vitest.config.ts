@@ -9,8 +9,12 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./tests/polyfill.js', './tests/setup.ts'],
     exclude: ['**/node_modules/**', '**/.next/**'],
-    pool: 'forks',
-    maxWorkers: '50%',
+    // Heavy component tests (charts, task details, admin pages) can exceed the
+    // default 5s under full-suite parallel load — raise the per-test cap.
+    testTimeout: 20000,
+    pool: 'threads',
+    maxWorkers: '100%',
+    minWorkers: 2,
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],

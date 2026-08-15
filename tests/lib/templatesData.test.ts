@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest'
 
 const { TEMPLATES, CATEGORY_META, COMPLEXITY_META, filterTemplates, ALL_CATEGORIES } = await import('@/lib/templatesData')

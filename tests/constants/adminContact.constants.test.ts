@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest'
 import { STATUS_OPTIONS, CATEGORY_OPTIONS, STATUS_CLASSES, CATEGORY_CLASSES } from '@/constants/adminContact.constants'
 

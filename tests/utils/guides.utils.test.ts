@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from "vitest";
 import { articleKey, estimateReadMinutes, searchGuides } from "@/utils/guides.utils";
 import type { GuideSection } from "@/types/guides.types";

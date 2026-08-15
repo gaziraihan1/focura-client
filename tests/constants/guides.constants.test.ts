@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from "vitest";
 import { COLOR_MAP, GUIDE_SECTIONS } from "@/constants/guides.constants";
 

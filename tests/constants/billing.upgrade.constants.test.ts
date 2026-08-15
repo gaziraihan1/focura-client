@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest'
 import { PLANS, PLAN_RANK, PLAN_META, STATUS_CONFIGS, INVOICE_STATUS_STYLES } from '@/constants/billing.upgrade.constants'
 

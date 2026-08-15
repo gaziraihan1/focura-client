@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi } from 'vitest'
 import { kpisCard, statusChartData } from '@/constants/analytics.constants'
 

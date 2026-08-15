@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest'
 import { parseAnnouncement, tokensToHtml, stripTokens } from '@/utils/announcement.utils'
 

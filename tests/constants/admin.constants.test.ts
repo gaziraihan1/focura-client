@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest'
 import { TASK_STATUS_COLORS, FEATURE_STATUS_COLORS, PLAN_COLORS } from '@/constants/admin.constants'
 

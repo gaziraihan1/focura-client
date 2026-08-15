@@ -121,6 +121,25 @@ describe('useWorkspaceUsage', () => {
     expect(result.current.data).toBeUndefined()
   })
 
+  it('refetches when the date range changes', async () => {
+    const { result, rerender } = renderHook(
+      ({ dateRange }: { dateRange: '7d' | '30d' }) =>
+        useWorkspaceUsage('ws-1', { dateRange }),
+      {
+        wrapper: createWrapper(),
+        initialProps: { dateRange: '7d' as const },
+      }
+    )
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    const firstFetchCount = result.current.dataUpdatedAt
+
+    rerender({ dateRange: '30d' })
+
+    await waitFor(() =>
+      expect(result.current.dataUpdatedAt).toBeGreaterThan(firstFetchCount)
+    )
+  })
+
   it('is disabled when the enabled option is false', () => {
     const { result } = renderHook(() => useWorkspaceUsage('ws-1', { enabled: false }), {
       wrapper: createWrapper(),
@@ -187,5 +206,13 @@ describe('useExportWorkspaceUsage', () => {
     await expect(result.current.exportToCSV('ws-1', '30d')).rejects.toThrow(
       'No data available for export'
     )
+  })
+})
+
+describe('workspaceUsageKeys', () => {
+  it('generates correct query keys', () => {
+    expect(workspaceUsageKeys.all).toEqual(['workspace-usage'])
+    expect(workspaceUsageKeys.detail('ws-1', '30d')).toEqual(['workspace-usage', 'ws-1', '30d'])
+    expect(workspaceUsageKeys.detail('ws-2', '7d')).toEqual(['workspace-usage', 'ws-2', '7d'])
   })
 })

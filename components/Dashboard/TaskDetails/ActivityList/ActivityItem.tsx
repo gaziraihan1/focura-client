@@ -34,7 +34,7 @@ export function ActivityItem({ activity }: ActivityItemProps) {
   );
 
   return (
-    <div className="flex gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+    <div className="flex gap-3 p-3 sm:p-4 rounded-xl border border-border bg-muted/40 hover:bg-muted/60 transition-colors">
       {/* User Avatar */}
       <UserAvatar user={activity.user} />
 
@@ -47,15 +47,15 @@ export function ActivityItem({ activity }: ActivityItemProps) {
 
           <div className="flex-1">
             <p className="text-sm leading-relaxed">
-              <span className="font-medium text-gray-900 dark:text-gray-100">
+              <span className="font-medium text-foreground">
                 {activity.user.name}
               </span>{' '}
-              <span className="text-gray-600 dark:text-gray-400">
+              <span className="text-muted-foreground">
                 {description}
               </span>{' '}
 
               {(activity.metadata?.subtaskTitle || activity.metadata?.taskTitle) && (
-    <span className="font-medium text-gray-900 dark:text-gray-100">
+    <span className="font-medium text-foreground">
       {activity.metadata?.subtaskTitle ?? activity.metadata?.taskTitle}
     </span>
   )}
@@ -72,7 +72,7 @@ export function ActivityItem({ activity }: ActivityItemProps) {
                 {limitParts.map((part) => (
                   <span
                     key={part.field}
-                    className="text-[10px] px-1.5 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300"
+                    className="text-[10px] px-1.5 py-0.5 rounded-md bg-muted/50 border border-border text-muted-foreground"
                   >
                     <span className="font-medium">{part.label}:</span> {part.from} → {part.to}
                   </span>
@@ -80,9 +80,9 @@ export function ActivityItem({ activity }: ActivityItemProps) {
               </div>
             )}
 
-            <div className="flex items-center gap-2 mt-1">
-              <Clock className="h-3 w-3 text-gray-400" />
-              <time className="text-xs text-gray-500 dark:text-gray-400">
+            <div className="flex items-center gap-1.5 mt-1">
+              <Clock className="h-3 w-3 text-muted-foreground" />
+              <time className="text-xs text-muted-foreground">
                 {timeAgo}
               </time>
             </div>

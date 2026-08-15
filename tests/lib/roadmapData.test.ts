@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest'
 import { CATEGORY_LABELS, CATEGORY_COLORS, ROADMAP_ITEMS } from '@/lib/roadmapData'
 

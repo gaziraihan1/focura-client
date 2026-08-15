@@ -28,6 +28,10 @@ let inactivityWarningTimer: ReturnType<typeof setTimeout> | null = null;
 let absoluteTimeoutTimer: ReturnType<typeof setTimeout> | null = null;
 let absoluteWarningTimer: ReturnType<typeof setTimeout> | null = null;
 
+// True while this tab is tracking a live session. Cleared on logout so
+// activity/visibility listeners can't re-arm timers after sign-out.
+let sessionActive = false;
+
 function clearInactivityTimers(): void {
   if (inactivityTimer) {
     clearTimeout(inactivityTimer);
@@ -105,6 +109,7 @@ function initializeSessionTimers(tokenExpiry: number): void {
 }
 
 export function updateActivity(): void {
+  if (!sessionActive) return;
   resetActivityTimers();
 }
 
@@ -151,6 +156,7 @@ function stopHeartbeat(): void {
 
 /** Called on real user interaction — resets the client inactivity timer. */
 function markInteraction(): void {
+  if (!sessionActive) return;
   lastInteractionAt = Date.now();
   updateActivity();
 }
@@ -177,6 +183,8 @@ function handleVisibilityChange(): void {
   }
 
   stopSessionTimers();
+  // No live session tracked in this tab (logged out) — nothing to re-sync.
+  if (!sessionActive) return;
   getFreshSession()
     .then((session) => {
       if (session?.error === "SESSION_EXPIRED") {
@@ -206,6 +214,7 @@ if (authChannel) {
         break;
       }
       case "refresh-complete": {
+        if (!sessionActive) break;
         if (tokenExpiry) {
           // Another tab completed refresh - update our token and reschedule
           invalidateTokenCache();
@@ -217,6 +226,7 @@ if (authChannel) {
       }
       case "logout-all": {
         // Another tab requested logout
+        disableSessionTracking();
         stopBackgroundRefresh();
         stopSessionTimers();
         invalidateTokenCache();
@@ -253,6 +263,11 @@ export async function forceLogout(reason = "Session expired. Please login again.
     return Promise.reject(new Error("SESSION_EXPIRED_DEFERRED"));
   }
 
+  // Stop tracking the session so no activity/visibility event can re-arm the
+  // timers or heartbeat while logged out. The hidden-tab path above keeps the
+  // listeners attached so handleVisibilityChange can re-sync on focus.
+  disableSessionTracking();
+
   // Public pages: stay silent — no toast, no redirect, no cross-tab logout.
   // Clearing the NextAuth session client-side makes useSession() flip to
   // "unauthenticated" so the next dashboard visit redirects to login.
@@ -282,6 +297,8 @@ export async function forceLogout(reason = "Session expired. Please login again.
 
 // Call this when we have a valid session with token expiry
 export function initializeBackgroundRefresh(tokenExpiry: number): void {
+  sessionActive = true;
+  registerSessionListeners();
   scheduleBackgroundRefresh(tokenExpiry);
   initializeSessionTimers(tokenExpiry);
   if (!lastInteractionAt) lastInteractionAt = Date.now();
@@ -294,9 +311,29 @@ export function stopBackgroundRefresh(): void {
   stopHeartbeat();
 }
 
-// ─── Window event listeners (module side effect) ─────────────────────────────
+/**
+ * Mark the session as no longer tracked and detach the activity/visibility
+ * listeners. Called on logout so later user interaction can't re-arm the
+ * inactivity/absolute timers or the heartbeat for a signed-out tab.
+ */
+function disableSessionTracking(): void {
+  sessionActive = false;
+  unregisterSessionListeners();
+  lastInteractionAt = 0;
+  lastThrottledInteraction = 0;
+}
 
-if (typeof window !== "undefined" && typeof document !== "undefined") {
+// ─── Window event listeners ─────────────────────────────────────────────────
+// Attached while a session is tracked; removed on logout so post-logout
+// interactions never re-schedule timers.
+
+let listenersRegistered = false;
+
+function registerSessionListeners(): void {
+  if (listenersRegistered || typeof window === "undefined" || typeof document === "undefined") {
+    return;
+  }
+  listenersRegistered = true;
   window.addEventListener("pointerdown", markInteraction, { passive: true });
   window.addEventListener("keydown", markInteraction);
   window.addEventListener("touchstart", markInteraction, { passive: true });
@@ -304,3 +341,18 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
   window.addEventListener("mousemove", markThrottledInteraction, { passive: true });
   document.addEventListener("visibilitychange", handleVisibilityChange);
 }
+
+function unregisterSessionListeners(): void {
+  if (!listenersRegistered || typeof window === "undefined" || typeof document === "undefined") {
+    return;
+  }
+  listenersRegistered = false;
+  window.removeEventListener("pointerdown", markInteraction);
+  window.removeEventListener("keydown", markInteraction);
+  window.removeEventListener("touchstart", markInteraction);
+  window.removeEventListener("scroll", markThrottledInteraction);
+  window.removeEventListener("mousemove", markThrottledInteraction);
+  document.removeEventListener("visibilitychange", handleVisibilityChange);
+}
+
+registerSessionListeners();

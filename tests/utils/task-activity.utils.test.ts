@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest'
 import {
   getActivityIcon,
@@ -43,8 +44,8 @@ describe('getActionColor', () => {
     expect(getActionColor('PRIORITY_CHANGED')).toContain('yellow')
   })
 
-  it('returns default gray for unknown action', () => {
-    expect(getActionColor('UNKNOWN')).toContain('gray')
+  it('returns default muted for unknown action', () => {
+    expect(getActionColor('UNKNOWN')).toContain('muted')
   })
 })
 

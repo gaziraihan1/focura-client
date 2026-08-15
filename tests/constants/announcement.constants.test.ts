@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest'
 import { EDITOR_TOOLS, CHARACTER_LIMITS } from '@/constants/announcement.constants'
 

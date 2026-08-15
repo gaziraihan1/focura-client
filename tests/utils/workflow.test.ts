@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from "vitest";
 import { buildWorkflowColumns, mergeBoardColumns, assignTasksToColumns } from "@/utils/workflow";
 import type { ProjectSectionItem } from "@/hooks/useProjectFeatures";

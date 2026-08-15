@@ -1,7 +1,7 @@
 "use client";
 
-import { useQueryClient, InfiniteData } from "@tanstack/react-query";
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useQueryClient, QueryClient, InfiniteData } from "@tanstack/react-query";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import {
   Notification,
   NotificationsResponse,
@@ -54,6 +54,271 @@ interface UseNotificationSSEOptions {
   onNotification?: (notification: Notification) => void;
 }
 
+interface SseManagerConfig {
+  backendToken: string | null;
+  sseToken: string | null;
+  qc: QueryClient;
+  preferences: NotificationPreferences;
+  onNotification?: (notification: Notification) => void;
+}
+
+// Module-level singleton: the bell and the notifications page both mount
+// useNotificationSSE, so they share one EventSource per session. A per-hook
+// EventSource meant duplicate streams — double unread increments, double
+// sounds and double browser notifications for every server event. The stream
+// is kept alive while at least one subscriber is mounted and torn down (with
+// timers cleared) when the last one detaches.
+let activeConfig: SseManagerConfig | null = null;
+let eventSource: EventSource | null = null;
+let connecting = false;
+let retryCount = 0;
+let retryTimer: NodeJS.Timeout | null = null;
+let heartbeatTimer: NodeJS.Timeout | null = null;
+let currentStatus: ConnectionStatus = "disconnected";
+let refCount = 0;
+const statusListeners = new Set<() => void>();
+
+function emitStatus(status: ConnectionStatus) {
+  currentStatus = status;
+  statusListeners.forEach((listener) => listener());
+}
+
+function clearRetryTimer() {
+  if (retryTimer) {
+    clearTimeout(retryTimer);
+    retryTimer = null;
+  }
+}
+
+function stopHeartbeat() {
+  if (heartbeatTimer) {
+    clearTimeout(heartbeatTimer);
+    heartbeatTimer = null;
+  }
+}
+
+function startHeartbeat() {
+  stopHeartbeat();
+  heartbeatTimer = setTimeout(() => {
+    // No message received in HEARTBEAT_TIMEOUT - connection may be stale
+    if (eventSource) {
+      eventSource.close();
+      eventSource = null;
+      emitStatus("reconnecting");
+      connect();
+    }
+  }, HEARTBEAT_TIMEOUT);
+}
+
+// Cache update helpers
+function prependNotification(notification: Notification) {
+  const qc = activeConfig?.qc;
+  if (!qc) return;
+  qc.setQueryData<InfiniteData<NotificationsResponse>>(
+    notificationKeys.list(),
+    (old) => {
+      if (!old) {
+        return {
+          pages: [
+            { items: [notification], nextCursor: null, hasMore: false },
+          ],
+          pageParams: [undefined],
+        };
+      }
+      // Guard: don't prepend if it already exists (e.g. reconnect replay)
+      const alreadyExists = old.pages.some((p) =>
+        p.items.some((n) => n.id === notification.id)
+      );
+      if (alreadyExists) return old;
+
+      return {
+        ...old,
+        pages: old.pages.map((page, i) =>
+          i === 0
+            ? { ...page, items: [notification, ...page.items] }
+            : page
+        ),
+      };
+    }
+  );
+}
+
+function incrementUnreadCount() {
+  const qc = activeConfig?.qc;
+  if (!qc) return;
+  qc.setQueryData<UnreadCountResponse>(
+    notificationKeys.unreadCount(),
+    (old) => ({ count: (old?.count ?? 0) + 1 })
+  );
+}
+
+function invalidateTaskQueries(notificationType: string) {
+  if (TASK_NOTIFICATION_TYPES.includes(notificationType as typeof TASK_NOTIFICATION_TYPES[number])) {
+    activeConfig?.qc.invalidateQueries({ queryKey: ["tasks"] });
+  }
+}
+
+function invalidateProjectQueries(notificationType: string) {
+  if (PROJECT_NOTIFICATION_TYPES.includes(notificationType as typeof PROJECT_NOTIFICATION_TYPES[number])) {
+    activeConfig?.qc.invalidateQueries({ queryKey: ["projects"] });
+  }
+}
+
+async function connect() {
+  if (!activeConfig?.backendToken || connecting) return;
+  // In-flight guard: connect() is fired from several paths (mount, onerror
+  // backoff, heartbeat, online/visibility). Without this, overlapping calls
+  // during the mint await would each open a stream and the last would clobber
+  // the rest — leaving orphaned connections and duplicate notifications.
+  connecting = true;
+
+  const backendUrl =
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+  // Close existing connection if any
+  if (eventSource) {
+    eventSource.close();
+    eventSource = null;
+  }
+
+  emitStatus(retryCount > 0 ? "reconnecting" : "connecting");
+
+  // Each connection needs a brand-new single-use token — a reused one is
+  // rejected with 401 TOKEN_REUSED. Mint a fresh token (fallback: session).
+  const streamToken =
+    (await fetchFreshSseToken()) ?? activeConfig?.sseToken ?? null;
+  // Detached (last subscriber gone) while awaiting — stop before opening.
+  if (!activeConfig) {
+    connecting = false;
+    return;
+  }
+  if (!streamToken) {
+    // No token yet (session warming up / backend unreachable) — retry with backoff
+    connecting = false;
+    retryCount++;
+    emitStatus("reconnecting");
+    clearRetryTimer();
+    retryTimer = setTimeout(
+      () => connect(),
+      getExponentialBackoff(retryCount),
+    );
+    return;
+  }
+
+  const es = new EventSource(
+    `${backendUrl}/api/v1/notifications/stream?token=${streamToken}`
+  );
+  eventSource = es;
+  connecting = false;
+
+  es.onopen = () => {
+    if (!activeConfig) {
+      es.close();
+      return;
+    }
+    emitStatus("connected");
+    retryCount = 0;
+    startHeartbeat();
+  };
+
+  es.onmessage = (event: MessageEvent) => {
+    if (!activeConfig) return;
+    try {
+      const parsed = JSON.parse(event.data as string) as
+        | { type: "connected"; userId: string }
+        | Notification;
+
+      // Reset heartbeat timer on any message
+      startHeartbeat();
+
+      // Skip the handshake — it has type "connected" and no id
+      if ("type" in parsed && parsed.type === "connected") return;
+
+      // Everything else is a Notification object
+      const notification = parsed as Notification;
+      if (!notification.id) return;
+
+      // Play sound for new notifications if enabled
+      if (activeConfig.preferences.soundEnabled) {
+        playNotificationSound();
+      }
+
+      // Show browser notification if enabled
+      if (activeConfig.preferences.browserNotifications) {
+        showBrowserNotification(notification);
+      }
+
+      // Update caches
+      prependNotification(notification);
+      incrementUnreadCount();
+      invalidateTaskQueries(notification.type);
+      invalidateProjectQueries(notification.type);
+
+      // Notify callback
+      activeConfig.onNotification?.(notification);
+    } catch (err) {
+      console.error("[SSE] Failed to parse message:", err);
+    }
+  };
+
+  es.onerror = () => {
+    stopHeartbeat();
+    es.close();
+    if (eventSource === es) {
+      eventSource = null;
+    }
+    connecting = false;
+
+    if (!activeConfig?.backendToken) {
+      emitStatus("disconnected");
+      return; // logged out or detached — stop retrying
+    }
+
+    // Reconnect with exponential backoff — every attempt mints a fresh
+    // single-use token, so a 401 (consumed/expired) self-heals.
+    const delay = getExponentialBackoff(retryCount);
+    retryCount++;
+    emitStatus("reconnecting");
+
+    clearRetryTimer();
+    retryTimer = setTimeout(() => {
+      if (activeConfig?.backendToken) connect();
+    }, delay);
+  };
+}
+
+function connectIfNeeded() {
+  if (!activeConfig?.backendToken || connecting || eventSource) return;
+  connect();
+}
+
+function attach(config: SseManagerConfig) {
+  const isNewSession =
+    !activeConfig ||
+    activeConfig.backendToken !== config.backendToken ||
+    activeConfig.sseToken !== config.sseToken;
+  activeConfig = config;
+  refCount++;
+  if (isNewSession) {
+    retryCount = 0;
+    connect();
+  }
+}
+
+function detach() {
+  refCount = Math.max(0, refCount - 1);
+  if (refCount === 0) {
+    clearRetryTimer();
+    stopHeartbeat();
+    eventSource?.close();
+    eventSource = null;
+    connecting = false;
+    retryCount = 0;
+    activeConfig = null;
+    emitStatus("disconnected");
+  }
+}
+
 export function useNotificationSSE({
   backendToken,
   sseToken,
@@ -61,297 +326,59 @@ export function useNotificationSSE({
   onNotification,
 }: UseNotificationSSEOptions) {
   const qc = useQueryClient();
-  const eventSourceRef = useRef<EventSource | null>(null);
-  const connectRef = useRef<(() => void) | null>(null);
-  const connectingRef = useRef(false);
-  const retryCountRef = useRef(0);
-  const heartbeatTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const retryTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const connectionStatus = useSyncExternalStore(
+    (onStoreChange) => {
+      statusListeners.add(onStoreChange);
+      return () => {
+        statusListeners.delete(onStoreChange);
+      };
+    },
+    () => currentStatus
+  );
   const preferencesRef = useRef(preferences);
-  const cancelledRef = useRef(false);
-  const [connectionStatus, setConnectionStatus] =
-    useState<ConnectionStatus>("disconnected");
+  const onNotificationRef = useRef(onNotification);
 
-  // Keep preferences ref in sync
+  // Keep preferences and onNotification fresh without re-connecting.
   useEffect(() => {
     preferencesRef.current = preferences;
+    if (activeConfig) {
+      activeConfig.preferences = preferences;
+    }
   }, [preferences]);
 
-  // Heartbeat management
-  const stopHeartbeat = useCallback(() => {
-    if (heartbeatTimerRef.current) {
-      clearTimeout(heartbeatTimerRef.current);
-      heartbeatTimerRef.current = null;
-    }
-  }, []);
-
-  const startHeartbeat = useCallback(() => {
-    stopHeartbeat();
-    heartbeatTimerRef.current = setTimeout(() => {
-      // No message received in HEARTBEAT_TIMEOUT - connection may be stale
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
-        eventSourceRef.current = null;
-        setConnectionStatus("reconnecting");
-        connectRef.current?.();
-      }
-    }, HEARTBEAT_TIMEOUT);
-  }, [stopHeartbeat]);
-
-  // Cache update helpers
-  const prependNotification = useCallback(
-    (notification: Notification) => {
-      qc.setQueryData<InfiniteData<NotificationsResponse>>(
-        notificationKeys.list(),
-        (old) => {
-          if (!old) {
-            return {
-              pages: [
-                { items: [notification], nextCursor: null, hasMore: false },
-              ],
-              pageParams: [undefined],
-            };
-          }
-          // Guard: don't prepend if it already exists (e.g. reconnect replay)
-          const alreadyExists = old.pages.some((p) =>
-            p.items.some((n) => n.id === notification.id)
-          );
-          if (alreadyExists) return old;
-
-          return {
-            ...old,
-            pages: old.pages.map((page, i) =>
-              i === 0
-                ? { ...page, items: [notification, ...page.items] }
-                : page
-            ),
-          };
-        }
-      );
-    },
-    [qc]
-  );
-
-  const incrementUnreadCount = useCallback(() => {
-    qc.setQueryData<UnreadCountResponse>(
-      notificationKeys.unreadCount(),
-      (old) => ({ count: (old?.count ?? 0) + 1 })
-    );
-  }, [qc]);
-
-  const invalidateTaskQueries = useCallback(
-    (notificationType: string) => {
-      if (TASK_NOTIFICATION_TYPES.includes(notificationType as typeof TASK_NOTIFICATION_TYPES[number])) {
-        qc.invalidateQueries({ queryKey: ["tasks"] });
-      }
-    },
-    [qc]
-  );
-
-  const invalidateProjectQueries = useCallback(
-    (notificationType: string) => {
-      if (PROJECT_NOTIFICATION_TYPES.includes(notificationType as typeof PROJECT_NOTIFICATION_TYPES[number])) {
-        qc.invalidateQueries({ queryKey: ["projects"] });
-      }
-    },
-    [qc]
-  );
-
-  // SSE connection
-  const connect = useCallback(async () => {
-    if (!backendToken || cancelledRef.current) return;
-    // In-flight guard: connect() is fired from several paths (mount, onerror
-    // backoff, heartbeat, online/visibility). Without this, overlapping calls
-    // during the mint await would each open a stream and the last would clobber
-    // the rest — leaving orphaned connections and duplicate notifications.
-    if (connectingRef.current) return;
-    connectingRef.current = true;
-
-    const backendUrl =
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-
-    // Close existing connection if any
-    if (eventSourceRef.current) {
-      eventSourceRef.current.close();
-      eventSourceRef.current = null;
-    }
-
-    setConnectionStatus(
-      retryCountRef.current > 0 ? "reconnecting" : "connecting"
-    );
-
-    // Each connection needs a brand-new single-use token — a reused one is
-    // rejected with 401 TOKEN_REUSED. Mint a fresh token (fallback: session).
-    const streamToken = (await fetchFreshSseToken()) ?? sseToken;
-    if (cancelledRef.current) {
-      connectingRef.current = false;
-      return;
-    }
-    if (!streamToken) {
-      // No token yet (session warming up / backend unreachable) — retry with backoff
-      connectingRef.current = false;
-      retryCountRef.current++;
-      setConnectionStatus("reconnecting");
-      if (retryTimerRef.current) {
-        clearTimeout(retryTimerRef.current);
-        retryTimerRef.current = null;
-      }
-      retryTimerRef.current = setTimeout(
-        () => connectRef.current?.(),
-        getExponentialBackoff(retryCountRef.current),
-      );
-      return;
-    }
-
-    // The EventSource is closed by the token effect's cleanup below
-    // (eventSourceRef.current?.close()), so the resource is released on unmount.
-    // react-doctor-disable-next-line react-doctor/effect-needs-cleanup
-    const es = new EventSource(
-      `${backendUrl}/api/v1/notifications/stream?token=${streamToken}`
-    );
-    eventSourceRef.current = es;
-    connectingRef.current = false;
-
-    es.onopen = () => {
-      if (cancelledRef.current) {
-        es.close();
-        return;
-      }
-      setConnectionStatus("connected");
-      retryCountRef.current = 0;
-      startHeartbeat();
-    };
-
-    es.onmessage = (event: MessageEvent) => {
-      if (cancelledRef.current) return;
-      try {
-        const parsed = JSON.parse(event.data as string) as
-          | { type: "connected"; userId: string }
-          | Notification;
-
-        // Reset heartbeat timer on any message
-        startHeartbeat();
-
-        // Skip the handshake — it has type "connected" and no id
-        if ("type" in parsed && parsed.type === "connected") return;
-
-        // Everything else is a Notification object
-        const notification = parsed as Notification;
-        if (!notification.id) return;
-
-        // Play sound for new notifications if enabled
-        if (preferencesRef.current.soundEnabled) {
-          playNotificationSound();
-        }
-
-        // Show browser notification if enabled
-        if (preferencesRef.current.browserNotifications) {
-          showBrowserNotification(notification);
-        }
-
-        // Update caches
-        prependNotification(notification);
-        incrementUnreadCount();
-        invalidateTaskQueries(notification.type);
-        invalidateProjectQueries(notification.type);
-
-        // Notify callback
-        onNotification?.(notification);
-      } catch (err) {
-        console.error("[SSE] Failed to parse message:", err);
-      }
-    };
-
-    es.onerror = () => {
-      stopHeartbeat();
-      es.close();
-      if (eventSourceRef.current === es) {
-        eventSourceRef.current = null;
-      }
-      connectingRef.current = false;
-
-      if (!backendToken || cancelledRef.current) {
-        setConnectionStatus("disconnected");
-        return; // logged out
-      }
-
-      // Reconnect with exponential backoff — every attempt mints a fresh
-      // single-use token, so a 401 (consumed/expired) self-heals.
-      const delay = getExponentialBackoff(retryCountRef.current);
-      retryCountRef.current++;
-      setConnectionStatus("reconnecting");
-
-      if (retryTimerRef.current) {
-        clearTimeout(retryTimerRef.current);
-        retryTimerRef.current = null;
-      }
-      retryTimerRef.current = setTimeout(() => {
-        if (backendToken && !cancelledRef.current) connectRef.current?.();
-      }, delay);
-    };
-  }, [
-    backendToken,
-    sseToken,
-    prependNotification,
-    incrementUnreadCount,
-    invalidateTaskQueries,
-    invalidateProjectQueries,
-    startHeartbeat,
-    stopHeartbeat,
-    onNotification,
-  ]);
-
-  // Keep connectRef in sync
   useEffect(() => {
-    connectRef.current = connect;
-  });
-
-  // Establish connection when credentials are available
-  useEffect(() => {
-    if (!backendToken) return;
-    cancelledRef.current = false;
-    let cancelled = false;
-
-    function connectIfNeeded() {
-      if (cancelled || !backendToken) return;
-      // Only connect if we don't already have a connection
-      if (!eventSourceRef.current) {
-        connect();
-      }
+    onNotificationRef.current = onNotification;
+    if (activeConfig) {
+      activeConfig.onNotification = onNotification;
     }
+  }, [onNotification]);
 
-    connectIfNeeded();
-
+  // Register with the shared connection. It stays alive while at least one
+  // subscriber (bell, notifications page) is mounted.
+  useEffect(() => {
+    attach({
+      backendToken,
+      sseToken,
+      qc,
+      preferences: preferencesRef.current,
+      onNotification: onNotificationRef.current,
+    });
     return () => {
-      cancelled = true;
-      cancelledRef.current = true;
-      connectingRef.current = false;
-      connectRef.current = null;
-      stopHeartbeat();
-      if (retryTimerRef.current) {
-        clearTimeout(retryTimerRef.current);
-        retryTimerRef.current = null;
-      }
-      eventSourceRef.current?.close();
-      eventSourceRef.current = null;
-      retryCountRef.current = 0;
+      detach();
     };
-  }, [backendToken, connect, stopHeartbeat]);
-
+  }, [backendToken, sseToken, qc]);
 
   // Offline/Online detection
   useEffect(() => {
     const handleOnline = () => {
-      if (!backendToken) return;
+      if (!activeConfig?.backendToken) return;
       // Reconnect when coming back online
-      if (!eventSourceRef.current) {
-        retryCountRef.current = 0;
-        connect();
-      }
+      retryCount = 0;
+      connectIfNeeded();
     };
 
     const handleOffline = () => {
-      setConnectionStatus("disconnected");
+      emitStatus("disconnected");
       stopHeartbeat();
     };
 
@@ -362,18 +389,18 @@ export function useNotificationSSE({
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
-  }, [backendToken, connect, stopHeartbeat]);
+  }, []);
 
   // Visibility change handling
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState !== "visible") return;
-      if (!backendToken) return;
+      if (!activeConfig?.backendToken) return;
 
       // Reconnect when tab becomes visible and connection is lost
-      if (!eventSourceRef.current) {
-        retryCountRef.current = 0;
-        connect();
+      if (!eventSource) {
+        retryCount = 0;
+        connectIfNeeded();
       } else {
         // Refresh data when tab becomes visible
         qc.invalidateQueries({ queryKey: notificationKeys.all });
@@ -384,7 +411,7 @@ export function useNotificationSSE({
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [backendToken, connect, qc]);
+  }, [qc]);
 
   return { connectionStatus };
 }

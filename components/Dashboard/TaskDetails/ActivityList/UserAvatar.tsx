@@ -1,5 +1,5 @@
 // Thin wrapper over the shared Avatar primitive so the activity feed keeps its
-// exact h-8 w-8 gray fallback look while reusing one implementation.
+// exact h-8 w-8 muted fallback look while reusing one implementation.
 import type { ActivityUser } from '@/types/task-activity.types';
 import { Avatar } from '@/components/Shared/Avatar';
 
@@ -13,7 +13,7 @@ export function UserAvatar({ user }: UserAvatarProps) {
       <Avatar
         name={user.name}
         image={user.image}
-        variant="gray"
+        variant="muted"
         twoLetterInitials
         className="h-8 w-8 text-sm"
       />

@@ -1,4 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
 import { api } from "@/lib/axios";
 import { PersonalQuotaInfo, WorkspaceQuotaInfo } from "./useTask";
 import { taskKeys } from "./taskKeys";
@@ -22,6 +23,16 @@ function getSmartRefetchInterval(hasChanges: boolean): number {
 
 export function usePersonalQuota() {
   const qc = useQueryClient();
+  const midnightTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (midnightTimerRef.current) {
+        clearTimeout(midnightTimerRef.current);
+        midnightTimerRef.current = null;
+      }
+    };
+  }, []);
 
   useQuery({
     queryKey: [...taskKeys.personalQuota(), "__midnight_reset__"],
@@ -29,8 +40,15 @@ export function usePersonalQuota() {
     staleTime: Infinity,
     gcTime: Infinity,
     refetchInterval: () => {
+      if (midnightTimerRef.current) {
+        clearTimeout(midnightTimerRef.current);
+        midnightTimerRef.current = null;
+      }
       const ms = msUntilMidnight();
-      setTimeout(() => { qc.invalidateQueries({ queryKey: taskKeys.personalQuota() }); }, ms);
+      midnightTimerRef.current = setTimeout(() => {
+        midnightTimerRef.current = null;
+        qc.invalidateQueries({ queryKey: taskKeys.personalQuota() });
+      }, ms);
       return false;
     },
   });
@@ -67,6 +85,16 @@ export function usePersonalQuota() {
 
 export function useWorkspaceQuota(workspaceId: string | undefined) {
   const qc = useQueryClient();
+  const midnightTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (midnightTimerRef.current) {
+        clearTimeout(midnightTimerRef.current);
+        midnightTimerRef.current = null;
+      }
+    };
+  }, []);
 
   useQuery({
     queryKey: workspaceId ? [...taskKeys.workspaceQuota(workspaceId), "__midnight_reset__"] : ["__noop__"],
@@ -76,8 +104,15 @@ export function useWorkspaceQuota(workspaceId: string | undefined) {
     gcTime: Infinity,
     refetchInterval: () => {
       if (!workspaceId) return false;
+      if (midnightTimerRef.current) {
+        clearTimeout(midnightTimerRef.current);
+        midnightTimerRef.current = null;
+      }
       const ms = msUntilMidnight();
-      setTimeout(() => { qc.invalidateQueries({ queryKey: taskKeys.workspaceQuota(workspaceId!) }); }, ms);
+      midnightTimerRef.current = setTimeout(() => {
+        midnightTimerRef.current = null;
+        qc.invalidateQueries({ queryKey: taskKeys.workspaceQuota(workspaceId!) });
+      }, ms);
       return false;
     },
   });

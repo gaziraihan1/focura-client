@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest'
 import { faqs, features, integrations, plans, testimonials } from '@/constants/home.constants'
 

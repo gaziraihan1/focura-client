@@ -31,7 +31,7 @@ export function getActionColor(action: string): string {
     case 'UPDATED':
     case 'STATUS_CHANGED':
     case 'PRIORITY_CHANGED': return 'text-yellow-600 dark:text-yellow-400';
-    default:             return 'text-gray-600 dark:text-gray-400';
+    default:             return 'text-muted-foreground';
   }
 }
 

@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest'
 
 const { API_SECTIONS, ALL_ENDPOINTS, findEndpoint, findSection, API_BASE_URL } = await import('@/lib/apiData')

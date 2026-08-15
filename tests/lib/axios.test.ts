@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi } from 'vitest'
 
 // We need to import normalizeError from the actual module, not the auto-mock.

@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest'
 import { INTENT_OPTIONS, ENERGY_OPTIONS, PRIORITY_COLORS } from '@/constants/intent.constants'
 

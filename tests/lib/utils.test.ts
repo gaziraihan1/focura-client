@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { cn } from "@/lib/utils";
 
 describe("lib/utils", () => {

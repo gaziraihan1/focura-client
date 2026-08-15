@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest'
 import { PLAN_META, GAINED_FEATURES } from '@/constants/billing.success.constants'
 

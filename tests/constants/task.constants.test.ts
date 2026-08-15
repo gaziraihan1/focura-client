@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest'
 import { STATUS_OPTIONS, PERSONAL_TASK_STATUS_OPTIONS, STATUS_LABELS } from '@/constants/task.constants'
 
