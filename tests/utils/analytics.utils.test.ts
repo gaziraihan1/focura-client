@@ -107,7 +107,8 @@ describe('getRiskColor', () => {
 
 describe('formatDate', () => {
   it('formats Date object', () => {
-    const result = formatDate(new Date('2024-01-15'))
+    // Use a local-midnight date so the day is stable in any timezone.
+    const result = formatDate(new Date(2024, 0, 15))
     expect(result).toContain('Jan')
     expect(result).toContain('15')
     expect(result).toContain('2024')
@@ -121,7 +122,7 @@ describe('formatDate', () => {
 
 describe('formatShortDate', () => {
   it('formats Date object without year', () => {
-    const result = formatShortDate(new Date('2024-01-15'))
+    const result = formatShortDate(new Date(2024, 0, 15))
     expect(result).toContain('Jan')
     expect(result).toContain('15')
     expect(result).not.toContain('2024')
@@ -129,39 +130,35 @@ describe('formatShortDate', () => {
 })
 
 describe('getRelativeTime', () => {
+  // The implementation compares millisecond timestamps, so targets are built
+  // with pure ms offsets. Calendar math (setDate/setHours) breaks around DST
+  // transitions, where a "day" is 23 or 25 hours long.
+  const DAY = 24 * 60 * 60 * 1000
+
   it('returns Due today for today', () => {
-    // Use a date that is definitely "today" by setting to end of day
-    const today = new Date()
-    today.setHours(23, 59, 59, 999)
-    expect(getRelativeTime(today)).toBe('Due today')
+    const laterToday = new Date(Date.now() + 30 * 60 * 1000)
+    expect(getRelativeTime(laterToday)).toBe('Due today')
   })
 
   it('returns Due tomorrow for tomorrow', () => {
-    const tomorrow = new Date()
-    tomorrow.setDate(tomorrow.getDate() + 1)
+    // +1 day plus a margin so a few elapsed milliseconds can't round it down.
+    const tomorrow = new Date(Date.now() + DAY + 60 * 60 * 1000)
     expect(getRelativeTime(tomorrow)).toBe('Due tomorrow')
   })
 
   it('returns overdue for past dates', () => {
-    const past = new Date()
-    past.setDate(past.getDate() - 3)
+    const past = new Date(Date.now() - 3 * DAY)
     expect(getRelativeTime(past)).toBe('3d overdue')
   })
 
   it('returns Due in Xd for near future', () => {
-    const future = new Date()
-    future.setDate(future.getDate() + 5)
-    future.setHours(0, 0, 0, 0) // Set to midnight to avoid partial day issues
-    const result = getRelativeTime(future)
-    // Could be "Due in 4d" or "Due in 5d" depending on time of day
-    expect(result).toMatch(/Due in [45]d/)
+    const future = new Date(Date.now() + 5 * DAY + 60 * 60 * 1000)
+    expect(getRelativeTime(future)).toBe('Due in 5d')
   })
 
   it('returns formatted date for far future', () => {
-    const farFuture = new Date()
-    farFuture.setDate(farFuture.getDate() + 10)
-    const result = getRelativeTime(farFuture)
-    expect(result).toContain('20')
+    const farFuture = new Date(Date.now() + 10 * DAY)
+    expect(getRelativeTime(farFuture)).toMatch(/^[A-Z][a-z]{2} \d{1,2}, \d{4}$/)
   })
 })
 

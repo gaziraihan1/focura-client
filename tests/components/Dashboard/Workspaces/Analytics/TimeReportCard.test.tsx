@@ -104,7 +104,7 @@ vi.mock("lucide-react", () => {
   };
 });
 
-import { TimeReportCard } from "@/components/Dashboard/Workspaces/analytics/TimeReportCard";
+import { TimeReportCard } from "@/components/Dashboard/Workspaces/Analytics/TimeReportCard";
 
 describe("TimeReportCard", () => {
   beforeEach(() => {
