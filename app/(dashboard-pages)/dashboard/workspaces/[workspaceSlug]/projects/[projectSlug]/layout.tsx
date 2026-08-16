@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, usePathname } from "next/navigation";
 
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
+import { useUserProfile } from "@/hooks/useUser";
 import { AccessDeniedProject } from "@/components/Dashboard/ProjectDetails/AccessDeniedProject";
+import LoadingState from "@/components/Dashboard/ProjectDetails/LoadingState";
 import { qc } from "@/lib/react-query/query-client";
 import { ProjectData } from "@/types/project.types";
 import {
@@ -30,12 +32,23 @@ export default function ProjectLayout({
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const nav = useProjectNav(workspaceSlug, projectSlug);
-  const { data: project, error } = useProjectDetailsBySlug(projectSlug);
+  const { data: project, error, isLoading } = useProjectDetailsBySlug(projectSlug);
 
   const projectColor = (project as ProjectData)?.color ?? "#667eea";
   const currentNavItem = nav.find((item) => item.match(pathname));
   const accessStatus = (error as { response?: { status?: number } } | undefined)?.response?.status;
-  const accessDenied = accessStatus === 403 || accessStatus === 404;
+  const { userId } = useUserProfile();
+
+  // Project-membership gate (mirrors the tasks page): a workspace member who
+  // is not a member of THIS project sees the access-restricted screen on every
+  // project page, not just the tasks page.
+  const isMember = project?.members && userId
+    ? project.members.some((m) => m.userId === userId || m.user?.id === userId)
+    : false;
+  const accessDenied =
+    accessStatus === 403 ||
+    accessStatus === 404 ||
+    (!!project && !isMember && !project.isAdmin);
 
   const deniedRef = useRef(false);
 
@@ -56,6 +69,10 @@ export default function ProjectLayout({
       deniedRef.current = false;
     }
   }, [accessDenied]);
+
+  if (isLoading) {
+    return <LoadingState />;
+  }
 
   if (accessDenied) {
     return <AccessDeniedProject projectName={project?.name} />;

@@ -12,7 +12,6 @@ import {
   User,
   Settings,
   LogOut,
-  FileText,
   Loader2,
 } from "lucide-react";
 
@@ -193,7 +192,6 @@ export default function TopNavbar({
                       {[
                         { href: "/dashboard/profile", icon: User, label: "Profile" },
                         { href: "/dashboard/settings", icon: Settings, label: "Settings" },
-                        { href: "/dashboard/billing", icon: FileText, label: "Billing" },
                       ].map(({ href, icon: Icon, label }) => (
                         <Link
                           key={href}

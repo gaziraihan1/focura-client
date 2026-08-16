@@ -7,13 +7,11 @@ import {
   Lock,
   Monitor,
   Palette,
-  Shield,
   Clock,
   Zap,
 } from "lucide-react";
 import { useUrlState } from "@/hooks/useUrlState";
 import { CapacityScheduleForm } from "@/components/Settings/CapacityScheduleForm";
-import { AccountSettingsForm } from "@/components/Settings/AccountSettingsForm";
 import { AppearanceSettingsForm } from "@/components/Settings/AppearanceSettingsForm";
 import { NotificationsSettingsForm } from "@/components/Settings/NotificationsSettingsForm";
 import { IntegrationsSettingsForm } from "@/components/Settings/IntegrationsSettingsForm";
@@ -23,13 +21,6 @@ import { SecuritySettingsForm } from "@/components/Settings/SecuritySettingsForm
 import { SettingsSection } from "@/components/Settings/SettingsSection";
 
 const globalSettings = [
-  {
-    title: "Account",
-    description:
-      "Update login credentials, connected accounts, sessions, and security preferences.",
-    icon: Shield,
-    active: true,
-  },
   {
     title: "Appearance",
     description:
@@ -82,7 +73,6 @@ const globalSettings = [
 ];
 
 const GLOBAL_FORM_MAP: Record<string, React.ComponentType> = {
-  "Account": AccountSettingsForm,
   "Appearance": AppearanceSettingsForm,
   "Notifications": NotificationsSettingsForm,
   "Integrations": IntegrationsSettingsForm,

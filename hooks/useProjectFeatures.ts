@@ -50,7 +50,7 @@ export const useProjectMilestones = (projectId?: string) =>
   useQuery({
     queryKey: milestoneKeys.stats(projectId || ""),
     queryFn: async () => {
-      const res = await api.get(`/api/v1/projects/${projectId}/milestones`);
+      const res = await api.get(`/api/v1/projects/${projectId}/milestones`, { showErrorToast: false });
       return unwrap<MilestoneStats>(res);
     },
     enabled: !!projectId,
@@ -130,7 +130,7 @@ export const useProjectSprints = (projectId?: string) =>
   useQuery({
     queryKey: sprintKeys.stats(projectId || ""),
     queryFn: async () => {
-      const res = await api.get(`/api/v1/projects/${projectId}/sprints`);
+      const res = await api.get(`/api/v1/projects/${projectId}/sprints`, { showErrorToast: false });
       return unwrap<SprintStats>(res);
     },
     enabled: !!projectId,
@@ -199,7 +199,7 @@ export const useProjectSections = (projectId?: string) =>
   useQuery({
     queryKey: sectionKeys.list(projectId || ""),
     queryFn: async () => {
-      const res = await api.get(`/api/v1/projects/${projectId}/sections`);
+      const res = await api.get(`/api/v1/projects/${projectId}/sections`, { showErrorToast: false });
       return unwrap<ProjectSectionItem[]>(res);
     },
     enabled: !!projectId,
@@ -271,7 +271,7 @@ export const useProjectViews = (projectId?: string) =>
   useQuery({
     queryKey: viewKeys.list(projectId || ""),
     queryFn: async () => {
-      const res = await api.get(`/api/v1/projects/${projectId}/views`);
+      const res = await api.get(`/api/v1/projects/${projectId}/views`, { showErrorToast: false });
       return unwrap<ProjectViewItem[]>(res);
     },
     enabled: !!projectId,
@@ -348,7 +348,7 @@ export const useCheckFavorite = (projectId?: string) =>
   useQuery({
     queryKey: favoriteKeys.check(projectId || ""),
     queryFn: async () => {
-      const res = await api.get(`/api/v1/projects/${projectId}/favorite`);
+      const res = await api.get(`/api/v1/projects/${projectId}/favorite`, { showErrorToast: false });
       return unwrap<{ favorited: boolean }>(res);
     },
     enabled: !!projectId,

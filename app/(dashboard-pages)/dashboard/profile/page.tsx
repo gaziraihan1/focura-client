@@ -4,6 +4,9 @@ import { ProfilePageHeader } from "@/components/Dashboard/Profile/ProfilePageHea
 import { ProfileInformationCard } from "@/components/Dashboard/Profile/ProfileInformationCard";
 import { ProfileSidebar } from "@/components/Dashboard/Profile/ProfileSidebar";
 import { ProfileLoadingState } from "@/components/Dashboard/Profile/ProfileLoadingState";
+import { ProfileSecurityCard } from "@/components/Dashboard/Profile/ProfileSecurityCard";
+import { DataExportCard } from "@/components/Settings/DataExportCard";
+import { DeleteAccountCard } from "@/components/Settings/DeleteAccountCard";
 import { useProfilePage } from "@/hooks/useProfilePage";
 import { useSecuritySettings } from "@/hooks/useSecurity";
 
@@ -52,6 +55,8 @@ export default function ProfilePage() {
             onFormChange={handleFormChange}
             onImageUpload={handleImageUpload}
           />
+
+          <ProfileSecurityCard />
         </div>
 
         <ProfileSidebar
@@ -62,6 +67,9 @@ export default function ProfilePage() {
           lastPasswordChange={securitySettings?.lastPasswordChange ?? null}
         />
       </div>
+
+      <DataExportCard />
+      <DeleteAccountCard />
     </div>
   );
 }

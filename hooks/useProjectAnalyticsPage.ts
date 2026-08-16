@@ -41,7 +41,9 @@ export function useProjectAnalyticsPage({ workspaceId, projectId }: UseProjectAn
     if (!normalizedError) return false;
     return (
       normalizedError.status === 403 &&
-      normalizedError.message.toLowerCase().includes("permission")
+      (normalizedError.code === "FORBIDDEN" ||
+        normalizedError.message.toLowerCase().includes("permission") ||
+        normalizedError.message.toLowerCase().includes("do not have access"))
     );
   }, [normalizedError]);
 

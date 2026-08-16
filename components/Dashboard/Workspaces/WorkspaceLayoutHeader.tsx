@@ -9,7 +9,6 @@ import {
   ChevronDown,
   User,
   Settings,
-  FileText,
   LogOut,
   Loader2,
 } from "lucide-react";
@@ -143,7 +142,6 @@ export function WorkspaceLayoutHeader({
                   {[
                     { href: "/dashboard/profile", icon: User, label: "Profile" },
                     { href: "/dashboard/settings", icon: Settings, label: "Settings" },
-                    { href: "/dashboard/billing", icon: FileText, label: "Billing" },
                   ].map(({ href, icon: Icon, label }) => (
                     <Link
                       key={href}
