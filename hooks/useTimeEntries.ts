@@ -36,6 +36,8 @@ export const timeEntryKeys = {
   task: (taskId: string) => [...timeEntryKeys.all, "task", taskId] as const,
   my: (from?: string, to?: string) =>
     [...timeEntryKeys.all, "my", from ?? "all", to ?? "all"] as const,
+  workspace: (workspaceId: string, from?: string, to?: string) =>
+    [...timeEntryKeys.all, "workspace", workspaceId, from ?? "all", to ?? "all"] as const,
 };
 
 // Refreshes the workspace analytics (time summary) when an entry changes.
@@ -62,6 +64,58 @@ export function useTaskTimeEntries(taskId: string) {
   });
 }
 
+/**
+ * The requesting user's own entries across all tasks.
+ * `from`/`to` are ISO datetime strings; when omitted the server returns
+ * every entry the user has ever logged.
+ */
+export function useMyTimeEntries(from?: string, to?: string) {
+  return useQuery({
+    queryKey: timeEntryKeys.my(from, to),
+    queryFn: async () => {
+      const result = await api.get<TimeEntry[]>("/api/v1/time-entries/my", {
+        params: {
+          ...(from ? { from } : {}),
+          ...(to ? { to } : {}),
+        },
+        showErrorToast: false,
+      });
+      return result?.success ? (result.data ?? []) : [];
+    },
+    staleTime: 30_000,
+  });
+}
+
+/**
+ * Every entry on tasks in a workspace that the requesting user can access.
+ * `from`/`to` are ISO datetime strings; when omitted the server returns all
+ * entries in scope. Includes the author (`user`) alongside the task.
+ */
+export function useWorkspaceTimeEntries(
+  workspaceId?: string,
+  from?: string,
+  to?: string,
+) {
+  return useQuery({
+    queryKey: timeEntryKeys.workspace(workspaceId ?? "", from, to),
+    queryFn: async () => {
+      const result = await api.get<TimeEntry[]>(
+        `/api/v1/time-entries/workspace/${workspaceId}`,
+        {
+          params: {
+            ...(from ? { from } : {}),
+            ...(to ? { to } : {}),
+          },
+          showErrorToast: false,
+        },
+      );
+      return result?.success ? (result.data ?? []) : [];
+    },
+    enabled: Boolean(workspaceId),
+    staleTime: 30_000,
+  });
+}
+
 export function useAddTimeEntry() {
   const qc = useQueryClient();
 
@@ -75,6 +129,7 @@ export function useAddTimeEntry() {
     },
     onSuccess: (entry, input) => {
       qc.invalidateQueries({ queryKey: timeEntryKeys.task(entry.taskId) });
+      qc.invalidateQueries({ queryKey: timeEntryKeys.all });
       invalidateAnalytics(qc, input.workspaceId);
       toast.success("Time entry added");
     },
@@ -103,6 +158,7 @@ export function useUpdateTimeEntry() {
     },
     onSuccess: (entry, input) => {
       qc.invalidateQueries({ queryKey: timeEntryKeys.task(entry.taskId) });
+      qc.invalidateQueries({ queryKey: timeEntryKeys.all });
       invalidateAnalytics(qc, input.workspaceId);
       toast.success("Time entry updated");
     },
@@ -116,20 +172,16 @@ export function useDeleteTimeEntry() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      entry,
-    }: {
-      entry: TimeEntry;
+    mutationFn: async (input: {
+      id: string;
+      taskId: string;
       workspaceId?: string | null;
-    }): Promise<string> => {
-      const result = await api.delete(`/api/v1/time-entries/${entry.id}`);
-      if (!result?.success) {
-        throw new Error("Failed to delete time entry");
-      }
-      return entry.taskId;
+    }): Promise<void> => {
+      await api.delete(`/api/v1/time-entries/${input.id}`);
     },
-    onSuccess: (taskId, input) => {
-      qc.invalidateQueries({ queryKey: timeEntryKeys.task(taskId) });
+    onSuccess: (_, input) => {
+      qc.invalidateQueries({ queryKey: timeEntryKeys.task(input.taskId) });
+      qc.invalidateQueries({ queryKey: timeEntryKeys.all });
       invalidateAnalytics(qc, input.workspaceId);
       toast.success("Time entry deleted");
     },

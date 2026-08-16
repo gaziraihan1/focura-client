@@ -7,9 +7,9 @@ import { WorkspaceStats } from "@/components/Dashboard/Workspaces/WorkspacePage/
 import { WorkspaceTabNavigation } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceTabNavigation";
 import { InviteMemberModal } from "@/components/Dashboard/Workspaces/WorkspacePage/InviteMemberModal";
 import { LoadingState } from "@/components/Shared/LoadingState";
-import { useWorkspaceDetailPage } from "@/hooks/useWorkspaceLayout";
 import { WorkspaceDetailErrorState } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceDetailErrorState";
 import { WorkspaceDetailContent } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceDetailsContent";
+import { useWorkspaceDetailPage } from "@/hooks/useWorkspaceLayout";
 
 export default function WorkspaceDetailPage() {
   const params = useParams();

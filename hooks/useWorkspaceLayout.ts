@@ -27,6 +27,7 @@ import {
   List,
   Kanban,
   CalendarDays,
+  Clock,
 } from "lucide-react";
 
 type TabType = "overview" | "projects" | "members";
@@ -120,6 +121,13 @@ export function useWorkspaceLayout({
           icon: CalendarDays,
           match: (path: string) =>
             path.includes(`/${slug}/tasks/calendar-view`),
+        },
+        {
+          name: "Time Log",
+          href: `/dashboard/workspaces/${slug}/tasks/time-log`,
+          icon: Clock,
+          match: (path: string) =>
+            path.includes(`/${slug}/tasks/time-log`),
         },
       ],
     },

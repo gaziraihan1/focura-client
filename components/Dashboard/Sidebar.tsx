@@ -45,6 +45,7 @@ const navigation: NavItem[] = [
       { name: "Add Task", href: "/dashboard/tasks/add-task" },
       { name: "Calendar View", href: "/dashboard/tasks/calender-view" },
       { name: "Kanban Board", href: "/dashboard/tasks/kanban-board" },
+      { name: "Time Log", href: "/dashboard/tasks/time-log" },
     ],
   },
   { name: "Projects", href: "/dashboard/projects", icon: FolderOpen },

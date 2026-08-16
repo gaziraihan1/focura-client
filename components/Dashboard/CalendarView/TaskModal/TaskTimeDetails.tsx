@@ -1,4 +1,4 @@
-import { Clock } from "lucide-react";
+import { Clock, TrendingUp } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -8,6 +8,8 @@ interface TaskTimeDetailsProps {
   estimatedHours?: number | null;
   createdAt: string;
   isOverdue: boolean;
+  updatedAt?: string | null;
+  timeProgress?: number | null;
 }
 
 export function TaskTimeDetails({
@@ -16,7 +18,11 @@ export function TaskTimeDetails({
   estimatedHours,
   createdAt,
   isOverdue,
+  updatedAt,
+  timeProgress,
 }: TaskTimeDetailsProps) {
+  const progress = timeProgress && timeProgress > 0 ? Math.min(100, Math.round(timeProgress)) : null;
+
   return (
     <div>
       <div className="flex items-center gap-2 mb-3">
@@ -59,7 +65,32 @@ export function TaskTimeDetails({
             {format(parseISO(createdAt), "MMM d, yyyy")}
           </span>
         </div>
+        {updatedAt && (
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">Last Updated:</span>
+            <span className="font-medium text-foreground">
+              {format(parseISO(updatedAt), "MMM d, yyyy")}
+            </span>
+          </div>
+        )}
       </div>
+
+      {progress !== null && (
+        <div className="pl-6 mt-3">
+          <div className="flex items-center gap-2 mb-1.5">
+            <TrendingUp className="w-3.5 h-3.5 text-muted-foreground" />
+            <span className="text-xs text-muted-foreground">
+              {progress}% of estimate used
+            </span>
+          </div>
+          <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+            <div
+              className="h-full rounded-full bg-primary transition-all"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

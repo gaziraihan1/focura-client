@@ -47,7 +47,9 @@ describe('useWorkspaceLayout', () => {
 
     const tasks = result.current.navigation.find((n: Record<string, unknown>) => n.name === 'Tasks')
     expect(tasks).toBeDefined()
-    expect(tasks.children).toHaveLength(3)
+    expect(tasks.children).toHaveLength(4)
+    const childNames = (tasks.children as { name: string }[]).map((c) => c.name)
+    expect(childNames).toEqual(['List', 'Kanban', 'Calendar', 'Time Log'])
   })
 
   it('manages sidebar open state', async () => {

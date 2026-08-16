@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus, Trash2, Loader2, Zap } from "lucide-react";
 import { useProjects } from "@/hooks/useProjectQueries";
+import { useLabels } from "@/hooks/useLabels";
 import {
   useCreateAutomation,
   useUpdateAutomation,
@@ -84,6 +85,8 @@ export function AutomationRuleForm({
   const updateAutomation = useUpdateAutomation();
   const { data: projects = [] } = useProjects(workspaceId);
   const { data: members = [] } = useWorkspaceMembers(workspaceId);
+  const { data: labelsResponse } = useLabels({ limit: 100 });
+  const labels = labelsResponse?.data ?? [];
 
   const [name, setName] = useState(initial?.name ?? "");
   const [triggerType, setTriggerType] = useState<AutomationTrigger>(
@@ -92,6 +95,16 @@ export function AutomationRuleForm({
   const [fromStatus, setFromStatus] = useState(initial?.triggerConfig?.fromStatus ?? "");
   const [toStatus, setToStatus] = useState(initial?.triggerConfig?.toStatus ?? "");
   const [projectId, setProjectId] = useState(initial?.triggerConfig?.projectId ?? "");
+  const [daysBefore, setDaysBefore] = useState(
+    initial?.triggerConfig?.daysBefore?.toString() ?? "3",
+  );
+  const [assigneeUserId, setAssigneeUserId] = useState(
+    initial?.triggerConfig?.assigneeUserId ?? "",
+  );
+  const [labelId, setLabelId] = useState(initial?.triggerConfig?.labelId ?? "");
+  const [mentionedUserId, setMentionedUserId] = useState(
+    initial?.triggerConfig?.mentionedUserId ?? "",
+  );
   const [actions, setActions] = useState<ActionDraft[]>(() => emptyActions(initial));
   const [error, setError] = useState("");
 
@@ -157,7 +170,15 @@ export function AutomationRuleForm({
     const triggerConfig =
       triggerType === "STATUS_CHANGED"
         ? { fromStatus: fromStatus || null, toStatus: toStatus || null }
-        : { projectId: projectId || null };
+        : triggerType === "TASK_CREATED"
+          ? { projectId: projectId || null }
+          : triggerType === "DUE_DATE_APPROACHING"
+            ? { daysBefore: Number(daysBefore) || 3 }
+            : triggerType === "ASSIGNEE_CHANGED"
+              ? { assigneeUserId: assigneeUserId || null }
+              : triggerType === "LABEL_ADDED"
+                ? { labelId: labelId || null }
+                : { mentionedUserId: mentionedUserId || null };
 
     const base = {
       name: name.trim(),
@@ -226,6 +247,12 @@ export function AutomationRuleForm({
             >
               <option value="STATUS_CHANGED">When a task status changes</option>
               <option value="TASK_CREATED">When a task is created</option>
+              <option value="DUE_DATE_APPROACHING">
+                When a task&apos;s due date is approaching
+              </option>
+              <option value="ASSIGNEE_CHANGED">When someone is assigned to a task</option>
+              <option value="LABEL_ADDED">When a label is added to a task</option>
+              <option value="MENTION">When a member is mentioned in a comment</option>
             </select>
           </div>
 
@@ -273,6 +300,90 @@ export function AutomationRuleForm({
                   ))}
                 </select>
               </div>
+            </div>
+          ) : triggerType === "DUE_DATE_APPROACHING" ? (
+            <div>
+              <label
+                htmlFor="automation-days-before"
+                className="mb-1.5 block text-xs font-medium text-muted-foreground"
+              >
+                Fire when due within (days)
+              </label>
+              <input
+                id="automation-days-before"
+                type="number"
+                min={1}
+                max={90}
+                value={daysBefore}
+                onChange={(e) => setDaysBefore(e.target.value)}
+                className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+              />
+            </div>
+          ) : triggerType === "ASSIGNEE_CHANGED" ? (
+            <div>
+              <label
+                htmlFor="automation-assignee"
+                className="mb-1.5 block text-xs font-medium text-muted-foreground"
+              >
+                Assigned member (optional)
+              </label>
+              <select
+                id="automation-assignee"
+                value={assigneeUserId}
+                onChange={(e) => setAssigneeUserId(e.target.value)}
+                className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+              >
+                <option value="">Anyone</option>
+                {members.map((member) => (
+                  <option key={member.userId} value={member.userId}>
+                    {member.user?.name || member.user?.email || member.userId}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : triggerType === "LABEL_ADDED" ? (
+            <div>
+              <label
+                htmlFor="automation-label"
+                className="mb-1.5 block text-xs font-medium text-muted-foreground"
+              >
+                Label (optional)
+              </label>
+              <select
+                id="automation-label"
+                value={labelId}
+                onChange={(e) => setLabelId(e.target.value)}
+                className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+              >
+                <option value="">Any label</option>
+                {labels.map((label) => (
+                  <option key={label.id} value={label.id}>
+                    {label.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : triggerType === "MENTION" ? (
+            <div>
+              <label
+                htmlFor="automation-mentioned"
+                className="mb-1.5 block text-xs font-medium text-muted-foreground"
+              >
+                Mentioned member (optional)
+              </label>
+              <select
+                id="automation-mentioned"
+                value={mentionedUserId}
+                onChange={(e) => setMentionedUserId(e.target.value)}
+                className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+              >
+                <option value="">Anyone</option>
+                {members.map((member) => (
+                  <option key={member.userId} value={member.userId}>
+                    {member.user?.name || member.user?.email || member.userId}
+                  </option>
+                ))}
+              </select>
             </div>
           ) : (
             <div>

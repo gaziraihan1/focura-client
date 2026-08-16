@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useWorkspacePlan } from "@/context/workspacePlan/WorkspacePlanContext";
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
-import { ProjectManagerOnly } from "@/components/Dashboard/ProjectDetails/ProjectManagerOnly";
+import { ProjectMemberOnly } from "@/components/Dashboard/ProjectDetails/ProjectMemberOnly";
 import { ProjectTimeReport } from "@/components/Dashboard/Workspaces/project/Reports/ProjectTimeReport";
 import { UpgradePlanCard } from "@/components/Shared/UpgradePlanCard";
 
@@ -28,7 +28,7 @@ export default function ProjectTimeReportPageWrapper() {
   }
 
   return (
-    <ProjectManagerOnly project={project}>
+    <ProjectMemberOnly project={project}>
       {isFree ? (
         <UpgradePlanCard
           feature="Project Time Reports"
@@ -41,6 +41,6 @@ export default function ProjectTimeReportPageWrapper() {
           projectName={project.name}
         />
       )}
-    </ProjectManagerOnly>
+    </ProjectMemberOnly>
   );
 }

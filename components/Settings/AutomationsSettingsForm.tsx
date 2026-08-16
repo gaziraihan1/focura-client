@@ -16,11 +16,16 @@ import { ConfirmModal } from "@/components/Shared/ConfirmModal";
 import { RunAutomationModal } from "@/components/Settings/RunAutomationModal";
 import { useProjects } from "@/hooks/useProjectQueries";
 import { useWorkspaceMembers } from "@/hooks/useWorkspaceQueries";
+import { useLabels } from "@/hooks/useLabels";
 import { STATUS_LABELS } from "@/constants/task.constants";
 
 const TRIGGER_LABELS: Record<string, string> = {
   STATUS_CHANGED: "Task status changes",
   TASK_CREATED: "Task created",
+  DUE_DATE_APPROACHING: "Task due date is approaching",
+  ASSIGNEE_CHANGED: "Someone is assigned to a task",
+  LABEL_ADDED: "A label is added to a task",
+  MENTION: "A member is mentioned in a comment",
 };
 
 const PRIORITY_LABELS: Record<string, string> = {
@@ -35,13 +40,35 @@ function formatDate(value: string | null): string {
   return new Date(value).toLocaleString();
 }
 
-function describeTrigger(rule: AutomationRule): string {
+function describeTrigger(
+  rule: AutomationRule,
+  memberNameMap: Map<string, string>,
+  labelNameMap: Map<string, string>,
+): string {
   if (rule.triggerType === "STATUS_CHANGED") {
     const from = rule.triggerConfig?.fromStatus;
     const to = rule.triggerConfig?.toStatus;
     const fromLabel = from ? STATUS_LABELS[from] ?? from : "any status";
     const toLabel = to ? STATUS_LABELS[to] ?? to : "any status";
     return `${fromLabel} → ${toLabel}`;
+  }
+  if (rule.triggerType === "DUE_DATE_APPROACHING") {
+    const daysBefore = rule.triggerConfig?.daysBefore ?? 3;
+    return `due within ${daysBefore} day${daysBefore === 1 ? "" : "s"}`;
+  }
+  if (rule.triggerType === "ASSIGNEE_CHANGED") {
+    const id = rule.triggerConfig?.assigneeUserId;
+    return id ? `when ${memberNameMap.get(id) ?? "a member"} is assigned` : "when anyone is assigned";
+  }
+  if (rule.triggerType === "LABEL_ADDED") {
+    const id = rule.triggerConfig?.labelId;
+    return id ? `when ${labelNameMap.get(id) ?? "a label"} is added` : "when any label is added";
+  }
+  if (rule.triggerType === "MENTION") {
+    const id = rule.triggerConfig?.mentionedUserId;
+    return id
+      ? `when ${memberNameMap.get(id) ?? "a member"} is mentioned`
+      : "when anyone is mentioned";
   }
   return rule.triggerConfig?.projectId ? "in a specific project" : "in any project";
 }
@@ -92,6 +119,8 @@ export function AutomationsSettingsForm({
   const testAutomation = useTestAutomation();
   const { data: projects = [] } = useProjects(selectedWorkspaceId);
   const { data: members = [] } = useWorkspaceMembers(selectedWorkspaceId);
+  const { data: labelsResponse } = useLabels({ limit: 100 });
+  const labels = labelsResponse?.data ?? [];
 
   const projectNameMap = useMemo(
     () => new Map(projects.map((p) => [p.id, p.name])),
@@ -106,6 +135,10 @@ export function AutomationsSettingsForm({
         ]),
       ),
     [members],
+  );
+  const labelNameMap = useMemo(
+    () => new Map(labels.map((l) => [l.id, l.name])),
+    [labels],
   );
 
   const { data: rules = [], isLoading: loadingRules } = useAutomations(selectedWorkspaceId);
@@ -256,6 +289,7 @@ export function AutomationsSettingsForm({
               onDelete={() => setRuleToDelete(rule)}
               onRun={() => setRunRule(rule)}
               actionSummary={describeActions(rule.actions, memberNameMap)}
+              triggerSummary={describeTrigger(rule, memberNameMap, labelNameMap)}
             />
           ))}
         </div>
@@ -288,6 +322,7 @@ interface RuleCardProps {
   rule: AutomationRule;
   projectName?: string | null;
   actionSummary: string;
+  triggerSummary: string;
   isPending: boolean;
   isRunning: boolean;
   onToggle: () => void;
@@ -300,6 +335,7 @@ function RuleCard({
   rule,
   projectName,
   actionSummary,
+  triggerSummary,
   isPending,
   isRunning,
   onToggle,
@@ -335,7 +371,7 @@ function RuleCard({
               <span className="font-medium text-foreground/80">
                 {TRIGGER_LABELS[rule.triggerType] ?? rule.triggerType}
               </span>{" "}
-              · {describeTrigger(rule)}
+              · {triggerSummary}
             </span>
             <span>{actionSummary}</span>
             <span className="inline-flex items-center gap-1">

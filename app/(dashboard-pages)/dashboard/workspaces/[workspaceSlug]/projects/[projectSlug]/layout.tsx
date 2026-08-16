@@ -20,10 +20,11 @@ import { Archive } from "lucide-react";
 
 // Pages whose content is manager/admin-only — hidden from collaborators and
 // viewers in the project sidebar (each page also enforces the gate itself).
+// Time Reports is deliberately NOT in this list: it's open to every project
+// member.
 const MANAGER_ONLY_NAV = new Set([
   "Settings",
   "Analytics",
-  "Time Reports",
   "Milestones",
   "Sprints",
   "Sections",

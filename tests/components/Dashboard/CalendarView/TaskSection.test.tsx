@@ -33,7 +33,7 @@ describe('TaskSection', () => {
 
   it('renders title and count', () => {
     render(<TaskSection {...defaultProps} />)
-    expect(screen.getByText(/Overdue/)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /Overdue/ })).toBeInTheDocument()
     expect(screen.getByText('(2)')).toBeInTheDocument()
   })
 

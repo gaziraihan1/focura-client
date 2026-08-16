@@ -5,6 +5,10 @@ import { useSession } from "next-auth/react";
 import { Clock, Plus, Trash2, Pencil, Check, X, Briefcase } from "lucide-react";
 import type { TimeEntry, TimeEntryCategory } from "@/types/task.types";
 import {
+  TIME_ENTRY_CATEGORY_META as CATEGORY_META,
+  TIME_ENTRY_CATEGORY_OPTIONS as CATEGORY_OPTIONS,
+} from "@/constants/timeEntry.constants";
+import {
   useTaskTimeEntries,
   useAddTimeEntry,
   useUpdateTimeEntry,
@@ -16,17 +20,6 @@ interface TimeEntryCardProps {
   workspaceId?: string | null;
 }
 
-const CATEGORY_META: Record<TimeEntryCategory, { label: string; className: string }> = {
-  DEEP_WORK: { label: "Deep Work", className: "bg-purple-500/10 border-purple-500/20 text-purple-600 dark:text-purple-400" },
-  MEETINGS:  { label: "Meetings",  className: "bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400" },
-  ADMIN:     { label: "Admin",     className: "bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400" },
-  LEARNING:  { label: "Learning",  className: "bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400" },
-  BREAK:     { label: "Break",     className: "bg-pink-500/10 border-pink-500/20 text-pink-600 dark:text-pink-400" },
-  OTHER:     { label: "Other",     className: "bg-neutral-500/10 border-neutral-500/20 text-neutral-600 dark:text-neutral-400" },
-};
-
-const CATEGORY_OPTIONS = Object.keys(CATEGORY_META) as TimeEntryCategory[];
-
 function formatDuration(minutes: number): string {
   if (minutes < 60) return `${minutes}m`;
   const h = Math.floor(minutes / 60);
@@ -37,6 +30,23 @@ function formatDuration(minutes: number): string {
 function formatDate(iso: string): string {
   const d = new Date(iso);
   return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+}
+
+// Local YYYY-MM-DD for <input type="date"> — mirrors formatDate's local rendering.
+function toDateInputValue(iso?: string | null): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+    d.getDate()
+  ).padStart(2, "0")}`;
+}
+
+// Local YYYY-MM-DD → ISO datetime (what the API expects for startedAt).
+function dateInputToIso(value: string): string | undefined {
+  if (!value) return undefined;
+  const d = new Date(`${value}T00:00:00`);
+  return Number.isNaN(d.getTime()) ? undefined : d.toISOString();
 }
 
 function initials(name: string | null | undefined): string {
@@ -60,6 +70,8 @@ export function TimeEntryCard({ taskId, workspaceId }: TimeEntryCardProps) {
   const [category, setCategory] = useState<TimeEntryCategory>("DEEP_WORK");
   const [billable, setBillable] = useState(false);
   const [description, setDescription] = useState("");
+  // Optional backdate — empty means "now" (server default).
+  const [date, setDate] = useState("");
 
   // Inline-edit state — editingId is the entry currently being edited.
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -67,6 +79,7 @@ export function TimeEntryCard({ taskId, workspaceId }: TimeEntryCardProps) {
   const [editCategory, setEditCategory] = useState<TimeEntryCategory>("OTHER");
   const [editBillable, setEditBillable] = useState(false);
   const [editDescription, setEditDescription] = useState("");
+  const [editDate, setEditDate] = useState("");
 
   const totalMinutes = entries.reduce((sum, e) => sum + e.duration, 0);
   const currentUserId = session?.user?.id;
@@ -79,10 +92,12 @@ export function TimeEntryCard({ taskId, workspaceId }: TimeEntryCardProps) {
     addEntry.mutate(
       {
         taskId,
+        workspaceId,
         duration: minutes,
         category,
         billable,
         description: description.trim() ? description.trim() : null,
+        startedAt: dateInputToIso(date),
       },
       {
         onSuccess: () => {
@@ -90,6 +105,7 @@ export function TimeEntryCard({ taskId, workspaceId }: TimeEntryCardProps) {
           setDescription("");
           setBillable(false);
           setCategory("DEEP_WORK");
+          setDate("");
         },
       }
     );
@@ -101,6 +117,7 @@ export function TimeEntryCard({ taskId, workspaceId }: TimeEntryCardProps) {
     setEditCategory(entry.category);
     setEditBillable(entry.billable);
     setEditDescription(entry.description ?? "");
+    setEditDate(toDateInputValue(entry.startedAt));
   };
 
   const cancelEdit = () => {
@@ -109,6 +126,7 @@ export function TimeEntryCard({ taskId, workspaceId }: TimeEntryCardProps) {
     setEditCategory("OTHER");
     setEditBillable(false);
     setEditDescription("");
+    setEditDate("");
   };
 
   const saveEdit = (entry: TimeEntry) => {
@@ -119,10 +137,12 @@ export function TimeEntryCard({ taskId, workspaceId }: TimeEntryCardProps) {
       {
         id: entry.id,
         taskId,
+        workspaceId,
         duration: minutes,
         category: editCategory,
         billable: editBillable,
         description: editDescription.trim() ? editDescription.trim() : null,
+        startedAt: dateInputToIso(editDate),
       },
       { onSuccess: cancelEdit }
     );
@@ -171,7 +191,17 @@ export function TimeEntryCard({ taskId, workspaceId }: TimeEntryCardProps) {
               ))}
             </select>
           </div>
-          <div className="col-span-2">
+          <div className="col-span-2 sm:col-span-2">
+            <label className="text-xs text-muted-foreground mb-1 block">Date (optional)</label>
+            <input
+              type="date"
+              aria-label="Entry date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+            />
+          </div>
+          <div className="col-span-2 sm:col-span-4">
             <label className="text-xs text-muted-foreground mb-1 block">Description (optional)</label>
             <input
               type="text"
@@ -251,6 +281,16 @@ export function TimeEntryCard({ taskId, workspaceId }: TimeEntryCardProps) {
                         ))}
                       </select>
                     </div>
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-muted-foreground mb-1 block">Date (optional)</label>
+                    <input
+                      type="date"
+                      aria-label="Edit entry date"
+                      value={editDate}
+                      onChange={(e) => setEditDate(e.target.value)}
+                      className="w-full px-2.5 py-1.5 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    />
                   </div>
                   <div>
                     <label className="text-[10px] text-muted-foreground mb-1 block">Description</label>
@@ -347,7 +387,7 @@ export function TimeEntryCard({ taskId, workspaceId }: TimeEntryCardProps) {
                           <Pencil className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => deleteEntry.mutate({ entry, workspaceId })}
+                          onClick={() => deleteEntry.mutate({ id: entry.id, taskId: entry.taskId, workspaceId })}
                           disabled={deleteEntry.isPending || updateEntry.isPending}
                           title="Delete entry"
                           className="p-1.5 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors disabled:opacity-50"

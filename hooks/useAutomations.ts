@@ -12,7 +12,13 @@ import { automationKeys } from "./automationKeys";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type AutomationTrigger = "STATUS_CHANGED" | "TASK_CREATED";
+export type AutomationTrigger =
+  | "STATUS_CHANGED"
+  | "TASK_CREATED"
+  | "DUE_DATE_APPROACHING"
+  | "ASSIGNEE_CHANGED"
+  | "LABEL_ADDED"
+  | "MENTION";
 
 export type AutomationActionType = "ASSIGN_USER" | "SET_PRIORITY" | "NOTIFY_MEMBERS";
 
@@ -20,6 +26,10 @@ export interface AutomationTriggerConfig {
   fromStatus?: string | null;
   toStatus?: string | null;
   projectId?: string | null;
+  daysBefore?: number | null;
+  assigneeUserId?: string | null;
+  labelId?: string | null;
+  mentionedUserId?: string | null;
 }
 
 export interface AutomationActionConfig {

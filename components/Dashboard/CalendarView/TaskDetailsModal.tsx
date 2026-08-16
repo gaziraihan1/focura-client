@@ -29,6 +29,8 @@ export function TaskDetailsModal({ task, onClose }: TaskDetailsModalProps) {
           priority={task.priority}
           isOverdue={!!isOverdue}
           onClose={onClose}
+          project={task.project}
+          dueDate={task.dueDate}
         />
 
         <TaskModalContent
@@ -37,6 +39,8 @@ export function TaskDetailsModal({ task, onClose }: TaskDetailsModalProps) {
           dueDate={task.dueDate}
           estimatedHours={task.estimatedHours}
           createdAt={task.createdAt}
+          updatedAt={task.updatedAt}
+          timeProgress={task.timeTracking?.timeProgress ?? null}
           isOverdue={!!isOverdue}
           createdBy={task.createdBy}
           assignees={task.assignees}
@@ -44,6 +48,13 @@ export function TaskDetailsModal({ task, onClose }: TaskDetailsModalProps) {
           commentsCount={task._count.comments}
           subtasksCount={task._count.subtasks}
           filesCount={task._count.files}
+          milestone={task.milestone}
+          sprint={task.sprint}
+          recurrence={task.recurrence}
+          energyType={task.energyType ?? null}
+          focusRequired={task.focusRequired ?? null}
+          focusLevel={task.focusLevel ?? null}
+          distractionCost={task.distractionCost ?? null}
         />
       </div>
     </div>

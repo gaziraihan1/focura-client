@@ -1,4 +1,4 @@
-import { X, AlertCircle } from "lucide-react";
+import { X, AlertCircle, Folder, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface TaskModalHeaderProps {
@@ -7,6 +7,8 @@ interface TaskModalHeaderProps {
   priority: string;
   isOverdue: boolean;
   onClose: () => void;
+  project?: { id: string; name: string; color: string; workspace?: { id: string; name: string } } | null;
+  dueDate?: string | null;
 }
 
 const getStatusColor = (status: string) => {
@@ -47,7 +49,17 @@ export function TaskModalHeader({
   priority,
   isOverdue,
   onClose,
+  project,
+  dueDate,
 }: TaskModalHeaderProps) {
+  const dueLabel = dueDate
+    ? new Date(dueDate).toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : null;
+
   return (
     <div className="border-b border-border p-6 bg-muted/50">
       <div className="flex items-start justify-between">
@@ -79,6 +91,32 @@ export function TaskModalHeader({
               </span>
             )}
           </div>
+
+          {(project || dueLabel) && (
+            <div className="flex items-center gap-3 flex-wrap mt-3">
+              {project && (
+                <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Folder className="w-3.5 h-3.5" />
+                  <span
+                    className="w-2 h-2 rounded-full"
+                    style={{ backgroundColor: project.color }}
+                  />
+                  <span className="font-medium text-foreground">{project.name}</span>
+                  {project.workspace?.name && (
+                    <span>· {project.workspace.name}</span>
+                  )}
+                </span>
+              )}
+              {dueLabel && (
+                <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span className={cn(isOverdue && "text-destructive font-medium")}>
+                    {isOverdue ? `Overdue · ${dueLabel}` : `Due ${dueLabel}`}
+                  </span>
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         <button aria-label="Close"

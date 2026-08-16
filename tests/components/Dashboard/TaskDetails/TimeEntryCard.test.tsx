@@ -122,6 +122,40 @@ describe("TimeEntryCard", () => {
     );
   });
 
+  it("passes workspaceId when updating so analytics refresh", () => {
+    mockUpdate.mockImplementation((_input: unknown, opts: { onSuccess?: () => void }) => {
+      opts.onSuccess?.();
+    });
+
+    render(<TimeEntryCard taskId="task-1" workspaceId="ws-1" />);
+    fireEvent.click(screen.getByTitle("Edit entry"));
+    fireEvent.click(screen.getByRole("button", { name: /save/i }));
+
+    expect(mockUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({ workspaceId: "ws-1" }),
+      expect.anything()
+    );
+  });
+
+  it("passes workspaceId and backdates when adding an entry", () => {
+    mockAdd.mockImplementation((_input: unknown, opts: { onSuccess?: () => void }) => {
+      opts.onSuccess?.();
+    });
+
+    render(<TimeEntryCard taskId="task-1" workspaceId="ws-1" />);
+    fireEvent.change(screen.getByLabelText("Entry date"), { target: { value: "2026-08-01" } });
+    fireEvent.change(screen.getByPlaceholderText("30"), { target: { value: "45" } });
+    fireEvent.click(screen.getByRole("button", { name: /add entry/i }));
+
+    const payload = mockAdd.mock.calls[0][0] as {
+      workspaceId: string;
+      startedAt: string;
+    };
+    expect(payload.workspaceId).toBe("ws-1");
+    // startedAt round-trips to the picked local date regardless of timezone.
+    expect(new Date(payload.startedAt).toLocaleDateString("en-CA")).toBe("2026-08-01");
+  });
+
   it("closes the form after a successful save", () => {
     mockUpdate.mockImplementation((_input: unknown, opts: { onSuccess?: () => void }) => {
       opts.onSuccess?.();

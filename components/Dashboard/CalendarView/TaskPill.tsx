@@ -9,6 +9,15 @@ interface TaskPillProps {
   onClick: () => void;
 }
 
+const STATUS_DOT: Record<string, string> = {
+  COMPLETED: "bg-green-500",
+  IN_PROGRESS: "bg-blue-500",
+  IN_REVIEW: "bg-purple-500",
+  BLOCKED: "bg-red-500",
+  CANCELLED: "bg-gray-400",
+  TODO: "bg-gray-300",
+};
+
 export default function TaskPill({ task, isPersonal, isOverdue, onClick }: TaskPillProps) {
   const getPriorityColor = () => {
     switch (task.priority) {
@@ -34,15 +43,24 @@ export default function TaskPill({ task, isPersonal, isOverdue, onClick }: TaskP
       )}
     >
       <div className="flex items-center gap-1 sm:gap-1.5 justify-between">
-        <span className="font-medium truncate flex-1 group-hover:font-semibold">
-          {task.title}
+        <span className="flex items-center gap-1 sm:gap-1.5 min-w-0 flex-1">
+          <span
+            aria-hidden
+            className={cn(
+              'w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full shrink-0',
+              STATUS_DOT[task.status] ?? 'bg-gray-300'
+            )}
+          />
+          <span className="font-medium truncate group-hover:font-semibold">
+            {task.title}
+          </span>
         </span>
-        
+
         <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
           {!isPersonal && (
             <Users className="w-2 h-2 sm:w-2.5 sm:h-2.5 lg:w-3 lg:h-3 text-muted-foreground hidden xs:block" />
           )}
-          
+
           {task.estimatedHours && (
             <span className="text-[8px] sm:text-[9px] lg:text-[10px] text-muted-foreground hidden sm:flex items-center gap-0.5">
               <Clock className="w-2 h-2 lg:w-2.5 lg:h-2.5" />

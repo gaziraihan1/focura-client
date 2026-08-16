@@ -1,17 +1,17 @@
 # 🕳️ Focura — Focus & Burnout Feature Gap Analysis
 
-> **Generated:** July 30, 2026  ·  **Last reviewed / updated:** August 9, 2026
+> **Generated:** July 30, 2026  ·  **Last reviewed / updated:** August 16, 2026
 > **Scope:** Frontend (`Focura-client/focura`) & Backend (`Focura-backend`)
 > **Focus areas:** Focus Sessions, Burnout Detection, Capacity Management, Energy Levels, AI Features, Daily Tasks
 
-**Status summary (2026-08-09):** All previously-identified gaps remain implemented, tested, and documented. Since the last review, **all five milestones in `FEATURE_PLANS.md` shipped end-to-end** — **Custom Workflows**, **Recurring Tasks**, **Automation Rules**, **Workspace Templates**, and now the **M5 public template gallery** (ratings, featured strip, author credits). The only remaining item is the **AI feature suite**, which is **deferred by decision** (requires an external paid API — OpenAI — and the implementation guide estimates 2–3 weeks of work).
+**Status summary (2026-08-16):** All previously-identified gaps remain implemented, tested, and documented. All five milestones in `FEATURE_PLANS.md` shipped end-to-end — **Custom Workflows**, **Recurring Tasks**, **Automation Rules**, **Workspace Templates**, and the **M5 public template gallery** (ratings, featured strip, author credits). The **AI feature suite also shipped** (Phases 1–4, server-side Google Gemini — see §2): task autocomplete, goal breakdown, comment assist, daily planning, meeting summaries, and weekly insights are live with per-workspace quota + rate-limit enforcement. Three original AI sub-features remain unbuilt by decision: **natural-language search**, **standalone task description generation**, and **project health scoring**.
 
 ---
 
 ## Table of Contents
 
 1. [Test Coverage Gaps](#1-test-coverage-gaps)
-2. [AI Features Not Implemented](#2-ai-features-not-implemented--deferred-by-decision)
+2. [AI Features — Implemented (Gemini) + Remaining Items](#2-ai-features--implemented-gemini--remaining-items)
 3. [Error Handling Gaps](#3-error-handling-gaps--resolved)
 4. [Type Safety & Casting Issues](#4-type-safety--casting-issues--resolved)
 5. [Missing UI Components](#5-missing-ui-components--resolved)
@@ -55,6 +55,7 @@
 | `useFocusSessionStats` | `hooks/useFocusSession.ts` | ✅ Covered | - |
 | `useDailyTasks` | `hooks/useDailyTasks.ts` | ✅ Covered | - |
 | `useRecommendations` | `hooks/useBurnoutTrends.ts` | ✅ Covered | - |
+| `useAi*` (goal breakdown, weekly insights, daily plan, comment assist, meeting summary, quota) | `hooks/useAi*.ts` | ✅ Covered | `tests/components/AI/*` suites |
 
 ### 1.3 Backend — Tests (status 2026-08-02)
 
@@ -66,28 +67,44 @@
 | `burnoutSignal` cron | `burnoutSignal.cron.test.ts` (new, 2026-08-02) | ✅ Covered |
 | `dailyTask` module | `tests/unit/dailyTask/*` | ✅ Covered |
 | energy export / dismiss-all / daily summary | added to calendar + focusSession test suites | ✅ Covered |
+| `ai` module (service, quota, rate limits, controllers) | `tests/unit/ai/*` | ✅ Covered |
 
-**Full backend suite:** 3,866+ tests passing (incl. 157 calendar/focusSession unit tests).
+**Full backend suite:** 4,477+ tests passing (incl. calendar/focusSession unit tests and the ai service suite).
 
 ---
 
-## 2. AI Features Not Implemented — Deferred by Decision
+## 2. AI Features — Implemented (Gemini) + Remaining Items
 
-The [`AI_IMPLEMENTATION_GUIDE.md`](./AI_IMPLEMENTATION_GUIDE.md) describes **7 AI features** that remain **entirely unimplemented**. **Decision (2026-08-02):** these are **deferred** — they require an external paid API (OpenAI), and the guide estimates 2–3 weeks of work. No code was started.
+The AI feature suite described in the original [`AI_IMPLEMENTATION_GUIDE.md`](./AI_IMPLEMENTATION_GUIDE.md) (an OpenAI-in-Next.js plan) is **implemented** — but **server-side with Google Gemini**, per the authoritative [`GEMINI.md`](../Focura-backend/GEMINI.md) spec. The Next.js client only calls Focura's own `/api/v1/ai/*` endpoints through `lib/axios`; there is no `app/api/ai/*`, and the API key never reaches the client.
 
-| # | Feature | Status | Priority |
-|---|---------|--------|----------|
-| 1 | **Smart Task Suggestions** — AI suggests priority, intent, energy while typing title | ⏸️ Deferred | High |
-| 2 | **AI Task Breakdown** — Generate subtasks from task title+description | ⏸️ Deferred | Medium |
-| 3 | **Daily AI Recommendations** — Morning suggestions based on energy, workload, deadlines | ⏸️ Deferred | High |
-| 4 | **Natural Language Search** — Search tasks with plain English queries | ⏸️ Deferred | Low |
-| 5 | **Task Description Generation** — Auto-generate structured descriptions with acceptance criteria | ⏸️ Deferred | Medium |
-| 6 | **AI Workload Analysis** — Burnout prediction with AI-powered pattern analysis | ⏸️ Deferred | High |
-| 7 | **Project Health Scoring** — AI-driven health score (0–100) for projects | ⏸️ Deferred | Low |
+**Shipped endpoints** (module `Focura-backend/src/modules/ai`, with per-workspace quota, burst/hourly/daily/monthly rate limits, and `X-AI-RateLimit-*` response headers):
 
-**Required infrastructure (none created):** `lib/ai/openai.ts`, `lib/ai/prompts.ts`, `lib/ai/context-builder.ts`, `app/api/ai/*` routes, `hooks/useAi*`, `components/AI/*`, `OPENAI_API_KEY`.
+| Endpoint | Feature | Gating |
+|----------|---------|--------|
+| `POST /api/v1/ai/tasks/autocomplete` | Expand a task title → description, subtasks, priority, energy, est. hours, due date | All plans |
+| `POST /api/v1/ai/goals/breakdown` | Big goal → Low/Medium/High energy-matched task list | All plans |
+| `POST /api/v1/ai/comments/assist` | Rephrase / expand a comment in a chosen tone | All plans |
+| `GET /api/v1/ai/quota` | Daily usage + remaining credits for the workspace | All plans |
+| `GET /api/v1/ai/usage` *(OWNER/ADMIN)* | AI spend report from `AiUsageLog` (calls, tokens, est. $) | Owner/Admin |
+| `POST /api/v1/ai/plan/daily` | Order tasks into a recommended daily sequence | PRO+ |
+| `POST /api/v1/ai/meetings/summarize` | Meeting details + notes → minutes + action items | PRO+ |
+| `POST /api/v1/ai/insights/weekly` | Weekly productivity summary + burnout warnings | BUSINESS+ |
 
-> Note: Non-AI burnout/workload analysis is fully implemented (rule-based `BurnoutSignal` computation — see §6.3).
+**Original 7-feature plan → current status:**
+
+| # | Original planned feature | Status | Shipped as |
+|---|--------------------------|--------|------------|
+| 1 | Smart Task Suggestions (priority/intent/energy while typing) | ✅ Implemented | `ai/tasks/autocomplete` |
+| 2 | AI Task Breakdown (generate subtasks) | ✅ Implemented | `ai/goals/breakdown` (goal → energy-matched tasks) |
+| 3 | Daily AI Recommendations (morning plan) | ✅ Implemented | `ai/plan/daily` (PRO+) |
+| 4 | Natural Language Search | ❌ Not implemented | — |
+| 5 | Task Description Generation (acceptance criteria) | ⚠️ Partially | Description expansion inside `ai/tasks/autocomplete`; standalone generator not built |
+| 6 | AI Workload Analysis / burnout prediction | ✅ Implemented | `ai/insights/weekly` (BUSINESS+) |
+| 7 | Project Health Scoring (0–100) | ❌ Not implemented | — |
+
+**Required infrastructure — all created:** `lib/ai/gemini.client.ts` + `GEMINI_API_KEY` (backend), `lib/ai/prompts.ts`, `lib/ai/context-builder.ts`, `modules/ai/*` (routes, controller, service, types, quota/rate-limit middleware), `hooks/useAi*`, and `components/AI/*` (AiGoalBreakdown, AiWeeklyInsights, AiDailyPlan, AiCommentAssist, AiMeetingSummary, AiQuotaBadge, AiSuggestionBar — all with tests).
+
+> Note: Non-AI burnout/workload analysis is fully implemented (rule-based `BurnoutSignal` computation — see §6.3). `AiWeeklyInsights` complements it with AI-written weekly summaries + burnout warnings on BUSINESS+ plans.
 
 ---
 
@@ -162,9 +179,10 @@ All hooks (`useUserCapacity`, `useUserSchedule`, `useBurnoutTrends`, `useEnergyL
 | `PATCH /api/v1/calendar/recommendations/:id/dismiss` | ✅ |
 | `POST /api/v1/calendar/recommendations/dismiss-all` | ✅ Implemented 2026-08-02 |
 | `GET /api/v1/focus-sessions/daily-summary` | ✅ Implemented 2026-08-02 |
+| `GET /api/v1/ai/*` (quota, usage) + `POST /api/v1/ai/*` (autocomplete, goals/breakdown, comments/assist, plan/daily, meetings/summarize, insights/weekly) | ✅ Implemented (Gemini, Phases 1–4) |
 | All other calendar / focus-session endpoints | ✅ |
 
-**All endpoints aligned FE ↔ BE (15/15).**
+**All endpoints aligned FE ↔ BE (15/15 focus/wellness + 8 AI).**
 
 ### 6.3 Backend Cron Jobs — ✅ Resolved
 
@@ -176,7 +194,7 @@ All hooks (`useUserCapacity`, `useUserSchedule`, `useBurnoutTrends`, `useEnergyL
 
 ### 6.4 Backend Test Coverage — ✅ Resolved
 
-Backend tests now exist for focus session controller/mutation/query/analytics, calendar controller/aggregation/insights/mutation/wellness, the wellness cron, the new burnout signal cron, dailyTask, and energy modules. **3,866+ tests passing.**
+Backend tests now exist for focus session controller/mutation/query/analytics, calendar controller/aggregation/insights/mutation/wellness, the wellness cron, the new burnout signal cron, dailyTask, energy, and the ai module (service + quota). **4,477+ tests passing.**
 
 ---
 
@@ -193,10 +211,11 @@ Backend tests now exist for focus session controller/mutation/query/analytics, c
 | `useRecommendations` (+dismiss/dismissAll) | `GET /calendar/recommendations`, `PATCH /:id/dismiss`, `POST /dismiss-all` | ✅ |
 | `useEnergyLevel` / `useEnergyHistory` / `exportEnergyHistory` | `GET+POST /calendar/energy`, `GET /history`, `GET /export` | ✅ |
 | `useUserCapacity` / `useUserSchedule` | `GET /calendar/capacity`, `GET /calendar/schedule` | ✅ |
+| `useAi*` (autocomplete, breakdown, plan, insights, comments, meetings, quota, usage) | `/ai/*` | ✅ |
 
 ### 7.2 Type Alignment — ✅ All aligned
 
-`CalendarInsights`, `BurnoutTrend`, `UserCapacity`/`UserCapacityData`, `UserWorkSchedule`/`UserWorkScheduleData`, `EnergyLevel`, `WellnessRecommendation`, `FocusDailySummary` — identical structures FE/BE.
+`CalendarInsights`, `BurnoutTrend`, `UserCapacity`/`UserCapacityData`, `UserWorkSchedule`/`UserWorkScheduleData`, `EnergyLevel`, `WellnessRecommendation`, `FocusDailySummary` — identical structures FE/BE. AI contracts (`AiTaskSuggestion`, `AiGoalBreakdown`, `AiCommentAssist`, `AiQuota`, `AI_ERROR_CODES`, `AI_BASE_PATH`) mirrored in `types/ai.types.ts`.
 
 ---
 
@@ -220,6 +239,7 @@ Backend tests now exist for focus session controller/mutation/query/analytics, c
 | Calendar aggregates / insights cache | ✅ | Redis with stale-while-revalidate |
 | **Energy level cache** | ✅ | `calendarEnergyLevel` + `calendarEnergyHistory` + `calendarEnergyExport` keys; `CalendarCache.invalidateEnergy` covers all three |
 | **Burnout trends cache** | ✅ | `calendarBurnoutTrends` key; `invalidateBurnoutTrends` on changes |
+| **AI responses** | ✅ | Cached per endpoint/key with quota accounting; rate limits (burst/hourly/daily/monthly) enforced in Redis |
 | Frontend stale time | ✅ | 5 min for calendars |
 | Frontend polling | ✅ | 30s for active session |
 
@@ -227,7 +247,7 @@ Backend tests now exist for focus session controller/mutation/query/analytics, c
 
 ## 10. Priority Action Items
 
-### Status: 🟢 All items completed except AI (deferred by decision)
+### Status: 🟢 All items completed — AI suite shipped (Gemini); 3 original AI sub-features remain unbuilt by decision
 
 | # | Item | Area | Status |
 |---|------|------|--------|
@@ -243,7 +263,7 @@ Backend tests now exist for focus session controller/mutation/query/analytics, c
 | 10 | Frontend tests for FocusModeBanner, WellnessRecommendations, etc. | Frontend | ✅ Done |
 | 11 | Backend test for wellness cron and service (+ burnout cron) | Backend | ✅ Done |
 | 12 | Bulk dismiss endpoint for recommendations | Backend | ✅ Done |
-| 13 | Implement AI features from AI_IMPLEMENTATION_GUIDE.md | Both | ⏸️ **Deferred by decision (needs paid OpenAI API, ~2–3 weeks)** |
+| 13 | Implement AI features from AI_IMPLEMENTATION_GUIDE.md | Both | ✅ Done (Phases 1–4, Google Gemini) — remaining unbuilt by decision: NL search, standalone description generation, project health scoring |
 | 14 | Document focus/burnout features in README/ARCHITECTURE/backend README | Docs | ✅ Done |
 
 ---
@@ -252,10 +272,10 @@ Backend tests now exist for focus session controller/mutation/query/analytics, c
 
 | Category | Count |
 |----------|-------|
-| ✅ Resolved gaps | **13/14** |
-| ⏸️ Deferred (AI features, requires external paid API) | **1** (7 sub-features) |
-| ✅ Working endpoints (aligned FE/BE) | **15/15** |
-| ✅ Working types (aligned FE/BE) | **6/6** |
-| ✅ Backend test suites passing | **3,866+** |
-| ✅ Frontend component/hook suites | Passing (incl. 65 chart/card tests added 2026-08-02) |
+| ✅ Resolved gaps | **15/15** (incl. AI feature suite — Gemini, Phases 1–4) |
+| ⏸️ Not built (3 original AI sub-features: NL search, standalone description gen, project health scoring) | 3 |
+| ✅ Working endpoints (aligned FE/BE) | **15/15** focus/wellness + **8** AI |
+| ✅ Working types (aligned FE/BE) | **6/6** + AI contracts |
+| ✅ Backend test suites passing | **4,477+** |
+| ✅ Frontend component/hook suites | Passing (incl. chart/card tests and `tests/components/AI/*`) |
 | ✅ Schema migrations applied | 44 (added `BurnoutSignal.updatedAt`) |

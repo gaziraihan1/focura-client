@@ -101,6 +101,14 @@ vi.mock('@/components/Dashboard/CalendarView/TaskModal/TaskActivityStats', () =>
   TaskActivityStats: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-activity-stats" />,
 }));
 
+vi.mock('@/components/Dashboard/CalendarView/TaskModal/TaskPlanSection', () => ({
+  TaskPlanSection: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-plan-section" />,
+}));
+
+vi.mock('@/components/Dashboard/CalendarView/TaskModal/TaskFocusSection', () => ({
+  TaskFocusSection: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-focus-section" />,
+}));
+
 vi.mock('@/components/Dashboard/Workspaces/Meeting/MeetingStatusBadge', () => ({
   MeetingStatusBadge: ({ status }: { status: string }) => <span data-testid="meeting-status-badge">{status}</span>,
 }));
@@ -217,6 +225,31 @@ describe('TaskModalContent', () => {
     expect(screen.getByTestId('task-people-section')).toBeInTheDocument();
     expect(screen.getByTestId('task-project-section')).toBeInTheDocument();
     expect(screen.getByTestId('task-activity-stats')).toBeInTheDocument();
+    expect(screen.getByTestId('task-plan-section')).toBeInTheDocument();
+    expect(screen.getByTestId('task-focus-section')).toBeInTheDocument();
+  });
+
+  it('passes plan and focus data to new sections', () => {
+    render(
+      <TaskModalContent
+        {...baseProps}
+        milestone={{ id: 'm1', title: 'Sprint Goal', status: 'ACTIVE', progress: 60 }}
+        sprint={{ id: 's1', name: 'Sprint 12' }}
+        recurrence={{ id: 'r1', pattern: 'WEEKLY', interval: 1, endsAt: null }}
+        energyType='HIGH'
+        focusRequired={true}
+        focusLevel={4}
+        distractionCost={2}
+        updatedAt='2025-01-10'
+        timeProgress={50}
+      />
+    );
+    expect(screen.getByTestId('task-plan-section')).toBeInTheDocument();
+    expect(screen.getByTestId('task-focus-section')).toBeInTheDocument();
+    const timeDetails = screen.getByTestId('task-time-details');
+    const props = JSON.parse(timeDetails.getAttribute('data-props')!);
+    expect(props.updatedAt).toBe('2025-01-10');
+    expect(props.timeProgress).toBe(50);
   });
 
   it('passes description to TaskDescription', () => {
@@ -243,5 +276,22 @@ describe('TaskModalContent', () => {
   it('handles null project', () => {
     render(<TaskModalContent {...baseProps} project={null} />);
     expect(screen.getByTestId('task-project-section')).toBeInTheDocument();
+  });
+
+  it('renders with all plan/focus data null', () => {
+    render(
+      <TaskModalContent
+        {...baseProps}
+        milestone={null}
+        sprint={null}
+        recurrence={null}
+        energyType={null}
+        focusRequired={null}
+        focusLevel={null}
+        distractionCost={null}
+      />
+    );
+    expect(screen.getByTestId('task-plan-section')).toBeInTheDocument();
+    expect(screen.getByTestId('task-focus-section')).toBeInTheDocument();
   });
 });

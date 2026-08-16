@@ -355,7 +355,7 @@ export function CalendarInsightsBar({ insights }: CalendarInsightsBarProps) {
 
 ### Recommendations Panel
 
-**Location**: `app/(dashboard-pages)/dashboard/wellness/` (future)
+**Location**: `components/Dashboard/WellnessRecommendations.tsx` (rendered on the Wellness page)
 
 **Mock Design**:
 
@@ -429,7 +429,7 @@ export function useWellnessRecommendations() {
 
 ### Energy Quick-Log Widget
 
-**Location**: `components/Dashboard/Calendar/EnergyQuickLog.tsx` (future)
+**Location**: `components/Dashboard/Calendar/EnergyQuickLog.tsx` (floating widget on the Wellness + Calendar pages)
 
 **Visual**:
 
@@ -662,5 +662,5 @@ Week 3:
 
 ---
 
-_Last Updated: January 2026_
+_Last Updated: August 2026_
 _Focura Frontend Team_

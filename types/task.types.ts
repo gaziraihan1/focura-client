@@ -257,6 +257,13 @@ export interface StatusOption {
 
 export type TimeEntryCategory = 'DEEP_WORK' | 'MEETINGS' | 'ADMIN' | 'LEARNING' | 'BREAK' | 'OTHER';
 
+/** Task summary embedded in a time entry returned by the "my entries" endpoint. */
+export interface TimeEntryTaskSummary {
+  id: string;
+  title: string;
+  project: { id: string; name: string } | null;
+}
+
 export interface TimeEntry {
   id: string;
   description: string | null;
@@ -267,6 +274,7 @@ export interface TimeEntry {
   endedAt: string | null;
   userId: string;
   taskId: string;
+  task?: TimeEntryTaskSummary;
   user?: {
     id: string;
     name: string | null;
