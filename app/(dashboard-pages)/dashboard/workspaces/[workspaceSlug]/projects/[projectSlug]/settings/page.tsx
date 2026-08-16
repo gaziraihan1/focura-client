@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect, Suspense } from "react";
+import { useMemo, useCallback, Suspense } from "react";
 import { useParams, useRouter, usePathname, useSearchParams } from "next/navigation";
 import {
   Settings,
@@ -58,25 +58,13 @@ function ProjectSettingsContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Restore the active tab from the URL (?tab=...) so a refresh (or a direct
+  // The active tab is derived from the URL (?tab=...) so a refresh (or a direct
   // link, or back/forward navigation) lands on the same tab the user was on.
-  const [activeTab, setActiveTab] = useState<SettingsTab>(() => {
-    const param = searchParams.get("tab");
-    return isSettingsTab(param) ? param : "general";
-  });
-
-  // Keep the tab in sync when the URL changes (browser back/forward, tab links
-  // from elsewhere) — without fighting the explicit setActiveTab in the handler.
-  useEffect(() => {
-    const param = searchParams.get("tab");
-    if (isSettingsTab(param) && param !== activeTab) {
-      setActiveTab(param);
-    }
-  }, [searchParams, activeTab]);
+  const tabParam = searchParams.get("tab");
+  const activeTab: SettingsTab = isSettingsTab(tabParam) ? tabParam : "general";
 
   const handleTabChange = useCallback(
     (tab: SettingsTab) => {
-      setActiveTab(tab);
       const next = new URLSearchParams(window.location.search);
       if (tab === "general") {
         next.delete("tab");

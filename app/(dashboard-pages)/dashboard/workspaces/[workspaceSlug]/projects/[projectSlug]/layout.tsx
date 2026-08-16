@@ -44,7 +44,7 @@ export default function ProjectLayout({
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const nav = useProjectNav(workspaceSlug, projectSlug);
-  const { data: project, error, isLoading, refetch } = useProjectDetailsBySlug(projectSlug);
+  const { data: project, error, isLoading, isFetching, refetch } = useProjectDetailsBySlug(projectSlug);
 
   const projectColor = (project as ProjectData)?.color ?? "#667eea";
   const currentNavItem = nav.find((item) => item.match(pathname));
@@ -104,18 +104,20 @@ export default function ProjectLayout({
   // list is stale — e.g. a collaborator added after this browser cached the
   // project detail. Refetch once before showing the denied screen so a fresh
   // membership list wins instead of a stale cache.
-  const [selfHealing, setSelfHealing] = useState(false);
   const healedRef = useRef(false);
 
   useEffect(() => {
     if (deniedByMembership && !deniedByApi && !healedRef.current) {
       healedRef.current = true;
-      setSelfHealing(true);
-      refetch().finally(() => setSelfHealing(false));
+      refetch();
     } else if (!deniedByMembership) {
       healedRef.current = false;
     }
   }, [deniedByMembership, deniedByApi, refetch]);
+
+  // Show loading while the self-heal refetch is in flight so the denied screen
+  // doesn't flash for a user whose membership was just added.
+  const selfHealing = deniedByMembership && !deniedByApi && isFetching;
 
   if (isLoading || selfHealing) {
     return <LoadingState />;

@@ -111,13 +111,16 @@ describe("ProjectLayout", () => {
 
   it("self-heals a stale member list by refetching before denying access", async () => {
     let includeMember = false;
+    let fetching = false;
     const refetch = vi.fn(async () => {
+      fetching = true;
       includeMember = true;
     });
 
     // Simulates a collaborator whose browser cached the project detail before
     // they were added: the first read has an empty member list, the refetch
-    // (after the backend invalidation) includes them.
+    // (after the backend invalidation) includes them. `fetching` mirrors the
+    // React Query isFetching flag so the layout shows loading while healing.
     (useProjectDetailsBySlug as any).mockImplementation(() => ({
       data: {
         name: "Web App",
@@ -128,18 +131,28 @@ describe("ProjectLayout", () => {
         isAdmin: false,
       },
       isLoading: false,
+      isFetching: fetching,
       error: undefined,
       refetch,
     }));
 
-    render(
+    const { rerender } = render(
       <ProjectLayout>
         <div>Secret page content</div>
       </ProjectLayout>,
     );
 
-    // The gate denies once, refetches, and then lets the user in
+    // The gate denies once and kicks off the refetch
     expect(refetch).toHaveBeenCalled();
+
+    // Simulate the refetch settling: a fresh read with the member list updated
+    // and no fetch in flight, which admits the collaborator.
+    rerender(
+      <ProjectLayout>
+        <div>Secret page content</div>
+      </ProjectLayout>,
+    );
+
     expect(await screen.findByText("Secret page content")).toBeDefined();
     expect(screen.queryByText("Access Denied")).toBeNull();
     // A self-heal must not wipe the shared caches
