@@ -23,7 +23,7 @@ export const AboutHero = () => {
         {/* Version badge */}
         <div className="inline-flex items-center gap-2 rounded-full border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground mb-8 shadow-sm">
           <span className="w-1.5 h-1.5 rounded-full bg-foreground inline-block animate-pulse" />
-          v1.0.0 Stable · Released April 5, 2026
+          v1.1.0 Stable · Released August 11, 2026
         </div>
 
         {/* Headline */}
@@ -66,7 +66,7 @@ export const AboutHero = () => {
         <div className="flex flex-wrap items-center justify-center gap-3">
           {[
             { icon: Star, label: "Open Source", value: "Source Available" },
-            { icon: GitFork, label: "Commits", value: "107+" },
+            { icon: GitFork, label: "Commits", value: "409+" },
             { icon: Zap, label: "Deployment", value: "Vercel Edge" },
           ].map(({ icon: Icon, label, value }) => (
             <div

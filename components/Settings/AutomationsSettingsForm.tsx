@@ -1,17 +1,21 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Zap, Plus, Loader2, Pencil, Trash2, Calendar } from "lucide-react";
+import { Zap, Plus, Loader2, Pencil, Trash2, Calendar, Play, Folder } from "lucide-react";
 import { useWorkspaces } from "@/hooks/useWorkspaceQueries";
 import {
   useAutomations,
   useUpdateAutomation,
   useDeleteAutomation,
+  useTestAutomation,
   type AutomationAction,
   type AutomationRule,
 } from "@/hooks/useAutomations";
 import { AutomationRuleForm } from "@/components/Settings/AutomationRuleForm";
 import { ConfirmModal } from "@/components/Shared/ConfirmModal";
+import { RunAutomationModal } from "@/components/Settings/RunAutomationModal";
+import { useProjects } from "@/hooks/useProjectQueries";
+import { useWorkspaceMembers } from "@/hooks/useWorkspaceQueries";
 import { STATUS_LABELS } from "@/constants/task.constants";
 
 const TRIGGER_LABELS: Record<string, string> = {
@@ -19,10 +23,11 @@ const TRIGGER_LABELS: Record<string, string> = {
   TASK_CREATED: "Task created",
 };
 
-const ACTION_LABELS: Record<string, string> = {
-  ASSIGN_USER: "Assign user",
-  SET_PRIORITY: "Set priority",
-  NOTIFY_MEMBERS: "Notify members",
+const PRIORITY_LABELS: Record<string, string> = {
+  URGENT: "Urgent",
+  HIGH: "High",
+  MEDIUM: "Medium",
+  LOW: "Low",
 };
 
 function formatDate(value: string | null): string {
@@ -41,20 +46,66 @@ function describeTrigger(rule: AutomationRule): string {
   return rule.triggerConfig?.projectId ? "in a specific project" : "in any project";
 }
 
-function describeActions(actions: AutomationAction[]): string {
-  return actions.map((action) => ACTION_LABELS[action.type] ?? action.type).join(", ");
+function describeActions(
+  actions: AutomationAction[],
+  memberNameMap: Map<string, string>,
+): string {
+  return actions
+    .map((action) => {
+      if (action.type === "ASSIGN_USER") {
+        const config = action.config;
+        if (config.role === "project-owner") return "Assign project owner";
+        if (config.role === "actor") return "Assign the actor";
+        if (config.email) return `Assign ${config.email}`;
+        if (config.assigneeUserId)
+          return `Assign ${memberNameMap.get(config.assigneeUserId) ?? "a member"}`;
+        return "Assign user";
+      }
+      if (action.type === "SET_PRIORITY") {
+        const label = PRIORITY_LABELS[action.config.priority ?? ""] ?? action.config.priority;
+        return `Set priority: ${label}`;
+      }
+      return "Notify members";
+    })
+    .join(", ");
 }
 
-export function AutomationsSettingsForm() {
+export function AutomationsSettingsForm({
+  workspaceId: fixedWorkspaceId,
+}: { workspaceId?: string } = {}) {
   const { data: workspaces = [], isLoading: loadingWorkspaces } = useWorkspaces();
   const [workspaceId, setWorkspaceId] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editingRule, setEditingRule] = useState<AutomationRule | null>(null);
   const [ruleToDelete, setRuleToDelete] = useState<AutomationRule | null>(null);
+  const [pendingRuleId, setPendingRuleId] = useState<string | null>(null);
+  const [runRule, setRunRule] = useState<AutomationRule | null>(null);
 
+  // Embedded in workspace settings the workspace is fixed by the URL; in
+  // global settings the user picks one via the selector below.
+  const isFixed = Boolean(fixedWorkspaceId);
   const selectedWorkspaceId = useMemo(
-    () => workspaceId || workspaces[0]?.id || "",
-    [workspaceId, workspaces],
+    () => fixedWorkspaceId || workspaceId || workspaces[0]?.id || "",
+    [fixedWorkspaceId, workspaceId, workspaces],
+  );
+
+  const testAutomation = useTestAutomation();
+  const { data: projects = [] } = useProjects(selectedWorkspaceId);
+  const { data: members = [] } = useWorkspaceMembers(selectedWorkspaceId);
+
+  const projectNameMap = useMemo(
+    () => new Map(projects.map((p) => [p.id, p.name])),
+    [projects],
+  );
+  const memberNameMap = useMemo(
+    () =>
+      new Map(
+        members.map((m) => [
+          m.userId,
+          m.user?.name || m.user?.email || m.userId,
+        ]),
+      ),
+    [members],
   );
 
   const { data: rules = [], isLoading: loadingRules } = useAutomations(selectedWorkspaceId);
@@ -77,7 +128,11 @@ export function AutomationsSettingsForm() {
   };
 
   const handleToggle = (rule: AutomationRule) => {
-    updateAutomation.mutate({ id: rule.id, enabled: !rule.enabled });
+    setPendingRuleId(rule.id);
+    updateAutomation.mutate(
+      { id: rule.id, enabled: !rule.enabled },
+      { onSettled: () => setPendingRuleId(null) },
+    );
   };
 
   const handleDeleteConfirm = async () => {
@@ -86,7 +141,7 @@ export function AutomationsSettingsForm() {
     setRuleToDelete(null);
   };
 
-  if (loadingWorkspaces) {
+  if (!isFixed && loadingWorkspaces) {
     return (
       <div className="flex items-center justify-center py-16">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -94,7 +149,7 @@ export function AutomationsSettingsForm() {
     );
   }
 
-  if (workspaces.length === 0) {
+  if (!isFixed && workspaces.length === 0) {
     return (
       <div className="rounded-2xl border border-border bg-card p-8 text-center">
         <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-muted">
@@ -137,29 +192,31 @@ export function AutomationsSettingsForm() {
           </button>
         </div>
 
-        <div className="mt-4">
-          <label
-            htmlFor="automation-workspace"
-            className="mb-1.5 block text-xs font-medium text-muted-foreground"
-          >
-            Workspace
-          </label>
-          <select
-            id="automation-workspace"
-            value={selectedWorkspaceId}
-            onChange={(e) => {
-              setWorkspaceId(e.target.value);
-              closeForm();
-            }}
-            className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 sm:max-w-xs"
-          >
-            {workspaces.map((workspace) => (
-              <option key={workspace.id} value={workspace.id}>
-                {workspace.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        {!isFixed && (
+          <div className="mt-4">
+            <label
+              htmlFor="automation-workspace"
+              className="mb-1.5 block text-xs font-medium text-muted-foreground"
+            >
+              Workspace
+            </label>
+            <select
+              id="automation-workspace"
+              value={selectedWorkspaceId}
+              onChange={(e) => {
+                setWorkspaceId(e.target.value);
+                closeForm();
+              }}
+              className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 sm:max-w-xs"
+            >
+              {workspaces.map((workspace) => (
+                <option key={workspace.id} value={workspace.id}>
+                  {workspace.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       {/* Rule builder */}
@@ -191,14 +248,24 @@ export function AutomationsSettingsForm() {
             <RuleCard
               key={rule.id}
               rule={rule}
-              isPending={updateAutomation.isPending}
+              projectName={rule.projectId ? projectNameMap.get(rule.projectId) ?? null : null}
+              isPending={pendingRuleId === rule.id}
+              isRunning={testAutomation.isPending && runRule?.id === rule.id}
               onToggle={() => handleToggle(rule)}
               onEdit={() => openEdit(rule)}
               onDelete={() => setRuleToDelete(rule)}
+              onRun={() => setRunRule(rule)}
+              actionSummary={describeActions(rule.actions, memberNameMap)}
             />
           ))}
         </div>
       )}
+
+      <RunAutomationModal
+        rule={runRule}
+        workspaceId={selectedWorkspaceId}
+        onClose={() => setRunRule(null)}
+      />
 
       <ConfirmModal
         isOpen={Boolean(ruleToDelete)}
@@ -219,13 +286,27 @@ export function AutomationsSettingsForm() {
 
 interface RuleCardProps {
   rule: AutomationRule;
+  projectName?: string | null;
+  actionSummary: string;
   isPending: boolean;
+  isRunning: boolean;
   onToggle: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  onRun: () => void;
 }
 
-function RuleCard({ rule, isPending, onToggle, onEdit, onDelete }: RuleCardProps) {
+function RuleCard({
+  rule,
+  projectName,
+  actionSummary,
+  isPending,
+  isRunning,
+  onToggle,
+  onEdit,
+  onDelete,
+  onRun,
+}: RuleCardProps) {
   return (
     <div className="rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/30">
       <div className="flex items-start gap-3">
@@ -241,6 +322,12 @@ function RuleCard({ rule, isPending, onToggle, onEdit, onDelete }: RuleCardProps
                 Paused
               </span>
             )}
+            {projectName && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2 py-0.5 text-[10px] font-medium text-blue-600 dark:text-blue-400">
+                <Folder className="h-2.5 w-2.5" />
+                {projectName}
+              </span>
+            )}
           </div>
 
           <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
@@ -250,7 +337,7 @@ function RuleCard({ rule, isPending, onToggle, onEdit, onDelete }: RuleCardProps
               </span>{" "}
               · {describeTrigger(rule)}
             </span>
-            <span>{describeActions(rule.actions)}</span>
+            <span>{actionSummary}</span>
             <span className="inline-flex items-center gap-1">
               <Calendar className="h-3 w-3" />
               {rule.runCount} run{rule.runCount === 1 ? "" : "s"} · {formatDate(rule.lastRunAt)}
@@ -271,6 +358,15 @@ function RuleCard({ rule, isPending, onToggle, onEdit, onDelete }: RuleCardProps
             <div className="h-6 w-11 rounded-full bg-muted transition-colors peer-checked:bg-primary peer-disabled:opacity-50" />
             <div className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-background shadow transition-transform peer-checked:translate-x-5" />
           </label>
+          <button
+            type="button"
+            onClick={onRun}
+            disabled={isRunning}
+            className="p-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors disabled:opacity-50"
+            aria-label={`Run ${rule.name} now`}
+          >
+            <Play className="h-4 w-4" />
+          </button>
           <button
             type="button"
             onClick={onEdit}

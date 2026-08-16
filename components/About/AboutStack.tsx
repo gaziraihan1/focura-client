@@ -19,7 +19,7 @@ const stackGroups: StackGroup[] = [
     color: "border-border bg-muted/40",
     badgeColor: "bg-muted text-foreground",
     items: [
-      { name: "Next.js", version: "16.0.10", role: "App Router — SSR, RSC, API routes" },
+      { name: "Next.js", version: "16.3.0", role: "App Router — SSR, RSC, API routes" },
       { name: "React", version: "19.2.0", role: "UI library with concurrent features" },
       { name: "TypeScript", version: "5.9.3", role: "Strict type safety across the codebase" },
     ],
@@ -29,8 +29,8 @@ const stackGroups: StackGroup[] = [
     color: "border-border bg-muted/40",
     badgeColor: "bg-muted text-foreground",
     items: [
-      { name: "Tailwind CSS", version: "4.0", role: "Utility-first styling — v4 engine" },
-      { name: "Framer Motion", version: "12.23.24", role: "Animations and page transitions" },
+      { name: "Tailwind CSS", version: "4.2.1", role: "Utility-first styling — v4 engine" },
+      { name: "Framer Motion", version: "12.34.3", role: "Animations and page transitions" },
       { name: "Lucide React", version: "0.554.0", role: "Icon system across all UI" },
     ],
   },
@@ -40,8 +40,8 @@ const stackGroups: StackGroup[] = [
     badgeColor: "bg-muted text-foreground",
     items: [
       { name: "TanStack Query", version: "5.90.21", role: "Server state, caching, optimistic updates" },
-      { name: "Redux Toolkit", version: "2.11.0", role: "Client-side global state slices" },
-      { name: "Axios", version: "1.13.2", role: "HTTP client with interceptors + JWT attach" },
+      { name: "React Context", version: "—", role: "Built-in client state for theme & auth" },
+      { name: "Axios", version: "1.18.1", role: "HTTP client with interceptors + JWT attach" },
     ],
   },
   {
@@ -49,8 +49,8 @@ const stackGroups: StackGroup[] = [
     color: "border-border bg-muted/40",
     badgeColor: "bg-muted text-foreground",
     items: [
-      { name: "React Hook Form", version: "7.66.1", role: "Performant, uncontrolled form handling" },
-      { name: "Zod", version: "4.1.13", role: "Runtime schema validation" },
+      { name: "React Hook Form", version: "7.71.2", role: "Performant, uncontrolled form handling" },
+      { name: "Zod", version: "3.25.76", role: "Runtime schema validation" },
       { name: "Recharts", version: "3.7.0", role: "Analytics charts and data visualisations" },
     ],
   },
@@ -59,7 +59,7 @@ const stackGroups: StackGroup[] = [
     color: "border-border bg-muted/40",
     badgeColor: "bg-muted text-foreground",
     items: [
-      { name: "NextAuth.js", version: "4.24.13", role: "Session management + Google OAuth" },
+      { name: "NextAuth.js", version: "4.24.15", role: "Session management + Google OAuth" },
       { name: "RS256 JWT", version: "—", role: "Token auth issued by backend on exchange" },
       { name: "Upstash Redis", version: "—", role: "Token revocation, rate limiting, caching" },
     ],
@@ -70,7 +70,7 @@ const stackGroups: StackGroup[] = [
     badgeColor: "bg-muted text-foreground",
     items: [
       { name: "Vercel", version: "—", role: "Hosting, CDN edge network, preview deploys" },
-      { name: "Cloudinary", version: "2.8.0", role: "File uploads, storage, media optimisation" },
+      { name: "Cloudinary", version: "2.9.0", role: "File uploads, storage, media optimisation" },
       { name: "PostgreSQL + Prisma", version: "—", role: "Backend database with ORM and migrations" },
     ],
   },

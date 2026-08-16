@@ -8,6 +8,7 @@ import { TaskHeader } from "@/components/Dashboard/TaskDetails/TaskHeader";
 import { TimeTrackingCard } from "@/components/Dashboard/TaskDetails/TimeTrackingCard";
 import { FocusRequirementsCard } from "@/components/Dashboard/TaskDetails/FocusRequirementsCard";
 import { FocusSessionCard } from "@/components/Dashboard/TaskDetails/FocusSessionCard";
+import { TimeEntryCard } from "@/components/Dashboard/TaskDetails/TimeEntryCard";
 import { IntentBadge } from "@/components/Dashboard/TaskDetails/IntentBadge";
 
 import {
@@ -119,6 +120,8 @@ export default function TaskDetailsView({
 
       
       <FocusSessionCard taskId={task.id} />
+
+      <TimeEntryCard taskId={task.id} workspaceId={task.workspaceId} />
 
       {task.timeTracking && (
         <TimeTrackingCard

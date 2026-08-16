@@ -40,7 +40,7 @@ export const AboutCTA = () => {
             {/* Live badge */}
             <div className="inline-flex items-center gap-2 rounded-full border  bg-muted px-4 py-1.5 text-xs font-medium text-muted-foreground mb-8 shadow-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-foreground inline-block animate-pulse" />
-              Live on Vercel · v1.0.0 Stable
+              Live on Vercel · v1.1.0 Stable
             </div>
 
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4 leading-tight">

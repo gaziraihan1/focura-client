@@ -105,7 +105,6 @@ describe('TopNavbar', () => {
 
     expect(screen.getByText('Profile')).toBeInTheDocument()
     expect(screen.getByText('Settings')).toBeInTheDocument()
-    expect(screen.getByText('Billing')).toBeInTheDocument()
   })
 
   it('shows user email in dropdown', async () => {

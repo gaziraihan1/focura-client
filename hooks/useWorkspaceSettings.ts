@@ -24,7 +24,7 @@ const PREDEFINED_COLORS = [
 ];
 
 type WorkspaceRole = "OWNER" | "ADMIN" | "MEMBER" | "GUEST";
-type TabType = "general" | "members" | "integrations" | "danger";
+type TabType = "general" | "members" | "integrations" | "automations" | "danger";
 
 interface WorkspaceForm {
   name: string;
@@ -42,7 +42,7 @@ export function useWorkspaceSettings({ slug }: UseWorkspaceSettingsProps) {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab") as TabType | null;
-  const [activeTab, setActiveTab] = useState<TabType>(tabParam && ["general", "members", "integrations", "danger"].includes(tabParam) ? tabParam : "general");
+  const [activeTab, setActiveTab] = useState<TabType>(tabParam && ["general", "members", "integrations", "automations", "danger"].includes(tabParam) ? tabParam : "general");
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<WorkspaceRole>("MEMBER");
   const [showInviteModal, setShowInviteModal] = useState(false);

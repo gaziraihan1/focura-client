@@ -1,5 +1,5 @@
 import { useRef, useCallback } from "react";
-import { Save, Users, AlertCircle, Globe } from "lucide-react";
+import { Save, Users, AlertCircle, Globe, Zap } from "lucide-react";
 import { TabType } from "@/hooks/useWorkspaceSettings";
 
 interface WorkspaceSettingsTabsProps {
@@ -11,6 +11,7 @@ const TABS: { id: TabType; label: string; icon: typeof Save }[] = [
   { id: "general", label: "General", icon: Save },
   { id: "members", label: "Members", icon: Users },
   { id: "integrations", label: "Integrations", icon: Globe },
+  { id: "automations", label: "Automations", icon: Zap },
   { id: "danger", label: "Danger Zone", icon: AlertCircle },
 ];
 

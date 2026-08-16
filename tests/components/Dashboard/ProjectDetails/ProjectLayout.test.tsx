@@ -11,6 +11,10 @@ vi.mock("@/hooks/useProjects", () => ({
   useProjectDetailsBySlug: vi.fn(),
 }));
 
+vi.mock("@/hooks/useUser", () => ({
+  useUserProfile: () => ({ userId: "user-1", user: { id: "user-1" } }),
+}));
+
 vi.mock("@/components/Dashboard/Workspaces/project/Layout", () => ({
   MobileDrawer: () => <div data-testid="mobile-drawer" />,
   MobileTopBar: () => <div data-testid="mobile-topbar" />,
@@ -71,7 +75,13 @@ describe("ProjectLayout", () => {
 
   it("renders children normally when the project is accessible", () => {
     (useProjectDetailsBySlug as any).mockReturnValue({
-      data: { name: "Web App", status: "ACTIVE", color: "#667eea", workspaceId: "w1" },
+      data: {
+        name: "Web App",
+        status: "ACTIVE",
+        color: "#667eea",
+        workspaceId: "w1",
+        members: [{ userId: "user-1" }],
+      },
       isLoading: false,
       error: undefined,
     });

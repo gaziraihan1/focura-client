@@ -16,7 +16,7 @@ import { AppearanceSettingsForm } from "@/components/Settings/AppearanceSettings
 import { NotificationsSettingsForm } from "@/components/Settings/NotificationsSettingsForm";
 import { IntegrationsSettingsForm } from "@/components/Settings/IntegrationsSettingsForm";
 import { ApiTokensSettingsForm } from "@/components/Settings/ApiTokensSettingsForm";
-import { AutomationsSettingsForm } from "@/components/Settings/AutomationsSettingsForm";
+import { AutomationsShortcutForm } from "@/components/Settings/AutomationsShortcutForm";
 import { SecuritySettingsForm } from "@/components/Settings/SecuritySettingsForm";
 import { SettingsSection } from "@/components/Settings/SettingsSection";
 
@@ -78,7 +78,7 @@ const GLOBAL_FORM_MAP: Record<string, React.ComponentType> = {
   "Integrations": IntegrationsSettingsForm,
   "API & Tokens": ApiTokensSettingsForm,
   "Capacity & Schedule": CapacityScheduleForm,
-  "Automations": AutomationsSettingsForm,
+  "Automations": AutomationsShortcutForm,
   "Security": SecuritySettingsForm,
 };
 

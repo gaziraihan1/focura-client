@@ -116,6 +116,7 @@ export interface GitHubPrChecks {
 
 export interface Task {
   id: string;
+  workspaceId?: string;
   title: string;
   description: string | null;
   status: TaskStatus;
@@ -252,4 +253,24 @@ export interface TaskSidebarProps {
 export interface StatusOption {
   value: TaskStatus;
   label: string;
+}
+
+export type TimeEntryCategory = 'DEEP_WORK' | 'MEETINGS' | 'ADMIN' | 'LEARNING' | 'BREAK' | 'OTHER';
+
+export interface TimeEntry {
+  id: string;
+  description: string | null;
+  duration: number; // minutes
+  billable: boolean;
+  category: TimeEntryCategory;
+  startedAt: string;
+  endedAt: string | null;
+  userId: string;
+  taskId: string;
+  user?: {
+    id: string;
+    name: string | null;
+    email: string;
+    image?: string | null;
+  };
 }

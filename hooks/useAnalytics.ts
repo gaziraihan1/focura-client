@@ -106,6 +106,12 @@ export interface TimeSummary {
     projectName: string;
     hours: number;
   }>;
+  memberBreakdown: Array<{
+    userId: string;
+    userName: string | null;
+    userEmail: string;
+    hours: number;
+  }>;
 }
 
 export interface ActivityTrendPoint {

@@ -161,3 +161,20 @@ export function useDeleteAutomation() {
     onSuccess: invalidate,
   });
 }
+
+/**
+ * Run a rule on demand against a chosen task (POST /:id/test).
+ */
+export function useTestAutomation() {
+  const invalidate = useInvalidateAutomations();
+
+  return useMutation({
+    mutationFn: async ({ id, taskId }: { id: string; taskId: string }) => {
+      await api.post(`/api/v1/automations/${id}/test`, { taskId }, {
+        showSuccessToast: true,
+        showErrorToast: true,
+      });
+    },
+    onSuccess: invalidate,
+  });
+}

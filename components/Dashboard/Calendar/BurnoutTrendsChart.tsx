@@ -153,6 +153,15 @@ export function BurnoutTrendsChart() {
                     <p className="font-medium">{trend.riskLevel}</p>
                     <p className="text-muted-foreground">Load: {trend.avgDailyLoad.toFixed(2)}</p>
                     <p className="text-muted-foreground">Heavy days: {trend.consecutiveHeavyDays}</p>
+                    {trend.avgEnergy !== null && trend.avgEnergy !== undefined && (
+                      <p className="text-muted-foreground">Avg energy: {trend.avgEnergy}/10</p>
+                    )}
+                    {trend.lowEnergyDays > 0 && (
+                      <p className="text-muted-foreground">Low-energy days: {trend.lowEnergyDays}</p>
+                    )}
+                    {trend.focusMinutes > 0 && (
+                      <p className="text-muted-foreground">Focus: {Math.round(trend.focusMinutes / 60)}h{trend.focusOverloadDays > 0 ? " (" + trend.focusOverloadDays + " overload)" : ""}</p>
+                    )}
                   </div>
                 </div>
               );

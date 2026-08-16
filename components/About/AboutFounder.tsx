@@ -3,8 +3,8 @@ import { Github, Globe, Code2, GitBranch, Package } from "lucide-react";
 import Image from "next/image";
 
 const stats = [
-  { icon: GitBranch, label: "Commits", value: "130+" },
-  { icon: Package, label: "Custom Hooks", value: "80+" },
+  { icon: GitBranch, label: "Commits", value: "409+" },
+  { icon: Package, label: "Custom Hooks", value: "119" },
   { icon: Code2, label: "TypeScript", value: "99.9%" },
 ];
 
@@ -37,7 +37,7 @@ export const AboutFounder = () => {
             <p className="text-sm text-muted-foreground leading-relaxed mb-8">
               The goal was never to ship a side project — it was to build a
               production-grade SaaS platform from scratch and learn every layer
-              of the stack deeply. Focura v1.0.0 Stable shipped on April 5,
+              of the stack deeply. Focura v1.1.0 Stable shipped on August 11,
               2026.
             </p>
 

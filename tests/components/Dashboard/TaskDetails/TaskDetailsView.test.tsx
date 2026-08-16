@@ -28,6 +28,10 @@ vi.mock('@/components/Dashboard/TaskDetails/FocusSessionCard', () => ({
   FocusSessionCard: () => <div data-testid="focus-session-card" />,
 }));
 
+vi.mock('@/components/Dashboard/TaskDetails/TimeEntryCard', () => ({
+  TimeEntryCard: () => <div data-testid="time-entry-card" />,
+}));
+
 vi.mock('@/components/Dashboard/TaskDetails/FocusRequirementsCard', () => ({
   FocusRequirementsCard: () => <div data-testid="focus-requirements-card" />,
 }));

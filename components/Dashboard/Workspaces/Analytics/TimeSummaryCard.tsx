@@ -89,6 +89,41 @@ export function TimeSummaryCard({ data, days = 7 }: TimeSummaryCardProps) {
         </div>
       )}
 
+      {/* Member Breakdown */}
+      {data.memberBreakdown && data.memberBreakdown.length > 0 && (
+        <div className="mt-6">
+          <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+            <Users className="w-4 h-4 shrink-0" />
+            Time by Member
+          </h3>
+          <div className="rounded-lg border divide-y divide-border">
+            {data.memberBreakdown.map((member) => {
+              const share = totalHours > 0 ? Math.round((member.hours / totalHours) * 100) : 0;
+              const initial = (member.userName ?? member.userEmail ?? "?").charAt(0).toUpperCase();
+              return (
+                <div key={member.userId} className="flex items-center gap-3 p-3">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-semibold text-primary shrink-0">
+                    {initial}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium truncate">
+                      {member.userName ?? member.userEmail}
+                    </p>
+                    <div className="mt-1 h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                      <div className="h-full rounded-full bg-primary/40" style={{ width: `${share}%` }} />
+                    </div>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-sm font-semibold tabular-nums">{formatHours(member.hours)}</span>
+                    <span className="text-xs text-muted-foreground ml-1.5">{share}%</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {data.projectBreakdown.length === 0 && (
         <div className="text-center py-8">
           <Clock className="w-12 h-12 text-muted-foreground mx-auto mb-3 opacity-50" />

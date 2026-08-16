@@ -25,7 +25,7 @@ const values = [
   {
     icon: Puzzle,
     title: "Composable Architecture",
-    body: "80+ custom hooks encapsulate all data-fetching and side-effect logic. Components are thin. Business logic is reusable. The codebase is structured to be extended, not rewritten.",
+    body: "119 custom hooks encapsulate all data-fetching and side-effect logic. Components are thin. Business logic is reusable. The codebase is structured to be extended, not rewritten.",
     tag: "Composability",
     tagColor: "bg-muted text-foreground",
   },

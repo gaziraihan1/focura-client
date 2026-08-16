@@ -11,6 +11,7 @@ import { WorkspaceSettingsTabs } from "@/components/Dashboard/Workspaces/Workspa
 import { GeneralSettingsTab } from "@/components/Dashboard/Workspaces/WorkspaceSettings/GeneralSettingsTab";
 import { WorkspaceInviteMemberModal } from "@/components/Dashboard/Workspaces/WorkspaceSettings/WorkspaceInviteMemberModal";
 import { WorkspaceIntegrationsForm } from "@/components/Settings/WorkspaceIntegrationsForm";
+import { AutomationsSettingsForm } from "@/components/Settings/AutomationsSettingsForm";
 
 function SettingsSkeleton() {
   return (
@@ -146,6 +147,16 @@ export default function WorkspaceSettingsPage() {
             workspaceId={workspace?.id}
             isAdmin={isAdmin}
           />
+        </div>
+      )}
+
+      {activeTab === "automations" && (
+        <div
+          role="tabpanel"
+          id="tabpanel-automations"
+          aria-labelledby="tab-automations"
+        >
+          <AutomationsSettingsForm workspaceId={workspace.id} />
         </div>
       )}
 

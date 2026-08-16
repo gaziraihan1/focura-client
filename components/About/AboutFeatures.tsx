@@ -124,7 +124,7 @@ export const AboutFeatures = () => {
             </span>
           </h2>
           <p className="text-sm text-muted-foreground max-w-xs leading-relaxed md:text-right">
-            8 core feature areas, 80+ custom hooks, and a fully typed API
+            8 core feature areas, 119 custom hooks, and a fully typed API
             layer.
           </p>
         </div>

@@ -11,6 +11,8 @@ import {
   type AutomationTrigger,
 } from "@/hooks/useAutomations";
 import { STATUS_OPTIONS } from "@/constants/task.constants";
+import { useWorkspaceMembers } from "@/hooks/useWorkspaceQueries";
+import type { WorkspaceMember } from "@/hooks/useWorkspace";
 
 // ─── Draft types (UI-local, converted on submit) ─────────────────────────────
 
@@ -47,7 +49,7 @@ const PRIORITY_OPTIONS = [
 ];
 
 const ASSIGN_TARGET_OPTIONS = [
-  { value: "assigneeUserId", label: "Specific user ID" },
+  { value: "assigneeUserId", label: "Team member" },
   { value: "email", label: "Member email" },
   { value: "role", label: "Project owner or the actor" },
 ] as const;
@@ -81,6 +83,7 @@ export function AutomationRuleForm({
   const createAutomation = useCreateAutomation();
   const updateAutomation = useUpdateAutomation();
   const { data: projects = [] } = useProjects(workspaceId);
+  const { data: members = [] } = useWorkspaceMembers(workspaceId);
 
   const [name, setName] = useState(initial?.name ?? "");
   const [triggerType, setTriggerType] = useState<AutomationTrigger>(
@@ -146,7 +149,7 @@ export function AutomationRuleForm({
       setError("Add at least one action.");
       return;
     }
-    if (actions.some((action) => action.type === "ASSIGN_USER" && !action.value.trim())) {
+    if (actions.some((action) => action.type === "ASSIGN_USER" && action.target !== "role" && !action.value.trim())) {
       setError("Every ASSIGN_USER action needs a user ID, email, or role target.");
       return;
     }
@@ -324,6 +327,7 @@ export function AutomationRuleForm({
               <ActionRow
                 key={index}
                 action={action}
+                members={members}
                 onChange={(draft) => updateAction(index, draft)}
                 onRemove={() => removeAction(index)}
               />
@@ -361,11 +365,12 @@ export function AutomationRuleForm({
 
 interface ActionRowProps {
   action: ActionDraft;
+  members: WorkspaceMember[];
   onChange: (draft: ActionDraft) => void;
   onRemove: () => void;
 }
 
-function ActionRow({ action, onChange, onRemove }: ActionRowProps) {
+function ActionRow({ action, members, onChange, onRemove }: ActionRowProps) {
   if (action.type === "ASSIGN_USER") {
     return (
       <div className="flex items-end gap-2 rounded-xl border border-border bg-muted/30 p-3">
@@ -407,18 +412,40 @@ function ActionRow({ action, onChange, onRemove }: ActionRowProps) {
             {action.target === "email"
               ? "Email"
               : action.target === "role"
-                ? "Role (or leave blank for actor)"
-                : "User ID"}
+                ? "Role"
+                : "Team member"}
           </label>
-          <input
-            type="text"
-            value={action.value}
-            onChange={(e) => onChange({ ...action, value: e.target.value })}
-            placeholder={
-              action.target === "role" ? "project-owner" : action.target === "email" ? "dev@team.com" : "user id"
-            }
-            className="w-full rounded-lg border border-border bg-background px-2.5 py-2 text-sm"
-          />
+          {action.target === "email" ? (
+            <input
+              type="text"
+              value={action.value}
+              onChange={(e) => onChange({ ...action, value: e.target.value })}
+              placeholder="dev@team.com"
+              className="w-full rounded-lg border border-border bg-background px-2.5 py-2 text-sm"
+            />
+          ) : action.target === "role" ? (
+            <select
+              value={action.value || "actor"}
+              onChange={(e) => onChange({ ...action, value: e.target.value })}
+              className="w-full rounded-lg border border-border bg-background px-2.5 py-2 text-sm"
+            >
+              <option value="project-owner">Project owner</option>
+              <option value="actor">The person who triggered it</option>
+            </select>
+          ) : (
+            <select
+              value={action.value}
+              onChange={(e) => onChange({ ...action, value: e.target.value })}
+              className="w-full rounded-lg border border-border bg-background px-2.5 py-2 text-sm"
+            >
+              <option value="">Select a member</option>
+              {members.map((member) => (
+                <option key={member.userId} value={member.userId}>
+                  {member.user?.name || member.user?.email || member.userId}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
         <button
           type="button"

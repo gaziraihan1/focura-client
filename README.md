@@ -131,7 +131,7 @@ The wellness dashboard (`/dashboard/wellness`) brings focus, energy, and burnout
 - ✅ Project slug-based routing
 
 #### **Automation Rules**
-- ✅ "When X happens, do Y" rules at workspace or project level (`/settings/automations`)
+- ✅ "When X happens, do Y" rules at workspace or project level — managed in **Workspace Settings → Automations** (`/dashboard/workspaces/:slug/settings?tab=automations`); global Settings links to each workspace's rules
 - ✅ Triggers: status changed, task created (with from → to status filters)
 - ✅ Actions: assign user (by email or role), set priority, notify members (SSE)
 - ✅ Loop-safe by construction — rules fire only on user-initiated mutations

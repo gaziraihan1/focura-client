@@ -8,8 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Automation rules can now be run manually ("Run now") against any task in the workspace via `POST /api/v1/automations/:id/test`
+- Rule builder UX: team-member picker for ASSIGN_USER, explicit project-owner/actor role dropdown, resolved action summaries, per-rule pending states, and project-scope badges in the rule list
 - Added a cookie-consent banner — Google Analytics now loads only after explicit opt-in
 - Added Data Export and Account Deletion to Settings — matching the promises in the legal pages
+
+### Changed
+- Automations moved from global Settings into **Workspace Settings → Automations** (`/dashboard/workspaces/:slug/settings?tab=automations`); the global Settings entry now links to each workspace's rules
 
 ### Planned for v1.2.0
 - Notification streams now authenticate with a short-lived, single-use token minted per connection (`/api/v1/notifications/sse-token`), carried through the session via exchange/refresh; idle streams stay alive with data-carrying heartbeats

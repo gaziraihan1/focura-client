@@ -11,7 +11,7 @@ const layers = [
     points: [
       "Server Components for zero-JS data fetching",
       "Client Components for interactive UI",
-      "80+ custom hooks for data abstraction",
+      "119 custom hooks for data abstraction",
       "TanStack Query for caching & deduplication",
       "Optimistic UI updates via React Query",
     ],
