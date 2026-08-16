@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, usePathname } from "next/navigation";
 
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
@@ -18,6 +18,18 @@ import {
 } from "@/components/Dashboard/Workspaces/project/Layout";
 import { Archive } from "lucide-react";
 
+// Pages whose content is manager/admin-only — hidden from collaborators and
+// viewers in the project sidebar (each page also enforces the gate itself).
+const MANAGER_ONLY_NAV = new Set([
+  "Settings",
+  "Analytics",
+  "Time Reports",
+  "Milestones",
+  "Sprints",
+  "Sections",
+  "Views",
+]);
+
 export default function ProjectLayout({
   children,
 }: {
@@ -32,7 +44,7 @@ export default function ProjectLayout({
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const nav = useProjectNav(workspaceSlug, projectSlug);
-  const { data: project, error, isLoading } = useProjectDetailsBySlug(projectSlug);
+  const { data: project, error, isLoading, refetch } = useProjectDetailsBySlug(projectSlug);
 
   const projectColor = (project as ProjectData)?.color ?? "#667eea";
   const currentNavItem = nav.find((item) => item.match(pathname));
@@ -45,20 +57,38 @@ export default function ProjectLayout({
   const isMember = project?.members && userId
     ? project.members.some((m) => m.userId === userId || m.user?.id === userId)
     : false;
-  const accessDenied =
-    accessStatus === 403 ||
-    accessStatus === 404 ||
-    (!!project && !isMember && !project.isAdmin);
+  const deniedByApi = accessStatus === 403 || accessStatus === 404;
+  const deniedByMembership = !!project && !isMember && !project.isAdmin;
+  const accessDenied = deniedByApi || deniedByMembership;
 
-  const deniedRef = useRef(false);
+  // Manager-only nav: workspace owner/admin (project.isAdmin is per-user on the
+  // slug endpoint) or a project MANAGER member.
+  const canManage = useMemo(() => {
+    if (!project || !userId) return false;
+    if (project.isAdmin) return true;
+    return !!project.members?.some(
+      (m) =>
+        (m.userId === userId || m.user?.id === userId) && m.role === "MANAGER",
+    );
+  }, [project, userId]);
+
+  const visibleNav = useMemo(
+    () => (canManage ? nav : nav.filter((item) => !MANAGER_ONLY_NAV.has(item.label))),
+    [nav, canManage],
+  );
+
+  // Drop cached project/feature data only when the API itself refused access
+  // (403/404). The membership gate alone can be reading a stale member list,
+  // so it must NOT wipe the cache mid-self-heal.
+  const deniedApiRef = useRef(false);
 
   useEffect(() => {
-    if (accessDenied) {
+    if (deniedByApi) {
       // A 403/404 from the gated project endpoints means this user no longer
       // has access. Drop the cached project + feature data so a removed
       // member's stale pages can't keep rendering from cache.
-      if (!deniedRef.current) {
-        deniedRef.current = true;
+      if (!deniedApiRef.current) {
+        deniedApiRef.current = true;
         qc.removeQueries({ queryKey: ["projects", "detail"] });
         qc.removeQueries({ queryKey: ["sections"] });
         qc.removeQueries({ queryKey: ["sprints"] });
@@ -66,11 +96,28 @@ export default function ProjectLayout({
         qc.removeQueries({ queryKey: ["project-views"] });
       }
     } else {
-      deniedRef.current = false;
+      deniedApiRef.current = false;
     }
-  }, [accessDenied]);
+  }, [deniedByApi]);
 
-  if (isLoading) {
+  // Self-heal: the backend granted access (no 403/404) but the local member
+  // list is stale — e.g. a collaborator added after this browser cached the
+  // project detail. Refetch once before showing the denied screen so a fresh
+  // membership list wins instead of a stale cache.
+  const [selfHealing, setSelfHealing] = useState(false);
+  const healedRef = useRef(false);
+
+  useEffect(() => {
+    if (deniedByMembership && !deniedByApi && !healedRef.current) {
+      healedRef.current = true;
+      setSelfHealing(true);
+      refetch().finally(() => setSelfHealing(false));
+    } else if (!deniedByMembership) {
+      healedRef.current = false;
+    }
+  }, [deniedByMembership, deniedByApi, refetch]);
+
+  if (isLoading || selfHealing) {
     return <LoadingState />;
   }
 
@@ -79,7 +126,7 @@ export default function ProjectLayout({
   }
 
   const contentProps: SidebarContentProps = {
-    nav,
+    nav: visibleNav,
     pathname,
     projectName: project?.name,
     projectColor,

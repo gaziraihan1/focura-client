@@ -127,7 +127,7 @@ describe('AboutStack', () => {
 
   it('renders version numbers', () => {
     render(<AboutStack />)
-    expect(screen.getByText('v16.0.10')).toBeInTheDocument()
+    expect(screen.getByText('v16.3.0')).toBeInTheDocument()
     expect(screen.getByText('v19.2.0')).toBeInTheDocument()
   })
 
@@ -254,8 +254,8 @@ describe('AboutFounder', () => {
 
   it('renders stats', () => {
     render(<AboutFounder />)
-    expect(screen.getByText('130+')).toBeInTheDocument()
-    expect(screen.getByText('80+')).toBeInTheDocument()
+    expect(screen.getByText('409+')).toBeInTheDocument()
+    expect(screen.getByText('119')).toBeInTheDocument()
     expect(screen.getAllByText('99.9%').length).toBeGreaterThanOrEqual(1)
   })
 

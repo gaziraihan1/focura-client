@@ -5,6 +5,10 @@ vi.mock("@/hooks/useProjects", () => ({
   useProjectDetailsBySlug: vi.fn(),
 }));
 
+vi.mock("@/hooks/useUser", () => ({
+  useUserProfile: () => ({ userId: "user-1", isLoading: false }),
+}));
+
 vi.mock("@/components/Dashboard/ProjectDetails/ViewList", () => ({
   default: ({ projectId }: { projectId: string }) => (
     <div data-testid="view-list">ViewList for {projectId}</div>
@@ -22,7 +26,7 @@ import ProjectViewsPage from "@/app/(dashboard-pages)/dashboard/workspaces/[work
 describe("ProjectViewsPage", () => {
   it("should render the heading and description", () => {
     (useProjectDetailsBySlug as any).mockReturnValue({
-      data: { id: "proj1" },
+      data: { id: "proj1", isAdmin: true },
     });
 
     render(<ProjectViewsPage />);
@@ -32,12 +36,22 @@ describe("ProjectViewsPage", () => {
 
   it("should render ViewList when project is loaded", () => {
     (useProjectDetailsBySlug as any).mockReturnValue({
-      data: { id: "proj1" },
+      data: { id: "proj1", isAdmin: true },
     });
 
     render(<ProjectViewsPage />);
     expect(screen.getByTestId("view-list")).toBeDefined();
     expect(screen.getByText("ViewList for proj1")).toBeDefined();
+  });
+
+  it("should show the access restricted screen for non-managers", () => {
+    (useProjectDetailsBySlug as any).mockReturnValue({
+      data: { id: "proj1", isAdmin: false, members: [] },
+    });
+
+    render(<ProjectViewsPage />);
+    expect(screen.getByText("Access Restricted")).toBeDefined();
+    expect(screen.queryByTestId("view-list")).toBeNull();
   });
 
   it("should show loading state when project is not yet loaded", () => {
@@ -46,12 +60,12 @@ describe("ProjectViewsPage", () => {
     });
 
     render(<ProjectViewsPage />);
-    expect(screen.getByText(/Loading project/i)).toBeDefined();
+    expect(screen.queryByTestId("view-list")).toBeNull();
   });
 
   it("should render a back button", () => {
     (useProjectDetailsBySlug as any).mockReturnValue({
-      data: { id: "proj1" },
+      data: { id: "proj1", isAdmin: true },
     });
 
     render(<ProjectViewsPage />);
@@ -60,7 +74,7 @@ describe("ProjectViewsPage", () => {
 
   it("should render a link to project overview", () => {
     (useProjectDetailsBySlug as any).mockReturnValue({
-      data: { id: "proj1" },
+      data: { id: "proj1", isAdmin: true },
     });
 
     render(<ProjectViewsPage />);

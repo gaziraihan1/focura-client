@@ -108,4 +108,41 @@ describe("ProjectLayout", () => {
     expect(screen.getByText("Page content")).toBeDefined();
     expect(qc.removeQueries).not.toHaveBeenCalled();
   });
+
+  it("self-heals a stale member list by refetching before denying access", async () => {
+    let includeMember = false;
+    const refetch = vi.fn(async () => {
+      includeMember = true;
+    });
+
+    // Simulates a collaborator whose browser cached the project detail before
+    // they were added: the first read has an empty member list, the refetch
+    // (after the backend invalidation) includes them.
+    (useProjectDetailsBySlug as any).mockImplementation(() => ({
+      data: {
+        name: "Web App",
+        status: "ACTIVE",
+        color: "#667eea",
+        workspaceId: "w1",
+        members: includeMember ? [{ userId: "user-1" }] : [],
+        isAdmin: false,
+      },
+      isLoading: false,
+      error: undefined,
+      refetch,
+    }));
+
+    render(
+      <ProjectLayout>
+        <div>Secret page content</div>
+      </ProjectLayout>,
+    );
+
+    // The gate denies once, refetches, and then lets the user in
+    expect(refetch).toHaveBeenCalled();
+    expect(await screen.findByText("Secret page content")).toBeDefined();
+    expect(screen.queryByText("Access Denied")).toBeNull();
+    // A self-heal must not wipe the shared caches
+    expect(qc.removeQueries).not.toHaveBeenCalled();
+  });
 });

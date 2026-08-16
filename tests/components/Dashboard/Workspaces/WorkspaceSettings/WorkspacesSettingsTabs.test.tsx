@@ -13,11 +13,12 @@ describe('WorkspacesSettingsTabs', () => {
     vi.clearAllMocks()
   })
 
-  it('renders all four tabs', () => {
+  it('renders all five tabs', () => {
     render(<WorkspaceSettingsTabs {...defaultProps} />)
     expect(screen.getByText('General')).toBeInTheDocument()
     expect(screen.getByText('Members')).toBeInTheDocument()
     expect(screen.getByText('Integrations')).toBeInTheDocument()
+    expect(screen.getByText('Automations')).toBeInTheDocument()
     expect(screen.getByText('Danger Zone')).toBeInTheDocument()
   })
 
@@ -37,6 +38,12 @@ describe('WorkspacesSettingsTabs', () => {
     render(<WorkspaceSettingsTabs {...defaultProps} />)
     fireEvent.click(screen.getByText('Integrations'))
     expect(defaultProps.onTabChange).toHaveBeenCalledWith('integrations')
+  })
+
+  it('calls onTabChange when Automations tab is clicked', () => {
+    render(<WorkspaceSettingsTabs {...defaultProps} />)
+    fireEvent.click(screen.getByText('Automations'))
+    expect(defaultProps.onTabChange).toHaveBeenCalledWith('automations')
   })
 
   it('calls onTabChange when Danger Zone tab is clicked', () => {
@@ -79,7 +86,7 @@ describe('WorkspacesSettingsTabs', () => {
   it('renders icons in each tab button', () => {
     const { container } = render(<WorkspaceSettingsTabs {...defaultProps} />)
     const buttons = container.querySelectorAll('button')
-    expect(buttons.length).toBe(4)
+    expect(buttons.length).toBe(5)
     buttons.forEach(btn => {
       expect(btn.querySelector('svg')).toBeInTheDocument()
     })

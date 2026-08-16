@@ -73,6 +73,7 @@ export const useAddProjectMember = () => {
         return { ...old, members: [...old.members, newMember], stats: { ...old.stats, totalMembers: old.stats.totalMembers + 1 }, _count: { ...old._count, members: old._count.members + 1 } };
       });
       qc.invalidateQueries({ queryKey: projectKeys.lists() });
+      qc.invalidateQueries({ queryKey: projectKeys.details() });
     },
   });
 };
@@ -89,6 +90,8 @@ export const useUpdateProjectMemberRole = () => {
         if (!old) return old;
         return { ...old, members: old.members.map((m) => (m.userId === variables.memberId ? { ...m, role: variables.role } : m)) };
       });
+      qc.invalidateQueries({ queryKey: projectKeys.details() });
+      qc.invalidateQueries({ queryKey: projectKeys.lists() });
     },
   });
 };
@@ -105,6 +108,8 @@ export const useRemoveProjectMember = () => {
         if (!old) return old;
         return { ...old, members: old.members.filter((m) => m.userId !== variables.memberId), stats: { ...old.stats, totalMembers: Math.max(0, old.stats.totalMembers - 1) }, _count: { ...old._count, members: Math.max(0, old._count.members - 1) } };
       });
+      qc.invalidateQueries({ queryKey: projectKeys.details() });
+      qc.invalidateQueries({ queryKey: projectKeys.lists() });
     },
   });
 };

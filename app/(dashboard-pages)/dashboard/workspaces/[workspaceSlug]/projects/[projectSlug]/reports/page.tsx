@@ -4,10 +4,10 @@ import { useParams } from "next/navigation";
 import { useWorkspacePlan } from "@/context/workspacePlan/WorkspacePlanContext";
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
 import { ProjectManagerOnly } from "@/components/Dashboard/ProjectDetails/ProjectManagerOnly";
-import { ProjectAnalyticsPage } from "@/components/Dashboard/Workspaces/project/Analytics/ProjectAnalyticsPage";
+import { ProjectTimeReport } from "@/components/Dashboard/Workspaces/project/Reports/ProjectTimeReport";
 import { UpgradePlanCard } from "@/components/Shared/UpgradePlanCard";
 
-export default function ProjectAnalyticsPageWrapper() {
+export default function ProjectTimeReportPageWrapper() {
   const params = useParams();
   const projectSlug = params?.projectSlug as string;
 
@@ -31,15 +31,14 @@ export default function ProjectAnalyticsPageWrapper() {
     <ProjectManagerOnly project={project}>
       {isFree ? (
         <UpgradePlanCard
-          feature="Project Analytics"
-          description="Get deep insights into your project's progress, team performance, and deadline risks."
+          feature="Project Time Reports"
+          description="See exactly how your team's time is spent across tasks, members, and categories."
         />
       ) : (
-        <ProjectAnalyticsPage
+        <ProjectTimeReport
           workspaceId={project.workspaceId}
           projectId={project.id}
           projectName={project.name}
-          projectColor={project.color}
         />
       )}
     </ProjectManagerOnly>

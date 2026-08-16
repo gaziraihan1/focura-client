@@ -24,6 +24,8 @@ vi.mock("lucide-react", () => {
     Pencil: icon("Pencil"),
     Trash2: icon("Trash2"),
     Calendar: icon("Calendar"),
+    Play: icon("Play"),
+    Folder: icon("Folder"),
   };
 });
 
@@ -59,6 +61,7 @@ vi.mock("@/hooks/useWorkspaceQueries", () => ({
     ],
     isLoading: false,
   })),
+  useWorkspaceMembers: vi.fn(() => ({ data: [], isLoading: false })),
 }));
 
 vi.mock("@/hooks/useAutomations", () => ({
@@ -72,6 +75,10 @@ vi.mock("@/hooks/useAutomations", () => ({
   })),
   useDeleteAutomation: vi.fn(() => ({
     mutateAsync: vi.fn().mockResolvedValue(undefined),
+    isPending: false,
+  })),
+  useTestAutomation: vi.fn(() => ({
+    mutateAsync: vi.fn(),
     isPending: false,
   })),
   automationKeys: { all: ["automations"] },
@@ -162,7 +169,10 @@ describe("AutomationsSettingsForm", () => {
 
     await user.click(screen.getByRole("switch"));
 
-    expect(mockUpdate).toHaveBeenCalledWith({ id: "rule-1", enabled: false });
+    expect(mockUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({ id: "rule-1", enabled: false }),
+      expect.anything(),
+    );
   });
 
   it("asks for confirmation before deleting a rule", async () => {

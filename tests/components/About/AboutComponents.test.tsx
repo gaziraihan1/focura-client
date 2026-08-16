@@ -12,7 +12,7 @@ vi.mock('next/link', () => ({
 describe('AboutHero', () => {
   it('renders version badge', () => {
     render(<AboutHero />)
-    expect(screen.getByText(/v1.0.0 Stable/)).toBeInTheDocument()
+    expect(screen.getByText(/v1.1.0 Stable/)).toBeInTheDocument()
   })
 
   it('renders heading', () => {
@@ -40,7 +40,7 @@ describe('AboutHero', () => {
   it('renders stat pills', () => {
     render(<AboutHero />)
     expect(screen.getByText('Source Available')).toBeInTheDocument()
-    expect(screen.getByText('107+')).toBeInTheDocument()
+    expect(screen.getByText('409+')).toBeInTheDocument()
     expect(screen.getByText('Vercel Edge')).toBeInTheDocument()
   })
 })

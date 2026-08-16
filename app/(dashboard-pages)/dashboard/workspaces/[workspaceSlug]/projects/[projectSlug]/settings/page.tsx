@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
-import { useParams, useRouter, usePathname } from "next/navigation";
+import { useState, useMemo, useCallback, useEffect, Suspense } from "react";
+import { useParams, useRouter, usePathname, useSearchParams } from "next/navigation";
 import {
   Settings,
   Users,
@@ -36,28 +36,55 @@ const TABS: TabDef[] = [
   { id: "danger", label: "Danger Zone", icon: AlertTriangle, danger: true },
 ];
 
+function isSettingsTab(value: string | null): value is SettingsTab {
+  return !!value && TABS.some((t) => t.id === value);
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function ProjectSettingsPage() {
+  return (
+    <Suspense fallback={null}>
+      <ProjectSettingsContent />
+    </Suspense>
+  );
+}
+
+function ProjectSettingsContent() {
   const params = useParams();
   const workspaceSlug = params?.workspaceSlug as string;
   const projectSlug = params?.projectSlug as string;
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const [activeTab, setActiveTab] = useState<SettingsTab>("general");
+  // Restore the active tab from the URL (?tab=...) so a refresh (or a direct
+  // link, or back/forward navigation) lands on the same tab the user was on.
+  const [activeTab, setActiveTab] = useState<SettingsTab>(() => {
+    const param = searchParams.get("tab");
+    return isSettingsTab(param) ? param : "general";
+  });
+
+  // Keep the tab in sync when the URL changes (browser back/forward, tab links
+  // from elsewhere) — without fighting the explicit setActiveTab in the handler.
+  useEffect(() => {
+    const param = searchParams.get("tab");
+    if (isSettingsTab(param) && param !== activeTab) {
+      setActiveTab(param);
+    }
+  }, [searchParams, activeTab]);
 
   const handleTabChange = useCallback(
     (tab: SettingsTab) => {
       setActiveTab(tab);
-      const searchParams = new URLSearchParams(window.location.search);
+      const next = new URLSearchParams(window.location.search);
       if (tab === "general") {
-        searchParams.delete("tab");
+        next.delete("tab");
       } else {
-        searchParams.set("tab", tab);
+        next.set("tab", tab);
       }
-      const newUrl = searchParams.toString()
-        ? `${pathname}?${searchParams}`
+      const newUrl = next.toString()
+        ? `${pathname}?${next}`
         : pathname;
       router.replace(newUrl, { scroll: false });
     },

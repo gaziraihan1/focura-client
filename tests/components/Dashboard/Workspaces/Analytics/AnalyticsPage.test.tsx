@@ -126,6 +126,12 @@ vi.mock('@/components/Shared/UpgradeSectionCard', () => ({
   ),
 }))
 
+vi.mock('@/components/Dashboard/Workspaces/Analytics/TimeReportCard', () => ({
+  TimeReportCard: ({ workspaceId }: { workspaceId: string }) => (
+    <div data-testid="time-report-card">Time Report</div>
+  ),
+}))
+
 import { AnalyticsPage } from '@/components/Dashboard/Workspaces/Analytics/AnalyticsPage'
 import { useAnalyticsPage } from '@/hooks/useAnalyticsPage'
 import type { ExecutiveKPIs, TaskStatusItem, TasksByPriorityItem, ActivityTrendPoint, TrendDataPoint, MemberContribution, ProjectHealth, DeadlineRisk, TimeSummary, MostActiveDay as MostActiveDayType, WorkloadMember } from '@/hooks/useAnalytics'
@@ -481,6 +487,7 @@ describe('AnalyticsPage', () => {
     expect(screen.getByText('Project Status')).toBeInTheDocument()
     expect(screen.getByText('Overdue Trend')).toBeInTheDocument()
     expect(screen.getByTestId('analytics-period-badge')).toHaveTextContent('Last 30 days')
+    expect(screen.getByTestId('time-report-card')).toBeInTheDocument()
   })
 
   it('renders without optional data sections', () => {

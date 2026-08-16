@@ -172,6 +172,7 @@ interface QuickAccessGridProps {
   sprintCount: number;
   sectionCount: number;
   viewCount: number;
+  canManage: boolean;
   onNavigate: (path: string) => void;
 }
 
@@ -185,6 +186,7 @@ function QuickAccessGrid({
   sprintCount,
   sectionCount,
   viewCount,
+  canManage,
   onNavigate,
 }: QuickAccessGridProps) {
   return (
@@ -221,45 +223,53 @@ function QuickAccessGrid({
           onClick={() => onNavigate(`${base}/members`)}
         />
 
-        <QuickAccessCard
-          icon={Flag}
-          title="Milestones"
-          description="Track key milestones with health status (on track / at risk / delayed) and progress."
-          stat={milestoneCount}
-          statLabel="milestones"
-          accent="#f59e0b"
-          onClick={() => onNavigate(`${base}/milestones`)}
-        />
+        {canManage && (
+          <QuickAccessCard
+            icon={Flag}
+            title="Milestones"
+            description="Track key milestones with health status (on track / at risk / delayed) and progress."
+            stat={milestoneCount}
+            statLabel="milestones"
+            accent="#f59e0b"
+            onClick={() => onNavigate(`${base}/milestones`)}
+          />
+        )}
 
-        <QuickAccessCard
-          icon={Sprout}
-          title="Sprints"
-          description="Plan time-boxed iterations, track velocity and run retrospectives."
-          stat={sprintCount}
-          statLabel="sprints"
-          accent="#10b981"
-          onClick={() => onNavigate(`${base}/sprints`)}
-        />
+        {canManage && (
+          <QuickAccessCard
+            icon={Sprout}
+            title="Sprints"
+            description="Plan time-boxed iterations, track velocity and run retrospectives."
+            stat={sprintCount}
+            statLabel="sprints"
+            accent="#10b981"
+            onClick={() => onNavigate(`${base}/sprints`)}
+          />
+        )}
 
-        <QuickAccessCard
-          icon={Columns}
-          title="Sections"
-          description="Organize tasks into sections — map any section to a board column with WIP limits."
-          stat={sectionCount}
-          statLabel="sections"
-          accent="#8b5cf6"
-          onClick={() => onNavigate(`${base}/sections`)}
-        />
+        {canManage && (
+          <QuickAccessCard
+            icon={Columns}
+            title="Sections"
+            description="Organize tasks into sections — map any section to a board column with WIP limits."
+            stat={sectionCount}
+            statLabel="sections"
+            accent="#8b5cf6"
+            onClick={() => onNavigate(`${base}/sections`)}
+          />
+        )}
 
-        <QuickAccessCard
-          icon={Eye}
-          title="Views"
-          description="Save custom views (Kanban, List, Calendar, Timeline) to switch perspectives instantly."
-          stat={viewCount}
-          statLabel="views"
-          accent="#14b8a6"
-          onClick={() => onNavigate(`${base}/views`)}
-        />
+        {canManage && (
+          <QuickAccessCard
+            icon={Eye}
+            title="Views"
+            description="Save custom views (Kanban, List, Calendar, Timeline) to switch perspectives instantly."
+            stat={viewCount}
+            statLabel="views"
+            accent="#14b8a6"
+            onClick={() => onNavigate(`${base}/views`)}
+          />
+        )}
       </div>
     </div>
   );
@@ -270,10 +280,11 @@ interface AtAGlanceProps {
   isOverdue: boolean;
   dueLabel: string;
   totalMembers: number;
+  canManage: boolean;
   onManage: () => void;
 }
 
-function AtAGlanceCards({ project, isOverdue, dueLabel, totalMembers, onManage }: AtAGlanceProps) {
+function AtAGlanceCards({ project, isOverdue, dueLabel, totalMembers, canManage, onManage }: AtAGlanceProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
@@ -314,12 +325,14 @@ function AtAGlanceCards({ project, isOverdue, dueLabel, totalMembers, onManage }
             </div>
             <p className="text-sm font-semibold text-foreground">Team</p>
           </div>
-          <button
-            onClick={onManage}
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
-          >
-            Manage <ChevronRight size={11} />
-          </button>
+          {canManage && (
+            <button
+              onClick={onManage}
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+            >
+              Manage <ChevronRight size={11} />
+            </button>
+          )}
         </div>
 
         {totalMembers > 0 ? (
@@ -360,6 +373,18 @@ export default function ProjectOverviewPage() {
     if (!project?.members || !userId) return false;
     return project.members.some((m) => m.userId === userId || m.user?.id === userId);
   }, [project?.members, userId]);
+
+  // Manager-only pages (Settings, Analytics, Time Reports, Milestones, Sprints,
+  // Sections, Views) are hidden from collaborators/viewers — keep the overview
+  // links to them hidden too.
+  const canManage = useMemo(() => {
+    if (!project || !userId) return false;
+    if (project.isAdmin) return true;
+    return !!project.members?.some(
+      (m) =>
+        (m.userId === userId || m.user?.id === userId) && m.role === "MANAGER",
+    );
+  }, [project, userId]);
 
   if (isLoading || userLoading) return <LoadingState />;
 
@@ -458,6 +483,7 @@ export default function ProjectOverviewPage() {
         sprintCount={sprintStats?.sprints?.length ?? 0}
         sectionCount={sectionItems.length}
         viewCount={viewItems.length}
+        canManage={canManage}
         onNavigate={navigate}
       />
 
@@ -467,6 +493,7 @@ export default function ProjectOverviewPage() {
         isOverdue={isOverdue}
         dueLabel={dueLabel}
         totalMembers={totalMembers}
+        canManage={canManage}
         onManage={() => navigate(`${base}/settings`)}
       />
 

@@ -63,6 +63,44 @@ export interface ProjectTimeSummary {
   }>;
 }
 
+export interface ProjectTimeReportEntry {
+  id: string;
+  taskId: string;
+  taskTitle: string | null;
+  userId: string;
+  userName: string | null;
+  userEmail: string;
+  duration: number; // minutes
+  category: string;
+  billable: boolean;
+  description: string | null;
+  startedAt: string;
+  endedAt: string | null;
+}
+
+export interface ProjectTimeReportRow {
+  id: string;
+  name: string;
+  minutes: number;
+  hours: number;
+}
+
+export interface ProjectTimeReportCategoryRow {
+  category: string;
+  minutes: number;
+  hours: number;
+}
+
+export interface ProjectTimeReport {
+  totalMinutes: number;
+  totalHours: number;
+  entryCount: number;
+  entries: ProjectTimeReportEntry[];
+  byTask: ProjectTimeReportRow[];
+  byMember: ProjectTimeReportRow[];
+  byCategory: ProjectTimeReportCategoryRow[];
+}
+
 export interface ProjectCompletionTrend {
   // The API serializes Date to an ISO string over JSON, so both are possible.
   date: Date | string;
@@ -88,6 +126,8 @@ export const projectAnalyticsKeys = {
     [...projectAnalyticsKeys.all(workspaceId), projectId, 'members', 'contribution'] as const,
   timeSummary: (workspaceId: string, projectId: string, days: number) =>
     [...projectAnalyticsKeys.all(workspaceId), projectId, 'time', 'summary', days] as const,
+  timeReport: (workspaceId: string, projectId: string, days: number) =>
+    [...projectAnalyticsKeys.all(workspaceId), projectId, 'time', 'report', days] as const,
   deadlineRisk: (workspaceId: string, projectId: string) =>
     [...projectAnalyticsKeys.all(workspaceId), projectId, 'deadline-risk'] as const,
 };
@@ -168,6 +208,27 @@ export function useProjectTimeSummary(
     retry: false,
     staleTime: 5 * 60 * 1000,
     gcTime: 15 * 60 * 1000,
+  });
+}
+
+export function useProjectTimeReport(
+  workspaceId: string,
+  projectId: string,
+  days: number = 7,
+  options?: { enabled?: boolean }
+) {
+  return useQuery({
+    queryKey: projectAnalyticsKeys.timeReport(workspaceId, projectId, days),
+    queryFn: async () => {
+      const response = await api.get<ProjectTimeReport>(
+        `/api/v1/analytics/${workspaceId}/projects/${projectId}/time/report?days=${days}`
+      );
+      return response?.data as ProjectTimeReport;
+    },
+    enabled: !!workspaceId && !!projectId && (options?.enabled ?? true),
+    retry: false,
+    staleTime: 30 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 }
 

@@ -6,6 +6,7 @@ import { FocusDailySummary } from "@/components/Dashboard/FocusDailySummary";
 import { WellnessRecommendations } from "@/components/Dashboard/WellnessRecommendations";
 import { BurnoutTrendsChart } from "@/components/Dashboard/Calendar/BurnoutTrendsChart";
 import { EnergyTrendChart } from "@/components/Dashboard/Calendar/EnergyTrendChart";
+import { WeeklyStrainBreakdown } from "@/components/Dashboard/Wellness/WeeklyStrainBreakdown";
 import { EnergyQuickLog } from "@/components/Dashboard/Calendar/EnergyQuickLog";
 import { AiGoalBreakdown } from "@/components/AI/AiGoalBreakdown";
 import { AiWeeklyInsights } from "@/components/AI/AiWeeklyInsights";
@@ -53,6 +54,9 @@ export default function WellnessPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <BurnoutTrendsChart />
           <EnergyTrendChart />
+        </div>
+        <div className="mt-5">
+          <WeeklyStrainBreakdown />
         </div>
       </div>
 

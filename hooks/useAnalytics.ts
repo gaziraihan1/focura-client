@@ -114,6 +114,47 @@ export interface TimeSummary {
   }>;
 }
 
+export interface TimeTrackingReportEntry {
+  id: string;
+  taskId: string;
+  taskTitle: string | null;
+  projectId: string | null;
+  projectName: string | null;
+  userId: string;
+  userName: string | null;
+  userEmail: string;
+  duration: number; // minutes
+  category: string;
+  billable: boolean;
+  description: string | null;
+  startedAt: string;
+  endedAt: string | null;
+}
+
+export interface TimeTrackingReportRow {
+  id: string;
+  name: string;
+  minutes: number;
+  hours: number;
+}
+
+export interface TimeTrackingReportCategoryRow {
+  category: string;
+  minutes: number;
+  hours: number;
+}
+
+export interface TimeTrackingReport {
+  totalMinutes: number;
+  totalHours: number;
+  entryCount: number;
+  entries: TimeTrackingReportEntry[];
+  byProject: TimeTrackingReportRow[];
+  byTask: TimeTrackingReportRow[];
+  byMember: TimeTrackingReportRow[];
+  byCategory: TimeTrackingReportCategoryRow[];
+}
+
 export interface ActivityTrendPoint {
   // The API serializes Date to an ISO string over JSON, so both are possible.
   date: Date | string;
@@ -155,6 +196,8 @@ export const analyticsKeys = {
     [...analyticsKeys.all(workspaceId), 'members', 'contribution'] as const,
   timeSummary: (workspaceId: string, days: number) =>
     [...analyticsKeys.all(workspaceId), 'time', 'summary', days] as const,
+  timeReport: (workspaceId: string, days: number) =>
+    [...analyticsKeys.all(workspaceId), 'time', 'report', days] as const,
   activityTrends: (workspaceId: string, days: number) =>
     [...analyticsKeys.all(workspaceId), 'activity', 'trends', days] as const,
   workload: (workspaceId: string) =>
@@ -239,6 +282,22 @@ export function useTimeSummary(workspaceId: string, days: number = 7, options?: 
     retry: false, 
     staleTime: 5 * 60 * 1000,
     gcTime: 15 * 60 * 1000 // 15 minutes
+  });
+}
+
+export function useTimeReport(workspaceId: string, days: number = 7, options?: {enabled?: boolean}) {
+  return useQuery({
+    queryKey: analyticsKeys.timeReport(workspaceId, days),
+    queryFn: async () => {
+      const response = await api.get<TimeTrackingReport>(
+        `/api/v1/analytics/${workspaceId}/time/report?days=${days}`
+      );
+      return response?.data as TimeTrackingReport;
+    },
+    enabled: !!workspaceId && (options?.enabled ?? true),
+    retry: false,
+    staleTime: 30 * 1000,
+    gcTime: 10 * 60 * 1000 // 10 minutes
   });
 }
 

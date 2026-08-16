@@ -1,4 +1,4 @@
-import { LayoutDashboard, CheckSquare, Flag, Sprout, Columns, Eye, BarChart2, Megaphone, Star, Settings } from "lucide-react";
+import { LayoutDashboard, CheckSquare, Flag, Sprout, Columns, Eye, BarChart2, Clock, Megaphone, Star, Settings } from "lucide-react";
 import { useMemo } from "react";
 
 export interface ProjectNavItem {
@@ -56,6 +56,12 @@ export function useProjectNav(workspaceSlug: string, projectSlug: string): Proje
         href: `${base}/analytics`,
         icon: BarChart2,
         match: (p) => p.startsWith(`${base}/analytics`),
+      },
+      {
+        label: "Time Reports",
+        href: `${base}/reports`,
+        icon: Clock,
+        match: (p) => p.startsWith(`${base}/reports`),
       },
       {
         label: "Announcements",

@@ -11,6 +11,7 @@ import { ActivityTrendChart } from './ActivityTrendChart';
 import { WorkloadChart } from './WorkloadChart';
 import { MostActiveDay } from './MostActiveDay';
 import { TimeSummaryCard } from './TimeSummaryCard';
+import { TimeReportCard } from './TimeReportCard';
 import { PriorityDistribution } from './PriorityDistribution';
 import { ProjectStatusChart } from './ProjectStatusChart';
 import { OverdueTrendChart } from './OverdueTrendChart';
@@ -172,6 +173,8 @@ export function AnalyticsPage({
           </div>
         )}
       </div>
+
+      <TimeReportCard workspaceId={workspaceId} />
 
       <DeadlineRiskPanel data={overview.deadlineRisk} />
 

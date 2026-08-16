@@ -25,8 +25,8 @@ describe('AboutFounder', () => {
 
   it('renders the stats', () => {
     render(<AboutFounder />);
-    expect(screen.getByText('130+')).toBeInTheDocument();
-    expect(screen.getByText('80+')).toBeInTheDocument();
+    expect(screen.getByText('409+')).toBeInTheDocument();
+    expect(screen.getByText('119')).toBeInTheDocument();
   });
 
   it('renders tech stack tags', () => {
