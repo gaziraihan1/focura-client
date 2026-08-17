@@ -141,7 +141,7 @@ export default function ProjectLayout({
     <div className="flex -mx-4 -my-6 sm:-mx-6 lg:-mx-8 min-h-[calc(100vh-57px)]">
       {/* Desktop sidebar — sticky so it stays pinned while the project content
           scrolls (the scroll container is the workspace layout's <main>) */}
-      <aside className="hidden lg:flex flex-col w-52 xl:w-56 shrink-0 self-start sticky top-0 h-[calc(100vh-57px)] bg-card border-r border-border">
+      <aside className="hidden lg:flex flex-col w-52 xl:w-56 shrink-0 self-start sticky -top-6 h-[calc(100vh-57px)] bg-card border-r border-border">
         <SidebarContent {...contentProps} />
       </aside>
 
