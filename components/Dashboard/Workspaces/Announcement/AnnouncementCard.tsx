@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { m as motion } from 'framer-motion';
-import { Globe, Lock, Pin, Trash2, Loader2 } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { Globe, Lock, Pin, Pencil, Trash2, Loader2, Megaphone, ArrowRight } from 'lucide-react';
+import { format, formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Avatar } from '@/components/Shared/Avatar';
 import type { Announcement } from '@/types/announcement.types';
@@ -16,6 +16,7 @@ interface AnnouncementCardProps {
   isDeleting:   boolean;
   isPinning:    boolean;
   onClick:      () => void;
+  onEdit?:      () => void;
   onDelete:     (e: React.MouseEvent) => void;
   onTogglePin:  (e: React.MouseEvent) => void;
   index:        number;
@@ -29,6 +30,7 @@ export function AnnouncementCard({
   isDeleting,
   isPinning,
   onClick,
+  onEdit,
   onDelete,
   onTogglePin,
   index,
@@ -38,6 +40,15 @@ export function AnnouncementCard({
   const isPublic = announcement.visibility === 'PUBLIC';
   const timeAgo  = formatDistanceToNow(new Date(announcement.createdAt), { addSuffix: true });
   const preview  = stripTokens(announcement.content);
+  const isLong   = preview.length >= 50;
+  const shown    = isLong ? `${preview.slice(0, 50)}...` : preview;
+
+  // Show an "Edited" chip when the announcement was actually updated
+  // (tolerance avoids false positives from identical create/update timestamps).
+  const isEdited =
+    new Date(announcement.updatedAt).getTime() -
+      new Date(announcement.createdAt).getTime() >
+    1000;
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -72,22 +83,29 @@ export function AnnouncementCard({
           }
         }}
         className={cn(
-          'group relative flex flex-col gap-3 p-5 rounded-xl cursor-pointer',
+          'group relative flex flex-col gap-3 p-5 rounded-xl cursor-pointer overflow-hidden',
           'border border-border bg-card',
-          'hover:border-primary/30 hover:shadow-sm hover:shadow-primary/5',
-          'transition-colors duration-200',
+          'hover:border-primary/30 hover:shadow-md hover:shadow-primary/5',
+          'transition-all duration-200',
           announcement.isPinned && 'border-amber-500/30 bg-amber-500/5',
         )}
       >
+        {/* Pinned left accent bar */}
         {announcement.isPinned && (
-          <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-xl bg-linear-to-r from-amber-500/60 to-amber-400/20" />
+          <div className="absolute left-0 top-3 bottom-3 w-1 rounded-r-full bg-linear-to-b from-amber-500 to-amber-400/30" />
         )}
 
+        {/* Header */}
         <div className="flex items-start justify-between gap-3">
-          <div className="flex items-start gap-2 min-w-0">
-            {announcement.isPinned && (
-              <Pin className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5 fill-amber-500/30" />
-            )}
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className={cn(
+              'shrink-0 flex h-8 w-8 items-center justify-center rounded-lg',
+              announcement.isPinned
+                ? 'bg-amber-500/15 text-amber-500'
+                : 'bg-primary/10 text-primary',
+            )}>
+              <Megaphone className="w-4 h-4" />
+            </span>
             <h3 className="text-sm font-semibold text-foreground leading-snug line-clamp-2">
               {announcement.title}
             </h3>
@@ -106,15 +124,17 @@ export function AnnouncementCard({
           </span>
         </div>
 
+        {/* Content preview */}
         <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
-          {preview.length >= 50 ? `${preview.slice(0, 50)}...` : preview}
-          {preview.length >= 50 && (
-            <span className="opacity-70 hover:opacity-100 transition-colors transition-opacity hover:text-accent-foreground/70">
-              {' '}read more
+          {shown}
+          {isLong && (
+            <span className="inline-flex items-center gap-0.5 font-medium text-primary/80 hover:text-primary transition-colors">
+              {' '}read more <ArrowRight className="w-3 h-3" />
             </span>
           )}
         </p>
 
+        {/* Footer */}
         <div className="flex items-center justify-between gap-2 pt-1">
           <div className="flex items-center gap-2 min-w-0">
             <Avatar
@@ -126,13 +146,32 @@ export function AnnouncementCard({
               {announcement.createdBy.name}
             </span>
             <span className="text-muted-foreground/40 text-[11px]">·</span>
-            <span className="text-[11px] text-muted-foreground/70 shrink-0">
+            <span className="text-[11px] text-muted-foreground/70 shrink-0 inline-flex items-center gap-1">
               {timeAgo}
+              {isEdited && (
+                <span
+                  title={format(new Date(announcement.updatedAt), 'MMM d, yyyy · h:mm a')}
+                  className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground"
+                >
+                  Edited
+                </span>
+              )}
             </span>
           </div>
 
           {canManage && (
             <div className="flex items-center gap-0.5 md:opacity-0 group-hover:opacity-100 transition-opacity">
+              {onEdit && (
+                <motion.button
+                  whileTap={{ scale: 0.85 }}
+                  onClick={(e) => { e.stopPropagation(); onEdit(); }}
+                  title="Edit"
+                  aria-label="Edit announcement"
+                  className="p-1.5 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                >
+                  <Pencil className="w-3.5 h-3.5" />
+                </motion.button>
+              )}
               <motion.button
                 whileTap={{ scale: 0.85 }}
                 onClick={(e) => { e.stopPropagation(); onTogglePin(e); }}
@@ -165,6 +204,7 @@ export function AnnouncementCard({
           )}
         </div>
 
+        {/* Recipients for private announcements */}
         {!isPublic && announcement.targets.length > 0 && (
           <div className="flex items-center gap-1.5 pt-2 border-t border-border/40">
             <div className="flex -space-x-1">

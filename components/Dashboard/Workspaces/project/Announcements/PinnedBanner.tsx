@@ -1,6 +1,7 @@
-import {  timeAgo } from "@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/announcements/page";
+import { timeAgo, formatFullDate } from "@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/announcements/page";
 import { Loader2, Pin, PinOff, Trash2 } from "lucide-react";
 import { AuthorAvatar } from "./AuthorAvatar";
+import { stripTokens } from "@/utils/announcement.utils";
 import { Announcement } from "@/types/announcement.types";
 
 export function PinnedBanner({
@@ -48,12 +49,22 @@ export function PinnedBanner({
               <p className="text-sm font-bold text-foreground leading-tight truncate">
                 {a.title}
               </p>
-              <span className="text-[10px] text-amber-600 dark:text-amber-400 shrink-0 font-medium">
-                {timeAgo(a.createdAt)}
+              <span className="flex items-center gap-1.5 shrink-0">
+                <span className="text-[10px] text-amber-600 dark:text-amber-400 font-medium">
+                  {timeAgo(a.createdAt)}
+                </span>
+                {new Date(a.updatedAt).getTime() - new Date(a.createdAt).getTime() > 1000 && (
+                  <span
+                    title={formatFullDate(a.updatedAt)}
+                    className="inline-flex items-center rounded-full bg-muted px-1.5 py-px text-[9px] font-medium text-muted-foreground"
+                  >
+                    Edited
+                  </span>
+                )}
               </span>
             </div>
             <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
-              {a.content}
+              {stripTokens(a.content)}
             </p>
           </div>
  

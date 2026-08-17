@@ -9,6 +9,7 @@ import { MeetingCard } from '@/components/Dashboard/Workspaces/Meeting/MeetingCa
 import { MeetingDetailModal } from '@/components/Dashboard/Workspaces/Meeting/MeetingDetailModal';
 import { MeetingGridSkeleton } from '@/components/Dashboard/Workspaces/Meeting/MeetingGridSkeleton';
 import { ErrorState } from '@/components/Dashboard/Workspaces/Meeting/ErrorState';
+import { ConfirmModal } from '@/components/Shared/ConfirmModal';
 import { useMeetingPage } from '@/hooks/useMeetingPage';
 import { useParams } from 'next/navigation';
 
@@ -19,6 +20,8 @@ export default function MeetingsPage() {
   const controller = useMeetingPage({workspaceSlug})
 
   if (controller.roleLoading || !controller.workspaceId) return <PageSkeleton />;
+
+  const pendingAction = controller.confirmAction;
 
   return (
     <div className="flex h-full flex-col justify-center">
@@ -66,7 +69,7 @@ export default function MeetingsPage() {
             onCreateClick={controller.openCreate}
           />
         ) : (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {controller.meetings.map((meeting) => (
               <MeetingCard
                 key={meeting.id}
@@ -103,6 +106,23 @@ export default function MeetingsPage() {
         onEdit={controller.isAdminOrOwner ? controller.openEdit : undefined}
         onCancel={controller.isAdminOrOwner ? controller.handleCancel : undefined}
       />
+
+      <ConfirmModal
+        isOpen={!!pendingAction}
+        onClose={() => controller.setConfirmAction(null)}
+        onConfirm={controller.handleConfirmAction}
+        title={pendingAction?.type === 'cancel' ? 'Cancel meeting' : 'Delete meeting'}
+        message={
+          pendingAction
+            ? pendingAction.type === 'cancel'
+              ? `Cancel "${pendingAction.meeting.title}"? Attendees will be notified that this meeting is no longer happening.`
+              : `Delete "${pendingAction.meeting.title}"? This will permanently remove the meeting and cannot be undone.`
+            : ''
+        }
+        confirmText={pendingAction?.type === 'cancel' ? 'Cancel meeting' : 'Delete'}
+        variant="danger"
+        isLoading={controller.cancelIsPending || controller.deleteIsPending}
+      />
     </div>
   );
 }
@@ -115,4 +135,3 @@ function PageSkeleton() {
     </div>
   );
 }
-

@@ -20,6 +20,7 @@ interface AnnouncementListProps {
   currentPage:   number;
   onDelete:      (id: string) => void;
   onTogglePin:   (id: string) => void;
+  onEdit?:       (announcement: Announcement) => void;
   onPageChange:  (page: number) => void;
   isFetching:    boolean
 }
@@ -35,6 +36,7 @@ export function AnnouncementList({
   currentPage,
   onDelete,
   onTogglePin,
+  onEdit,
   onPageChange,
   isFetching
 }: AnnouncementListProps) {
@@ -69,6 +71,7 @@ export function AnnouncementList({
               isDeleting={deletingId === a.id}
               isPinning={pinningId  === a.id}
               onClick={() => setSelected(a)}
+              onEdit={onEdit ? () => onEdit(a) : undefined}
               onDelete={(e)    => { e.stopPropagation(); onDelete(a.id); }}
               onTogglePin={(e) => { e.stopPropagation(); onTogglePin(a.id); }}
             />

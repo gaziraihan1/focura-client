@@ -7,6 +7,7 @@ import type {
   Announcement,
   AnnouncementsResponse,
   CreateAnnouncementDto,
+  UpdateAnnouncementDto,
   AnnouncementFilters,
   AnnouncementVisibility,
   AnnouncementPagination,
@@ -156,6 +157,39 @@ export function useCreateAnnouncement(workspaceSlug: string) {
       if (created.projectId) {
         qc.invalidateQueries({
           queryKey: announcementKeys.projectAll(workspaceSlug, created.projectId),
+        });
+      }
+    },
+  });
+}
+
+export function useUpdateAnnouncement(workspaceSlug: string) {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: UpdateAnnouncementDto;
+    }) => {
+      const res = await api.patch<Announcement>(
+        `/api/v1/announcements/${id}`,
+        data,
+      );
+      return res?.data as Announcement;
+    },
+    onSuccess: (updated) => {
+      qc.setQueryData(announcementKeys.detail(updated.id), updated);
+      qc.invalidateQueries({ queryKey: announcementKeys.all(workspaceSlug) });
+
+      if (updated.projectId) {
+        qc.invalidateQueries({
+          queryKey: announcementKeys.projectAll(
+            workspaceSlug,
+            updated.projectId,
+          ),
         });
       }
     },

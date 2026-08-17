@@ -4,18 +4,12 @@ import { useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   CheckSquare,
-  Megaphone,
   Users,
   AlertCircle,
   CheckCircle2,
-  Circle,
   Loader2,
   Flame,
   ChevronRight,
-  Flag,
-  Sprout,
-  Columns,
-  Eye,
 } from "lucide-react";
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
 import { useUserProfile } from "@/hooks/useUser";
@@ -24,10 +18,10 @@ import { AccessDeniedProject } from "@/components/Dashboard/ProjectDetails/Acces
 import LoadingState from "@/components/Dashboard/ProjectDetails/LoadingState";
 import { StatPill } from "@/components/Dashboard/Workspaces/project/StatPill";
 import { MemberAvatars } from "@/components/Dashboard/Workspaces/project/MemberAvatars";
-import { StatusBar } from "@/components/Dashboard/Workspaces/project/StatusBar";
-import { QuickAccessCard } from "@/components/Dashboard/Workspaces/project/QuickAccessCard";
 import { ProjectData } from "@/types/project.types";
 import { ProjectHeader } from "@/components/Dashboard/Workspaces/project/ProjectHeader";
+import { QuickAccessGrid } from "@/components/Dashboard/Workspaces/project/QuickAccessGrid";
+import { TaskProgressCard } from "@/components/Dashboard/Workspaces/project/TaskProgressCard";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -100,180 +94,8 @@ function StatsRibbon({
   );
 }
 
-interface TaskProgressCardProps {
-  base: string;
-  totalTasks: number;
-  completedTasks: number;
-  inProgressTasks: number;
-  accentColor: string;
-  onViewAll: () => void;
-}
 
-function TaskProgressCard({
-  base,
-  totalTasks,
-  completedTasks,
-  inProgressTasks,
-  accentColor,
-  onViewAll,
-}: TaskProgressCardProps) {
-  return (
-    <div className="rounded-2xl border border-border bg-card p-5 sm:p-6">
-      <div className="flex items-center justify-between mb-5">
-        <div>
-          <h2 className="text-base font-bold text-foreground">Task Progress</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {totalTasks === 0
-              ? "No tasks created yet"
-              : `${totalTasks - completedTasks - inProgressTasks} remaining to start`}
-          </p>
-        </div>
-        <button
-          onClick={onViewAll}
-          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-border hover:bg-accent transition-colors"
-        >
-          View all
-          <ChevronRight size={12} />
-        </button>
-      </div>
 
-      {totalTasks === 0 ? (
-        <div className="py-8 flex flex-col items-center gap-2 text-center">
-          <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
-            <Circle size={18} className="text-muted-foreground" />
-          </div>
-          <p className="text-sm text-muted-foreground">No tasks yet — create your first task to get started.</p>
-          <button
-            onClick={() => onViewAll()}
-            className="mt-1 text-xs font-semibold px-4 py-1.5 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
-          >
-            Go to Tasks
-          </button>
-        </div>
-      ) : (
-        <StatusBar
-          completed={completedTasks}
-          inProgress={inProgressTasks}
-          total={totalTasks}
-          accentColor={accentColor}
-        />
-      )}
-    </div>
-  );
-}
-
-interface QuickAccessGridProps {
-  base: string;
-  totalTasks: number;
-  totalAnnouncements: number;
-  totalMembers: number;
-  accentColor: string;
-  milestoneCount: number;
-  sprintCount: number;
-  sectionCount: number;
-  viewCount: number;
-  canManage: boolean;
-  onNavigate: (path: string) => void;
-}
-
-function QuickAccessGrid({
-  base,
-  totalTasks,
-  totalAnnouncements,
-  totalMembers,
-  accentColor,
-  milestoneCount,
-  sprintCount,
-  sectionCount,
-  viewCount,
-  canManage,
-  onNavigate,
-}: QuickAccessGridProps) {
-  return (
-    <div>
-      <h2 className="text-base font-bold text-foreground mb-3">Quick Access</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <QuickAccessCard
-          icon={CheckSquare}
-          title="Tasks"
-          description="Manage, assign and track every task in this project. Filter by status, priority or assignee."
-          stat={totalTasks}
-          statLabel="tasks"
-          accent={accentColor}
-          onClick={() => onNavigate(`${base}/tasks`)}
-        />
-
-        <QuickAccessCard
-          icon={Megaphone}
-          title="Announcements"
-          description="Post updates, pin important notices and keep your team informed in one place."
-          stat={totalAnnouncements}
-          statLabel="posts"
-          accent="#f59e0b"
-          onClick={() => onNavigate(`${base}/announcements`)}
-        />
-
-        <QuickAccessCard
-          icon={Users}
-          title="Members"
-          description="View collaborators, manage roles and invite new people to the project."
-          stat={totalMembers}
-          statLabel="members"
-          accent="#8b5cf6"
-          onClick={() => onNavigate(`${base}/members`)}
-        />
-
-        {canManage && (
-          <QuickAccessCard
-            icon={Flag}
-            title="Milestones"
-            description="Track key milestones with health status (on track / at risk / delayed) and progress."
-            stat={milestoneCount}
-            statLabel="milestones"
-            accent="#f59e0b"
-            onClick={() => onNavigate(`${base}/milestones`)}
-          />
-        )}
-
-        {canManage && (
-          <QuickAccessCard
-            icon={Sprout}
-            title="Sprints"
-            description="Plan time-boxed iterations, track velocity and run retrospectives."
-            stat={sprintCount}
-            statLabel="sprints"
-            accent="#10b981"
-            onClick={() => onNavigate(`${base}/sprints`)}
-          />
-        )}
-
-        {canManage && (
-          <QuickAccessCard
-            icon={Columns}
-            title="Sections"
-            description="Organize tasks into sections — map any section to a board column with WIP limits."
-            stat={sectionCount}
-            statLabel="sections"
-            accent="#8b5cf6"
-            onClick={() => onNavigate(`${base}/sections`)}
-          />
-        )}
-
-        {canManage && (
-          <QuickAccessCard
-            icon={Eye}
-            title="Views"
-            description="Save custom views (Kanban, List, Calendar, Timeline) to switch perspectives instantly."
-            stat={viewCount}
-            statLabel="views"
-            accent="#14b8a6"
-            onClick={() => onNavigate(`${base}/views`)}
-          />
-        )}
-      </div>
-    </div>
-  );
-}
 
 interface AtAGlanceProps {
   project: ProjectData;

@@ -32,6 +32,11 @@ interface ApiError {
   };
 }
 
+type ConfirmAction =
+  | { type: "cancel"; meeting: Meeting }
+  | { type: "delete"; meeting: Meeting }
+  | null;
+
 export const useMeetingPage = ({ workspaceSlug }: UseMeetingPageProps) => {
   const { data: workspaces } = useWorkspaces();
 
@@ -76,6 +81,7 @@ export const useMeetingPage = ({ workspaceSlug }: UseMeetingPageProps) => {
   const [editingMeeting, setEditingMeeting] = useState<Meeting | null>(null);
   const [detailMeeting, setDetailMeeting] = useState<Meeting | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
 
   const openCreate = useCallback(() => {
     setEditingMeeting(null);
@@ -128,35 +134,39 @@ export const useMeetingPage = ({ workspaceSlug }: UseMeetingPageProps) => {
     ]
   );
 
-  const handleCancel = useCallback(
-    (meeting: Meeting) => {
-      if (!confirm(`Cancel "${meeting.title}"?`)) return;
+  const handleCancel = useCallback((meeting: Meeting) => {
+    setConfirmAction({ type: "cancel", meeting });
+  }, []);
 
+  const handleDelete = useCallback((meeting: Meeting) => {
+    setConfirmAction({ type: "delete", meeting });
+  }, []);
+
+  const handleConfirmAction = useCallback(() => {
+    if (!confirmAction) return;
+
+    const { type, meeting } = confirmAction;
+
+    if (type === "cancel") {
       cancelMutation.mutate(meeting.id, {
         onSuccess: (updated) => {
+          setConfirmAction(null);
           if (detailMeeting?.id === updated.id) {
             setDetailMeeting(updated);
           }
         },
       });
-    },
-    [cancelMutation, detailMeeting]
-  );
-
-  const handleDelete = useCallback(
-    (meeting: Meeting) => {
-      if (!confirm(`Delete "${meeting.title}"?`)) return;
-
+    } else {
       deleteMutation.mutate(meeting.id, {
         onSuccess: () => {
+          setConfirmAction(null);
           if (detailOpen && detailMeeting?.id === meeting.id) {
             setDetailOpen(false);
           }
         },
       });
-    },
-    [deleteMutation, detailOpen, detailMeeting]
-  );
+    }
+  }, [confirmAction, cancelMutation, deleteMutation, detailMeeting, detailOpen]);
 
   const formIsPending =
     createMutation.isPending || updateMutation.isPending;
@@ -201,6 +211,11 @@ export const useMeetingPage = ({ workspaceSlug }: UseMeetingPageProps) => {
     detailOpen,
     setDetailOpen,
 
+    confirmAction,
+    setConfirmAction,
+    cancelIsPending: cancelMutation.isPending,
+    deleteIsPending: deleteMutation.isPending,
+
     openCreate,
     openEdit,
     openDetail,
@@ -208,6 +223,7 @@ export const useMeetingPage = ({ workspaceSlug }: UseMeetingPageProps) => {
     handleFormSubmit,
     handleCancel,
     handleDelete,
+    handleConfirmAction,
 
     formIsPending,
     formError,

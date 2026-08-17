@@ -102,7 +102,7 @@ export default function AnnouncementsPage() {
   const isLoading = !project || announcementsLoading
  
   // Modal
-  const { open: openModal, modalProps } = useAnnouncementModal(
+  const { open: openModal, edit: openEdit, modalProps } = useAnnouncementModal(
     workspaceSlug,
     projectId || null,
   );
@@ -291,6 +291,7 @@ export default function AnnouncementsPage() {
                 onTogglePin={handleTogglePin}
                 onDelete={handleDelete}
                 onOpen={setDetailAnnouncement}
+                onEdit={canManage && !isArchived ? () => openEdit(a) : undefined}
                 isArchived={isArchived}
               />
             ))}

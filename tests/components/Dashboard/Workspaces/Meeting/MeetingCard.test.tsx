@@ -183,7 +183,7 @@ vi.mock('lucide-react', () => {
     'BarChart3', 'Sparkles', 'CheckCircle2', 'Rocket', 'Zap', 'Building2',
     'AlertCircle', 'XCircle', 'Loader2', 'Trash2', 'Pin', 'Download',
     'Megaphone', 'FolderOpen', 'ArrowRight', 'AlertTriangle', 'Shield',
-    'ArchiveRestore', 'RefreshCw', 'Save', 'CalendarDays',
+    'ArchiveRestore', 'RefreshCw', 'Save', 'CalendarDays', 'Users', 'Video',
   ];
   for (const name of iconNames) {
     icons[name] = identity;
@@ -328,5 +328,15 @@ describe('MeetingCard', () => {
       />
     );
     expect(screen.queryByLabelText('Meeting actions')).not.toBeInTheDocument();
+  });
+
+  it('renders duration chip', () => {
+    render(<MeetingCard meeting={baseMeeting} isAdmin={false} currentUserId="u1" />);
+    expect(screen.getByText('30m')).toBeInTheDocument();
+  });
+
+  it('renders day tile with date number', () => {
+    render(<MeetingCard meeting={baseMeeting} isAdmin={false} currentUserId="u1" />);
+    expect(screen.getByText('15')).toBeInTheDocument();
   });
 });

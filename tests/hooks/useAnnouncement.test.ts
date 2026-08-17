@@ -5,6 +5,7 @@ import {
   useAnnouncements,
   useAnnouncement,
   useCreateAnnouncement,
+  useUpdateAnnouncement,
   useDeleteAnnouncement,
   useTogglePinAnnouncement,
   useAnnouncementFilters,
@@ -162,6 +163,35 @@ describe('useCreateAnnouncement', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data?.id).toBe('ann-new')
+  })
+})
+
+describe('useUpdateAnnouncement', () => {
+  it('updates an announcement', async () => {
+    server.use(
+      http.patch(`${BASE}/api/v1/announcements/:id`, async ({ request }) => {
+        const body = await request.json() as any
+        return HttpResponse.json({
+          success: true,
+          data: { ...mockAnnouncement, ...body, id: 'ann-1' },
+        })
+      })
+    )
+
+    const { result } = renderHook(
+      () => useUpdateAnnouncement('ws-slug'),
+      { wrapper: createWrapper() }
+    )
+
+    await act(async () => {
+      await result.current.mutateAsync({
+        id: 'ann-1',
+        data: { title: 'Updated Title' },
+      })
+    })
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(result.current.data?.title).toBe('Updated Title')
   })
 })
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { m as motion, AnimatePresence } from 'framer-motion';
-import { X, Globe, Lock, Pin, Calendar } from 'lucide-react';
+import { X, Globe, Lock, Pin, Calendar, Megaphone, Pencil } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Avatar } from '@/components/Shared/Avatar';
@@ -21,6 +21,13 @@ export function AnnouncementDetailModal({
   if (!announcement) return null;
 
   const isPublic = announcement.visibility === 'PUBLIC';
+
+  // Show an "Edited" time when the announcement was actually updated
+  // (tolerance avoids false positives from identical create/update timestamps).
+  const isEdited =
+    new Date(announcement.updatedAt).getTime() -
+      new Date(announcement.createdAt).getTime() >
+    1000;
 
   return (
     <AnimatePresence>
@@ -42,18 +49,21 @@ export function AnnouncementDetailModal({
               exit={{    opacity: 0, scale: 0.96, y: 12 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
               className={cn(
-                'relative w-full max-w-lg max-h-[90vh] flex flex-col',
+                'relative w-full max-w-lg max-h-[95dvh] flex flex-col',
                 'rounded-2xl bg-card border border-border shadow-2xl shadow-black/20',
                 announcement.isPinned && 'border-amber-500/30',
               )}
             >
               {announcement.isPinned && (
-                <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-2xl" />
+                <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-2xl bg-linear-to-r from-amber-500/60 to-amber-400/20" />
               )}
 
-              <div className="flex items-start justify-between gap-4 px-6 py-5 border-b border-border shrink-0">
+              <div className="flex items-start justify-between gap-4 px-5 sm:px-6 py-5 border-b border-border shrink-0">
                 <div className="flex-1 min-w-0 space-y-2">
                   <div className="flex items-center gap-2 flex-wrap">
+                    <span className="shrink-0 flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <Megaphone className="w-3.5 h-3.5" />
+                    </span>
                     {announcement.isPinned && (
                       <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-600 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">
                         <Pin className="w-2.5 h-2.5" />
@@ -86,11 +96,11 @@ export function AnnouncementDetailModal({
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
+              <div className="flex-1 overflow-y-auto px-5 sm:px-6 py-5 space-y-5">
                 <RenderedContent raw={announcement.content} />
 
                 <div className="flex items-center gap-4 pt-4 border-t border-border flex-wrap">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2.5">
                     <Avatar
                       name={announcement.createdBy.name}
                       image={announcement.createdBy.image}
@@ -104,9 +114,17 @@ export function AnnouncementDetailModal({
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <Calendar className="w-3.5 h-3.5" />
-                    {format(new Date(announcement.createdAt), 'MMM d, yyyy · h:mm a')}
+                  <div className="ml-auto flex items-center gap-2 flex-wrap">
+                    <div className="inline-flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/60 border border-border/40 rounded-md px-2.5 py-1.5">
+                      <Calendar className="w-3.5 h-3.5" />
+                      {format(new Date(announcement.createdAt), 'MMM d, yyyy · h:mm a')}
+                    </div>
+                    {isEdited && (
+                      <div className="inline-flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/60 border border-border/40 rounded-md px-2.5 py-1.5">
+                        <Pencil className="w-3 h-3" />
+                        Edited {format(new Date(announcement.updatedAt), 'MMM d, yyyy · h:mm a')}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -115,7 +133,7 @@ export function AnnouncementDetailModal({
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                       Recipients ({announcement.targets.length})
                     </p>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {announcement.targets.map((t) => (
                         <div
                           key={t.userId}

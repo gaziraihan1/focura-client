@@ -14,7 +14,7 @@ export default function AnnouncementsPage() {
     data, isLoading, filters,
     setVisibility, setIsPinned, setPage, resetFilters, activeFiltersCount,
     canManage, members,
-    showModal, openModal, handleClose,
+    showModal, openModal, openEdit, handleClose, editingAnnouncement,
     form, isValid, isSubmitting,
     setTitle, setContent, setVisibilityField,
     setIsPinnedField, setProjectId, toggleTarget,
@@ -66,6 +66,7 @@ export default function AnnouncementsPage() {
         currentPage={filters.page ?? 1}
         onDelete={handleDelete}
         onTogglePin={handleTogglePin}
+        onEdit={canManage ? openEdit : undefined}
         onPageChange={setPage}
         isFetching={isFetching}
       />
@@ -74,6 +75,7 @@ export default function AnnouncementsPage() {
         isOpen={showModal}
         isLoading={isSubmitting}
         isValid={isValid}
+        isEditing={!!editingAnnouncement}
         form={form}
         members={members.map((m) => ({
           userId: m.id,

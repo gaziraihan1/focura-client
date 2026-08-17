@@ -21,7 +21,7 @@ export function QuickAccessCard({
   return (
     <button
       onClick={onClick}
-      className="group relative w-full text-left rounded-2xl border border-border bg-card overflow-hidden hover:border-border/0 hover:shadow-xl transition-colors transition-transform duration-300 hover:-translate-y-0.5"
+      className="group relative w-full text-left rounded-2xl border border-border bg-card overflow-hidden hover:border-border/0 hover:shadow-xl transition-colors  duration-300 hover:-translate-y-0.5"
     >
       {/* Gradient sweep on hover */}
       <div
@@ -29,12 +29,6 @@ export function QuickAccessCard({
         style={{
           background: `linear-gradient(135deg, ${accent}0a 0%, ${accent}04 50%, transparent 100%)`,
         }}
-      />
-
-      {/* Top accent strip */}
-      <div
-        className="h-1 w-full"
-        style={{ backgroundColor: accent }}
       />
 
       <div className="p-5 sm:p-6">

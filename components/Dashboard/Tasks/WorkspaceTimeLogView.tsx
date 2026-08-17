@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Briefcase, CalendarDays, Clock, Folder, X } from "lucide-react";
 import { useWorkspaceTimeEntries } from "@/hooks/useTimeEntries";
-import { useWorkspace } from "@/hooks/useWorkspaceQueries";
+import { useWorkspace, useWorkspaceMembers } from "@/hooks/useWorkspaceQueries";
+import { useWorkspaceRoleFromWorkspace } from "@/hooks/useWorkspaceRole";
 import { TIME_ENTRY_CATEGORY_META } from "@/constants/timeEntry.constants";
 
 function formatDuration(minutes: number): string {
@@ -34,6 +35,7 @@ function dateInputToIso(value: string, endOfDay: boolean): string | undefined {
 export function WorkspaceTimeLogView({ workspaceSlug }: { workspaceSlug: string }) {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+  const [memberFilter, setMemberFilter] = useState("");
 
   const fromIso = useMemo(() => dateInputToIso(from, false), [from]);
   const toIso = useMemo(() => dateInputToIso(to, true), [to]);
@@ -41,18 +43,30 @@ export function WorkspaceTimeLogView({ workspaceSlug }: { workspaceSlug: string 
   const { data: workspace } = useWorkspace(workspaceSlug);
   const workspaceId = workspace?.id;
 
+  // OWNER/ADMIN see every member's entries (and can filter to one member);
+  // MEMBER/GUEST only their own. The backend enforces this — the role here
+  // only adapts the UI copy, shows/hides the member filter, and hides the
+  // (always-self) author name for normal members.
+  const { isOwner, isAdmin } = useWorkspaceRoleFromWorkspace(workspaceSlug);
+  const canViewAll = isOwner || isAdmin;
+
+  const { data: members = [] } = useWorkspaceMembers(workspaceId);
+  const memberUserId = canViewAll && memberFilter ? memberFilter : undefined;
+
   const { data: entries = [], isLoading } = useWorkspaceTimeEntries(
     workspaceId,
     fromIso,
     toIso,
+    memberUserId,
   );
 
   const totalMinutes = entries.reduce((sum, e) => sum + e.duration, 0);
-  const hasFilters = from !== "" || to !== "";
+  const hasFilters = from !== "" || to !== "" || memberFilter !== "";
 
   const clearFilters = () => {
     setFrom("");
     setTo("");
+    setMemberFilter("");
   };
 
   return (
@@ -62,7 +76,9 @@ export function WorkspaceTimeLogView({ workspaceSlug }: { workspaceSlug: string 
         <div className="min-w-0">
           <h1 className="text-xl sm:text-2xl font-bold">Time Log</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Every time entry logged on tasks in this workspace.
+            {canViewAll
+              ? "Every time entry logged on tasks in this workspace."
+              : "Your time entries on tasks in this workspace."}
           </p>
         </div>
         <div className="flex items-center gap-2 text-sm shrink-0">
@@ -76,6 +92,24 @@ export function WorkspaceTimeLogView({ workspaceSlug }: { workspaceSlug: string 
       {/* Date range filter */}
       <div className="rounded-xl border bg-card p-4 sm:p-5">
         <div className="flex flex-wrap items-end gap-3">
+          {canViewAll && (
+            <div className="min-w-0 flex-1 sm:flex-none">
+              <label className="text-xs text-muted-foreground mb-1 block">Member</label>
+              <select
+                aria-label="Filter by member"
+                value={memberFilter}
+                onChange={(e) => setMemberFilter(e.target.value)}
+                className="w-full sm:w-auto px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+              >
+                <option value="">All members</option>
+                {members.map((m) => (
+                  <option key={m.id} value={m.userId}>
+                    {m.user.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           <div className="min-w-0 flex-1 sm:flex-none">
             <label className="text-xs text-muted-foreground mb-1 block">From</label>
             <input
@@ -171,8 +205,12 @@ export function WorkspaceTimeLogView({ workspaceSlug }: { workspaceSlug: string 
                   <p className="flex items-center gap-1 text-xs text-muted-foreground mt-1.5">
                     <CalendarDays className="w-3 h-3 shrink-0" />
                     {formatDate(entry.startedAt)}
-                    <span className="mx-1 text-border">·</span>
-                    <span>{entry.user?.name ?? "Unknown member"}</span>
+                    {canViewAll && (
+                      <>
+                        <span className="mx-1 text-border">·</span>
+                        <span>{entry.user?.name ?? "Unknown member"}</span>
+                      </>
+                    )}
                   </p>
                 </div>
 

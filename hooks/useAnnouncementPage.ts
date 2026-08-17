@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import type {
+  Announcement,
   AnnouncementVisibility,
   EditorTool,
 } from '@/types/announcement.types';
@@ -7,6 +8,7 @@ import {
   useAnnouncementFilters,
   useAnnouncements,
   useCreateAnnouncement,
+  useUpdateAnnouncement,
   useDeleteAnnouncement,
   useTogglePinAnnouncement,
 } from './useAnnouncement';
@@ -100,6 +102,7 @@ export function useAnnouncementPage(
   const [showModal,  setShowModal]  = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [pinningId,  setPinningId]  = useState<string | null>(null);
+  const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null);
 
   // ── Form state — lives here, passed down as props
   const [form, setForm] = useState<FormState>({
@@ -119,6 +122,7 @@ export function useAnnouncementPage(
     useAnnouncementFilters();
   const { data, isLoading: listLoading, isFetching }  = useAnnouncements(workspaceSlug, filters);
   const createAnnouncement   = useCreateAnnouncement(workspaceSlug);
+  const updateAnnouncement   = useUpdateAnnouncement(workspaceSlug);
   const deleteAnnouncement   = useDeleteAnnouncement(workspaceSlug);
   const togglePin            = useTogglePinAnnouncement(workspaceSlug);
 
@@ -153,28 +157,57 @@ export function useAnnouncementPage(
   );
 
   // ── Modal open/close
-  const openModal  = useCallback(() => setShowModal(true), []);
+  const openModal  = useCallback(() => {
+    setEditingAnnouncement(null);
+    setShowModal(true);
+  }, []);
+  const openEdit = useCallback((announcement: Announcement) => {
+    setEditingAnnouncement(announcement);
+    setForm({
+      title:      announcement.title,
+      content:    announcement.content,
+      visibility: announcement.visibility,
+      isPinned:   announcement.isPinned,
+      targetIds:  announcement.targets.map((t) => t.userId),
+      projectId:  announcement.projectId,
+    });
+    setShowModal(true);
+  }, []);
   const handleClose = useCallback(() => {
-    if (createAnnouncement.isPending) return;
+    if (createAnnouncement.isPending || updateAnnouncement.isPending) return;
     resetForm();
+    setEditingAnnouncement(null);
     setShowModal(false);
-  }, [createAnnouncement.isPending, resetForm]);
+  }, [createAnnouncement.isPending, updateAnnouncement.isPending, resetForm]);
 
-  // ── Submit
+  // ── Submit (create or update)
   const handleSubmit = useCallback(async () => {
     if (!form.title.trim() || !form.content.trim()) return;
-    await createAnnouncement.mutateAsync({
+
+    const payload = {
       title:      form.title.trim(),
       content:    form.content.trim(),
       visibility: form.visibility,
       isPinned:   form.isPinned,
       targetIds:  form.visibility === 'PRIVATE' ? form.targetIds : [],
-      projectId:  form.projectId,
-      workspaceSlug,
-    });
+    };
+
+    if (editingAnnouncement) {
+      await updateAnnouncement.mutateAsync({
+        id: editingAnnouncement.id,
+        data: payload,
+      });
+    } else {
+      await createAnnouncement.mutateAsync({
+        ...payload,
+        projectId: form.projectId,
+        workspaceSlug,
+      });
+    }
     resetForm();
+    setEditingAnnouncement(null);
     setShowModal(false);
-  }, [form, createAnnouncement, resetForm, workspaceSlug]);
+  }, [form, editingAnnouncement, createAnnouncement, updateAnnouncement, resetForm, workspaceSlug]);
 
   // ── Delete
   const handleDelete = useCallback(async (id: string) => {
@@ -213,7 +246,10 @@ export function useAnnouncementPage(
     // modal open state
     showModal,
     openModal,
+    openEdit,
     handleClose,
+    editingAnnouncement,
+    isEditing: !!editingAnnouncement,
 
     // form state — passed to modal as props
     form,
@@ -226,7 +262,8 @@ export function useAnnouncementPage(
     toggleTarget,
 
     // mutation state
-    isSubmitting: createAnnouncement.isPending,
+    isSubmitting: createAnnouncement.isPending || updateAnnouncement.isPending,
+    isUpdating:   updateAnnouncement.isPending,
     handleSubmit,
 
     // delete / pin
@@ -254,6 +291,7 @@ export function useAnnouncementModal(
   lockedProjectId?: string | null,
 ) {
   const [isOpen, setIsOpen] = useState(false);
+  const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null);
 
   // Lazy initializer — runs once on mount, reads lockedProjectId at that time
   const [form, setForm] = useState<AnnouncementFormState>(() => ({
@@ -261,37 +299,67 @@ export function useAnnouncementModal(
     projectId: lockedProjectId ?? null,
   }));
 
-  const { mutateAsync, isPending } = useCreateAnnouncement(workspaceSlug);
+  const { mutateAsync: createAsync, isPending: createPending } = useCreateAnnouncement(workspaceSlug);
+  const { mutateAsync: updateAsync, isPending: updatePending }   = useUpdateAnnouncement(workspaceSlug);
+  const isPending = createPending || updatePending;
 
   const resetForm = useCallback(() =>
     setForm({ ...EMPTY_FORM, projectId: lockedProjectId ?? null }),
     [lockedProjectId],
   );
 
-  const open = useCallback(() => setIsOpen(true), []);
+  const open = useCallback(() => {
+    setEditingAnnouncement(null);
+    resetForm();
+    setIsOpen(true);
+  }, [resetForm]);
+
+  const edit = useCallback((announcement: Announcement) => {
+    setEditingAnnouncement(announcement);
+    setForm({
+      title:      announcement.title,
+      content:    announcement.content,
+      visibility: announcement.visibility,
+      isPinned:   announcement.isPinned,
+      targetIds:  announcement.targets.map((t) => t.userId),
+      projectId:  announcement.projectId,
+    });
+    setIsOpen(true);
+  }, []);
 
   const close = useCallback(() => {
     if (isPending) return;
     resetForm();
+    setEditingAnnouncement(null);
     setIsOpen(false);
   }, [isPending, resetForm]);
 
   const onSubmit = useCallback(async () => {
     if (!form.title.trim() || !form.content.trim()) return;
-    await mutateAsync({
+
+    const payload = {
       title:      form.title.trim(),
       content:    form.content.trim(),
       visibility: form.visibility,
       isPinned:   form.isPinned,
       targetIds:  form.visibility === 'PRIVATE' ? form.targetIds : [],
-      // Always use the latest lockedProjectId at submit time, not form state
-      // This handles the case where projectId resolved after initial render
-      projectId:  lockedProjectId ?? form.projectId,
-      workspaceSlug,
-    });
+    };
+
+    if (editingAnnouncement) {
+      await updateAsync({ id: editingAnnouncement.id, data: payload });
+    } else {
+      await createAsync({
+        ...payload,
+        // Always use the latest lockedProjectId at submit time, not form state
+        // This handles the case where projectId resolved after initial render
+        projectId:  lockedProjectId ?? form.projectId,
+        workspaceSlug,
+      });
+    }
     resetForm();
+    setEditingAnnouncement(null);
     setIsOpen(false);
-  }, [form, mutateAsync, resetForm, lockedProjectId, workspaceSlug]);
+  }, [form, editingAnnouncement, createAsync, updateAsync, resetForm, lockedProjectId, workspaceSlug]);
 
   const onTitleChange = useCallback(
     (v: string) => setForm((f) => ({ ...f, title: v })), []);
@@ -320,10 +388,12 @@ export function useAnnouncementModal(
 
   return {
     open,
+    edit,
     modalProps: {
       isOpen,
       isLoading: isPending,
       isValid,
+      isEditing: !!editingAnnouncement,
       form,
       onClose:           close,
       onSubmit,

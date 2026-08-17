@@ -183,7 +183,7 @@ vi.mock('lucide-react', () => {
     'BarChart3', 'Sparkles', 'CheckCircle2', 'Rocket', 'Zap', 'Building2',
     'AlertCircle', 'XCircle', 'Loader2', 'Trash2', 'Pin', 'Download',
     'Megaphone', 'FolderOpen', 'ArrowRight', 'AlertTriangle', 'Shield',
-    'ArchiveRestore', 'RefreshCw', 'Save', 'CalendarDays',
+    'ArchiveRestore', 'RefreshCw', 'Save', 'CalendarDays', 'Pencil',
   ];
   for (const name of iconNames) {
     icons[name] = identity;
@@ -292,5 +292,25 @@ describe('AnnouncementDetailModal', () => {
   it('does not show recipients for public announcements', () => {
     render(<AnnouncementDetailModal announcement={baseAnnouncement} isOpen={true} onClose={vi.fn()} />);
     expect(screen.queryByText(/Recipients/)).not.toBeInTheDocument();
+  });
+
+  it('shows edited time when updatedAt is later than createdAt', () => {
+    render(
+      <AnnouncementDetailModal
+        announcement={{
+          ...baseAnnouncement,
+          createdAt: '2025-01-10T10:00:00Z',
+          updatedAt: '2025-01-12T10:00:00Z',
+        }}
+        isOpen={true}
+        onClose={vi.fn()}
+      />
+    );
+    expect(screen.getByText(/Edited/)).toBeInTheDocument();
+  });
+
+  it('hides edited time when not edited', () => {
+    render(<AnnouncementDetailModal announcement={baseAnnouncement} isOpen={true} onClose={vi.fn()} />);
+    expect(screen.queryByText(/Edited/)).not.toBeInTheDocument();
   });
 });

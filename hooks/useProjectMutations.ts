@@ -41,6 +41,9 @@ export const useUpdateProject = () => {
       });
       qc.invalidateQueries({ queryKey: projectKeys.details() });
       qc.invalidateQueries({ queryKey: projectKeys.lists() });
+      // The All Projects page (useAllUserProjects) caches under its own key —
+      // invalidate it too so an archive/rename reflects there instantly.
+      qc.invalidateQueries({ queryKey: [...projectKeys.all, "user-projects"] });
     },
   });
 };

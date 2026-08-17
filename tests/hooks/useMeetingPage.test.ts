@@ -11,8 +11,11 @@ function waitForMeetings(result: Record<string, unknown>) {
 }
 
 describe('useMeetingPage', () => {
+  let confirmSpy: ReturnType<typeof vi.fn>
+
   beforeEach(() => {
-    vi.stubGlobal('confirm', vi.fn(() => true))
+    confirmSpy = vi.fn(() => true)
+    vi.stubGlobal('confirm', confirmSpy)
   })
 
   it('loads meetings for a workspace', async () => {
@@ -167,7 +170,7 @@ describe('useMeetingPage', () => {
     await waitFor(() => expect(result.current.formOpen).toBe(false))
   })
 
-  it('cancels a meeting', async () => {
+  it('opens cancel confirmation instead of browser confirm', async () => {
     const { result } = renderHook(
       () => useMeetingPage({ workspaceSlug: 'test-ws' }),
       { wrapper: createWrapper() }
@@ -176,12 +179,31 @@ describe('useMeetingPage', () => {
     await waitForMeetings(result)
 
     const meeting = result.current.meetings[0]
-    await act(async () => {
-      await result.current.handleCancel(meeting)
-    })
+    act(() => result.current.handleCancel(meeting))
+
+    expect(result.current.confirmAction).toEqual({ type: 'cancel', meeting })
+    expect(confirmSpy).not.toHaveBeenCalled()
   })
 
-  it('deletes a meeting', async () => {
+  it('cancels a meeting after confirmation', async () => {
+    const { result } = renderHook(
+      () => useMeetingPage({ workspaceSlug: 'test-ws' }),
+      { wrapper: createWrapper() }
+    )
+
+    await waitForMeetings(result)
+
+    const meeting = result.current.meetings[0]
+    act(() => result.current.handleCancel(meeting))
+
+    await act(async () => {
+      await result.current.handleConfirmAction()
+    })
+
+    expect(result.current.confirmAction).toBeNull()
+  })
+
+  it('deletes a meeting after confirmation', async () => {
     const { result } = renderHook(
       () => useMeetingPage({ workspaceSlug: 'test-ws' }),
       { wrapper: createWrapper() }
@@ -191,11 +213,30 @@ describe('useMeetingPage', () => {
 
     const meeting = result.current.meetings[0]
     act(() => result.current.openDetail(meeting))
+    act(() => result.current.handleDelete(meeting))
+
+    expect(result.current.confirmAction?.type).toBe('delete')
 
     await act(async () => {
-      await result.current.handleDelete(meeting)
+      await result.current.handleConfirmAction()
     })
 
     expect(result.current.detailOpen).toBe(false)
+    expect(result.current.confirmAction).toBeNull()
+  })
+
+  it('closes confirmation without acting', async () => {
+    const { result } = renderHook(
+      () => useMeetingPage({ workspaceSlug: 'test-ws' }),
+      { wrapper: createWrapper() }
+    )
+
+    await waitForMeetings(result)
+
+    const meeting = result.current.meetings[0]
+    act(() => result.current.handleCancel(meeting))
+    act(() => result.current.setConfirmAction(null))
+
+    expect(result.current.confirmAction).toBeNull()
   })
 })

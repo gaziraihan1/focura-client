@@ -183,7 +183,7 @@ vi.mock('lucide-react', () => {
     'BarChart3', 'Sparkles', 'CheckCircle2', 'Rocket', 'Zap', 'Building2',
     'AlertCircle', 'XCircle', 'Loader2', 'Trash2', 'Pin', 'Download',
     'Megaphone', 'FolderOpen', 'ArrowRight', 'AlertTriangle', 'Shield',
-    'ArchiveRestore', 'RefreshCw', 'Save', 'CalendarDays',
+    'ArchiveRestore', 'RefreshCw', 'Save', 'CalendarDays', 'Pencil',
   ];
   for (const name of iconNames) {
     icons[name] = identity;
@@ -328,5 +328,41 @@ describe('AnnouncementCard', () => {
       />
     );
     expect(screen.getByText(/1 recipient/)).toBeInTheDocument();
+  });
+
+  it('shows edit button when onEdit provided', () => {
+    render(<AnnouncementCard {...defaultProps} canManage={true} onEdit={vi.fn()} />);
+    expect(screen.getByTitle('Edit')).toBeInTheDocument();
+  });
+
+  it('hides edit button when onEdit not provided', () => {
+    render(<AnnouncementCard {...defaultProps} canManage={true} />);
+    expect(screen.queryByTitle('Edit')).not.toBeInTheDocument();
+  });
+
+  it('calls onEdit when edit button clicked', () => {
+    const onEdit = vi.fn();
+    render(<AnnouncementCard {...defaultProps} canManage={true} onEdit={onEdit} />);
+    fireEvent.click(screen.getByTitle('Edit'));
+    expect(onEdit).toHaveBeenCalled();
+  });
+
+  it('shows Edited indicator when updatedAt is later than createdAt', () => {
+    render(
+      <AnnouncementCard
+        {...defaultProps}
+        announcement={{
+          ...baseAnnouncement,
+          createdAt: '2025-01-10T10:00:00Z',
+          updatedAt: '2025-01-12T10:00:00Z',
+        }}
+      />
+    );
+    expect(screen.getByText('Edited')).toBeInTheDocument();
+  });
+
+  it('hides Edited indicator when not edited', () => {
+    render(<AnnouncementCard {...defaultProps} />);
+    expect(screen.queryByText('Edited')).not.toBeInTheDocument();
   });
 });

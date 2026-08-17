@@ -64,6 +64,15 @@ export interface CreateAnnouncementDto {
   projectId?: string | null;
 }
 
+export interface UpdateAnnouncementDto {
+  title?:      string;
+  content?:    string;
+  visibility?: AnnouncementVisibility;
+  isPinned?:   boolean;
+  targetIds?:  string[];
+  projectId?:  string | null;
+}
+
 // ─── Filters ──────────────────────────────────────────────────────────────────
 
 export interface AnnouncementFilters {
@@ -114,6 +123,7 @@ export interface AnnouncementModalProps {
   isOpen:            boolean;
   isLoading:         boolean;
   isValid:           boolean;
+  isEditing?:        boolean;
   form:              AnnouncementFormState;
   members:           WorkspaceMember[];
   projects?:         WorkspaceProject[];

@@ -72,6 +72,8 @@ vi.mock('lucide-react', () => {
     Italic: mock('italic'),
     Code2: mock('code2'),
     Link2: mock('link2'),
+    ArrowRight: mock('arrow-right'),
+    Pencil: mock('pencil'),
     CornerDownLeft: mock('corner-down-left'),
     Check: mock('check'),
     Copy: mock('copy'),
@@ -93,10 +95,11 @@ vi.mock('@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[
 }))
 
 vi.mock('@/utils/announcement.utils', () => ({
-  stripTokens: (raw: string) => raw,
+  stripTokens: vi.fn((raw: string) => raw),
 }))
 
 import { AnnouncementCard as ProjectAnnouncementCard } from '@/components/Dashboard/Workspaces/project/Announcements/AnnouncementCard'
+import { stripTokens } from '@/utils/announcement.utils'
 import type { Announcement } from '@/types/announcement.types'
 
 describe('ProjectAnnouncementCard', () => {
@@ -259,5 +262,54 @@ describe('ProjectAnnouncementCard', () => {
     render(<ProjectAnnouncementCard {...defaultProps} />)
     fireEvent.click(screen.getByRole('button', { name: /delete announcement/i }))
     expect(defaultProps.onOpen).not.toHaveBeenCalled()
+  })
+
+  it('shows edit button when onEdit provided', () => {
+    render(<ProjectAnnouncementCard {...defaultProps} onEdit={vi.fn()} />)
+    expect(screen.getByRole('button', { name: /edit announcement/i })).toBeInTheDocument()
+  })
+
+  it('hides edit button when onEdit not provided', () => {
+    render(<ProjectAnnouncementCard {...defaultProps} />)
+    expect(screen.queryByRole('button', { name: /edit announcement/i })).not.toBeInTheDocument()
+  })
+
+  it('calls onEdit when edit button clicked', () => {
+    const onEdit = vi.fn()
+    render(<ProjectAnnouncementCard {...defaultProps} onEdit={onEdit} />)
+    fireEvent.click(screen.getByRole('button', { name: /edit announcement/i }))
+    expect(onEdit).toHaveBeenCalled()
+  })
+
+  it('prevents event propagation on edit click', () => {
+    render(<ProjectAnnouncementCard {...defaultProps} onEdit={vi.fn()} />)
+    fireEvent.click(screen.getByRole('button', { name: /edit announcement/i }))
+    expect(defaultProps.onOpen).not.toHaveBeenCalled()
+  })
+
+  it('shows Edited indicator when updatedAt is later than createdAt', () => {
+    render(
+      <ProjectAnnouncementCard
+        {...defaultProps}
+        announcement={{ ...projectAnnouncement, updatedAt: '2025-01-18T10:00:00Z' }}
+      />
+    )
+    expect(screen.getByText('Edited')).toBeInTheDocument()
+  })
+
+  it('hides Edited indicator when not edited', () => {
+    render(<ProjectAnnouncementCard {...defaultProps} />)
+    expect(screen.queryByText('Edited')).not.toBeInTheDocument()
+  })
+
+  it('strips formatting tokens from the content preview', () => {
+    const content = '**Bold** and //italic// and $$mono$$ and {https://x.com|link}'
+    render(
+      <ProjectAnnouncementCard
+        {...defaultProps}
+        announcement={{ ...projectAnnouncement, content }}
+      />
+    )
+    expect(stripTokens).toHaveBeenCalledWith(content)
   })
 })

@@ -36,8 +36,8 @@ export const timeEntryKeys = {
   task: (taskId: string) => [...timeEntryKeys.all, "task", taskId] as const,
   my: (from?: string, to?: string) =>
     [...timeEntryKeys.all, "my", from ?? "all", to ?? "all"] as const,
-  workspace: (workspaceId: string, from?: string, to?: string) =>
-    [...timeEntryKeys.all, "workspace", workspaceId, from ?? "all", to ?? "all"] as const,
+  workspace: (workspaceId: string, from?: string, to?: string, memberUserId?: string) =>
+    [...timeEntryKeys.all, "workspace", workspaceId, from ?? "all", to ?? "all", memberUserId ?? "all"] as const,
 };
 
 // Refreshes the workspace analytics (time summary) when an entry changes.
@@ -89,15 +89,18 @@ export function useMyTimeEntries(from?: string, to?: string) {
 /**
  * Every entry on tasks in a workspace that the requesting user can access.
  * `from`/`to` are ISO datetime strings; when omitted the server returns all
- * entries in scope. Includes the author (`user`) alongside the task.
+ * entries in scope. `memberUserId` optionally narrows to one member's entries
+ * — only meaningful for OWNER/ADMIN (the backend ignores it for members).
+ * Includes the author (`user`) alongside the task.
  */
 export function useWorkspaceTimeEntries(
   workspaceId?: string,
   from?: string,
   to?: string,
+  memberUserId?: string,
 ) {
   return useQuery({
-    queryKey: timeEntryKeys.workspace(workspaceId ?? "", from, to),
+    queryKey: timeEntryKeys.workspace(workspaceId ?? "", from, to, memberUserId),
     queryFn: async () => {
       const result = await api.get<TimeEntry[]>(
         `/api/v1/time-entries/workspace/${workspaceId}`,
@@ -105,6 +108,7 @@ export function useWorkspaceTimeEntries(
           params: {
             ...(from ? { from } : {}),
             ...(to ? { to } : {}),
+            ...(memberUserId ? { memberUserId } : {}),
           },
           showErrorToast: false,
         },
