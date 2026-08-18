@@ -5,7 +5,9 @@ import {
   useCallback,
   useContext,
   useMemo,
+  useState,
   useSyncExternalStore,
+  useEffect,
 } from "react";
 import { ConsentBanner } from "./ConsentBanner";
 import { GoogleAnalytics } from "@/components/Analytics/GoogleAnalytics";
@@ -61,11 +63,16 @@ const ConsentContext = createContext<ConsentContextValue>({
  * - The choice is persisted in `localStorage` under `focura-consent`.
  */
 export function ConsentProvider({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
   const consent: ConsentChoice | null = useSyncExternalStore(
     subscribe,
     readStoredConsent,
     getServerSnapshot
   );
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const persist = useCallback((choice: ConsentChoice) => {
     try {
@@ -88,7 +95,7 @@ export function ConsentProvider({ children }: { children: React.ReactNode }) {
   return (
     <ConsentContext.Provider value={value}>
       {children}
-      {consent === null && <ConsentBanner />}
+      {mounted && consent === null && <ConsentBanner />}
       <GoogleAnalytics enabled={consent === "accepted"} />
     </ConsentContext.Provider>
   );

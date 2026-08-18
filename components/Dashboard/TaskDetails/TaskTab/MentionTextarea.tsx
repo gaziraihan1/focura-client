@@ -103,12 +103,15 @@ const MentionTextarea = forwardRef<MentionTextareaHandle, MentionTextareaProps>(
         </AnimatePresence>
 
         {/* Hint */}
-        <p className="mt-1.5 text-[10px] text-muted-foreground/50 select-none">
-          Type <span className="font-semibold text-muted-foreground/70">@</span> to
-          mention ·{' '}
-          <kbd className="px-1 py-0.5 rounded bg-muted text-[10px]">⌘ Enter</kbd> to
-          send
-        </p>
+        <div className="mt-1.5 flex items-center gap-3 text-[10px] text-muted-foreground/40 select-none">
+          <span>
+            <span className="font-semibold text-muted-foreground/60">@</span> mention
+          </span>
+          <span className="w-px h-3 bg-border/40" />
+          <span>
+            <kbd className="px-1 py-0.5 rounded bg-muted/80 text-[9px] font-mono">⌘↵</kbd> send
+          </span>
+        </div>
       </div>
     );
   }

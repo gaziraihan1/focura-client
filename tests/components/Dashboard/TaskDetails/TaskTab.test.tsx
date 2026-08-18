@@ -113,6 +113,7 @@ vi.mock('lucide-react', () => {
     Search: icon('Search'),
     ArrowUpDown: icon('ArrowUpDown'),
     ArrowUp: icon('ArrowUp'),
+    AtSign: icon('AtSign'),
     ArrowDown: icon('ArrowDown'),
     Menu: icon('Menu'),
     Save: icon('Save'),
@@ -439,8 +440,8 @@ describe('TaskDetails/TaskTab – EmptyComments', () => {
   it('renders no comments message', async () => {
     const { EmptyComments } = await import('@/components/Dashboard/TaskDetails/TaskTab/CommentsList/EmptyComments')
     render(<EmptyComments />)
-    expect(screen.getByText('No comments yet')).toBeInTheDocument()
-    expect(screen.getByText('Be the first to leave a comment.')).toBeInTheDocument()
+    expect(screen.getByText(/no comments yet/i)).toBeInTheDocument()
+    expect(screen.getByText(/start the conversation/i)).toBeInTheDocument()
   })
 })
 
@@ -487,7 +488,7 @@ describe('TaskDetails/TaskTab – MentionDropdown', () => {
         onSelect={vi.fn()}
       />
     )
-    expect(screen.getByText('Mention someone')).toBeInTheDocument()
+    expect(screen.getByText('Mention a teammate')).toBeInTheDocument()
   })
   it('shows role when present', async () => {
     const { MentionDropdown } = await import('@/components/Dashboard/TaskDetails/TaskTab/MentionDropdown')
@@ -581,7 +582,7 @@ describe('TaskDetails/TaskTab – CommentsTab', () => {
         onDelete={vi.fn()} addCommentLoading={false}
       />
     )
-    expect(screen.getByText('No comments yet')).toBeInTheDocument()
+    expect(screen.getByText(/no comments yet/i)).toBeInTheDocument()
   })
 })
 

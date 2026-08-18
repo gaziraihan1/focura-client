@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { Clock, Plus, Trash2, Pencil, Check, X, Briefcase } from "lucide-react";
+import { Clock, Plus, Trash2, Pencil, Check, X, Briefcase, ChevronDown, ChevronUp } from "lucide-react";
 import type { TimeEntry, TimeEntryCategory } from "@/types/task.types";
 import {
   TIME_ENTRY_CATEGORY_META as CATEGORY_META,
@@ -66,6 +66,7 @@ export function TimeEntryCard({ taskId, workspaceId }: TimeEntryCardProps) {
   const updateEntry = useUpdateTimeEntry();
   const deleteEntry = useDeleteTimeEntry();
 
+  const [isExpanded, setIsExpanded] = useState(false);
   const [duration, setDuration] = useState<string>("");
   const [category, setCategory] = useState<TimeEntryCategory>("DEEP_WORK");
   const [billable, setBillable] = useState(false);
@@ -159,249 +160,265 @@ export function TimeEntryCard({ taskId, workspaceId }: TimeEntryCardProps) {
         <div className="flex items-center gap-2 text-sm">
           <span className="text-muted-foreground">Total</span>
           <span className="font-bold tabular-nums">{formatDuration(totalMinutes)}</span>
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="p-1 rounded-lg hover:bg-accent transition-colors"
+            aria-label={isExpanded ? "Collapse time entries" : "Expand time entries"}
+          >
+            {isExpanded ? (
+              <ChevronUp className="w-4 h-4 text-muted-foreground" />
+            ) : (
+              <ChevronDown className="w-4 h-4 text-muted-foreground" />
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Add form */}
-      <form onSubmit={handleSubmit} className="space-y-3 mb-5">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          <div className="col-span-2 sm:col-span-1">
-            <label className="text-xs text-muted-foreground mb-1 block">Duration (min)</label>
-            <input
-              type="number"
-              min={1}
-              max={1440}
-              value={duration}
-              onChange={(e) => setDuration(e.target.value)}
-              placeholder="30"
-              className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-            />
-          </div>
-          <div className="col-span-2 sm:col-span-1">
-            <label className="text-xs text-muted-foreground mb-1 block">Category</label>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value as TimeEntryCategory)}
-              className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-            >
-              {CATEGORY_OPTIONS.map((c) => (
-                <option key={c} value={c}>
-                  {CATEGORY_META[c].label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="col-span-2 sm:col-span-2">
-            <label className="text-xs text-muted-foreground mb-1 block">Date (optional)</label>
-            <input
-              type="date"
-              aria-label="Entry date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-            />
-          </div>
-          <div className="col-span-2 sm:col-span-4">
-            <label className="text-xs text-muted-foreground mb-1 block">Description (optional)</label>
-            <input
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="What did you work on?"
-              maxLength={500}
-              className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-            />
-          </div>
-        </div>
+      {/* Collapsible content */}
+      {isExpanded && (
+        <>
+          {/* Add form */}
+          <form onSubmit={handleSubmit} className="space-y-3 mb-5">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div className="col-span-2 sm:col-span-1">
+                <label className="text-xs text-muted-foreground mb-1 block">Duration (min)</label>
+                <input
+                  type="number"
+                  min={1}
+                  max={1440}
+                  value={duration}
+                  onChange={(e) => setDuration(e.target.value)}
+                  placeholder="30"
+                  className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                />
+              </div>
+              <div className="col-span-2 sm:col-span-1">
+                <label className="text-xs text-muted-foreground mb-1 block">Category</label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value as TimeEntryCategory)}
+                  className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                >
+                  {CATEGORY_OPTIONS.map((c) => (
+                    <option key={c} value={c}>
+                      {CATEGORY_META[c].label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="col-span-2 sm:col-span-2">
+                <label className="text-xs text-muted-foreground mb-1 block">Date (optional)</label>
+                <input
+                  type="date"
+                  aria-label="Entry date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                />
+              </div>
+              <div className="col-span-2 sm:col-span-4">
+                <label className="text-xs text-muted-foreground mb-1 block">Description (optional)</label>
+                <input
+                  type="text"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="What did you work on?"
+                  maxLength={500}
+                  className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                />
+              </div>
+            </div>
 
-        <div className="flex items-center justify-between gap-3 flex-wrap">
-          <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={billable}
-              onChange={(e) => setBillable(e.target.checked)}
-              className="accent-primary"
-            />
-            <Briefcase className="w-3.5 h-3.5 text-muted-foreground" />
-            <span className="text-muted-foreground">Billable</span>
-          </label>
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={billable}
+                  onChange={(e) => setBillable(e.target.checked)}
+                  className="accent-primary"
+                />
+                <Briefcase className="w-3.5 h-3.5 text-muted-foreground" />
+                <span className="text-muted-foreground">Billable</span>
+              </label>
 
-          <button
-            type="submit"
-            disabled={addEntry.isPending || !duration || Number(duration) <= 0}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Plus className="w-4 h-4" />
-            {addEntry.isPending ? "Adding…" : "Add Entry"}
-          </button>
-        </div>
-      </form>
+              <button
+                type="submit"
+                disabled={addEntry.isPending || !duration || Number(duration) <= 0}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Plus className="w-4 h-4" />
+                {addEntry.isPending ? "Adding…" : "Add Entry"}
+              </button>
+            </div>
+          </form>
 
-      {/* Entries list */}
-      {isLoading ? (
-        <div className="text-sm text-muted-foreground py-4">Loading time entries…</div>
-      ) : entries.length === 0 ? (
-        <div className="text-center py-6 border border-dashed rounded-lg">
-          <Clock className="w-8 h-8 text-muted-foreground mx-auto mb-2 opacity-40" />
-          <p className="text-sm text-muted-foreground">No time logged on this task yet</p>
-        </div>
-      ) : (
-        <ul className="space-y-2">
-          {entries.map((entry) => (
-            <li
-              key={entry.id}
-              className="flex items-start gap-3 p-3 rounded-lg border bg-background/50"
-            >
-              {editingId === entry.id ? (
-                /* ── Inline edit form ── */
-                <div className="flex-1 min-w-0 space-y-2">
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="text-[10px] text-muted-foreground mb-1 block">Duration (min)</label>
-                      <input
-                        type="number"
-                        min={1}
-                        max={1440}
-                        value={editDuration}
-                        onChange={(e) => setEditDuration(e.target.value)}
-                        className="w-full px-2.5 py-1.5 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-                      />
+          {/* Entries list */}
+          {isLoading ? (
+            <div className="text-sm text-muted-foreground py-4">Loading time entries…</div>
+          ) : entries.length === 0 ? (
+            <div className="text-center py-6 border border-dashed rounded-lg">
+              <Clock className="w-8 h-8 text-muted-foreground mx-auto mb-2 opacity-40" />
+              <p className="text-sm text-muted-foreground">No time logged on this task yet</p>
+            </div>
+          ) : (
+            <ul className="space-y-2">
+              {entries.map((entry) => (
+                <li
+                  key={entry.id}
+                  className="flex items-start gap-3 p-3 rounded-lg border bg-background/50"
+                >
+                  {editingId === entry.id ? (
+                    /* ── Inline edit form ── */
+                    <div className="flex-1 min-w-0 space-y-2">
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-[10px] text-muted-foreground mb-1 block">Duration (min)</label>
+                          <input
+                            type="number"
+                            min={1}
+                            max={1440}
+                            value={editDuration}
+                            onChange={(e) => setEditDuration(e.target.value)}
+                            className="w-full px-2.5 py-1.5 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-muted-foreground mb-1 block">Category</label>
+                          <select
+                            value={editCategory}
+                            onChange={(e) => setEditCategory(e.target.value as TimeEntryCategory)}
+                            className="w-full px-2.5 py-1.5 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                          >
+                            {CATEGORY_OPTIONS.map((c) => (
+                              <option key={c} value={c}>
+                                {CATEGORY_META[c].label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-muted-foreground mb-1 block">Date (optional)</label>
+                        <input
+                          type="date"
+                          aria-label="Edit entry date"
+                          value={editDate}
+                          onChange={(e) => setEditDate(e.target.value)}
+                          className="w-full px-2.5 py-1.5 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-muted-foreground mb-1 block">Description</label>
+                        <input
+                          type="text"
+                          value={editDescription}
+                          onChange={(e) => setEditDescription(e.target.value)}
+                          placeholder="What did you work on?"
+                          maxLength={500}
+                          className="w-full px-2.5 py-1.5 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                        />
+                      </div>
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
+                          <input
+                            type="checkbox"
+                            checked={editBillable}
+                            onChange={(e) => setEditBillable(e.target.checked)}
+                            className="accent-primary"
+                          />
+                          <Briefcase className="w-3.5 h-3.5 text-muted-foreground" />
+                          <span className="text-muted-foreground">Billable</span>
+                        </label>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={cancelEdit}
+                            disabled={updateEntry.isPending}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors disabled:opacity-50"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                            Cancel
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => saveEdit(entry)}
+                            disabled={updateEntry.isPending || !editDuration || Number(editDuration) <= 0}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <Check className="w-3.5 h-3.5" />
+                            {updateEntry.isPending ? "Saving…" : "Save"}
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <label className="text-[10px] text-muted-foreground mb-1 block">Category</label>
-                      <select
-                        value={editCategory}
-                        onChange={(e) => setEditCategory(e.target.value as TimeEntryCategory)}
-                        className="w-full px-2.5 py-1.5 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-                      >
-                        {CATEGORY_OPTIONS.map((c) => (
-                          <option key={c} value={c}>
-                            {CATEGORY_META[c].label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted-foreground mb-1 block">Date (optional)</label>
-                    <input
-                      type="date"
-                      aria-label="Edit entry date"
-                      value={editDate}
-                      onChange={(e) => setEditDate(e.target.value)}
-                      className="w-full px-2.5 py-1.5 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted-foreground mb-1 block">Description</label>
-                    <input
-                      type="text"
-                      value={editDescription}
-                      onChange={(e) => setEditDescription(e.target.value)}
-                      placeholder="What did you work on?"
-                      maxLength={500}
-                      className="w-full px-2.5 py-1.5 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-                    />
-                  </div>
-                  <div className="flex items-center justify-between gap-2 flex-wrap">
-                    <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
-                      <input
-                        type="checkbox"
-                        checked={editBillable}
-                        onChange={(e) => setEditBillable(e.target.checked)}
-                        className="accent-primary"
-                      />
-                      <Briefcase className="w-3.5 h-3.5 text-muted-foreground" />
-                      <span className="text-muted-foreground">Billable</span>
-                    </label>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={cancelEdit}
-                        disabled={updateEntry.isPending}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors disabled:opacity-50"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => saveEdit(entry)}
-                        disabled={updateEntry.isPending || !editDuration || Number(editDuration) <= 0}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <Check className="w-3.5 h-3.5" />
-                        {updateEntry.isPending ? "Saving…" : "Save"}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                /* ── Read-only row ── */
-                <>
-                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-semibold text-primary shrink-0">
-                    {initials(entry.user?.name)}
-                  </div>
+                  ) : (
+                    /* ── Read-only row ── */
+                    <>
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-semibold text-primary shrink-0">
+                        {initials(entry.user?.name)}
+                      </div>
 
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm font-medium">
-                        {entry.user?.name ?? "Unknown"}
-                      </span>
-                      <span
-                        className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full border ${CATEGORY_META[entry.category]?.className ?? CATEGORY_META.OTHER.className}`}
-                      >
-                        {CATEGORY_META[entry.category]?.label ?? "Other"}
-                      </span>
-                      {entry.billable && (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400">
-                          <Briefcase className="w-2.5 h-2.5" />
-                          Billable
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-sm font-medium">
+                            {entry.user?.name ?? "Unknown"}
+                          </span>
+                          <span
+                            className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full border ${CATEGORY_META[entry.category]?.className ?? CATEGORY_META.OTHER.className}`}
+                          >
+                            {CATEGORY_META[entry.category]?.label ?? "Other"}
+                          </span>
+                          {entry.billable && (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400">
+                              <Briefcase className="w-2.5 h-2.5" />
+                              Billable
+                            </span>
+                          )}
+                        </div>
+
+                        {entry.description && (
+                          <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">
+                            {entry.description}
+                          </p>
+                        )}
+
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {formatDate(entry.startedAt)}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="text-sm font-bold tabular-nums">
+                          {formatDuration(entry.duration)}
                         </span>
-                      )}
-                    </div>
-
-                    {entry.description && (
-                      <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">
-                        {entry.description}
-                      </p>
-                    )}
-
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {formatDate(entry.startedAt)}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-sm font-bold tabular-nums">
-                      {formatDuration(entry.duration)}
-                    </span>
-                    {currentUserId && entry.userId === currentUserId && (
-                      <>
-                        <button
-                          onClick={() => startEdit(entry)}
-                          disabled={updateEntry.isPending || deleteEntry.isPending}
-                          title="Edit entry"
-                          className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors disabled:opacity-50"
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => deleteEntry.mutate({ id: entry.id, taskId: entry.taskId, workspaceId })}
-                          disabled={deleteEntry.isPending || updateEntry.isPending}
-                          title="Delete entry"
-                          className="p-1.5 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors disabled:opacity-50"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
+                        {currentUserId && entry.userId === currentUserId && (
+                          <>
+                            <button
+                              onClick={() => startEdit(entry)}
+                              disabled={updateEntry.isPending || deleteEntry.isPending}
+                              title="Edit entry"
+                              className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors disabled:opacity-50"
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => deleteEntry.mutate({ id: entry.id, taskId: entry.taskId, workspaceId })}
+                              disabled={deleteEntry.isPending || updateEntry.isPending}
+                              title="Delete entry"
+                              className="p-1.5 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors disabled:opacity-50"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
       )}
     </div>
   );

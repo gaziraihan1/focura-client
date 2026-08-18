@@ -83,9 +83,7 @@ export const TaskTabs = ({
 
 
   const handleCommentDelete = async (commentId: string) => {
-    if (confirm("Are you sure you want to delete this comment?")) {
-      await deleteComment.mutateAsync({ commentId, taskId });
-    }
+    await deleteComment.mutateAsync({ commentId, taskId });
   };
 
   return (

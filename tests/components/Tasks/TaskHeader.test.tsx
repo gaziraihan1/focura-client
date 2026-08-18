@@ -7,6 +7,7 @@ vi.mock('lucide-react', () => ({
   Edit: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="edit-icon" {...props} />,
   Trash: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="trash-icon" {...props} />,
   Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader-icon" {...props} />,
+  AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-circle" {...props} />,
 }))
 
 describe('TaskHeader', () => {
@@ -68,7 +69,15 @@ describe('TaskHeader', () => {
 
   it('calls onDelete when delete button is clicked', () => {
     render(<TaskHeader {...defaultProps} />)
+
+    // Click the delete button to show the confirmation modal
     fireEvent.click(screen.getByText('Delete'))
+
+    // Click the confirm button in the modal
+    const confirmButtons = screen.getAllByText('Delete')
+    expect(confirmButtons).toHaveLength(2) // One in header, one in modal
+    fireEvent.click(confirmButtons[1]) // Click the modal's delete button
+
     expect(defaultProps.onDelete).toHaveBeenCalledTimes(1)
   })
 
@@ -79,8 +88,11 @@ describe('TaskHeader', () => {
 
   it('disables delete button when deleting', () => {
     render(<TaskHeader {...defaultProps} isDeleting={true} />)
-    const deleteButton = screen.getByText('Delete').closest('button')
-    expect(deleteButton).toBeDisabled()
+
+    // Get the header delete button (the first one in the document)
+    const deleteButtons = screen.getAllByText('Delete')
+    const headerDeleteButton = deleteButtons[0].closest('button')
+    expect(headerDeleteButton).toBeDisabled()
   })
 
   it('renders both edit and delete buttons by default', () => {

@@ -202,6 +202,7 @@ export interface Task {
   slackUserDisplayName?: string | null;
 
   createdBy: User;
+  editedBy?: User | null;
   assignees: TaskAssignee[];
   project?: Project;
   labels:LabelTypes[]

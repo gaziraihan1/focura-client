@@ -39,7 +39,7 @@ vi.mock('framer-motion', () => {
     button: 'button',
     span: 'span',
     p: 'p',
-    motion: {
+    m: {
       div: 'div',
       button: 'button',
       span: 'span',
@@ -449,11 +449,14 @@ describe('TaskDetails/TaskHeader', () => {
     fireEvent.click(screen.getByText('Edit'))
     expect(onEdit).toHaveBeenCalled()
   })
-  it('calls onDelete when Delete clicked', async () => {
+  it('opens delete confirmation modal and calls onDelete on confirm', async () => {
     const onDelete = vi.fn()
     const { TaskHeader } = await import('@/components/Dashboard/TaskDetails/TaskHeader')
     render(<TaskHeader isEditing={false} onBack={vi.fn()} onEdit={vi.fn()} onDelete={onDelete} isDeleting={false} />)
     fireEvent.click(screen.getByText('Delete'))
+    expect(screen.getByText('Delete task')).toBeInTheDocument()
+    const deleteButtons = screen.getAllByText('Delete')
+    fireEvent.click(deleteButtons[deleteButtons.length - 1])
     expect(onDelete).toHaveBeenCalled()
   })
 })

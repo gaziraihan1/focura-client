@@ -65,6 +65,8 @@ vi.mock("lucide-react", () => {
     Check: icon("Check"),
     X: icon("X"),
     Briefcase: icon("Briefcase"),
+    ChevronDown: icon("ChevronDown"),
+    ChevronUp: icon("ChevronUp"),
   };
 });
 
@@ -77,20 +79,34 @@ describe("TimeEntryCard", () => {
 
   it("renders entries with durations and total", () => {
     render(<TimeEntryCard taskId="task-1" />);
+
+    // The total should be visible even when collapsed
+    expect(screen.getByText("1h 30m")).toBeInTheDocument(); // total
+
+    // Expand the section to see the entries
+    fireEvent.click(screen.getByLabelText(/expand time entries/i));
+
     expect(screen.getByText("Alice")).toBeInTheDocument();
     expect(screen.getByText("Bob")).toBeInTheDocument();
     expect(screen.getByText("30m")).toBeInTheDocument();
     expect(screen.getByText("1h")).toBeInTheDocument();
-    expect(screen.getByText("1h 30m")).toBeInTheDocument(); // total
   });
 
   it("shows an edit button only for the current user's entries", () => {
     render(<TimeEntryCard taskId="task-1" />);
+
+    // Expand the section to see the entries
+    fireEvent.click(screen.getByLabelText(/expand time entries/i));
+
     expect(screen.getAllByTitle("Edit entry")).toHaveLength(1);
   });
 
   it("opens the inline edit form pre-filled with the entry's values", () => {
     render(<TimeEntryCard taskId="task-1" />);
+
+    // Expand the section to see the entries
+    fireEvent.click(screen.getByLabelText(/expand time entries/i));
+
     fireEvent.click(screen.getByTitle("Edit entry"));
 
     expect(screen.getByDisplayValue("30")).toBeInTheDocument();
@@ -105,6 +121,10 @@ describe("TimeEntryCard", () => {
     });
 
     render(<TimeEntryCard taskId="task-1" />);
+
+    // Expand the section to see the entries
+    fireEvent.click(screen.getByLabelText(/expand time entries/i));
+
     fireEvent.click(screen.getByTitle("Edit entry"));
     fireEvent.change(screen.getByDisplayValue("30"), { target: { value: "45" } });
     fireEvent.click(screen.getByRole("button", { name: /save/i }));
@@ -128,6 +148,10 @@ describe("TimeEntryCard", () => {
     });
 
     render(<TimeEntryCard taskId="task-1" workspaceId="ws-1" />);
+
+    // Expand the section to see the entries
+    fireEvent.click(screen.getByLabelText(/expand time entries/i));
+
     fireEvent.click(screen.getByTitle("Edit entry"));
     fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
@@ -143,6 +167,10 @@ describe("TimeEntryCard", () => {
     });
 
     render(<TimeEntryCard taskId="task-1" workspaceId="ws-1" />);
+
+    // Expand the section to see the add form
+    fireEvent.click(screen.getByLabelText(/expand time entries/i));
+
     fireEvent.change(screen.getByLabelText("Entry date"), { target: { value: "2026-08-01" } });
     fireEvent.change(screen.getByPlaceholderText("30"), { target: { value: "45" } });
     fireEvent.click(screen.getByRole("button", { name: /add entry/i }));
@@ -162,6 +190,10 @@ describe("TimeEntryCard", () => {
     });
 
     render(<TimeEntryCard taskId="task-1" />);
+
+    // Expand the section to see the entries
+    fireEvent.click(screen.getByLabelText(/expand time entries/i));
+
     fireEvent.click(screen.getByTitle("Edit entry"));
     fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
@@ -171,6 +203,10 @@ describe("TimeEntryCard", () => {
 
   it("cancels editing without updating", () => {
     render(<TimeEntryCard taskId="task-1" />);
+
+    // Expand the section to see the entries
+    fireEvent.click(screen.getByLabelText(/expand time entries/i));
+
     fireEvent.click(screen.getByTitle("Edit entry"));
     fireEvent.click(screen.getByRole("button", { name: /cancel/i }));
 

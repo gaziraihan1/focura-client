@@ -69,7 +69,7 @@ describe('CommentEditor', () => {
         loading={false}
       />,
     );
-    expect(screen.getByPlaceholderText(/Add a comment/)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Write a comment/)).toBeInTheDocument();
   });
 
   it('shows lock message when cannot comment', () => {

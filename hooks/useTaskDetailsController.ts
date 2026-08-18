@@ -150,7 +150,7 @@ export function useTaskDetailsController(taskId: string, workspaceSlug: string )
 
   const handleDelete = async () => {
     if (!task || !permissions.canDelete) return;
-    if (!confirm("Are you sure you want to delete this task?")) return;
+
     await deleteTask.mutateAsync(task.id);
     router.push(
       workspaceSlug

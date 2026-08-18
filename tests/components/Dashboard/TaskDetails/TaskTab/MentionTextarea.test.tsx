@@ -50,7 +50,7 @@ describe("MentionTextarea", () => {
   it("renders the hint text", () => {
     render(<MentionTextarea {...defaultProps} />);
     expect(screen.getByText(/mention/)).toBeInTheDocument();
-    expect(screen.getByText("⌘ Enter")).toBeInTheDocument();
+    expect(screen.getByText("send")).toBeInTheDocument();
   });
 
   it("disables textarea when disabled prop is true", () => {

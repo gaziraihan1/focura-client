@@ -45,12 +45,15 @@ describe('ConsentProvider + ConsentBanner', () => {
     localStorage.clear();
   });
 
-  it('shows the banner on first visit when no choice is stored', () => {
+  it('shows the banner on first visit when no choice is stored', async () => {
     render(
       <ConsentProvider>
         <div>page</div>
       </ConsentProvider>
     );
+
+    // Wait for component to mount before checking for banner
+    await new Promise(resolve => setTimeout(resolve, 0));
 
     expect(screen.getByText('We respect your privacy')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Accept' })).toBeInTheDocument();
@@ -63,12 +66,15 @@ describe('ConsentProvider + ConsentBanner', () => {
     expect(GaMock).toHaveBeenLastCalledWith({ enabled: false });
   });
 
-  it('persists acceptance, hides the banner, and enables GA', () => {
+  it('persists acceptance, hides the banner, and enables GA', async () => {
     render(
       <ConsentProvider>
         <div>page</div>
       </ConsentProvider>
     );
+
+    // Wait for component to mount
+    await new Promise(resolve => setTimeout(resolve, 0));
 
     fireEvent.click(screen.getByRole('button', { name: 'Accept' }));
 
@@ -77,12 +83,15 @@ describe('ConsentProvider + ConsentBanner', () => {
     expect(GaMock).toHaveBeenLastCalledWith({ enabled: true });
   });
 
-  it('persists decline, hides the banner, and keeps GA disabled', () => {
+  it('persists decline, hides the banner, and keeps GA disabled', async () => {
     render(
       <ConsentProvider>
         <div>page</div>
       </ConsentProvider>
     );
+
+    // Wait for component to mount
+    await new Promise(resolve => setTimeout(resolve, 0));
 
     fireEvent.click(screen.getByRole('button', { name: 'Decline' }));
 
@@ -91,7 +100,7 @@ describe('ConsentProvider + ConsentBanner', () => {
     expect(GaMock).toHaveBeenLastCalledWith({ enabled: false });
   });
 
-  it('does not show the banner when consent was previously accepted', () => {
+  it('does not show the banner when consent was previously accepted', async () => {
     localStorage.setItem(CONSENT_STORAGE_KEY, 'accepted');
 
     render(
@@ -100,11 +109,14 @@ describe('ConsentProvider + ConsentBanner', () => {
       </ConsentProvider>
     );
 
+    // Wait for component to mount
+    await new Promise(resolve => setTimeout(resolve, 0));
+
     expect(screen.queryByText('We respect your privacy')).not.toBeInTheDocument();
     expect(GaMock).toHaveBeenLastCalledWith({ enabled: true });
   });
 
-  it('does not show the banner when consent was previously declined', () => {
+  it('does not show the banner when consent was previously declined', async () => {
     localStorage.setItem(CONSENT_STORAGE_KEY, 'declined');
 
     render(
@@ -113,16 +125,22 @@ describe('ConsentProvider + ConsentBanner', () => {
       </ConsentProvider>
     );
 
+    // Wait for component to mount
+    await new Promise(resolve => setTimeout(resolve, 0));
+
     expect(screen.queryByText('We respect your privacy')).not.toBeInTheDocument();
     expect(GaMock).toHaveBeenLastCalledWith({ enabled: false });
   });
 
-  it('renders children content', () => {
+  it('renders children content', async () => {
     render(
       <ConsentProvider>
         <div>page</div>
       </ConsentProvider>
     );
+
+    // Wait for component to mount
+    await new Promise(resolve => setTimeout(resolve, 0));
 
     expect(screen.getByText('page')).toBeInTheDocument();
   });

@@ -30,10 +30,11 @@ export function MeetingDetailModal({
   const canManage  = isAdmin || meeting.createdById === currentUserId;
   const isCancelled = meeting.status === 'CANCELLED';
 
-  return (    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" onClick={onClose} role="presentation" />
 
-      <div className="relative z-10 w-full sm:max-w-lg max-h-[95dvh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border bg-card shadow-xl">
+      <div className="relative z-10 w-full sm:max-w-lg max-h-[95dvh] overflow-y-auto rounded-2xl border bg-card shadow-xl">
         {/* Header */}
         <div className="flex items-start justify-between gap-3 px-5 pt-5 pb-4">
           <div className="space-y-2">

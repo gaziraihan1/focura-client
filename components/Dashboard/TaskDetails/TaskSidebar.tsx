@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { m as motion } from "framer-motion";
-import { Clock, Calendar, User, Folder, Check, Lock, Link2, Unlink2, MessageSquare, Sprout, Flag, Repeat } from "lucide-react";
+import { Clock, Calendar, User, Folder, Check, Lock, Link2, Unlink2, MessageSquare, Sprout, Flag, Repeat, Pencil } from "lucide-react";
 import { Task } from "@/types/task.types";
 import { getStatusColor, getPriorityColor } from "@/utils/task.utils";
 import { Avatar } from "@/components/Shared/Avatar";
@@ -371,6 +371,12 @@ function TaskDetailsCard({
           <Clock size={14} />
           Created {new Date(task.createdAt).toLocaleDateString("en-US", { timeZone: "UTC" })}
         </div>
+        {task.editedBy && (
+          <div className="flex items-center gap-3 text-xs text-muted-foreground mt-2">
+            <Pencil size={14} />
+            Last edited by {task.editedBy.name} · {new Date(task.updatedAt).toLocaleDateString("en-US", { timeZone: "UTC" })}
+          </div>
+        )}
         {task.completedAt && (
           <div className="flex items-center gap-3 text-xs text-muted-foreground mt-2">
             <Check size={14} />

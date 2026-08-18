@@ -7,12 +7,19 @@ interface RelativeTimeProps {
 
 export function RelativeTime({ date }: RelativeTimeProps) {
   const label = getRelativeTimeLabel(date);
+  const fullDate = new Date(date).toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
 
   return (
     <time
       dateTime={date}
-      title={new Date(date).toLocaleString()}
-      className="text-[11px] text-muted-foreground/60 tabular-nums"
+      title={fullDate}
+      className="text-[11px] text-muted-foreground/50 tabular-nums hover:text-muted-foreground transition-colors cursor-default"
     >
       {label}
     </time>
