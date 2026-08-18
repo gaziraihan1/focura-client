@@ -28,7 +28,7 @@ export default function ProjectDetails({project, joined}: ProjectDetailsProps) {
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <h3 className="text-lg font-semibold text-foreground truncate">
+              <h3 className="text-lg font-semibold text-foreground truncate text-wrap">
                 {project?.name}
               </h3>
               {project?.description && (

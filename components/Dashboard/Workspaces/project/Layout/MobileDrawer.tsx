@@ -13,7 +13,7 @@ export function MobileDrawer({ open, onClose, ...contentProps }: MobileDrawerPro
       <div role="presentation"
         onClick={onClose}
         className={[
-          "fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px] transition-opacity duration-200 lg:hidden",
+          "fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px] transition-opacity duration-200 xl:hidden",
           open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none",
         ].join(" ")}
       />
@@ -24,7 +24,7 @@ export function MobileDrawer({ open, onClose, ...contentProps }: MobileDrawerPro
           "fixed inset-y-0 left-0 z-50 w-64 flex flex-col",
           "bg-card border-r border-border shadow-2xl",
           "transform transition-transform duration-200 ease-out",
-          "lg:hidden",
+          "xl:hidden",
           open ? "translate-x-0" : "-translate-x-full",
         ].join(" ")}
       >

@@ -9,7 +9,7 @@ interface MobileTopBarProps {
 
 export function MobileTopBar({ projectName, currentLabel, projectColor, onOpen }: MobileTopBarProps) {
   return (
-    <div className="lg:hidden flex items-center gap-3 px-3 py-2.5 bg-card/95 backdrop-blur-sm border-b border-border sticky top-0 z-30">
+    <div className="xl:hidden flex items-center gap-3 px-3 py-2.5 bg-card/95 backdrop-blur-sm border-b border-border sticky -top-6 z-30">
       <button
         aria-label="Open menu"
         onClick={onOpen}

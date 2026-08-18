@@ -316,7 +316,7 @@ export default function ProjectOverviewPage() {
         dueLabel={dueLabel}
         totalMembers={totalMembers}
         canManage={canManage}
-        onManage={() => navigate(`${base}/settings`)}
+        onManage={() => navigate(`${base}/settings?tab=members`)}
       />
 
     </div>

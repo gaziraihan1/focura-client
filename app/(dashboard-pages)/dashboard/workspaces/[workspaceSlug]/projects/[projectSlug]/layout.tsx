@@ -141,7 +141,7 @@ export default function ProjectLayout({
     <div className="flex -mx-4 -my-6 sm:-mx-6 lg:-mx-8 min-h-[calc(100vh-57px)]">
       {/* Desktop sidebar — sticky so it stays pinned while the project content
           scrolls (the scroll container is the workspace layout's <main>) */}
-      <aside className="hidden lg:flex flex-col w-52 xl:w-56 shrink-0 self-start sticky -top-6 h-[calc(100vh-57px)] bg-card border-r border-border">
+      <aside className="hidden xl:flex flex-col w-52 xl:w-56 shrink-0 self-start sticky -top-6 h-[calc(100vh-57px)] bg-card border-r border-border">
         <SidebarContent {...contentProps} />
       </aside>
 
@@ -153,7 +153,7 @@ export default function ProjectLayout({
       />
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden bg-background">
+      <div className="flex-1 flex flex-col min-w-0 overflow-x-clip bg-background">
         {/* Mobile top bar */}
         <MobileTopBar
           projectName={project?.name}
@@ -162,7 +162,7 @@ export default function ProjectLayout({
           onOpen={() => setDrawerOpen(true)}
         />
         {project?.status === 'ARCHIVED' && (
-  <div className="flex items-center gap-2 px-4 py-2.5 mb-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-sm font-medium max-w-3xl mx-auto mt-4">
+  <div className="flex items-center gap-2 px-4 py-2.5 mb-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-sm font-medium max-w-3xl mx-4 sm:mx-auto mt-4">
     <Archive size={14} className="shrink-0" />
     This project is archived and is read-only. Unarchive it in Settings to resume work.
   </div>

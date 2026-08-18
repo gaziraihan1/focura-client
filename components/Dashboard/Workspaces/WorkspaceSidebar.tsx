@@ -105,7 +105,7 @@ const toggleExpanded = (name: string) => {
         {workspace.logo || workspace.name.charAt(0).toUpperCase()}
       </div>
       <div className="flex-1 text-left">
-        <p className="font-semibold text-foreground truncate">{workspace.name}</p>
+        <p className="font-semibold text-foreground truncate text-wrap">{workspace.name}</p>
         <p className="text-xs text-muted-foreground">{currentMember?.role || "Member"}</p>
       </div>
       <ChevronDown size={16} className="text-muted-foreground" />
