@@ -92,13 +92,25 @@ export default function AdminBillingPage() {
       render: (b: AdminBilling) => {
         const inv = b.recentInvoices[0];
         if (!inv) return <span className="text-[11px] text-muted-foreground">—</span>;
+        const refunded = (inv.amountRefunded ?? 0) / 100;
+        const fullyRefunded = refunded > 0 && (inv.amountRefunded ?? 0) >= inv.amountPaid;
         return (
           <div className="flex items-center gap-2">
-            <span className="text-xs tabular-nums text-foreground">
+            <span className={cn(
+              'text-xs tabular-nums',
+              fullyRefunded
+                ? 'text-muted-foreground line-through'
+                : 'text-foreground',
+            )}>
               {(inv.amountPaid / 100).toLocaleString('en-US', {
                 style: 'currency', currency: inv.currency.toUpperCase(),
               })}
             </span>
+            {refunded > 0 && (
+              <span className="text-[10px] text-amber-600 tabular-nums">
+                −{refunded.toLocaleString('en-US', { style: 'currency', currency: inv.currency.toUpperCase() })}
+              </span>
+            )}
             {inv.invoicePdf && (
               <Link
                 href={inv.invoicePdf}

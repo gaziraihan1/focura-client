@@ -292,6 +292,8 @@ export interface AdminBilling {
   recentInvoices: {
     id: string;
     amountPaid: number;
+    amountRefunded: number;
+    refundedAt: string | null;
     currency: string;
     status: string;
     paidAt: string | null;

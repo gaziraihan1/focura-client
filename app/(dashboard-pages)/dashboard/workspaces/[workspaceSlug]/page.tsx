@@ -11,6 +11,8 @@ import { WorkspaceDetailErrorState } from "@/components/Dashboard/Workspaces/Wor
 import { WorkspaceDetailContent } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceDetailsContent";
 import { useWorkspaceDetailPage } from "@/hooks/useWorkspaceLayout";
 
+type TabType = "overview"| "projects" | "members" 
+
 export default function WorkspaceDetailPage() {
   const params = useParams();
   const slug = params.workspaceSlug as string;
@@ -35,7 +37,7 @@ export default function WorkspaceDetailPage() {
   const pathname = usePathname();
   const handleTabChange = useCallback(
     (tab: string) => {
-      setActiveTab(tab as any);
+      setActiveTab(tab as TabType);
       const params = new URLSearchParams(window.location.search);
       if (tab === "overview") {
         params.delete("tab");

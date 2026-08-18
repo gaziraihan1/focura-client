@@ -369,7 +369,7 @@ function RefundSectionsPart3() {
             — we typically respond within 2 business days.
           </p>
           <p className="text-xs text-neutral-400 dark:text-neutral-500 pt-1">
-            Last Updated: April 25, 2026 · Version 1.0 · Effective: January 1,
+            Last Updated: August 18, 2026 · Version 1.1 · Effective: January 1,
             2026
           </p>
         </div>
