@@ -105,11 +105,11 @@ export const faqs = [
   },
   {
     q: "Do you offer refunds?",
-    a: "We offer a 7-day refund window for all paid plans if you are not satisfied with the service.",
+    a: "We offer a 14-day refund window for all paid plans if you are not satisfied with the service.",
   },
   {
     q: "Is there a free trial for premium features?",
-    a: "Yes, Pro features include a 7-day free trial with full access. No credit card required.",
+    a: "Yes, Pro features include a 14-day free trial with full access. No credit card required.",
   },
   {
     q: "Do you offer team or enterprise pricing?",

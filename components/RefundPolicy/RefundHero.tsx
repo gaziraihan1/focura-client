@@ -42,7 +42,7 @@ export const RefundHero = () => {
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-neutral-400 dark:text-neutral-500">
           <span className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
-            7-Day Refund Window
+            14-Day Refund Window
           </span>
           <span className="hidden sm:block text-neutral-300 dark:text-neutral-700">•</span>
           <span className="flex items-center gap-1.5">

@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Refund Policy | Focura",
   description:
-    "Focura's refund policy — a fair 7-day window for first-time subscribers. Learn what qualifies, how to request, and how Paddle processes refunds.",
+    "Focura's refund policy — a fair 14-day window for first-time subscribers. Learn what qualifies, how to request, and how Paddle processes refunds.",
   keywords: [
     "focura refund",
     "focura refund policy",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Refund Policy – Focura",
     description:
-      "Focura's refund policy — a fair 7-day window for first-time subscribers.",
+      "Focura's refund policy — a fair 14-day window for first-time subscribers.",
     url: "https://focura-client.vercel.app/refund",
     siteName: "Focura",
     type: "website",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Refund Policy – Focura",
     description:
-      "Focura's refund policy — a fair 7-day window for first-time subscribers.",
+      "Focura's refund policy — a fair 14-day window for first-time subscribers.",
   },
   alternates: {
     canonical: "https://focura-client.vercel.app/refund",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 
 const NAV_ITEMS: RefundNavItem[] = [
   { id: "overview", label: "Overview" },
-  { id: "refund-window", label: "7-Day Refund Window" },
+  { id: "refund-window", label: "14-Day Refund Window" },
   { id: "eligible", label: "What Qualifies" },
   { id: "not-eligible", label: "What Does Not Qualify" },
   { id: "usage-assessment", label: "Usage Assessment" },

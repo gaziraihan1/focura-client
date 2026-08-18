@@ -33,7 +33,7 @@ const faqs: FAQItem[] = [
     category: "Billing",
     question: "How do I request a refund?",
     answer:
-      "Please review our Refund Policy page first to check eligibility. If you qualify (first-time subscription, within 7 days, minimal usage), email focurabusiness@gmail.com with your name, email, Order ID, and reason. See the full policy at /refund.",
+      "Please review our Refund Policy page first to check eligibility. If you qualify (first-time subscription, within 14 days, minimal usage), email focurabusiness@gmail.com with your name, email, Order ID, and reason. See the full policy at /refund.",
   },
   {
     category: "Technical",

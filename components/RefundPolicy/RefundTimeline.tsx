@@ -10,7 +10,7 @@ const steps = [
   },
   {
     icon: Clock,
-    day: "Days 1–7",
+    day: "Days 1–14",
     label: "Refund window open",
     description:
       "You may submit a refund request at any point within this window, provided eligibility conditions are met.",
@@ -20,7 +20,7 @@ const steps = [
   },
   {
     icon: Mail,
-    day: "Before Day 7",
+    day: "Before Day 14",
     label: "Submit your request",
     description:
       "Email focurabusiness@gmail.com with all required details and cancel your subscription before the next renewal.",
@@ -28,10 +28,10 @@ const steps = [
   },
   {
     icon: CheckCircle2,
-    day: "Day 8+",
+    day: "Day 15+",
     label: "Window closed",
     description:
-      "Refund requests received after 7 days from the charge date are not eligible, regardless of reason.",
+      "Refund requests received after 14 days from the charge date are not eligible, regardless of reason.",
     accent:
       "bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/40 text-red-600 dark:text-red-400",
   },

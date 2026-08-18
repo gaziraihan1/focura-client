@@ -50,7 +50,7 @@ const SEARCH_INDEX: SearchResult[] = [
   { category: 'Billing',         article: 'Upgrading your plan',          excerpt: 'Settings → Billing → Upgrade. Takes effect immediately, pro-rated.' },
   { category: 'Billing',         article: 'Billing history and invoices', excerpt: 'Settings → Billing → Invoices. PDF download available for each invoice.' },
   { category: 'Billing',         article: 'Cancelling a subscription',    excerpt: 'Settings → Billing → Cancel. Access remains until period end.' },
-  { category: 'Billing',         article: 'Requesting a refund',          excerpt: '7-day window for first-time subscribers with minimal usage. Email focurabusiness@gmail.com.' },
+  { category: 'Billing',         article: 'Requesting a refund',          excerpt: '14-day window for first-time subscribers with minimal usage. Email focurabusiness@gmail.com.' },
   { category: 'Billing',         article: 'Updating payment method',      excerpt: 'Settings → Billing → Payment Method. New card takes effect next billing date.' },
   // Security & Account
   { category: 'Account',         article: 'Updating your profile',        excerpt: 'Settings → Account → Profile. Name, avatar, bio, timezone.' },

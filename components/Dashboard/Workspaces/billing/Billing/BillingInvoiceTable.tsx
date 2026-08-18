@@ -39,7 +39,23 @@ export function BillingInvoiceTable({ invoices }: InvoiceTableProps) {
                 {inv.periodEnd ? ` – ${formatDate(inv.periodEnd)}` : ''}
               </td>
               <td className="px-6 py-3.5 font-semibold text-foreground">
-                {formatCents(inv.amount, inv.currency)}
+                <div className="flex flex-col">
+                  <span
+                    className={
+                      (inv.amountRefunded ?? 0) > 0 &&
+                      (inv.amountRefunded ?? 0) >= inv.amount
+                        ? 'line-through text-muted-foreground'
+                        : undefined
+                    }
+                  >
+                    {formatCents(inv.amount, inv.currency)}
+                  </span>
+                  {(inv.amountRefunded ?? 0) > 0 && (
+                    <span className="text-xs font-medium text-amber-600 dark:text-amber-400">
+                      Refunded {formatCents(-inv.amountRefunded!, inv.currency)}
+                    </span>
+                  )}
+                </div>
               </td>
               <td className="px-6 py-3.5">
                 <span

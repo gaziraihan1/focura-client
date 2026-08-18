@@ -3,7 +3,7 @@ import { CheckCircle2, XCircle } from "lucide-react";
 const eligible = [
   "First-time subscription purchase (any paid plan)",
   "Proven technical issue preventing core feature use",
-  "Request submitted within 7 days of the charge date",
+  "Request submitted within 14 days of the charge date",
   "Account shows minimal / light usage (not heavily used)",
   "Subscription cancelled before the next renewal date",
 ];
@@ -13,7 +13,7 @@ const notEligible = [
   "Partial usage — you used the product and then changed your mind",
   "Accounts with heavy usage: many tasks, workspaces, or sessions created",
   "Downgrade from a higher plan to a lower plan",
-  "Refund request submitted after the 7-day window",
+  "Refund request submitted after the 14-day window",
   "Account suspended or terminated for policy violations",
   "Payments processed by third-party resellers or app stores",
 ];

@@ -47,25 +47,25 @@ function RefundSectionsPart1() {
         </p>
       </RefundSection>
 
-      {/* 2. 7-Day Window */}
+      {/* 2. 14-Day Window */}
       <RefundSection
         id="refund-window"
-        title="7-Day Refund Window"
+        title="14-Day Refund Window"
         icon={Clock}
         index={2}
       >
         <p>
           Focura offers a{" "}
           <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
-            7-calendar-day refund window
+            14-calendar-day refund window
           </strong>{" "}
           starting from the date your payment is processed. Requests submitted
           after this window are not eligible for a refund under any
-          circumstances, including technical issues discovered after Day 7.
+          circumstances, including technical issues discovered after Day 14.
         </p>
         <RefundTimeline />
         <RefundHighlight variant="warning">
-          The 7-day clock starts on the exact date and time your payment is
+          The 14-day clock starts on the exact date and time your payment is
           charged — not when you first log in or activate the plan. Check your
           Paddle receipt for the precise charge timestamp.
         </RefundHighlight>
@@ -119,10 +119,10 @@ function RefundSectionsPart1() {
             </span>,
             <span key="window">
               <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
-                Request submitted within 7 days.
+                Request submitted within 14 days.
               </strong>{" "}
               Your refund email must be sent to focurabusiness@gmail.com within
-              7 calendar days of the original charge date.
+              14 calendar days of the original charge date.
             </span>,
             <span key="cancelled">
               <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
@@ -156,7 +156,7 @@ function RefundSectionsPart1() {
           >
             focurabusiness@gmail.com
           </a>{" "}
-          before the 7-day window closes. We are happy to discuss your case.
+          before the 14-day window closes. We are happy to discuss your case.
         </RefundHighlight>
       </RefundSection>
     </>
@@ -270,7 +270,7 @@ function RefundSectionsPart2() {
           </span>{" "}
           and include all of the fields listed below. Incomplete requests will
           be returned for more information, which may cause you to miss the
-          7-day window.
+          14-day window.
         </p>
         <RefundRequestCard />
       </RefundSection>
@@ -300,7 +300,7 @@ function RefundSectionsPart3() {
               </strong>{" "}
               If you were charged more than once for the same plan due to a
               payment error, we will refund the duplicate charge in full,
-              regardless of the 7-day window. Provide both Order IDs.
+              regardless of the 14-day window. Provide both Order IDs.
             </span>,
             <span key="fraud">
               <strong className="font-semibold text-neutral-800 dark:text-neutral-200">

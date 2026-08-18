@@ -10,7 +10,7 @@ export const contentType = 'image/png';
 export default async function Image() {
   return generateOGImage({
     title: 'Refund Policy',
-    description: 'Fair 7-day refund window for first-time subscribers.',
+    description: 'Fair 14-day refund window for first-time subscribers.',
     gradient: 'neutral',
   });
 }

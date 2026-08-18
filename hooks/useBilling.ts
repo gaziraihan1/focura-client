@@ -38,6 +38,8 @@ export interface WorkspaceSubscription {
 export interface InvoiceData {
   id:            string;
   amount:        number;
+  amountRefunded: number;
+  refundedAt:     string | null;
   currency:      string;
   status:        string;
   pdfUrl:        string | null;

@@ -102,4 +102,5 @@ export const INVOICE_STATUS_STYLES: Record<string, string> = {
   VOID: 'bg-muted text-muted-foreground',
   UNCOLLECTIBLE: 'bg-destructive/10 text-destructive',
   DRAFT: 'bg-muted text-muted-foreground',
+  REFUNDED: 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400',
 };
