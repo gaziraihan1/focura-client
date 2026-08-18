@@ -128,7 +128,7 @@ describe('RefundHero', () => {
 
   it('renders refund window info', () => {
     render(<RefundHero />)
-    expect(screen.getByText('7-Day Refund Window')).toBeInTheDocument()
+    expect(screen.getByText('14-Day Refund Window')).toBeInTheDocument()
   })
 
   it('renders Paddle-Compatible Policy', () => {

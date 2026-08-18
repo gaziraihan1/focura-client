@@ -119,7 +119,7 @@ describe('RefundContent', () => {
   it('renders all section headings', () => {
     render(<RefundContentDefault />)
     expect(screen.getByText('Overview')).toBeInTheDocument()
-    expect(screen.getByText('7-Day Refund Window')).toBeInTheDocument()
+    expect(screen.getByText('14-Day Refund Window')).toBeInTheDocument()
     expect(screen.getByText('What Qualifies for a Refund')).toBeInTheDocument()
     expect(screen.getByText('What Does Not Qualify')).toBeInTheDocument()
     expect(screen.getByText('How We Assess Usage')).toBeInTheDocument()

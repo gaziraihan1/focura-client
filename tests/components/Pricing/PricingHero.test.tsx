@@ -31,6 +31,6 @@ describe('PricingHero', () => {
 
   it('renders "7-day free trial"', () => {
     render(<PricingHero />)
-    expect(screen.getByText('7-day free trial')).toBeInTheDocument()
+    expect(screen.getByText('14-day free trial')).toBeInTheDocument()
   })
 })

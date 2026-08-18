@@ -112,16 +112,17 @@ describe('billing.upgrade.constants', () => {
   })
 
   describe('INVOICE_STATUS_STYLES', () => {
-    it('has 5 invoice statuses', () => {
-      expect(Object.keys(INVOICE_STATUS_STYLES)).toHaveLength(5)
+    it('has 6 invoice statuses', () => {
+      expect(Object.keys(INVOICE_STATUS_STYLES)).toHaveLength(6)
     })
 
-    it('includes PAID, OPEN, VOID, UNCOLLECTIBLE, DRAFT', () => {
+    it('includes PAID, OPEN, VOID, UNCOLLECTIBLE, DRAFT, REFUNDED', () => {
       expect(INVOICE_STATUS_STYLES.PAID).toBeTruthy()
       expect(INVOICE_STATUS_STYLES.OPEN).toBeTruthy()
       expect(INVOICE_STATUS_STYLES.VOID).toBeTruthy()
       expect(INVOICE_STATUS_STYLES.UNCOLLECTIBLE).toBeTruthy()
       expect(INVOICE_STATUS_STYLES.DRAFT).toBeTruthy()
+      expect(INVOICE_STATUS_STYLES.REFUNDED).toBeTruthy()
     })
 
     it('each style includes bg and text classes', () => {

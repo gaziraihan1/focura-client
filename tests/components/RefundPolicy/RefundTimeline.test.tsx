@@ -119,9 +119,9 @@ describe('RefundTimeline', () => {
   it('renders all timeline steps', () => {
     render(<RefundTimeline />)
     expect(screen.getByText('Day 0')).toBeInTheDocument()
-    expect(screen.getByText('Days 1–7')).toBeInTheDocument()
-    expect(screen.getByText('Before Day 7')).toBeInTheDocument()
-    expect(screen.getByText('Day 8+')).toBeInTheDocument()
+    expect(screen.getByText('Days 1–14')).toBeInTheDocument()
+    expect(screen.getByText('Before Day 14')).toBeInTheDocument()
+    expect(screen.getByText('Day 15+')).toBeInTheDocument()
   })
 
   it('renders step labels', () => {
