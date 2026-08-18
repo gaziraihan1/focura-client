@@ -8,6 +8,7 @@ import Sidebar from "./Sidebar";
 import TopNavbar from "./TopNavbar";
 
 import { useUserProfile } from "@/hooks/useUserProfile";
+import { useSidebarCollapse } from "@/context/sidebarCollapse/SidebarCollapseContext";
 
 function FullPageSpinner() {
   return (
@@ -26,6 +27,8 @@ export default function DashboardShell({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const { isMainSidebarCollapsed, toggleMainSidebar } = useSidebarCollapse();
 
   const pathname = usePathname();
   const router = useRouter();
@@ -104,7 +107,11 @@ export default function DashboardShell({
   return (
     <div className="min-h-screen bg-background">
       {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        collapsed={isMainSidebarCollapsed}
+      />
 
       {/* Mobile overlay */}
       {sidebarOpen && (
@@ -115,12 +122,14 @@ export default function DashboardShell({
       )}
 
       {/* Main area */}
-      <div className="lg:pl-64 flex flex-col min-h-screen">
+      <div className={`flex flex-col min-h-screen ${isMainSidebarCollapsed ? "lg:pl-0" : "lg:pl-64"}`}>
         <TopNavbar
           onMenuClick={() => setSidebarOpen(true)}
           user={profile}
           isLoadingProfile={isProfileLoading && !profile}
           isRefreshing={isFetching && !!profile}
+          sidebarCollapsed={isMainSidebarCollapsed}
+          onSidebarToggle={toggleMainSidebar}
         />
 
         <main id="main-content" className="flex-1 px-4 py-5 lg:px-6 lg:py-7 max-w-screen-2xl w-full mx-auto" tabIndex={-1}>

@@ -23,6 +23,7 @@ import SidebarNewProjectButton from "./SidebarNewProjectButton";
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  collapsed?: boolean;
 }
 
 interface NavItem {
@@ -76,7 +77,7 @@ const bottomNavigation: NavItem[] = [
   { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
 ];
 
-export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+export default function Sidebar({ isOpen, onClose, collapsed = false }: SidebarProps) {
   const pathname = usePathname();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [collapsedItems, setCollapsedItems] = useState<string[]>([]);
@@ -173,7 +174,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         flex flex-col
         transition-transform duration-300 ease-in-out
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
-        lg:translate-x-0
+        ${collapsed ? "lg:-translate-x-full" : "lg:translate-x-0"}
       `}
     >
       <div className="flex items-center justify-between px-5 py-5 border-b border-sidebar-border shrink-0">

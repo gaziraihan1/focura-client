@@ -15,17 +15,22 @@ import {
 import ThemeSwitcher from "@/components/Themes/ThemeSwitcher";
 import { logout } from "@/lib/auth/logout";
 import { Session } from "next-auth";
+import { SidebarToggle } from "@/components/Dashboard/SidebarToggle";
 
 interface WorkspaceLayoutHeaderProps {
   session: Session | null;
   onSidebarOpen: () => void;
   onSwitcherOpen: () => void;
+  sidebarCollapsed?: boolean;
+  onSidebarToggle?: () => void;
 }
 
 export function WorkspaceLayoutHeader({
   session,
   onSidebarOpen,
   onSwitcherOpen,
+  sidebarCollapsed = false,
+  onSidebarToggle,
 }: WorkspaceLayoutHeaderProps) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -72,6 +77,14 @@ export function WorkspaceLayoutHeader({
       >
         <Menu size={20} />
       </button>
+
+      {onSidebarToggle && (
+        <SidebarToggle
+          collapsed={sidebarCollapsed}
+          onToggle={onSidebarToggle}
+          className="hidden lg:inline-flex"
+        />
+      )}
 
       {/* Search / switcher trigger */}
       <div className="flex-1 min-w-44 sm:min-w-60 max-w-md relative shrink-0">

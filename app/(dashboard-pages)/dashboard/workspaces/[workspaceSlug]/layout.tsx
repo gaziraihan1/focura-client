@@ -9,6 +9,7 @@ import { WorkspaceSidebar } from "@/components/Dashboard/Workspaces/WorkspaceSid
 import { WorkspaceLayoutHeader } from "@/components/Dashboard/Workspaces/WorkspaceLayoutHeader";
 import { WorkspaceSwitcherModal } from "@/components/Dashboard/Workspaces/WorkspaceSwitcherModal";
 import { Workspace } from "@/hooks/useWorkspace";
+import { useSidebarCollapse } from "@/context/sidebarCollapse/SidebarCollapseContext";
 
 function WorkspaceLayoutInner({
   slug,
@@ -21,6 +22,7 @@ function WorkspaceLayoutInner({
 }) {
   const router = useRouter();
   const { isFree } = useWorkspacePlan();
+  const { isMainSidebarCollapsed, toggleMainSidebar } = useSidebarCollapse();
 
   const {
     workspace,
@@ -64,15 +66,18 @@ function WorkspaceLayoutInner({
         isLoading={isLoading}
         slug={slug}
         sidebarOpen={sidebarOpen}
+        collapsed={isMainSidebarCollapsed}
         onSidebarClose={() => setSidebarOpen(false)}
         onSwitcherOpen={() => setSwitcherOpen(true)}
       />
 
-      <div className="flex-1 flex flex-col min-h-0 lg:ml-64 overflow-x-hidden min-w-0">
+      <div className={`flex-1 flex flex-col min-h-0 min-w-0 overflow-x-clip ${isMainSidebarCollapsed ? "lg:ml-0" : "lg:ml-64"}`}>
         <WorkspaceLayoutHeader
           session={session}
           onSidebarOpen={() => setSidebarOpen(true)}
           onSwitcherOpen={() => setSwitcherOpen(true)}
+          sidebarCollapsed={isMainSidebarCollapsed}
+          onSidebarToggle={toggleMainSidebar}
         />
         <main className="flex-1 overflow-y-auto min-h-0 px-4 py-6 sm:px-6 lg:px-8">
           {children}

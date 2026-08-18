@@ -19,6 +19,7 @@ import ThemeSwitcher from "../Themes/ThemeSwitcher";
 import Image from "next/image";
 import NotificationBell from "../Notifications/NotificationBell";
 import { SearchModal } from "../Shared/SearchModal";
+import { SidebarToggle } from "./SidebarToggle";
 import type { UserProfile } from "@/hooks/useUserProfile";
 
 interface TopNavbarProps {
@@ -26,6 +27,8 @@ interface TopNavbarProps {
   user?: UserProfile;
   isRefreshing?: boolean;
   isLoadingProfile?: boolean;
+  sidebarCollapsed?: boolean;
+  onSidebarToggle?: () => void;
 }
 
 export default function TopNavbar({
@@ -33,6 +36,8 @@ export default function TopNavbar({
   user,
   isRefreshing,
   isLoadingProfile,
+  sidebarCollapsed = false,
+  onSidebarToggle,
 }: TopNavbarProps) {
   const pathname = usePathname();
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -84,6 +89,14 @@ export default function TopNavbar({
             >
               <Menu size={20} className="text-foreground" />
             </button>
+
+            {onSidebarToggle && (
+              <SidebarToggle
+                collapsed={sidebarCollapsed}
+                onToggle={onSidebarToggle}
+                className="hidden lg:inline-flex rounded-xl p-2"
+              />
+            )}
 
             <button
               onClick={() => setShowSearch(true)}

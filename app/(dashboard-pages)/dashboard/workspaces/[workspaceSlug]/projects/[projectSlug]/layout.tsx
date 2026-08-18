@@ -17,6 +17,8 @@ import {
   useProjectNav,
 } from "@/components/Dashboard/Workspaces/project/Layout";
 import { Archive } from "lucide-react";
+import { SidebarToggle } from "@/components/Dashboard/SidebarToggle";
+import { useSidebarCollapse } from "@/context/sidebarCollapse/SidebarCollapseContext";
 
 // Pages whose content is manager/admin-only — hidden from collaborators and
 // viewers in the project sidebar (each page also enforces the gate itself).
@@ -43,6 +45,8 @@ export default function ProjectLayout({
   const projectSlug = params?.projectSlug as string;
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const { isProjectSidebarCollapsed, toggleProjectSidebar } = useSidebarCollapse();
 
   const nav = useProjectNav(workspaceSlug, projectSlug);
   const { data: project, error, isLoading, isFetching, refetch } = useProjectDetailsBySlug(projectSlug);
@@ -141,7 +145,14 @@ export default function ProjectLayout({
     <div className="flex -mx-4 -my-6 sm:-mx-6 lg:-mx-8 min-h-[calc(100vh-57px)]">
       {/* Desktop sidebar — sticky so it stays pinned while the project content
           scrolls (the scroll container is the workspace layout's <main>) */}
-      <aside className="hidden xl:flex flex-col w-52 xl:w-56 shrink-0 self-start sticky -top-6 h-[calc(100vh-57px)] bg-card border-r border-border">
+      <aside
+        className={[
+          "flex-col shrink-0 self-start sticky -top-6 h-[calc(100vh-57px)] bg-card overflow-hidden transition-all duration-200 ease-in-out",
+          isProjectSidebarCollapsed
+            ? "hidden w-52 xl:flex xl:w-0 xl:border-r-0"
+            : "hidden w-52 xl:flex xl:w-56 border-r border-border",
+        ].join(" ")}
+      >
         <SidebarContent {...contentProps} />
       </aside>
 
@@ -161,6 +172,16 @@ export default function ProjectLayout({
           projectColor={projectColor}
           onOpen={() => setDrawerOpen(true)}
         />
+
+        {/* Desktop sidebar toggle — floats over the content on xl+ so the project
+            sidebar can be hidden/restored while the content takes the full width */}
+        <div className="hidden xl:flex h-0 sticky top-0 z-30 items-start">
+          <SidebarToggle
+            collapsed={isProjectSidebarCollapsed}
+            onToggle={toggleProjectSidebar}
+            className="mt-2 ml-2 bg-background/90 backdrop-blur-sm border border-border shadow-sm"
+          />
+        </div>
         {project?.status === 'ARCHIVED' && (
   <div className="flex items-center gap-2 px-4 py-2.5 mb-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-sm font-medium max-w-3xl mx-4 sm:mx-auto mt-4">
     <Archive size={14} className="shrink-0" />

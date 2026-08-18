@@ -36,6 +36,7 @@ interface WorkspaceSidebarProps {
   pathname: string;
   slug: string;
   sidebarOpen: boolean;
+  collapsed?: boolean;
   onSidebarClose: () => void;
   onSwitcherOpen: () => void;
   isLoading: boolean; // ← new
@@ -52,6 +53,7 @@ export function WorkspaceSidebar({
   pathname,
   slug,
   sidebarOpen,
+  collapsed = false,
   onSidebarClose,
   onSwitcherOpen,
   isLoading,
@@ -79,7 +81,7 @@ const toggleExpanded = (name: string) => {
       <aside
         className={`fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border
           flex flex-col transform transition-transform duration-200
-          lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+          ${collapsed ? "lg:-translate-x-full" : "lg:translate-x-0"} ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="flex flex-col h-full">
 

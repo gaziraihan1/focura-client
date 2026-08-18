@@ -1,4 +1,3 @@
-import { formatDate } from "@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/page";
 import { ProjectData } from "@/types/project.types";
 import { Activity, Calendar, Target } from "lucide-react";
 import { MemberAvatars } from "./MemberAvatars";
@@ -11,6 +10,17 @@ interface ProjectHeaderProps {
   isOverdue: boolean;
   dueLabel: string;
   totalMembers: number;
+}
+
+
+function formatDate(dateStr: string | undefined) {
+  if (!dateStr) return "—";
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    timeZone: "UTC",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 }
 
 export function ProjectHeader({

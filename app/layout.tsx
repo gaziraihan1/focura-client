@@ -4,6 +4,7 @@ import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { ConsentProvider } from "@/components/Consent/ConsentProvider";
 import Providers from "@/components/Providers/SessionProvider";
+import { SidebarCollapseProvider } from "@/context/sidebarCollapse/SidebarCollapseContext";
 // import { OfflineProvider } from "@/components/Providers/OfflineProvider";
 
 const geistSans = Geist({
@@ -78,13 +79,15 @@ export default async function RootLayout({
           {/* <OfflineProvider> */}
             {/* Skip to main content - accessibility */}
             <ConsentProvider>
-              <a
-                href="#main-content"
-                className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-9999 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg focus:outline-none"
-              >
-                Skip to main content
-              </a>
-              {children}
+              <SidebarCollapseProvider>
+                <a
+                  href="#main-content"
+                  className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-9999 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg focus:outline-none"
+                >
+                  Skip to main content
+                </a>
+                {children}
+              </SidebarCollapseProvider>
               <SpeedInsights />
             </ConsentProvider>
           {/* </OfflineProvider> */}
