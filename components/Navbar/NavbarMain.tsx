@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, LogOut, Loader2 } from "lucide-react";
 import ThemeSwitcher from "../Themes/ThemeSwitcher";
-import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { logout } from "@/lib/auth/logout";
 import { useIsFocuraAdmin } from "@/hooks/useFeatures";
@@ -78,7 +77,7 @@ export default function NavbarMain() {
             onClick={() => setOpen(false)}
             className="flex items-center gap-2 text-lg sm:text-xl font-semibold shrink-0"
           >
-            <Image src={"/focura.png"} width={32} height={32} alt="logo" className="rounded-md" />
+            <img src="/focura-logo.svg" width={44} height={44} alt="Focura" className="rounded-md" />
             Focura
           </Link>
 

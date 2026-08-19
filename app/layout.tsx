@@ -32,6 +32,9 @@ export const metadata: Metadata = {
   ],
 
   applicationName: "Focura",
+  icons: {
+    icon: "/focura-favicon.svg",
+  },
   category: "productivity",
 
   openGraph: {

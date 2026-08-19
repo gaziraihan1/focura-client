@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <!-- Brighter, more vivid gradient for dark backgrounds -->
+    <linearGradient id="brandGradDark" x1="15%" y1="5%" x2="85%" y2="95%">
+      <stop offset="0%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+
+    <radialGradient id="ballSheenDark" cx="38%" cy="32%" r="65%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ═══ OUTER RING ══════════════════════════════════════════════════ -->
+  <circle cx="100" cy="100" r="90" stroke="url(#brandGradDark)" stroke-width="2.5" fill="none" opacity="0.4" stroke-dasharray="42 12" stroke-dashoffset="10"/>
+
+  <!-- ═══ MIDDLE RING ═════════════════════════════════════════════════ -->
+  <circle cx="100" cy="100" r="72" stroke="url(#brandGradDark)" stroke-width="3.5" fill="none" opacity="0.55"/>
+
+  <!-- ═══ INNER RING ══════════════════════════════════════════════════ -->
+  <circle cx="100" cy="100" r="56" stroke="url(#brandGradDark)" stroke-width="5" fill="none" opacity="0.8"/>
+
+  <!-- ═══ CORE BALL ═══════════════════════════════════════════════════ -->
+  <circle cx="100" cy="100" r="38" fill="url(#brandGradDark)"/>
+  <circle cx="100" cy="100" r="38" fill="url(#ballSheenDark)"/>
+
+  <!-- ═══ "F" — crisp white ══════════════════════════════════════════ -->
+  <path d="M 88 82 L 88 118" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+  <path d="M 88 82 L 120 82" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+  <path d="M 88 100 L 114 100" stroke="#ffffff" stroke-width="7" stroke-linecap="round" opacity="0.88"/>
+
+  <!-- ═══ CARDINAL DOTS ═══════════════════════════════════════════════ -->
+  <circle cx="100" cy="10" r="3.5" fill="url(#brandGradDark)" opacity="0.65"/>
+  <circle cx="190" cy="100" r="3.5" fill="url(#brandGradDark)" opacity="0.65"/>
+  <circle cx="100" cy="190" r="3.5" fill="url(#brandGradDark)" opacity="0.65"/>
+  <circle cx="10" cy="100" r="3.5" fill="url(#brandGradDark)" opacity="0.65"/>
+</svg>

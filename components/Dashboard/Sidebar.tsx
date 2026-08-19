@@ -3,7 +3,6 @@
 import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Image from "next/image";
 import {
   LayoutDashboard,
   CheckSquare,
@@ -180,7 +179,7 @@ export default function Sidebar({ isOpen, onClose, collapsed = false }: SidebarP
       <div className="flex items-center justify-between px-5 py-5 border-b border-sidebar-border shrink-0">
         <Link href="/dashboard" className="flex items-center gap-2.5 group">
           <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 ring-1 ring-sidebar-border group-hover:ring-sidebar-primary/40 transition-colors">
-            <Image src="/focura.png" width={32} height={32} alt="Focura Logo" className="w-full h-full object-cover" />
+            <img src="/focura-logo.svg" width={44} height={44} alt="Focura" className="w-full h-full object-cover" />
           </div>
           <span className="text-[15px] font-bold tracking-tight text-sidebar-foreground">
             Focura

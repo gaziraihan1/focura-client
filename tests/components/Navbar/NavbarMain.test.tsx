@@ -75,7 +75,7 @@ describe('NavbarMain', () => {
     render(<NavbarMain />)
 
     const img = screen.getByRole('img')
-    expect(img).toHaveAttribute('src', '/focura.png')
+    expect(img).toHaveAttribute('src', '/focura-logo.svg')
     expect(img).toHaveAttribute('alt', 'logo')
   })
 
