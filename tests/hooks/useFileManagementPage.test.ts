@@ -20,8 +20,8 @@ describe('useFileManagementPage', () => {
     )
 
     expect(result.current.viewMode).toBe('grid')
-    expect(result.current.filters.sortBy).toBe('date')
-    expect(result.current.filters.sortOrder).toBe('desc')
+    expect(result.current.filters.sortBy).toBeUndefined()
+    expect(result.current.filters.sortOrder).toBeUndefined()
     expect(result.current.filters.page).toBe(1)
   })
 

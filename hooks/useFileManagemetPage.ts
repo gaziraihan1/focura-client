@@ -22,8 +22,6 @@ import {
 
 export function useFileManagementPage(workspaceId: string) {
   const [filters, setFilters] = useState<FileFilters>({
-    sortBy: 'date',
-    sortOrder: 'desc',
     page: 1,
     limit: 50,
   });

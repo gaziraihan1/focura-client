@@ -26,8 +26,8 @@ export function FileFiltersComponent({
   const [showFilters, setShowFilters] = useState(false);
 
   const activeFilterCount = [
-    filters.fileType && filters.fileType !== "all",
-    filters.uploadedBy && filters.uploadedBy !== "all",
+    filters.fileType,
+    filters.uploadedBy,
     filters.dateFrom,
     filters.dateTo,
   ].filter(Boolean).length;

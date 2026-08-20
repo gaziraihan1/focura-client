@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import FileFiltersPanel from "@/components/Dashboard/Storage/Files/FileFiltersPanel";
 
 vi.mock("lucide-react", () => {
@@ -14,7 +14,7 @@ vi.mock("lucide-react", () => {
 const defaultProps = {
   showFilters: true,
   onFiltersChange: vi.fn(),
-  filters: { search: "", fileType: "all", uploadedBy: "all", sortBy: "date" as const, sortOrder: "desc" as const, page: 1 },
+  filters: { search: undefined, fileType: undefined, uploadedBy: undefined, sortBy: undefined, sortOrder: undefined, page: 1 },
   isAdmin: false,
   uploaders: [],
   activeFilterCount: 0,
@@ -41,5 +41,21 @@ describe("FileFiltersPanel", () => {
   it("renders clear button when active filters exist", () => {
     render(<FileFiltersPanel {...defaultProps} activeFilterCount={2} />);
     expect(screen.getByText("Clear All Filters")).toBeInTheDocument();
+  });
+
+  it("calls onFiltersChange with undefined values when clear button is clicked", () => {
+    const onFiltersChange = vi.fn();
+    render(<FileFiltersPanel {...defaultProps} onFiltersChange={onFiltersChange} activeFilterCount={2} />);
+    
+    fireEvent.click(screen.getByText("Clear All Filters"));
+    
+    expect(onFiltersChange).toHaveBeenCalledWith({
+      search: undefined,
+      fileType: undefined,
+      uploadedBy: undefined,
+      sortBy: undefined,
+      sortOrder: undefined,
+      page: 1,
+    });
   });
 });

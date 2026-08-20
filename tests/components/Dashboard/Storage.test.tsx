@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { createWrapper } from '../../utils/renderWithProviders'
 import { StorageSummaryCards } from '@/components/Dashboard/Storage/StorageSummaryCards'
@@ -549,9 +549,9 @@ describe('Storage/FileCardOverlay', () => {
 describe('Storage/FileFilters', () => {
   const mockProps = {
     filters: {
-      search: '',
-      fileType: 'all',
-      uploadedBy: 'all',
+      search: undefined,
+      fileType: undefined,
+      uploadedBy: undefined,
       dateFrom: undefined,
       dateTo: undefined,
     },
@@ -583,6 +583,28 @@ describe('Storage/FileFilters', () => {
     const listButton = screen.getByTitle('List view')
     await listButton.click()
     expect(mockProps.onViewModeChange).toHaveBeenCalledWith('list')
+  })
+
+  it('handles search input changes', () => {
+    render(<FileFiltersComponent {...mockProps} />, { wrapper: createWrapper() })
+    const searchInput = screen.getByPlaceholderText(/search files/i)
+    fireEvent.change(searchInput, { target: { value: 'test file' } })
+    expect(mockProps.onFiltersChange).toHaveBeenCalled()
+  })
+
+  it('clears search when X button is clicked', () => {
+    const onFiltersChange = vi.fn()
+    const propsWithSearch = {
+      ...mockProps,
+      filters: { ...mockProps.filters, search: 'test' },
+      onFiltersChange
+    }
+    render(<FileFiltersComponent {...propsWithSearch} />, { wrapper: createWrapper() })
+    const clearButton = screen.getByRole('button', { name: /clear search/i })
+    fireEvent.click(clearButton)
+    expect(onFiltersChange).toHaveBeenCalledWith(
+      expect.objectContaining({ search: undefined })
+    )
   })
 })
 
