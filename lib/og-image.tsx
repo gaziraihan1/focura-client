@@ -26,15 +26,24 @@ const ACCENT_COLORS: Record<string, { primary: string; secondary: string }> = {
 
 let cachedLogo: string | null | undefined;
 
-/** Reads lib/assets/focura.png (bundled with the serverless function) and returns it as a base64 data URI (cached). */
+/** Resolves the focura.png asset as a base64 data URI (cached), trying bundled and public locations. */
 function getFocuraLogo(): string | null {
   if (cachedLogo !== undefined) return cachedLogo;
-  try {
-    const buffer = readFileSync(join(process.cwd(), 'lib', 'assets', 'focura.png'));
-    cachedLogo = `data:image/png;base64,${buffer.toString('base64')}`;
-  } catch {
-    cachedLogo = null;
+  const cwd = process.cwd();
+  const candidates = [
+    join(cwd, 'lib', 'assets', 'focura.png'),
+    join(cwd, 'public', 'focura.png'),
+  ];
+  for (const path of candidates) {
+    try {
+      const buffer = readFileSync(path);
+      cachedLogo = `data:image/png;base64,${buffer.toString('base64')}`;
+      return cachedLogo;
+    } catch {
+      // try next candidate
+    }
   }
+  cachedLogo = null;
   return cachedLogo;
 }
 

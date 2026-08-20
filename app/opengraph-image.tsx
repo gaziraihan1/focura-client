@@ -1,4 +1,3 @@
-import { ImageResponse } from 'next/og';
 import { generateOGImage } from '@/lib/og-image';
 
 export const size = {

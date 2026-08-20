@@ -1,12 +1,15 @@
-import ResourcePopularList from '@/components/Resources/ResourcePopularList'
-import ResourcesCategories from '@/components/Resources/ResourcesCategories'
-import ResourcesCTA from '@/components/Resources/ResourcesCTA'
-import ResourcesFeaturedGuides from '@/components/Resources/ResourcesFeaturedGuides'
-import ResourcesHero from '@/components/Resources/ResourcesHero'
-import ResourceUpdateList from '@/components/Resources/ResourceUpdateList'
+import { Suspense } from "react";
+import ResourcePopularList from "@/components/Resources/ResourcePopularList";
+import ResourcesCategories from "@/components/Resources/ResourcesCategories";
+import ResourcesCTA from "@/components/Resources/ResourcesCTA";
+import ResourcesFeaturedGuides from "@/components/Resources/ResourcesFeaturedGuides";
+import ResourcesHero from "@/components/Resources/ResourcesHero";
+import ResourceUpdateList from "@/components/Resources/ResourceUpdateList";
+import ResourcesPopularSkeleton from "@/components/Resources/ResourcesPopularSkeleton";
+import ResourcesUpdatesSkeleton from "@/components/Resources/ResourcesUpdatesSkeleton";
 
 // Force dynamic rendering to avoid build-time API calls to unavailable backend
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 import type { Metadata } from "next";
 
@@ -40,17 +43,23 @@ export const metadata: Metadata = {
   },
 };
 
-
-
-export default function ResourcesPage() {
+export default async function ResourcesPage({
+  searchParams,
+}: {
+  searchParams?: { page?: string };
+}) {
   return (
     <div>
-        <ResourcesHero />
-        <ResourcePopularList />
-        <ResourcesFeaturedGuides />
-        <ResourcesCategories />
-        <ResourceUpdateList />
-        <ResourcesCTA />
+      <ResourcesHero />
+      <Suspense fallback={<ResourcesPopularSkeleton />}>
+        <ResourcePopularList searchParams={searchParams} />
+      </Suspense>
+      <ResourcesFeaturedGuides />
+      <ResourcesCategories />
+      <Suspense fallback={<ResourcesUpdatesSkeleton />}>
+        <ResourceUpdateList searchParams={searchParams} />
+      </Suspense>
+      <ResourcesCTA />
     </div>
-  )
+  );
 }
