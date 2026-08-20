@@ -75,8 +75,8 @@ describe('NavbarMain', () => {
     render(<NavbarMain />)
 
     const img = screen.getByRole('img')
-    expect(img).toHaveAttribute('src', '/focura-logo.svg')
-    expect(img).toHaveAttribute('alt', 'logo')
+    expect(img).toHaveAttribute('src', '/focura.png')
+    expect(img).toHaveAttribute('alt', 'Focura')
   })
 
   it('toggles mobile menu on hamburger click', async () => {

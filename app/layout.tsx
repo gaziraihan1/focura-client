@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 
   applicationName: "Focura",
   icons: {
-    icon: "/focura-favicon.svg",
+    icon: "/focura.png",
   },
   category: "productivity",
 
