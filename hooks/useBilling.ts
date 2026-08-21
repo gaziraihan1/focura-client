@@ -95,8 +95,8 @@ export function useWorkspaceInvoices(workspaceId: string) {
 }
 
 /**
- * Create a Stripe checkout session.
- * On success, redirects the user to the Stripe-hosted checkout page.
+ * Create a checkout session (Stripe, Paddle, or Lemon Squeezy).
+ * On success, redirects the user to the provider-hosted checkout page.
  */
 export function useCreateCheckout(workspaceId: string) {
   return useMutation({
@@ -116,8 +116,8 @@ export function useCreateCheckout(workspaceId: string) {
 }
 
 /**
- * Open the Stripe customer portal (manage payment method, download invoices, cancel).
- * On success, redirects the user to the Stripe-hosted portal page.
+ * Open the customer portal (manage payment method, download invoices, cancel).
+ * On success, redirects the user to the provider-hosted portal page.
  */
 export function useCreatePortal(workspaceId: string) {
   return useMutation<string | undefined, Error, void>({

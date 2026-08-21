@@ -1,20 +1,20 @@
 import { ShieldCheck, ExternalLink } from "lucide-react";
 
-export const RefundPaddleNote = () => {
+export const RefundPaymentProviderNote = () => {
   return (
     <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-hidden shadow-sm">
       {/* Header */}
       <div className="flex items-center gap-3 px-5 py-4 border-b border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/80">
-        {/* Paddle logo placeholder — neutral square with "P" */}
-        <div className="w-8 h-8 rounded-lg bg-[#0B2033] flex items-center justify-center shrink-0">
-          <span className="text-white text-sm font-extrabold tracking-tight">P</span>
+        {/* Lemon Squeezy logo placeholder — neutral square with "L" */}
+        <div className="w-8 h-8 rounded-lg bg-[#FFC233] flex items-center justify-center shrink-0">
+          <span className="text-white text-sm font-extrabold tracking-tight">L</span>
         </div>
         <div>
           <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-            Paddle Merchant of Record
+            Lemon Squeezy Merchant of Record
           </p>
           <p className="text-xs text-neutral-400 dark:text-neutral-500">
-            How refunds work within Paddle&apos;s billing infrastructure
+            How refunds work within Lemon Squeezy&apos;s billing infrastructure
           </p>
         </div>
       </div>
@@ -24,11 +24,11 @@ export const RefundPaddleNote = () => {
         <p>
           Focura uses{" "}
           <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
-            Paddle
+            Lemon Squeezy
           </strong>{" "}
-          as its Merchant of Record (MoR). This means Paddle is the legally
+          as its Merchant of Record (MoR). This means Lemon Squeezy is the legally
           responsible seller for all transactions made on our platform, and all
-          payments are processed, taxed, and receipted by Paddle on our behalf.
+          payments are processed, taxed, and receipted by Lemon Squeezy on our behalf.
         </p>
 
         <div className="grid sm:grid-cols-3 gap-3">
@@ -36,17 +36,17 @@ export const RefundPaddleNote = () => {
             {
               title: "Tax & Compliance",
               body:
-                "Paddle handles all sales tax, VAT, and GST collection and remittance globally. You will not be charged additional taxes beyond the displayed price.",
+                "Lemon Squeezy handles all sales tax, VAT, and GST collection and remittance globally. You will not be charged additional taxes beyond the displayed price.",
             },
             {
               title: "Payment Receipt",
               body:
-                "Your payment receipt comes from Paddle, not Focura directly. Use the Order ID in that receipt when submitting a refund request.",
+                "Your payment receipt comes from Lemon Squeezy, not Focura directly. Use the Order ID in that receipt when submitting a refund request.",
             },
             {
               title: "Refund Processing",
               body:
-                "Once Focura approves your request, we instruct Paddle to issue the refund. Processing time is 5–10 business days depending on your bank or card issuer.",
+                "Once Focura approves your request, we instruct Lemon Squeezy to issue the refund. Processing time is 5–10 business days depending on your bank or card issuer.",
             },
           ].map(({ title, body }) => (
             <div
@@ -69,23 +69,23 @@ export const RefundPaddleNote = () => {
             strokeWidth={2}
           />
           <p className="text-xs text-blue-800 dark:text-blue-300 leading-relaxed">
-            <strong className="font-semibold">Buyer Protection:</strong> As Paddle
-            is the MoR, you may also contact Paddle Support directly if you
-            believe a charge was made in error. Paddle&apos;s own refund and dispute
+            <strong className="font-semibold">Buyer Protection:</strong> As Lemon Squeezy
+            is the MoR, you may also contact Lemon Squeezy Support directly if you
+            believe a charge was made in error. Lemon Squeezy&apos;s own refund and dispute
             policies apply in parallel to this policy. We cooperate fully with
-            all Paddle-initiated chargebacks and refund reviews.
+            all Lemon Squeezy-initiated chargebacks and refund reviews.
           </p>
         </div>
 
         <p className="text-xs text-neutral-400 dark:text-neutral-500">
-          Learn more about how Paddle operates as a Merchant of Record at{" "}
+          Learn more about how Lemon Squeezy operates as a Merchant of Record at{" "}
           <a
-            href="https://www.paddle.com"
+            href="https://www.lemonsqueezy.com"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-neutral-600 dark:text-neutral-300 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-600 transition-colors"
           >
-            paddle.com
+            lemonsqueezy.com
             <ExternalLink className="w-3 h-3" />
           </a>
           .

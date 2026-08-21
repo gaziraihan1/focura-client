@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, LogOut, Loader2 } from "lucide-react";
 import ThemeSwitcher from "../Themes/ThemeSwitcher";
@@ -77,7 +78,7 @@ export default function NavbarMain() {
             onClick={() => setOpen(false)}
             className="flex items-center gap-2 text-lg sm:text-xl font-semibold shrink-0"
           >
-            <img src="/focura.png" width={44} height={44} alt="Focura" className="rounded-md" />
+            <Image src="/focura.png" width={44} height={44} alt="Focura" className="rounded-md" priority />
             Focura
           </Link>
 

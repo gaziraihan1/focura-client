@@ -16,7 +16,7 @@ import {RefundList} from "./RefundList";
 import {RefundEligibilityGrid} from "./RefundEligibilityGrid";
 import {RefundTimeline} from "./RefundTimeline";
 import {RefundRequestCard} from "./RefundRequestCard";
-import {RefundPaddleNote} from "./RefundPaddleNote";
+import {RefundPaymentProviderNote} from "./RefundPaddleNote";
 
 function RefundSectionsPart1() {
   return (
@@ -31,8 +31,8 @@ function RefundSectionsPart1() {
         </p>
         <RefundHighlight variant="info">
           All payments on Focura are processed by{" "}
-          <strong className="font-semibold">Paddle</strong>, our Merchant of
-          Record. This means Paddle handles the actual charge, tax, and refund
+          <strong className="font-semibold">Lemon Squeezy</strong>, our Merchant of
+          Record. This means Lemon Squeezy handles the actual charge, tax, and refund
           on our behalf. See{" "}
           <a href="#paddle" className="underline underline-offset-2 font-medium">
             Section 7
@@ -67,7 +67,7 @@ function RefundSectionsPart1() {
         <RefundHighlight variant="warning">
           The 14-day clock starts on the exact date and time your payment is
           charged — not when you first log in or activate the plan. Check your
-          Paddle receipt for the precise charge timestamp.
+          Lemon Squeezy receipt for the precise charge timestamp.
         </RefundHighlight>
       </RefundSection>
 
@@ -221,7 +221,7 @@ function RefundSectionsPart2() {
           items={[
             "Log in to your Focura account and navigate to Settings → Billing.",
             'Click "Cancel Subscription" and confirm the cancellation.',
-            "You will receive a Paddle cancellation confirmation email — include this in your refund request as proof.",
+            "You will receive a Lemon Squeezy cancellation confirmation email — include this in your refund request as proof.",
             "Your account will remain on the paid plan until the end of the current billing period.",
             "Once the refund is approved, access may be revoked before the period ends.",
           ]}
@@ -230,23 +230,23 @@ function RefundSectionsPart2() {
           If your subscription renews before we process your refund request, the
           renewal charge is not refundable. It is your responsibility to cancel
           before the next billing date. You can find your next renewal date in
-          Settings → Billing or in your Paddle receipt.
+          Settings → Billing or in your Lemon Squeezy receipt.
         </RefundHighlight>
       </RefundSection>
 
       {/* 7. Paddle */}
       <RefundSection
-        id="paddle"
-        title="Paddle & Payment Processing"
+        id="lemonsqueezy"
+        title="Lemon Squeezy & Payment Processing"
         icon={ShieldCheck}
         index={7}
       >
         <p>
-          Because Paddle acts as our Merchant of Record, the mechanics of refund
+          Because Lemon Squeezy acts as our Merchant of Record, the mechanics of refund
           processing differ slightly from a direct payment provider. Here is
           everything you need to know:
         </p>
-        <RefundPaddleNote />
+        <RefundPaymentProviderNote />
       </RefundSection>
 
       {/* 8. How to Request */}
@@ -315,7 +315,7 @@ function RefundSectionsPart3() {
               >
                 security@focura.app
               </a>
-              . We will investigate and work with Paddle to resolve the issue.
+              . We will investigate and work with Lemon Squeezy to resolve the issue.
             </span>,
             <span key="extended">
               <strong className="font-semibold text-neutral-800 dark:text-neutral-200">

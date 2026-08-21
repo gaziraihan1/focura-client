@@ -151,20 +151,20 @@ function CookiesBasicsSections() {
               </a>
               .
             </span>,
-            <span key="paddle">
+            <span key="lemonsqueezy">
               <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
-                Paddle
+                Lemon Squeezy
               </strong>{" "}
-              — our payment processor and Merchant of Record. Paddle may set
+              — our payment processor and Merchant of Record. Lemon Squeezy may set
               cookies during the checkout flow to detect fraud and process
               transactions securely. See{" "}
               <a
-                href="https://www.paddle.com/legal/privacy"
+                href="https://www.lemonsqueezy.com/privacy"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-600 transition-colors"
               >
-                Paddle&apos;s Privacy Policy
+                Lemon Squeezy&apos;s Privacy Policy
               </a>
               .
             </span>,
