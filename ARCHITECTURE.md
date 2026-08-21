@@ -176,7 +176,7 @@ focura-client/
 │   ├── page.tsx                         # Home page
 │   ├── not-found.tsx                    # 404 page
 │   ├── globals.css                      # Global styles
-│   └── icon.png                         # Favicon
+│   └── focura.png                         # Favicon
 │
 ├── components/                          # React Components
 │   ├── AdminDashboard/                  # Admin UI

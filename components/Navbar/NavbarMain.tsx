@@ -78,7 +78,7 @@ export default function NavbarMain() {
             onClick={() => setOpen(false)}
             className="flex items-center gap-2 text-lg sm:text-xl font-semibold shrink-0"
           >
-            <Image src="/focura.png" width={44} height={44} alt="Focura" className="rounded-md" priority />
+            <Image src="/focura.png" width={36} height={36} alt="Focura" className="rounded-md" priority />
             Focura
           </Link>
 

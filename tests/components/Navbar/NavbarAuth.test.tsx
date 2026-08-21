@@ -33,7 +33,7 @@ describe('NavbarAuth', () => {
     render(<NavbarAuth />)
 
     const img = screen.getByRole('img')
-    expect(img).toHaveAttribute('src', '/icon.png')
+    expect(img).toHaveAttribute('src', '/focura.png')
     expect(img).toHaveAttribute('alt', 'Focura')
   })
 

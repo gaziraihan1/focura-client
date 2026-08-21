@@ -9,7 +9,7 @@ export default function NavbarAuth() {
     <header className="w-full border-b border-border bg-background/80 backdrop-blur-md">
       <nav className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/" className="text-2xl font-bold text-foreground flex items-center gap-2">
-          <Image src="/icon.png" alt="Focura" width={32} height={32} />
+          <Image src="/focura.png" alt="Focura" width={36} height={36} className="rounded-md"/>
           Focura
         </Link>
 
