@@ -113,28 +113,28 @@ vi.mock('@/lib/utils', () => ({
 }))
 
 
-import { RefundPaddleNote } from '@/components/RefundPolicy/RefundPaddleNote'
+import { RefundPaymentProviderNote } from '@/components/RefundPolicy/RefundPaddleNote'
 
 describe('RefundPaddleNote', () => {
-  it('renders Paddle Merchant of Record header', () => {
-    render(<RefundPaddleNote />)
-    expect(screen.getByText('Paddle Merchant of Record')).toBeInTheDocument()
+  it('renders Lemon Squeezy Merchant of Record header', () => {
+    render(<RefundPaymentProviderNote />)
+    expect(screen.getByText('Lemon Squeezy Merchant of Record')).toBeInTheDocument()
   })
 
   it('renders the three info cards', () => {
-    render(<RefundPaddleNote />)
+    render(<RefundPaymentProviderNote />)
     expect(screen.getByText('Tax & Compliance')).toBeInTheDocument()
     expect(screen.getByText('Payment Receipt')).toBeInTheDocument()
     expect(screen.getByText('Refund Processing')).toBeInTheDocument()
   })
 
   it('renders buyer protection notice', () => {
-    render(<RefundPaddleNote />)
+    render(<RefundPaymentProviderNote />)
     expect(screen.getByText(/Buyer Protection/)).toBeInTheDocument()
   })
 
   it('renders paddle.com link', () => {
-    render(<RefundPaddleNote />)
-    expect(screen.getByText('paddle.com')).toBeInTheDocument()
+    render(<RefundPaymentProviderNote />)
+    expect(screen.getByText('lemonsqueezy.com')).toBeInTheDocument()
   })
 })

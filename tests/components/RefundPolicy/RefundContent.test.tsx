@@ -124,7 +124,7 @@ describe('RefundContent', () => {
     expect(screen.getByText('What Does Not Qualify')).toBeInTheDocument()
     expect(screen.getByText('How We Assess Usage')).toBeInTheDocument()
     expect(screen.getByText('Cancellation Before Renewal')).toBeInTheDocument()
-    expect(screen.getByText('Paddle & Payment Processing')).toBeInTheDocument()
+    expect(screen.getByText('Lemon Squeezy & Payment Processing')).toBeInTheDocument()
     expect(screen.getByText('How to Submit a Refund Request')).toBeInTheDocument()
     expect(screen.getByText('Exceptions & Special Cases')).toBeInTheDocument()
     expect(screen.getByText('Changes to This Policy')).toBeInTheDocument()
