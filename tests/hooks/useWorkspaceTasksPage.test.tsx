@@ -317,7 +317,6 @@ describe('useWorkspaceTasksPage', () => {
     const { result } = renderTasksPage()
 
     expect(h.completeSession).toHaveBeenCalled()
-    expect(result.current.timeRemaining).toBe(0)
     expect(result.current.activeSession?.id).toBe('s1')
   })
 })

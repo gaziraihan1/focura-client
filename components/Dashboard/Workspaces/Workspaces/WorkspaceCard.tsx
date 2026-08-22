@@ -3,6 +3,7 @@ import { Crown, FolderKanban, Users, Settings } from "lucide-react";
 import { useWorkspacesPage } from "@/hooks/useWorkspacePage";
 import { Workspace } from "@/hooks/useWorkspace";
 import { useSession } from "next-auth/react";
+import { prefetchWorkspaceOverview } from "@/hooks/useNavigationPrefetch";
 
 interface WorkspaceCardProps {
   workspace: Workspace;
@@ -16,7 +17,11 @@ export function WorkspaceCard({ workspace }: WorkspaceCardProps) {
   const isOwner = workspace.ownerId === session?.user.id
 
   return (
-    <Link href={`/dashboard/workspaces/${workspace.slug}`}>
+    <Link
+      href={`/dashboard/workspaces/${workspace.slug}`}
+      onMouseEnter={() => prefetchWorkspaceOverview(workspace.slug)}
+      onFocus={() => prefetchWorkspaceOverview(workspace.slug)}
+    >
       <div className="group p-6 rounded-xl bg-card border hover:shadow-xl hover:border-primary/50 transition cursor-pointer">
         <div className="flex justify-between mb-4">
           <div className="flex gap-3">

@@ -36,7 +36,7 @@ function getFocuraLogo(): string | null {
   ];
   for (const path of candidates) {
     try {
-      const buffer = readFileSync(path);
+      const buffer = readFileSync(/*turbopackIgnore: true*/ path);
       cachedLogo = `data:image/png;base64,${buffer.toString('base64')}`;
       return cachedLogo;
     } catch {

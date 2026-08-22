@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
+import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { authOptions } from "@/lib/auth/authOptions";
 import { serverApi } from "@/lib/api/server";
+import { workspaceKeys } from "@/hooks/workspaceKeys";
 import { DashboardGreeting } from "@/components/Dashboard/DashboardGreeting";
 import { QuickActions } from "@/components/Dashboard/QuickActions";
 import { WorkspaceList } from "@/components/Dashboard/WorkspaceList";
@@ -23,7 +25,14 @@ export default async function DashboardPage() {
   const totalProjects = wsList.reduce((sum, ws) => sum + (ws._count?.projects ?? 0), 0);
   const totalMembers = wsList.reduce((sum, ws) => sum + (ws._count?.members ?? 0), 0);
 
+  // Seed the client react-query cache with the server-fetched list so
+  // client components using useWorkspaces() render instantly instead of
+  // re-requesting the same endpoint after hydration.
+  const queryClient = new QueryClient();
+  queryClient.setQueryData(workspaceKeys.lists(), wsList);
+
   return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
     <div className="space-y-5 py-2">
       {/* Hero greeting with stats */}
       <DashboardGreeting
@@ -60,5 +69,6 @@ export default async function DashboardPage() {
         <WellnessRecommendations />
       </div>
     </div>
+    </HydrationBoundary>
   );
 }

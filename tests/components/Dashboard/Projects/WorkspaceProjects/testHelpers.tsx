@@ -1,3 +1,6 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import React from 'react'
+
 export const mockProject = {
   id: 'proj-1',
   name: 'Test Project',
@@ -25,3 +28,14 @@ export const mockMembers = [
   { user: { id: 'user-3', name: 'Charlie', email: 'charlie@test.com', image: null }, role: 'MEMBER' },
   { user: { id: 'user-4', name: 'Diana', email: 'diana@test.com', image: null }, role: 'MEMBER' },
 ]
+
+export function createTestWrapper(children: React.ReactNode) {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  })
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+}

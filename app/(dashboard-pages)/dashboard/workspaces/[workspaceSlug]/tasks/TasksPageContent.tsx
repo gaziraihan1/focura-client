@@ -37,7 +37,7 @@ export function TasksPageContent({ workspaceSlug }: TasksPageContentProps) {
     selectedAssignee, setSelectedAssignee, selectedLabels, toggleLabel, clearFilters,
     selectedSection, setSelectedSection,
     focusRequired, setFocusRequired, handlePageChange, projects, sections, labels, members,
-    qouta, focusedTask, timeRemaining, activeSession, completeSession,
+    qouta, focusedTask, activeSession, completeSession,
     primaryTask, secondaryTasks, hasPrimaryTask, dailyTasksLoading,
     handleAddToPrimary, handleAddToSecondary, handleRemoveDailyTask,
     loadingTaskId, loadingType, role,
@@ -54,7 +54,7 @@ export function TasksPageContent({ workspaceSlug }: TasksPageContentProps) {
       <TasksPageHeader workspaceName={workspace.name} onCreateTask={handleCreateTask} memberRole={role} />
       <TaskQuotaDetails qouta={qouta} />
       {focusedTask && activeSession && (
-        <FocusModeBanner task={focusedTask} timeRemaining={timeRemaining} onEndFocus={completeSession} sessionDuration={activeSession.duration} workspaceSlug={workspaceSlug} />
+        <FocusModeBanner task={focusedTask} onEndFocus={completeSession} sessionDuration={activeSession.duration} workspaceSlug={workspaceSlug} />
       )}
 
       {stats && <TaskStatsGrid stats={stats} />}

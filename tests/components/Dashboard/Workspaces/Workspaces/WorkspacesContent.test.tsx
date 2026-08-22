@@ -1,5 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import React from 'react'
 
 // ─── Global mocks ────────────────────────────────────────────────────────────
 vi.mock('next/link', () => ({
@@ -133,6 +135,22 @@ vi.mock('lucide-react', () => ({
   Square: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="square-icon" {...props} />,
 }))
 
+vi.mock('@/hooks/useNavigationPrefetch', () => ({
+  useProjectOverviewPrefetch: () => vi.fn(),
+  useWorkspaceOverviewPrefetch: () => vi.fn(),
+}))
+
+function createTestWrapper(children: React.ReactNode) {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  })
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+}
+
 // ─── Imports under test ──────────────────────────────────────────────────────
 import { WorkspacesContent } from '@/components/Dashboard/Workspaces/Workspaces/WorkspacesContent'
 
@@ -169,24 +187,24 @@ describe('WorkspacesContent', () => {
   }
 
   it('shows loading spinner when isLoading', () => {
-    render(<WorkspacesContent {...defaultProps} isLoading={true} />)
+    render(createTestWrapper(<WorkspacesContent {...defaultProps} isLoading={true} />))
     expect(screen.getByTestId('loader-icon')).toBeInTheDocument()
   })
 
   it('shows error state when isError', () => {
-    render(<WorkspacesContent {...defaultProps} isError={true} />)
+    render(createTestWrapper(<WorkspacesContent {...defaultProps} isError={true} />))
     expect(screen.getByText('Failed to load workspaces')).toBeInTheDocument()
     expect(screen.getByTestId('alert-icon')).toBeInTheDocument()
   })
 
   it('shows empty state with no workspaces', () => {
-    render(<WorkspacesContent {...defaultProps} />)
+    render(createTestWrapper(<WorkspacesContent {...defaultProps} />))
     expect(screen.getByText('No workspaces yet')).toBeInTheDocument()
     expect(screen.getByTestId('folder-kanban-icon')).toBeInTheDocument()
   })
 
   it('shows empty state with search query', () => {
-    render(<WorkspacesContent {...defaultProps} searchQuery="xyz" />)
+    render(createTestWrapper(<WorkspacesContent {...defaultProps} searchQuery="xyz" />))
     expect(screen.getByText('No workspaces found')).toBeInTheDocument()
   })
 
@@ -194,18 +212,18 @@ describe('WorkspacesContent', () => {
     const workspaces = [
       { ...mockWorkspace, id: 'ws-1', name: 'WS 1' },
     ]
-    render(<WorkspacesContent {...defaultProps} filteredWorkspaces={workspaces} />)
+    render(createTestWrapper(<WorkspacesContent {...defaultProps} filteredWorkspaces={workspaces} />))
     expect(screen.getByText('WS 1')).toBeInTheDocument()
   })
 
   it('prefers loading state over error state', () => {
-    render(<WorkspacesContent {...defaultProps} isLoading={true} isError={true} />)
+    render(createTestWrapper(<WorkspacesContent {...defaultProps} isLoading={true} isError={true} />))
     expect(screen.getByTestId('loader-icon')).toBeInTheDocument()
     expect(screen.queryByText('Failed to load workspaces')).not.toBeInTheDocument()
   })
 
   it('prefers error state over empty state', () => {
-    render(<WorkspacesContent {...defaultProps} isError={true} filteredWorkspaces={[]} />)
+    render(createTestWrapper(<WorkspacesContent {...defaultProps} isError={true} filteredWorkspaces={[]} />))
     expect(screen.getByText('Failed to load workspaces')).toBeInTheDocument()
   })
 })

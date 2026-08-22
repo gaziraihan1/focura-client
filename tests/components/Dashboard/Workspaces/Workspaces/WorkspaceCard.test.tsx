@@ -1,5 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import React from 'react'
 
 // ─── Global mocks ────────────────────────────────────────────────────────────
 vi.mock('next/link', () => ({
@@ -133,6 +135,22 @@ vi.mock('lucide-react', () => ({
   Square: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="square-icon" {...props} />,
 }))
 
+vi.mock('@/hooks/useNavigationPrefetch', () => ({
+  useProjectOverviewPrefetch: () => vi.fn(),
+  useWorkspaceOverviewPrefetch: () => vi.fn(),
+}))
+
+function createTestWrapper(children: React.ReactNode) {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  })
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+}
+
 // ─── Imports under test ──────────────────────────────────────────────────────
 import { WorkspaceCard } from '@/components/Dashboard/Workspaces/Workspaces/WorkspaceCard'
 
@@ -164,69 +182,69 @@ describe('WorkspaceCard', () => {
   const workspace = { ...mockWorkspace }
 
   it('renders workspace name', () => {
-    render(<WorkspaceCard workspace={workspace} />)
+    render(createTestWrapper(<WorkspaceCard workspace={workspace} />))
     expect(screen.getByText('Test Workspace')).toBeInTheDocument()
   })
 
   it('renders workspace slug', () => {
-    render(<WorkspaceCard workspace={workspace} />)
+    render(createTestWrapper(<WorkspaceCard workspace={workspace} />))
     expect(screen.getByText('/test-ws')).toBeInTheDocument()
   })
 
   it('renders a link to the workspace', () => {
-    render(<WorkspaceCard workspace={workspace} />)
+    render(createTestWrapper(<WorkspaceCard workspace={workspace} />))
     const link = screen.getByRole('link')
     expect(link.getAttribute('href')).toBe('/dashboard/workspaces/test-ws')
   })
 
   it('renders description when present', () => {
-    render(<WorkspaceCard workspace={workspace} />)
+    render(createTestWrapper(<WorkspaceCard workspace={workspace} />))
     expect(screen.getByText('A workspace for testing')).toBeInTheDocument()
   })
 
   it('does not render description when absent', () => {
-    render(<WorkspaceCard workspace={{ ...workspace, description: undefined }} />)
+    render(createTestWrapper(<WorkspaceCard workspace={{ ...workspace, description: undefined }} />))
     expect(screen.queryByText('A workspace for testing')).not.toBeInTheDocument()
   })
 
   it('renders project and member counts', () => {
-    render(<WorkspaceCard workspace={workspace} />)
+    render(createTestWrapper(<WorkspaceCard workspace={workspace} />))
     expect(screen.getByText('3 projects')).toBeInTheDocument()
     expect(screen.getByText('5 members')).toBeInTheDocument()
   })
 
   it('renders plan badge', () => {
-    render(<WorkspaceCard workspace={workspace} />)
+    render(createTestWrapper(<WorkspaceCard workspace={workspace} />))
     expect(screen.getByText('Free')).toBeInTheDocument()
   })
 
   it('renders workspace logo/first letter', () => {
-    render(<WorkspaceCard workspace={{ ...workspace, logo: undefined }} />)
+    render(createTestWrapper(<WorkspaceCard workspace={{ ...workspace, logo: undefined }} />))
     expect(screen.getByText('T')).toBeInTheDocument()
   })
 
   it('renders logo text when provided', () => {
-    render(<WorkspaceCard workspace={{ ...workspace, logo: 'W' }} />)
+    render(createTestWrapper(<WorkspaceCard workspace={{ ...workspace, logo: 'W' }} />))
     expect(screen.getByText('W')).toBeInTheDocument()
   })
 
   it('shows crown icon for owner', () => {
-    render(<WorkspaceCard workspace={workspace} />)
+    render(createTestWrapper(<WorkspaceCard workspace={workspace} />))
     expect(screen.getByTestId('crown-icon')).toBeInTheDocument()
   })
 
   it('does not show crown for non-owner', () => {
-    render(<WorkspaceCard workspace={{ ...workspace, ownerId: 'other-user' }} />)
+    render(createTestWrapper(<WorkspaceCard workspace={{ ...workspace, ownerId: 'other-user' }} />))
     expect(screen.queryByTestId('crown-icon')).not.toBeInTheDocument()
   })
 
   it('renders settings button', () => {
-    render(<WorkspaceCard workspace={workspace} />)
+    render(createTestWrapper(<WorkspaceCard workspace={workspace} />))
     expect(screen.getByTestId('settings-icon')).toBeInTheDocument()
   })
 
   it('calls navigateToSettings on settings button click', () => {
-    render(<WorkspaceCard workspace={workspace} />)
+    render(createTestWrapper(<WorkspaceCard workspace={workspace} />))
     const settingsBtn = screen.getByTestId('settings-icon').closest('button')!
     fireEvent.click(settingsBtn)
     // navigation is mocked, just verify button is clickable
@@ -234,7 +252,7 @@ describe('WorkspaceCard', () => {
   })
 
   it('applies default color when workspace.color is null', () => {
-    const { container } = render(<WorkspaceCard workspace={{ ...workspace, color: null }} />)
+    const { container } = render(createTestWrapper(<WorkspaceCard workspace={{ ...workspace, color: null }} />))
     const colorBox = container.querySelector('[style]')
     expect(colorBox?.getAttribute('style')).toContain('rgb(102, 126, 234)')
   })

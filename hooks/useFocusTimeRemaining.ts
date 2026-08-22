@@ -63,16 +63,26 @@ export function syncFocusTimer(
     return;
   }
 
-  onExpire = handleExpire ?? null;
-
+  // Same session already ticking — just refresh its expiry handler.
   if (intervalId !== null && activeSessionId === session.id) {
+    onExpire = handleExpire ?? null;
     return;
   }
 
   stopTicker();
   activeSessionId = session.id;
   expiredForSession = null;
+  onExpire = handleExpire ?? null;
   setSeconds(computeRemaining(session));
+
+  // Session already past its end — expire without waiting for a tick.
+  if (timeRemaining === 0) {
+    expiredForSession = session.id;
+    const callback = onExpire;
+    onExpire = null;
+    callback?.();
+    return;
+  }
 
   intervalId = setInterval(() => {
     const remaining = computeRemaining(session);
@@ -80,8 +90,8 @@ export function syncFocusTimer(
 
     if (remaining === 0 && expiredForSession !== session.id) {
       expiredForSession = session.id;
-      stopTicker();
       const callback = onExpire;
+      stopTicker();
       onExpire = null;
       callback?.();
     }

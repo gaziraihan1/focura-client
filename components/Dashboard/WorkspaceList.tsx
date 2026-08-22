@@ -1,6 +1,9 @@
+'use client';
+
 import Link from 'next/link';
 import type { Workspace } from '@/hooks/useWorkspace';
 import { Plus, ArrowRight, Users, FolderOpen } from 'lucide-react';
+import { prefetchWorkspaceOverview } from '@/hooks/useNavigationPrefetch';
 
 const ROLE_STYLES: Record<string, string> = {
   OWNER: 'bg-green-500/10 text-green-700 dark:text-green-400',
@@ -34,6 +37,8 @@ export function WorkspaceList({ workspaces }: WorkspaceListProps) {
           <Link
             key={ws.id}
             href={`/dashboard/workspaces/${ws.slug}`}
+            onMouseEnter={() => prefetchWorkspaceOverview(ws.slug)}
+            onFocus={() => prefetchWorkspaceOverview(ws.slug)}
             className="group flex items-center gap-3 p-3 rounded-lg hover:bg-accent/50 transition"
           >
             <div

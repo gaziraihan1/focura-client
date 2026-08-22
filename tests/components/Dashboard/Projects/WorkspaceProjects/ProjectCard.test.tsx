@@ -17,52 +17,57 @@ vi.mock('lucide-react', () => {
   return { Calendar: mock('calendar'), Flag: mock('flag'), FolderKanban: mock('folder-kanban'), Users: mock('users'), Crown: mock('crown') }
 })
 
+vi.mock('@/hooks/useNavigationPrefetch', () => ({
+  useProjectOverviewPrefetch: () => vi.fn(),
+  useWorkspaceOverviewPrefetch: () => vi.fn(),
+}))
+
 import { ProjectCard } from '@/components/Dashboard/Projects/WorkspaceProjects/ProjectCard'
-import { mockProject } from './testHelpers'
+import { mockProject, createTestWrapper } from './testHelpers.tsx'
 
 describe('ProjectCard', () => {
   it('renders project name', () => {
-    render(<ProjectCard project={mockProject} workspaceSlug="ws-1" haveAccess={true} />)
+    render(createTestWrapper(<ProjectCard project={mockProject} workspaceSlug="ws-1" haveAccess={true} />))
     expect(screen.getByText('Test Project')).toBeInTheDocument()
   })
 
   it('renders as Link when haveAccess is true', () => {
-    render(<ProjectCard project={mockProject} workspaceSlug="ws-1" haveAccess={true} />)
+    render(createTestWrapper(<ProjectCard project={mockProject} workspaceSlug="ws-1" haveAccess={true} />))
     const link = screen.getByText('Test Project').closest('a')
     expect(link).toHaveAttribute('href', '/dashboard/workspaces/ws-1/projects/test-project')
   })
 
   it('renders as button when haveAccess is false', () => {
-    render(<ProjectCard project={mockProject} workspaceSlug="ws-1" haveAccess={false} />)
+    render(createTestWrapper(<ProjectCard project={mockProject} workspaceSlug="ws-1" haveAccess={false} />))
     const button = screen.getByRole('button', { name: /open project test project/i })
     expect(button).toBeInTheDocument()
   })
 
   it('calls onClick when button clicked (no access)', () => {
     const onClick = vi.fn()
-    render(<ProjectCard project={mockProject} workspaceSlug="ws-1" haveAccess={false} onClick={onClick} />)
+    render(createTestWrapper(<ProjectCard project={mockProject} workspaceSlug="ws-1" haveAccess={false} onClick={onClick} />))
     fireEvent.click(screen.getByRole('button', { name: /open project test project/i }))
     expect(onClick).toHaveBeenCalledTimes(1)
   })
 
   it('renders priority', () => {
-    render(<ProjectCard project={mockProject} workspaceSlug="ws-1" haveAccess={true} />)
+    render(createTestWrapper(<ProjectCard project={mockProject} workspaceSlug="ws-1" haveAccess={true} />))
     expect(screen.getByText('HIGH')).toBeInTheDocument()
   })
 
   it('renders due date', () => {
-    render(<ProjectCard project={mockProject} workspaceSlug="ws-1" haveAccess={true} />)
+    render(createTestWrapper(<ProjectCard project={mockProject} workspaceSlug="ws-1" haveAccess={true} />))
     expect(screen.getByText(/Due/)).toBeInTheDocument()
   })
 
   it('does not render due date section when no due date', () => {
     const projectNoDue = { ...mockProject, dueDate: null }
-    render(<ProjectCard project={projectNoDue} workspaceSlug="ws-1" haveAccess={true} />)
+    render(createTestWrapper(<ProjectCard project={projectNoDue} workspaceSlug="ws-1" haveAccess={true} />))
     expect(screen.queryByText(/Due/)).not.toBeInTheDocument()
   })
 
   it('renders task and member counts', () => {
-    render(<ProjectCard project={mockProject} workspaceSlug="ws-1" haveAccess={true} />)
+    render(createTestWrapper(<ProjectCard project={mockProject} workspaceSlug="ws-1" haveAccess={true} />))
     expect(screen.getByText('5')).toBeInTheDocument()
     expect(screen.getByText('2')).toBeInTheDocument()
   })

@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useWorkspace, useWorkspaceRoleFromWorkspace } from "@/hooks/useWorkspace";
 import { useProjects } from "@/hooks/useProjects";
 import { useLabels } from "@/hooks/useLabels";
@@ -7,6 +7,7 @@ import { useTasks, useTaskStats, TaskFilters, TaskSort, useWorkspaceQuota, useTa
 import { useFocusSession } from "./useFocusSession";
 import { useDailyTasks } from "./useDailyTasks";
 import { useWorkspaceSections } from "@/hooks/useWorkspaceSections";
+import { syncFocusTimer } from "./useFocusTimeRemaining";
 import toast from "react-hot-toast";
 
 export const DEFAULT_PAGE_SIZE = 10;
@@ -29,7 +30,6 @@ export function useWorkspaceTasksPage({ workspaceSlug }: UseWorkspaceTasksPagePr
   const [selectedAssignee, setSelectedAssignee] = useState<string>("all");
   const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
   const [focusRequired, setFocusRequired] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(0);
   const [sortBy, setSortBy] = useState<TaskSort["sortBy"]>("priority");
   const [sortOrder, setSortOrder] = useState<TaskSort["sortOrder"]>("asc");
 
@@ -90,25 +90,9 @@ export function useWorkspaceTasksPage({ workspaceSlug }: UseWorkspaceTasksPagePr
   const { data: qouta } = useWorkspaceQuota(workspace?.id);
   const { activeSession, completeSession } = useFocusSession();
   const { data: focusedTask = null } = useTask(activeSession?.taskId as string);
-  const workspaceAutoCompletedRef = useRef(false);
-
-  useEffect(() => { workspaceAutoCompletedRef.current = false; }, [activeSession?.id]);
 
   useEffect(() => {
-    if (!activeSession?.taskId) return;
-    const updateTimer = () => {
-      const startTime = new Date(activeSession?.startedAt).getTime();
-      const elapsed = Math.floor((Date.now() - startTime) / 1000);
-      const remaining = Math.max(0, activeSession.duration * 60 - elapsed);
-      setTimeRemaining(remaining);
-      if (remaining === 0 && !activeSession.completed && !workspaceAutoCompletedRef.current) {
-        workspaceAutoCompletedRef.current = true;
-        completeSession();
-      }
-    };
-    updateTimer();
-    const interval = setInterval(updateTimer, 1000);
-    return () => clearInterval(interval);
+    syncFocusTimer(activeSession, completeSession);
   }, [activeSession, completeSession]);
 
   const { primaryTask, secondaryTasks, hasPrimaryTask, isLoading: dailyTasksLoading, addToPrimary, addToSecondary, removeDailyTask } = useDailyTasks(workspaceSlug);
@@ -155,7 +139,7 @@ export function useWorkspaceTasksPage({ workspaceSlug }: UseWorkspaceTasksPagePr
     selectedAssignee, setSelectedAssignee: handleAssigneeChange, selectedLabels, toggleLabel, clearFilters,
     focusRequired, setFocusRequired: handleFocusRequiredChange, handlePageChange, handleAddToSecondary,
     handleAddToPrimary, loadingTaskId, primaryTask, secondaryTasks, hasPrimaryTask, dailyTasksLoading,
-    handleRemoveDailyTask, projects, sections, labels, members, qouta, focusedTask, timeRemaining, activeSession,
+    handleRemoveDailyTask, projects, sections, labels, members, qouta, focusedTask, activeSession,
     completeSession, loadingType, role,
   };
 }

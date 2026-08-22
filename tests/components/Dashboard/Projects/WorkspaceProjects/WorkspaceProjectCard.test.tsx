@@ -26,6 +26,11 @@ vi.mock('@/lib/react-query/query-client', () => ({
   },
 }))
 
+vi.mock('@/hooks/useNavigationPrefetch', () => ({
+  useProjectOverviewPrefetch: () => vi.fn(),
+  useWorkspaceOverviewPrefetch: () => vi.fn(),
+}))
+
 vi.mock('lucide-react', () => {
   const mock = (name: string) => {
     const C = (props: Record<string, unknown>) => React.createElement('svg', { 'data-testid': `${name}-icon`, ...props })
@@ -44,7 +49,7 @@ vi.mock('lucide-react', () => {
 })
 
 import { WorkspaceProjectCard } from '@/components/Dashboard/Projects/WorkspaceProjects/WorkspaceProjectCard'
-import { mockProject } from './testHelpers'
+import { mockProject, createTestWrapper } from './testHelpers.tsx'
 
 describe('WorkspaceProjectCard', () => {
   beforeEach(() => {
@@ -55,24 +60,28 @@ describe('WorkspaceProjectCard', () => {
 
   it('renders project name', () => {
     render(
-      <WorkspaceProjectCard
-        project={mockProject}
-        workspaceSlug="ws-1"
-        currentUserId="user-1"
-        canCreateProjects={true}
-      />
+      createTestWrapper(
+        <WorkspaceProjectCard
+          project={mockProject}
+          workspaceSlug="ws-1"
+          currentUserId="user-1"
+          canCreateProjects={true}
+        />
+      )
     )
     expect(screen.getByText('Test Project')).toBeInTheDocument()
   })
 
   it('shows access denied modal when clicking without access', async () => {
     const { container } = render(
-      <WorkspaceProjectCard
-        project={mockProject}
-        workspaceSlug="ws-1"
-        currentUserId="user-99"
-        canCreateProjects={false}
-      />
+      createTestWrapper(
+        <WorkspaceProjectCard
+          project={mockProject}
+          workspaceSlug="ws-1"
+          currentUserId="user-99"
+          canCreateProjects={false}
+        />
+      )
     )
 
     const cardButton = Array.from(container.querySelectorAll('button')).find((b) =>
@@ -85,24 +94,28 @@ describe('WorkspaceProjectCard', () => {
 
   it('does not show access denied modal when user has access', () => {
     render(
-      <WorkspaceProjectCard
-        project={mockProject}
-        workspaceSlug="ws-1"
-        currentUserId="user-1"
-        canCreateProjects={false}
-      />
+      createTestWrapper(
+        <WorkspaceProjectCard
+          project={mockProject}
+          workspaceSlug="ws-1"
+          currentUserId="user-1"
+          canCreateProjects={false}
+        />
+      )
     )
     expect(screen.queryByText('Access Restricted')).not.toBeInTheDocument()
   })
 
   it('has access when canCreateProjects is true', () => {
     render(
-      <WorkspaceProjectCard
-        project={mockProject}
-        workspaceSlug="ws-1"
-        currentUserId="user-99"
-        canCreateProjects={true}
-      />
+      createTestWrapper(
+        <WorkspaceProjectCard
+          project={mockProject}
+          workspaceSlug="ws-1"
+          currentUserId="user-99"
+          canCreateProjects={true}
+        />
+      )
     )
     const link = screen.getByText('Test Project').closest('a')
     expect(link).toHaveAttribute('href', '/dashboard/workspaces/ws-1/projects/test-project')
@@ -123,12 +136,14 @@ describe('WorkspaceProjectCard', () => {
     ])
 
     render(
-      <WorkspaceProjectCard
-        project={mockProject}
-        workspaceSlug="ws-1"
-        currentUserId="user-3"
-        canCreateProjects={false}
-      />
+      createTestWrapper(
+        <WorkspaceProjectCard
+          project={mockProject}
+          workspaceSlug="ws-1"
+          currentUserId="user-3"
+          canCreateProjects={false}
+        />
+      )
     )
 
     const cardButton = Array.from(document.querySelectorAll('button')).find((b) =>
@@ -145,12 +160,14 @@ describe('WorkspaceProjectCard', () => {
 
   it('still denies after self-heal when the refreshed list lacks membership', async () => {
     render(
-      <WorkspaceProjectCard
-        project={mockProject}
-        workspaceSlug="ws-1"
-        currentUserId="user-99"
-        canCreateProjects={false}
-      />
+      createTestWrapper(
+        <WorkspaceProjectCard
+          project={mockProject}
+          workspaceSlug="ws-1"
+          currentUserId="user-99"
+          canCreateProjects={false}
+        />
+      )
     )
 
     const cardButton = Array.from(document.querySelectorAll('button')).find((b) =>

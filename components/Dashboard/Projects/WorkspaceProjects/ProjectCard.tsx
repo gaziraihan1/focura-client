@@ -5,6 +5,7 @@ import ProjectMembers from "./ProjectMembers";
 import ProjectStatsCount from "./ProjectStatsCount";
 import ProjectDetails from "./ProjectDetails";
 import { ProjectDetails as Details } from "@/hooks/useProjects";
+import { prefetchProjectOverview } from "@/hooks/useNavigationPrefetch";
 
 // oxlint-disable-next-line react-doctor/only-export-components -- shared status palette imported by ProjectDetails
 export const statusColors: Record<string, string> = {
@@ -47,6 +48,12 @@ export function ProjectCard({
     project?._count?.members || project?.members?.length || 0;
   const taskCount = project?._count?.tasks || 0;
 
+  const handlePrefetch = () => {
+    if (project?.id && project?.slug && haveAccess) {
+      prefetchProjectOverview({ id: project.id, slug: project.slug });
+    }
+  };
+
   const CardContent = (
     <div className="p-4 sm:p-5 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-lg transition cursor-pointer h-full flex flex-col gap-4">
       <ProjectDetails project={project} joined={joined} />
@@ -79,7 +86,11 @@ export function ProjectCard({
 
   if (haveAccess) {
     return (
-      <Link href={`/dashboard/workspaces/${workspaceSlug}/projects/${project?.slug}`}>
+      <Link
+        href={`/dashboard/workspaces/${workspaceSlug}/projects/${project?.slug}`}
+        onMouseEnter={handlePrefetch}
+        onFocus={handlePrefetch}
+      >
         {CardContent}
       </Link>
     );

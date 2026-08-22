@@ -1,5 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import React from 'react'
 
 // ─── Global mocks ────────────────────────────────────────────────────────────
 vi.mock('next/link', () => ({
@@ -133,6 +135,22 @@ vi.mock('lucide-react', () => ({
   Square: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="square-icon" {...props} />,
 }))
 
+vi.mock('@/hooks/useNavigationPrefetch', () => ({
+  useProjectOverviewPrefetch: () => vi.fn(),
+  useWorkspaceOverviewPrefetch: () => vi.fn(),
+}))
+
+function createTestWrapper(children: React.ReactNode) {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  })
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+}
+
 // ─── Imports under test ──────────────────────────────────────────────────────
 import { WorkspaceGrid } from '@/components/Dashboard/Workspaces/Workspaces/WorkspaceGrid'
 
@@ -166,13 +184,13 @@ describe('WorkspaceGrid', () => {
       { ...mockWorkspace, id: 'ws-1', name: 'Workspace 1' },
       { ...mockWorkspace, id: 'ws-2', name: 'Workspace 2' },
     ]
-    render(<WorkspaceGrid workspaces={workspaces} />)
+    render(createTestWrapper(<WorkspaceGrid workspaces={workspaces} />))
     expect(screen.getByText('Workspace 1')).toBeInTheDocument()
     expect(screen.getByText('Workspace 2')).toBeInTheDocument()
   })
 
   it('renders empty grid for empty list', () => {
-    const { container } = render(<WorkspaceGrid workspaces={[]} />)
+    const { container } = render(createTestWrapper(<WorkspaceGrid workspaces={[]} />))
     const grid = container.querySelector('.grid')
     expect(grid).toBeInTheDocument()
     expect(grid?.children.length).toBe(0)
@@ -184,7 +202,7 @@ describe('WorkspaceGrid', () => {
       { ...mockWorkspace, id: 'ws-2', name: 'Two' },
       { ...mockWorkspace, id: 'ws-3', name: 'Three' },
     ]
-    render(<WorkspaceGrid workspaces={workspaces} />)
+    render(createTestWrapper(<WorkspaceGrid workspaces={workspaces} />))
     expect(screen.getByText('One')).toBeInTheDocument()
     expect(screen.getByText('Two')).toBeInTheDocument()
     expect(screen.getByText('Three')).toBeInTheDocument()

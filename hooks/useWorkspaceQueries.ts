@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
+import { QueryClient, useQuery, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { Workspace, WorkspaceMember, WorkspaceStats, WorkspaceOverview, WorkspaceStorageInfo } from "./useWorkspace";
 import { workspaceKeys } from "./workspaceKeys";
@@ -79,26 +79,37 @@ export function useWorkspace(workspaceSlugOrId: string) {
   });
 }
 
+/**
+ * Fetches the workspace overview payload and seeds the dependent caches
+ * (workspace detail, stats, members, projects list) exactly as the
+ * overview page expects them. Shared by `useWorkspaceOverview` and the
+ * hover-prefetcher so navigation warms every cache the layout reads.
+ */
+export async function fetchWorkspaceOverview(
+  qc: QueryClient,
+  slug: string
+): Promise<WorkspaceOverview> {
+  const res = await api.get<WorkspaceOverview>(`/api/v1/workspaces/${slug}/overview`, { showErrorToast: true });
+  const overview = res.data as WorkspaceOverview;
+
+  qc.setQueryData(workspaceKeys.detail(slug), overview.workspace);
+  qc.setQueryData(workspaceKeys.stats(overview.workspace.id), overview.stats);
+  qc.setQueryData(workspaceKeys.members(overview.workspace.id), overview.workspace.members);
+
+  const existingProjects = qc.getQueryData(projectKeys.list(overview.workspace.id));
+  if (!existingProjects) {
+    qc.setQueryData(projectKeys.list(overview.workspace.id), overview.projects);
+  }
+
+  return overview;
+}
+
 export function useWorkspaceOverview(slug: string) {
   const qc = useQueryClient();
 
   return useQuery({
     queryKey: [...workspaceKeys.detail(slug), "overview"] as const,
-    queryFn: async (): Promise<WorkspaceOverview> => {
-      const res = await api.get<WorkspaceOverview>(`/api/v1/workspaces/${slug}/overview`, { showErrorToast: true });
-      const overview = res.data as WorkspaceOverview;
-
-      qc.setQueryData(workspaceKeys.detail(slug), overview.workspace);
-      qc.setQueryData(workspaceKeys.stats(overview.workspace.id), overview.stats);
-      qc.setQueryData(workspaceKeys.members(overview.workspace.id), overview.workspace.members);
-
-      const existingProjects = qc.getQueryData(projectKeys.list(overview.workspace.id));
-      if (!existingProjects) {
-        qc.setQueryData(projectKeys.list(overview.workspace.id), overview.projects);
-      }
-
-      return overview;
-    },
+    queryFn: () => fetchWorkspaceOverview(qc, slug),
     staleTime: 0,
     gcTime: 5 * 60 * 1000,
     retry: 1,

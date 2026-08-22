@@ -1,12 +1,29 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import React from 'react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 vi.mock('next/link', () => ({
   default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
     <a href={href} {...props}>{children}</a>
   ),
 }))
+
+vi.mock('@/hooks/useNavigationPrefetch', () => ({
+  useProjectOverviewPrefetch: () => vi.fn(),
+  useWorkspaceOverviewPrefetch: () => vi.fn(),
+}))
+
+function createTestWrapper(children: React.ReactNode) {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  })
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+}
 
 // ─── WorkspaceList ───────────────────────────────────────────────────────────
 import { WorkspaceList } from '@/components/Dashboard/WorkspaceList'
@@ -26,39 +43,39 @@ const mockWorkspaces = [
 
 describe('WorkspaceList', () => {
   it('renders the heading', () => {
-    render(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />)
+    render(createTestWrapper(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />))
     expect(screen.getByText('Your workspaces')).toBeInTheDocument()
   })
 
   it('renders workspace names', () => {
-    render(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />)
+    render(createTestWrapper(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />))
     expect(screen.getByText('Test Workspace')).toBeInTheDocument()
     expect(screen.getByText('Second Workspace')).toBeInTheDocument()
   })
 
   it('renders project and member counts', () => {
-    const { container } = render(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />)
+    const { container } = render(createTestWrapper(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />))
     expect(container.textContent).toContain('3')
     expect(container.textContent).toContain('5')
   })
 
   it('renders owner badge for owner', () => {
-    render(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />)
+    render(createTestWrapper(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />))
     expect(screen.getAllByText('Owner').length).toBeGreaterThanOrEqual(1)
   })
 
   it('renders create new workspace link', () => {
-    render(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />)
+    render(createTestWrapper(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />))
     expect(screen.getByText('Create new workspace')).toBeInTheDocument()
   })
 
   it('renders view all link', () => {
-    render(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />)
+    render(createTestWrapper(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />))
     expect(screen.getByText('View all →')).toBeInTheDocument()
   })
 
   it('renders workspace logo initial', () => {
-    render(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />)
+    render(createTestWrapper(<WorkspaceList workspaces={mockWorkspaces as any as Record<string, unknown>} />))
     expect(screen.getAllByText('T').length).toBeGreaterThanOrEqual(1)
   })
 
@@ -68,7 +85,7 @@ describe('WorkspaceList', () => {
       logo: null, ownerId: 'u1', owner: { id: 'u1', name: 'Owner' },
       _count: { projects: 1, members: 1 },
     }))
-    render(<WorkspaceList workspaces={many as any as Record<string, unknown>} />)
+    render(createTestWrapper(<WorkspaceList workspaces={many as any as Record<string, unknown>} />))
     expect(screen.queryByText('WS 5')).not.toBeInTheDocument()
   })
 })
