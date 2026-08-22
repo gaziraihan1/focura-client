@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Link from 'next/link';
 import { Activity } from '@/hooks/useActivity';
 import {
@@ -23,7 +24,7 @@ interface ActivityItemProps {
   compact?: boolean;
 }
 
-export function ActivityItem({
+export const ActivityItem = memo(function ActivityItem({
   activity,
   // showWorkspace = true,
   compact = false,
@@ -243,4 +244,4 @@ export function ActivityItem({
       )}
     </div>
   );
-}
+});

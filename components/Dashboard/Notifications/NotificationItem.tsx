@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -19,7 +20,7 @@ interface NotificationItemProps {
   onDelete: () => void;
 }
 
-export function NotificationItem({
+export const NotificationItem = memo(function NotificationItem({
   notification,
   onClick,
   onDelete,
@@ -75,4 +76,4 @@ export function NotificationItem({
       </div>
     </div>
   );
-}
+});

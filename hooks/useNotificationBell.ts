@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useNotifications, ConnectionStatus } from "@/hooks/useNotifications";
 
@@ -9,11 +9,6 @@ interface Notification {
   read: boolean;
   actionUrl?: string | null;
   createdAt: string;
-}
-
-interface NotificationPreferences {
-  browserNotifications: boolean;
-  soundEnabled: boolean;
 }
 
 function getConnectionStatusLabel(status: ConnectionStatus): string {
@@ -61,33 +56,42 @@ export function useNotificationBell() {
     enableBrowserNotifications,
   } = useNotifications();
 
-  const recentNotifications = notifications.slice(0, 5);
+  const recentNotifications = useMemo(
+    () => notifications.slice(0, 5),
+    [notifications]
+  );
   const badge = unreadCount > 9 ? "9+" : unreadCount > 0 ? unreadCount : null;
 
-  const handleNotificationClick = (notification: Notification) => {
-    if (!notification.read) {
-      markAsRead(notification.id);
-    }
+  const handleNotificationClick = useCallback(
+    (notification: Notification) => {
+      if (!notification.read) {
+        markAsRead(notification.id);
+      }
 
-    setShowDropdown(false);
+      setShowDropdown(false);
 
-    if (notification.actionUrl) {
-      router.push(notification.actionUrl);
-    }
-  };
+      if (notification.actionUrl) {
+        router.push(notification.actionUrl);
+      }
+    },
+    [markAsRead, router]
+  );
 
-  const handleMarkAllAsRead = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    markAllAsRead();
-  };
+  const handleMarkAllAsRead = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      markAllAsRead();
+    },
+    [markAllAsRead]
+  );
 
-  const handleToggleDropdown = () => {
+  const handleToggleDropdown = useCallback(() => {
     setShowDropdown((prev) => !prev);
-  };
+  }, []);
 
-  const handleCloseDropdown = () => {
+  const handleCloseDropdown = useCallback(() => {
     setShowDropdown(false);
-  };
+  }, []);
 
   const isConnected = connectionStatus === "connected";
 

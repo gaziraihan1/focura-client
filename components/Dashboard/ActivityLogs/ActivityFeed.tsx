@@ -1,7 +1,15 @@
+import { useMemo } from 'react';
 import { useActivities } from '@/hooks/useActivity';
 import { ActivityItem } from './ActivityItem';
 import { ActivityFilters as Filters } from '@/hooks/useActivity';
 import { Loader2, AlertCircle, Clock } from 'lucide-react';
+
+const groupDateFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'UTC',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
 
 interface ActivityFeedProps {
   filters?: Filters;
@@ -18,13 +26,29 @@ export function ActivityFeed({
   limit = 50,
   emptyMessage = 'No activities yet',
 }: ActivityFeedProps) {
-  const mergedFilters = {
-    ...filters,
-    workspaceId: workspaceId || filters?.workspaceId,
-    limit,
-  };
+  const mergedFilters = useMemo(
+    () => ({
+      ...filters,
+      workspaceId: workspaceId || filters?.workspaceId,
+      limit,
+    }),
+    [filters, workspaceId, limit]
+  );
 
   const { data: activities, isLoading, error } = useActivities(mergedFilters);
+
+  // Group activities by date
+  const groupedActivities = useMemo(() => {
+    return (activities ?? []).reduce((acc, activity) => {
+      const date = groupDateFormatter.format(new Date(activity.createdAt));
+
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(activity);
+      return acc;
+    }, {} as Record<string, NonNullable<typeof activities>>);
+  }, [activities]);
 
   if (isLoading) {
     return (
@@ -55,22 +79,6 @@ export function ActivityFeed({
       </div>
     );
   }
-
-  // Group activities by date
-  const groupedActivities = activities.reduce((acc, activity) => {
-    const date = new Date(activity.createdAt).toLocaleDateString('en-US', {
-      timeZone: 'UTC',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-
-    if (!acc[date]) {
-      acc[date] = [];
-    }
-    acc[date].push(activity);
-    return acc;
-  }, {} as Record<string, typeof activities>);
 
   return (
     <div className="space-y-6">

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, memo } from "react";
 import { format, isPast } from 'date-fns';
 import { Task } from '@/hooks/useTask';
 import { AlertCircle } from 'lucide-react';
@@ -15,7 +15,7 @@ interface CalendarDayProps {
   onTaskClick: (task: Task) => void;
 }
 
-export function CalendarDay({
+export const CalendarDay = memo(function CalendarDay({
   date,
   tasks,
   density,
@@ -30,24 +30,16 @@ export function CalendarDay({
     return 'critical';
   }, [density]);
 
-  const { overdueTaskSet } = useMemo(() => {
-    const personal: Task[] = [];
-    const assigned: Task[] = [];
-    const overdue: Task[] = [];
+  const overdueTaskSet = useMemo(() => {
+    const overdue = new Set<Task>();
 
     tasks.forEach((task) => {
       if (task.dueDate && isPast(new Date(task.dueDate)) && task.status !== 'COMPLETED') {
-        overdue.push(task);
-      }
-
-      if (task.assignees.length === 0) {
-        personal.push(task);
-      } else {
-        assigned.push(task);
+        overdue.add(task);
       }
     });
 
-    return { personalTasks: personal, assignedTasks: assigned, overdueTaskSet: new Set(overdue) };
+    return overdue;
   }, [tasks]);
 
   const getBgColor = () => {
@@ -133,4 +125,4 @@ export function CalendarDay({
       )}
     </div>
   );
-}
+});

@@ -274,7 +274,6 @@ export function CommentItem({
         {hasReplies && !isReply && showReplies && (
           <motion.div
             key="replies"
-            layout
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}

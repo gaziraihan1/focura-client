@@ -1,18 +1,17 @@
+import { useMemo } from "react";
 import { Activity } from "@/hooks/useActivity";
 import { ActivityDateGroup } from "./ActivityDateGroup";
 
-interface ActivityListProps {
-  activities: Activity[];
-}
+const groupDateFormatter = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
 
-export function ActivityList({ activities }: ActivityListProps) {
-  const groupedActivities = activities.reduce(
+function groupByDay(activities: Activity[]): Record<string, Activity[]> {
+  return activities.reduce(
     (acc, activity) => {
-      const date = new Date(activity.createdAt).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
+      const date = groupDateFormatter.format(new Date(activity.createdAt));
 
       if (!acc[date]) {
         acc[date] = [];
@@ -22,6 +21,14 @@ export function ActivityList({ activities }: ActivityListProps) {
     },
     {} as Record<string, Activity[]>,
   );
+}
+
+interface ActivityListProps {
+  activities: Activity[];
+}
+
+export function ActivityList({ activities }: ActivityListProps) {
+  const groupedActivities = useMemo(() => groupByDay(activities), [activities]);
 
   return (
     <div className="space-y-8">

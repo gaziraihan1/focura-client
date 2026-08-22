@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { 
+import {
   eachDayOfInterval,
   format,
   isSameMonth,
@@ -10,6 +10,8 @@ import { Task } from '@/hooks/useTask';
 import { CalendarWeekView } from './CalendarWeekView';
 import { CalendarDayView } from './CalendarDayView';
 import { CalendarDay } from './CalendarDay';
+
+const NO_TASKS: Task[] = [];
 
 interface CalendarGridProps {
   currentDate: Date;
@@ -64,6 +66,23 @@ export function CalendarGrid({
     return density;
   }, [calendarDays, tasksByDate]);
 
+  // Precompute per-cell props once per data/navigation change so the
+  // memoized CalendarDay components receive referentially stable inputs.
+  const dayCells = useMemo(() => {
+    return calendarDays.map((day) => {
+      const dateKey = format(day, 'yyyy-MM-dd');
+      return {
+        key: dateKey,
+        date: day,
+        tasks: tasksByDate.get(dateKey) ?? NO_TASKS,
+        density: densityByDate.get(dateKey) ?? 0,
+        isCurrentMonth: isSameMonth(day, currentDate),
+        isToday: isToday(day),
+        isPast: isPast(day) && !isToday(day),
+      };
+    });
+  }, [calendarDays, tasksByDate, densityByDate, currentDate]);
+
   if (view === 'week') {
     return (
       <CalendarWeekView
@@ -109,24 +128,18 @@ export function CalendarGrid({
       </div>
 
       <div className="grid grid-cols-7 gap-px bg-border" style={{ height: 'calc(100% - 40px)' }}>
-        {calendarDays.map((day) => {
-          const dateKey = format(day, 'yyyy-MM-dd');
-          const dayTasks = tasksByDate.get(dateKey) || [];
-          const density = densityByDate.get(dateKey) || 0;
-
-          return (
-            <CalendarDay
-              key={dateKey}
-              date={day}
-              tasks={dayTasks}
-              density={density}
-              isCurrentMonth={isSameMonth(day, currentDate)}
-              isToday={isToday(day)}
-              isPast={isPast(day) && !isToday(day)}
-              onTaskClick={onTaskClick}
-            />
-          );
-        })}
+        {dayCells.map((cell) => (
+          <CalendarDay
+            key={cell.key}
+            date={cell.date}
+            tasks={cell.tasks}
+            density={cell.density}
+            isCurrentMonth={cell.isCurrentMonth}
+            isToday={cell.isToday}
+            isPast={cell.isPast}
+            onTaskClick={onTaskClick}
+          />
+        ))}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useSyncExternalStore } from "react";
+import { createContext, useCallback, useContext, useMemo, useSyncExternalStore } from "react";
 
 const MAIN_SIDEBAR_KEY = "focura.main-sidebar-collapsed";
 const PROJECT_SIDEBAR_KEY = "focura.project-sidebar-collapsed";
@@ -105,17 +105,27 @@ export function SidebarCollapseProvider({
     setProjectSidebarCollapsed(!readStoredValue(PROJECT_SIDEBAR_KEY));
   }, [setProjectSidebarCollapsed]);
 
+  const value = useMemo<SidebarCollapseContextValue>(
+    () => ({
+      isMainSidebarCollapsed,
+      toggleMainSidebar,
+      setMainSidebarCollapsed,
+      isProjectSidebarCollapsed,
+      toggleProjectSidebar,
+      setProjectSidebarCollapsed,
+    }),
+    [
+      isMainSidebarCollapsed,
+      isProjectSidebarCollapsed,
+      toggleMainSidebar,
+      setMainSidebarCollapsed,
+      toggleProjectSidebar,
+      setProjectSidebarCollapsed,
+    ]
+  );
+
   return (
-    <SidebarCollapseContext.Provider
-      value={{
-        isMainSidebarCollapsed,
-        toggleMainSidebar,
-        setMainSidebarCollapsed,
-        isProjectSidebarCollapsed,
-        toggleProjectSidebar,
-        setProjectSidebarCollapsed,
-      }}
-    >
+    <SidebarCollapseContext.Provider value={value}>
       {children}
     </SidebarCollapseContext.Provider>
   );

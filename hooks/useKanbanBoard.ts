@@ -95,13 +95,20 @@ export function useKanbanBoard({ tasks, sort, focusMode }: UseKanbanBoardProps) 
           break;
         }
 
-        case "aging":
-          sortedTasks.sort((a, b) => {
-            const aAge = differenceInDays(new Date(), parseISO(a.updatedAt));
-            const bAge = differenceInDays(new Date(), parseISO(b.updatedAt));
-            return bAge - aAge;
-          });
+        case "aging": {
+          // Decorate–sort: parse each date once (O(n)) instead of inside
+          // the comparator (O(n log n) Date allocations).
+          const now = new Date();
+          const decorated = sortedTasks.map((task) => ({
+            task,
+            age: differenceInDays(now, parseISO(task.updatedAt)),
+          }));
+          decorated.sort((a, b) => b.age - a.age);
+          for (let i = 0; i < decorated.length; i += 1) {
+            sortedTasks[i] = decorated[i].task;
+          }
           break;
+        }
 
         case "recent":
           sortedTasks.sort(
