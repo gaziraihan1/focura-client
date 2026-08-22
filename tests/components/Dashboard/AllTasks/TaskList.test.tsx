@@ -18,7 +18,6 @@ describe('TaskList', () => {
   const defaultProps = {
     tasks: [] as any[],
     focusedTaskId: null,
-    focusTimeRemaining: 0,
     isLoading: false,
     isError: false,
     searchQuery: '',

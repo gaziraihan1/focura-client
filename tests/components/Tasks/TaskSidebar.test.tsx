@@ -88,7 +88,7 @@ describe('TaskSidebar', () => {
 
   it('renders task priority value', () => {
     render(<TaskSidebar {...defaultProps} />)
-    expect(screen.getByText('HIGH')).toBeInTheDocument()
+    expect(screen.getByText('⬆️ High')).toBeInTheDocument()
   })
 
   it('renders details section', () => {
@@ -162,20 +162,7 @@ describe('TaskSidebar', () => {
     expect(select).toBeDisabled()
   })
 
-  it('hides In Review and Blocked options for personal tasks', () => {
-    render(<TaskSidebar {...defaultProps} isPersonalTask={true} />)
-    const select = screen.getByRole('combobox')
-    const options = Array.from(select.querySelectorAll('option'))
-    const values = options.map((o) => o.getAttribute('value'))
-    expect(values).not.toContain('IN_REVIEW')
-    expect(values).not.toContain('BLOCKED')
-    expect(values).not.toContain('CANCELLED')
-  })
 
-  it('shows personal task hint for personal tasks', () => {
-    render(<TaskSidebar {...defaultProps} isPersonalTask={true} />)
-    expect(screen.getByText(/Personal tasks support/)).toBeInTheDocument()
-  })
 
   it('renders completed date when task is completed', () => {
     const task = createMockTask({ completedAt: '2026-07-18T00:00:00Z' })

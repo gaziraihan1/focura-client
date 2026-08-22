@@ -1,9 +1,11 @@
+import { memo } from "react";
+
 interface KanbanInsightsButtonProps {
   showInsights: boolean;
   onToggle: () => void;
 }
 
-export function KanbanInsightsButton({
+export const KanbanInsightsButton = memo(function KanbanInsightsButton({
   showInsights,
   onToggle,
 }: KanbanInsightsButtonProps) {
@@ -17,4 +19,4 @@ export function KanbanInsightsButton({
       Show Insights
     </button>
   );
-}
+});

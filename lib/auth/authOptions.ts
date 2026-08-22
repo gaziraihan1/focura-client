@@ -1,3 +1,15 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Auth — NextAuth configuration
+//
+// Helper functions have been split into focused modules:
+//   - exchange.ts — HMAC proof + backend token exchange
+//   - refresh.ts  — Silent token refresh with dedup locks
+//   - bridge.ts   — Internal backend bridge (audit + lockout)
+//   - types.ts    — Shared type definitions
+//
+// This file re-exports everything for backward compatibility.
+// ─────────────────────────────────────────────────────────────────────────────
+
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -7,199 +19,21 @@ import * as argon2 from "argon2";
 import crypto from "crypto";
 import { verifySync as verifyTOTP } from "otplib";
 
+import { exchangeForTokens } from "./exchange";
+import { silentRefresh } from "./refresh";
+import { callInternal, recordLoginFailure } from "./bridge";
+import type { GoogleProfile } from "./types";
+
+// Re-export all helpers for backward compatibility
+export { createExchangeProof, exchangeForTokens } from "./exchange";
+export { silentRefresh } from "./refresh";
+export { callInternal, recordLoginFailure } from "./bridge";
+export type { TokenResponse, RefreshResult, FailedAttemptResult, GoogleProfile } from "./types";
+
 const isProd = process.env.NODE_ENV === "production";
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
 const DUMMY_HASH = "$argon2id$v=19$m=65536,t=3,p=4$c29tZXNhbHQ$ZHVtbXloYXNo";
 
-interface GoogleProfile {
-  email_verified?: boolean;
-  verified_email?: boolean;
-}
-type TokenResponse = {
-  accessToken: string;
-  refreshToken: string;
-  sseToken: string;
-  accessTokenExpiry: number;
-  refreshTokenExpiry: number;
-};
-
-// A refresh attempt either returns a new token pair or fails. On failure we
-// keep the server's error code so the jwt callback can tell a transient blip
-// (network, 5xx) apart from a genuinely dead session (TOKEN_REVOKED,
-// SESSION_TIMEOUT, replay, invalid) — only the latter must force-logout.
-type RefreshResult =
-  | { ok: true; tokens: TokenResponse }
-  | { ok: false; code?: string };
-
-const refreshLocks = new Map<string, Promise<RefreshResult>>();
-// ─── HMAC exchange proof ──────────────────────────────────────────────────────
-function createExchangeProof(
-  userId: string,
-  email: string,
-  role: string,
-  sessionId: string,
-) {
-  const timestamp = Date.now();
-  const payload = `${userId}${email}${role}${sessionId}${timestamp}`;
-  const signature = crypto
-    .createHmac("sha256", process.env.NEXTAUTH_SECRET!)
-    .update(payload)
-    .digest("hex");
-  return { timestamp, signature };
-}
-
-async function exchangeForTokens(
-  user: { id: string; email: string; role: string },
-  sessionId: string,
-): Promise<{
-  accessToken: string;
-  refreshToken: string;
-  sseToken: string;
-  accessTokenExpiry: number;
-  refreshTokenExpiry: number;
-} | null> {
-  try {
-    const { timestamp, signature } = createExchangeProof(
-      user.id,
-      user.email,
-      user.role,
-      sessionId,
-    );
-    const res = await fetch(`${BACKEND_URL}/api/v1/auth/exchange`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        userId: user.id,
-        email: user.email,
-        role: user.role,
-        sessionId,
-        timestamp,
-        signature,
-      }),
-    });
-    if (!res.ok) {
-      console.error("❌ Exchange failed:", res.status);
-      return null;
-    }
-    return res.json();
-  } catch (err) {
-    console.error("❌ Exchange network error:", err);
-    return null;
-  }
-}
-
-// ─── Internal backend bridge (login audit + account lockout) ────────────────
-// The credentials check lives in Next.js, but the Redis-backed account
-// lockout and the audit log live in the Express backend. These calls are
-// strictly best-effort: they must never block or break a login.
-export async function callInternal<T = Record<string, unknown>>(
-  path: string,
-  fields: Record<string, unknown>,
-): Promise<T | null> {
-  // Unit tests have no backend to talk to — skip the network call entirely.
-  if (process.env.NODE_ENV === "test") return null;
-  try {
-    const timestamp = Date.now();
-    // Same HMAC scheme as the /exchange proof: signed with NEXTAUTH_SECRET,
-    // the shared secret the backend already uses to verify exchange requests.
-    const signature = crypto
-      .createHmac("sha256", process.env.NEXTAUTH_SECRET!)
-      .update(JSON.stringify(fields))
-      .digest("hex");
-    const res = await fetch(`${BACKEND_URL}/api/v1/internal${path}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...fields, timestamp, signature }),
-      signal: AbortSignal.timeout(4000),
-    });
-    if (!res.ok) return null;
-    return (await res.json()) as T;
-  } catch {
-    return null; // never fail a login over an internal audit/lockout call
-  }
-}
-
-type FailedAttemptResult = {
-  success?: boolean;
-  locked?: boolean;
-  unlocksAt?: string;
-  attempts?: number;
-};
-
-/** Record a failed login with the backend and surface the lock status (if any). */
-async function recordLoginFailure(
-  email: string,
-): Promise<FailedAttemptResult | null> {
-  const result = await callInternal<FailedAttemptResult>("/failed-attempt", {
-    email,
-  });
-  void callInternal("/audit", {
-    event: "LOGIN_FAILED",
-    email,
-    reason: "Invalid credentials",
-    meta: { attempts: result?.attempts ?? 0 },
-  });
-  return result;
-}
-
-
-async function silentRefresh(
-  sessionId: string,
-  refreshToken: string,
-): Promise<RefreshResult> {
-  const existing = refreshLocks.get(sessionId);
-  if (existing) return existing.catch(() => ({ ok: false } as RefreshResult));
-
-  let resolve!: (value: RefreshResult) => void;
-
-  const promise = new Promise<RefreshResult>((res) => {
-    resolve = res;
-  });
-
-  refreshLocks.set(sessionId, promise);
-
-  try {
-    const res = await fetch(`${BACKEND_URL}/api/v1/auth/refresh`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken }),
-    });
-
-    if (res.ok) {
-      const tokens: TokenResponse = await res.json();
-      const result: RefreshResult = { ok: true, tokens };
-      resolve(result);
-      return result;
-    }
-
-    // Surface the server's rejection code (TOKEN_REVOKED, SESSION_TIMEOUT,
-    // TOKEN_REPLAY_DETECTED, INVALID_TOKEN, TOKEN_EXPIRED, …) so the jwt
-    // callback can distinguish a dead session from a transient blip.
-    let code: string | undefined;
-    try {
-      const body = (await res.json()) as { code?: string };
-      code = body?.code;
-    } catch {
-      // non-JSON error body — leave code undefined (treated as transient)
-    }
-    const result: RefreshResult = { ok: false, code };
-    resolve(result);
-    return result;
-  } catch {
-    // Network error / timeout — transient; never force-logout on this.
-    const result: RefreshResult = { ok: false };
-    resolve(result);
-    return result;
-  } finally {
-    refreshLocks.delete(sessionId);
-  }
-}
-
 export const authOptions: NextAuthOptions = {
-  // NOTE: The `Session` model was intentionally removed from the Prisma schema.
-  // With session strategy "jwt" the adapter's session methods (createSession,
-  // getSessionAndUser, ...) are never invoked, so removing the model is safe.
-  // Do NOT switch to a database-session strategy without restoring it first.
   adapter: PrismaAdapter(prisma),
 
   providers: [
@@ -245,11 +79,6 @@ export const authOptions: NextAuthOptions = {
           },
         });
         if (!user || !user.password) {
-          // Timing-safe dummy verify prevents user enumeration. Deliberately
-          // NOT counted against the lockout: recording failures for accounts
-          // that don't exist (or have no password) would let an attacker lock
-          // out a real account by spamming its email. IP-based rate limiting
-          // already covers unknown-account brute force.
           await argon2.verify(DUMMY_HASH, "invalid");
           throw new Error("Invalid credentials.");
         }
@@ -267,7 +96,6 @@ export const authOptions: NextAuthOptions = {
               1,
               Math.ceil((unlocksAt - Date.now()) / 60_000),
             );
-            // This attempt was blocked by an active lock — record it.
             void callInternal("/audit", {
               event: "LOGIN_BLOCKED",
               email,
@@ -281,13 +109,12 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid credentials.");
         }
 
-        // ─── 2FA enforcement ────────────────────────────────────────────
+        // 2FA enforcement
         if (user.twoFactorEnabled) {
           if (!credentials.totpCode) {
             throw new Error("2FA_REQUIRED");
           }
 
-          // Second step: verify the TOTP code
           if (!user.twoFactorSecret) {
             throw new Error("Two-factor authentication is not properly configured. Please contact support.");
           }
@@ -307,7 +134,6 @@ export const authOptions: NextAuthOptions = {
           data: { lastLoginAt: new Date() },
         });
 
-        // Login audit + lockout reset — best-effort, fire-and-forget.
         void callInternal("/clear-attempts", { email });
         void callInternal("/audit", {
           event: "LOGIN_SUCCESS",
@@ -342,17 +168,7 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async jwt({ token, user, account, trigger }) {
-      // ─── Google sign-in 2FA gate ───────────────────────────────────────
-      // Google accounts with twoFactorEnabled get a PENDING session (no
-      // backend tokens). The 2FA page verifies the TOTP code via the
-      // backend, which mints a short-lived single-use Redis marker; the
-      // explicit session update() below consumes the marker and completes
-      // the token exchange. While pending the session carries no
-      // credentials, so it can never reach protected API calls — the client
-      // routes the user to /authentication/2fa instead. The marker is
-      // consumed only on trigger === "update" (never by session polls), so
-      // polling cannot race the verification, and a stale marker can never
-      // auto-complete a later sign-in.
+      // Google sign-in 2FA gate
       if (token.twoFactorPending) {
         if (trigger === "update") {
           const check = await callInternal<{ verified?: boolean }>(
@@ -373,8 +189,6 @@ export const authOptions: NextAuthOptions = {
               token.sseToken = tokens.sseToken;
               console.log("✅ Exchange successful after 2FA verification");
             }
-            // Exchange failed → keep pending; the 2FA page detects the still-
-            // pending session and re-verifies (minting a fresh marker).
           }
         }
         return token;
@@ -386,9 +200,7 @@ export const authOptions: NextAuthOptions = {
         token.role = user.role ?? "USER";
         token.sessionId = sessionId;
 
-        // Google sign-in on an account with 2FA enabled → require the TOTP
-        // code before minting tokens (credentials sign-in already enforces
-        // TOTP inside authorize()).
+        // Google sign-in on an account with 2FA enabled
         if (account?.provider === "google") {
           const dbUser = await prisma.user.findUnique({
             where: { id: user.id },
@@ -425,108 +237,68 @@ export const authOptions: NextAuthOptions = {
         return token;
       }
 
-    // Subsequent requests: silently refresh when near expiry
-    const now = Date.now();
-    const nearExpiry =
-      !token.backendTokenExpiry ||
-      now > (token.backendTokenExpiry as number) - 60_000;
+    
+      // Subsequent requests: silently refresh when near expiry
+      const now = Date.now();
+      const nearExpiry =
+        !token.backendTokenExpiry ||
+        now > (token.backendTokenExpiry as number) - 60_000;
 
-    if (nearExpiry && token.refreshToken) {
-      // Throttle retry attempts: while the network is flaky we must not
-      // hammer /refresh on every session read. But throttle ONLY while the
-      // current access token still works — once it has truly expired, the
-      // 401-retry path depends on this refresh, so always attempt it.
-      const tokenStillValid =
-        !!token.backendTokenExpiry && now < (token.backendTokenExpiry as number);
-      const lastAttempt = (token.lastRefreshAttempt as number) ?? 0;
-      if (tokenStillValid && now - lastAttempt < 30_000) {
-        return token;
-      }
-      token.lastRefreshAttempt = now;
+      if (nearExpiry && token.refreshToken) {
+        const tokenStillValid =
+          !!token.backendTokenExpiry && now < (token.backendTokenExpiry as number);
+        const lastAttempt = (token.lastRefreshAttempt as number) ?? 0;
+        if (tokenStillValid && now - lastAttempt < 30_000) {
+          return token;
+        }
+        token.lastRefreshAttempt = now;
 
-      console.log("🔄 Attempting silent refresh...");
-      
-      const refresh = await silentRefresh(
-        token.sessionId as string,
-        token.refreshToken as string,
-      );
+        const refresh = await silentRefresh(
+          token.sessionId as string,
+          token.refreshToken as string,
+        );
 
-      if (refresh.ok) {
-        token.backendToken = refresh.tokens.accessToken;
-        token.backendTokenExpiry = refresh.tokens.accessTokenExpiry;
-        token.refreshToken = refresh.tokens.refreshToken;
-        token.refreshTokenExpiry = refresh.tokens.refreshTokenExpiry;
-        token.sseToken = refresh.tokens.sseToken;
-        console.log("✅ Silent refresh successful");
-      } else {
-        const refreshExpired =
-          !token.refreshTokenExpiry ||
-          Date.now() > (token.refreshTokenExpiry as number);
-
-        // Server explicitly rejected this session as dead — the session was
-        // revoked, timed out, or the refresh token is invalid/replayed. These
-        // are NOT transient: retrying will keep failing, so mark the session
-        // expired so lib/axios forceLogouts instead of leaving a zombie that
-        // silently 401s on every request.
-        const serverRejected =
-          !!refresh.code &&
-          ["TOKEN_REVOKED", "SESSION_TIMEOUT", "TOKEN_REPLAY_DETECTED", "INVALID_TOKEN", "TOKEN_EXPIRED"].includes(
-            refresh.code,
-          );
-
-        if (refreshExpired || serverRejected) {
-          // Never throw from a NextAuth callback: an uncaught error makes
-          // /api/auth/session return Next's HTML 500 page instead of JSON,
-          // which breaks useSession() with CLIENT_FETCH_ERROR
-          // ("Unexpected token '<', <!DOCTYPE..."). Instead mark the token
-          // as expired and clear backend credentials so the session callback
-          // surfaces `error` and DashboardShell forces a graceful logout.
-          console.error(
-            refreshExpired
-              ? "❌ Refresh token expired - marking session expired"
-              : `❌ Session rejected by server (${refresh.code}) - marking session expired`,
-          );
-          token.error = "SESSION_EXPIRED";
-          token.backendToken = "";
-          token.backendTokenExpiry = 0;
-          token.refreshToken = "";
-          token.refreshTokenExpiry = 0;
-          token.sseToken = "";
+        if (refresh.ok) {
+          token.backendToken = refresh.tokens.accessToken;
+          token.backendTokenExpiry = refresh.tokens.accessTokenExpiry;
+          token.refreshToken = refresh.tokens.refreshToken;
+          token.refreshTokenExpiry = refresh.tokens.refreshTokenExpiry;
+          token.sseToken = refresh.tokens.sseToken;
         } else {
-          // Refresh failed but the session is still valid (network hiccup, 5xx,
-          // or a non-terminal code). KEEP the current tokens — zeroing them here
-          // degrades the session to empty and the next API call force-logs-out
-          // the user on a transient blip. The old access token stays valid until
-          // it truly expires; lib/axios's 401-retry path then re-attempts this
-          // refresh (throttled above).
-          console.warn("⚠️ Silent refresh failed (transient) - keeping current token");
+          const refreshExpired =
+            !token.refreshTokenExpiry ||
+            Date.now() > (token.refreshTokenExpiry as number);
+
+          const serverRejected =
+            !!refresh.code &&
+            ["TOKEN_REVOKED", "SESSION_TIMEOUT", "TOKEN_REPLAY_DETECTED", "INVALID_TOKEN", "TOKEN_EXPIRED"].includes(
+              refresh.code,
+            );
+
+          if (refreshExpired || serverRejected) {
+            token.error = "SESSION_EXPIRED";
+            token.backendToken = "";
+            token.backendTokenExpiry = 0;
+            token.refreshToken = "";
+            token.refreshTokenExpiry = 0;
+            token.sseToken = "";
+          }
         }
       }
-    }
 
-    return token;
-  },
+      return token;
+    },
 
-  async session({ session, token }) {
-    session.user.id = token.id as string;
-    session.user.role = token.role as string;
-    // Pending-2FA sessions carry no backend credentials.
-    session.backendToken = token.twoFactorPending ? "" : (token.backendToken as string);
-    session.sseToken = token.sseToken as string;
-    session.sessionId = token.sessionId as string;
-    session.error = token.error as string | undefined;
-    session.twoFactorPending = token.twoFactorPending === true;
-    
-    // Log session state for debugging
-    if (process.env.NODE_ENV === "development") {
-      console.log("📋 Session callback:", {
-        hasBackendToken: !!session.backendToken,
-        tokenLength: session.backendToken?.length || 0,
-      });
-    }
-    
-    return session;
-  },
+    async session({ session, token }) {
+      session.user.id = token.id as string;
+      session.user.role = token.role as string;
+      session.backendToken = token.twoFactorPending ? "" : (token.backendToken as string);
+      session.sseToken = token.sseToken as string;
+      session.sessionId = token.sessionId as string;
+      session.error = token.error as string | undefined;
+      session.twoFactorPending = token.twoFactorPending === true;
+      return session;
+    },
 
     async signIn({ user, account, profile }) {
       if (account?.provider === "google") {
@@ -539,15 +311,9 @@ export const authOptions: NextAuthOptions = {
           });
 
           if (existing) {
-            // ─── Account-takeover guard ────────────────────────────────
-            // An UNVERIFIED Google email must never be able to assume
-            // control of an existing password-based account. Note: we return
-            // false (deny) rather than throwing — the catch below swallows
-            // errors and returns true, which would silently allow the link.
             if (!isVerified && existing.password) {
               return false;
             }
-            // Existing user — safe to update
             await prisma.user.update({
               where: { email: user.email! },
               data: {
@@ -560,11 +326,7 @@ export const authOptions: NextAuthOptions = {
               },
             });
           }
-          // ↑ New users: adapter creates them; emailVerified is handled
-          //   by the `linkAccount` event which already fires for Google.
-          //   No else branch needed — the broken update() is removed.
 
-          // Best-effort login audit + lockout reset for OAuth sign-ins.
           void callInternal("/clear-attempts", { email: user.email! });
           void callInternal("/audit", {
             event: "LOGIN_SUCCESS",

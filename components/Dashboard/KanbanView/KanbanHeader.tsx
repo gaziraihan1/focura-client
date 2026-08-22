@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Target, Zap, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { KanbanScope } from '@/hooks/useKanbanPage';
@@ -14,7 +15,7 @@ interface KanbanHeaderProps {
   onFocusModeChange: (enabled: boolean) => void;
 }
 
-export function KanbanHeader({
+export const KanbanHeader = memo(function KanbanHeader({
   scope,
   onScopeChange,
   taskCounts,
@@ -89,4 +90,4 @@ export function KanbanHeader({
       </div>
     </header>
   );
-}
+});

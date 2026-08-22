@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import { KanbanHeader } from "@/components/Dashboard/KanbanView/KanbanHeader";
 import { ExecutionControlBar } from "@/components/Dashboard/KanbanView/ExecutionControlBar";
 import { KanbanBoard } from "@/components/Dashboard/KanbanView/KanbanBoard";
@@ -28,6 +29,10 @@ export function KanbanPageContent() {
     taskCounts,
     isLoading,
   } = useKanbanPage();
+
+  const handleOpenInsights = useCallback(() => setShowInsights(true), [setShowInsights]);
+  const handleCloseInsights = useCallback(() => setShowInsights(false), [setShowInsights]);
+  const handleCloseTask = useCallback(() => setSelectedTask(null), [setSelectedTask]);
 
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden">
@@ -63,19 +68,19 @@ export function KanbanPageContent() {
       {showInsights && (
         <InsightFooter
           tasks={displayTasks}
-          onClose={() => setShowInsights(false)}
+          onClose={handleCloseInsights}
         />
       )}
 
       <KanbanInsightsButton
         showInsights={showInsights}
-        onToggle={() => setShowInsights(true)}
+        onToggle={handleOpenInsights}
       />
 
       {selectedTask && (
         <TaskDetailsModal
           task={selectedTask}
-          onClose={() => setSelectedTask(null)}
+          onClose={handleCloseTask}
         />
       )}
     </div>

@@ -7,7 +7,6 @@ import { Task } from "@/hooks/useTask";
 interface TaskListProps {
   tasks: Task[];
   focusedTaskId?: string | null;
-  focusTimeRemaining?: number;
   isLoading: boolean;
   isError: boolean;
   searchQuery: string;
@@ -17,7 +16,6 @@ interface TaskListProps {
 export function TaskList({
   tasks,
   focusedTaskId,
-  focusTimeRemaining = 0,
   isLoading,
   isError,
   searchQuery,
@@ -71,10 +69,7 @@ export function TaskList({
     <div className="space-y-3">
       {/* Focused Task - Always shown first */}
       {focusedTask && (
-        <FocusTaskCard 
-          task={focusedTask} 
-          timeRemaining={focusTimeRemaining}
-        />
+        <FocusTaskCard task={focusedTask} />
       )}
 
       {/* Regular Tasks */}

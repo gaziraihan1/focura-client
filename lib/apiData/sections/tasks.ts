@@ -1,0 +1,170 @@
+import { FULL_BASE, type ApiSection } from '../types';
+
+export const tasksSection: ApiSection = {
+  id         : 'tasks',
+  title      : 'Tasks',
+  description: 'Full CRUD for tasks, subtasks, dependencies, assignments, and time entries. Tasks are the core entity in Focura.',
+  endpoints  : [
+    {
+      id         : 'tasks-list',
+      method     : 'GET',
+      path       : '/api/v1/tasks',
+      summary    : 'List tasks',
+      description: 'Returns tasks with rich filtering. All filter parameters are combinable (AND logic).',
+      auth       : 'auth',
+      queryParams: [
+        { name: 'workspaceId',   type: 'string',  required: false, description: 'Filter by workspace' },
+        { name: 'projectId',     type: 'string',  required: false, description: 'Filter by project' },
+        { name: 'status',        type: 'string',  required: false, description: 'TODO | IN_PROGRESS | IN_REVIEW | BLOCKED | COMPLETED | CANCELLED' },
+        { name: 'priority',      type: 'string',  required: false, description: 'URGENT | HIGH | MEDIUM | LOW' },
+        { name: 'assigneeId',    type: 'string',  required: false, description: 'Filter by assigned user cuid' },
+        { name: 'focusRequired', type: 'boolean', required: false, description: 'Only return focus-flagged tasks' },
+        { name: 'dueDate',       type: 'string',  required: false, description: 'ISO date — tasks due on this date' },
+        { name: 'overdue',       type: 'boolean', required: false, description: 'Return only overdue tasks' },
+        { name: 'search',        type: 'string',  required: false, description: 'Full-text search on title and description' },
+        { name: 'page',          type: 'number',  required: false, description: 'Default: 1' },
+        { name: 'limit',         type: 'number',  required: false, description: 'Default: 20, max: 100' },
+      ],
+      responses  : [
+        { status: 200, description: 'Paginated task list with metadata', shape: [
+          { name: 'data.tasks[].id',       type: 'string', description: 'Task cuid' },
+          { name: 'data.tasks[].title',    type: 'string', description: 'Task title' },
+          { name: 'data.tasks[].status',   type: 'string', description: 'Current status' },
+          { name: 'data.tasks[].priority', type: 'string', description: 'Priority level' },
+          { name: 'data.tasks[].assignees',type: 'array',  description: 'Assigned user objects' },
+          { name: 'data.tasks[].dueDate',  type: 'string?', description: 'ISO 8601 due date' },
+          { name: 'data.pagination',       type: 'object', description: 'page, limit, total, totalPages' },
+        ]},
+      ],
+      examples: [
+        { label: 'cURL', code: `curl "${FULL_BASE}/v1/tasks?projectId=cm_proj_xyz&status=IN_PROGRESS&priority=HIGH" \\\n  -H "Authorization: Bearer <token>"` },
+        { label: 'Axios', code: `const { data } = await axios.get('/api/v1/tasks', {\n  params: { projectId, status: 'IN_PROGRESS', overdue: true },\n  headers: { Authorization: \`Bearer \${token}\` },\n});` },
+      ],
+      tags: ['tasks'],
+    },
+    {
+      id         : 'tasks-create',
+      method     : 'POST',
+      path       : '/api/v1/tasks',
+      summary    : 'Create a task',
+      description: 'Creates a new task. Triggers real-time notifications to assignees via SSE.',
+      auth       : 'auth',
+      bodyFields : [
+        { name: 'title',          type: 'string',   required: true,  description: 'Task title' },
+        { name: 'workspaceId',    type: 'string',   required: true,  description: 'Parent workspace cuid' },
+        { name: 'projectId',      type: 'string',   required: false, description: 'Parent project cuid' },
+        { name: 'description',    type: 'string',   required: false, description: 'Markdown-supported description' },
+        { name: 'status',         type: 'string',   required: false, description: 'Default: TODO' },
+        { name: 'priority',       type: 'string',   required: false, description: 'Default: MEDIUM' },
+        { name: 'assigneeIds',    type: 'string[]', required: false, description: 'Array of user cuids to assign' },
+        { name: 'labelIds',       type: 'string[]', required: false, description: 'Array of label cuids' },
+        { name: 'dueDate',        type: 'string',   required: false, description: 'ISO 8601 datetime' },
+        { name: 'startDate',      type: 'string',   required: false, description: 'ISO 8601 datetime' },
+        { name: 'estimatedHours', type: 'number',   required: false, description: 'Estimated hours to complete' },
+        { name: 'focusRequired',  type: 'boolean',  required: false, description: 'Flag as requiring focused work' },
+        { name: 'focusLevel',     type: 'number',   required: false, description: '1–5 focus intensity' },
+        { name: 'energyType',     type: 'string',   required: false, description: 'LOW | MEDIUM | HIGH' },
+        { name: 'parentId',       type: 'string',   required: false, description: 'Parent task cuid (creates subtask)' },
+      ],
+      responses  : [
+        { status: 201, description: 'Task created', shape: [
+          { name: 'data.id',     type: 'string', description: 'New task cuid' },
+          { name: 'data.title',  type: 'string', description: 'Task title' },
+          { name: 'data.status', type: 'string', description: 'Initial status' },
+        ]},
+        { status: 403, description: 'Not a project member' },
+      ],
+      examples: [
+        { label: 'Axios', code: `const { data } = await axios.post('/api/v1/tasks', {\n  title       : 'Implement dark mode',\n  workspaceId : 'cm_ws_abc123',\n  projectId   : 'cm_proj_xyz',\n  priority    : 'HIGH',\n  assigneeIds : ['cm_user_123'],\n  dueDate     : '2026-05-01T00:00:00.000Z',\n  focusRequired: true,\n}, { headers: { Authorization: \`Bearer \${token}\` } });` },
+      ],
+      tags: ['tasks'],
+    },
+    {
+      id         : 'tasks-get',
+      method     : 'GET',
+      path       : '/api/v1/tasks/:id',
+      summary    : 'Get task by ID',
+      description: 'Returns the full task object including subtasks, assignees, labels, time entries, dependencies, and comment count.',
+      auth       : 'auth',
+      pathParams : [
+        { name: 'id', type: 'string', required: true, description: 'Task cuid' },
+      ],
+      responses  : [
+        { status: 200, description: 'Full task object with relations' },
+        { status: 404, description: 'Task not found' },
+      ],
+      examples: [
+        { label: 'cURL', code: `curl ${FULL_BASE}/tasks/cm_task_abc \\\n  -H "Authorization: Bearer <token>"` },
+      ],
+      tags: ['tasks'],
+    },
+    {
+      id         : 'tasks-update',
+      method     : 'PUT',
+      path       : '/api/v1/  tasks/:id',
+      summary    : 'Update task',
+      description: 'Full update of a task. All body fields are optional — send only what changes. Triggers SSE notification to assignees on significant changes.',
+      auth       : 'auth',
+      pathParams : [
+        { name: 'id', type: 'string', required: true, description: 'Task cuid' },
+      ],
+      bodyFields : [
+        { name: 'title',          type: 'string',   required: false, description: 'New title' },
+        { name: 'description',    type: 'string',   required: false, description: 'New description' },
+        { name: 'status',         type: 'string',   required: false, description: 'New status' },
+        { name: 'priority',       type: 'string',   required: false, description: 'New priority' },
+        { name: 'assigneeIds',    type: 'string[]', required: false, description: 'Replace full assignee list' },
+        { name: 'dueDate',        type: 'string',   required: false, description: 'New due date' },
+        { name: 'estimatedHours', type: 'number',   required: false, description: 'Updated estimate' },
+      ],
+      responses  : [
+        { status: 200, description: 'Updated task object' },
+        { status: 403, description: 'Not a project member or insufficient role' },
+      ],
+      examples: [
+        { label: 'cURL', code: `curl -X PUT ${FULL_BASE}/tasks/cm_task_abc \\\n  -H "Authorization: Bearer <token>" \\\n  -H "Content-Type: application/json" \\\n  -d '{"status":"COMPLETED","priority":"HIGH"}'` },
+      ],
+      tags: ['tasks'],
+    },
+    {
+      id         : 'tasks-update-status',
+      method     : 'PATCH',
+      path       : '/api/v1/tasks/:id/status',
+      summary    : 'Update task status only',
+      description: 'Lightweight status-only update. Used by Kanban drag-and-drop and quick-status toggles.',
+      auth       : 'auth',
+      pathParams : [
+        { name: 'id', type: 'string', required: true, description: 'Task cuid' },
+      ],
+      bodyFields : [
+        { name: 'status', type: 'string', required: true, description: 'TODO | IN_PROGRESS | IN_REVIEW | BLOCKED | COMPLETED | CANCELLED' },
+      ],
+      responses  : [
+        { status: 200, description: 'Status updated' },
+      ],
+      examples: [
+        { label: 'Axios', code: `await axios.patch(\`/api/v1/tasks/\${taskId}/status\`,\n  { status: 'IN_PROGRESS' },\n  { headers: { Authorization: \`Bearer \${token}\` } }\n);` },
+      ],
+      tags: ['tasks'],
+    },
+    {
+      id         : 'tasks-delete',
+      method     : 'DELETE',
+      path       : '/api/v1/tasks/:id',
+      summary    : 'Delete task',
+      description: 'Permanently deletes a task, its subtasks, comments, attachments, and time entries.',
+      auth       : 'auth',
+      pathParams : [
+        { name: 'id', type: 'string', required: true, description: 'Task cuid' },
+      ],
+      responses  : [
+        { status: 200, description: 'Task deleted' },
+        { status: 403, description: 'Not authorised' },
+      ],
+      examples: [
+        { label: 'cURL', code: `curl -X DELETE ${FULL_BASE}/tasks/cm_task_abc \\\n  -H "Authorization: Bearer <token>"` },
+      ],
+      tags: ['tasks'],
+    },
+  ],
+};

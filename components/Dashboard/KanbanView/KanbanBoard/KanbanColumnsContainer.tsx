@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Task } from "@/hooks/useTask";
 import { ColumnConfig } from "@/hooks/useKanbanBoard";
 import { KanbanColumn } from "../KanbanColumn";
@@ -17,7 +18,7 @@ interface KanbanColumnsContainerProps {
   onTaskClick: (task: Task) => void;
 }
 
-export function KanbanColumnsContainer({
+export const KanbanColumnsContainer = memo(function KanbanColumnsContainer({
   visibleColumns,
   sortedTasksByColumn,
   columnStats,
@@ -51,4 +52,4 @@ export function KanbanColumnsContainer({
       </div>
     </div>
   );
-}
+});

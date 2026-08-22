@@ -1,8 +1,9 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTasks, useTaskStats, TaskFilters, TaskSort, usePersonalQuota, useTask } from "@/hooks/useTask";
 import { useUserProfile } from "./useUser";
 import { useFocusSession } from "./useFocusSession";
+import { syncFocusTimer } from "./useFocusTimeRemaining";
 
 export const DEFAULT_PAGE_SIZE = 10;
 
@@ -60,34 +61,9 @@ export function useTasksPage() {
   const handleCreateTask = () => { router.push("/dashboard/tasks/add-task"); };
 
   const { activeSession, completeSession } = useFocusSession();
-  const autoCompletedRef = useRef(false);
-
-  useEffect(() => { autoCompletedRef.current = false; }, [activeSession?.id]);
-
-  const calculateTimeRemaining = () => {
-    if (!activeSession || !activeSession.taskId) return 0;
-    const startTime = new Date(activeSession.startedAt).getTime();
-    const elapsed = Math.floor((Date.now() - startTime) / 1000);
-    return Math.max(0, activeSession.duration * 60 - elapsed);
-  };
-
-  const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining);
 
   useEffect(() => {
-    if (!activeSession || !activeSession.taskId) return;
-    const updateTimer = () => {
-      const startTime = new Date(activeSession.startedAt).getTime();
-      const elapsed = Math.floor((Date.now() - startTime) / 1000);
-      const remaining = Math.max(0, activeSession.duration * 60 - elapsed);
-      setTimeRemaining(remaining);
-      if (remaining === 0 && !activeSession.completed && !autoCompletedRef.current) {
-        autoCompletedRef.current = true;
-        completeSession();
-      }
-    };
-    updateTimer();
-    const interval = setInterval(updateTimer, 1000);
-    return () => clearInterval(interval);
+    syncFocusTimer(activeSession, completeSession);
   }, [activeSession, completeSession]);
 
   const { data: focusedTask = null } = useTask(activeSession?.taskId as string);
@@ -96,7 +72,7 @@ export function useTasksPage() {
     activeTab, searchQuery, selectedStatus, selectedPriority, currentPage, pageSize, sortBy, sortOrder,
     stats, tasks, pagination, isLoading, isError, handleTabChange, handleSearchChange, handleStatusChange,
     handlePriorityChange, handleSortChange, handlePageChange, handleCreateTask, tasksResponse, focusedTask,
-    timeRemaining, activeSession, completeSession, qouta, focusRequired, setFocusRequired: handleFocusRequiredChange,
+    activeSession, completeSession, qouta, focusRequired, setFocusRequired: handleFocusRequiredChange,
   };
 }
 

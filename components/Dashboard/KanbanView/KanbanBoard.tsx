@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Task } from "@/hooks/useTask";
 import { KanbanSort } from "@/hooks/useKanbanPage";
 import { MobileColumnNavigator } from "./KanbanBoard/MobileColumnNavigator";
@@ -14,7 +15,7 @@ interface KanbanBoardProps {
   isLoading: boolean;
 }
 
-export function KanbanBoard({
+export const KanbanBoard = memo(function KanbanBoard({
   tasks,
   sort,
   enforceWIP,
@@ -48,4 +49,4 @@ export function KanbanBoard({
       />
     </div>
   );
-}
+});

@@ -30,7 +30,7 @@ export function TasksPageContent() {
     activeTab, searchQuery, selectedStatus, selectedPriority, currentPage, pageSize,
     sortBy, sortOrder, stats, tasks, pagination, isLoading, isError,
     handleTabChange, handleStatusChange, handlePriorityChange, handleSearchChange,
-    handleSortChange, handlePageChange, handleCreateTask, focusedTask, timeRemaining,
+    handleSortChange, handlePageChange, handleCreateTask, focusedTask,
     activeSession, completeSession, qouta, focusRequired, setFocusRequired,
   } = useTasksPage();
 
@@ -39,7 +39,7 @@ export function TasksPageContent() {
       <TasksPageHeader onCreateTask={handleCreateTask} />
       <TaskQoutaDetails qouta={qouta} />
       {focusedTask && activeSession && (
-        <FocusModeBanner task={focusedTask} timeRemaining={timeRemaining} onEndFocus={completeSession} sessionDuration={activeSession.duration} />
+        <FocusModeBanner task={focusedTask} onEndFocus={completeSession} sessionDuration={activeSession.duration} />
       )}
 
       {stats && <TaskStatsCards stats={stats} activeTab={activeTab} />}
@@ -54,7 +54,7 @@ export function TasksPageContent() {
       />
 
       <TasksContent
-        tasks={tasks} focusedTaskId={activeSession?.taskId} focusTimeRemaining={timeRemaining}
+        tasks={tasks} focusedTaskId={activeSession?.taskId}
         isLoading={isLoading} isError={isError} searchQuery={searchQuery}
         currentPage={currentPage} totalPages={pagination?.totalPages || 0}
         totalItems={pagination?.totalCount || 0} itemsPerPage={pageSize}

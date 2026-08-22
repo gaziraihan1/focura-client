@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { KanbanFilters, KanbanSort, useExecutionControlBar } from "@/hooks/useKanbanPage";
 import { FocusModeBar } from "./ExecutionControlBar/FocusModeBar";
 import { ControlBarActions } from "./ExecutionControlBar/ControlBarActions";
@@ -14,7 +15,7 @@ interface ExecutionControlBarProps {
   focusMode: boolean;
 }
 
-export function ExecutionControlBar({
+export const ExecutionControlBar = memo(function ExecutionControlBar({
   filters,
   onFiltersChange,
   sort,
@@ -63,4 +64,4 @@ export function ExecutionControlBar({
       )}
     </div>
   );
-}
+});

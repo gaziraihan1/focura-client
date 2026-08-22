@@ -1,6 +1,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Focura API — Complete Endpoint Registry
-// Re-exports from lib/apiData/index for backward compatibility.
+// Auth — Barrel export
 // ─────────────────────────────────────────────────────────────────────────────
 
-export * from './apiData/index';
+export { createExchangeProof, exchangeForTokens } from './exchange';
+export { silentRefresh } from './refresh';
+export { callInternal, recordLoginFailure } from './bridge';
+export type { TokenResponse, RefreshResult, FailedAttemptResult, GoogleProfile } from './types';

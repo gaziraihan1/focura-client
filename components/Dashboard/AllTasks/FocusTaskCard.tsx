@@ -8,8 +8,11 @@ import { TaskHeader } from "./FocusTaskCard/TaskHeader";
 import { TaskProgressBar } from "./FocusTaskCard/TaskProgressBar";
 import { TaskMetadata } from "./FocusTaskCard/TaskMetadata";
 import { FocusTaskCardProps } from "@/types/focusTask.types";
+import { useFocusTimeRemaining } from "@/hooks/useFocusTimeRemaining";
 
-export function FocusTaskCard({ task, timeRemaining }: FocusTaskCardProps) {
+export function FocusTaskCard({ task, timeRemaining: timeRemainingProp }: FocusTaskCardProps) {
+  const liveTimeRemaining = useFocusTimeRemaining();
+  const timeRemaining = timeRemainingProp ?? liveTimeRemaining;
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}

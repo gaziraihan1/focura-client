@@ -6,10 +6,12 @@ import { Zap, X, Clock, Target } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Avatar } from "@/components/Shared/Avatar";
 import { Task } from "@/hooks/useTask";
+import { useFocusTimeRemaining } from "@/hooks/useFocusTimeRemaining";
 
 interface FocusModeBannerProps {
   task: Task;
-  timeRemaining: number; // seconds
+  /** Omit to subscribe to the shared focus countdown */
+  timeRemaining?: number; // seconds
   onEndFocus: () => void;
   sessionDuration?: number; // minutes
   workspaceSlug?: string;
@@ -23,12 +25,14 @@ function formatTime(seconds: number): string {
 
 export function FocusModeBanner({
   task,
-  timeRemaining,
+  timeRemaining: timeRemainingProp,
   onEndFocus,
   sessionDuration = 25,
   workspaceSlug,
 }: FocusModeBannerProps) {
   const router = useRouter();
+  const liveTimeRemaining = useFocusTimeRemaining();
+  const timeRemaining = timeRemainingProp ?? liveTimeRemaining;
 
   const getProgress = (): number => {
     const totalSeconds = Math.max(1, sessionDuration * 60);

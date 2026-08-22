@@ -6,7 +6,6 @@ import { Task } from "@/hooks/useTask";
 interface TasksContentProps {
   tasks: Task[];
   focusedTaskId?: string | null;
-  focusTimeRemaining?: number;
   isLoading: boolean;
   isError: boolean;
   searchQuery: string;
@@ -21,7 +20,6 @@ interface TasksContentProps {
 export function TasksContent({
   tasks,
   focusedTaskId,
-  focusTimeRemaining,
   isLoading,
   isError,
   searchQuery,
@@ -37,7 +35,6 @@ export function TasksContent({
       <TaskList
         tasks={tasks}
         focusedTaskId={focusedTaskId}
-        focusTimeRemaining={focusTimeRemaining}
         isLoading={isLoading}
         isError={isError}
         searchQuery={searchQuery}
