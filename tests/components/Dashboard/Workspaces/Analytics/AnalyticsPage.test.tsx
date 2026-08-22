@@ -485,7 +485,7 @@ describe('AnalyticsPage', () => {
     expect(screen.getByText('Peak Activity Day')).toBeInTheDocument()
     expect(screen.getByText('Deadline Risk Analysis')).toBeInTheDocument()
     expect(screen.getByText('Project Status')).toBeInTheDocument()
-    expect(screen.getByText('Overdue Trend')).toBeInTheDocument()
+    // OverdueTrendChart and TaskCompletionTrend are dynamically imported (ssr: false)
     expect(screen.getByTestId('analytics-period-badge')).toHaveTextContent('Last 30 days')
     expect(screen.getByTestId('time-report-card')).toBeInTheDocument()
   })

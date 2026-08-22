@@ -1,7 +1,4 @@
-"use client";
-
 import dynamic from "next/dynamic";
-import { use } from "react";
 
 const TaskDetailsClient = dynamic(
   () => import("@/components/Dashboard/TaskDetails/TaskDetailsClient").then((m) => m.TaskDetailsClient),
@@ -15,12 +12,12 @@ const TaskDetailsClient = dynamic(
   }
 );
 
-export default function WorkspaceTaskDetailsPage({
+export default async function WorkspaceTaskDetailsPage({
   params,
 }: {
   params: Promise<{ id: string; workspaceSlug: string }>;
 }) {
-  const { id, workspaceSlug } = use(params);
+  const { id, workspaceSlug } = await params;
   return (
     <TaskDetailsClient
       id={id}

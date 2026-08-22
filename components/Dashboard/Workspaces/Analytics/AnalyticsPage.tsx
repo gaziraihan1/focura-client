@@ -1,9 +1,9 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { BarChart3, Loader2, AlertTriangle, CalendarRange } from 'lucide-react';
 import { KPICards } from './KPICards';
 import { TaskStatusChart } from './TaskStatusChart';
-import { TaskCompletionTrend } from './TaskCompletionTrend';
 import { MemberLeaderboard } from './MemberLeaderboard';
 import { DeadlineRiskPanel } from './DeadlineRiskPanel';
 import { ProjectHealthCards } from './ProjectHealthCards';
@@ -14,10 +14,18 @@ import { TimeSummaryCard } from './TimeSummaryCard';
 import { TimeReportCard } from './TimeReportCard';
 import { PriorityDistribution } from './PriorityDistribution';
 import { ProjectStatusChart } from './ProjectStatusChart';
-import { OverdueTrendChart } from './OverdueTrendChart';
 import { useAnalyticsPage } from '@/hooks/useAnalyticsPage';
 import LoadingAnalytics from './LoadingAnalytics';
 import { UpgradeSectionCard } from '@/components/Shared/UpgradeSectionCard';
+
+const TaskCompletionTrend = dynamic(
+  () => import('./TaskCompletionTrend').then((m) => m.TaskCompletionTrend),
+  { ssr: false }
+);
+const OverdueTrendChart = dynamic(
+  () => import('./OverdueTrendChart').then((m) => m.OverdueTrendChart),
+  { ssr: false }
+);
 
 interface AnalyticsPageProps {
   workspaceId: string;

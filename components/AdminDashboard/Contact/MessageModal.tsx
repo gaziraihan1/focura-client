@@ -1,4 +1,4 @@
-import { formatCategory, formatDate } from "@/app/(dashboard-pages)/admin-dashboard/contact/page";
+import { formatCategory, formatDate } from "@/app/(dashboard-pages)/admin-dashboard/contact/utils";
 import { ContactMessage } from "@/hooks/useContactMessage";
 import { Calendar, Hash, Mail, Tag, User, X } from "lucide-react";
 import { InfoRow } from "./InfoRow";

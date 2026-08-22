@@ -88,7 +88,7 @@ vi.mock('@/components/Dashboard/Workspaces/project/Announcements/AuthorAvatar', 
   AuthorAvatar: ({ author }: Record<string, unknown>) => <div data-testid="author-avatar">{author?.name ?? 'Unknown'}</div>,
 }))
 
-vi.mock('@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/announcements/page', () => ({
+vi.mock('@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/announcements/utils', () => ({
   timeAgo: () => '3 days ago',
   formatFullDate: (date: string) => new Date(date).toLocaleString(),
   initials: (name?: string | null) => name ? name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2) : '??',

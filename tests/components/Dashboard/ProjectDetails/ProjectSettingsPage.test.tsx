@@ -5,7 +5,6 @@ const replaceMock = vi.fn();
 const searchParamsMock = new URLSearchParams();
 
 vi.mock("next/navigation", () => ({
-  useParams: () => ({ workspaceSlug: "acme", projectSlug: "web-app" }),
   usePathname: () => "/dashboard/workspaces/acme/projects/web-app/settings",
   useRouter: () => ({ replace: replaceMock }),
   useSearchParams: () => searchParamsMock,
@@ -44,7 +43,7 @@ vi.mock("@/components/Dashboard/Workspaces/project/Settings", () => ({
   DangerTab: () => <div data-testid="tab-danger">Danger content</div>,
 }));
 
-import ProjectSettingsPage from "@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/settings/page";
+import { ProjectSettingsPageContent } from "@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/settings/ProjectSettingsPageContent";
 
 describe("ProjectSettingsPage", () => {
   beforeEach(() => {
@@ -53,19 +52,19 @@ describe("ProjectSettingsPage", () => {
   });
 
   it("defaults to the general tab when no tab param is present", () => {
-    render(<ProjectSettingsPage />);
+    render(<ProjectSettingsPageContent workspaceSlug="acme" projectSlug="web-app" />);
     expect(screen.getByTestId("tab-general")).toBeDefined();
   });
 
   it("restores the active tab from ?tab= in the URL", () => {
     searchParamsMock.set("tab", "members");
-    render(<ProjectSettingsPage />);
+    render(<ProjectSettingsPageContent workspaceSlug="acme" projectSlug="web-app" />);
     expect(screen.getByTestId("tab-members")).toBeDefined();
     expect(screen.queryByTestId("tab-general")).toBeNull();
   });
 
   it("writes the tab to the URL when switching tabs", () => {
-    render(<ProjectSettingsPage />);
+    render(<ProjectSettingsPageContent workspaceSlug="acme" projectSlug="web-app" />);
     fireEvent.click(screen.getByRole("button", { name: /members/i }));
     expect(replaceMock).toHaveBeenCalledWith(
       expect.stringContaining("tab=members"),
@@ -75,7 +74,7 @@ describe("ProjectSettingsPage", () => {
 
   it("removes the tab param when returning to the general tab", () => {
     searchParamsMock.set("tab", "members");
-    render(<ProjectSettingsPage />);
+    render(<ProjectSettingsPageContent workspaceSlug="acme" projectSlug="web-app" />);
     fireEvent.click(screen.getByRole("button", { name: /general/i }));
     expect(replaceMock).toHaveBeenCalledWith(
       "/dashboard/workspaces/acme/projects/web-app/settings",

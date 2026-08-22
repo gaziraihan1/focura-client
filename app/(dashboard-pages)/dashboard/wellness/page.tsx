@@ -1,5 +1,3 @@
-"use client";
-
 import { Brain, HeartPulse, Sparkles } from "lucide-react";
 import { FocusStreakBadge } from "@/components/Dashboard/FocusStreakBadge";
 import { FocusDailySummary } from "@/components/Dashboard/FocusDailySummary";

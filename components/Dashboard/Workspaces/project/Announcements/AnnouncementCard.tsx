@@ -1,4 +1,4 @@
-import { formatFullDate, timeAgo } from "@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/announcements/page";
+import { formatFullDate, timeAgo } from "@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/announcements/utils";
 import { Globe, Loader2, Lock, Pin, Pencil, Trash2, User, Megaphone, ArrowRight } from "lucide-react";
 import { AuthorAvatar } from "./AuthorAvatar";
 import { stripTokens } from "@/utils/announcement.utils";

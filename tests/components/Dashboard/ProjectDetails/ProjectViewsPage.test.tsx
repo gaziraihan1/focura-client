@@ -16,12 +16,11 @@ vi.mock("@/components/Dashboard/ProjectDetails/ViewList", () => ({
 }));
 
 vi.mock("next/navigation", () => ({
-  useParams: () => ({ workspaceSlug: "ws1", projectSlug: "proj1" }),
   useRouter: () => ({ back: vi.fn(), push: vi.fn() }),
 }));
 
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
-import ProjectViewsPage from "@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/views/page";
+import { ViewsPageContent } from "@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/views/ViewsPageContent";
 
 describe("ProjectViewsPage", () => {
   it("should render the heading and description", () => {
@@ -29,7 +28,7 @@ describe("ProjectViewsPage", () => {
       data: { id: "proj1", isAdmin: true },
     });
 
-    render(<ProjectViewsPage />);
+    render(<ViewsPageContent workspaceSlug="ws1" projectSlug="proj1" />);
     expect(screen.getByText("Saved Views")).toBeDefined();
     expect(screen.getByText(/Create custom views/i)).toBeDefined();
   });
@@ -39,7 +38,7 @@ describe("ProjectViewsPage", () => {
       data: { id: "proj1", isAdmin: true },
     });
 
-    render(<ProjectViewsPage />);
+    render(<ViewsPageContent workspaceSlug="ws1" projectSlug="proj1" />);
     expect(screen.getByTestId("view-list")).toBeDefined();
     expect(screen.getByText("ViewList for proj1")).toBeDefined();
   });
@@ -49,7 +48,7 @@ describe("ProjectViewsPage", () => {
       data: { id: "proj1", isAdmin: false, members: [] },
     });
 
-    render(<ProjectViewsPage />);
+    render(<ViewsPageContent workspaceSlug="ws1" projectSlug="proj1" />);
     expect(screen.getByText("Access Restricted")).toBeDefined();
     expect(screen.queryByTestId("view-list")).toBeNull();
   });
@@ -59,7 +58,7 @@ describe("ProjectViewsPage", () => {
       data: null,
     });
 
-    render(<ProjectViewsPage />);
+    render(<ViewsPageContent workspaceSlug="ws1" projectSlug="proj1" />);
     expect(screen.queryByTestId("view-list")).toBeNull();
   });
 
@@ -68,7 +67,7 @@ describe("ProjectViewsPage", () => {
       data: { id: "proj1", isAdmin: true },
     });
 
-    render(<ProjectViewsPage />);
+    render(<ViewsPageContent workspaceSlug="ws1" projectSlug="proj1" />);
     expect(screen.getByText("Back")).toBeDefined();
   });
 
@@ -77,7 +76,7 @@ describe("ProjectViewsPage", () => {
       data: { id: "proj1", isAdmin: true },
     });
 
-    render(<ProjectViewsPage />);
+    render(<ViewsPageContent workspaceSlug="ws1" projectSlug="proj1" />);
     expect(screen.getByText("Go to project overview")).toBeDefined();
   });
 });

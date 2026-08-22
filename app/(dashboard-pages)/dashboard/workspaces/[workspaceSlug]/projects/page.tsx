@@ -1,70 +1,10 @@
-"use client";
+import { ProjectsPageContent } from "./ProjectsPageContent";
 
-import { ProjectsEmptyState } from "@/components/Dashboard/Projects/WorkspaceProjects/ProjectsEmptyState";
-import { ProjectsSearchBar } from "@/components/Dashboard/Projects/WorkspaceProjects/ProjectsSearchBar";
-import { WorkspaceProjectCard } from "@/components/Dashboard/Projects/WorkspaceProjects/WorkspaceProjectCard";
-import { WorkspaceProjectsErrorState } from "@/components/Dashboard/Projects/WorkspaceProjects/WorkspaceProjectsErrorState";
-import { WorkspaceProjectsPageHeader } from "@/components/Dashboard/Projects/WorkspaceProjects/WorkspaceProjectsPageHeader";
-import { useWorkspaceProjectsPage } from "@/hooks/useProjectsPage";
-import { useParams } from "next/navigation";
-import { LoadingState } from "@/components/Shared/LoadingState";
-
-export default function WorkspaceProjectsPage() {
-  const params = useParams();
-  const workspaceSlug = params.workspaceSlug as string;
-
-  const {
-  workspace,
-  projects,
-  searchQuery,
-  setSearchQuery,
-  canCreateProjects,
-  isLoading,
-  hasError,
-  currentUserId,
-} = useWorkspaceProjectsPage({ workspaceSlug });
- 
-  if (isLoading) {
-    return <LoadingState />;
-  }
-
-  if (hasError) {
-    return <WorkspaceProjectsErrorState />;
-  }
-
-  return (
-    <div className="space-y-6 px-2 sm:px-4">
-      <WorkspaceProjectsPageHeader
-        workspaceName={workspace!.name}
-        workspaceSlug={workspaceSlug}
-        canCreateProjects={canCreateProjects}
-      />
-
-      <ProjectsSearchBar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-      />
-
-      {projects?.length === 0 ? (
-        <ProjectsEmptyState
-          hasSearchQuery={!!searchQuery}
-          workspaceSlug={workspaceSlug}
-          canCreateProjects={canCreateProjects}
-        />
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
-          {projects?.map((project) => (
-            <WorkspaceProjectCard
-              key={project.id}
-              project={project}
-              workspaceSlug={workspaceSlug}
-              currentUserId={currentUserId}
-                  canCreateProjects={canCreateProjects} // ← pass down
-
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
+export default async function WorkspaceProjectsPage({
+  params,
+}: {
+  params: Promise<{ workspaceSlug: string }>;
+}) {
+  const { workspaceSlug } = await params;
+  return <ProjectsPageContent workspaceSlug={workspaceSlug} />;
 }

@@ -1,6 +1,7 @@
 // components/StorageOverview/StorageOverviewPage.tsx
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useStorageOverview } from '@/hooks/useStorageOverview';
 import { LoadingState } from './StorageOverviewPage/LoadingState';
 import { EmptyState } from './StorageOverviewPage/EmptyState';
@@ -11,10 +12,17 @@ import { StorageSummaryCards } from './StorageSummaryCards';
 import { MyContributionCard } from './MyContributionCard';
 import { UserContributionsTable } from './UserContributionsTable';
 import { StorageBreakdownChart } from './StorageBreakdownChart';
-import { StorageTrendChart } from './StorageTrendChart';
-import { FileTypeChart } from './FileTypeChart';
 import { LargestFilesTable } from './LargestFilesTable';
 import { PlanComparison } from './PlanComparison';
+
+const StorageTrendChart = dynamic(
+  () => import('./StorageTrendChart').then((m) => m.StorageTrendChart),
+  { ssr: false }
+);
+const FileTypeChart = dynamic(
+  () => import('./FileTypeChart').then((m) => m.FileTypeChart),
+  { ssr: false }
+);
 
 export function StorageOverviewPage() {
   const {

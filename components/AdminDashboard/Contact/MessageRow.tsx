@@ -1,4 +1,4 @@
-import { formatCategory, formatDate } from "@/app/(dashboard-pages)/admin-dashboard/contact/page";
+import { formatCategory, formatDate } from "@/app/(dashboard-pages)/admin-dashboard/contact/utils";
 import { CATEGORY_CLASSES, STATUS_CLASSES } from "@/constants/adminContact.constants";
 import { ContactMessage } from "@/hooks/useContactMessage";
 

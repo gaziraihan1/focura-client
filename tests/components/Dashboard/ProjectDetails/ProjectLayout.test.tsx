@@ -2,9 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 vi.mock("next/navigation", () => ({
-  useParams: () => ({ workspaceSlug: "acme", projectSlug: "web-app" }),
   usePathname: () => "/dashboard/workspaces/acme/projects/web-app/tasks",
-  useRouter: () => ({ back: vi.fn(), push: vi.fn() }),
 }));
 
 vi.mock("@/hooks/useProjects", () => ({
@@ -26,7 +24,28 @@ vi.mock("@/lib/react-query/query-client", () => ({
   qc: { removeQueries: vi.fn() },
 }));
 
-import ProjectLayout from "@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/layout";
+vi.mock("@/components/Dashboard/SidebarToggle", () => ({
+  SidebarToggle: () => <div data-testid="sidebar-toggle" />,
+}));
+
+vi.mock("@/context/sidebarCollapse/SidebarCollapseContext", () => ({
+  useSidebarCollapse: () => ({
+    isProjectSidebarCollapsed: false,
+    toggleProjectSidebar: vi.fn(),
+  }),
+}));
+
+vi.mock("@/components/Dashboard/ProjectDetails/AccessDeniedProject", () => ({
+  AccessDeniedProject: ({ projectName }: { projectName?: string }) => (
+    <div>Access Denied{projectName ? `: ${projectName}` : ""}</div>
+  ),
+}));
+
+vi.mock("@/components/Dashboard/ProjectDetails/LoadingState", () => ({
+  default: () => <div data-testid="loading-state">Loading...</div>,
+}));
+
+import { ProjectLayoutShell } from "@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/ProjectLayoutShell";
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
 import { qc } from "@/lib/react-query/query-client";
 
@@ -42,11 +61,11 @@ describe("ProjectLayout", () => {
       error: { response: { status: 404 } },
     });
     render(
-      <ProjectLayout>
+      <ProjectLayoutShell workspaceSlug="acme" projectSlug="web-app">
         <div>Secret page content</div>
-      </ProjectLayout>,
+      </ProjectLayoutShell>,
     );
-    expect(screen.getByText("Access Denied")).toBeDefined();
+    expect(screen.getByText(/Access Denied/)).toBeDefined();
     // Children must not render for a removed member
     expect(screen.queryByText("Secret page content")).toBeNull();
     // Stale project + feature caches are dropped so nothing keeps rendering from cache
@@ -64,11 +83,11 @@ describe("ProjectLayout", () => {
       error: { response: { status: 403 } },
     });
     render(
-      <ProjectLayout>
+      <ProjectLayoutShell workspaceSlug="acme" projectSlug="web-app">
         <div>Secret page content</div>
-      </ProjectLayout>,
+      </ProjectLayoutShell>,
     );
-    expect(screen.getByText("Access Denied")).toBeDefined();
+    expect(screen.getByText(/Access Denied/)).toBeDefined();
     expect(screen.queryByText("Secret page content")).toBeNull();
     expect(qc.removeQueries).toHaveBeenCalledWith({ queryKey: ["projects", "detail"] });
   });
@@ -86,9 +105,9 @@ describe("ProjectLayout", () => {
       error: undefined,
     });
     render(
-      <ProjectLayout>
+      <ProjectLayoutShell workspaceSlug="acme" projectSlug="web-app">
         <div>Page content</div>
-      </ProjectLayout>,
+      </ProjectLayoutShell>,
     );
     expect(screen.getByText("Page content")).toBeDefined();
     expect(qc.removeQueries).not.toHaveBeenCalled();
@@ -101,9 +120,9 @@ describe("ProjectLayout", () => {
       error: new Error("Network error"),
     });
     render(
-      <ProjectLayout>
+      <ProjectLayoutShell workspaceSlug="acme" projectSlug="web-app">
         <div>Page content</div>
-      </ProjectLayout>,
+      </ProjectLayoutShell>,
     );
     expect(screen.getByText("Page content")).toBeDefined();
     expect(qc.removeQueries).not.toHaveBeenCalled();
@@ -137,9 +156,9 @@ describe("ProjectLayout", () => {
     }));
 
     const { rerender } = render(
-      <ProjectLayout>
+      <ProjectLayoutShell workspaceSlug="acme" projectSlug="web-app">
         <div>Secret page content</div>
-      </ProjectLayout>,
+      </ProjectLayoutShell>,
     );
 
     // The gate denies once and kicks off the refetch
@@ -148,13 +167,13 @@ describe("ProjectLayout", () => {
     // Simulate the refetch settling: a fresh read with the member list updated
     // and no fetch in flight, which admits the collaborator.
     rerender(
-      <ProjectLayout>
+      <ProjectLayoutShell workspaceSlug="acme" projectSlug="web-app">
         <div>Secret page content</div>
-      </ProjectLayout>,
+      </ProjectLayoutShell>,
     );
 
     expect(await screen.findByText("Secret page content")).toBeDefined();
-    expect(screen.queryByText("Access Denied")).toBeNull();
+    expect(screen.queryByText(/Access Denied/)).toBeNull();
     // A self-heal must not wipe the shared caches
     expect(qc.removeQueries).not.toHaveBeenCalled();
   });

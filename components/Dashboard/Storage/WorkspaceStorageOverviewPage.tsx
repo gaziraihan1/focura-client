@@ -1,5 +1,6 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { HardDrive, AlertTriangle, Shield, Users, Loader2 } from 'lucide-react';
 import { useWorkspaceStorageOverview } from '@/hooks/useStorage';
 import { useStorageWarning } from '@/hooks/useStoragePage';
@@ -7,11 +8,18 @@ import { StorageSummaryCards } from './StorageSummaryCards';
 import { MyContributionCard } from './MyContributionCard';
 import { UserContributionsTable } from './UserContributionsTable';
 import { StorageBreakdownChart } from './StorageBreakdownChart';
-import { StorageTrendChart } from './StorageTrendChart';
-import { FileTypeChart } from './FileTypeChart';
 import { LargestFilesTable } from './LargestFilesTable';
 import { PlanComparison } from './PlanComparison';
 import { UpgradeSectionCard } from '@/components/Shared/UpgradeSectionCard';
+
+const StorageTrendChart = dynamic(
+  () => import('./StorageTrendChart').then((m) => m.StorageTrendChart),
+  { ssr: false }
+);
+const FileTypeChart = dynamic(
+  () => import('./FileTypeChart').then((m) => m.FileTypeChart),
+  { ssr: false }
+);
 
 interface WorkspaceStoragePageProps {
   workspaceId: string;

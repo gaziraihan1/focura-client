@@ -1,5 +1,5 @@
 import Image from "next/image";
-import {  initials } from "@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/announcements/page";
+import { initials } from "@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/announcements/utils";
 import { Announcement } from "@/types/announcement.types";
 
 export function AuthorAvatar({
