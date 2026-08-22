@@ -1,6 +1,6 @@
-export default function ProjectsLoading() {
+﻿export default function ProjectsLoading() {
   return (
-    <div className="space-y-6 p-6">
+    <div className="mx-auto max-w-7xl space-y-6 p-4 sm:p-6 lg:p-8">
       <div className="flex items-center justify-between">
         <div className="h-7 w-36 animate-pulse rounded-lg bg-muted" />
         <div className="h-10 w-32 animate-pulse rounded-lg bg-muted" />

@@ -1,6 +1,6 @@
-export default function WorkspaceLoading() {
+﻿export default function WorkspaceLoading() {
   return (
-    <div className="space-y-6 p-6">
+    <div className="mx-auto max-w-7xl space-y-6 p-4 sm:p-6 lg:p-8">
       <div className="flex items-center gap-4">
         <div className="h-12 w-12 animate-pulse rounded-xl bg-muted" />
         <div className="space-y-2">
