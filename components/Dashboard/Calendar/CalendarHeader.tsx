@@ -54,7 +54,7 @@ export function CalendarHeader({
       tabIndex={-1}
     >
       <div className="mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="space-y-4 md:flex md:justify-between lg:block gap-3 xl:flex xl:justify-between">
           {/* Title */}
           <div>
             <h1 className="text-xl sm:text-3xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text">
@@ -66,7 +66,7 @@ export function CalendarHeader({
           </div>
 
           {/* Controls */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             {/* View Switcher */}
             <div
               className="flex items-center gap-0.5 p-1 rounded-lg bg-muted border border-border"

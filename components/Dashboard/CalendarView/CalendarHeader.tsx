@@ -41,13 +41,13 @@ export function CalendarHeader({
           <div className="flex items-center gap-1 sm:gap-2 flex-1 sm:flex-initial">
             <button
               onClick={onPrevious}
-              className="p-1.5 sm:p-2 hover:bg-accent rounded-lg transition-colors"
+              className="p-1.5 hover:bg-accent rounded-lg transition-colors"
               aria-label="Previous"
             >
-              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+              <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
             </button>
             
-            <h1 className="text-base sm:text-xl lg:text-2xl font-semibold min-w-35 sm:min-w-45 lg:min-w-55 text-center">
+            <h1 className="text-base sm:text-xl font-semibold min-w-25 sm:min-w-35 text-center">
               {view === 'month' && (
                 <>
                   <span className="hidden sm:inline">{format(currentDate, 'MMMM yyyy')}</span>
@@ -70,10 +70,10 @@ export function CalendarHeader({
             
             <button
               onClick={onNext}
-              className="p-1.5 sm:p-2 hover:bg-accent rounded-lg transition-colors"
+              className="p-1.5 hover:bg-accent rounded-lg transition-colors"
               aria-label="Next"
             >
-              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+              <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
             </button>
           </div>
         </div>
@@ -81,7 +81,7 @@ export function CalendarHeader({
         <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-between sm:justify-end">
           <button
             onClick={() => onToggleTimeBound(!showOnlyTimeBound)}
-            className={`flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg transition-all ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-2 xl:px-3 py-1.5 xl:py-2 text-xs sm:text-sm rounded-lg transition-all ${
               showOnlyTimeBound
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-muted text-muted-foreground hover:bg-accent'

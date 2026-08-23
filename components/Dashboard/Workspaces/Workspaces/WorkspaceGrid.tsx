@@ -8,7 +8,7 @@ interface WorkspaceGridProps {
 
 export function WorkspaceGrid({ workspaces }: WorkspaceGridProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
       {workspaces.map((workspace, index) => (
         <motion.div
           key={workspace.id}

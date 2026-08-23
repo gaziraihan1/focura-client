@@ -104,7 +104,7 @@ export default function TopNavbar({
               className="hidden md:flex flex-1 max-w-sm items-center gap-2 rounded-xl border border-border bg-muted/40 px-3.5 py-2 hover:border-primary/30 hover:bg-muted/60 transition-colors duration-200 group cursor-text"
             >
               <Search size={15} className="text-muted-foreground shrink-0" />
-              <span className="flex-1 text-sm text-muted-foreground text-left min-w-0">
+              <span className="flex-1 text-[11px] text-muted-foreground text-left min-w-0">
                 Search workspaces, projects, files…
               </span>
               <kbd className="hidden lg:inline-flex h-5 select-none items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground shrink-0">
