@@ -3,7 +3,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Check, Loader2, ListChecks, Sparkles, Wand2 } from "lucide-react";
-import { useAiTaskBreakdown } from "@/hooks/useAi";
+import { useAiTaskBreakdown, useWorkspaceSlug } from "@/hooks/useAi";
 import { useCreateTask } from "@/hooks/useTask";
 import { cn } from "@/lib/utils";
 import {
@@ -13,6 +13,13 @@ import {
 } from "@/types/ai.types";
 import { AiQuotaBadge } from "./AiQuotaBadge";
 import { AiUpgradeCta } from "./AiUpgradeCta";
+
+interface AiGoalBreakdownProps {
+  /** Optional workspace scope — when provided, tasks are created in this workspace and the AI resolves the plan from the workspace's tier. */
+  workspaceId?: string | null;
+  /** Workspace slug for the upgrade CTA link. */
+  workspaceSlug?: string;
+}
 
 const ENERGY_STYLES: Record<AiEnergyType, string> = {
   LOW: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
@@ -29,7 +36,7 @@ function getErrorCode(error: unknown): string | undefined {
  * "Cognitive breakdown" card — describes a big goal and the AI returns a
  * low→high energy task sequence the user can review and add to their tasks.
  */
-export function AiGoalBreakdown() {
+export function AiGoalBreakdown({ workspaceId, workspaceSlug }: AiGoalBreakdownProps) {
   const [goal, setGoal] = useState("");
   const [tasks, setTasks] = useState<AiGoalBreakdownTask[] | null>(null);
   const [rationale, setRationale] = useState<string | undefined>();
@@ -38,6 +45,8 @@ export function AiGoalBreakdown() {
 
   const breakdown = useAiTaskBreakdown();
   const createTask = useCreateTask();
+  const slugFromList = useWorkspaceSlug(workspaceId);
+  const resolvedWorkspaceSlug = workspaceSlug ?? slugFromList;
 
   const trimmedGoal = goal.trim();
   const canGenerate = trimmedGoal.length >= 5 && !breakdown.isPending;
@@ -46,7 +55,10 @@ export function AiGoalBreakdown() {
   async function handleGenerate() {
     setQuotaError(false);
     try {
-      const result = await breakdown.mutateAsync({ goal: trimmedGoal });
+      const result = await breakdown.mutateAsync({
+        goal: trimmedGoal,
+        workspaceId: workspaceId ?? undefined,
+      });
       setTasks(result.tasks);
       setRationale(result.rationale);
       setSelected(new Set(result.tasks.map((_, i) => i)));
@@ -85,7 +97,7 @@ export function AiGoalBreakdown() {
           priority: "MEDIUM",
           energyType: task.energyType ?? undefined,
           estimatedHours: task.estimatedHours ?? undefined,
-          workspaceId: null,
+          workspaceId: workspaceId ?? null,
           projectId: undefined,
           assigneeIds: [],
           labelIds: [],
@@ -129,7 +141,7 @@ export function AiGoalBreakdown() {
             </p>
           </div>
         </div>
-        <AiQuotaBadge className="hidden sm:inline-flex" />
+        <AiQuotaBadge workspaceId={workspaceId} className="hidden sm:inline-flex" />
       </div>
 
       <div className="mt-4">
@@ -172,7 +184,7 @@ export function AiGoalBreakdown() {
       </div>
 
       {quotaError && (
-        <AiUpgradeCta className="mt-4" />
+        <AiUpgradeCta className="mt-4" workspaceSlug={resolvedWorkspaceSlug} />
       )}
 
       {tasks && tasks.length > 0 && (
