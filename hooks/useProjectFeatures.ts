@@ -1,16 +1,9 @@
-import { api } from "@/lib/axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { api, unwrap } from "@/lib/axios";
 import { milestoneKeys, sprintKeys, sectionKeys, viewKeys, favoriteKeys } from "./projectFeatureKeys";
 import type { Task } from "./useTask";
 
 export type TaskStatus = Task["status"];
-
-function unwrap<T>(response: any): T {
-  if (response && typeof response === "object" && "success" in response && "data" in response) {
-    return response.data as T;
-  }
-  return response as T;
-}
 
 // ── Milestone Types ──────────────────────────────────────────────────────────
 
@@ -71,7 +64,7 @@ export const useCreateMilestone = () => {
 export const useUpdateMilestone = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ milestoneId, projectId, ...data }: any) => {
+    mutationFn: async ({ milestoneId, projectId, ...data }: { milestoneId: string; projectId: string } & Partial<MilestoneItem>) => {
       const res = await api.patch(`/api/v1/projects/${projectId}/milestones/${milestoneId}`, data, { showSuccessToast: true, showErrorToast: true });
       return unwrap<MilestoneItem>(res);
     },
@@ -151,7 +144,7 @@ export const useCreateSprint = () => {
 export const useUpdateSprint = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ sprintId, projectId, ...data }: any) => {
+    mutationFn: async ({ sprintId, projectId, ...data }: { sprintId: string; projectId: string } & Partial<SprintItem>) => {
       const res = await api.patch(`/api/v1/projects/${projectId}/sprints/${sprintId}`, data, { showSuccessToast: true, showErrorToast: true });
       return unwrap<SprintItem>(res);
     },
@@ -222,7 +215,7 @@ export const useCreateSection = () => {
 export const useUpdateSection = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ sectionId, projectId, ...data }: any) => {
+    mutationFn: async ({ sectionId, projectId, ...data }: { sectionId: string; projectId: string } & Partial<ProjectSectionItem>) => {
       const res = await api.patch(`/api/v1/projects/${projectId}/sections/${sectionId}`, data, { showSuccessToast: true, showErrorToast: true });
       return unwrap<ProjectSectionItem>(res);
     },
@@ -258,9 +251,9 @@ export interface ProjectViewItem {
   name: string;
   description?: string;
   type: "KANBAN" | "LIST" | "CALENDAR" | "TIMELINE";
-  filters?: any;
-  sort?: any;
-  config?: any;
+  filters?: Record<string, unknown>;
+  sort?: Record<string, unknown>;
+  config?: Record<string, unknown>;
   isDefault: boolean;
   visibility: "PRIVATE" | "SHARED";
   createdById: string;
@@ -281,7 +274,7 @@ export const useProjectViews = (projectId?: string) =>
 export const useCreateView = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (data: { name: string; description?: string; type?: string; projectId: string; isDefault?: boolean; visibility?: string; filters?: any; sort?: any; config?: any }) => {
+    mutationFn: async (data: { name: string; description?: string; type?: string; projectId: string; isDefault?: boolean; visibility?: string; filters?: Record<string, unknown>; sort?: Record<string, unknown>; config?: Record<string, unknown> }) => {
       const res = await api.post(`/api/v1/projects/${data.projectId}/views`, data, { showSuccessToast: true, showErrorToast: true });
       return unwrap<ProjectViewItem>(res);
     },
@@ -292,7 +285,7 @@ export const useCreateView = () => {
 export const useUpdateView = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ viewId, projectId, ...data }: any) => {
+    mutationFn: async ({ viewId, projectId, ...data }: { viewId: string; projectId: string } & Partial<Omit<ProjectViewItem, "id" | "createdById">>) => {
       const res = await api.patch(`/api/v1/projects/${projectId}/views/${viewId}`, data, { showSuccessToast: true, showErrorToast: true });
       return unwrap<ProjectViewItem>(res);
     },

@@ -3,48 +3,12 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import axios, { AxiosError } from "axios";
 import { Send, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { ContactFields } from "./ContactFormFields";
+import { contactFormSchema, type ContactFormValues } from "./contact-form-schema";
 
-// ─── Zod schema (mirrors the backend validator) ───────────────────────────────
-const formSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, "Name must be at least 2 characters")
-    .max(100, "Name must be under 100 characters"),
-  email: z
-    .string()
-    .trim()
-    .email("Please enter a valid email address")
-    .max(255, "Email must be under 255 characters"),
-  subject: z
-    .string()
-    .trim()
-    .min(5, "Subject must be at least 5 characters")
-    .max(200, "Subject must be under 200 characters"),
-  category: z.enum([
-    "GENERAL",
-    "BILLING",
-    "TECHNICAL",
-    "FEATURE_REQUEST",
-    "PARTNERSHIP",
-    "SECURITY",
-    "OTHER",
-  ]),
-  message: z
-    .string()
-    .trim()
-    .min(20, "Message must be at least 20 characters")
-    .max(5000, "Message must be under 5000 characters"),
-  consent: z.boolean().refine((v) => v === true, {
-    message: "You must agree to our Privacy Policy to submit this form.",
-  }),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = ContactFormValues;
 
 // ─── Success state ────────────────────────────────────────────────────────────
 function SuccessState({ onReset }: { onReset: () => void }) {
@@ -92,7 +56,7 @@ export const ContactForm = () => {
     control,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(contactFormSchema),
     defaultValues: {
       category: "GENERAL",
       consent: false,

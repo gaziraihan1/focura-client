@@ -1,13 +1,17 @@
 import { AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import type { FieldErrors, UseFormRegister } from 'react-hook-form';
+import type { AdminJobFormValues } from './job-form-schema';
+
+/** Shared typed props for every field group rendered inside AdminJobForm. */
+interface JobFieldGroupProps {
+  register: UseFormRegister<AdminJobFormValues>;
+  errors: FieldErrors<AdminJobFormValues>;
+}
 
 const inputBase   = 'w-full rounded-xl border bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 transition-colors';
 const inputNormal = 'border-border focus:border-ring focus:ring-ring/30';
 const inputErr    = 'border-destructive focus:ring-destructive/30';
-
-const jobInputBase   = inputBase;
-const jobInputNormal = inputNormal;
-const jobInputErr    = inputErr;
 
 interface FieldProps {
   label: string;
@@ -77,10 +81,7 @@ const EXPERIENCE_LEVELS = [
   ['EXECUTIVE', 'Executive'],
 ] as const;
 
-interface BasicInfoFieldsProps {
-  register: any;
-  errors: any;
-}
+type BasicInfoFieldsProps = JobFieldGroupProps;
 
 export function BasicInfoFields({ register, errors }: BasicInfoFieldsProps) {
   return (
@@ -122,10 +123,7 @@ export function BasicInfoFields({ register, errors }: BasicInfoFieldsProps) {
   );
 }
 
-interface ClassificationFieldsProps {
-  register: any;
-  errors: any;
-}
+type ClassificationFieldsProps = JobFieldGroupProps;
 
 export function ClassificationFields({ register, errors }: ClassificationFieldsProps) {
   return (
@@ -158,10 +156,7 @@ export function ClassificationFields({ register, errors }: ClassificationFieldsP
   );
 }
 
-interface SalaryFieldsProps {
-  register: any;
-  errors: any;
-}
+type SalaryFieldsProps = JobFieldGroupProps;
 
 export function SalaryFields({ register, errors }: SalaryFieldsProps) {
   return (
@@ -205,10 +200,7 @@ export function SalaryFields({ register, errors }: SalaryFieldsProps) {
   );
 }
 
-interface ContentFieldsProps {
-  register: any;
-  errors: any;
-}
+type ContentFieldsProps = JobFieldGroupProps;
 
 export function ContentFields({ register, errors }: ContentFieldsProps) {
   return (
@@ -252,10 +244,7 @@ export function ContentFields({ register, errors }: ContentFieldsProps) {
   );
 }
 
-interface ApplicationFieldsProps {
-  register: any;
-  errors: any;
-}
+type ApplicationFieldsProps = JobFieldGroupProps;
 
 export function ApplicationFields({ register, errors }: ApplicationFieldsProps) {
   return (

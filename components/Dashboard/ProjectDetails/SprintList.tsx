@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useProjectRouteSlugs } from "@/hooks/useRouteParams";
 import { Sprout, Plus, MoreHorizontal, Target, Loader2, Trash2, ExternalLink } from "lucide-react";
 import { ConfirmModal } from "@/components/Shared/ConfirmModal";
 import FeatureListError from "@/components/Dashboard/ProjectDetails/FeatureListError";
@@ -38,9 +38,7 @@ export default function SprintList({ projectId }: SprintListProps) {
   const [retroModal, setRetroModal] = useState<{ sprintId: string; name: string } | null>(null);
   const [retroText, setRetroText] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<SprintItem | null>(null);
-  const params = useParams();
-  const workspaceSlug = params?.workspaceSlug as string;
-  const projectSlug = params?.projectSlug as string;
+  const { workspaceSlug, projectSlug } = useProjectRouteSlugs();
 
   const handleCreate = async () => {
     if (!name.trim() || !startDate || !endDate || createSprint.isPending) return;

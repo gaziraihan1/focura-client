@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { api } from '@/lib/axios';
+import { api, normalizeError } from '@/lib/axios';
 import toast from 'react-hot-toast';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -116,9 +115,8 @@ export function useChangePassword() {
       qc.invalidateQueries({ queryKey: securityKeys.settings() });
       toast.success('Password changed successfully');
     },
-    onError: (error: any) => {
-      const message = error?.response?.data?.message || 'Failed to change password';
-      toast.error(message);
+    onError: (error) => {
+      toast.error(normalizeError(error).message || 'Failed to change password');
     },
   });
 }
@@ -158,8 +156,8 @@ export function useSetupTwoFactor() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: securityKeys.settings() });
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || error?.message || 'Failed to set up two-factor authentication');
+    onError: (error) => {
+      toast.error(normalizeError(error).message || 'Failed to set up two-factor authentication');
     },
   });
 }
@@ -180,8 +178,8 @@ export function useVerifyTwoFactor() {
       qc.invalidateQueries({ queryKey: securityKeys.settings() });
       toast.success('Two-factor authentication enabled successfully');
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || error?.message || 'Failed to verify code');
+    onError: (error) => {
+      toast.error(normalizeError(error).message || 'Failed to verify code');
     },
   });
 }
@@ -202,8 +200,8 @@ export function useDisableTwoFactor() {
       qc.invalidateQueries({ queryKey: securityKeys.settings() });
       toast.success('Two-factor authentication disabled successfully');
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || error?.message || 'Failed to disable two-factor authentication');
+    onError: (error) => {
+      toast.error(normalizeError(error).message || 'Failed to disable two-factor authentication');
     },
   });
 }

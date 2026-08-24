@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react';
-import { api } from '@/lib/axios';
+import { api, normalizeError } from '@/lib/axios';
 
 type CallbackStatus = 'loading' | 'success' | 'error';
 
@@ -93,9 +93,11 @@ function IntegrationsCallbackInner() {
           setStatus('error');
           setMessage(result?.message || 'Failed to complete integration');
         }
-      } catch (err: any) {
+      } catch (err) {
         if (cancelled) return;
-        const errMsg = err?.response?.data?.message || err?.message || 'An error occurred while connecting';
+        // normalizeError (lib/axios) safely extracts the API message from
+        // Axios errors without leaking `any` into this component.
+        const errMsg = normalizeError(err).message || 'An error occurred while connecting';
 
         // OAuth state expired — offer to retry from integrations page
         if (errMsg.toLowerCase().includes('state has expired') || errMsg.toLowerCase().includes('oauth state')) {

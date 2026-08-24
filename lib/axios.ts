@@ -3,7 +3,7 @@
 // barrel preserves the historical import surface so callers keep importing
 // from "@/lib/axios" unchanged.
 export { axiosInstance, default } from "./axios/instance";
-export { api, normalizeError } from "./axios/client";
+export { api, normalizeError, unwrap, unwrapList } from "./axios/client";
 export { getFreshSession } from "./axios/refresh";
 export {
   initializeBackgroundRefresh,

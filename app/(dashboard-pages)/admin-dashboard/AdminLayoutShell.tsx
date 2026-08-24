@@ -43,6 +43,12 @@ export function AdminLayoutShell({ children }: { children: React.ReactNode }) {
   // Redirect gate on async admin-status query — no event-handler or server
   // component has this client-fetched info; per the rule's own validation
   // this is a false positive (async-subscription-gated).
+  //
+  // SECURITY NOTE: this redirect is UX polish only, NOT the authorization
+  // boundary. Real enforcement lives in:
+  //   1. proxy.ts (Next.js middleware) — JWT role check for /admin-dashboard/*
+  //   2. Backend: /api/v1/admin/* is mounted behind `authenticate +
+  //      requireFocuraAdmin` — API calls from non-admins are rejected there.
   useEffect(() => {
     // react-doctor-disable-next-line react-doctor/nextjs-no-client-side-redirect
     if (!isLoading && !isAdmin) router.replace("/dashboard");

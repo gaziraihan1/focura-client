@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 import { ChevronDown, FolderKanban } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -9,11 +8,11 @@ import toast from 'react-hot-toast';
 import { ProjectMember, useProjects } from '@/hooks/useProjects';
 import { useWorkspaceProjectsPage } from '@/hooks/useProjectsPage';
 import { ProjectData } from '@/types/project.types';
+import { useWorkspaceSlug } from '@/hooks/useRouteParams';
 
 export default function ProjectDropdown() {
   const [open, setOpen] = useState(false);
-  const params = useParams();
-  const workspaceSlug = params.workspaceSlug as string;
+  const workspaceSlug = useWorkspaceSlug();
 
   const {
     workspace,

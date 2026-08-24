@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/axios";
+import { api, type ApiResponse } from "@/lib/axios";
 import { Task, TaskFilters, TaskSort, TasksResponse, TaskStats, TaskOverview } from "./useTask";
 import { taskKeys, taskOverviewKeys, commentKeys, attachmentKeys } from "./taskKeys";
 import { Activity, activityKeys } from "./useActivity";
@@ -36,27 +36,23 @@ export function useTasks(
       if (sort?.sortBy) params.append("sortBy", sort.sortBy);
       if (sort?.sortOrder) params.append("sortOrder", sort.sortOrder);
 
-      const response = await api.get<TasksResponse | Task[]>(
-        `/api/v1/tasks?${params.toString()}`,
-        { showErrorToast: true },
-      );
+      // Backend contract: { success, data: Task[], pagination } — envelope
+      // unwrapping is centralized in lib/axios; no raw-array responses exist.
+      const response = (await api.get<Task[]>(`/api/v1/tasks?${params.toString()}`, {
+        showErrorToast: true,
+      })) as (ApiResponse<Task[]> & { pagination?: TasksResponse["pagination"] }) | undefined;
 
-      if (!response) {
-        return { data: [], pagination: { page: 1, pageSize: 10, totalCount: 0, totalPages: 0, hasNext: false, hasPrev: false } };
-      }
-
-      if ("data" in response && "pagination" in response) {
-        return response as TasksResponse;
-      }
-
-      if (Array.isArray(response)) {
-        return {
-          data: response as Task[],
-          pagination: { page, pageSize, totalCount: response.length, totalPages: Math.ceil(response.length / pageSize), hasNext: page < Math.ceil(response.length / pageSize), hasPrev: page > 1 },
-        };
-      }
-
-      return { data: [], pagination: { page: 1, pageSize: 10, totalCount: 0, totalPages: 0, hasNext: false, hasPrev: false } };
+      return {
+        data: Array.isArray(response?.data) ? response.data : [],
+        pagination: response?.pagination ?? {
+          page,
+          pageSize,
+          totalCount: 0,
+          totalPages: 0,
+          hasNext: false,
+          hasPrev: false,
+        },
+      };
     },
     staleTime: 2 * 60 * 1000,
     placeholderData: (previousData) => previousData,

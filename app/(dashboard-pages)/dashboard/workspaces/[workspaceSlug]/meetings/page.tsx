@@ -11,11 +11,10 @@ import { MeetingGridSkeleton } from '@/components/Dashboard/Workspaces/Meeting/M
 import { ErrorState } from '@/components/Dashboard/Workspaces/Meeting/ErrorState';
 import { ConfirmModal } from '@/components/Shared/ConfirmModal';
 import { useMeetingPage } from '@/hooks/useMeetingPage';
-import { useParams } from 'next/navigation';
+import { useWorkspaceSlug } from '@/hooks/useRouteParams';
 
 export default function MeetingsPage() {
-  const params = useParams();
-  const workspaceSlug = params.workspaceSlug as string;
+  const workspaceSlug = useWorkspaceSlug();
 
   const controller = useMeetingPage({workspaceSlug})
 

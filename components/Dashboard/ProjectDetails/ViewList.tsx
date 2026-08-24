@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import { Check, Eye, ExternalLink, Plus, Loader2, Trash2 } from "lucide-react";
 import { ConfirmModal } from "@/components/Shared/ConfirmModal";
 import FeatureListError from "@/components/Dashboard/ProjectDetails/FeatureListError";
@@ -11,7 +10,12 @@ import {
   useCreateView,
   useDeleteView,
   useUpdateView,
+  type ProjectViewItem,
 } from "@/hooks/useProjectFeatures";
+import { useProjectRouteSlugs } from "@/hooks/useRouteParams";
+
+const VIEW_TYPES = ["KANBAN", "LIST", "CALENDAR", "TIMELINE"] as const;
+type ViewType = (typeof VIEW_TYPES)[number];
 
 interface ViewListProps {
   projectId: string;
@@ -23,17 +27,15 @@ export default function ViewList({ projectId }: ViewListProps) {
   const deleteView = useDeleteView();
   const updateView = useUpdateView();
   const [showNew, setShowNew] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<any>(null);
-  const params = useParams();
-  const workspaceSlug = params?.workspaceSlug as string;
-  const projectSlug = params?.projectSlug as string;
+  const [deleteTarget, setDeleteTarget] = useState<ProjectViewItem | null>(null);
+  const { workspaceSlug, projectSlug } = useProjectRouteSlugs();
 
   const tasksHref = (viewId: string) =>
     workspaceSlug && projectSlug
       ? `/dashboard/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks?view=${viewId}`
       : "#";
   const [name, setName] = useState("");
-  const [type, setType] = useState<"KANBAN" | "LIST" | "CALENDAR" | "TIMELINE">("KANBAN");
+  const [type, setType] = useState<ViewType>("KANBAN");
 
   const handleCreate = async () => {
     if (!name.trim() || createView.isPending) return;
@@ -138,7 +140,12 @@ export default function ViewList({ projectId }: ViewListProps) {
           <select aria-label="Select an option"
             className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm"
             value={type}
-            onChange={(e) => setType(e.target.value as any)}
+            onChange={(e) => {
+              const next = e.target.value;
+              if ((VIEW_TYPES as readonly string[]).includes(next)) {
+                setType(next as ViewType);
+              }
+            }}
           >
             <option value="KANBAN">Kanban</option>
             <option value="LIST">List</option>

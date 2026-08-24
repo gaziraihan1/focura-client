@@ -1,14 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/axios";
+import { api, unwrap } from "@/lib/axios";
 import { ProjectDetails, CreateProjectDto, UpdateProjectDto, AddProjectMemberDto, ProjectMember } from "./useProjects";
 import { projectKeys } from "./projectKeys";
-
-function unwrap<T>(response: any): T {
-  if (response && typeof response === "object" && "success" in response && "data" in response) {
-    return response.data as T;
-  }
-  return response as T;
-}
 
 export const useCreateProject = () => {
   const qc = useQueryClient();

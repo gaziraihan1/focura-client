@@ -81,21 +81,18 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          {/* <OfflineProvider> */}
-            {/* Skip to main content - accessibility */}
-            <ConsentProvider>
-              <SidebarCollapseProvider>
-                <a
-                  href="#main-content"
-                  className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-9999 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg focus:outline-none"
-                >
-                  Skip to main content
-                </a>
-                {children}
-              </SidebarCollapseProvider>
-              <SpeedInsights />
-            </ConsentProvider>
-          {/* </OfflineProvider> */}
+          <ConsentProvider>
+            <SidebarCollapseProvider>
+              <a
+                href="#main-content"
+                className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-9999 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg focus:outline-none"
+              >
+                Skip to main content
+              </a>
+              {children}
+            </SidebarCollapseProvider>
+            <SpeedInsights />
+          </ConsentProvider>
         </Providers>
       </body>
     </html>

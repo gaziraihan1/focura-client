@@ -5,7 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { MembersSettingsTab } from "@/components/Dashboard/Workspaces/WorkspaceSettings/MembersSettingsTab";
 import { DangerZoneTab } from "@/components/Dashboard/Workspaces/WorkspaceSettings/DangerZoneTab";
 import { DeleteWorkspaceModal } from "@/components/Dashboard/Workspaces/WorkspaceSettings/DeleteWorkspaceModal";
-import { useWorkspaceSettings } from "@/hooks/useWorkspaceSettings";
+import { useWorkspaceSettings, type TabType } from "@/hooks/useWorkspaceSettings";
 import { WorkspaceSettingsHeader } from "@/components/Dashboard/Workspaces/WorkspaceSettings/WorkspacesSettingsHeader";
 import { WorkspaceSettingsTabs } from "@/components/Dashboard/Workspaces/WorkspaceSettings/WorkspacesSettingsTabs";
 import { GeneralSettingsTab } from "@/components/Dashboard/Workspaces/WorkspaceSettings/GeneralSettingsTab";
@@ -74,8 +74,8 @@ export function SettingsPageContent({ slug }: SettingsPageContentProps) {
   const router = useRouter();
   const pathname = usePathname();
   const handleTabChange = useCallback(
-    (tab: string) => {
-      setActiveTab(tab as any);
+    (tab: TabType) => {
+      setActiveTab(tab);
       const params = new URLSearchParams(window.location.search);
       if (tab === "general") {
         params.delete("tab");

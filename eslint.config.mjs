@@ -11,6 +11,33 @@ const eslintConfig = defineConfig([
       "@typescript-eslint/no-require-imports": "off",
     },
   },
+  // Source code: explicit `any` is a hard error — typed boundaries keep
+  // refactors safe. Fix with real types, `unknown`, or a documented cast.
+  {
+    files: [
+      "app/**/*.ts",
+      "app/**/*.tsx",
+      "components/**/*.ts",
+      "components/**/*.tsx",
+      "hooks/**/*.ts",
+      "hooks/**/*.tsx",
+      "lib/**/*.ts",
+      "context/**/*.ts",
+      "context/**/*.tsx",
+      "utils/**/*.ts",
+      "types/**/*.ts",
+    ],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "error",
+    },
+  },
+  // Tests intentionally use loose mocks — stay permissive there.
+  {
+    files: ["tests/**/*.ts", "tests/**/*.tsx", "**/*.test.ts", "**/*.test.tsx"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "warn",
+    },
+  },
   globalIgnores([
     ".next/**",
     "out/**",

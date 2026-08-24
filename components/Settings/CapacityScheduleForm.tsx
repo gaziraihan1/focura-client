@@ -268,7 +268,7 @@ export function CapacityScheduleForm() {
             label="Timezone"
             value={timezone}
             onChange={setTimezone}
-            options={TIMEZONES as unknown as number[]}
+            options={TIMEZONES}
             formatOption={(tz) => String(tz).replace(/_/g, " ")}
             icon={<Globe className="h-4 w-4 text-muted-foreground" />}
           />
@@ -409,23 +409,23 @@ function SliderField({
   );
 }
 
-interface SelectFieldProps {
+interface SelectFieldProps<T extends number | string> {
   label: string;
-  value: number | string;
-  onChange: (v: any) => void;
-  options: number[] | readonly string[];
-  formatOption: (v: any) => string;
+  value: T;
+  onChange: (v: T) => void;
+  options: readonly T[];
+  formatOption: (v: T) => string;
   icon?: React.ReactNode;
 }
 
-function SelectField({
+function SelectField<T extends number | string>({
   label,
   value,
   onChange,
   options,
   formatOption,
   icon,
-}: SelectFieldProps) {
+}: SelectFieldProps<T>) {
   const id = `select-${label.replace(/\s+/g, "-").toLowerCase()}`;
   return (
     <div>
@@ -439,11 +439,13 @@ function SelectField({
       <select
         id={id}
         value={String(value)}
-        onChange={(e) => onChange(
-          options.some((o) => typeof o === "number")
-            ? Number(e.target.value)
-            : e.target.value
-        )}
+        onChange={(e) =>
+          onChange(
+            (typeof value === "number"
+              ? Number(e.target.value)
+              : e.target.value) as T
+          )
+        }
         className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
       >
         {options.map((opt) => (

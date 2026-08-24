@@ -7,7 +7,7 @@ import { formatDate } from '@/utils/billing.upgrade.utils';
 import { BillingCancelConfirmation } from './BillingCancelConfirmation';
 import type { PlanCardProps } from '@/types/billing.upgrade.types';
 import { BillingStatusBadge } from './BillingStatusBadge';
-import { useParams } from 'next/navigation';
+import { useWorkspaceSlug } from '@/hooks/useRouteParams';
 
 export function BillingPlanCard({
   sub,
@@ -18,8 +18,7 @@ export function BillingPlanCard({
   onReactivate,
   reactivatePending,
 }: PlanCardProps) {
-  const params = useParams();
-  const workspaceSlug = params.workspaceSlug as string;
+  const workspaceSlug = useWorkspaceSlug();
   const [cancelConfirm, setCancelConfirm] = useState(false);
   const [now] = useState<number | null>(() => Date.now());
 

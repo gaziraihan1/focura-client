@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useProjectRouteSlugs } from "@/hooks/useRouteParams";
 import { Flag, Plus, MoreHorizontal, AlertTriangle, CheckCircle2, Loader2, Trash2, ExternalLink } from "lucide-react";
 import { ConfirmModal } from "@/components/Shared/ConfirmModal";
 import FeatureListError from "@/components/Dashboard/ProjectDetails/FeatureListError";
@@ -35,9 +35,7 @@ export default function MilestoneList({ projectId }: MilestoneListProps) {
   const [title, setTitle] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<MilestoneItem | null>(null);
-  const params = useParams();
-  const workspaceSlug = params?.workspaceSlug as string;
-  const projectSlug = params?.projectSlug as string;
+  const { workspaceSlug, projectSlug } = useProjectRouteSlugs();
 
   const handleCreate = async () => {
     if (!title.trim() || createMilestone.isPending) return;

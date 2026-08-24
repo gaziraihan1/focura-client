@@ -77,7 +77,26 @@ vi.mock('@/lib/axios', () => {
     upload: <T>(endpoint: string, data?: unknown)  => axiosInstance.post<T>(endpoint, data).then(r => r.data),
   };
 
-  return { api, axiosInstance, default: axiosInstance };
+  // Mirror the real envelope helpers from lib/axios/client so hooks that
+  // import them keep working under this module mock.
+  const unwrap = <T>(response: unknown): T => {
+    if (
+      response !== null &&
+      typeof response === 'object' &&
+      'success' in response &&
+      'data' in response &&
+      (response as { data?: unknown }).data !== undefined
+    ) {
+      return (response as { data: T }).data;
+    }
+    return response as T;
+  };
+  const unwrapList = <T>(response: unknown): T[] => {
+    const data = unwrap<T[]>(response);
+    return Array.isArray(data) ? data : [];
+  };
+
+  return { api, axiosInstance, default: axiosInstance, unwrap, unwrapList };
 });
 
 // ─────────────────────────────────────────────────────────────

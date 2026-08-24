@@ -2,7 +2,6 @@
 
 import { useForm }                                    from 'react-hook-form';
 import { zodResolver }                                from '@hookform/resolvers/zod';
-import { z }                                          from 'zod';
 import { AlertTriangle, Loader2, Save }               from 'lucide-react';
 import {
   BasicInfoFields,
@@ -11,43 +10,11 @@ import {
   ContentFields,
   ApplicationFields,
 } from './JobFormFields';
+import { jobFormSchema, type AdminJobFormValues } from './job-form-schema';
 
-const formSchema = z.object({
-  title           : z.string().trim().min(3, 'Title is required').max(150),
-  department      : z.string().min(1, 'Department is required'),
-  location        : z.string().trim().min(2, 'Location is required').max(100),
-  locationType    : z.string().min(1),
-  type            : z.string().min(1),
-  experienceLevel : z.string().min(1),
-  salaryMin : z.preprocess(
-    (v) => (v === '' || v === null || v === undefined ? undefined : Number(v)),
-    z.number().int().positive().optional()
-  ),
-  salaryMax : z.preprocess(
-    (v) => (v === '' || v === null || v === undefined ? undefined : Number(v)),
-    z.number().int().positive().optional()
-  ),
-  salaryCurrency  : z.string().length(3, 'Must be a 3-letter code'),
-  description     : z.string().trim().min(50, 'Description must be at least 50 characters'),
-  requirements    : z.string().trim().min(20, 'Requirements must be at least 20 characters'),
-  niceToHave      : z.string().trim().optional(),
-  benefits        : z.string().trim().optional(),
-  status          : z.string().min(1),
-  closingDate     : z.string().optional(),
-  applicationUrl  : z.string().url('Must be a valid URL').optional().or(z.literal('')),
-  applicationEmail: z.string().email('Must be a valid email').optional().or(z.literal('')),
-  isPinned        : z.boolean(),
-}).refine(
-  (d) => {
-    if (d.salaryMin !== undefined && d.salaryMax !== undefined) {
-      return d.salaryMax >= d.salaryMin;
-    }
-    return true;
-  },
-  { message: 'Salary max must be ≥ salary min', path: ['salaryMax'] }
-);
-
-export type AdminJobFormValues = z.infer<typeof formSchema>;
+// Re-exported for backward compatibility (useJob.ts / AdminJobManager import
+// it from this module historically).
+export type { AdminJobFormValues };
 
 interface AdminJobFormProps {
   initial    ?: Partial<AdminJobFormValues>;
@@ -70,7 +37,7 @@ export const AdminJobForm = ({ initial, onSubmit, submitLabel }: AdminJobFormPro
     setError,
     formState: { errors, isSubmitting },
   } = useForm<AdminJobFormValues>({
-    resolver     : zodResolver(formSchema),
+    resolver     : zodResolver(jobFormSchema),
     defaultValues: {
       locationType    : 'REMOTE',
       type            : 'FULL_TIME',

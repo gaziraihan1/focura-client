@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { createWrapper } from '../../../utils/renderWithProviders'
 
-vi.mock('@/hooks/useCalenderDayView', () => ({
+vi.mock('@/hooks/useCalendarDayView', () => ({
   useCalendarDayView: () => ({
     dayTasks: [],
     categorizedTasks: { overdue: [], urgent: [], high: [], medium: [], low: [] },

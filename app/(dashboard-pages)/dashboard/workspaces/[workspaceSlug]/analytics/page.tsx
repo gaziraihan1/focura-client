@@ -1,14 +1,13 @@
 'use client';
 
-import { useParams } from 'next/navigation';
 import { useWorkspacePlan } from '@/context/workspacePlan/WorkspacePlanContext';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { AnalyticsPage } from '@/components/Dashboard/Workspaces/Analytics/AnalyticsPage';
 import { UpgradePlanCard } from '@/components/Shared/UpgradePlanCard';
+import { useWorkspaceSlug } from '@/hooks/useRouteParams';
 
 export default function WorkspaceAnalyticsPage() {
-  const params = useParams();
-  const workspaceSlug = params.workspaceSlug as string;
+  const workspaceSlug = useWorkspaceSlug();
 
   const { isFree, isPro, isLoading } = useWorkspacePlan();
   const { data: workspace } = useWorkspace(workspaceSlug); // already cached, no extra fetch

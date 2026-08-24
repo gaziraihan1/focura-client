@@ -1,6 +1,6 @@
 'use client';
 
-import { FileManagementPageProps, useFileManagementPage } from '@/hooks/useFileManagemetPage';
+import { FileManagementPageProps, useFileManagementPage } from '@/hooks/useFileManagementPage';
 import { FileFiltersComponent } from './FileFilters';
 import { FileGrid } from './FileGrid';
 import { LoadingState } from './FileManagementPage/LoadingState';

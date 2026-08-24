@@ -4,15 +4,14 @@ import {
   startOfMonth, endOfMonth, startOfWeek, endOfWeek,
   addMonths, subMonths, addWeeks, subWeeks, addDays, subDays,
 } from "date-fns";
-import { useParams } from "next/navigation";
 import { Task, useTasks } from "@/hooks/useTask";
 import {  Workspace, workspaceKeys } from "@/hooks/useWorkspace";
+import { useWorkspaceSlug } from "@/hooks/useRouteParams";
 
 type CalendarView = "month" | "week" | "day";
 
 export function useCalendarPage() {
-  const params    = useParams();
-  const slug      = params?.workspaceSlug as string | undefined;
+  const slug      = useWorkspaceSlug();
   const qc = useQueryClient();
   const workspace   = qc.getQueryData<Workspace>(
     workspaceKeys.detail(slug ?? "")

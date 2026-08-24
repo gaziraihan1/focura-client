@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/axios";
+import { api, unwrap } from "@/lib/axios";
 import type { ProjectSectionItem } from "@/hooks/useProjectFeatures";
 
 export interface WorkspaceSection {
@@ -13,13 +13,6 @@ export interface WorkspaceSection {
 interface ProjectRef {
   id: string;
   name: string;
-}
-
-function unwrap<T>(response: any): T {
-  if (response && typeof response === "object" && "success" in response && "data" in response) {
-    return response.data as T;
-  }
-  return response as T;
 }
 
 /**

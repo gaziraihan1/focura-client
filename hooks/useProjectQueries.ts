@@ -1,14 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/axios";
+import { api, unwrap } from "@/lib/axios";
 import { ProjectDetails } from "./useProjects";
 import { projectKeys } from "./projectKeys";
-
-function unwrap<T>(response: any): T {
-  if (response && typeof response === "object" && "success" in response && "data" in response) {
-    return response.data as T;
-  }
-  return response as T;
-}
 
 export const useProjects = (workspaceId?: string) => {
   return useQuery({

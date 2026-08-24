@@ -42,6 +42,33 @@ export function normalizeError(error: unknown): AppError {
   return { message: "Unknown error" };
 }
 
+// ─── Response-envelope normalization ──────────────────────────────────────────
+// The backend guarantees every success body is shaped:
+//   { success: boolean, data?: T, message?: string, pagination?: {...} }
+// (verified across all src/modules/** controllers in Focura-backend — no raw
+// arrays are ever returned). `unwrap` is the SINGLE place that knows this
+// contract; hooks and components must not re-implement envelope sniffing.
+
+export function unwrap<T = unknown>(response: unknown): T {
+  if (
+    response !== null &&
+    typeof response === "object" &&
+    "success" in response &&
+    "data" in response &&
+    (response as { data?: unknown }).data !== undefined
+  ) {
+    return (response as { data: T }).data;
+  }
+  // Defensive fallback for already-unwrapped payloads or data-less envelopes.
+  return response as T;
+}
+
+/** Like {@link unwrap} but guarantees an array result for list endpoints. */
+export function unwrapList<T = unknown>(response: unknown): T[] {
+  const data = unwrap<T[]>(response);
+  return Array.isArray(data) ? data : [];
+}
+
 // ─── Request interceptor ──────────────────────────────────────────────────────
 
 axiosInstance.interceptors.request.use(
@@ -279,7 +306,7 @@ const handleAxiosError = async (
     case 400:
       // Validation errors with field details
       if (data?.errors?.length) {
-        toast.error(data.errors.map((e: any) => `${e.field}: ${e.message}`).join("; "));
+        toast.error(data.errors.map((e) => `${e.field}: ${e.message}`).join("; "));
       } else {
         toast.error(message || "Invalid request. Please check your input.");
       }

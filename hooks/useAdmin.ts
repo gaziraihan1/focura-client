@@ -130,7 +130,7 @@ export function useUpdateWorkspaceLimits() {
       const updatedPlan = plan as 'FREE' | 'PRO' | 'BUSINESS' | 'ENTERPRISE';
       
       // Update the workspace detail cache immediately
-      qc.setQueryData(workspaceKeys.detail(slug), (old: any) => {
+      qc.setQueryData(workspaceKeys.detail(slug), (old: Record<string, unknown> | undefined) => {
         if (!old) return old;
         return {
           ...old, plan: updatedPlan, maxMembers, maxStorage,
@@ -141,8 +141,8 @@ export function useUpdateWorkspaceLimits() {
       });
 
       // Update the workspace overview cache immediately (this is what useWorkspaceOverview uses)
-      qc.setQueryData([...workspaceKeys.detail(slug), "overview"], (old: any) => {
-        if (!old) return old;
+      qc.setQueryData([...workspaceKeys.detail(slug), "overview"], (old: { workspace?: Record<string, unknown> } | undefined) => {
+        if (!old?.workspace) return old;
         return {
           ...old,
           workspace: {

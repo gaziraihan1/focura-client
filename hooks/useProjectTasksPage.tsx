@@ -5,7 +5,8 @@
 // page lives here — the page component stays presentational.
 
 import { createElement, useCallback, useMemo, useEffect, useRef, useState, type ReactNode } from 'react';
-import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useProjectSlug } from '@/hooks/useRouteParams';
 import { useProjectDetailsBySlug, useProjectRole } from '@/hooks/useProjects';
 import { useUserProfile } from '@/hooks/useUser';
 import { Task, useTasks, TaskSort } from '@/hooks/useTask';
@@ -42,8 +43,7 @@ const VIEW_TYPE_TO_MODE: Record<ProjectViewItem['type'], ViewMode> = {
 };
 
 export function useProjectTasksPage() {
-  const params = useParams();
-  const projectSlug = params?.projectSlug as string;
+  const projectSlug = useProjectSlug();
 
   const [viewMode, setViewMode] = useState<ViewMode>('board');
   const [search, setSearch] = useState('');

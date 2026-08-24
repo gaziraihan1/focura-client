@@ -4,7 +4,7 @@ import { DayViewStats } from "./CalendarDayView/DayViewStats";
 import { TaskPrioritySection } from "./CalendarDayView/TaskPrioritySection";
 import { DayViewEmptyState } from "./CalendarDayView/DayViewEmptyState";
 import { DayViewLoadingState } from "./CalendarDayView/DayViewLoadingState";
-import { useCalendarDayView } from "@/hooks/useCalenderDayView";
+import { useCalendarDayView } from "@/hooks/useCalendarDayView";
 
 interface CalendarDayViewProps {
   currentDate: Date;

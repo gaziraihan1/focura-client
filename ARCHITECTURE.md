@@ -51,7 +51,7 @@ Focura Client is designed to be:
 │  │  ├─ Server Components (data fetching)                      │  │
 │  │  ├─ Client Components (interactivity)                      │  │
 │  │  ├─ Tailwind CSS + Framer Motion                           │  │
-│  │  └─ NextAuth + Redux Toolkit + TanStack Query             │  │
+│  │  └─ NextAuth + TanStack Query                             │  │
 │  └────────────────────────────────────────────────────────────┘  │
 └──────────────────────┬───────────────────────────────────────────┘
                        │ HTTPS + RS256 JWT
@@ -88,95 +88,78 @@ Focura Client is designed to be:
 
 | Category | Technology | Version | Purpose |
 |----------|-----------|---------|---------|
-| **Framework** | Next.js (App Router) | 16.0.10 | Full-stack React with SSR |
+| **Framework** | Next.js (App Router) | ^16.3.0 | Full-stack React with SSR |
 | **UI Library** | React | 19.2.0 | Component-based UI |
-| **Language** | TypeScript | 5.9.3 | Type safety |
-| **Styling** | Tailwind CSS | 4.0 | Utility-first CSS |
-| **State Management** | Redux Toolkit | 2.11.0 | Global state |
-| **Server State** | TanStack Query | 5.90.21 | Caching & deduplication |
-| **Authentication** | NextAuth.js | 4.24.13 | Session management |
-| **HTTP Client** | Axios | 1.13.2 | API requests |
-| **Form Handling** | React Hook Form | 7.66.1 | Form management |
-| **Validation** | Zod | 4.1.13 | Schema validation |
-| **Animations** | Framer Motion | 12.23.24 | Smooth animations |
-| **Charts** | Recharts | 3.7.0 | Data visualization |
-| **Icons** | Lucide React | 0.554.0 | Icon library |
-| **Notifications** | React Hot Toast | 2.6.0 | Toast notifications |
-| **Theme** | next-themes | 0.4.6 | Dark/Light mode |
+| **Language** | TypeScript | ^5 | Type safety |
+| **Styling** | Tailwind CSS | 4.x | Utility-first CSS |
+| **UI State** | React Context | built-in | Sidebar, workspace plan, consent |
+| **Server State** | TanStack Query | ^5.90.21 | Caching & deduplication |
+| **Authentication** | NextAuth.js | ^4.24.15 | Session management |
+| **HTTP Client** | Axios | ^1.13.2 | API requests |
+| **Form Handling** | React Hook Form | ^7.66.1 | Form management |
+| **Validation** | Zod | 3.25.76 | Schema validation |
+| **Animations** | Framer Motion | ^12.23.24 | Smooth animations |
+| **Charts** | Recharts | ^3.7.0 | Data visualization |
+| **Icons** | Lucide React | ^0.554.0 | Icon library |
+| **Notifications** | React Hot Toast | ^2.6.0 | Toast notifications |
+| **Theme** | next-themes | ^0.4.6 | Dark/Light mode |
+| **Testing** | Vitest + Testing Library + MSW | latest | Unit & integration tests |
+
+> Versions reflect `package.json`. There is **no Redux** — global UI state is
+> minimal React Context (`context/sidebarCollapse`, `context/workspacePlan`,
+> `components/Consent`), and all server state lives in TanStack Query.
 
 ### Frontend Directory Structure
 
 ```
 focura-client/
 ├── app/                                  # Next.js App Router
-│   ├── (auth)/                          # Authentication routes
-│   │   ├── page.tsx
-│   │   ├── signin/page.tsx
-│   │   ├── signup/page.tsx
-│   │   ├── forgot-password/page.tsx
-│   │   ├── verify-email/page.tsx
-│   │   └── reset-password/page.tsx
-│   │
 │   ├── (dashboard-pages)/               # Protected dashboard routes
-│   │   ├── admin-dashboard/             # Admin panel
-│   │   │   ├── page.tsx
-│   │   │   ├── layout.tsx
-│   │   │   └── [...admin-pages]
+│   │   ├── admin-dashboard/             # Admin panel (role-gated in proxy.ts)
+│   │   │   ├── page.tsx                 #   overview, users, workspaces,
+│   │   │   ├── layout.tsx               #   projects, billing, activity,
+│   │   │   └── [...admin-pages]/        #   careers, templates, resource...
 │   │   │
 │   │   └── dashboard/                   # Main dashboard
 │   │       ├── layout.tsx               # Shared dashboard layout
 │   │       ├── page.tsx                 # Dashboard home
 │   │       ├── tasks/                   # Task management
-│   │       │   ├── page.tsx
-│   │       │   ├── [id]/page.tsx        # Task details
-│   │       │   └── new/page.tsx
-│   │       ├── kanban/                  # Kanban board
-│   │       │   └── page.tsx
 │   │       ├── calendar/                # Calendar view
-│   │       │   └── page.tsx
-│   │       ├── projects/                # Project management
-│   │       │   ├── page.tsx
-│   │       │   ├── [id]/page.tsx
-│   │       │   └── new/page.tsx
+│   │       ├── projects/                # Projects under a workspace
+│   │       │   └── [projectSlug]/...    #   details, tasks, analytics,
+│   │       │                            #   milestones, sprints, views...
 │   │       ├── workspaces/              # Workspace management
-│   │       │   ├── page.tsx
-│   │       │   ├── [id]/page.tsx
-│   │       │   └── new/page.tsx
-│   │       ├── analytics/               # Analytics dashboard
-│   │       │   └── page.tsx
-│   │       ├── labels/                  # Label management
-│   │       │   └── page.tsx
+│   │       │   └── [workspaceSlug]/     #   settings, billing, kanban,
+│   │       │                            #   meetings, labels, integrations
 │   │       ├── storage/                 # File management
-│   │       │   └── page.tsx
 │   │       ├── notifications/           # Notifications page
-│   │       │   └── page.tsx
 │   │       ├── activity-logs/           # Activity feed
-│   │       │   └── page.tsx
 │   │       ├── profile/                 # User profile
-│   │       │   └── page.tsx
-│   │       ├── help/                    # Help & documentation
-│   │       │   └── page.tsx
-│   │       ├── billing/                 # Billing & subscription
-│   │       │   └── page.tsx
-│   │       └── settings/                # Workspace settings
-│   │           └── page.tsx
+│   │       ├── wellness/                # Focus & burnout insights
+│   │       └── settings/                # Workspace settings ([workspaceSlug])
 │   │
-│   ├── (public-pages)/                  # Public routes
-│   │   ├── page.tsx                     # Landing page
-│   │   ├── pricing/page.tsx
-│   │   ├── docs/page.tsx
-│   │   ├── resources/page.tsx
-│   │   └── features/page.tsx
+│   ├── (public-pages)/                  # Public marketing & info routes
+│   │   ├── about/ pricing/ features/ solutions/
+│   │   ├── careers/ contact/ resources/ roadmap/
+│   │   ├── help/ guides/ dev-guides/ api-docs/
+│   │   └── privacy/ terms/ cookies/ refund/
 │   │
-│   ├── api/                             # API route handlers
-│   │   ├── auth/[...nextauth]/route.ts
-│   │   └── [api-routes]/route.ts
+│   ├── authentication/                  # Auth entry routes
+│   │   ├── login/ registration/
+│   │   ├── forgot-password/ reset-password/
+│   │   ├── verify-email/ verified/
+│   │   ├── 2fa/                         # Two-factor challenge
+│   │   └── success/
 │   │
-│   ├── layout.tsx                       # Root layout
-│   ├── page.tsx                         # Home page
-│   ├── not-found.tsx                    # 404 page
-│   ├── globals.css                      # Global styles
-│   └── focura.png                         # Favicon
+│   ├── api/                             # BFF route handlers (NextAuth only)
+│   │   ├── auth/[...nextauth]/route.ts  # Session endpoints
+│   │   ├── auth/register|verify-email|forgot-password|
+│   │   │        reset-password|verify-2fa/route.ts
+│   │   └── (proxied to the Express backend via RS256 JWT)
+│   │
+│   ├── layout.tsx                       # Root layout (Providers, Consent)
+│   ├── globals.css                      # Global styles + Tailwind 4 theme tokens
+│   └── not-found.tsx                    # 404 page
 │
 ├── components/                          # React Components
 │   ├── AdminDashboard/                  # Admin UI
@@ -284,50 +267,44 @@ focura-client/
 │       ├── ThemeProvider.tsx
 │       └── QueryProvider.tsx
 │
-├── hooks/                               # Custom React Hooks (116)
+├── hooks/                               # Custom React Hooks (122) — see hooks/README.md
+│   ├── useTaskQueries.ts                # Task queries (TanStack Query)
+│   ├── taskMutations.ts                 # Task mutations
+│   ├── taskKeys.ts                      # Query key factories
 │   ├── useWorkspace.ts                  # Workspace operations
-│   ├── useTask.ts                       # Task CRUD
-│   ├── useProject.ts                    # Project management
-│   ├── useCalendar.ts                   # Calendar logic
+│   ├── useProjectFeatures.ts            # Milestones, sprints, sections, views
 │   ├── useKanbanBoard.ts                # Kanban operations
 │   ├── useNotifications.ts              # Real-time notifications + SSE
-│   ├── useLabels.ts                     # Label operations
-│   ├── useFocusSession.ts               # Focus sessions
-│   ├── useAnalytics.ts                  # Analytics queries
-│   ├── useBilling.ts                    # Billing operations
-│   ├── useStorage.ts                    # File storage
+│   ├── useRouteParams.ts                # Typed route-param accessors
 │   ├── useAdmin.ts                      # Admin operations
-│   ├── useUser.ts                       # User profile
-│   ├── useTheme.ts                      # Theme management
-│   ├── usePagination.ts                 # Pagination logic
-│   ├── useComment.ts                    # Comment operations
-│   ├── useDailyTasks.ts                 # Daily task management
-│   ├── useFeatures.ts                   # Feature voting
-│   ├── useMeeting.ts                    # Meeting management
-│   └── [Page-specific hooks]            # Page controllers
+│   ├── useSecurity.ts                   # Password & 2FA management
+│   └── [Page controllers: use<XxxPage>] # Compose queries + UI state
 │
-├── lib/                                 # Core utilities
-│   ├── api/                             # API client
-│   │   └── [...api-methods]
+├── lib/                                 # Core infrastructure
+│   ├── axios.ts                         # Barrel — re-exports the axios stack
+│   ├── axios/                           # HTTP client stack (single source of
+│   │   ├── client.ts                    #   API contract: api.*, unwrap(),
+│   │   │                                #   normalizeError, interceptors
+│   │   ├── instance.ts                  #   Axios instance creation
+│   │   ├── refresh.ts                   #   Token refresh + request queue
+│   │   ├── session.ts                   #   Session timers, force logout
+│   │   └── types.ts                     #   ApiResponse, AppError, error codes
 │   │
 │   ├── auth/                            # Authentication
-│   │   ├── authOptions.ts               # NextAuth config
-│   │   ├── logout.ts                    # Logout logic
-│   │   └── [...auth-helpers]
+│   │   ├── authOptions.ts               # NextAuth config (JWT callbacks)
+│   │   ├── exchange.ts                  # HMAC proof → RS256 token exchange
+│   │   ├── refresh.ts                   # Silent session refresh w/ dedup lock
+│   │   ├── bridge.ts / logout.ts / types.ts / index.ts
 │   │
-│   ├── axios.ts                         # Axios with interceptors
-│   ├── email.ts                         # Email utilities
-│   ├── hash.ts                          # Hashing functions
-│   ├── limiter.ts                       # Rate limiting
+│   ├── csrf.ts                          # CSRF token fetch/invalidate
+│   ├── limiter.ts                       # Rate limiting helpers
 │   ├── prisma.ts                        # Prisma client
-│   ├── react-query/                     # TanStack Query config
-│   ├── task/                            # Task utilities
-│   ├── tokens.ts                        # JWT utilities
-│   ├── utils.ts                         # Common utilities
-│   └── docs/                            # Documentation helpers
+│   ├── react-query/                     # TanStack Query client config
+│   ├── email.ts                         # Email utilities
+│   ├── a11y.ts                          # Accessibility helpers (announce)
+│   └── apiData|templatesData|roadmapData # Static content data
 │
 ├── types/                               # TypeScript Definitions (30+)
-│   ├── types.ts                         # Core domain types
 │   ├── task.types.ts
 │   ├── project.types.ts
 │   ├── workspace-usage.types.ts
@@ -336,31 +313,37 @@ focura-client/
 │   ├── comment.types.ts
 │   ├── meeting.types.ts
 │   ├── calendar.types.ts
-│   ├── billing.types.ts
-│   └── [Feature types]
+│   ├── next-auth.d.ts                   # Session type augmentation
+│   └── [<domain>.types.ts]
 │
-├── constants/                           # App constants
+├── constants/                           # App constants (16 domain files)
 │   └── [...constants]
 │
-├── context/                             # React Context
-│   └── [Context providers]
+├── context/                             # React Context (UI state only)
+│   ├── providers/                       # QueryProvider, ToastProvider
+│   ├── sidebarCollapse/
+│   └── workspacePlan/
 │
 ├── utils/                               # Utility functions
 │   └── [Helpers & formatters]
 │
+├── tests/                               # Vitest suites (mirror src structure)
+│   ├── setup.ts                         # Global mocks (axios, next-auth)
+│   └── hooks|components|integration|lib|api|...
+│
 ├── public/                              # Static assets
-│   ├── images/
-│   ├── fonts/
-│   └── icons/
+│   └── [...assets]
 │
 ├── prisma/                              # Prisma schema
-│   ├── schema.prisma
-│   └── migrations/
+│   └── schema.prisma
 │
+├── proxy.ts                             # Next.js 16 middleware (route guards,
+│   │                                    #  admin role check, security headers)
 ├── next.config.ts                       # Next.js config
 ├── tsconfig.json                        # TypeScript config
-├── tailwind.config.ts                   # Tailwind config
-├── components.json                      # Shadcn UI config
+├── vitest.config.ts                     # Test runner config (+ coverage gate)
+├── eslint.config.mjs                    # ESLint flat config (no-explicit-any: error)
+├── .prettierrc.json                     # Formatting config
 ├── package.json                         # Dependencies
 ├── README.md                            # Project readme
 ├── ARCHITECTURE.md                      # This file
@@ -450,10 +433,16 @@ export function TaskListPresenter({ tasks }) {
 
 ```
 ┌─────────────────────────────────────────────┐
-│         Global State (Redux Toolkit)         │
-│  ├─ Authentication (user, session)           │
-│  ├─ Workspaces (current, list)               │
-│  └─ UI State (theme, sidebar open)           │
+│    Session State (NextAuth useSession)      │
+│  ├─ User identity & role                    │
+│  └─ Backend RS256 token (HTTP-only cookie)  │
+└─────────────────────────────────────────────┘
+                      │
+┌─────────────────────▼─────────────────────┐
+│     UI State (minimal React Context)      │
+│  ├─ Sidebar collapsed                     │
+│  ├─ Workspace plan (FREE/PRO/BUSINESS)    │
+│  └─ Cookie consent                        │
 └─────────────────────────────────────────────┘
                       │
 ┌─────────────────────▼─────────────────────┐
@@ -546,10 +535,15 @@ User fills form
 | Route | Public | Authenticated | Owner | Admin | Member |
 |-------|--------|---------------|-------|-------|--------|
 | `/dashboard` | ❌ | ✅ | ✅ | ✅ | ✅ |
-| `/workspace/[id]/settings` | ❌ | ❌ | ✅ | ✅ | ❌ |
-| `/admin` | ❌ | ❌ | ⚠️ | ✅ | ❌ |
+| `/dashboard/workspaces/[workspaceSlug]/settings` | ❌ | ❌ | ✅ | ✅ | ❌ |
+| `/admin-dashboard` | ❌ | ❌ | ⚠️ | ✅ | ❌ |
 | `/tasks` | ❌ | ✅ | ✅ | ✅ | ✅ |
-| `/workspace/[id]/delete` | ❌ | ❌ | ✅ | ❌ | ❌ |
+| `/dashboard/workspaces/[workspaceSlug]/settings` (danger zone) | ❌ | ❌ | ✅ | ❌ | ❌ |
+
+Admin routes are enforced at **two independent layers**: `proxy.ts` checks the
+NextAuth JWT role before rendering, and the backend mounts `/api/v1/admin/*`
+behind `authenticate → requireFocuraAdmin` so non-admin API calls are rejected
+regardless of what the client renders.
 
 ---
 
@@ -595,27 +589,34 @@ User fills form
 ### Request/Response Pattern
 
 ```typescript
-// Request
+// lib/axios/client.ts — the SINGLE place that knows the wire format
 export const api = {
-  async get<T>(endpoint: string) {
-    return axiosInstance.get<ApiResponse<T>>(endpoint);
-  },
+  get<T>(endpoint: string, options?: ApiOptions): Promise<ApiResponse<T> | undefined> { ... },
+  post<T>(endpoint: string, data?: unknown, options?: ApiOptions) { ... },
+  // put / patch / delete / upload follow the same shape
 };
 
-// Response Format
+// Every success body from the backend is shaped like this:
 interface ApiResponse<T> {
   success: boolean;
   data?: T;
   message?: string;
-  code?: string;
+  pagination?: { page; pageSize; totalCount; totalPages; hasNext; hasPrev };
 }
 
-// Usage
-const response = await api.get<Task[]>("/api/v1/tasks");
-if (response?.success) {
-  setTasks(response.data);
-}
+// Hooks unwrap via the shared helpers — never hand-roll envelope sniffing:
+import { api, unwrap, unwrapList } from "@/lib/axios";
+
+const tasks   = unwrapList<Task[]>(await api.get<Task[]>("/api/v1/tasks"));
+const project = unwrap<ProjectDetails>(res);
+
+// Errors: normalizeError() extracts { message, status, code } from Axios
+// errors without `any`. Toasts and forced logout are owned by the
+// interceptor layer (opt in/out per request via ApiOptions).
 ```
+
+**ApiOptions** accepted by every method: `showErrorToast`, `showSuccessToast`,
+`params` (query params), `data` (body for DELETE-with-payload).
 
 ---
 
@@ -1185,5 +1186,5 @@ Creator & Maintainer of Focura
 
 ---
 
-**Last Updated**: April 5, 2026  
-**Version**: 1.0.0
+**Last Updated**: August 24, 2026  
+**Version**: 1.1.0 (matches package.json)

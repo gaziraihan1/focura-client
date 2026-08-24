@@ -1,16 +1,9 @@
-import { api } from "@/lib/axios";
+import { api, unwrap } from "@/lib/axios";
 import { qc } from "@/lib/react-query/query-client";
 import { workspaceKeys } from "./workspaceKeys";
 import { projectKeys } from "./projectKeys";
 import { milestoneKeys, sprintKeys, sectionKeys, viewKeys } from "./projectFeatureKeys";
 import { fetchWorkspaceOverview } from "./useWorkspaceQueries";
-
-function unwrap<T>(response: unknown): T {
-  if (response && typeof response === "object" && "success" in response && "data" in response) {
-    return (response as { data: T }).data;
-  }
-  return response as T;
-}
 
 /**
  * Prefetches a workspace's overview payload (and everything it seeds:

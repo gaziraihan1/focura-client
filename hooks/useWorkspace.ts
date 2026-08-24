@@ -1,5 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useMemo } from "react";
+import type { ProjectDetails } from "./useProjects";
 
 // ─── Types (kept here for backward compatibility) ─────────────────────────────
 
@@ -80,7 +81,7 @@ export interface WorkspaceRoleResult {
 export interface WorkspaceOverview {
   workspace: Workspace;
   stats: WorkspaceStats;
-  projects: any[];
+  projects: ProjectDetails[];
 }
 
 export interface StorageLimitInfo {

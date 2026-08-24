@@ -1,6 +1,8 @@
 import { useWatch } from "react-hook-form";
+import type { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 import { AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { ContactFormValues } from "./contact-form-schema";
 
 const inputBase =
   "w-full rounded-xl border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground transition-colors outline-none focus:ring-2";
@@ -66,9 +68,9 @@ export function FieldWrap({
 }
 
 interface ContactFieldsProps {
-  register: any;
-  control: any;
-  errors: any;
+  register: UseFormRegister<ContactFormValues>;
+  control: Control<ContactFormValues>;
+  errors: FieldErrors<ContactFormValues>;
 }
 
 export function ContactFields({ register, control, errors }: ContactFieldsProps) {

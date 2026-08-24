@@ -1,7 +1,8 @@
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Sparkles, BarChart2, Users, Zap, Lock } from 'lucide-react';
+import { useWorkspaceSlug } from '@/hooks/useRouteParams';
 
 const FEATURE_ICONS: Record<string, React.ReactNode> = {
   Analytics:   <BarChart2 className="w-5 h-5" />,
@@ -21,12 +22,14 @@ const PLAN_PERKS = [
 interface UpgradePlanCardProps {
   feature:     string;
   description: string;
+  /** Workspace slug — read from the route when omitted. */
+  workspaceSlug?: string;
 }
 
-export function UpgradePlanCard({ feature, description }: UpgradePlanCardProps) {
+export function UpgradePlanCard({ feature, description, workspaceSlug: slugProp }: UpgradePlanCardProps) {
   const router = useRouter();
-  const params = useParams();
-  const slug   = params.workspaceSlug as string;
+  const routeSlug = useWorkspaceSlug();
+  const slug = slugProp || routeSlug;
 
   const icon = FEATURE_ICONS[feature] ?? <Lock className="w-5 h-5" />;
 

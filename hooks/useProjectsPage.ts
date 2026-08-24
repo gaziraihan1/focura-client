@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import { useWorkspace, useWorkspaceRole, useWorkspaceRoleFromWorkspace } from "@/hooks/useWorkspace";
-import { CreateProjectDto, ProjectDetails, useCreateProject } from "@/hooks/useProjects";
+import { CreateProjectDto, useCreateProject } from "@/hooks/useProjects";
 import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -360,9 +360,9 @@ export function useWorkspaceProjectsPage({
   const [searchQuery, setSearchQuery] = useState("");
 
   const projects = useMemo(() => {
+    // useProjects already unwraps the API envelope centrally (lib/axios unwrap).
     if (!projectsData) return [];
-    if (Array.isArray(projectsData)) return projectsData;
-    return (projectsData as { data?: ProjectDetails[] }).data || [];
+    return Array.isArray(projectsData) ? projectsData : [];
   }, [projectsData]);
 
   const filteredProjects = useMemo(() => {

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { User2, Mail, Trash2,  Loader2 } from 'lucide-react';
-import { useWorkspace, useWorkspaceMembers, useInviteMember, useRemoveMember, useUpdateMemberRole } from '@/hooks/useWorkspace';
+import { useWorkspace, useWorkspaceMembers, useInviteMember, useRemoveMember, useUpdateMemberRole, type WorkspaceRole } from '@/hooks/useWorkspace';
 import toast from 'react-hot-toast';
 import { announce } from '@/lib/a11y';
 
@@ -20,7 +20,7 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
   const updateRole = useUpdateMemberRole();
 
   const [inviteEmail, setInviteEmail] = useState('');
-  const [inviteRole, setInviteRole] = useState<string>('MEMBER');
+  const [inviteRole, setInviteRole] = useState<WorkspaceRole>('MEMBER');
   const [inviting, setInviting] = useState(false);
 
   const handleInvite = async () => {
@@ -30,7 +30,7 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
       await inviteMember.mutateAsync({
         workspaceId: workspace.id,
         email: inviteEmail,
-        role: inviteRole as any,
+        role: inviteRole,
       });
       setInviteEmail('');
       toast.success('Invitation sent');
@@ -58,13 +58,13 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
     }
   };
 
-  const handleRoleChange = async (memberId: string, role: string) => {
+  const handleRoleChange = async (memberId: string, role: WorkspaceRole) => {
     if (!workspace) return;
     try {
       await updateRole.mutateAsync({
         workspaceId: workspace.id,
         memberId,
-        role: role as any,
+        role,
       });
       toast.success('Role updated');
       announce('Member role updated');
@@ -119,7 +119,12 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
             <select
               id="member-invite-role"
               value={inviteRole}
-              onChange={(e) => setInviteRole(e.target.value)}
+              onChange={(e) => {
+                const next = e.target.value;
+                if ((ROLE_OPTIONS as readonly string[]).includes(next)) {
+                  setInviteRole(next as WorkspaceRole);
+                }
+              }}
               className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm"
             >
               <option value="MEMBER">Member</option>
@@ -172,7 +177,12 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
                 <select
                   id={`member-role-${member.id}`}
                   value={member.role}
-                  onChange={(e) => handleRoleChange(member.id, e.target.value)}
+                  onChange={(e) => {
+                    const next = e.target.value;
+                    if ((ROLE_OPTIONS as readonly string[]).includes(next)) {
+                      handleRoleChange(member.id, next as WorkspaceRole);
+                    }
+                  }}
                   className="rounded-lg border border-border bg-background px-2 py-1.5 text-xs"
                 >
                   {ROLE_OPTIONS.map((role) => (

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { renderHook } from '@testing-library/react'
-import { useCalendarDayView } from '@/hooks/useCalenderDayView'
+import { useCalendarDayView } from '@/hooks/useCalendarDayView'
 
 const makeTask = (overrides: Record<string, unknown> = {}) => ({
   id: 'task-1',

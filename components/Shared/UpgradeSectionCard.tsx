@@ -1,7 +1,8 @@
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Lock, Sparkles } from 'lucide-react';
+import { useWorkspaceSlug } from '@/hooks/useRouteParams';
 
 interface UpgradeSectionCardProps {
   /** Name of the locked section, e.g. "Member Leaderboard" */
@@ -12,6 +13,8 @@ interface UpgradeSectionCardProps {
   icon?: React.ReactNode;
   /** Button label — defaults to "Upgrade to Business" */
   ctaLabel?: string;
+  /** Workspace slug — read from the route when omitted. */
+  workspaceSlug?: string;
 }
 
 /**
@@ -25,10 +28,11 @@ export function UpgradeSectionCard({
   description,
   icon,
   ctaLabel = "Upgrade to Business",
+  workspaceSlug: slugProp,
 }: UpgradeSectionCardProps) {
   const router = useRouter();
-  const params = useParams();
-  const slug = params.workspaceSlug as string;
+  const routeSlug = useWorkspaceSlug();
+  const slug = slugProp || routeSlug;
 
   return (
     <section

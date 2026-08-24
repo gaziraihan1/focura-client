@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { renderHook } from '@testing-library/react'
 import { createWrapper } from '../utils/renderWithProviders'
-import { useFileManagementPage } from '@/hooks/useFileManagemetPage'
+import { useFileManagementPage } from '@/hooks/useFileManagementPage'
 
 vi.mock('next/navigation', () => ({
   useParams: () => ({ workspaceSlug: 'test-ws' }),

@@ -41,7 +41,10 @@ describe('useTasks', () => {
     expect(result.current.data?.pagination.totalCount).toBe(1)
   })
 
-  it('handles response as a simple Task array', async () => {
+  it('returns an empty list for a non-envelope response shape', async () => {
+    // The backend contract guarantees { success, data, pagination }.
+    // A raw array body would violate that contract — the hook must degrade
+    // gracefully to [] instead of guessing shapes (see lib/axios unwrap).
     server.use(
       http.get('*/api/v1/tasks*', () => {
         return HttpResponse.json([mockTask, { ...mockTask, id: 'task-2' }]);
@@ -51,9 +54,8 @@ describe('useTasks', () => {
     const { result } = renderHook(() => useTasks(), { wrapper: createWrapper() })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
-    expect(result.current.data?.data).toHaveLength(2)
-    expect(result.current.data?.pagination.totalCount).toBe(2)
-    expect(result.current.data?.pagination.totalPages).toBe(1)
+    expect(result.current.data?.data).toEqual([])
+    expect(result.current.data?.pagination.totalCount).toBe(0)
   })
 
   it('handles null response gracefully', async () => {

@@ -1,14 +1,13 @@
 'use client';
 
-import { useParams } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import LabelManagementMain from '@/components/Dashboard/Labels/LabelManagementMain';
+import { useWorkspaceSlug } from '@/hooks/useRouteParams';
 
 export default function LabelsPage() {
-  const params = useParams();
-  const workspaceSlug = params.workspaceSlug as string;
+  const workspaceSlug = useWorkspaceSlug();
 
   const { data: workspace, isLoading: isWorkspaceLoading } = useWorkspace(workspaceSlug);
 

@@ -33,11 +33,14 @@ export function useIsFocuraAdmin() {
     throwOnError: false,
     queryFn: async () => {
       try {
-        const res = await api.get<{ isAdmin: boolean }>(
-          '/api/v1/features/admin/me',
-          { showErrorToast: false }, // ← suppress the 401 toast
-        );
-        return (res as unknown as { isAdmin: boolean })?.isAdmin ?? false;
+        // Variant envelope: /features/admin/me returns { success, isAdmin }
+        // with the flag at TOP level, not inside `data` (verified in
+        // feature.controller.ts adminMe) — hence the documented cast.
+        const res = await api.get('/api/v1/features/admin/me', {
+          showErrorToast: false, // suppress the 401 toast
+        });
+        const isAdmin = (res as { isAdmin?: boolean } | null | undefined)?.isAdmin;
+        return isAdmin ?? false;
       } catch {
         return false;
       }

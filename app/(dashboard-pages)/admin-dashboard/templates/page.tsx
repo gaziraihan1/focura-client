@@ -1,63 +1,56 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { api } from '@/lib/axios';
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { api, unwrapList } from '@/lib/axios';
 import { Loader2, Trash2, Mail } from 'lucide-react';
 
 interface TemplateSubscriber {
   email: string;
 }
 
-const fetchSubscribers = async () => {
-  const res = await api.get<TemplateSubscriber[]>('/api/v1/templates');
-  if (res?.success && res.data) return res.data;
-  return [];
+const templateKeys = {
+  all: ['templates'] as const,
 };
+
+// Data fetching goes through TanStack Query like every other page —
+// this gives caching, dedup and refetch consistency for free.
+const fetchSubscribers = async (): Promise<TemplateSubscriber[]> => {
+  const res = await api.get<TemplateSubscriber[]>('/api/v1/templates');
+  return unwrapList<TemplateSubscriber>(res);
+};
+
 const TemplatesOwnerPage = () => {
-  const [data, setData] = useState<TemplateSubscriber[]>([]);
-  const [loading, setLoading] = useState(true);
+  const qc = useQueryClient();
   const [deleting, setDeleting] = useState<string | null>(null);
 
-  useEffect(() => {
-    let mounted = true;
+  const { data: subscribers = [], isLoading: loading } = useQuery({
+    queryKey: templateKeys.all,
+    queryFn: fetchSubscribers,
+    staleTime: 60 * 1000,
+  });
 
-    (async () => {
-      setLoading(true);
-      try {
-        const result = await fetchSubscribers();
-        if (mounted) {
-          setData(result);
-        }
-      } finally {
-        if (mounted) {
-          setLoading(false);
-        }
-      }
-    })();
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  const handleDelete = async (email: string) => {
-    if (deleting) return;
-
-    setDeleting(email);
-
-    const res = await api.delete(
-      `/api/v1/templates/${encodeURIComponent(email)}`,
-      {
+  const deleteSubscriber = useMutation({
+    mutationFn: async (email: string) => {
+      await api.delete(`/api/v1/templates/${encodeURIComponent(email)}`, {
         showSuccessToast: true,
         showErrorToast: true,
-      }
-    );
+      });
+    },
+    onSuccess: (_, email) => {
+      // Optimistically remove from cache; invalidate keeps it honest.
+      qc.setQueryData<TemplateSubscriber[]>(templateKeys.all, (old) =>
+        old ? old.filter((item) => item.email !== email) : old,
+      );
+      void qc.invalidateQueries({ queryKey: templateKeys.all });
+    },
+    onSettled: () => setDeleting(null),
+  });
 
-    if (res?.success) {
-      setData((prev) => prev.filter((item) => item.email !== email));
-    }
-
-    setDeleting(null);
+  const handleDelete = (email: string) => {
+    if (deleteSubscriber.isPending) return;
+    setDeleting(email);
+    deleteSubscriber.mutate(email);
   };
 
   return (
@@ -81,7 +74,7 @@ const TemplatesOwnerPage = () => {
             <div className="flex items-center justify-center py-20">
               <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
             </div>
-          ) : data.length === 0 ? (
+          ) : subscribers.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
                 <Mail className="w-5 h-5 text-muted-foreground" />
@@ -104,7 +97,7 @@ const TemplatesOwnerPage = () => {
               </thead>
 
               <tbody>
-                {data.map((item) => (
+                {subscribers.map((item) => (
                   <tr
                     key={item.email}
                     className="border-b border-border hover:bg-muted/50 transition-colors"
@@ -136,7 +129,7 @@ const TemplatesOwnerPage = () => {
 
         {/* Footer */}
         <div className="text-xs text-muted-foreground">
-          Total subscribers: <span className="font-medium text-foreground">{data.length}</span>
+          Total subscribers: <span className="font-medium text-foreground">{subscribers.length}</span>
         </div>
       </div>
     </div>
