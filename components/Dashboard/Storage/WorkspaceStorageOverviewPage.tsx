@@ -81,7 +81,7 @@ export function WorkspaceStorageOverviewPage({ workspaceId, isPro = false }: Wor
   }
 
   return (
-      <div className="space-y-6 min-w-0 w-full overflow-hidden">
+      <div className="space-y-6 min-w-0 2xl:max-w-7xl 2xl:mx-auto w-full overflow-hidden">
 
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">

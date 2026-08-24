@@ -38,7 +38,7 @@ export function FileManagementPage({
   }
 
   return (
-    <div className="space-y-6 pb-8">
+    <div className="space-y-6 pb-8 2xl:max-w-7xl mx-auto px-2 sm:px-4 lg:px-0">
       <PageHeader
         isAdmin={data?.isAdmin || false}
         selectedWorkspaceId={selectedWorkspaceId}

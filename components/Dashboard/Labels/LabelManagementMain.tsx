@@ -53,7 +53,7 @@ export default function LabelManagementMain({
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background 2xl:max-w-7xl mx-auto">
       <LabelManagementHeader
       canManageLabels={canManageLabels}
         workspaceSlug={workspaceSlug}

@@ -33,7 +33,7 @@ export default async function DashboardPage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-    <div className="space-y-5 py-2">
+    <div className="space-y-5 py-2 2xl:max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
       {/* Hero greeting with stats */}
       <DashboardGreeting
         userName={session.user?.name}

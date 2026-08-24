@@ -42,7 +42,7 @@ export function TeamTasksPageContent({ workspaceId }: TeamTasksPageContentProps)
   const hasNoResults = filteredTasks.length === 0 && !!userId;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 2xl:max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
       <TeamTasksPageHeader workspaceId={workspaceId} />
 
       <TeamTasksStats stats={stats} />

@@ -77,7 +77,7 @@ export function StorageOverviewPage() {
 
   // Main content
   return (
-    <div className="space-y-8 pb-8">
+    <div className="space-y-8 pb-8 2xl:max-w-7xl 2xl:mx-auto">
       {/* Header */}
       <PageHeader
         selectedWorkspaceId={selectedWorkspaceId}

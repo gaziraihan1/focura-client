@@ -23,7 +23,7 @@ export default function AnnouncementsPage() {
   } = useAnnouncementPage(workspaceSlug as string);
 
   return (
-    <div className="space-y-6 px-2 sm:px-4 lg:px-6">
+    <div className="space-y-6 px-2 sm:px-4 lg:px-6 xl:max-w-7xl mx-auto">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center flex-wrap gap-2.5">
           <Megaphone className="w-5 h-5 text-primary" />

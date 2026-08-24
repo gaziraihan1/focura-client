@@ -98,7 +98,7 @@ export function AnalyticsPage({
   }
 
   return (
-    <div className="space-y-8 pb-8 px-2 sm:px-4 lg:px-0 mx-auto">
+    <div className="space-y-8 pb-8 px-2 sm:px-4 lg:px-0 mx-auto 2xl:max-w-7xl">
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
         <div className="flex-1">
           <div className="flex flex-wrap items-center gap-3">

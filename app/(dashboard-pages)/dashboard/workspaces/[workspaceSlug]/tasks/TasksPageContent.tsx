@@ -50,7 +50,7 @@ export function TasksPageContent({ workspaceSlug }: TasksPageContentProps) {
   };
 
   return (
-    <div className="space-y-6 px-2 sm:px-4 lg:px-6">
+    <div className="space-y-6 px-2 sm:px-4 lg:px-6 2xl:max-w-7xl mx-auto">
       <TasksPageHeader workspaceName={workspace.name} onCreateTask={handleCreateTask} memberRole={role} />
       <TaskQuotaDetails qouta={qouta} />
       {focusedTask && activeSession && (

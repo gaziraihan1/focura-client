@@ -11,7 +11,7 @@ import { AiWeeklyInsights } from "@/components/AI/AiWeeklyInsights";
 
 export default function WellnessPage() {
   return (
-    <div className="space-y-5 py-2">
+    <div className="space-y-5 py-2 2xl:max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
       {/* Page header */}
       <div className="flex items-start justify-between gap-4">
         <div>

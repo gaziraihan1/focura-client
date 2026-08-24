@@ -32,7 +32,7 @@ export function LabelManagementHeader({
 
   return (
     <>
-      <header className="bg-card rounded-2xl border-border z-10 p-4">
+      <header className="rounded-2xl border-border z-10 p-4">
         <div className="mx-auto px-2 sm:px-4 lg:px-0 py-6">
           <div className="flex flex-col gap-4">
             {/* Title */}

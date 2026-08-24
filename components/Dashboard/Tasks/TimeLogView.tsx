@@ -48,7 +48,7 @@ export function TimeLogView() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 2xl:max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">

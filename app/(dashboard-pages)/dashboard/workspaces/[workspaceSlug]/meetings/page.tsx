@@ -24,7 +24,7 @@ export default function MeetingsPage() {
   const pendingAction = controller.confirmAction;
 
   return (
-    <div className="flex h-full flex-col justify-center">
+    <div className="flex h-full flex-col justify-center 2xl:max-w-7xl mx-auto">
       <header className="border-b bg-background px-2 sm:px-4 py-4">
         <div className="flex items-center flex-wrap justify-between gap-4">
           <div>

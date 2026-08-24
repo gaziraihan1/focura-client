@@ -33,7 +33,7 @@ export function ProjectsPageContent({ workspaceSlug }: ProjectsPageContentProps)
   }
 
   return (
-    <div className="space-y-6 px-2 sm:px-4">
+    <div className="space-y-6 px-2 sm:px-4 2xl:max-w-7xl mx-auto">
       <WorkspaceProjectsPageHeader
         workspaceName={workspace!.name}
         workspaceSlug={workspaceSlug}

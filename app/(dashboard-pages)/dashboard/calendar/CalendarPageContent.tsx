@@ -70,7 +70,7 @@ export function CalendarPageContent() {
   }
 
   return (
-    <main className="min-h-screen bg-background" aria-label="Calendar">
+    <main className="min-h-screen 2xl:max-w-7xl mx-auto" aria-label="Calendar">
       <CalendarHeader
         currentDate={currentDate}
         view={view}
