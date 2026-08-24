@@ -42,7 +42,7 @@ export function useWorkspaceSections(workspaceId?: string, projects: ProjectRef[
       const results = await Promise.allSettled(
         projects.map((project) =>
           api
-            .get(`/api/v1/projects/${project.id}/sections`)
+            .get(`/api/v1/projects/${project.id}/sections`, { showErrorToast: false })
             .then((res) => unwrap<ProjectSectionItem[]>(res)),
         ),
       );
