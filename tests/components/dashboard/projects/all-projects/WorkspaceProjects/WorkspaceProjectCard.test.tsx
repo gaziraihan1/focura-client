@@ -49,7 +49,7 @@ vi.mock('lucide-react', () => {
 })
 
 import { WorkspaceProjectCard } from '@/components/dashboard/projects/all-projects/WorkspaceProjects/WorkspaceProjectCard'
-import { mockProject, createTestWrapper } from './testHelpers.tsx'
+import { mockProject, createTestWrapper } from './testHelpers.js'
 
 describe('WorkspaceProjectCard', () => {
   beforeEach(() => {

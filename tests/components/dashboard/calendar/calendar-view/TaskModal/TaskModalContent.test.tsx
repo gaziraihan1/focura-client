@@ -113,7 +113,7 @@ vi.mock('@/components/dashboard/workspace/meetings/MeetingStatusBadge', () => ({
   MeetingStatusBadge: ({ status }: { status: string }) => <span data-testid="meeting-status-badge">{status}</span>,
 }));
 
-vi.mock('@/components/dashboard/calendar/calendar/DayDetailsPanelParts', () => ({
+vi.mock('@/components/dashboard/calendar/DayDetailsPanelParts', () => ({
   PlannedHoursCard: () => <div data-testid="planned-hours-card" />,
   FocusSessionsCard: () => <div data-testid="focus-sessions-card" />,
   GoalsCard: () => <div data-testid="goals-card" />,

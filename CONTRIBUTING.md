@@ -152,9 +152,9 @@ app/                  # Next.js App Router — pages & layouts
   (public-pages)/     # marketing pages
   api/                # NextAuth + auth route handlers
 components/           # React components (grouped by feature area)
-  Dashboard/          # main dashboard components (Calendar/, TaskDetails/, ...)
-  Settings/           # settings forms
-  ui/                 # atomic primitives
+  dashboard/          # main dashboard components (calendar/, task-details/, ...)
+  settings/           # settings forms
+  shared/             # reusable UI primitives (Avatar, Modal, Pagination, ...)
 hooks/                # ~107 custom hooks + *Keys.ts query-key factories
 lib/                  # axios client, auth options, prisma, utils
 types/                # TypeScript domain types (calendar.types.ts, etc.)
@@ -211,7 +211,7 @@ server.use(http.get(`${BASE}/api/v1/...`, () => HttpResponse.json({ success: tru
 
 **Run the targeted suite while developing:**
 ```bash
-npx vitest run tests/hooks/useEnergyLevel.test.ts tests/components/Dashboard/Calendar/EnergyTrendChart.test.tsx
+npx vitest run tests/hooks/useEnergyLevel.test.ts tests/components/Dashboard/Calendar/calendar/EnergyTrendChart.test.tsx
 ```
 
 **Before submitting:**

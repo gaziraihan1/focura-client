@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest';
-import { CalendarLegend } from '@/components/dashboard/calendar/calendar/CalendarLegend'
-import { InsightCard } from '@/components/dashboard/calendar/calendar/InsightCard'
-import { LoadingState } from '@/components/dashboard/calendar/calendar/LoadingStateCalendar'
-import { CalendarInsightsBar } from '@/components/dashboard/calendar/calendar/CalendarInsightsBar'
+import { CalendarLegend } from '@/components/dashboard/calendar/CalendarLegend'
+import { InsightCard } from '@/components/dashboard/calendar/InsightCard'
+import { LoadingState } from '@/components/dashboard/calendar/LoadingStateCalendar'
+import { CalendarInsightsBar } from '@/components/dashboard/calendar/CalendarInsightsBar'
 
 import { Zap } from 'lucide-react'
 

@@ -87,7 +87,7 @@ export function useWorkspaceTasksPage({ workspaceSlug }: UseWorkspaceTasksPagePr
   }, [tasksResponse?.data, workspace?.id]);
   const pagination = tasksResponse?.pagination;
   const { data: stats } = useTaskStats(workspace?.id);
-  const { data: qouta } = useWorkspaceQuota(workspace?.id);
+  const { data: quota } = useWorkspaceQuota(workspace?.id);
   const { activeSession, completeSession } = useFocusSession();
   const { data: focusedTask = null } = useTask(activeSession?.taskId as string);
 
@@ -139,7 +139,7 @@ export function useWorkspaceTasksPage({ workspaceSlug }: UseWorkspaceTasksPagePr
     selectedAssignee, setSelectedAssignee: handleAssigneeChange, selectedLabels, toggleLabel, clearFilters,
     focusRequired, setFocusRequired: handleFocusRequiredChange, handlePageChange, handleAddToSecondary,
     handleAddToPrimary, loadingTaskId, primaryTask, secondaryTasks, hasPrimaryTask, dailyTasksLoading,
-    handleRemoveDailyTask, projects, sections, labels, members, qouta, focusedTask, activeSession,
+    handleRemoveDailyTask, projects, sections, labels, members, quota, focusedTask, activeSession,
     completeSession, loadingType, role,
   };
 }

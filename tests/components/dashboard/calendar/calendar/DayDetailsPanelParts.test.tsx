@@ -6,7 +6,7 @@ import {
   BurnoutCard,
   getBurnoutColor,
   getBurnoutLabel,
-} from '@/components/dashboard/calendar/calendar/DayDetailsPanelParts';
+} from '@/components/dashboard/calendar/DayDetailsPanelParts';
 
 vi.mock('lucide-react', () => {
   const icon = (name: string) => {

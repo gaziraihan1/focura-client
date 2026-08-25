@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { TasksPageHeader } from "@/components/dashboard/tasks/all-tasks/TasksPageHeader";
 import { useTasksPage } from "@/hooks/useTasksPage";
-import TaskQoutaDetails from "@/components/dashboard/tasks/all-tasks/TaskQoutaDetails";
+import TaskQuotaDetails from "@/components/dashboard/tasks/all-tasks/TaskQuotaDetails";
 
 const TaskStatsCards = dynamic(
   () => import("@/components/dashboard/tasks/all-tasks/TaskStatsCards").then((m) => m.TaskStatsCards),
@@ -31,13 +31,13 @@ export function TasksPageContent() {
     sortBy, sortOrder, stats, tasks, pagination, isLoading, isError,
     handleTabChange, handleStatusChange, handlePriorityChange, handleSearchChange,
     handleSortChange, handlePageChange, handleCreateTask, focusedTask,
-    activeSession, completeSession, qouta, focusRequired, setFocusRequired,
+    activeSession, completeSession, quota, focusRequired, setFocusRequired,
   } = useTasksPage();
 
   return (
     <div className="space-y-6 2xl:max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
       <TasksPageHeader onCreateTask={handleCreateTask} />
-      <TaskQoutaDetails qouta={qouta} />
+      <TaskQuotaDetails quota={quota} />
       {focusedTask && activeSession && (
         <FocusModeBanner task={focusedTask} onEndFocus={completeSession} sessionDuration={activeSession.duration} />
       )}

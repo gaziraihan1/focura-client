@@ -7,7 +7,7 @@ import { TaskStatsGrid } from "@/components/dashboard/tasks/all-tasks/workspace-
 import { TaskSearchAndFilters } from "@/components/dashboard/tasks/all-tasks/workspace-tasks/TaskSearchAndFilters";
 import { TaskTabs } from "@/components/dashboard/tasks/all-tasks/workspace-tasks/TaskTabs";
 import { useWorkspaceTasksPage } from "@/hooks/useTasksPage";
-import TaskQuotaDetails from "@/components/dashboard/tasks/all-tasks/TaskQoutaDetails";
+import TaskQuotaDetails from "@/components/dashboard/tasks/all-tasks/TaskQuotaDetails";
 import { FocusModeBanner } from "@/components/dashboard/tasks/all-tasks/FocusModeBanner";
 import { AiDailyPlan } from "@/components/ai/AiDailyPlan";
 import { LoadingState } from "@/components/shared/LoadingState";
@@ -37,7 +37,7 @@ export function TasksPageContent({ workspaceSlug }: TasksPageContentProps) {
     selectedAssignee, setSelectedAssignee, selectedLabels, toggleLabel, clearFilters,
     selectedSection, setSelectedSection,
     focusRequired, setFocusRequired, handlePageChange, projects, sections, labels, members,
-    qouta, focusedTask, activeSession, completeSession,
+    quota, focusedTask, activeSession, completeSession,
     primaryTask, secondaryTasks, hasPrimaryTask, dailyTasksLoading,
     handleAddToPrimary, handleAddToSecondary, handleRemoveDailyTask,
     loadingTaskId, loadingType, role,
@@ -52,7 +52,7 @@ export function TasksPageContent({ workspaceSlug }: TasksPageContentProps) {
   return (
     <div className="space-y-6 px-2 sm:px-4 lg:px-6 2xl:max-w-7xl mx-auto">
       <TasksPageHeader workspaceName={workspace.name} onCreateTask={handleCreateTask} memberRole={role} />
-      <TaskQuotaDetails qouta={qouta} />
+      <TaskQuotaDetails quota={quota} />
       {focusedTask && activeSession && (
         <FocusModeBanner task={focusedTask} onEndFocus={completeSession} sessionDuration={activeSession.duration} workspaceSlug={workspaceSlug} />
       )}

@@ -9,7 +9,7 @@
  *  - Calendar/ (DayDetailsPanel)
  *  - CalendarView/TaskModal/
  *  - ActivityLogs/
- *  - AllTasks/ (FocusTaskCard, TaskQouta, etc.)
+ *  - AllTasks/ (FocusTaskCard, TaskQuota, etc.)
  *  - WorkspaceNewTask/
  *  - Workspaces/project/Settings/
  *  - Workspaces/project/Tasks/
@@ -349,7 +349,7 @@ vi.mock('@/components/dashboard/labels/LabelPicker', () => ({
   LabelPicker: () => <div data-testid="label-picker" />,
 }))
 
-vi.mock('@/components/dashboard/calendar/calendar/DayDetailsPanelParts', () => ({
+vi.mock('@/components/dashboard/calendar/DayDetailsPanelParts', () => ({
   PlannedHoursCard: () => <div data-testid="planned-hours-card" />,
   FocusSessionsCard: () => <div data-testid="focus-sessions-card" />,
   GoalsCard: () => <div data-testid="goals-card" />,

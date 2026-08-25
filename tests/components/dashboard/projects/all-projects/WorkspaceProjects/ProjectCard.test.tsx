@@ -23,7 +23,7 @@ vi.mock('@/hooks/useNavigationPrefetch', () => ({
 }))
 
 import { ProjectCard } from '@/components/dashboard/projects/all-projects/WorkspaceProjects/ProjectCard'
-import { mockProject, createTestWrapper } from './testHelpers.tsx'
+import { mockProject, createTestWrapper } from './testHelpers.js'
 
 describe('ProjectCard', () => {
   it('renders project name', () => {

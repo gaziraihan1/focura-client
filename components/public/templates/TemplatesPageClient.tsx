@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import TemplatesHero          from './TemplatesHero';
 import TemplatesCategories    from './TemplatesCategories';
 import TemplatesGrid          from './TemplatesGrid';
-import TemplatesHowItWorks    from './TemplateshowItWorks';
+import TemplatesHowItWorks    from './TemplatesHowItWorks';
 import TemplatesForCreators   from './TemplatesForCreators';
 import TemplatesNotifyBanner  from './TemplatesNotifyBanner';
 import TemplatesCTA           from './TemplatesCTA';

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { CalendarLegend } from '@/components/dashboard/calendar/calendar/CalendarLegend'
+import { CalendarLegend } from '@/components/dashboard/calendar/CalendarLegend'
 
 describe('CalendarLegend', () => {
   it('renders all legend items', () => {

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { LoadingState } from '@/components/dashboard/calendar/calendar/LoadingStateCalendar'
+import { LoadingState } from '@/components/dashboard/calendar/LoadingStateCalendar'
 
 describe('LoadingStateCalendar', () => {
   it('renders loading spinner', () => {

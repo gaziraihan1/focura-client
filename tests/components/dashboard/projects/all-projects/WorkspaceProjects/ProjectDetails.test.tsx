@@ -29,7 +29,7 @@ function createTestWrapper(children: React.ReactNode) {
 }
 
 import ProjectDetails from '@/components/dashboard/projects/all-projects/WorkspaceProjects/ProjectDetails'
-import { mockProject } from './testHelpers.tsx'
+import { mockProject } from './testHelpers.js'
 
 describe('ProjectDetails', () => {
   it('renders project name', () => {

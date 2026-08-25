@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { CalendarSkeleton } from '@/components/dashboard/calendar/calendar/CalendarSkeleton'
+import { CalendarSkeleton } from '@/components/dashboard/calendar/CalendarSkeleton'
 
 describe('CalendarSkeleton', () => {
   it('renders with loading status role', () => {

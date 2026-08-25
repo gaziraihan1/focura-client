@@ -29,19 +29,19 @@
 
 | Component | File Path | Status | Notes |
 |-----------|-----------|--------|-------|
-| `FocusModeBanner` | `components/Dashboard/AllTasks/FocusModeBanner.tsx` | ✅ Covered | `tests/components/Dashboard/AllTasks/FocusModeBanner.test.tsx` |
-| `FocusSessionCard` | `components/Dashboard/TaskDetails/FocusSessionCard.tsx` | ✅ Deep coverage | **2026-08-02:** added timer (countdown), progress bar width, auto-complete on expiry, complete/cancel actions, disabled states, other-task warning (17 tests) |
-| `EnergySelector` | `components/Dashboard/WorkspaceNewTask/EnergySelector.tsx` | ✅ Covered | Bundled in a combined test file |
-| `CapacityScheduleForm` | `components/Settings/CapacityScheduleForm.tsx` | ✅ Covered | `/tests/components/Settings/CapacityScheduleForm.test.tsx` |
-| `WeeklyComparison` | `components/Dashboard/Calendar/WeeklyComparison.tsx` | ✅ Covered | `tests/components/Dashboard/Calendar/WeeklyComparison.test.tsx` (committed) |
-| `ExportButton` | `components/Dashboard/Calendar/ExportButton.tsx` | ✅ Covered | `tests/components/Dashboard/Calendar/ExportButton.test.tsx` (committed) |
-| `WellnessRecommendations` | `components/Dashboard/WellnessRecommendations.tsx` | ✅ Covered | Dedicated test incl. dismiss-all button |
-| `CalendarInsightsBar` | `components/Dashboard/Calendar/CalendarInsightsBar.tsx` | ✅ Covered | - |
-| `BurnoutTrendsChart` | `components/Dashboard/Calendar/BurnoutTrendsChart.tsx` | ✅ Covered | **2026-08-02:** new test file — data/loading/error/empty + auto-expand on HIGH/CRITICAL |
-| `EnergyTrendChart` | `components/Dashboard/Calendar/EnergyTrendChart.tsx` | ✅ Covered | **2026-08-02:** new component + test (data/loading/error/empty/expand) |
-| `CapacityChart` | `components/Dashboard/Calendar/CapacityChart.tsx` | ✅ Covered | Error-state + retry tests added |
-| `DailyCapacityView` | `components/Dashboard/Calendar/DailyCapacityView.tsx` | ✅ Covered | Error-state + retry tests added |
-| `FocusDailySummary` | `components/Dashboard/FocusDailySummary.tsx` | ✅ Covered | Dedicated test |
+| `FocusModeBanner` | `components/dashboard/tasks/all-tasks/FocusModeBanner.tsx` | ✅ Covered | `tests/components/Dashboard/Tasks/all-tasks/FocusModeBanner.test.tsx` |
+| `FocusSessionCard` | `components/dashboard/task-details/FocusSessionCard.tsx` | ✅ Deep coverage | **2026-08-02:** added timer (countdown), progress bar width, auto-complete on expiry, complete/cancel actions, disabled states, other-task warning (17 tests) |
+| `EnergySelector` | `components/dashboard/tasks/workspace-new-task/EnergySelector.tsx` | ✅ Covered | Bundled in a combined test file |
+| `CapacityScheduleForm` | `components/settings/CapacityScheduleForm.tsx` | ✅ Covered | `/tests/components/Settings/CapacityScheduleForm.test.tsx` |
+| `WeeklyComparison` | `components/dashboard/calendar/WeeklyComparison.tsx` | ✅ Covered | `tests/components/Dashboard/Calendar/calendar/WeeklyComparison.test.tsx` (committed) |
+| `ExportButton` | `components/dashboard/calendar/ExportButton.tsx` | ✅ Covered | `tests/components/Dashboard/Calendar/calendar/ExportButton.test.tsx` (committed) |
+| `WellnessRecommendations` | `components/dashboard/shell/WellnessRecommendations.tsx` | ✅ Covered | Dedicated test incl. dismiss-all button |
+| `CalendarInsightsBar` | `components/dashboard/calendar/CalendarInsightsBar.tsx` | ✅ Covered | - |
+| `BurnoutTrendsChart` | `components/dashboard/calendar/BurnoutTrendsChart.tsx` | ✅ Covered | **2026-08-02:** new test file — data/loading/error/empty + auto-expand on HIGH/CRITICAL |
+| `EnergyTrendChart` | `components/dashboard/calendar/EnergyTrendChart.tsx` | ✅ Covered | **2026-08-02:** new component + test (data/loading/error/empty/expand) |
+| `CapacityChart` | `components/dashboard/calendar/CapacityChart.tsx` | ✅ Covered | Error-state + retry tests added |
+| `DailyCapacityView` | `components/dashboard/calendar/DailyCapacityView.tsx` | ✅ Covered | Error-state + retry tests added |
+| `FocusDailySummary` | `components/dashboard/shell/FocusDailySummary.tsx` | ✅ Covered | Dedicated test |
 
 ### 1.2 Frontend — Hook Tests
 
@@ -55,7 +55,7 @@
 | `useFocusSessionStats` | `hooks/useFocusSession.ts` | ✅ Covered | - |
 | `useDailyTasks` | `hooks/useDailyTasks.ts` | ✅ Covered | - |
 | `useRecommendations` | `hooks/useBurnoutTrends.ts` | ✅ Covered | - |
-| `useAi*` (goal breakdown, weekly insights, daily plan, comment assist, meeting summary, quota) | `hooks/useAi*.ts` | ✅ Covered | `tests/components/AI/*` suites |
+| `useAi*` (goal breakdown, weekly insights, daily plan, comment assist, meeting summary, quota) | `hooks/useAi*.ts` | ✅ Covered | `tests/components/AI/*.test.tsx` suites |
 
 ### 1.3 Backend — Tests (status 2026-08-02)
 
@@ -102,7 +102,7 @@ The AI feature suite described in the original [`AI_IMPLEMENTATION_GUIDE.md`](./
 | 6 | AI Workload Analysis / burnout prediction | ✅ Implemented | `ai/insights/weekly` (BUSINESS+) |
 | 7 | Project Health Scoring (0–100) | ❌ Not implemented | — |
 
-**Required infrastructure — all created:** `lib/ai/gemini.client.ts` + `GEMINI_API_KEY` (backend), `lib/ai/prompts.ts`, `lib/ai/context-builder.ts`, `modules/ai/*` (routes, controller, service, types, quota/rate-limit middleware), `hooks/useAi*`, and `components/AI/*` (AiGoalBreakdown, AiWeeklyInsights, AiDailyPlan, AiCommentAssist, AiMeetingSummary, AiQuotaBadge, AiSuggestionBar — all with tests).
+**Required infrastructure — all created:** `lib/ai/gemini.client.ts` + `GEMINI_API_KEY` (backend), `lib/ai/prompts.ts`, `lib/ai/context-builder.ts`, `modules/ai/*` (routes, controller, service, types, quota/rate-limit middleware), `hooks/useAi*`, and `components/ai/*` (AiGoalBreakdown, AiWeeklyInsights, AiDailyPlan, AiCommentAssist, AiMeetingSummary, AiQuotaBadge, AiSuggestionBar — all with tests).
 
 > Note: Non-AI burnout/workload analysis is fully implemented (rule-based `BurnoutSignal` computation — see §6.3). `AiWeeklyInsights` complements it with AI-written weekly summaries + burnout warnings on BUSINESS+ plans.
 
@@ -277,5 +277,5 @@ Backend tests now exist for focus session controller/mutation/query/analytics, c
 | ✅ Working endpoints (aligned FE/BE) | **15/15** focus/wellness + **8** AI |
 | ✅ Working types (aligned FE/BE) | **6/6** + AI contracts |
 | ✅ Backend test suites passing | **4,477+** |
-| ✅ Frontend component/hook suites | Passing (incl. chart/card tests and `tests/components/AI/*`) |
+| ✅ Frontend component/hook suites | Passing (incl. chart/card tests and `tests/components/AI/*.test.tsx`) |
 | ✅ Schema migrations applied | 44 (added `BurnoutSignal.updatedAt`) |

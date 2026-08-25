@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { CalendarDayCell } from '@/components/dashboard/calendar/calendar/CalendarDayCell'
+import { CalendarDayCell } from '@/components/dashboard/calendar/CalendarDayCell'
 
 vi.mock('@/utils/calendar.utils', () => ({
   getWorkloadBarColor: vi.fn(() => 'bg-green-500'),

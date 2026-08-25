@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { CalendarHeader } from '@/components/dashboard/calendar/calendar/CalendarHeader'
+import { CalendarHeader } from '@/components/dashboard/calendar/CalendarHeader'
 
 const defaultProps = {
   currentDate: new Date(2026, 6, 1),

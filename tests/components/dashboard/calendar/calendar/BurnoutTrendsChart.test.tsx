@@ -38,7 +38,7 @@ vi.mock("lucide-react", () => {
   };
 });
 
-import { BurnoutTrendsChart } from "@/components/dashboard/calendar/calendar/BurnoutTrendsChart";
+import { BurnoutTrendsChart } from "@/components/dashboard/calendar/BurnoutTrendsChart";
 
 describe("BurnoutTrendsChart", () => {
   beforeEach(() => {

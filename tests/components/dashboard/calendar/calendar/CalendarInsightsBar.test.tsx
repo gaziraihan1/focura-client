@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { CalendarInsightsBar } from '@/components/dashboard/calendar/calendar/CalendarInsightsBar'
+import { CalendarInsightsBar } from '@/components/dashboard/calendar/CalendarInsightsBar'
 
 vi.mock('@/utils/calendar.utils', () => ({
   getBurnoutColor: vi.fn(() => 'text-green-600'),

@@ -87,7 +87,7 @@ vi.mock("@/lib/utils", () => ({
     args.filter(Boolean).join(" "),
 }));
 
-import { DailyCapacityView } from "@/components/dashboard/calendar/calendar/DailyCapacityView";
+import { DailyCapacityView } from "@/components/dashboard/calendar/DailyCapacityView";
 
 describe("DailyCapacityView", () => {
   beforeEach(() => {

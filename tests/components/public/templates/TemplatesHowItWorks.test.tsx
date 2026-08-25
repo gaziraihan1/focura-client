@@ -113,7 +113,7 @@ vi.mock('@/lib/utils', () => ({
 }))
 
 
-import TemplatesHowItWorks from '@/components/public/templates/TemplateshowItWorks'
+import TemplatesHowItWorks from '@/components/public/templates/TemplatesHowItWorks'
 
 describe('TemplatesHowItWorks', () => {
   it('renders the heading', () => {

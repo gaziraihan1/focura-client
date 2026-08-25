@@ -117,7 +117,7 @@ vi.mock("lucide-react", () => {
   };
 });
 
-import { CapacityChart } from "@/components/dashboard/calendar/calendar/CapacityChart";
+import { CapacityChart } from "@/components/dashboard/calendar/CapacityChart";
 
 describe("CapacityChart", () => {
   beforeEach(() => {

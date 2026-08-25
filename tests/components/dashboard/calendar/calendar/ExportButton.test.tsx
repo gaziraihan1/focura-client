@@ -48,7 +48,7 @@ vi.mock("lucide-react", () => {
   };
 });
 
-import { ExportButton } from "@/components/dashboard/calendar/calendar/ExportButton";
+import { ExportButton } from "@/components/dashboard/calendar/ExportButton";
 import { toPng } from "html-to-image";
 
 describe("ExportButton", () => {

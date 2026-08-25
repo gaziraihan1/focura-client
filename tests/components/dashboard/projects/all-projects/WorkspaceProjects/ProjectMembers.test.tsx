@@ -26,7 +26,7 @@ function createTestWrapper(children: React.ReactNode) {
 }
 
 import ProjectMembers from '@/components/dashboard/projects/all-projects/WorkspaceProjects/ProjectMembers'
-import { mockMembers } from './testHelpers.tsx'
+import { mockMembers } from './testHelpers.js'
 
 describe('ProjectMembers', () => {
   it('renders member names', () => {

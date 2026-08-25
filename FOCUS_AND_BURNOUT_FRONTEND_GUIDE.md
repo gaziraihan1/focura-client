@@ -67,7 +67,7 @@ Focura's frontend brings the backend's powerful focus and burnout system to life
 
 ### The Focus Session Card Component
 
-**Location**: Task detail view (`components/Dashboard/TaskDetails/FocusSessionCard.tsx`)
+**Location**: Task detail view (`components/dashboard/task-details/FocusSessionCard.tsx`)
 
 **Visual States**:
 
@@ -193,7 +193,7 @@ function TaskDetailsPanel({ taskId }: { taskId: string }) {
 
 ### Calendar Grid Visualization
 
-**Location**: `components/Dashboard/Calendar/`
+**Location**: `components/dashboard/calendar/`
 
 **Visual Hierarchy**:
 
@@ -355,7 +355,7 @@ export function CalendarInsightsBar({ insights }: CalendarInsightsBarProps) {
 
 ### Recommendations Panel
 
-**Location**: `components/Dashboard/WellnessRecommendations.tsx` (rendered on the Wellness page)
+**Location**: `components/dashboard/shell/WellnessRecommendations.tsx` (rendered on the Wellness page)
 
 **Mock Design**:
 
@@ -429,7 +429,7 @@ export function useWellnessRecommendations() {
 
 ### Energy Quick-Log Widget
 
-**Location**: `components/Dashboard/Calendar/EnergyQuickLog.tsx` (floating widget on the Wellness + Calendar pages)
+**Location**: `components/dashboard/calendar/EnergyQuickLog.tsx` (floating widget on the Wellness + Calendar pages)
 
 **Visual**:
 

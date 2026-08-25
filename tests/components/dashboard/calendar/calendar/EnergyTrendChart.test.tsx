@@ -39,7 +39,7 @@ vi.mock("lucide-react", () => {
   };
 });
 
-import { EnergyTrendChart } from "@/components/dashboard/calendar/calendar/EnergyTrendChart";
+import { EnergyTrendChart } from "@/components/dashboard/calendar/EnergyTrendChart";
 
 describe("EnergyTrendChart", () => {
   beforeEach(() => {

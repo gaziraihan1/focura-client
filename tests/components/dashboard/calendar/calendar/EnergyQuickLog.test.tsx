@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { EnergyQuickLog } from '@/components/dashboard/calendar/calendar/EnergyQuickLog'
+import { EnergyQuickLog } from '@/components/dashboard/calendar/EnergyQuickLog'
 import { useEnergyLevel } from '@/hooks/useEnergyLevel'
 
 vi.mock('@/hooks/useEnergyLevel', () => ({

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { InsightCard } from '@/components/dashboard/calendar/calendar/InsightCard'
+import { InsightCard } from '@/components/dashboard/calendar/InsightCard'
 
 const MockIcon = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="mock-icon" {...props} />
 

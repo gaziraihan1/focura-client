@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { CalendarGrid } from '@/components/dashboard/calendar/calendar/CalendarGrid'
+import { CalendarGrid } from '@/components/dashboard/calendar/CalendarGrid'
 
 vi.mock('@/utils/calendar.utils', () => ({
   getWorkloadColor: vi.fn(() => 'bg-background'),

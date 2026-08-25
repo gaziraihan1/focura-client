@@ -54,7 +54,7 @@ vi.mock("@/lib/utils", () => ({
   cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(" "),
 }));
 
-import { WeeklyComparison } from "@/components/dashboard/calendar/calendar/WeeklyComparison";
+import { WeeklyComparison } from "@/components/dashboard/calendar/WeeklyComparison";
 
 describe("WeeklyComparison", () => {
   beforeEach(() => {

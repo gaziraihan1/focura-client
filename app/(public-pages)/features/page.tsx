@@ -1,4 +1,4 @@
-import FeatureComparison from '@/components/public/features/FeatureComparision'
+import FeatureComparison from '@/components/public/features/FeatureComparison'
 import FeatureFinalCTA from '@/components/public/features/FeatureFinalCTA'
 import FeaturesHero from '@/components/public/features/FeatureHero'
 import FeaturesDetails from '@/components/public/features/FeaturesDetails'

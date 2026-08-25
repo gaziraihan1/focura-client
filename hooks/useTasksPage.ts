@@ -60,7 +60,7 @@ export function useTasksPage() {
   const { data: tasksResponse, isLoading, isError } = useTasks(filters, currentPage, pageSize, sort);
   const tasks = tasksResponse?.data || [];
   const pagination = tasksResponse?.pagination;
-  const { data: qouta } = usePersonalQuota();
+  const { data: quota } = usePersonalQuota();
   const { data: stats } = useTaskStats(undefined, activeTab);
 
   // Every filter change resets to page 1 (page param removed when back on 1).
@@ -108,7 +108,7 @@ export function useTasksPage() {
     activeTab, searchQuery, selectedStatus, selectedPriority, currentPage, pageSize, sortBy, sortOrder,
     stats, tasks, pagination, isLoading, isError, handleTabChange, handleSearchChange, handleStatusChange,
     handlePriorityChange, handleSortChange, handlePageChange, handleCreateTask, tasksResponse, focusedTask,
-    activeSession, completeSession, qouta, focusRequired, setFocusRequired: handleFocusRequiredChange,
+    activeSession, completeSession, quota, focusRequired, setFocusRequired: handleFocusRequiredChange,
   };
 }
 
