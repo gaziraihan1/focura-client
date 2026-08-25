@@ -1,6 +1,6 @@
 // utils/billing-success.util.ts
 
-const longDateFormatter = new Intl.DateTimeFormat('en-US', { dateStyle: 'long' });
+import { formatDateLong } from '@/utils/date.utils';
 
 export function daysUntil(date: string | null | undefined): number | null {
   if (!date) return null;
@@ -9,8 +9,7 @@ export function daysUntil(date: string | null | undefined): number | null {
 }
 
 export function formatDate(date: string | null | undefined): string {
-  if (!date) return '—';
-  return longDateFormatter.format(new Date(date));
+  return formatDateLong(date);
 }
 
 export function getGainKey(fromPlan: string, toPlan: string): string {

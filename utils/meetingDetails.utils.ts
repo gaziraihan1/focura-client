@@ -1,11 +1,7 @@
+import { formatDateWeekdayUtc } from "@/utils/date.utils";
+
 export function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    timeZone: "UTC",
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+  return formatDateWeekdayUtc(iso);
 }
 
 export function formatTime(iso: string) {

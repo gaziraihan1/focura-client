@@ -2,7 +2,6 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
-import { AxiosError } from "axios";
 
 type ApiErrorResponse = {
   message?: string;
@@ -82,7 +81,7 @@ export const fileManagementKeys = {
 
 // ==================== HOOKS ====================
 export function useFiles(workspaceId: string, filters?: FileFilters) {
-  return useQuery<FilesResponse, AxiosError<ApiErrorResponse>>({
+  return useQuery<FilesResponse, { response?: { status?: number; data?: ApiErrorResponse } }>({
     queryKey: fileManagementKeys.files(workspaceId, filters),
     queryFn: async () => {
       const params = new URLSearchParams();

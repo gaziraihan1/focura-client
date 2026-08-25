@@ -79,10 +79,12 @@ describe("AdminActivityPage", () => {
       isLoading: false,
     } as never);
 
-    const { default: AdminActivityPage } = await import(
-      "@/app/(dashboard-pages)/admin-dashboard/activity/page"
+    // The server page (activity/page.tsx) prefetches and hydrates; the
+    // rendered behavior under test lives in AdminActivityContent.
+    const { AdminActivityContent } = await import(
+      "@/components/AdminDashboard/AdminActivityContent"
     );
-    render(<AdminActivityPage />);
+    render(<AdminActivityContent />);
 
     // Who — the acting admin
     expect(screen.getByText("Focura Admin")).toBeInTheDocument();
@@ -111,10 +113,10 @@ describe("AdminActivityPage", () => {
       isLoading: false,
     } as never);
 
-    const { default: AdminActivityPage } = await import(
-      "@/app/(dashboard-pages)/admin-dashboard/activity/page"
+    const { AdminActivityContent } = await import(
+      "@/components/AdminDashboard/AdminActivityContent"
     );
-    render(<AdminActivityPage />);
+    render(<AdminActivityContent />);
 
     expect(screen.getByText("Jane Doe")).toBeInTheDocument();
     expect(screen.getByText("CREATED")).toBeInTheDocument();

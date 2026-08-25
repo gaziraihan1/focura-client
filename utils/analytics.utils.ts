@@ -1,6 +1,7 @@
 // lib/analytics-utils.ts
 
 import { TasksByPriorityItem } from "@/hooks/useAnalytics";
+import { formatDateMedium } from "@/utils/date.utils";
 import { AlertCircle, AlertTriangle, CheckCircle, Clock } from "lucide-react";
 
 export function formatNumber(num: number): string {
@@ -83,12 +84,7 @@ export function getRiskColor(risk: "low" | "medium" | "high"): string {
 }
 
 export function formatDate(date: Date | string): string {
-  const d = typeof date === "string" ? new Date(date) : date;
-  return d.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  return formatDateMedium(date);
 }
 
 export function formatShortDate(date: Date | string): string {

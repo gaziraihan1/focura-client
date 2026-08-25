@@ -5,8 +5,10 @@ vi.mock("lucide-react", () => ({
   Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="icon-Loader2" {...props} />,
 }));
 
-vi.mock("axios", () => ({
-  default: { get: vi.fn().mockResolvedValue({ data: { jobs: [] } }) },
+vi.mock("@/lib/axios", () => ({
+  api: { get: vi.fn().mockResolvedValue({ success: true, data: [] }) },
+  unwrap: (res: { data?: unknown }) => res?.data ?? res,
+  unwrapList: (res: { data?: unknown }) => (Array.isArray(res?.data) ? res.data : []),
 }));
 
 vi.mock("@/components/Careers/CareersFilters", () => ({

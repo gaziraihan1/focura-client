@@ -1,46 +1,21 @@
+// Backwards-compatible export - redirects to unified component
+// TODO: Eventually remove this file and update all imports to use UnifiedTaskCard
 import { Task } from "@/types/task.types";
-import Link from "next/link";
+import { UnifiedTaskCard, type TaskCardProps } from './UnifiedTaskCard';
 
+// Original simple TaskCard API
 export default function TaskCard({ task }: { task: Task }) {
+  // types/task.types.Task (API shape) and hooks/useTask.Task (card view-model)
+  // are structurally different; this legacy shim only feeds the fields the
+  // "simple" variant reads. Cast until callers migrate to UnifiedTaskCard.
   return (
-    <div className="border rounded-xl p-4 shadow hover:shadow-md transition">
-      {/* Status */}
-      <p className="text-xs font-medium text-gray-500">{task.status}</p>
-
-      {/* Title */}
-      <h3 className="text-lg font-semibold mt-1">{task.title}</h3>
-
-      {/* Project Badge */}
-      {task.project && (
-        <span
-          className="inline-block text-xs px-2 py-1 rounded mt-2"
-          style={{ backgroundColor: task.project.color + "20" }}
-        >
-          {task.project.name}
-        </span>
-      )}
-
-      {/* Priority */}
-      <p className="text-xs mt-3">
-        Priority: <b>{task.priority}</b>
-      </p>
-
-      {/* Footer */}
-      <div className="mt-4 flex justify-between items-center">
-        <p className="text-xs">
-          Due:{" "}
-          {task.dueDate
-            ? new Date(task.dueDate).toLocaleDateString()
-            : "No due date"}
-        </p>
-
-        <Link
-          href={`/tasks/${task.id}`}
-          className="text-blue-600 text-sm font-medium"
-        >
-          View →
-        </Link>
-      </div>
-    </div>
+    <UnifiedTaskCard
+      task={task as unknown as TaskCardProps["task"]}
+      variant="simple"
+    />
   );
 }
+
+// Export the unified component and types for direct usage
+export { UnifiedTaskCard };
+export type { TaskCardVariant, TaskCardProps, TaskSectionBadge, SectionsById } from './UnifiedTaskCard';

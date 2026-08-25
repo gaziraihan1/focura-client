@@ -1,16 +1,12 @@
 import axios from "axios";
+import { PUBLIC_API_BASE_URL } from "@/lib/config/api";
 
-// ─── Axios instance ───────────────────────────────────────────────────────────
+// ─── Axios instance ──────────────────────────────────────────────────────────
 
-const API_BASE_URL =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:5000"
-    : process.env.NEXT_PUBLIC_API_URL;
-
-if (!API_BASE_URL) throw new Error("API_BASE_URL is not set");
+if (!PUBLIC_API_BASE_URL) throw new Error("API_BASE_URL is not set");
 
 export const axiosInstance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: PUBLIC_API_BASE_URL,
   timeout: 30000,
   headers: { "Content-Type": "application/json" },
   // use Authorization header, not cookies.

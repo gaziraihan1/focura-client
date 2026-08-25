@@ -1,4 +1,5 @@
 import { ApiResponse } from "@/lib/axios";
+import { PUBLIC_API_BASE_URL } from "@/lib/config/api";
 import { PaginatedResult, PopularResourceDTO, ProductUpdateDTO, ResourceStatus } from "@/types/resource.types";
 
 const PUBLIC_BASE = "/api/v1/resources";
@@ -8,9 +9,6 @@ interface ListParams {
   page?: number;
   limit?: number;
 }
-
-const PUBLIC_API_BASE_URL =
-  process.env.NODE_ENV === "development" ? "http://localhost:5000" : process.env.NEXT_PUBLIC_API_URL;
 
   function toQueryString(params: ListParams = {}): string {
   const qs = new URLSearchParams();

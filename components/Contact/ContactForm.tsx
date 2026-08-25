@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios, { AxiosError } from "axios";
+import { api } from "@/lib/axios";
+import type { ApiErrorResponse } from "@/lib/axios";
 import { Send, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { ContactFields } from "./ContactFormFields";
 import { contactFormSchema, type ContactFormValues } from "./contact-form-schema";
@@ -68,17 +69,12 @@ export const ContactForm = () => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { consent, ...payload } = values;
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/v1/contact`,
-        payload,
-        { withCredentials: true }
-      );
+      await api.post("/api/v1/contact", payload, { showErrorToast: false });
       setSubmitted(true);
     } catch (err) {
-      const axiosErr = err as AxiosError<{
-        message?: string;
-        error?: string;
-      }>;
+      const axiosErr = err as {
+        response?: { status?: number; data?: ApiErrorResponse };
+      };
 
       if (axiosErr.response?.status === 429) {
         setServerError(

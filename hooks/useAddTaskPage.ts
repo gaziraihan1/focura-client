@@ -3,7 +3,6 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useCreateTask, CreateTaskDto } from "@/hooks/useTask";
 import { api } from "@/lib/axios";
-import { AxiosError } from "axios";
 import type { AiTaskSuggestion } from "@/types/ai.types";
 
 interface FormData {
@@ -102,10 +101,16 @@ export function useAddTaskPage() {
       toast.success("Task created successfully");
       router.push("/dashboard/tasks");
     } catch (err) {
-      const error = err as AxiosError<{
-        message?: string;
-        errors?: { path: string[]; message: string }[];
-      }>;
+      // Structural shape of a rejected api.* call (AxiosError-like) without
+      // importing raw axios types.
+      const error = err as {
+        response?: {
+          data?: {
+            message?: string;
+            errors?: { path: string[]; message: string }[];
+          };
+        };
+      };
 
       const fieldErrors = error.response?.data?.errors;
 

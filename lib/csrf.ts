@@ -1,3 +1,4 @@
+import { PUBLIC_API_BASE_URL } from '@/lib/config/api';
 import { getSession } from 'next-auth/react';
 
 let cachedCsrfToken: string | null = null;
@@ -17,7 +18,7 @@ async function fetchCsrfToken(backendToken?: string): Promise<string | null> {
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/v1/csrf-token`,
+      `${PUBLIC_API_BASE_URL || 'http://localhost:5000'}/api/v1/csrf-token`,
       {
         method: 'GET',
         headers: {

@@ -1,16 +1,7 @@
-import { useParams, useRouter } from 'next/navigation';
-import { MessageSquare, Clock, Flag, Repeat, Sprout } from 'lucide-react';
-import Image from 'next/image';
+// Migrated to use UnifiedTaskCard for consistency
+// TODO: Eventually remove this file and update imports to use UnifiedTaskCard directly
+import { UnifiedTaskCard, TaskSectionBadge, SectionsById } from "@/components/Tasks/UnifiedTaskCard";
 import { Task } from '@/hooks/useTask';
-import { SectionBadge } from './SectionBadge';
-// import { Task } from '@/hooks/useProjects';
-
-export interface TaskSectionBadge {
-  name: string;
-  color?: string | null;
-}
-
-export type SectionsById = ReadonlyMap<string, TaskSectionBadge>;
 
 interface TaskCardProps {
   task: Task;
@@ -18,90 +9,18 @@ interface TaskCardProps {
   section?: TaskSectionBadge | null
 }
 
-const priorityColors: Record<string, string> = {
-  URGENT: 'bg-red-500',
-  HIGH: 'bg-orange-500',
-  MEDIUM: 'bg-yellow-500',
-  LOW: 'bg-green-500',
-};
+// Re-export types for backwards compatibility
+export type { TaskSectionBadge, SectionsById };
+
 export default function TaskCard({ task, workspaceSlug, section }: TaskCardProps) {
-  const router = useRouter();
-  const {projectSlug} = useParams();
-
   return (
-    <div role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.currentTarget.click(); } }}
-      onClick={() => router.push(`/dashboard/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/${task.id}`)}
-      className="p-4 rounded-lg bg-card border border-border hover:border-primary cursor-pointer transition space-y-3"
-    >
-      <div className="flex items-start justify-between">
-        <h4 className="font-medium text-foreground line-clamp-2">{task.title}</h4>
-        <div className={`w-2 h-2 rounded-full ${priorityColors[task.priority]}`} />
-      </div>
-
-      <div className="flex flex-wrap gap-1.5">
-        {section && <SectionBadge name={section.name} color={section.color} />}
-        {task.sprint && (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-violet-50 text-violet-600 dark:bg-violet-950/20 dark:text-violet-400">
-            <Sprout size={10} />
-            {task.sprint.name}
-          </span>
-        )}
-        {task.milestone && (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-600 dark:bg-amber-950/20 dark:text-amber-400">
-            <Flag size={10} />
-            {task.milestone.title}
-          </span>
-        )}
-        {task.recurrence && (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-cyan-50 text-cyan-600 dark:bg-cyan-950/20 dark:text-cyan-400">
-            <Repeat size={10} />
-            {task.recurrence.pattern.charAt(0) +
-              task.recurrence.pattern.slice(1).toLowerCase()}
-          </span>
-        )}
-      </div>
-
-      <div className="flex items-center gap-4 text-xs text-muted-foreground">
-        {task._count.comments > 0 && (
-          <div className="flex items-center gap-1">
-            <MessageSquare size={14} />
-            <span>{task._count.comments}</span>
-          </div>
-        )}
-        {task.dueDate && (
-          <div className="flex items-center gap-1">
-            <Clock size={14} />
-            <span>{new Date(task.dueDate).toLocaleDateString("en-US", { timeZone: "UTC" })}</span>
-          </div>
-        )}
-      </div>
-
-      {task.assignees.length > 0 && (
-        <div className="flex -space-x-2">
-          {task.assignees.slice(0, 3).map(assignee => (
-            <div key={assignee.user.id} className="relative">
-              {assignee.user.image ? (
-                <Image
-                width={24}
-                height={24}
-                  src={assignee.user.image}
-                  alt={assignee.user.name}
-                  className="w-6 h-6 rounded-full border-2 border-card"
-                />
-              ) : (
-                <div className="w-6 h-6 rounded-full bg-primary/20 border-2 border-card flex items-center justify-center text-xs font-medium">
-                  {assignee.user.name.charAt(0)}
-                </div>
-              )}
-            </div>
-          ))}
-          {task.assignees.length > 3 && (
-            <div className="w-6 h-6 rounded-full bg-muted border-2 border-card flex items-center justify-center text-xs font-medium">
-              +{task.assignees.length - 3}
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+    <UnifiedTaskCard 
+      task={task} 
+      variant="project" 
+      workspaceSlug={workspaceSlug}
+      section={section}
+      showEngagementCounts={true}
+      showAssignees={true}
+    />
   );
 }

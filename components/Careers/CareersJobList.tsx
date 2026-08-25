@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import axios                    from 'axios';
+import { api, unwrap, unwrapList } from '@/lib/axios';
 import { Loader2 }              from 'lucide-react';
 import type { JobListItem, JobPosting } from '@/types/job.types';
 import type { CareersFiltersState } from './CareersFilters';
@@ -35,13 +35,12 @@ const CareersJobList = () => {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/jobs`, // ✅ Public endpoint
-        { params: { limit: 50 } }
-      );
-      // Handle both wrapped { success: true, jobs: [] } and unwrapped responses
-      const jobsList = data.jobs || data.data?.jobs || [];
-      setJobs(jobsList);
+      const res = await api.get<JobListItem[]>('/api/v1/jobs', {
+        // ✅ Public endpoint
+        params: { limit: 50 },
+        showErrorToast: false,
+      });
+      setJobs(unwrapList(res));
     } catch (err) {
       console.error('Failed to fetch jobs:', err);
       setError('Failed to load open roles.');
@@ -55,13 +54,11 @@ const CareersJobList = () => {
     setDetailLoading(true);
     setError(null);
     try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/v1/jobs/${slug}` // ✅ Public endpoint (NOT /admin/)
+      const res = await api.get<JobPosting>(
+        `/api/v1/jobs/${slug}`, // ✅ Public endpoint (NOT /admin/)
+        { showErrorToast: false }
       );
-      
-      // Handle response structure: { success: true,  JobPosting } OR just JobPosting
-      const fullJob: JobPosting = data.data || data;
-      setSelectedForDetail(fullJob);
+      setSelectedForDetail(unwrap<JobPosting>(res));
     } catch (err) {
       console.error('Failed to fetch job details:', err);
       setError('Failed to load job details.');

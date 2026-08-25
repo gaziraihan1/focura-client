@@ -11,4 +11,9 @@ export {
   stopSessionTimers,
   updateActivity,
 } from "./axios/session";
-export type { ApiOptions, ApiResponse, AppError } from "./axios/types";
+export type {
+  ApiOptions,
+  ApiResponse,
+  AppError,
+  ApiErrorResponse,
+} from "./axios/types";

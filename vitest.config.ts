@@ -37,7 +37,6 @@ export default defineConfig({
         'lib/auth/authOptions.ts',
         'lib/prisma.ts',
         'lib/api/server.ts',
-        'lib/api/fetcher.ts',
         'lib/axios.ts',
         'lib/email.ts',
         'lib/error/**',

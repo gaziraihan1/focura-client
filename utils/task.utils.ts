@@ -1,4 +1,4 @@
-import { TimeTracking, TaskStatus, TaskPriority } from "@/types/task.types";
+import { TimeTracking } from "@/types/task.types";
 
 export const formatTimeDuration = (hours: number): string => {
   if (hours < 0) {
@@ -43,7 +43,9 @@ export const getEnergyTypeColor = (type: string): string => {
   return colors[type] || "text-gray-500 bg-gray-500/10";
 };
 
-export const getStatusColor = (status: TaskStatus): string => {
+// Status/priority accept plain strings (callers pass task.status straight
+// from API payloads); unknown values fall back to a neutral color.
+export const getStatusColor = (status: string): string => {
   const colors: Record<string, string> = {
     TODO: "bg-gray-500/10 text-gray-500 border-gray-500/20",
     IN_PROGRESS: "bg-blue-500/10 text-blue-500 border-blue-500/20",
@@ -55,7 +57,7 @@ export const getStatusColor = (status: TaskStatus): string => {
   return colors[status] || "bg-gray-500/10 text-gray-500";
 };
 
-export const getPriorityColor = (priority: TaskPriority): string => {
+export const getPriorityColor = (priority: string): string => {
   const colors: Record<string, string> = {
     URGENT: "bg-red-500/10 text-red-500 border-red-500/20",
     HIGH: "bg-orange-500/10 text-orange-500 border-orange-500/20",

@@ -17,9 +17,20 @@ vi.mock('@/utils/task.utils', () => ({
 }))
 vi.mock('@/utils/taskcard.utils', () => ({
   formatHoursSinceCreation: (h: number) => h + 'h',
+  calculateTimeProgress: () => null,
 }))
 vi.mock('@/components/Shared/Avatar', () => ({
   Avatar: ({ name }: { name: string }) => <div data-testid="avatar">{name}</div>,
+}))
+vi.mock('lucide-react', () => ({
+  CheckCircle2: () => <div data-testid="check-circle" />,
+  Clock: () => <div data-testid="clock" />,
+  Flag: () => <div data-testid="flag" />,
+  Folder: () => <div data-testid="folder" />,
+  Timer: () => <div data-testid="timer" />,
+  AlertCircle: () => <div data-testid="alert-circle" />,
+  TrendingUp: () => <div data-testid="trending-up" />,
+  Calendar: () => <div data-testid="calendar" />,
 }))
 
 const baseTask = {

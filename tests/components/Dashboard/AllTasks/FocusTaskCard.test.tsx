@@ -102,14 +102,22 @@ vi.mock('@/components/Dashboard/AllTasks/FocusTaskCard/TaskMetadata', () => ({
   TaskMetadata: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-metadata" {...props} />,
 }))
 
-vi.mock('@/components/Dashboard/AllTasks/WorkspaceTasks/TaskCardParts', () => ({
-  TaskCardHeader: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-card-header" {...props} />,
-  TaskCardMetaChips: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-card-meta-chips" {...props} />,
-  TaskCardProgressAssignees: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="task-card-progress-assignees" {...props} />,
+vi.mock('@/utils/task.utils', () => ({
+  getStatusColor: () => 'bg-green-100',
+  getPriorityColor: () => 'text-red-500',
+  getTimeStatusColor: () => 'text-green-500',
+  formatTimeDuration: (h: number) => h + 'h',
+  formatHoursSinceCreation: (h: number) => h + 'h',
 }))
-
-vi.mock('@/components/Dashboard/Workspaces/TeamPage/ProjectMembersPanel', () => ({
-  ProjectMembersPanel: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="project-members-panel" {...props} />,
+vi.mock('@/utils/taskcard.utils', () => ({
+  formatHoursSinceCreation: (h: number) => h + 'h',
+  calculateTimeProgress: () => 50,
+}))
+vi.mock('@/lib/task/time', () => ({
+  getTaskTimeInfo: () => ({
+    isOverdue: false,
+    hoursUntilDue: 24,
+  }),
 }))
 
 vi.mock('lucide-react', () => ({
@@ -131,6 +139,11 @@ vi.mock('lucide-react', () => ({
   Settings: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="settings-icon" {...props} />,
   CheckSquare: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-square-icon" {...props} />,
   Square: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="square-icon" {...props} />,
+  Timer: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="timer-icon" {...props} />,
+  Clock: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="clock-icon" {...props} />,
+  Flag: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="flag-icon" {...props} />,
+  Folder: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="folder" {...props} />,
+  TrendingUp: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="trending-up" {...props} />,
 }))
 
 // ─── Imports under test ──────────────────────────────────────────────────────
@@ -179,31 +192,24 @@ describe('FocusTaskCard', () => {
     expect(link.getAttribute('href')).toBe('/dashboard/tasks/t-1')
   })
 
-  it('renders FocusBadge with timeRemaining', () => {
+  it('renders task title', () => {
     render(<FocusTaskCard task={task} timeRemaining={7200} />)
-    const badge = screen.getByTestId('focus-badge')
-    expect(badge).toBeInTheDocument()
+    expect(screen.getByText('Test Task')).toBeInTheDocument()
   })
 
-  it('renders TaskStatusIcon with status', () => {
+  it('renders task description', () => {
     render(<FocusTaskCard task={task} timeRemaining={3600} />)
-    const icon = screen.getByTestId('task-status-icon')
-    expect(icon).toBeInTheDocument()
+    expect(screen.getByText('A test task description')).toBeInTheDocument()
   })
 
-  it('renders TaskHeader with task data', () => {
+  it('renders priority indicator', () => {
     render(<FocusTaskCard task={task} timeRemaining={3600} />)
-    const header = screen.getByTestId('task-header')
-    expect(header).toBeInTheDocument()
+    expect(screen.getByTestId('flag-icon')).toBeInTheDocument()
   })
 
-  it('renders TaskProgressBar', () => {
+  it('renders time indicator when timeRemaining is provided', () => {
     render(<FocusTaskCard task={task} timeRemaining={3600} />)
-    expect(screen.getByTestId('task-progress-bar')).toBeInTheDocument()
-  })
-
-  it('renders TaskMetadata', () => {
-    render(<FocusTaskCard task={task} timeRemaining={3600} />)
-    expect(screen.getByTestId('task-metadata')).toBeInTheDocument()
+    // The unified component renders Timer icon and time
+    expect(screen.getByTestId('timer-icon')).toBeInTheDocument()
   })
 })
