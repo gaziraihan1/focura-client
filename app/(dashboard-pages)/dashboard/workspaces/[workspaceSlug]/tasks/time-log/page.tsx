@@ -1,4 +1,4 @@
-import { WorkspaceTimeLogView } from "@/components/Dashboard/Tasks/WorkspaceTimeLogView";
+import { WorkspaceTimeLogView } from "@/components/dashboard/tasks/time-log/WorkspaceTimeLogView";
 
 export default async function WorkspaceTimeLogPage({
   params,

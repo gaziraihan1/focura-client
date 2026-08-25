@@ -16,9 +16,9 @@ import {
   AlertCircle,
   Inbox,
 } from "lucide-react";
-import { MessageRow } from "@/components/AdminDashboard/Contact/MessageRow";
-import { MessageModal } from "@/components/AdminDashboard/Contact/MessageModal";
-import { FilterSelect } from "@/components/AdminDashboard/Contact/FilterSelect";
+import { MessageRow } from "@/components/admin-dashboard/contact/MessageRow";
+import { MessageModal } from "@/components/admin-dashboard/contact/MessageModal";
+import { FilterSelect } from "@/components/admin-dashboard/contact/FilterSelect";
 import { CATEGORY_OPTIONS, STATUS_OPTIONS } from "@/constants/adminContact.constants";
 
 export function ContactPageContent() {

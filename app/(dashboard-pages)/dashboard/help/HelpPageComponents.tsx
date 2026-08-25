@@ -5,7 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { HelpTopicId, ArticleTag } from "@/types/help.types";
 import { useHelpSearch, useHelpTopics } from "@/hooks/useHelpTopics";
-import { HelpContactCards } from "@/components/Dashboard/help/HelpContactCards";
+import { HelpContactCards } from "@/components/dashboard/help/HelpContactCards";
 
 // ─── Tag badge ────────────────────────────────────────────────────────────────
 

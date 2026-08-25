@@ -1,9 +1,9 @@
 "use client";
 
-import { ActivityFilters } from "@/components/Dashboard/ActivityLogs/ActivityFilters";
-import { ActivityPageHeader } from "@/components/Dashboard/ActivityLogs/ActivityPageHeader";
-import { ActivityContent } from "@/components/Dashboard/ActivityLogs/ActivityContent";
-import { ClearActivitiesDialog } from "@/components/Dashboard/ActivityLogs/ClearActivitiesDialog";
+import { ActivityFilters } from "@/components/dashboard/activity-logs/ActivityFilters";
+import { ActivityPageHeader } from "@/components/dashboard/activity-logs/ActivityPageHeader";
+import { ActivityContent } from "@/components/dashboard/activity-logs/ActivityContent";
+import { ClearActivitiesDialog } from "@/components/dashboard/activity-logs/ClearActivitiesDialog";
 import { useActivityPage } from "@/hooks/useActivityPage";
 
 interface ActivityPageContentProps {

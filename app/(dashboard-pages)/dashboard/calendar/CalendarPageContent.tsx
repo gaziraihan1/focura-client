@@ -1,22 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarHeader } from "@/components/Dashboard/Calendar/CalendarHeader";
-import { CalendarInsightsBar } from "@/components/Dashboard/Calendar/CalendarInsightsBar";
-import { CalendarGrid } from "@/components/Dashboard/Calendar/CalendarGrid";
-import { CalendarLegend } from "@/components/Dashboard/Calendar/CalendarLegend";
-import { CalendarSkeleton } from "@/components/Dashboard/Calendar/CalendarSkeleton";
-import { DayDetailsPanel } from "@/components/Dashboard/Calendar/DayDetailsPanel";
+import { CalendarHeader } from "@/components/dashboard/calendar/calendar/CalendarHeader";
+import { CalendarInsightsBar } from "@/components/dashboard/calendar/calendar/CalendarInsightsBar";
+import { CalendarGrid } from "@/components/dashboard/calendar/calendar/CalendarGrid";
+import { CalendarLegend } from "@/components/dashboard/calendar/calendar/CalendarLegend";
+import { CalendarSkeleton } from "@/components/dashboard/calendar/calendar/CalendarSkeleton";
+import { DayDetailsPanel } from "@/components/dashboard/calendar/calendar/DayDetailsPanel";
 import dynamic from "next/dynamic";
-import { BurnoutTrendsChart } from "@/components/Dashboard/Calendar/BurnoutTrendsChart";
-import { DailyCapacityView } from "@/components/Dashboard/Calendar/DailyCapacityView";
-import { WeeklyComparison } from "@/components/Dashboard/Calendar/WeeklyComparison";
+import { BurnoutTrendsChart } from "@/components/dashboard/calendar/calendar/BurnoutTrendsChart";
+import { DailyCapacityView } from "@/components/dashboard/calendar/calendar/DailyCapacityView";
+import { WeeklyComparison } from "@/components/dashboard/calendar/calendar/WeeklyComparison";
 
 const CapacityChart = dynamic(
-  () => import("@/components/Dashboard/Calendar/CapacityChart").then((m) => m.CapacityChart),
+  () => import("@/components/dashboard/calendar/calendar/CapacityChart").then((m) => m.CapacityChart),
   { ssr: false }
 );
-import { EnergyQuickLog } from "@/components/Dashboard/Calendar/EnergyQuickLog";
+import { EnergyQuickLog } from "@/components/dashboard/calendar/calendar/EnergyQuickLog";
 import { useMainCalendarPage } from "@/hooks/useCalendarPage";
 
 type CalendarViewType = "month" | "week" | "day";

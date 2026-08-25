@@ -10,9 +10,9 @@ import {
   type RoadmapStatus,
 } from '@/lib/roadmapData';
 import { cn }                              from '@/lib/utils';
-import RoadmapCard from '@/components/Roadmap/RoadmapCard';
-import DetailModal from '@/components/Roadmap/DetailModal';
-import QuarterLabel from '@/components/Roadmap/QuarterLabel';
+import RoadmapCard from '@/components/public/roadmap/RoadmapCard';
+import DetailModal from '@/components/public/roadmap/DetailModal';
+import QuarterLabel from '@/components/public/roadmap/QuarterLabel';
 
 export default function RoadmapContent() {
   const [activeFilter, setActiveFilter] = useState<RoadmapStatus | 'all'>('all');

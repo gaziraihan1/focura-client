@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Star } from "lucide-react";
-import FavoritesPanel from "@/components/Dashboard/ProjectDetails/FavoritesPanel";
+import FavoritesPanel from "@/components/dashboard/projects/project-details/FavoritesPanel";
 
 interface FavoritesPageContentProps {
   workspaceSlug: string;

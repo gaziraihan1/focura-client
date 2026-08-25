@@ -1,8 +1,8 @@
 "use client";
 
-import { WorkspacesContent } from "@/components/Dashboard/Workspaces/Workspaces/WorkspacesContent";
-import { WorkspaceSearch } from "@/components/Dashboard/Workspaces/Workspaces/WorkspaceSearch";
-import { WorkspacesHeader } from "@/components/Dashboard/Workspaces/Workspaces/WorkspacesHeader";
+import { WorkspacesContent } from "@/components/dashboard/workspace/list/WorkspacesContent";
+import { WorkspaceSearch } from "@/components/dashboard/workspace/list/WorkspaceSearch";
+import { WorkspacesHeader } from "@/components/dashboard/workspace/list/WorkspacesHeader";
 import { useWorkspacesPage } from "@/hooks/useWorkspacePage";
 
 export function WorkspacesPageContent() {

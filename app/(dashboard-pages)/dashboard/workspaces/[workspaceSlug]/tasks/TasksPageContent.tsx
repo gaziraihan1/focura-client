@@ -2,23 +2,23 @@
 
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { TasksPageHeader } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskPageHeader";
-import { TaskStatsGrid } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskStatsGrid";
-import { TaskSearchAndFilters } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskSearchAndFilters";
-import { TaskTabs } from "@/components/Dashboard/AllTasks/WorkspaceTasks/TaskTabs";
+import { TasksPageHeader } from "@/components/dashboard/tasks/all-tasks/workspace-tasks/TaskPageHeader";
+import { TaskStatsGrid } from "@/components/dashboard/tasks/all-tasks/workspace-tasks/TaskStatsGrid";
+import { TaskSearchAndFilters } from "@/components/dashboard/tasks/all-tasks/workspace-tasks/TaskSearchAndFilters";
+import { TaskTabs } from "@/components/dashboard/tasks/all-tasks/workspace-tasks/TaskTabs";
 import { useWorkspaceTasksPage } from "@/hooks/useTasksPage";
-import TaskQuotaDetails from "@/components/Dashboard/AllTasks/TaskQoutaDetails";
-import { FocusModeBanner } from "@/components/Dashboard/AllTasks/FocusModeBanner";
-import { AiDailyPlan } from "@/components/AI/AiDailyPlan";
-import { LoadingState } from "@/components/Shared/LoadingState";
+import TaskQuotaDetails from "@/components/dashboard/tasks/all-tasks/TaskQoutaDetails";
+import { FocusModeBanner } from "@/components/dashboard/tasks/all-tasks/FocusModeBanner";
+import { AiDailyPlan } from "@/components/ai/AiDailyPlan";
+import { LoadingState } from "@/components/shared/LoadingState";
 
 const TasksContentArea = dynamic(
-  () => import("@/components/Dashboard/AllTasks/WorkspaceTasks/TasksContentArea").then((m) => m.TasksContentArea),
+  () => import("@/components/dashboard/tasks/all-tasks/workspace-tasks/TasksContentArea").then((m) => m.TasksContentArea),
   { ssr: false }
 );
 
 const PrimaryTasksView = dynamic(
-  () => import("@/components/Dashboard/AllTasks/WorkspaceTasks/PrimaryTaskView").then((m) => m.PrimaryTasksView),
+  () => import("@/components/dashboard/tasks/all-tasks/workspace-tasks/PrimaryTaskView").then((m) => m.PrimaryTasksView),
   { ssr: false }
 );
 

@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 
 const TaskDetailsClient = dynamic(
-  () => import("@/components/Dashboard/TaskDetails/TaskDetailsClient").then((m) => m.TaskDetailsClient),
+  () => import("@/components/dashboard/task-details/TaskDetailsClient").then((m) => m.TaskDetailsClient),
   {
     ssr: false,
     loading: () => (

@@ -1,9 +1,9 @@
-import FinalSolutionsCTA from '@/components/Solutions/FinalSolutionsCTA'
-import SolutionsFeatureShowcase from '@/components/Solutions/SolutionsFeatureShowcase'
-import SolutionsHero from '@/components/Solutions/SolutionsHero'
-import SolutionsMetrics from '@/components/Solutions/SolutionsMetrics'
-import SolutionProblems from '@/components/Solutions/SolutionsProblem'
-import SolutionUseCases from '@/components/Solutions/SolutionsUseCases'
+import FinalSolutionsCTA from '@/components/public/solutions/FinalSolutionsCTA'
+import SolutionsFeatureShowcase from '@/components/public/solutions/SolutionsFeatureShowcase'
+import SolutionsHero from '@/components/public/solutions/SolutionsHero'
+import SolutionsMetrics from '@/components/public/solutions/SolutionsMetrics'
+import SolutionProblems from '@/components/public/solutions/SolutionsProblem'
+import SolutionUseCases from '@/components/public/solutions/SolutionsUseCases'
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

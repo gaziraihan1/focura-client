@@ -1,12 +1,12 @@
 "use client";
 
-import { ProjectsPageHeader } from "@/components/Dashboard/Projects/ProjectsPageHeader";
-import { ProjectStats } from "@/components/Dashboard/AllProjects/ProjectStats";
-import { WorkspaceQuickFilter } from "@/components/Dashboard/AllProjects/WorkspaceQuickFilter";
-import { ProjectFilters } from "@/components/Dashboard/AllProjects/ProjectFilters";
-import { ProjectsContent } from "@/components/Dashboard/Projects/ProjectsContent";
-import { ProjectsLoadingState } from "@/components/Dashboard/Projects/ProjectsLoadingState";
-import { ProjectsErrorState } from "@/components/Dashboard/Projects/ProjectsErrorState";
+import { ProjectsPageHeader } from "@/components/dashboard/projects/all-projects/ProjectsPageHeader";
+import { ProjectStats } from "@/components/dashboard/projects/all-projects/ProjectStats";
+import { WorkspaceQuickFilter } from "@/components/dashboard/projects/all-projects/WorkspaceQuickFilter";
+import { ProjectFilters } from "@/components/dashboard/projects/all-projects/ProjectFilters";
+import { ProjectsContent } from "@/components/dashboard/projects/all-projects/ProjectsContent";
+import { ProjectsLoadingState } from "@/components/dashboard/projects/all-projects/ProjectsLoadingState";
+import { ProjectsErrorState } from "@/components/dashboard/projects/all-projects/ProjectsErrorState";
 import { useProjectsPage } from "@/hooks/useProjectsPage";
 
 export function ProjectsPageContent() {

@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Columns } from "lucide-react";
-import SectionList from "@/components/Dashboard/ProjectDetails/SectionList";
-import { ProjectManagerOnly } from "@/components/Dashboard/ProjectDetails/ProjectManagerOnly";
+import SectionList from "@/components/dashboard/projects/project-details/SectionList";
+import { ProjectManagerOnly } from "@/components/dashboard/projects/project-details/ProjectManagerOnly";
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
 
 interface SectionsPageContentProps {

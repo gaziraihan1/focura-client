@@ -1,4 +1,4 @@
-import { StorageOverviewPage } from '@/components/Dashboard/Storage/StorageOverviewPage';
+import { StorageOverviewPage } from '@/components/dashboard/storage/overview/StorageOverviewPage';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

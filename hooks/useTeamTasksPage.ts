@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useTasks, useTaskStats, TaskFilters, TaskSort } from "@/hooks/useTask";
 import { useUserId } from "@/hooks/useUser";
 import { getTaskTimeInfo } from "@/lib/task/time";
-import { TeamTaskScope } from "@/components/Dashboard/TeamTask/TeamTaskFiltersBar";
+import { TeamTaskScope } from "@/components/dashboard/team-task/TeamTaskFiltersBar";
 
 const ITEMS_PER_PAGE = 10;
 

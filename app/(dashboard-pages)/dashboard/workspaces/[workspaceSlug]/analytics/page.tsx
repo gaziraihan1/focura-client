@@ -2,8 +2,8 @@
 
 import { useWorkspacePlan } from '@/context/workspacePlan/WorkspacePlanContext';
 import { useWorkspace } from '@/hooks/useWorkspace';
-import { AnalyticsPage } from '@/components/Dashboard/Workspaces/Analytics/AnalyticsPage';
-import { UpgradePlanCard } from '@/components/Shared/UpgradePlanCard';
+import { AnalyticsPage } from '@/components/dashboard/workspace/analytics/AnalyticsPage';
+import { UpgradePlanCard } from '@/components/shared/UpgradePlanCard';
 import { useWorkspaceSlug } from '@/hooks/useRouteParams';
 
 export default function WorkspaceAnalyticsPage() {

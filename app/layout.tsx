@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { ConsentProvider } from "@/components/Consent/ConsentProvider";
-import Providers from "@/components/Providers/SessionProvider";
+import { ConsentProvider } from "@/components/consent/ConsentProvider";
+import Providers from "@/components/providers/SessionProvider";
 import { SidebarCollapseProvider } from "@/context/sidebarCollapse/SidebarCollapseContext";
-// import { OfflineProvider } from "@/components/Providers/OfflineProvider";
+// import { OfflineProvider } from "@/components/providers/OfflineProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

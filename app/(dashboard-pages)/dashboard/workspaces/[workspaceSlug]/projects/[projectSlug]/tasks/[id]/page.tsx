@@ -1,5 +1,5 @@
 // app/dashboard/workspaces/[workspaceSlug]/tasks/[id]/page.tsx
-import { TaskDetailsClient } from "@/components/Dashboard/TaskDetails/TaskDetailsClient";
+import { TaskDetailsClient } from "@/components/dashboard/task-details/TaskDetailsClient";
 import { use } from "react";
 
 // params are available server-side in App Router — no need for useParams

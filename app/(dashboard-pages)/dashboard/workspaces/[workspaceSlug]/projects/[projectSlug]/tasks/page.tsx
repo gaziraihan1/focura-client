@@ -6,18 +6,18 @@
 
 import { useRouter } from 'next/navigation';
 import { AlertCircle } from 'lucide-react';
-import { AccessDeniedProject } from '@/components/Dashboard/ProjectDetails/AccessDeniedProject';
-import LoadingState from '@/components/Dashboard/ProjectDetails/LoadingState';
-import CreateTaskModal from '@/components/Dashboard/ProjectDetails/CreateTaskModal';
-import { EmptyTasks } from '@/components/Dashboard/Workspaces/project/Tasks/EmptyTasks';
-import { ListRow } from '@/components/Dashboard/Workspaces/project/Tasks/ListRow';
-import { Toolbar } from '@/components/Dashboard/Workspaces/project/Tasks/ToolBar';
-import { StatsBar } from '@/components/Dashboard/Workspaces/project/Tasks/StatsBar';
-import { BoardColumn } from '@/components/Dashboard/Workspaces/project/Tasks/BoardColumn';
-import { ProjectTasksCalendar } from '@/components/Dashboard/Workspaces/project/Tasks/ProjectTasksCalendar';
-import { ProjectTasksTimeline } from '@/components/Dashboard/Workspaces/project/Tasks/ProjectTasksTimeline';
-import { PageHeader } from '@/components/Dashboard/Workspaces/project/Tasks/PageHeader';
-import { Pagination } from '@/components/Shared/Pagination';
+import { AccessDeniedProject } from '@/components/dashboard/projects/project-details/AccessDeniedProject';
+import LoadingState from '@/components/dashboard/projects/project-details/LoadingState';
+import CreateTaskModal from '@/components/dashboard/projects/project-details/CreateTaskModal';
+import { EmptyTasks } from '@/components/dashboard/workspace/project-overview/Tasks/EmptyTasks';
+import { ListRow } from '@/components/dashboard/workspace/project-overview/Tasks/ListRow';
+import { Toolbar } from '@/components/dashboard/workspace/project-overview/Tasks/ToolBar';
+import { StatsBar } from '@/components/dashboard/workspace/project-overview/Tasks/StatsBar';
+import { BoardColumn } from '@/components/dashboard/workspace/project-overview/Tasks/BoardColumn';
+import { ProjectTasksCalendar } from '@/components/dashboard/workspace/project-overview/Tasks/ProjectTasksCalendar';
+import { ProjectTasksTimeline } from '@/components/dashboard/workspace/project-overview/Tasks/ProjectTasksTimeline';
+import { PageHeader } from '@/components/dashboard/workspace/project-overview/Tasks/PageHeader';
+import { Pagination } from '@/components/shared/Pagination';
 import {
   useProjectTasksPage,
   LIST_PAGE_SIZE,

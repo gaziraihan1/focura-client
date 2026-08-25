@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { useMeeting } from "@/hooks/useMeeting";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { cn } from "@/lib/utils";
-import { MeetingDetailsSkeleton, DetailCard, VisibilityBadge, HostChip, InfoRow, AttendeeAvatar } from "@/components/Dashboard/MeetingDetails";
+import { MeetingDetailsSkeleton, DetailCard, VisibilityBadge, HostChip, InfoRow, AttendeeAvatar } from "@/components/dashboard/meeting-details";
 import { formatDate, formatTime, getDuration } from "@/utils/meetingDetails.utils";
-import { StatusBadge } from "@/components/Dashboard/MeetingDetails/StatusBadge";
-import { AiMeetingSummary } from "@/components/AI/AiMeetingSummary";
+import { StatusBadge } from "@/components/dashboard/meeting-details/StatusBadge";
+import { AiMeetingSummary } from "@/components/ai/AiMeetingSummary";
 
 interface MeetingDetailsPageContentProps {
   workspaceSlug: string;

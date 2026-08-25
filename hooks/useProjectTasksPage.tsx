@@ -12,8 +12,8 @@ import { useUserProfile } from '@/hooks/useUser';
 import { Task, useTasks, TaskSort } from '@/hooks/useTask';
 import { useProjectSections, useProjectSprints, useProjectMilestones, useProjectViews, type ProjectViewItem } from '@/hooks/useProjectFeatures';
 import { buildWorkflowColumns, mergeBoardColumns, assignTasksToColumns } from '@/utils/workflow';
-import { COLUMNS } from '@/components/Dashboard/Workspaces/project/Tasks/ListRow';
-import type { SectionsById } from '@/components/Dashboard/ProjectDetails/TaskCard';
+import { COLUMNS } from '@/components/dashboard/workspace/project-overview/Tasks/ListRow';
+import type { SectionsById } from '@/components/dashboard/projects/project-details/TaskCard';
 import { usePagination } from '@/hooks/usePagination';
 import { useUrlState } from '@/hooks/useUrlState';
 

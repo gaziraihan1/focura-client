@@ -8,9 +8,9 @@ import { billingKeys } from "@/hooks/useBilling";
 import {
   InvoiceTableSkeleton,
   PlanCardSkeleton,
-} from "@/components/Dashboard/Workspaces/billing/Billing/BillingLoadingSkeleton";
-import { BillingPlanCard } from "@/components/Dashboard/Workspaces/billing/Billing/BillingPlanCard";
-import { BillingInvoiceTable } from "@/components/Dashboard/Workspaces/billing/Billing/BillingInvoiceTable";
+} from "@/components/dashboard/workspace/billing/Billing/BillingLoadingSkeleton";
+import { BillingPlanCard } from "@/components/dashboard/workspace/billing/Billing/BillingPlanCard";
+import { BillingInvoiceTable } from "@/components/dashboard/workspace/billing/Billing/BillingInvoiceTable";
 
 interface BillingPageContentProps {
   workspaceSlug: string;

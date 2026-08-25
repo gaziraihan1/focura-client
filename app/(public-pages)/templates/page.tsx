@@ -1,4 +1,4 @@
-import TemplatesPageClient from '@/components/Templates/TemplatesPageClient';
+import TemplatesPageClient from '@/components/public/templates/TemplatesPageClient';
 import type { Metadata }     from 'next';
 
 export const metadata: Metadata = {

@@ -1,12 +1,12 @@
 'use client';
 
-import { HelpCategories } from '@/components/Help/HelpCategories';
-import { HelpContactCard } from '@/components/Help/HelpContactCard';
-import { HelpFAQ } from '@/components/Help/HelpFaq';
-import { HelpFeaturesGuide } from '@/components/Help/HelpFeaturesGuide';
-import { HelpGettingStarted } from '@/components/Help/HelpGettingStarted';
-import { HelpHero } from '@/components/Help/HelpHero';
-import { HelpSearchResults } from '@/components/Help/HelpSearchResults';
+import { HelpCategories } from '@/components/docs/help/HelpCategories';
+import { HelpContactCard } from '@/components/docs/help/HelpContactCard';
+import { HelpFAQ } from '@/components/docs/help/HelpFaq';
+import { HelpFeaturesGuide } from '@/components/docs/help/HelpFeaturesGuide';
+import { HelpGettingStarted } from '@/components/docs/help/HelpGettingStarted';
+import { HelpHero } from '@/components/docs/help/HelpHero';
+import { HelpSearchResults } from '@/components/docs/help/HelpSearchResults';
 import { useState }          from 'react';
 
 const scrollToCategory = (id: string) => {

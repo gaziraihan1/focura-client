@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import VerifyEmailContent from "@/components/VerifyEmail/VerifyEmailContent";
+import VerifyEmailContent from "@/components/auth/verify-email/VerifyEmailContent";
 import { Loader2 } from "lucide-react";
 
 

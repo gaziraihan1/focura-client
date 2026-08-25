@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 import { useCreateTask } from "@/hooks/useTask";
 import { useProjectSections, useProjectSprints, useProjectMilestones } from "@/hooks/useProjectFeatures";
 import { CreateTaskFormData } from "@/types/taskForm.types";
-import { EMPTY_REPEAT, type RepeatValue } from "@/components/Tasks/form/RepeatControl";
+import { EMPTY_REPEAT, type RepeatValue } from "@/components/tasks/form/RepeatControl";
 
 interface UseCreateTaskModalProps {
   projectId: string;

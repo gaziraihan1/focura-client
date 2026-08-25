@@ -1,8 +1,8 @@
 "use client";
 
-import { NotificationsPageHeader } from "@/components/Dashboard/Notifications/NotificationsPageHeader";
-import { NotificationsContent } from "@/components/Dashboard/Notifications/NotificationsContent";
-import { DeleteNotificationsDialog } from "@/components/Dashboard/Notifications/DeleteNotificationsDialog";
+import { NotificationsPageHeader } from "@/components/dashboard/notifications/NotificationsPageHeader";
+import { NotificationsContent } from "@/components/dashboard/notifications/NotificationsContent";
+import { DeleteNotificationsDialog } from "@/components/dashboard/notifications/DeleteNotificationsDialog";
 import { useNotificationsPage } from "@/hooks/useNotificationsPage";
 
 export function NotificationsPageContent() {

@@ -2,13 +2,13 @@
 
 import { useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { WorkspaceHeader } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceHeader";
-import { WorkspaceStats } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceStats";
-import { WorkspaceTabNavigation } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceTabNavigation";
-import { InviteMemberModal } from "@/components/Dashboard/Workspaces/WorkspacePage/InviteMemberModal";
-import { LoadingState } from "@/components/Shared/LoadingState";
-import { WorkspaceDetailErrorState } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceDetailErrorState";
-import { WorkspaceDetailContent } from "@/components/Dashboard/Workspaces/WorkspacePage/WorkspaceDetailsContent";
+import { WorkspaceHeader } from "@/components/dashboard/workspace/detail/WorkspaceHeader";
+import { WorkspaceStats } from "@/components/dashboard/workspace/detail/WorkspaceStats";
+import { WorkspaceTabNavigation } from "@/components/dashboard/workspace/detail/WorkspaceTabNavigation";
+import { InviteMemberModal } from "@/components/dashboard/workspace/detail/InviteMemberModal";
+import { LoadingState } from "@/components/shared/LoadingState";
+import { WorkspaceDetailErrorState } from "@/components/dashboard/workspace/detail/WorkspaceDetailErrorState";
+import { WorkspaceDetailContent } from "@/components/dashboard/workspace/detail/WorkspaceDetailsContent";
 import { useWorkspaceDetailPage } from "@/hooks/useWorkspaceLayout";
 
 type TabType = "overview" | "projects" | "members";

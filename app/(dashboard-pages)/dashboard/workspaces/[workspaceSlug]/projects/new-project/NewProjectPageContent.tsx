@@ -1,13 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ErrorState } from "@/components/Dashboard/Projects/NewProject/ErrorState";
-import { LoadingState } from "@/components/Shared/LoadingState";
-import { NewProjectPageHeader } from "@/components/Dashboard/Projects/NewProject/NewProjectPageHeader";
-import { ProjectBasicInfoSection } from "@/components/Dashboard/Projects/NewProject/ProjectBasicInfoSection";
-import { ProjectFormActions } from "@/components/Dashboard/Projects/NewProject/ProjectFormActions";
-import { ProjectPlanningSection } from "@/components/Dashboard/Projects/NewProject/ProjectPlanningSection";
-import ProjectTemplateStarter from "@/components/Dashboard/Projects/NewProject/ProjectTemplateStarter";
+import { ErrorState } from "@/components/dashboard/projects/all-projects/NewProject/ErrorState";
+import { LoadingState } from "@/components/shared/LoadingState";
+import { NewProjectPageHeader } from "@/components/dashboard/projects/all-projects/NewProject/NewProjectPageHeader";
+import { ProjectBasicInfoSection } from "@/components/dashboard/projects/all-projects/NewProject/ProjectBasicInfoSection";
+import { ProjectFormActions } from "@/components/dashboard/projects/all-projects/NewProject/ProjectFormActions";
+import { ProjectPlanningSection } from "@/components/dashboard/projects/all-projects/NewProject/ProjectPlanningSection";
+import ProjectTemplateStarter from "@/components/dashboard/projects/all-projects/NewProject/ProjectTemplateStarter";
 import { useWorkspaceNewProjectPage } from "@/hooks/useProjectsPage";
 
 interface NewProjectPageContentProps {

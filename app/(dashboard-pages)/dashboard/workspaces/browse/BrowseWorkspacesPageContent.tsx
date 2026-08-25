@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Loader2, Search, AlertCircle, Globe, Compass } from "lucide-react";
 import { usePublicWorkspaces } from "@/hooks/useWorkspaceQueries";
-import { PublicWorkspaceCard } from "@/components/Dashboard/Workspaces/Workspaces/PublicWorkspaceCard";
+import { PublicWorkspaceCard } from "@/components/dashboard/workspace/list/PublicWorkspaceCard";
 
 const PAGE_SIZE = 12;
 

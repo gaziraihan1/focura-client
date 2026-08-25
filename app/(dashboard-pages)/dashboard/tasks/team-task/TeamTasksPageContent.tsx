@@ -1,9 +1,9 @@
 "use client";
 
-import { TeamTaskFiltersBar } from "@/components/Dashboard/TeamTask/TeamTaskFiltersBar";
-import { TeamTasksPageHeader } from "@/components/Dashboard/TeamTask/TeamTasksPageHeader";
-import { TeamTasksStats } from "@/components/Dashboard/TeamTask/TeamTasksStats";
-import { TeamTasksContent } from "@/components/Dashboard/TeamTask/TeamTasksContent";
+import { TeamTaskFiltersBar } from "@/components/dashboard/team-task/TeamTaskFiltersBar";
+import { TeamTasksPageHeader } from "@/components/dashboard/team-task/TeamTasksPageHeader";
+import { TeamTasksStats } from "@/components/dashboard/team-task/TeamTasksStats";
+import { TeamTasksContent } from "@/components/dashboard/team-task/TeamTasksContent";
 import { useTeamTasksPage } from "@/hooks/useTeamTasksPage";
 
 const ITEMS_PER_PAGE = 10;

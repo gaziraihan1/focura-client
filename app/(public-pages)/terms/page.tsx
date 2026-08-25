@@ -1,7 +1,7 @@
-import TermsContent from "@/components/TermsAndConditions/TermsContent";
-import { TermsHero } from "@/components/TermsAndConditions/TermsHero";
-import { TermsMobileNav } from "@/components/TermsAndConditions/TermsMobileNav";
-import { TermsNav, TermsNavItem } from "@/components/TermsAndConditions/TermsNav";
+import TermsContent from "@/components/public/terms/TermsContent";
+import { TermsHero } from "@/components/public/terms/TermsHero";
+import { TermsMobileNav } from "@/components/public/terms/TermsMobileNav";
+import { TermsNav, TermsNavItem } from "@/components/public/terms/TermsNav";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

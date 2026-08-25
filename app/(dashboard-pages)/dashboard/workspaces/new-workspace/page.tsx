@@ -1,10 +1,10 @@
 'use client';
 
-import { CreateWorkspaceFormActions } from '@/components/Dashboard/CreateWorkspacePage/CreateWorkspaceFormActions';
-import { CreateWorkspacePageHeader } from '@/components/Dashboard/CreateWorkspacePage/CreateWorkspacePageHeader';
-import { WorkspaceDetailsSection } from '@/components/Dashboard/CreateWorkspacePage/WorkspaceDetailsSection';
-import { WorkspacePlanSelector } from '@/components/Dashboard/CreateWorkspacePage/WorkspacePlanSelector';
-import { WorkspaceTypeSelector } from '@/components/Dashboard/CreateWorkspacePage/WorkspaceTypeSelector';
+import { CreateWorkspaceFormActions } from '@/components/dashboard/create-workspace/CreateWorkspaceFormActions';
+import { CreateWorkspacePageHeader } from '@/components/dashboard/create-workspace/CreateWorkspacePageHeader';
+import { WorkspaceDetailsSection } from '@/components/dashboard/create-workspace/WorkspaceDetailsSection';
+import { WorkspacePlanSelector } from '@/components/dashboard/create-workspace/WorkspacePlanSelector';
+import { WorkspaceTypeSelector } from '@/components/dashboard/create-workspace/WorkspaceTypeSelector';
 import { useCreateWorkspacePage } from '@/hooks/useCreateWorkspacePage';
 
 const STEPS = [

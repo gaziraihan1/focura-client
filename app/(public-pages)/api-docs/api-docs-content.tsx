@@ -4,13 +4,13 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { Menu, X }                from 'lucide-react';
 import { API_SECTIONS } from '@/lib/apiData';
-import { ApiDocsHero } from '@/components/ApiDocs/ApiDocsHero';
-import { ApiDocsSidebar } from '@/components/ApiDocs/ApiDocsSidebar';
-import { ApiDocsAuthentication } from '@/components/ApiDocs/ApiDocsAuthentication';
-import { ApiDocsRateLimit } from '@/components/ApiDocs/ApiDocsRateLimit';
-import { ApiDocsSSE } from '@/components/ApiDocs/ApiDocsSSE';
-import { ApiDocsErrors } from '@/components/ApiDocs/ApiDocsError';
-import { ApiDocsSection } from '@/components/ApiDocs/ApiDocsSection';
+import { ApiDocsHero } from '@/components/docs/api-docs/ApiDocsHero';
+import { ApiDocsSidebar } from '@/components/docs/api-docs/ApiDocsSidebar';
+import { ApiDocsAuthentication } from '@/components/docs/api-docs/ApiDocsAuthentication';
+import { ApiDocsRateLimit } from '@/components/docs/api-docs/ApiDocsRateLimit';
+import { ApiDocsSSE } from '@/components/docs/api-docs/ApiDocsSSE';
+import { ApiDocsErrors } from '@/components/docs/api-docs/ApiDocsError';
+import { ApiDocsSection } from '@/components/docs/api-docs/ApiDocsSection';
 
 const OVERVIEW_IDS = [
   'authentication-guide',

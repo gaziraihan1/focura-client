@@ -1,27 +1,27 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { TasksPageHeader } from "@/components/Dashboard/AllTasks/TasksPageHeader";
+import { TasksPageHeader } from "@/components/dashboard/tasks/all-tasks/TasksPageHeader";
 import { useTasksPage } from "@/hooks/useTasksPage";
-import TaskQoutaDetails from "@/components/Dashboard/AllTasks/TaskQoutaDetails";
+import TaskQoutaDetails from "@/components/dashboard/tasks/all-tasks/TaskQoutaDetails";
 
 const TaskStatsCards = dynamic(
-  () => import("@/components/Dashboard/AllTasks/TaskStatsCards").then((m) => m.TaskStatsCards),
+  () => import("@/components/dashboard/tasks/all-tasks/TaskStatsCards").then((m) => m.TaskStatsCards),
   { ssr: false }
 );
 
 const TaskFiltersBar = dynamic(
-  () => import("@/components/Dashboard/AllTasks/TaskFiltersBar").then((m) => m.TaskFiltersBar),
+  () => import("@/components/dashboard/tasks/all-tasks/TaskFiltersBar").then((m) => m.TaskFiltersBar),
   { ssr: false }
 );
 
 const TasksContent = dynamic(
-  () => import("@/components/Dashboard/AllTasks/TasksContent").then((m) => m.TasksContent),
+  () => import("@/components/dashboard/tasks/all-tasks/TasksContent").then((m) => m.TasksContent),
   { ssr: false }
 );
 
 const FocusModeBanner = dynamic(
-  () => import("@/components/Dashboard/AllTasks/FocusModeBanner").then((m) => m.FocusModeBanner),
+  () => import("@/components/dashboard/tasks/all-tasks/FocusModeBanner").then((m) => m.FocusModeBanner),
   { ssr: false }
 );
 

@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import SprintList from "@/components/Dashboard/ProjectDetails/SprintList";
-import { ProjectManagerOnly } from "@/components/Dashboard/ProjectDetails/ProjectManagerOnly";
+import SprintList from "@/components/dashboard/projects/project-details/SprintList";
+import { ProjectManagerOnly } from "@/components/dashboard/projects/project-details/ProjectManagerOnly";
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
 
 interface SprintsPageContentProps {

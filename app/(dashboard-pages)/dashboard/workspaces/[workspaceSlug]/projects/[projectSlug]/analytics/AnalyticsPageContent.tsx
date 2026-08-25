@@ -2,9 +2,9 @@
 
 import { useWorkspacePlan } from "@/context/workspacePlan/WorkspacePlanContext";
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
-import { ProjectManagerOnly } from "@/components/Dashboard/ProjectDetails/ProjectManagerOnly";
-import { ProjectAnalyticsPage } from "@/components/Dashboard/Workspaces/project/Analytics/ProjectAnalyticsPage";
-import { UpgradePlanCard } from "@/components/Shared/UpgradePlanCard";
+import { ProjectManagerOnly } from "@/components/dashboard/projects/project-details/ProjectManagerOnly";
+import { ProjectAnalyticsPage } from "@/components/dashboard/workspace/project-overview/Analytics/ProjectAnalyticsPage";
+import { UpgradePlanCard } from "@/components/shared/UpgradePlanCard";
 
 interface AnalyticsPageContentProps {
   projectSlug: string;

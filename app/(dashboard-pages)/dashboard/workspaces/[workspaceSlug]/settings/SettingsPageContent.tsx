@@ -2,16 +2,16 @@
 
 import { useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { MembersSettingsTab } from "@/components/Dashboard/Workspaces/WorkspaceSettings/MembersSettingsTab";
-import { DangerZoneTab } from "@/components/Dashboard/Workspaces/WorkspaceSettings/DangerZoneTab";
-import { DeleteWorkspaceModal } from "@/components/Dashboard/Workspaces/WorkspaceSettings/DeleteWorkspaceModal";
+import { MembersSettingsTab } from "@/components/dashboard/workspace/settings/MembersSettingsTab";
+import { DangerZoneTab } from "@/components/dashboard/workspace/settings/DangerZoneTab";
+import { DeleteWorkspaceModal } from "@/components/dashboard/workspace/settings/DeleteWorkspaceModal";
 import { useWorkspaceSettings, type TabType } from "@/hooks/useWorkspaceSettings";
-import { WorkspaceSettingsHeader } from "@/components/Dashboard/Workspaces/WorkspaceSettings/WorkspacesSettingsHeader";
-import { WorkspaceSettingsTabs } from "@/components/Dashboard/Workspaces/WorkspaceSettings/WorkspacesSettingsTabs";
-import { GeneralSettingsTab } from "@/components/Dashboard/Workspaces/WorkspaceSettings/GeneralSettingsTab";
-import { WorkspaceInviteMemberModal } from "@/components/Dashboard/Workspaces/WorkspaceSettings/WorkspaceInviteMemberModal";
-import { WorkspaceIntegrationsForm } from "@/components/Settings/WorkspaceIntegrationsForm";
-import { AutomationsSettingsForm } from "@/components/Settings/AutomationsSettingsForm";
+import { WorkspaceSettingsHeader } from "@/components/dashboard/workspace/settings/WorkspacesSettingsHeader";
+import { WorkspaceSettingsTabs } from "@/components/dashboard/workspace/settings/WorkspacesSettingsTabs";
+import { GeneralSettingsTab } from "@/components/dashboard/workspace/settings/GeneralSettingsTab";
+import { WorkspaceInviteMemberModal } from "@/components/dashboard/workspace/settings/WorkspaceInviteMemberModal";
+import { WorkspaceIntegrationsForm } from "@/components/settings/WorkspaceIntegrationsForm";
+import { AutomationsSettingsForm } from "@/components/settings/AutomationsSettingsForm";
 
 function SettingsSkeleton() {
   return (

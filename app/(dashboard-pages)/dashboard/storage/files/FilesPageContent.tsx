@@ -1,6 +1,6 @@
 "use client";
 
-import { FileManagementPage } from "@/components/Dashboard/Storage/Files/FileManagementPage";
+import { FileManagementPage } from "@/components/dashboard/storage/files/FileManagementPage";
 import { useWorkspacesSummary } from "@/hooks/useStorage";
 import { useState } from "react";
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { TaskFormHeader } from "@/components/Tasks/form/TaskFormHeader";
-import { AddTaskForm } from "@/components/Tasks/form/AddTaskForm";
+import { TaskFormHeader } from "@/components/tasks/form/TaskFormHeader";
+import { AddTaskForm } from "@/components/tasks/form/AddTaskForm";
 import { useAddTaskPage } from "@/hooks/useAddTaskPage";
 
 export function AddTaskPageContent() {

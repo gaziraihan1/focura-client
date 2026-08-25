@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { fetchPublicProductUpdate } from "@/hooks/usePublicResource";
-import { UpdateDetailsView } from "@/components/Resources/Update/UpdateDetailsView";
+import { UpdateDetailsView } from "@/components/public/resources/update/UpdateDetailsView";
 
 type ResourceDetailsPageProps = {
   params: Promise<{ slug: string }>;

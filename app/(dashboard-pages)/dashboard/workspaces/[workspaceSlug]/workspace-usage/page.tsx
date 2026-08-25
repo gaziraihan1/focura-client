@@ -5,47 +5,47 @@ import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Loader2, AlertCircle } from "lucide-react";
 import { useWorkspaceUsage } from "@/hooks/useWorkspaceUsage";
-import { WorkspaceUsageHeader } from "@/components/Dashboard/Analytics/WorkspaceUsage/WorkspaceUsageHeader";
-import { UsageSnapshot } from "@/components/Dashboard/Analytics/WorkspaceUsage/UsageSnapshot";
-import { PlanLimitsSection } from "@/components/Dashboard/Analytics/WorkspaceUsage/PlanLimitsSection";
-import { SectionErrorBoundary } from "@/components/Dashboard/Analytics/WorkspaceUsage/SectionErrorBoundary";
-import { SectionSkeleton } from "@/components/Dashboard/Analytics/WorkspaceUsage/SectionSkeleton";
+import { WorkspaceUsageHeader } from "@/components/dashboard/analytics/WorkspaceUsage/WorkspaceUsageHeader";
+import { UsageSnapshot } from "@/components/dashboard/analytics/WorkspaceUsage/UsageSnapshot";
+import { PlanLimitsSection } from "@/components/dashboard/analytics/WorkspaceUsage/PlanLimitsSection";
+import { SectionErrorBoundary } from "@/components/dashboard/analytics/WorkspaceUsage/SectionErrorBoundary";
+import { SectionSkeleton } from "@/components/dashboard/analytics/WorkspaceUsage/SectionSkeleton";
 import type { DateRangeFilter } from "@/types/workspace-usage.types";
 import { useWorkspaces } from "@/hooks/useWorkspace";
 import { useWorkspacePlan } from "@/context/workspacePlan/WorkspacePlanContext";
-import { UpgradePlanCard } from "@/components/Shared/UpgradePlanCard";
-import { UpgradeSectionCard } from "@/components/Shared/UpgradeSectionCard";
+import { UpgradePlanCard } from "@/components/shared/UpgradePlanCard";
+import { UpgradeSectionCard } from "@/components/shared/UpgradeSectionCard";
 
 const EngagementSection = dynamic(
-  () => import("@/components/Dashboard/Analytics/WorkspaceUsage/EngagementSection").then((m) => m.EngagementSection),
+  () => import("@/components/dashboard/analytics/WorkspaceUsage/EngagementSection").then((m) => m.EngagementSection),
   {
     ssr: false,
     loading: () => <SectionSkeleton rows={4} />,
   }
 );
 const StorageResourcesSection = dynamic(
-  () => import("@/components/Dashboard/Analytics/WorkspaceUsage/StorageResourcesSection").then((m) => m.StorageResourcesSection),
+  () => import("@/components/dashboard/analytics/WorkspaceUsage/StorageResourcesSection").then((m) => m.StorageResourcesSection),
   {
     ssr: false,
     loading: () => <SectionSkeleton rows={3} />,
   }
 );
 const FeatureUsageSection = dynamic(
-  () => import("@/components/Dashboard/Analytics/WorkspaceUsage/FeatureUsageSection").then((m) => m.FeatureUsageSection),
+  () => import("@/components/dashboard/analytics/WorkspaceUsage/FeatureUsageSection").then((m) => m.FeatureUsageSection),
   {
     ssr: false,
     loading: () => <SectionSkeleton rows={6} />,
   }
 );
 const GrowthInsightsSection = dynamic(
-  () => import("@/components/Dashboard/Analytics/WorkspaceUsage/GrowthInsightsSection").then((m) => m.GrowthInsightsSection),
+  () => import("@/components/dashboard/analytics/WorkspaceUsage/GrowthInsightsSection").then((m) => m.GrowthInsightsSection),
   {
     ssr: false,
     loading: () => <SectionSkeleton rows={3} />,
   }
 );
 const AiUsageSection = dynamic(
-  () => import("@/components/Dashboard/Analytics/WorkspaceUsage/AiUsageSection").then((m) => m.AiUsageSection),
+  () => import("@/components/dashboard/analytics/WorkspaceUsage/AiUsageSection").then((m) => m.AiUsageSection),
   {
     ssr: false,
     loading: () => <SectionSkeleton rows={3} />,

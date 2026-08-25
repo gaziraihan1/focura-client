@@ -11,14 +11,14 @@ import {
   Zap,
 } from "lucide-react";
 import { useUrlState } from "@/hooks/useUrlState";
-import { CapacityScheduleForm } from "@/components/Settings/CapacityScheduleForm";
-import { AppearanceSettingsForm } from "@/components/Settings/AppearanceSettingsForm";
-import { NotificationsSettingsForm } from "@/components/Settings/NotificationsSettingsForm";
-import { IntegrationsSettingsForm } from "@/components/Settings/IntegrationsSettingsForm";
-import { ApiTokensSettingsForm } from "@/components/Settings/ApiTokensSettingsForm";
-import { AutomationsShortcutForm } from "@/components/Settings/AutomationsShortcutForm";
-import { SecuritySettingsForm } from "@/components/Settings/SecuritySettingsForm";
-import { SettingsSection } from "@/components/Settings/SettingsSection";
+import { CapacityScheduleForm } from "@/components/settings/CapacityScheduleForm";
+import { AppearanceSettingsForm } from "@/components/settings/AppearanceSettingsForm";
+import { NotificationsSettingsForm } from "@/components/settings/NotificationsSettingsForm";
+import { IntegrationsSettingsForm } from "@/components/settings/IntegrationsSettingsForm";
+import { ApiTokensSettingsForm } from "@/components/settings/ApiTokensSettingsForm";
+import { AutomationsShortcutForm } from "@/components/settings/AutomationsShortcutForm";
+import { SecuritySettingsForm } from "@/components/settings/SecuritySettingsForm";
+import { SettingsSection } from "@/components/settings/SettingsSection";
 
 const globalSettings = [
   {

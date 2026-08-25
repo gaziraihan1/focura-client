@@ -3,10 +3,10 @@
 import { m as motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import ErrorState from "@/components/ForgetPassword/ErrorState";
+import ErrorState from "@/components/auth/forgot-password/ErrorState";
 import { useForgetPasswordPage } from "@/hooks/useForgetPasswordPage";
-import SuccessState from "@/components/ForgetPassword/SuccessState";
-import PasswordResetForm from "@/components/ForgetPassword/PasswordResetForm";
+import SuccessState from "@/components/auth/forgot-password/SuccessState";
+import PasswordResetForm from "@/components/auth/forgot-password/PasswordResetForm";
 
 export default function ForgotPasswordPage() {
 

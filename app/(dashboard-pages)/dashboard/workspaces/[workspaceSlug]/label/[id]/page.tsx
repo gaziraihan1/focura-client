@@ -1,4 +1,4 @@
-import { LabelContent } from "@/components/Dashboard/Labels/LabelDetails/LabelContent";
+import { LabelContent } from "@/components/dashboard/labels/LabelDetails/LabelContent";
 import { use } from "react";
 
 interface LabelPageProps {

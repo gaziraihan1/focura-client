@@ -1,12 +1,12 @@
 "use client";
 
 import { useCallback } from "react";
-import { KanbanHeader } from "@/components/Dashboard/KanbanView/KanbanHeader";
-import { ExecutionControlBar } from "@/components/Dashboard/KanbanView/ExecutionControlBar";
-import { KanbanBoard } from "@/components/Dashboard/KanbanView/KanbanBoard";
-import { InsightFooter } from "@/components/Dashboard/KanbanView/InsightFooter";
-import { KanbanInsightsButton } from "@/components/Dashboard/KanbanView/KanbanInsightsButton";
-import { TaskDetailsModal } from "@/components/Dashboard/CalendarView/TaskDetailsModal";
+import { KanbanHeader } from "@/components/dashboard/tasks/kanban/KanbanHeader";
+import { ExecutionControlBar } from "@/components/dashboard/tasks/kanban/ExecutionControlBar";
+import { KanbanBoard } from "@/components/dashboard/tasks/kanban/KanbanBoard";
+import { InsightFooter } from "@/components/dashboard/tasks/kanban/InsightFooter";
+import { KanbanInsightsButton } from "@/components/dashboard/tasks/kanban/KanbanInsightsButton";
+import { TaskDetailsModal } from "@/components/dashboard/calendar/calendar-view/TaskDetailsModal";
 import { useKanbanPage } from "@/hooks/useKanbanPage";
 
 export function KanbanPageContent() {

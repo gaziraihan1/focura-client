@@ -2,11 +2,11 @@
 
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { useBillingSuccess } from "@/hooks/useBillingSuccess";
-import { BillingSuccessHeader } from "@/components/Dashboard/Workspaces/billing/Success/BillingSuccessHeader";
-import { SuccessPlanCard } from "@/components/Dashboard/Workspaces/billing/Success/SuccessPlanCard";
-import { FeaturesGained } from "@/components/Dashboard/Workspaces/billing/Success/FeaturesGained";
-import { ActionButtons } from "@/components/Dashboard/Workspaces/billing/Success/ActionButtons";
-import { SubscriptionDetails } from "@/components/Dashboard/Workspaces/billing/Success/SubscriptionDetails";
+import { BillingSuccessHeader } from "@/components/dashboard/workspace/billing/Success/BillingSuccessHeader";
+import { SuccessPlanCard } from "@/components/dashboard/workspace/billing/Success/SuccessPlanCard";
+import { FeaturesGained } from "@/components/dashboard/workspace/billing/Success/FeaturesGained";
+import { ActionButtons } from "@/components/dashboard/workspace/billing/Success/ActionButtons";
+import { SubscriptionDetails } from "@/components/dashboard/workspace/billing/Success/SubscriptionDetails";
 
 interface BillingSuccessPageContentProps {
   workspaceSlug: string;

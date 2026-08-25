@@ -1,13 +1,13 @@
 import { Brain, HeartPulse, Sparkles } from "lucide-react";
-import { FocusStreakBadge } from "@/components/Dashboard/FocusStreakBadge";
-import { FocusDailySummary } from "@/components/Dashboard/FocusDailySummary";
-import { WellnessRecommendations } from "@/components/Dashboard/WellnessRecommendations";
-import { BurnoutTrendsChart } from "@/components/Dashboard/Calendar/BurnoutTrendsChart";
-import { EnergyTrendChart } from "@/components/Dashboard/Calendar/EnergyTrendChart";
-import { WeeklyStrainBreakdown } from "@/components/Dashboard/Wellness/WeeklyStrainBreakdown";
-import { EnergyQuickLog } from "@/components/Dashboard/Calendar/EnergyQuickLog";
-import { AiGoalBreakdown } from "@/components/AI/AiGoalBreakdown";
-import { AiWeeklyInsights } from "@/components/AI/AiWeeklyInsights";
+import { FocusStreakBadge } from "@/components/dashboard/shell/FocusStreakBadge";
+import { FocusDailySummary } from "@/components/dashboard/shell/FocusDailySummary";
+import { WellnessRecommendations } from "@/components/dashboard/shell/WellnessRecommendations";
+import { BurnoutTrendsChart } from "@/components/dashboard/calendar/calendar/BurnoutTrendsChart";
+import { EnergyTrendChart } from "@/components/dashboard/calendar/calendar/EnergyTrendChart";
+import { WeeklyStrainBreakdown } from "@/components/dashboard/calendar/wellness/WeeklyStrainBreakdown";
+import { EnergyQuickLog } from "@/components/dashboard/calendar/calendar/EnergyQuickLog";
+import { AiGoalBreakdown } from "@/components/ai/AiGoalBreakdown";
+import { AiWeeklyInsights } from "@/components/ai/AiWeeklyInsights";
 
 export default function WellnessPage() {
   return (

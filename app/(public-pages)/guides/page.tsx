@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { GuideHeader } from "@/components/Guides/GuideHeader";
-import { GuideSidebar } from "@/components/Guides/GuideSidebar";
-import { SectionHero } from "@/components/Guides/SectionHero";
-import { GuideSectionList } from "@/components/Guides/GuideSectionList";
-import { GuideSearchResults } from "@/components/Guides/GuideSearchResults";
-import { GuideSearchInput } from "@/components/Guides/GuideSearchInput";
-import { SectionPagination } from "@/components/Guides/SectionPagination";
+import { GuideHeader } from "@/components/docs/guides/GuideHeader";
+import { GuideSidebar } from "@/components/docs/guides/GuideSidebar";
+import { SectionHero } from "@/components/docs/guides/SectionHero";
+import { GuideSectionList } from "@/components/docs/guides/GuideSectionList";
+import { GuideSearchResults } from "@/components/docs/guides/GuideSearchResults";
+import { GuideSearchInput } from "@/components/docs/guides/GuideSearchInput";
+import { SectionPagination } from "@/components/docs/guides/SectionPagination";
 import { GUIDE_SECTIONS } from "@/constants/guides.constants";
 import { searchGuides } from "@/utils/guides.utils";
 

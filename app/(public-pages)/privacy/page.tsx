@@ -1,7 +1,7 @@
-import { PrivacyContent } from "@/components/PrivacyAndPolicy/PrivacyContent";
-import { PrivacyHero } from "@/components/PrivacyAndPolicy/PrivacyHero";
-import { PrivacyMobileNav } from "@/components/PrivacyAndPolicy/PrivacyMobileNav";
-import { PrivacyNav, PrivacyNavItem } from "@/components/PrivacyAndPolicy/PrivacyNav";
+import { PrivacyContent } from "@/components/public/privacy/PrivacyContent";
+import { PrivacyHero } from "@/components/public/privacy/PrivacyHero";
+import { PrivacyMobileNav } from "@/components/public/privacy/PrivacyMobileNav";
+import { PrivacyNav, PrivacyNavItem } from "@/components/public/privacy/PrivacyNav";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

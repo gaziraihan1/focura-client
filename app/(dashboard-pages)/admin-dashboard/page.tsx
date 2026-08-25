@@ -1,7 +1,7 @@
 import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { serverApiStrict } from "@/lib/api/server";
-import { adminKeys } from "@/hooks/useAdmin";
-import { AdminOverviewContent } from "@/components/AdminDashboard/AdminOverviewContent";
+import { adminKeys } from "@/hooks/adminKeys";
+import { AdminOverviewContent } from "@/components/admin-dashboard/AdminOverviewContent";
 import type { AdminStats } from "@/types/admin.types";
 
 // SSR prefetch: stats are fetched on the server and seeded into the React

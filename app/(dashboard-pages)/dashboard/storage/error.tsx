@@ -1,6 +1,6 @@
 "use client";
 
-import { ErrorFallback } from "@/components/Shared/ErrorFallback";
+import { ErrorFallback } from "@/components/shared/ErrorFallback";
 
 export default function StorageError({
   error,

@@ -3,7 +3,7 @@
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useWorkspace } from '@/hooks/useWorkspace';
-import LabelManagementMain from '@/components/Dashboard/Labels/LabelManagementMain';
+import LabelManagementMain from '@/components/dashboard/labels/LabelManagementMain';
 import { useWorkspaceSlug } from '@/hooks/useRouteParams';
 
 export default function LabelsPage() {

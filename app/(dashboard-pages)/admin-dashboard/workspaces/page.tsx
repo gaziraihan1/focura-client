@@ -1,7 +1,7 @@
 import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { serverApiStrict } from "@/lib/api/server";
-import { adminKeys } from "@/hooks/useAdmin";
-import { AdminWorkspacesContent } from "@/components/AdminDashboard/AdminWorkspacesContent";
+import { adminKeys } from "@/hooks/adminKeys";
+import { AdminWorkspacesContent } from "@/components/admin-dashboard/AdminWorkspacesContent";
 import type { AdminPaginatedResponse, AdminWorkspace } from "@/types/admin.types";
 
 // Must match the initial useAdminPagination() + useAdminWorkspaces() params

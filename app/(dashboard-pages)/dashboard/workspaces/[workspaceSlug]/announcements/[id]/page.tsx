@@ -1,4 +1,4 @@
-import { AnnouncementDetail } from "@/components/Dashboard/Workspaces/Announcement/AnnouncementDetail/AnnouncementDetail";
+import { AnnouncementDetail } from "@/components/dashboard/workspace/announcements/AnnouncementDetail/AnnouncementDetail";
 
 export default async function AnnouncementDetailPage({
   params,

@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
 import { useUserProfile } from "@/hooks/useUser";
-import { AccessDeniedProject } from "@/components/Dashboard/ProjectDetails/AccessDeniedProject";
-import LoadingState from "@/components/Dashboard/ProjectDetails/LoadingState";
+import { AccessDeniedProject } from "@/components/dashboard/projects/project-details/AccessDeniedProject";
+import LoadingState from "@/components/dashboard/projects/project-details/LoadingState";
 import { qc } from "@/lib/react-query/query-client";
 import { ProjectData } from "@/types/project.types";
 import {
@@ -15,9 +15,9 @@ import {
   SidebarContent,
   SidebarContentProps,
   useProjectNav,
-} from "@/components/Dashboard/Workspaces/project/Layout";
+} from "@/components/dashboard/workspace/project-overview/Layout";
 import { Archive } from "lucide-react";
-import { SidebarToggle } from "@/components/Dashboard/SidebarToggle";
+import { SidebarToggle } from "@/components/dashboard/shell/SidebarToggle";
 import { useSidebarCollapse } from "@/context/sidebarCollapse/SidebarCollapseContext";
 
 // Pages whose content is manager/admin-only — hidden from collaborators and

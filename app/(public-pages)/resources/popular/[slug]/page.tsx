@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { fetchPublicPopularResource } from "@/hooks/usePublicResource";
-import { PopularResourceDetailsView } from "@/components/Resources/Popular/PopularResourceDetailsView";
+import { PopularResourceDetailsView } from "@/components/public/resources/popular/PopularResourceDetailsView";
 
 type ResourceDetailsPageProps = {
   params: Promise<{ slug: string }>;

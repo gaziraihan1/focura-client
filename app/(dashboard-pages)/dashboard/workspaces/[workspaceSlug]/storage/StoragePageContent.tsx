@@ -2,8 +2,8 @@
 
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { useWorkspacePlan } from "@/context/workspacePlan/WorkspacePlanContext";
-import { WorkspaceStorageOverviewPage } from "@/components/Dashboard/Storage/WorkspaceStorageOverviewPage";
-import { UpgradePlanCard } from "@/components/Shared/UpgradePlanCard";
+import { WorkspaceStorageOverviewPage } from "@/components/dashboard/storage/overview/WorkspaceStorageOverviewPage";
+import { UpgradePlanCard } from "@/components/shared/UpgradePlanCard";
 
 interface StoragePageContentProps {
   workspaceSlug: string;

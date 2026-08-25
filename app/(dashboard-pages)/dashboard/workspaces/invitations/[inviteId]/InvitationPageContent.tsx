@@ -1,12 +1,12 @@
 "use client";
 
 import { useInvitationPage } from "@/hooks/useInvitationPage";
-import { InvitationLoadingState } from "@/components/Dashboard/Invitation/InvitationLoadingState";
-import { InvitationErrorState } from "@/components/Dashboard/Invitation/InvitationErrorState";
-import { InvitationSuccessState } from "@/components/Dashboard/Invitation/InvitationSuccessState";
-import { InvitationExpiredState } from "@/components/Dashboard/Invitation/InvitationExpiredState";
-import { InvitationAlreadyUsedState } from "@/components/Dashboard/Invitation/InvitationAlreadyUsedState";
-import { InvitationCard } from "@/components/Dashboard/Invitation/InvitationCard";
+import { InvitationLoadingState } from "@/components/dashboard/invitation/InvitationLoadingState";
+import { InvitationErrorState } from "@/components/dashboard/invitation/InvitationErrorState";
+import { InvitationSuccessState } from "@/components/dashboard/invitation/InvitationSuccessState";
+import { InvitationExpiredState } from "@/components/dashboard/invitation/InvitationExpiredState";
+import { InvitationAlreadyUsedState } from "@/components/dashboard/invitation/InvitationAlreadyUsedState";
+import { InvitationCard } from "@/components/dashboard/invitation/InvitationCard";
 
 interface InvitationPageContentProps {
   token: string;

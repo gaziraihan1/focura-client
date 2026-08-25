@@ -1,7 +1,7 @@
 import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { serverApiStrict } from "@/lib/api/server";
-import { adminKeys } from "@/hooks/useAdmin";
-import { AdminWorkspaceDetailContent } from "@/components/AdminDashboard/AdminWorkspaceDetailContent";
+import { adminKeys } from "@/hooks/adminKeys";
+import { AdminWorkspaceDetailContent } from "@/components/admin-dashboard/AdminWorkspaceDetailContent";
 import type { AdminWorkspaceDetail } from "@/types/admin.types";
 
 export default async function AdminWorkspaceDetailPage({

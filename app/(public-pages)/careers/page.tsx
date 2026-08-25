@@ -1,6 +1,6 @@
-import { CareersHero } from '@/components/Careers/CareersHero';
-import CareersJobList from '@/components/Careers/CareersJobList';
-import { CareersValues } from '@/components/Careers/CareersValues';
+import { CareersHero } from '@/components/public/careers/CareersHero';
+import CareersJobList from '@/components/public/careers/CareersJobList';
+import { CareersValues } from '@/components/public/careers/CareersValues';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

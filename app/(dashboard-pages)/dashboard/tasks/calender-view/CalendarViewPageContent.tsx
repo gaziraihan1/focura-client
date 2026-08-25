@@ -1,11 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { CalendarHeader } from "@/components/Dashboard/CalendarView/CalendarHeader";
+import { CalendarHeader } from "@/components/dashboard/calendar/calendar-view/CalendarHeader";
 import { useCalendarPage } from "@/hooks/useCalendarPage";
 
 const CalendarContent = dynamic(
-  () => import("@/components/Dashboard/CalendarView/CalendarContent").then((m) => m.CalendarContent),
+  () => import("@/components/dashboard/calendar/calendar-view/CalendarContent").then((m) => m.CalendarContent),
   {
     ssr: false,
     loading: () => (
@@ -17,7 +17,7 @@ const CalendarContent = dynamic(
 );
 
 const TaskDetailsModal = dynamic(
-  () => import("@/components/Dashboard/CalendarView/TaskDetailsModal").then((m) => m.TaskDetailsModal),
+  () => import("@/components/dashboard/calendar/calendar-view/TaskDetailsModal").then((m) => m.TaskDetailsModal),
   { ssr: false }
 );
 

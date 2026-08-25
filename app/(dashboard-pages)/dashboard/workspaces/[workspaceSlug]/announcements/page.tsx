@@ -2,9 +2,9 @@
 
 import { useParams } from 'next/navigation';
 import { Plus, Megaphone } from 'lucide-react';
-import { AnnouncementList }    from '@/components/Dashboard/Workspaces/Announcement/AnnouncementList';
-import { AnnouncementFilters } from '@/components/Dashboard/Workspaces/Announcement/AnnouncementFilters';
-import { AnnouncementModal }   from '@/components/Dashboard/Workspaces/Announcement/AnnouncementModal';
+import { AnnouncementList }    from '@/components/dashboard/workspace/announcements/AnnouncementList';
+import { AnnouncementFilters } from '@/components/dashboard/workspace/announcements/AnnouncementFilters';
+import { AnnouncementModal }   from '@/components/dashboard/workspace/announcements/AnnouncementModal';
 import { useAnnouncementPage } from '@/hooks/useAnnouncementPage';
 
 export default function AnnouncementsPage() {

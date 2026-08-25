@@ -1,13 +1,13 @@
-import FAQSection from "@/components/Home/FAQSection";
-import FeatureSection from "@/components/Home/FeatureSection";
-import FeatureShowcase from "@/components/Home/FeatureShowcase";
-import FinalCTA from "@/components/Home/FinalCTA";
-import Hero from "@/components/Home/Hero";
-import IntegrationsSection from "@/components/Home/IntegrationsSection";
-import PricingSection from "@/components/Home/PricingSection";
-import SecuritySection from "@/components/Home/SecuritySection";
-import Testimonials from "@/components/Home/Testimonials";
-import WorkflowSteps from "@/components/Home/WorkflowSteps";
+import FAQSection from "@/components/public/home/FAQSection";
+import FeatureSection from "@/components/public/home/FeatureSection";
+import FeatureShowcase from "@/components/public/home/FeatureShowcase";
+import FinalCTA from "@/components/public/home/FinalCTA";
+import Hero from "@/components/public/home/Hero";
+import IntegrationsSection from "@/components/public/home/IntegrationsSection";
+import PricingSection from "@/components/public/home/PricingSection";
+import SecuritySection from "@/components/public/home/SecuritySection";
+import Testimonials from "@/components/public/home/Testimonials";
+import WorkflowSteps from "@/components/public/home/WorkflowSteps";
 
 export default function Home() {
   return (

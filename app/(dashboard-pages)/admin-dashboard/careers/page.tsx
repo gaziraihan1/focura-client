@@ -1,4 +1,4 @@
-import AdminJobsManager from '@/components/AdminDashboard/careers/AdminJobManager';
+import AdminJobsManager from '@/components/admin-dashboard/careers/AdminJobManager';
 import type { Metadata }      from 'next';
 
 export const metadata: Metadata = {

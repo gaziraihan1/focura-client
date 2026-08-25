@@ -5,7 +5,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { Settings, Users, Palette, Lock, Loader2, AlertTriangle } from "lucide-react";
 import { useWorkspaceRole } from "@/hooks/useWorkspace";
 import { useUserProfile } from "@/hooks/useUser";
-import { GeneralTab, AppearanceTab, DangerTab, MembersTab } from "@/components/Dashboard/Workspaces/project/Settings";
+import { GeneralTab, AppearanceTab, DangerTab, MembersTab } from "@/components/dashboard/workspace/project-overview/Settings";
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
 
 type SettingsTab = "general" | "members" | "appearance" | "danger";

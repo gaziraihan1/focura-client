@@ -8,11 +8,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { billingKeys } from "@/hooks/useBilling";
 import { calculateYearlyDiscount } from "@/utils/billing.upgrade.utils";
 import { PLANS } from "@/constants/billing.upgrade.constants";
-import { LoadingPlanInfo } from "@/components/Dashboard/Workspaces/billing/Upgrade/LoadingPlanInfo";
-import { UpgradePageHeader } from "@/components/Dashboard/Workspaces/billing/Upgrade/UpgradePageHeader";
-import { UpgradeCycleToggle } from "@/components/Dashboard/Workspaces/billing/Upgrade/UpgradeCycleToggle";
-import { UpgradePlanCard } from "@/components/Dashboard/Workspaces/billing/Upgrade/UpgradePlanCard";
-import { UpgradePageFooter } from "@/components/Dashboard/Workspaces/billing/Upgrade/UpgradePageFooter";
+import { LoadingPlanInfo } from "@/components/dashboard/workspace/billing/Upgrade/LoadingPlanInfo";
+import { UpgradePageHeader } from "@/components/dashboard/workspace/billing/Upgrade/UpgradePageHeader";
+import { UpgradeCycleToggle } from "@/components/dashboard/workspace/billing/Upgrade/UpgradeCycleToggle";
+import { UpgradePlanCard } from "@/components/dashboard/workspace/billing/Upgrade/UpgradePlanCard";
+import { UpgradePageFooter } from "@/components/dashboard/workspace/billing/Upgrade/UpgradePageFooter";
 
 interface UpgradePageContentProps {
   workspaceSlug: string;

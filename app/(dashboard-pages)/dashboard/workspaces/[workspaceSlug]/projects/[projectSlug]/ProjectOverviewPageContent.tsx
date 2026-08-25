@@ -6,14 +6,14 @@ import { AlertCircle } from "lucide-react";
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
 import { useUserProfile } from "@/hooks/useUser";
 import { useProjectMilestones, useProjectSprints, useProjectSections, useProjectViews } from "@/hooks/useProjectFeatures";
-import { AccessDeniedProject } from "@/components/Dashboard/ProjectDetails/AccessDeniedProject";
-import LoadingState from "@/components/Dashboard/ProjectDetails/LoadingState";
+import { AccessDeniedProject } from "@/components/dashboard/projects/project-details/AccessDeniedProject";
+import LoadingState from "@/components/dashboard/projects/project-details/LoadingState";
 import { ProjectData } from "@/types/project.types";
-import { ProjectHeader } from "@/components/Dashboard/Workspaces/project/ProjectHeader";
-import { QuickAccessGrid } from "@/components/Dashboard/Workspaces/project/QuickAccessGrid";
-import { TaskProgressCard } from "@/components/Dashboard/Workspaces/project/TaskProgressCard";
-import { AtAGlanceCards } from "@/components/Dashboard/Workspaces/project/AtAGlanceCards";
-import { StatsRibbon } from "@/components/Dashboard/Workspaces/project/StatsRibbon";
+import { ProjectHeader } from "@/components/dashboard/workspace/project-overview/ProjectHeader";
+import { QuickAccessGrid } from "@/components/dashboard/workspace/project-overview/QuickAccessGrid";
+import { TaskProgressCard } from "@/components/dashboard/workspace/project-overview/TaskProgressCard";
+import { AtAGlanceCards } from "@/components/dashboard/workspace/project-overview/AtAGlanceCards";
+import { StatsRibbon } from "@/components/dashboard/workspace/project-overview/StatsRibbon";
 
 function daysUntil(dateStr: string | undefined): number | null {
   if (!dateStr) return null;

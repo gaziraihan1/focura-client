@@ -1,7 +1,7 @@
 import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { serverApiStrict } from "@/lib/api/server";
-import { adminKeys } from "@/hooks/useAdmin";
-import { AdminUserDetailContent } from "@/components/AdminDashboard/AdminUserDetailContent";
+import { adminKeys } from "@/hooks/adminKeys";
+import { AdminUserDetailContent } from "@/components/admin-dashboard/AdminUserDetailContent";
 import type { AdminUserDetail } from "@/types/admin.types";
 
 export default async function AdminUserDetailPage({

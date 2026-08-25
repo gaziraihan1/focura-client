@@ -1,8 +1,8 @@
 "use client";
 
-import { CalendarHeader } from "@/components/Dashboard/CalendarView/CalendarHeader";
-import { CalendarContent } from "@/components/Dashboard/CalendarView/CalendarContent";
-import { TaskDetailsModal } from "@/components/Dashboard/CalendarView/TaskDetailsModal";
+import { CalendarHeader } from "@/components/dashboard/calendar/calendar-view/CalendarHeader";
+import { CalendarContent } from "@/components/dashboard/calendar/calendar-view/CalendarContent";
+import { TaskDetailsModal } from "@/components/dashboard/calendar/calendar-view/TaskDetailsModal";
 import { useCalendarPage } from "@/hooks/useCalendarPage";
 
 export function CalendarViewPageContent() {

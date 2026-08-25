@@ -3,14 +3,14 @@
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useWorkspacePlan } from "@/context/workspacePlan/WorkspacePlanContext";
-import EmptyState from "@/components/Dashboard/Workspaces/EmptyState";
+import EmptyState from "@/components/dashboard/workspace/layout/EmptyState";
 import { useWorkspaceLayout } from "@/hooks/useWorkspaceLayout";
-import { WorkspaceSidebar } from "@/components/Dashboard/Workspaces/WorkspaceSidebar";
-import { WorkspaceLayoutHeader } from "@/components/Dashboard/Workspaces/WorkspaceLayoutHeader";
-import { WorkspaceSwitcherModal } from "@/components/Dashboard/Workspaces/WorkspaceSwitcherModal";
+import { WorkspaceSidebar } from "@/components/dashboard/workspace/layout/WorkspaceSidebar";
+import { WorkspaceLayoutHeader } from "@/components/dashboard/workspace/layout/WorkspaceLayoutHeader";
+import { WorkspaceSwitcherModal } from "@/components/dashboard/workspace/layout/WorkspaceSwitcherModal";
 import { Workspace } from "@/hooks/useWorkspace";
 import { useSidebarCollapse } from "@/context/sidebarCollapse/SidebarCollapseContext";
-import { WorkspaceLayoutSkeleton } from "@/components/Dashboard/Workspaces/WorkspaceLayoutSkeleton";
+import { WorkspaceLayoutSkeleton } from "@/components/dashboard/workspace/layout/WorkspaceLayoutSkeleton";
 
 export function WorkspaceLayoutShell({
   slug,

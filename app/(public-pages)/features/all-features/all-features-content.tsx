@@ -10,8 +10,8 @@ import {
   useDeleteFeatureRequest,
   useIsFocuraAdmin,
 } from '@/hooks/useFeatures';
-import { FeatureCard }          from '@/components/Features/AllFeatures/FeatureCard';
-import { FeatureRequestModal }  from '@/components/Features/AllFeatures/FeatureRequestModal';
+import { FeatureCard }          from '@/components/public/features/all-features/FeatureCard';
+import { FeatureRequestModal }  from '@/components/public/features/all-features/FeatureRequestModal';
 import type { FeatureStatus }   from '@/types/feature.types';
 
 const STATUS_TABS: { value: FeatureStatus | 'ALL'; label: string }[] = [

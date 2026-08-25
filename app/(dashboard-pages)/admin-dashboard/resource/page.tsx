@@ -1,4 +1,4 @@
-import { ResourceFormLauncher } from "@/components/AdminDashboard/Resource/ResourceFormLauncher";
+import { ResourceFormLauncher } from "@/components/admin-dashboard/resource/ResourceFormLauncher";
 
 export default function AdminResourcesPage() {
   return (

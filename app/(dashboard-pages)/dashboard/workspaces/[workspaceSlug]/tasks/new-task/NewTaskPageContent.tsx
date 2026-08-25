@@ -1,13 +1,13 @@
 "use client";
 
 import { AlertCircle } from "lucide-react";
-import { WorkspaceTaskFormHeader } from "@/components/Dashboard/WorkspaceNewTask/WorkspaceTaskFormHeader";
-import { BasicInformationSection } from "@/components/Dashboard/WorkspaceNewTask/BasicInformationSection";
-import { TaskDetailsSection } from "@/components/Dashboard/WorkspaceNewTask/TaskDetailsSection";
-import { TeamLabelsSection } from "@/components/Dashboard/WorkspaceNewTask/TeamLabelsSection";
-import { FormActions } from "@/components/Dashboard/WorkspaceNewTask/FormActions";
-import { LabelManagerModal } from "@/components/Dashboard/WorkspaceNewTask/LabelManagerModal";
-import { LoadingState } from "@/components/Shared/LoadingState";
+import { WorkspaceTaskFormHeader } from "@/components/dashboard/tasks/workspace-new-task/WorkspaceTaskFormHeader";
+import { BasicInformationSection } from "@/components/dashboard/tasks/workspace-new-task/BasicInformationSection";
+import { TaskDetailsSection } from "@/components/dashboard/tasks/workspace-new-task/TaskDetailsSection";
+import { TeamLabelsSection } from "@/components/dashboard/tasks/workspace-new-task/TeamLabelsSection";
+import { FormActions } from "@/components/dashboard/tasks/workspace-new-task/FormActions";
+import { LabelManagerModal } from "@/components/dashboard/tasks/workspace-new-task/LabelManagerModal";
+import { LoadingState } from "@/components/shared/LoadingState";
 import { useWorkspaceNewTaskPage } from "@/hooks/useWorkspaceNewTaskPage";
 
 interface NewTaskPageContentProps {

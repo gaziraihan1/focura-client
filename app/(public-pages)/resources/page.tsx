@@ -1,12 +1,12 @@
 import { Suspense } from "react";
-import ResourcePopularList from "@/components/Resources/ResourcePopularList";
-import ResourcesCategories from "@/components/Resources/ResourcesCategories";
-import ResourcesCTA from "@/components/Resources/ResourcesCTA";
-import ResourcesFeaturedGuides from "@/components/Resources/ResourcesFeaturedGuides";
-import ResourcesHero from "@/components/Resources/ResourcesHero";
-import ResourceUpdateList from "@/components/Resources/ResourceUpdateList";
-import ResourcesPopularSkeleton from "@/components/Resources/ResourcesPopularSkeleton";
-import ResourcesUpdatesSkeleton from "@/components/Resources/ResourcesUpdatesSkeleton";
+import ResourcePopularList from "@/components/public/resources/ResourcePopularList";
+import ResourcesCategories from "@/components/public/resources/ResourcesCategories";
+import ResourcesCTA from "@/components/public/resources/ResourcesCTA";
+import ResourcesFeaturedGuides from "@/components/public/resources/ResourcesFeaturedGuides";
+import ResourcesHero from "@/components/public/resources/ResourcesHero";
+import ResourceUpdateList from "@/components/public/resources/ResourceUpdateList";
+import ResourcesPopularSkeleton from "@/components/public/resources/ResourcesPopularSkeleton";
+import ResourcesUpdatesSkeleton from "@/components/public/resources/ResourcesUpdatesSkeleton";
 
 // Force dynamic rendering to avoid build-time API calls to unavailable backend
 export const dynamic = "force-dynamic";

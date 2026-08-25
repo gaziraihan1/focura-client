@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import MilestoneList from "@/components/Dashboard/ProjectDetails/MilestoneList";
-import { ProjectManagerOnly } from "@/components/Dashboard/ProjectDetails/ProjectManagerOnly";
+import MilestoneList from "@/components/dashboard/projects/project-details/MilestoneList";
+import { ProjectManagerOnly } from "@/components/dashboard/projects/project-details/ProjectManagerOnly";
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
 
 interface MilestonesPageContentProps {

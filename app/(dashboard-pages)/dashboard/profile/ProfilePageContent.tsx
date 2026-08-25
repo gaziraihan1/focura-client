@@ -1,12 +1,12 @@
 "use client";
 
-import { ProfilePageHeader } from "@/components/Dashboard/Profile/ProfilePageHeader";
-import { ProfileInformationCard } from "@/components/Dashboard/Profile/ProfileInformationCard";
-import { ProfileSidebar } from "@/components/Dashboard/Profile/ProfileSidebar";
-import { ProfileLoadingState } from "@/components/Dashboard/Profile/ProfileLoadingState";
-import { ProfileSecurityCard } from "@/components/Dashboard/Profile/ProfileSecurityCard";
-import { DataExportCard } from "@/components/Settings/DataExportCard";
-import { DeleteAccountCard } from "@/components/Settings/DeleteAccountCard";
+import { ProfilePageHeader } from "@/components/dashboard/profile/ProfilePageHeader";
+import { ProfileInformationCard } from "@/components/dashboard/profile/ProfileInformationCard";
+import { ProfileSidebar } from "@/components/dashboard/profile/ProfileSidebar";
+import { ProfileLoadingState } from "@/components/dashboard/profile/ProfileLoadingState";
+import { ProfileSecurityCard } from "@/components/dashboard/profile/ProfileSecurityCard";
+import { DataExportCard } from "@/components/settings/DataExportCard";
+import { DeleteAccountCard } from "@/components/settings/DeleteAccountCard";
 import { useProfilePage } from "@/hooks/useProfilePage";
 import { useSecuritySettings } from "@/hooks/useSecurity";
 

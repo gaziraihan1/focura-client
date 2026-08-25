@@ -5,15 +5,15 @@ import { useRouter, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 import { useTeamPage } from "@/hooks/useTeamPage";
-import { StatsCards } from "@/components/Dashboard/Workspaces/TeamPage/StatsCard";
-import { MembersTab } from "@/components/Dashboard/Workspaces/TeamPage/MembersTab";
-import { ProjectsTab } from "@/components/Dashboard/Workspaces/TeamPage/ProjectsTab";
+import { StatsCards } from "@/components/dashboard/workspace/members/StatsCard";
+import { MembersTab } from "@/components/dashboard/workspace/members/MembersTab";
+import { ProjectsTab } from "@/components/dashboard/workspace/members/ProjectsTab";
 import {
   WorkspaceRoleOption,
   ProjectRoleOption,
-} from "@/components/Dashboard/Workspaces/TeamPage/RoleDropdown";
-import TeamPageLoading from "@/components/Dashboard/Workspaces/TeamPage/TeamPageLoading";
-import Tabs from "@/components/Dashboard/Workspaces/TeamPage/Tabs";
+} from "@/components/dashboard/workspace/members/RoleDropdown";
+import TeamPageLoading from "@/components/dashboard/workspace/members/TeamPageLoading";
+import Tabs from "@/components/dashboard/workspace/members/Tabs";
 
 type TabId = "members" | "projects";
 

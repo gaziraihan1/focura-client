@@ -2,9 +2,9 @@
 
 import { useWorkspacePlan } from "@/context/workspacePlan/WorkspacePlanContext";
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
-import { ProjectMemberOnly } from "@/components/Dashboard/ProjectDetails/ProjectMemberOnly";
-import { ProjectTimeReport } from "@/components/Dashboard/Workspaces/project/Reports/ProjectTimeReport";
-import { UpgradePlanCard } from "@/components/Shared/UpgradePlanCard";
+import { ProjectMemberOnly } from "@/components/dashboard/projects/project-details/ProjectMemberOnly";
+import { ProjectTimeReport } from "@/components/dashboard/workspace/project-overview/Reports/ProjectTimeReport";
+import { UpgradePlanCard } from "@/components/shared/UpgradePlanCard";
 
 interface ReportsPageContentProps {
   projectSlug: string;

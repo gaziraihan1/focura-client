@@ -22,7 +22,7 @@ import {
 } from "@/hooks/useProjectFeatures";
 import { Task } from "@/types/task.types";
 import { taskKeys, taskOverviewKeys } from "./taskKeys";
-import { EMPTY_REPEAT } from "@/components/Tasks/form/RepeatControl";
+import { EMPTY_REPEAT } from "@/components/tasks/form/RepeatControl";
 import type { EditTaskData } from "@/types/taskDetails.types";
 
 export function useTaskDetailsController(taskId: string, workspaceSlug: string ) {

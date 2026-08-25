@@ -8,14 +8,14 @@ import { useWorkspaceRole } from "@/hooks/useWorkspace";
 import { useUserProfile } from "@/hooks/useUser";
 import { useTeamMembers } from "@/hooks/useTeam";
 import { useAnnouncementModal } from "@/hooks/useAnnouncementPage";
-import { AnnouncementModal } from "@/components/Dashboard/Workspaces/Announcement/AnnouncementModal";
-import { FilterBar, FilterType } from "@/components/Dashboard/Workspaces/project/Announcements/FilterBar";
-import { EmptyAnnouncements } from "@/components/Dashboard/Workspaces/project/Announcements/EmptyAnnouncements";
-import { PinnedBanner } from "@/components/Dashboard/Workspaces/project/Announcements/PinnedBanner";
-import { CardSkeleton } from "@/components/Dashboard/Workspaces/project/Announcements/CardSkeleton";
-import { AnnouncementCard } from "@/components/Dashboard/Workspaces/project/Announcements/AnnouncementCard";
-import { Pagination } from "@/components/Dashboard/Workspaces/project/Announcements/Pagination";
-import { AnnouncementDetailModal } from "@/components/Dashboard/Workspaces/Announcement/AnnouncementDetailModal";
+import { AnnouncementModal } from "@/components/dashboard/workspace/announcements/AnnouncementModal";
+import { FilterBar, FilterType } from "@/components/dashboard/workspace/project-overview/Announcements/FilterBar";
+import { EmptyAnnouncements } from "@/components/dashboard/workspace/project-overview/Announcements/EmptyAnnouncements";
+import { PinnedBanner } from "@/components/dashboard/workspace/project-overview/Announcements/PinnedBanner";
+import { CardSkeleton } from "@/components/dashboard/workspace/project-overview/Announcements/CardSkeleton";
+import { AnnouncementCard } from "@/components/dashboard/workspace/project-overview/Announcements/AnnouncementCard";
+import { Pagination } from "@/components/dashboard/workspace/project-overview/Announcements/Pagination";
+import { AnnouncementDetailModal } from "@/components/dashboard/workspace/announcements/AnnouncementDetailModal";
 import type { Announcement } from "@/types/announcement.types";
 
 interface AnnouncementsPageContentProps {

@@ -1,12 +1,12 @@
 "use client";
 
-import { ProjectsEmptyState } from "@/components/Dashboard/Projects/WorkspaceProjects/ProjectsEmptyState";
-import { ProjectsSearchBar } from "@/components/Dashboard/Projects/WorkspaceProjects/ProjectsSearchBar";
-import { WorkspaceProjectCard } from "@/components/Dashboard/Projects/WorkspaceProjects/WorkspaceProjectCard";
-import { WorkspaceProjectsErrorState } from "@/components/Dashboard/Projects/WorkspaceProjects/WorkspaceProjectsErrorState";
-import { WorkspaceProjectsPageHeader } from "@/components/Dashboard/Projects/WorkspaceProjects/WorkspaceProjectsPageHeader";
+import { ProjectsEmptyState } from "@/components/dashboard/projects/all-projects/WorkspaceProjects/ProjectsEmptyState";
+import { ProjectsSearchBar } from "@/components/dashboard/projects/all-projects/WorkspaceProjects/ProjectsSearchBar";
+import { WorkspaceProjectCard } from "@/components/dashboard/projects/all-projects/WorkspaceProjects/WorkspaceProjectCard";
+import { WorkspaceProjectsErrorState } from "@/components/dashboard/projects/all-projects/WorkspaceProjects/WorkspaceProjectsErrorState";
+import { WorkspaceProjectsPageHeader } from "@/components/dashboard/projects/all-projects/WorkspaceProjects/WorkspaceProjectsPageHeader";
 import { useWorkspaceProjectsPage } from "@/hooks/useProjectsPage";
-import { LoadingState } from "@/components/Shared/LoadingState";
+import { LoadingState } from "@/components/shared/LoadingState";
 
 interface ProjectsPageContentProps {
   workspaceSlug: string;

@@ -1,5 +1,5 @@
-import { ContactContent } from "@/components/Contact/ContactContent";
-import { ContactHero } from "@/components/Contact/ContactHero";
+import { ContactContent } from "@/components/public/contact/ContactContent";
+import { ContactHero } from "@/components/public/contact/ContactHero";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

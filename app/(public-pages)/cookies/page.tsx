@@ -1,7 +1,7 @@
-import { CookiesContent } from "@/components/Cookies/CookiesContent";
-import { CookiesHero } from "@/components/Cookies/CookiesHero";
-import { CookiesMobileNav } from "@/components/Cookies/CookiesMobileNav";
-import { CookiesNav, CookiesNavItem } from "@/components/Cookies/CookiesNav";
+import { CookiesContent } from "@/components/public/cookies/CookiesContent";
+import { CookiesHero } from "@/components/public/cookies/CookiesHero";
+import { CookiesMobileNav } from "@/components/public/cookies/CookiesMobileNav";
+import { CookiesNav, CookiesNavItem } from "@/components/public/cookies/CookiesNav";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

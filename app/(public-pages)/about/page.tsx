@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { AboutHero } from "@/components/About/AboutHero";
-import { AboutMission } from "@/components/About/AboutMission";
-import { AboutFeatures } from "@/components/About/AboutFeatures";
-import { AboutStack } from "@/components/About/AboutStack";
-import { AboutArchitecture } from "@/components/About/AboutArchitecture";
-import { AboutFounder } from "@/components/About/AboutFounder";
-import { AboutValues } from "@/components/About/AboutValues";
-import { AboutOpenSource } from "@/components/About/AboutOpenSource";
-import { AboutCTA } from "@/components/About/AboutCTA";
+import { AboutHero } from "@/components/public/about/AboutHero";
+import { AboutMission } from "@/components/public/about/AboutMission";
+import { AboutFeatures } from "@/components/public/about/AboutFeatures";
+import { AboutStack } from "@/components/public/about/AboutStack";
+import { AboutArchitecture } from "@/components/public/about/AboutArchitecture";
+import { AboutFounder } from "@/components/public/about/AboutFounder";
+import { AboutValues } from "@/components/public/about/AboutValues";
+import { AboutOpenSource } from "@/components/public/about/AboutOpenSource";
+import { AboutCTA } from "@/components/public/about/AboutCTA";
 export const metadata: Metadata = {
   title: "About | Focura",
   description:

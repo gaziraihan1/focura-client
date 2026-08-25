@@ -1,7 +1,7 @@
-import RefundContent from "@/components/RefundPolicy/RefundContent";
-import { RefundHero } from "@/components/RefundPolicy/RefundHero";
-import { RefundMobileNav } from "@/components/RefundPolicy/RefundMobileNav";
-import { RefundNav, RefundNavItem } from "@/components/RefundPolicy/RefundNav";
+import RefundContent from "@/components/public/refund/RefundContent";
+import { RefundHero } from "@/components/public/refund/RefundHero";
+import { RefundMobileNav } from "@/components/public/refund/RefundMobileNav";
+import { RefundNav, RefundNavItem } from "@/components/public/refund/RefundNav";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

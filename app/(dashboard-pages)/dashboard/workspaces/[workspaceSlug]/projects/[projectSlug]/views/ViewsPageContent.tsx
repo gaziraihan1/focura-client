@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Eye } from "lucide-react";
-import ViewList from "@/components/Dashboard/ProjectDetails/ViewList";
-import { ProjectManagerOnly } from "@/components/Dashboard/ProjectDetails/ProjectManagerOnly";
+import ViewList from "@/components/dashboard/projects/project-details/ViewList";
+import { ProjectManagerOnly } from "@/components/dashboard/projects/project-details/ProjectManagerOnly";
 import { useProjectDetailsBySlug } from "@/hooks/useProjects";
 
 interface ViewsPageContentProps {

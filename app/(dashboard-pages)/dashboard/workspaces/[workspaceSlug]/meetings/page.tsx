@@ -2,14 +2,14 @@
 
 import { Plus } from 'lucide-react';
 
-import { MeetingFilters } from '@/components/Dashboard/Workspaces/Meeting/MeetingFilters';
-import { MeetingEmptyState } from '@/components/Dashboard/Workspaces/Meeting/MeetingEmptyState';
-import { MeetingFormModal } from '@/components/Dashboard/Workspaces/Meeting/MeetingInformModal';
-import { MeetingCard } from '@/components/Dashboard/Workspaces/Meeting/MeetingCard';
-import { MeetingDetailModal } from '@/components/Dashboard/Workspaces/Meeting/MeetingDetailModal';
-import { MeetingGridSkeleton } from '@/components/Dashboard/Workspaces/Meeting/MeetingGridSkeleton';
-import { ErrorState } from '@/components/Dashboard/Workspaces/Meeting/ErrorState';
-import { ConfirmModal } from '@/components/Shared/ConfirmModal';
+import { MeetingFilters } from '@/components/dashboard/workspace/meetings/MeetingFilters';
+import { MeetingEmptyState } from '@/components/dashboard/workspace/meetings/MeetingEmptyState';
+import { MeetingFormModal } from '@/components/dashboard/workspace/meetings/MeetingInformModal';
+import { MeetingCard } from '@/components/dashboard/workspace/meetings/MeetingCard';
+import { MeetingDetailModal } from '@/components/dashboard/workspace/meetings/MeetingDetailModal';
+import { MeetingGridSkeleton } from '@/components/dashboard/workspace/meetings/MeetingGridSkeleton';
+import { ErrorState } from '@/components/dashboard/workspace/meetings/ErrorState';
+import { ConfirmModal } from '@/components/shared/ConfirmModal';
 import { useMeetingPage } from '@/hooks/useMeetingPage';
 import { useWorkspaceSlug } from '@/hooks/useRouteParams';
 

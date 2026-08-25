@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Loader2, Menu, X, Shield } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import ThemeToggle from "@/components/Themes/ThemeSwitcher";
+import ThemeToggle from "@/components/themes/ThemeSwitcher";
 
 const NAV_LINKS = [
   { href: "/admin-dashboard",            label: "Overview"    },

@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import type { JobPosting, JobStatus } from '@/types/job.types';
-import type { AdminJobFormValues } from '@/components/AdminDashboard/careers/AdminJobForm';
+import type { AdminJobFormValues } from '@/components/admin-dashboard/careers/AdminJobForm';
 
 // ─── Query Keys ───────────────────────────────────────────────────────────────
 export const jobKeys = {
