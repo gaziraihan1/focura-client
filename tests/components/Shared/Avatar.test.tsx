@@ -21,7 +21,7 @@ vi.mock("@/lib/utils", () => ({
     args.filter(Boolean).join(" "),
 }));
 
-import { Avatar } from "@/components/Shared/Avatar";
+import { Avatar } from "@/components/shared/Avatar";
 
 describe("Avatar", () => {
   describe("with image", () => {

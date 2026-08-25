@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { PermissionModal } from '@/components/Shared/PermissionModal'
+import { PermissionModal } from '@/components/shared/PermissionModal'
 
 vi.mock('lucide-react', () => ({
   X: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="x-icon" {...props} />,

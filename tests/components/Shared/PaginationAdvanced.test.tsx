@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
-import { Pagination } from '@/components/Shared/Pagination'
+import { Pagination } from '@/components/shared/Pagination'
 
 describe('Pagination', () => {
   const defaultProps = {

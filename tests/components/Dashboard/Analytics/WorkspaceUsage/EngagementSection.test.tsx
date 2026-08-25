@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { EngagementSection } from '@/components/Dashboard/Analytics/WorkspaceUsage/EngagementSection'
+import { EngagementSection } from '@/components/dashboard/analytics/WorkspaceUsage/EngagementSection'
 import type { UserEngagementMetrics } from '@/types/workspace-usage.types'
 
 vi.mock('recharts', () => ({

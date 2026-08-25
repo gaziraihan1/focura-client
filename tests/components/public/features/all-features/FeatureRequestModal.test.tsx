@@ -1,0 +1,165 @@
+import { describe, it, expect, vi, beforeAll } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+
+// Polyfill IntersectionObserver for jsdom
+beforeAll(() => {
+  class MockIntersectionObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+  // @ts-expect-error jsdom does not support IntersectionObserver
+  globalThis.IntersectionObserver = MockIntersectionObserver
+})
+
+vi.mock('next/link', () => ({
+  default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
+    <a href={href} {...props}>{children}</a>
+  ),
+}))
+
+vi.mock('next/image', () => ({
+  default: (props: Record<string, unknown>) => {
+    const { fill, alt = "", ...rest } = props
+    return <img alt={alt} {...rest} data-fill={fill} />
+  },
+}))
+
+vi.mock('framer-motion', () => ({
+  m: {
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...props}>{children}</button>,
+  },
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
+}))
+
+vi.mock('lucide-react', () => {
+  const icon = (name: string) => {
+    const Component = (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={`${name}-icon`} {...props} />
+    Component.displayName = name
+    return Component
+  }
+  return {
+    ShieldCheck: icon('ShieldCheck'),
+    Scale: icon('Scale'),
+    Cookie: icon('Cookie'),
+    ReceiptText: icon('ReceiptText'),
+    Layers: icon('Layers'),
+    Search: icon('Search'),
+    Bell: icon('Bell'),
+    CheckCircle2: icon('CheckCircle2'),
+    Loader2: icon('Loader2'),
+    Mail: icon('Mail'),
+    Clock: icon('Clock'),
+    CreditCard: icon('CreditCard'),
+    Calendar: icon('Calendar'),
+    FileText: icon('FileText'),
+    MessageSquare: icon('MessageSquare'),
+    Copy: icon('Copy'),
+    User: icon('User'),
+    ChevronDown: icon('ChevronDown'),
+    ChevronUp: icon('ChevronUp'),
+    ExternalLink: icon('ExternalLink'),
+    Database: icon('Database'),
+    Settings2: icon('Settings2'),
+    Share2: icon('Share2'),
+    Globe: icon('Globe'),
+    Lock: icon('Lock'),
+    UserCog: icon('UserCog'),
+    Baby: icon('Baby'),
+    RefreshCw: icon('RefreshCw'),
+    Eye: icon('Eye'),
+    Pencil: icon('Pencil'),
+    Trash2: icon('Trash2'),
+    Download: icon('Download'),
+    Ban: icon('Ban'),
+    HandMetal: icon('HandMetal'),
+    Megaphone: icon('Megaphone'),
+    AlertTriangle: icon('AlertTriangle'),
+    Info: icon('Info'),
+    CheckCircle: icon('CheckCircle'),
+    XCircle: icon('XCircle'),
+    Scissors: icon('Scissors'),
+    BarChart2: icon('BarChart2'),
+    AlertCircle: icon('AlertCircle'),
+    ToggleRight: icon('ToggleRight'),
+    MonitorSmartphone: icon('MonitorSmartphone'),
+    ArrowRight: icon('ArrowRight'),
+    Zap: icon('Zap'),
+    Rocket: icon('Rocket'),
+    MousePointerClick: icon('MousePointerClick'),
+    Sparkles: icon('Sparkles'),
+    GitFork: icon('GitFork'),
+    Star: icon('Star'),
+    PlayCircle: icon('PlayCircle'),
+    Check: icon('Check'),
+    Minus: icon('Minus'),
+    Users: icon('Users'),
+    Workflow: icon('Workflow'),
+    Gauge: icon('Gauge'),
+    CloudLightning: icon('CloudLightning'),
+    ThumbsUp: icon('ThumbsUp'),
+    ThumbsDown: icon('ThumbsDown'),
+    X: icon('X'),
+    Lightbulb: icon('Lightbulb'),
+    BookOpen: icon('BookOpen'),
+    UserCheck: icon('UserCheck'),
+    Pin: icon('Pin'),
+  }
+})
+
+vi.mock('@/lib/utils', () => ({
+  cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(' '),
+}))
+
+vi.mock('@/hooks/useFeatures', () => ({
+  useCastVote: () => ({ mutate: vi.fn(), isPending: false }),
+  useUpdateFeatureStatus: () => ({ mutate: vi.fn(), isPending: false }),
+  useCreateFeatureRequest: () => ({ mutate: vi.fn(), isPending: false }),
+}))
+
+
+import { FeatureRequestModal } from '@/components/public/features/all-features/FeatureRequestModal'
+
+describe('FeatureRequestModal', () => {
+  it('does not render when closed', () => {
+    render(<FeatureRequestModal isOpen={false} onClose={vi.fn()} />)
+    expect(screen.queryByText('Request a Feature')).not.toBeInTheDocument()
+  })
+
+  it('renders when open', () => {
+    render(<FeatureRequestModal isOpen={true} onClose={vi.fn()} />)
+    expect(screen.getByText('Request a Feature')).toBeInTheDocument()
+  })
+
+  it('renders form fields', () => {
+    render(<FeatureRequestModal isOpen={true} onClose={vi.fn()} />)
+    expect(screen.getByPlaceholderText(/Give your idea a clear, short title/)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/Describe the feature/)).toBeInTheDocument()
+  })
+
+  it('submit button is disabled when fields are empty', () => {
+    render(<FeatureRequestModal isOpen={true} onClose={vi.fn()} />)
+    const submitBtn = screen.getByText('Submit Request')
+    expect(submitBtn).toBeDisabled()
+  })
+
+  it('enables submit when both fields filled', () => {
+    render(<FeatureRequestModal isOpen={true} onClose={vi.fn()} />)
+    fireEvent.change(screen.getByPlaceholderText(/Give your idea a clear, short title/), { target: { value: 'My feature' } })
+    fireEvent.change(screen.getByPlaceholderText(/Describe the feature/), { target: { value: 'Description here' } })
+    expect(screen.getByText('Submit Request')).not.toBeDisabled()
+  })
+
+  it('shows character count for description', () => {
+    render(<FeatureRequestModal isOpen={true} onClose={vi.fn()} />)
+    expect(screen.getByText('0 / 2,000')).toBeInTheDocument()
+  })
+
+  it('closes when cancel is clicked', () => {
+    const onClose = vi.fn()
+    render(<FeatureRequestModal isOpen={true} onClose={onClose} />)
+    fireEvent.click(screen.getByText('Cancel'))
+    expect(onClose).toHaveBeenCalled()
+  })
+})

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import NavbarAuth from '@/components/Navbar/NavbarAuth'
+import NavbarAuth from '@/components/navbar/NavbarAuth'
 
 vi.mock('next/link', () => ({
   default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
@@ -12,7 +12,7 @@ vi.mock('next/image', () => ({
   default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img alt="" {...props} />,
 }))
 
-vi.mock('@/components/Themes/ThemeSwitcher', () => ({
+vi.mock('@/components/themes/ThemeSwitcher', () => ({
   default: () => <div data-testid="theme-switcher">Theme</div>,
 }))
 

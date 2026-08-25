@@ -21,7 +21,7 @@ vi.mock('lucide-react', () => {
   };
 });
 
-import { UpgradeSectionCard } from '@/components/Shared/UpgradeSectionCard';
+import { UpgradeSectionCard } from '@/components/shared/UpgradeSectionCard';
 
 describe('UpgradeSectionCard', () => {
   beforeEach(() => {

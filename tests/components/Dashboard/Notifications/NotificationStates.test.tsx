@@ -1,19 +1,32 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
-import { NotificationsEmptyState } from '@/components/Dashboard/Notifications/NotificationsEmptyState'
-import { NotificationsLoadingState } from '@/components/Dashboard/Notifications/NotificationsLoadingState'
-import { EndOfListMessage } from '@/components/Dashboard/Notifications/EndOfListMessage'
-import { NotificationsPageHeader } from '@/components/Dashboard/Notifications/NotificationsPageHeader'
+import { EmptyState } from '@/components/shared/EmptyState'
+import { Bell } from 'lucide-react'
+import { NotificationsLoadingState } from '@/components/dashboard/notifications/NotificationsLoadingState'
+import { EndOfListMessage } from '@/components/dashboard/notifications/EndOfListMessage'
+import { NotificationsPageHeader } from '@/components/dashboard/notifications/NotificationsPageHeader'
 
 describe('NotificationsEmptyState', () => {
   it('renders "No notifications yet" text', () => {
-    render(<NotificationsEmptyState />)
+    render(
+      <EmptyState
+        icon={Bell}
+        title="No notifications yet"
+        description="We'll notify you when something important happens."
+      />
+    )
     expect(screen.getByText('No notifications yet')).toBeInTheDocument()
   })
 
   it('shows secondary message', () => {
-    render(<NotificationsEmptyState />)
+    render(
+      <EmptyState
+        icon={Bell}
+        title="No notifications yet"
+        description="We'll notify you when something important happens."
+      />
+    )
     expect(screen.getByText(/something important happens/)).toBeInTheDocument()
   })
 })

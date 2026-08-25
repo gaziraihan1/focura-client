@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import FileFiltersPanel from "@/components/Dashboard/Storage/Files/FileFiltersPanel";
+import FileFiltersPanel from "@/components/dashboard/storage/files/FileFiltersPanel";
 
 vi.mock("lucide-react", () => {
   const icon = (name: string) => {

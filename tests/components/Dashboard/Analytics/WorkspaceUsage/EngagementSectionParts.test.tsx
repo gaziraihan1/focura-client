@@ -5,7 +5,7 @@ import {
   DailyActiveUsersChart,
   PeakHoursHeatmap,
   InactiveMembers,
-} from '@/components/Dashboard/Analytics/WorkspaceUsage/EngagementSectionParts'
+} from '@/components/dashboard/analytics/WorkspaceUsage/EngagementSectionParts'
 
 vi.mock('recharts', () => ({
   ResponsiveContainer: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,

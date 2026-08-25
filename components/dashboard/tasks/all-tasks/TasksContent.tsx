@@ -1,0 +1,56 @@
+// components/Dashboard/AllTasks/TasksContent.tsx
+import { TaskList } from "@/components/dashboard/tasks/all-tasks/TaskList";
+import { Pagination } from "@/components/shared/Pagination";
+import { Task } from "@/hooks/useTask";
+
+interface TasksContentProps {
+  tasks: Task[];
+  focusedTaskId?: string | null;
+  isLoading: boolean;
+  isError: boolean;
+  searchQuery: string;
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+  onCreateTask: () => void;
+  onPageChange: (page: number) => void;
+}
+
+export function TasksContent({
+  tasks,
+  focusedTaskId,
+  isLoading,
+  isError,
+  searchQuery,
+  currentPage,
+  totalPages,
+  totalItems,
+  itemsPerPage,
+  onCreateTask,
+  onPageChange,
+}: TasksContentProps) {
+  return (
+    <>
+      <TaskList
+        tasks={tasks}
+        focusedTaskId={focusedTaskId}
+        isLoading={isLoading}
+        isError={isError}
+        searchQuery={searchQuery}
+        onCreateTask={onCreateTask}
+      />
+
+      {/* Pagination */}
+      {!isLoading && totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+          itemsPerPage={itemsPerPage}
+          totalItems={totalItems}
+        />
+      )}
+    </>
+  );
+}

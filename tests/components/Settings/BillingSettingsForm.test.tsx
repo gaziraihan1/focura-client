@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
-import { BillingSettingsForm } from '@/components/Settings/BillingSettingsForm'
+import { BillingSettingsForm } from '@/components/settings/BillingSettingsForm'
 import { createWrapper } from '@/tests/utils/renderWithProviders'
 
 vi.mock('lucide-react', () => {

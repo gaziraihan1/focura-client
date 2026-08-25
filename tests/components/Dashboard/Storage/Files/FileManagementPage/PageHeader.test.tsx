@@ -8,13 +8,13 @@ vi.mock('lucide-react', () => {
   };
 });
 
-vi.mock('@/components/Dashboard/Storage/WorkspaceSwitcher', () => ({
+vi.mock('@/components/dashboard/storage/files/FileManagementPage/WorkspaceSwitcher', () => ({
   WorkspaceSwitcher: ({ currentWorkspaceId }: { currentWorkspaceId: string }) => (
     <div data-testid="workspace-switcher" data-ws-id={currentWorkspaceId} />
   ),
 }));
 
-import { PageHeader } from '@/components/Dashboard/Storage/Files/FileManagementPage/PageHeader';
+import { PageHeader } from '@/components/dashboard/storage/files/FileManagementPage/PageHeader';
 
 describe('PageHeader', () => {
   it('renders the Files heading', () => {

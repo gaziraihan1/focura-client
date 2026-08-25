@@ -20,7 +20,7 @@ vi.mock('next/script', () => ({
   },
 }));
 
-import { GoogleAnalytics } from '@/components/Analytics/GoogleAnalytics';
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 
 describe('GoogleAnalytics', () => {
   beforeEach(() => {

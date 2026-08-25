@@ -10,7 +10,7 @@ vi.mock("react-hot-toast", () => ({
   },
 }));
 
-import { AiGoalBreakdown } from "@/components/AI/AiGoalBreakdown";
+import { AiGoalBreakdown } from "@/components/ai/AiGoalBreakdown";
 import toast from "react-hot-toast";
 
 function renderCard() {

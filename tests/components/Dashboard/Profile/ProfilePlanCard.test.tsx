@@ -282,11 +282,11 @@ vi.mock("@/hooks/useProjectAnalyticsPage", () => ({
 
 vi.mock("@/hooks/useWorkspace", () => ({}));
 
-vi.mock("@/components/Themes/ThemeSwitcher", () => ({
+vi.mock("@/components/themes/ThemeSwitcher", () => ({
   default: () => <div data-testid="theme-switcher" />,
 }));
 
-vi.mock("@/components/Shared/Pagination", () => ({
+vi.mock("@/components/shared/Pagination", () => ({
   Pagination: ({ currentPage, totalPages, onPageChange }: Record<string, unknown>) => (
     <div data-testid="pagination">
       <span>Page {currentPage} of {totalPages}</span>
@@ -307,7 +307,7 @@ vi.mock("@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[
 
 describe("ProfilePlanCard", () => {
   it("renders plan info for workspace", async () => {
-    const { ProfilePlanCard } = await import("@/components/Dashboard/Profile/ProfilePlanCard");
+    const { ProfilePlanCard } = await import("@/components/dashboard/profile/ProfilePlanCard");
     render(
       <ProfilePlanCard ownedWorkspaces={[{ id: "1", plan: "PRO", maxStorage: 10240, slug: "my-ws" }]} />
     );
@@ -317,7 +317,7 @@ describe("ProfilePlanCard", () => {
   });
 
   it("renders no plan when empty", async () => {
-    const { ProfilePlanCard } = await import("@/components/Dashboard/Profile/ProfilePlanCard");
+    const { ProfilePlanCard } = await import("@/components/dashboard/profile/ProfilePlanCard");
     render(<ProfilePlanCard ownedWorkspaces={[]} />);
     expect(screen.getByText("No workspace plan active")).toBeInTheDocument();
   });

@@ -283,11 +283,11 @@ vi.mock("@/hooks/useProjectAnalyticsPage", () => ({
 
 vi.mock("@/hooks/useWorkspace", () => ({}));
 
-vi.mock("@/components/Themes/ThemeSwitcher", () => ({
+vi.mock("@/components/themes/ThemeSwitcher", () => ({
   default: () => <div data-testid="theme-switcher" />,
 }));
 
-vi.mock("@/components/Shared/Pagination", () => ({
+vi.mock("@/components/shared/Pagination", () => ({
   Pagination: ({ currentPage, totalPages, onPageChange }: Record<string, unknown>) => (
     <div data-testid="pagination">
       <span>Page {currentPage} of {totalPages}</span>
@@ -308,7 +308,7 @@ vi.mock("@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[
 
 describe("ProfileStatsCard", () => {
   it("renders role and member since", async () => {
-    const { ProfileStatsCard } = await import("@/components/Dashboard/Profile/ProfileStatsCard");
+    const { ProfileStatsCard } = await import("@/components/dashboard/profile/ProfileStatsCard");
     render(<ProfileStatsCard role="ADMIN" createdAt="2026-01-15T00:00:00Z" />);
     expect(screen.getByText("admin")).toBeInTheDocument();
     expect(screen.getByText("Role")).toBeInTheDocument();
@@ -317,13 +317,13 @@ describe("ProfileStatsCard", () => {
   });
 
   it("shows no password change recorded when lastPasswordChange is null", async () => {
-    const { ProfileStatsCard } = await import("@/components/Dashboard/Profile/ProfileStatsCard");
+    const { ProfileStatsCard } = await import("@/components/dashboard/profile/ProfileStatsCard");
     render(<ProfileStatsCard role="ADMIN" createdAt="2026-01-15T00:00:00Z" />);
     expect(screen.getByText("No password change recorded")).toBeInTheDocument();
   });
 
   it("shows the last password change with full date metadata", async () => {
-    const { ProfileStatsCard } = await import("@/components/Dashboard/Profile/ProfileStatsCard");
+    const { ProfileStatsCard } = await import("@/components/dashboard/profile/ProfileStatsCard");
     render(
       <ProfileStatsCard
         role="ADMIN"

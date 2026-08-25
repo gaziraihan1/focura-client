@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import FooterMain from '@/components/Footer/FooterMain'
+import FooterMain from '@/components/footer/FooterMain'
 
 vi.mock('next/link', () => ({
   default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (

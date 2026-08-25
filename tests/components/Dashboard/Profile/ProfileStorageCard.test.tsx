@@ -282,11 +282,11 @@ vi.mock("@/hooks/useProjectAnalyticsPage", () => ({
 
 vi.mock("@/hooks/useWorkspace", () => ({}));
 
-vi.mock("@/components/Themes/ThemeSwitcher", () => ({
+vi.mock("@/components/themes/ThemeSwitcher", () => ({
   default: () => <div data-testid="theme-switcher" />,
 }));
 
-vi.mock("@/components/Shared/Pagination", () => ({
+vi.mock("@/components/shared/Pagination", () => ({
   Pagination: ({ currentPage, totalPages, onPageChange }: Record<string, unknown>) => (
     <div data-testid="pagination">
       <span>Page {currentPage} of {totalPages}</span>
@@ -307,7 +307,7 @@ vi.mock("@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[
 
 describe("ProfileStorageCard", () => {
   it("renders storage data", async () => {
-    const { ProfileStorageCard } = await import("@/components/Dashboard/Profile/ProfileStorageCard");
+    const { ProfileStorageCard } = await import("@/components/dashboard/profile/ProfileStorageCard");
     render(
       <ProfileStorageCard storage={{ total: 10240, used: 5120, remaining: 5120 }} />
     );
@@ -317,7 +317,7 @@ describe("ProfileStorageCard", () => {
   });
 
   it("renders null storage", async () => {
-    const { ProfileStorageCard } = await import("@/components/Dashboard/Profile/ProfileStorageCard");
+    const { ProfileStorageCard } = await import("@/components/dashboard/profile/ProfileStorageCard");
     render(<ProfileStorageCard storage={null} />);
     expect(screen.getByText("Storage")).toBeInTheDocument();
     expect(screen.getByText("0% remaining")).toBeInTheDocument();

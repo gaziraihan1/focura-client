@@ -9,7 +9,7 @@ vi.mock('lucide-react', () => {
   };
 });
 
-import { LoadMoreButton } from '@/components/Dashboard/Storage/Files/FileManagementPage/LoadMoreButton';
+import { LoadMoreButton } from '@/components/dashboard/storage/files/FileManagementPage/LoadMoreButton';
 
 describe('LoadMoreButton', () => {
   it('renders nothing when hasMore is false', () => {

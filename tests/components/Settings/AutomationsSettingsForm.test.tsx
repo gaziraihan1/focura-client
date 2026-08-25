@@ -6,7 +6,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createElement, type ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AutomationsSettingsForm } from "@/components/Settings/AutomationsSettingsForm";
+import { AutomationsSettingsForm } from "@/components/settings/AutomationsSettingsForm";
 
 // Mock lucide-react
 vi.mock("lucide-react", () => {
@@ -124,7 +124,7 @@ vi.mock("@/hooks/useLabels", () => ({
   })),
 }));
 
-vi.mock("@/components/Shared/ConfirmModal", () => ({
+vi.mock("@/components/shared/ConfirmModal", () => ({
   ConfirmModal: ({ isOpen, onConfirm, title }: any) =>
     isOpen ? (
       <div data-testid="confirm-modal">

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { createWrapper } from "../../utils/renderWithProviders";
-import { AiCommentAssist } from "@/components/AI/AiCommentAssist";
+import { createWrapper } from "@/tests/utils/renderWithProviders";
+import { AiCommentAssist } from "@/components/ai/AiCommentAssist";
 import { http, HttpResponse } from "msw";
 import { server } from "@/tests/mock/server";
 

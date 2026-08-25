@@ -20,7 +20,7 @@ vi.mock("@/lib/utils", () => ({
     args.filter(Boolean).join(" "),
 }));
 
-import { LegalMobileNav } from "@/components/Shared/LegalMobileNav";
+import { LegalMobileNav } from "@/components/shared/LegalMobileNav";
 
 describe("LegalMobileNav", () => {
   beforeEach(() => {

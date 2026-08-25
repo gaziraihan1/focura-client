@@ -1,0 +1,53 @@
+import { describe, it, expect, vi } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
+import { SubtaskForm } from '@/components/dashboard/task-details/SubtasksSection/SubtaskForm'
+
+vi.mock('framer-motion', () => ({
+  m: {
+    div: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => <button {...props}>{children}</button>,
+  },
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => children,
+}))
+
+vi.mock('lucide-react', () => ({
+  Check: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-icon" {...props} />,
+  Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader-icon" {...props} />,
+}))
+
+vi.mock('@/lib/utils', () => ({
+  cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(' '),
+}))
+
+const defaultProps = {
+  onSubmit: vi.fn(),
+  onCancel: vi.fn(),
+  isLoading: false,
+}
+
+describe('SubtaskForm', () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  it('renders the input field', () => {
+    render(<SubtaskForm {...defaultProps} />)
+    expect(screen.getByPlaceholderText('Subtask title…')).toBeInTheDocument()
+  })
+
+  it('renders priority buttons', () => {
+    render(<SubtaskForm {...defaultProps} />)
+    expect(screen.getByText('Low')).toBeInTheDocument()
+    expect(screen.getByText('Medium')).toBeInTheDocument()
+    expect(screen.getByText('High')).toBeInTheDocument()
+  })
+
+  it('renders the Add subtask button', () => {
+    render(<SubtaskForm {...defaultProps} />)
+    expect(screen.getByText('Add subtask')).toBeInTheDocument()
+  })
+
+  it('calls onCancel when Cancel is clicked', () => {
+    render(<SubtaskForm {...defaultProps} />)
+    fireEvent.click(screen.getByText('Cancel'))
+    expect(defaultProps.onCancel).toHaveBeenCalled()
+  })
+})

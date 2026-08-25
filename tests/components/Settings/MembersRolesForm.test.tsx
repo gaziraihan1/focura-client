@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
-import { MembersRolesForm } from '@/components/Settings/MembersRolesForm';
+import { MembersRolesForm } from '@/components/settings/MembersRolesForm';
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────
 

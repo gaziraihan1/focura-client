@@ -7,7 +7,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { createElement } from "react";
-import { ConfirmModal } from "@/components/Shared/ConfirmModal";
+import { ConfirmModal } from "@/components/shared/ConfirmModal";
 
 // Mock lucide-react
 vi.mock("lucide-react", () => {

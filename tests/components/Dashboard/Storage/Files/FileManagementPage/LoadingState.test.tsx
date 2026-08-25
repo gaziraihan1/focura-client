@@ -1,11 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
-vi.mock('@/components/Shared/LoadingState', () => ({
+vi.mock('@/components/shared/LoadingState', () => ({
   LoadingState: () => <div data-testid="shared-loading-state" />,
 }));
 
-import { LoadingState } from '@/components/Dashboard/Storage/Files/FileManagementPage/LoadingState';
+import { LoadingState } from '@/components/dashboard/storage/files/FileManagementPage/LoadingState';
 
 describe('LoadingState', () => {
   it('renders the loading state with loading text', () => {

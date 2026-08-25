@@ -1,0 +1,43 @@
+import { EmptyState } from "@/components/dashboard/projects/all-projects/EmptyState";
+import { ProjectsGridView } from "./ProjectsGridView";
+import { ProjectsListView } from "./ProjectsListView";
+import { ViewMode, ProjectData } from "@/types/project.types";
+
+interface ProjectsContentProps {
+  projects: ProjectData[];
+  viewMode: ViewMode;
+  hasSearchOrFilters: boolean;
+  onProjectClick: (project: ProjectData) => void;
+  onBrowseWorkspaces: () => void;
+  onCloseModal: () => void;
+  showModal: boolean;
+}
+
+export function ProjectsContent({
+  projects,
+  viewMode,
+  hasSearchOrFilters,
+  onProjectClick,
+  onBrowseWorkspaces,
+  showModal,
+  onCloseModal
+}: ProjectsContentProps) {
+  if (projects.length === 0) {
+    return (
+      <EmptyState
+        hasSearchOrFilters={hasSearchOrFilters}
+        onBrowseWorkspaces={onBrowseWorkspaces}
+      />
+    );
+  }
+
+  if (viewMode === "grid") {
+    return (
+      <ProjectsGridView projects={projects} onProjectClick={onProjectClick} showModal={showModal} onCloseModal={onCloseModal} />
+    );
+  }
+
+  return (
+    <ProjectsListView projects={projects} onProjectClick={onProjectClick} showModal={showModal} onCloseModal={onCloseModal} />
+  );
+}

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
-import { SkeletonLoader, CardSkeleton, ListSkeleton } from '@/components/Shared/SkeletonLoader'
+import { SkeletonLoader, CardSkeleton, ListSkeleton } from '@/components/shared/SkeletonLoader'
 
 describe('SkeletonLoader', () => {
   it('renders a single skeleton by default', () => {

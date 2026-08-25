@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { Pagination } from '@/components/Shared/Pagination'
+import { Pagination } from '@/components/shared/Pagination'
 
 describe('Pagination', () => {
   const onPageChange = vi.fn()

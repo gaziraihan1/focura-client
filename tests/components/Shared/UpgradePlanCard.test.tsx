@@ -25,7 +25,7 @@ vi.mock("lucide-react", () => {
   };
 });
 
-import { UpgradePlanCard } from "@/components/Shared/UpgradePlanCard";
+import { UpgradePlanCard } from "@/components/shared/UpgradePlanCard";
 
 describe("UpgradePlanCard", () => {
   beforeEach(() => {

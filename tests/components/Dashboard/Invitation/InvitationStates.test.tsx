@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
-import { InvitationLoadingState } from '@/components/Dashboard/Invitation/InvitationLoadingState'
-import { InvitationErrorState } from '@/components/Dashboard/Invitation/InvitationErrorState'
-import { InvitationSuccessState } from '@/components/Dashboard/Invitation/InvitationSuccessState'
-import { InvitationExpiredState } from '@/components/Dashboard/Invitation/InvitationExpiredState'
+import { InvitationLoadingState } from '@/components/dashboard/invitation/InvitationLoadingState'
+import { InvitationErrorState } from '@/components/dashboard/invitation/InvitationErrorState'
+import { InvitationSuccessState } from '@/components/dashboard/invitation/InvitationSuccessState'
+import { InvitationExpiredState } from '@/components/dashboard/invitation/InvitationExpiredState'
 
 describe('InvitationLoadingState', () => {
   it('renders "Loading invitation..." text', () => {

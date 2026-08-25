@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { WorkspaceUsageHeader } from '@/components/Dashboard/Analytics/WorkspaceUsage/WorkspaceUsageHeader'
+import { WorkspaceUsageHeader } from '@/components/dashboard/analytics/WorkspaceUsage/WorkspaceUsageHeader'
 
 vi.mock('@/hooks/useWorkspaceUsage', () => ({
   useExportWorkspaceUsage: () => ({

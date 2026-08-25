@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
-import { ProfileLoadingState } from '@/components/Dashboard/Profile/ProfileLoadingState'
-import { ProfilePageHeader } from '@/components/Dashboard/Profile/ProfilePageHeader'
+import { ProfileLoadingState } from '@/components/dashboard/profile/ProfileLoadingState'
+import { ProfilePageHeader } from '@/components/dashboard/profile/ProfilePageHeader'
 
 describe('ProfileLoadingState', () => {
   it('renders loader/spinner', () => {

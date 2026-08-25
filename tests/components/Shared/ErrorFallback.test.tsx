@@ -13,7 +13,7 @@ vi.mock("lucide-react", () => ({
   ),
 }));
 
-import { ErrorFallback } from "@/components/Shared/ErrorFallback";
+import { ErrorFallback } from "@/components/shared/ErrorFallback";
 
 describe("ErrorFallback", () => {
   const baseError = new Error("Test error message");

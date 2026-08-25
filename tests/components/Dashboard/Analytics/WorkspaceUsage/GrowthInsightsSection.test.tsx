@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { GrowthInsightsSection } from '@/components/Dashboard/Analytics/WorkspaceUsage/GrowthInsightsSection'
+import { GrowthInsightsSection } from '@/components/dashboard/analytics/WorkspaceUsage/GrowthInsightsSection'
 import type { WorkspaceGrowthMetrics } from '@/types/workspace-usage.types'
 
 vi.mock('lucide-react', () => {

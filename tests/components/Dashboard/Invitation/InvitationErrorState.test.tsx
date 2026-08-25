@@ -282,11 +282,11 @@ vi.mock("@/hooks/useProjectAnalyticsPage", () => ({
 
 vi.mock("@/hooks/useWorkspace", () => ({}));
 
-vi.mock("@/components/Themes/ThemeSwitcher", () => ({
+vi.mock("@/components/themes/ThemeSwitcher", () => ({
   default: () => <div data-testid="theme-switcher" />,
 }));
 
-vi.mock("@/components/Shared/Pagination", () => ({
+vi.mock("@/components/shared/Pagination", () => ({
   Pagination: ({ currentPage, totalPages, onPageChange }: Record<string, unknown>) => (
     <div data-testid="pagination">
       <span>Page {currentPage} of {totalPages}</span>
@@ -307,14 +307,14 @@ vi.mock("@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[
 
 describe("InvitationErrorState", () => {
   it("renders error state with default message", async () => {
-    const { InvitationErrorState } = await import("@/components/Dashboard/Invitation/InvitationErrorState");
+    const { InvitationErrorState } = await import("@/components/dashboard/invitation/InvitationErrorState");
     render(<InvitationErrorState error={null} onGoToDashboard={vi.fn()} />);
     expect(screen.getByText("Invalid Invitation")).toBeInTheDocument();
     expect(screen.getByText("This invitation link is invalid or has expired.")).toBeInTheDocument();
   });
 
   it("renders custom error message", async () => {
-    const { InvitationErrorState } = await import("@/components/Dashboard/Invitation/InvitationErrorState");
+    const { InvitationErrorState } = await import("@/components/dashboard/invitation/InvitationErrorState");
     render(<InvitationErrorState error="Custom error" onGoToDashboard={vi.fn()} />);
     expect(screen.getByText("Custom error")).toBeInTheDocument();
   });

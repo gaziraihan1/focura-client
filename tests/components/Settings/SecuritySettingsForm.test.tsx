@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { SecuritySettingsForm } from '@/components/Settings/SecuritySettingsForm'
+import { SecuritySettingsForm } from '@/components/settings/SecuritySettingsForm'
 import { createWrapper } from '@/tests/utils/renderWithProviders'
 
 vi.mock('lucide-react', () => {

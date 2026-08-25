@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react';
-import { CardLoadingState } from '@/components/Shared/CardLoadingState'
+import { CardLoadingState } from '@/components/shared/CardLoadingState'
 
 describe('CardLoadingState', () => {
   it('renders a spinning loader', () => {

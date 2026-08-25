@@ -282,11 +282,11 @@ vi.mock("@/hooks/useProjectAnalyticsPage", () => ({
 
 vi.mock("@/hooks/useWorkspace", () => ({}));
 
-vi.mock("@/components/Themes/ThemeSwitcher", () => ({
+vi.mock("@/components/themes/ThemeSwitcher", () => ({
   default: () => <div data-testid="theme-switcher" />,
 }));
 
-vi.mock("@/components/Shared/Pagination", () => ({
+vi.mock("@/components/shared/Pagination", () => ({
   Pagination: ({ currentPage, totalPages, onPageChange }: Record<string, unknown>) => (
     <div data-testid="pagination">
       <span>Page {currentPage} of {totalPages}</span>
@@ -307,7 +307,7 @@ vi.mock("@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[
 
 describe("InvitationAlreadyUsedState", () => {
   it("renders already accepted state", async () => {
-    const { InvitationAlreadyUsedState } = await import("@/components/Dashboard/Invitation/InvitationAlreadyUsedState");
+    const { InvitationAlreadyUsedState } = await import("@/components/dashboard/invitation/InvitationAlreadyUsedState");
     render(
       <InvitationAlreadyUsedState status="ACCEPTED" onGoToWorkspace={vi.fn()} />
     );

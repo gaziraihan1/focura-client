@@ -282,11 +282,11 @@ vi.mock("@/hooks/useProjectAnalyticsPage", () => ({
 
 vi.mock("@/hooks/useWorkspace", () => ({}));
 
-vi.mock("@/components/Themes/ThemeSwitcher", () => ({
+vi.mock("@/components/themes/ThemeSwitcher", () => ({
   default: () => <div data-testid="theme-switcher" />,
 }));
 
-vi.mock("@/components/Shared/Pagination", () => ({
+vi.mock("@/components/shared/Pagination", () => ({
   Pagination: ({ currentPage, totalPages, onPageChange }: Record<string, unknown>) => (
     <div data-testid="pagination">
       <span>Page {currentPage} of {totalPages}</span>
@@ -307,7 +307,7 @@ vi.mock("@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[
 
 describe("ProfilePageHeader", () => {
   it("shows edit button when not editing", async () => {
-    const { ProfilePageHeader } = await import("@/components/Dashboard/Profile/ProfilePageHeader");
+    const { ProfilePageHeader } = await import("@/components/dashboard/profile/ProfilePageHeader");
     render(
       <ProfilePageHeader isEditing={false} isSaving={false} onEdit={vi.fn()} onCancel={vi.fn()} onSave={vi.fn()} />
     );
@@ -316,7 +316,7 @@ describe("ProfilePageHeader", () => {
   });
 
   it("shows save/cancel when editing", async () => {
-    const { ProfilePageHeader } = await import("@/components/Dashboard/Profile/ProfilePageHeader");
+    const { ProfilePageHeader } = await import("@/components/dashboard/profile/ProfilePageHeader");
     render(
       <ProfilePageHeader isEditing isSaving={false} onEdit={vi.fn()} onCancel={vi.fn()} onSave={vi.fn()} />
     );

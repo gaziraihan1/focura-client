@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import LabelCard from '@/components/Dashboard/Labels/LabelCard';
+import LabelCard from '@/components/dashboard/labels/LabelCard';
 
 vi.mock('next/link', () => ({
   default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
@@ -15,7 +15,7 @@ vi.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }));
 
-vi.mock('@/components/Shared/PermissionModal', () => ({
+vi.mock('@/components/shared/PermissionModal', () => ({
   PermissionModal: () => <div data-testid="permission-modal" />,
 }));
 

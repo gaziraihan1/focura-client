@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { DataExportCard } from '@/components/Settings/DataExportCard';
+import { DataExportCard } from '@/components/settings/DataExportCard';
 import { api } from '@/lib/axios';
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────

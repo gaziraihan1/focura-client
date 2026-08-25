@@ -8,7 +8,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, userEvent } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createElement, type ReactNode } from "react";
-import { ApiTokensSettingsForm } from "@/components/Settings/ApiTokensSettingsForm";
+import { ApiTokensSettingsForm } from "@/components/settings/ApiTokensSettingsForm";
 
 // Mock lucide-react
 vi.mock("lucide-react", () => {
@@ -43,7 +43,7 @@ vi.mock("@/hooks/useApiTokens", () => ({
 }));
 
 // Mock ConfirmModal
-vi.mock("@/components/Shared/ConfirmModal", () => ({
+vi.mock("@/components/shared/ConfirmModal", () => ({
   ConfirmModal: ({ isOpen, onConfirm, title }: any) =>
     isOpen ? (
       <div data-testid="confirm-modal">

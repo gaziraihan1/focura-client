@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { LoadingState } from '@/components/Shared/LoadingState'
+import { LoadingState } from '@/components/shared/LoadingState'
 
 vi.mock('lucide-react', () => ({
   Loader2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="loader" {...props} />,

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { StorageResourcesSection } from '@/components/Dashboard/Analytics/WorkspaceUsage/StorageResourcesSection'
+import { StorageResourcesSection } from '@/components/dashboard/analytics/WorkspaceUsage/StorageResourcesSection'
 import type { ResourceUsageMetrics } from '@/types/workspace-usage.types'
 
 vi.mock('recharts', () => ({

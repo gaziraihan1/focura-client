@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { FormattedDescription } from '@/components/Shared/FormattedDescription'
+import { FormattedDescription } from '@/components/shared/FormattedDescription'
 
 vi.mock('@/utils/resources.utils', () => ({
   splitDescriptionIntoSentences: (str: string) => str.split('. ').filter(Boolean),

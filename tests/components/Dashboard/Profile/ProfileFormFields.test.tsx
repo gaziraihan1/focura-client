@@ -282,11 +282,11 @@ vi.mock("@/hooks/useProjectAnalyticsPage", () => ({
 
 vi.mock("@/hooks/useWorkspace", () => ({}));
 
-vi.mock("@/components/Themes/ThemeSwitcher", () => ({
+vi.mock("@/components/themes/ThemeSwitcher", () => ({
   default: () => <div data-testid="theme-switcher" />,
 }));
 
-vi.mock("@/components/Shared/Pagination", () => ({
+vi.mock("@/components/shared/Pagination", () => ({
   Pagination: ({ currentPage, totalPages, onPageChange }: Record<string, unknown>) => (
     <div data-testid="pagination">
       <span>Page {currentPage} of {totalPages}</span>
@@ -307,7 +307,7 @@ vi.mock("@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[
 
 describe("ProfileFormFields", () => {
   it("renders read-only fields", async () => {
-    const { ProfileFormFields } = await import("@/components/Dashboard/Profile/ProfileFormFields");
+    const { ProfileFormFields } = await import("@/components/dashboard/profile/ProfileFormFields");
     render(
       <ProfileFormFields
         isEditing={false}
@@ -322,7 +322,7 @@ describe("ProfileFormFields", () => {
   });
 
   it("renders editable fields", async () => {
-    const { ProfileFormFields } = await import("@/components/Dashboard/Profile/ProfileFormFields");
+    const { ProfileFormFields } = await import("@/components/dashboard/profile/ProfileFormFields");
     render(
       <ProfileFormFields
         isEditing
@@ -336,7 +336,7 @@ describe("ProfileFormFields", () => {
   });
 
   it("shows 'No bio added yet' when bio is empty", async () => {
-    const { ProfileFormFields } = await import("@/components/Dashboard/Profile/ProfileFormFields");
+    const { ProfileFormFields } = await import("@/components/dashboard/profile/ProfileFormFields");
     render(
       <ProfileFormFields
         isEditing={false}

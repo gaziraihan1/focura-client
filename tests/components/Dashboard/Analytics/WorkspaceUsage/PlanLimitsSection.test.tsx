@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { PlanLimitsSection } from '@/components/Dashboard/Analytics/WorkspaceUsage/PlanLimitsSection'
+import { PlanLimitsSection } from '@/components/dashboard/analytics/WorkspaceUsage/PlanLimitsSection'
 import type { PlanLimitsMetrics } from '@/types/workspace-usage.types'
 
 vi.mock('next/link', () => ({

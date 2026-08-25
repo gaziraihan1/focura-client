@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { FileList } from '@/components/Dashboard/Storage/Files/FileList';
+import { FileList } from '@/components/dashboard/storage/files/FileList';
 
 vi.mock('lucide-react', () => {
   const icon = (name: string) => (props: React.SVGProps<SVGSVGElement>) => <svg data-testid={name} {...props} />;
@@ -31,11 +31,11 @@ vi.mock('@/utils/file.utils', () => ({
   formatRelativeTime: () => '2 hours ago',
 }));
 
-vi.mock('@/components/Dashboard/Storage/Files/DeleteConfirmModal', () => ({
+vi.mock('@/components/dashboard/storage/files/DeleteConfirmModal', () => ({
   DeleteConfirmModal: () => <div data-testid="delete-modal" />,
 }));
 
-vi.mock('@/components/Dashboard/Storage/Files/FilePreviewModal', () => ({
+vi.mock('@/components/dashboard/storage/files/FilePreviewModal', () => ({
   FilePreviewModal: () => <div data-testid="preview-modal" />,
 }));
 

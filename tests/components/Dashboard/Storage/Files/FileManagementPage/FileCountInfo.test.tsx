@@ -9,7 +9,7 @@ vi.mock('lucide-react', () => {
   };
 });
 
-import { FileCountInfo } from '@/components/Dashboard/Storage/Files/FileManagementPage/FileCountInfo';
+import { FileCountInfo } from '@/components/dashboard/storage/files/FileManagementPage/FileCountInfo';
 
 describe('FileCountInfo', () => {
   const defaultProps = {

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import { createWrapper } from "../../utils/renderWithProviders";
-import { AiSuggestionBar } from "@/components/AI/AiSuggestionBar";
+import { createWrapper } from "@/tests/utils/renderWithProviders";
+import { AiSuggestionBar } from "@/components/ai/AiSuggestionBar";
 import { http, HttpResponse } from "msw";
 import { server } from "@/tests/mock/server";
 import type { AiTaskSuggestion } from "@/types/ai.types";

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import React from 'react'
-import { EmptyState } from '@/components/Shared/EmptyState'
+import { EmptyState } from '@/components/shared/EmptyState'
 
 vi.mock('lucide-react', () => {
   const mock = (name: string) => {

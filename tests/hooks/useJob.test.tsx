@@ -13,7 +13,7 @@ import {
   useToggleJobPin,
   useToggleJobStatus,
 } from '@/hooks/useJob'
-import { AdminJobFormValues } from '@/components/AdminDashboard/careers/AdminJobForm'
+import { AdminJobFormValues } from '@/components/admin-dashboard/careers/AdminJobForm'
 
 
 const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'

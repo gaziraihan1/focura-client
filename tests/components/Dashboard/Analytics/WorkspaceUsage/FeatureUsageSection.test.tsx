@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { FeatureUsageSection } from '@/components/Dashboard/Analytics/WorkspaceUsage/FeatureUsageSection'
+import { FeatureUsageSection } from '@/components/dashboard/analytics/WorkspaceUsage/FeatureUsageSection'
 import type { FeatureUsageMetrics } from '@/types/workspace-usage.types'
 
 vi.mock('lucide-react', () => {

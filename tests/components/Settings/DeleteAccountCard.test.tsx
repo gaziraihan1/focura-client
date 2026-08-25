@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { DeleteAccountCard } from '@/components/Settings/DeleteAccountCard';
+import { DeleteAccountCard } from '@/components/settings/DeleteAccountCard';
 import { api } from '@/lib/axios';
 import { signOut } from 'next-auth/react';
 

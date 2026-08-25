@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import LabelManagementMain from '@/components/Dashboard/Labels/LabelManagementMain';
+import LabelManagementMain from '@/components/dashboard/labels/LabelManagementMain';
 
 vi.mock('framer-motion', () => ({
   motion: {
@@ -41,32 +41,32 @@ vi.mock('@/hooks/useLabelPage', () => ({
   }),
 }));
 
-vi.mock('@/components/Dashboard/Labels/LabelCard', () => ({
+vi.mock('@/components/dashboard/labels/LabelCard', () => ({
   default: ({ label }: { label: string }) => <div data-testid="label-card">{label.name}</div>,
 }));
 
-vi.mock('@/components/Dashboard/Labels/LabelFormModal', () => ({
+vi.mock('@/components/dashboard/labels/LabelFormModal', () => ({
   default: () => <div data-testid="label-form-modal" />,
 }));
 
-vi.mock('@/components/Dashboard/Labels/DeleteConfirmModal', () => ({
+vi.mock('@/components/dashboard/labels/DeleteConfirmModal', () => ({
   default: () => <div data-testid="delete-confirm-modal" />,
 }));
 
-vi.mock('@/components/Dashboard/Labels/LabelManagementMain/LabelManagementHeader', () => ({
+vi.mock('@/components/dashboard/labels/LabelManagementMain/LabelManagementHeader', () => ({
   LabelManagementHeader: () => <div data-testid="label-management-header" />,
 }));
 
-vi.mock('@/components/Dashboard/Labels/LabelManagementMain/LabelsEmptyState', () => ({
+vi.mock('@/components/dashboard/labels/LabelManagementMain/LabelsEmptyState', () => ({
   LabelsEmptyState: () => <div data-testid="labels-empty-state" />,
 }));
 
-vi.mock('@/components/Dashboard/Labels/LabelManagementSkeleton', () => ({
+vi.mock('@/components/dashboard/labels/LabelManagementSkeleton', () => ({
   LabelManagementSkeleton: () => <div data-testid="label-management-skeleton" />,
   LabelGridSkeleton: () => <div data-testid="label-grid-skeleton" />,
 }));
 
-vi.mock('@/components/Dashboard/Labels/LabelDetails/PaginationControls', () => ({
+vi.mock('@/components/dashboard/labels/LabelDetails/PaginationControls', () => ({
   PaginationControls: () => <div data-testid="pagination-controls" />,
 }));
 

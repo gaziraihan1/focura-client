@@ -282,11 +282,11 @@ vi.mock("@/hooks/useProjectAnalyticsPage", () => ({
 
 vi.mock("@/hooks/useWorkspace", () => ({}));
 
-vi.mock("@/components/Themes/ThemeSwitcher", () => ({
+vi.mock("@/components/themes/ThemeSwitcher", () => ({
   default: () => <div data-testid="theme-switcher" />,
 }));
 
-vi.mock("@/components/Shared/Pagination", () => ({
+vi.mock("@/components/shared/Pagination", () => ({
   Pagination: ({ currentPage, totalPages, onPageChange }: Record<string, unknown>) => (
     <div data-testid="pagination">
       <span>Page {currentPage} of {totalPages}</span>
@@ -307,7 +307,7 @@ vi.mock("@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[
 
 describe("InvitationExpiredState", () => {
   it("renders expired state", async () => {
-    const { InvitationExpiredState } = await import("@/components/Dashboard/Invitation/InvitationExpiredState");
+    const { InvitationExpiredState } = await import("@/components/dashboard/invitation/InvitationExpiredState");
     render(
       <InvitationExpiredState workspaceName="My Workspace" onGoToDashboard={vi.fn()} />
     );

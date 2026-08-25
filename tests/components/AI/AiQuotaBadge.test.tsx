@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
-import { createWrapper } from "../../utils/renderWithProviders";
-import { AiQuotaBadge } from "@/components/AI/AiQuotaBadge";
+import { createWrapper } from "@/tests/utils/renderWithProviders";
+import { AiQuotaBadge } from "@/components/ai/AiQuotaBadge";
 import { http, HttpResponse } from "msw";
 import { server } from "@/tests/mock/server";
 

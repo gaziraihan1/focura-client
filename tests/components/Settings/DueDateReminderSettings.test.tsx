@@ -1,7 +1,7 @@
 import React from 'react'
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { DueDateReminderSettings } from '@/components/Settings/DueDateReminderSettings'
+import { DueDateReminderSettings } from '@/components/settings/DueDateReminderSettings'
 
 vi.mock('lucide-react', () => {
 

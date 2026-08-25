@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { FilePreviewModal } from "@/components/Dashboard/Storage/Files/FilePreviewModal";
+import { FilePreviewModal } from "@/components/dashboard/storage/files/FilePreviewModal";
 
 vi.mock("lucide-react", () => {
   const icon = (name: string) => {
@@ -19,7 +19,7 @@ vi.mock("@/hooks/useFileManagement", () => ({
   FileWithDetails: {},
 }));
 
-vi.mock("@/components/Dashboard/Storage/Files/FilePreviewModalHeader", () => ({
+vi.mock("@/components/dashboard/storage/files/FilePreviewModalHeader", () => ({
   default: ({ file, onClose }: Record<string, unknown>) => (
     <div data-testid="modal-header">
       <span>{file.originalName}</span>

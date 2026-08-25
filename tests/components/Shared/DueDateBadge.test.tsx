@@ -1,7 +1,7 @@
 import React from 'react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { DueDateBadge, DueDateIndicator } from '@/components/Shared/DueDateBadge'
+import { DueDateBadge, DueDateIndicator } from '@/components/shared/DueDateBadge'
 import type { Task } from '@/hooks/useTask'
 
 // ─── Mocks ─────────────────────────────────────────────────────────────────────

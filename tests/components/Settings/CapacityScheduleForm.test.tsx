@@ -55,7 +55,7 @@ vi.mock("lucide-react", () => {
   };
 });
 
-import { CapacityScheduleForm } from "@/components/Settings/CapacityScheduleForm";
+import { CapacityScheduleForm } from "@/components/settings/CapacityScheduleForm";
 
 describe("CapacityScheduleForm", () => {
   beforeEach(() => {

@@ -1,0 +1,77 @@
+import { NotificationDropdownHeader } from "./NotificationDropdownHeader";
+import { NotificationLoadingState } from "./NotificationLoadingState";
+import { Bell } from "lucide-react";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { NotificationListItem } from "./NotificationListItem";
+import { NotificationDropdownFooter } from "./NotificationDropdownFooter";
+
+interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  read: boolean;
+  actionUrl?: string | null;
+  createdAt: string;
+}
+
+interface NotificationDropdownProps {
+  notifications: Notification[];
+  recentNotifications: Notification[];
+  unreadCount: number;
+  isLoading: boolean;
+  isMarkingAllAsRead: boolean;
+  formatTimeAgo: (dateString: string) => string;
+  onNotificationClick: (notification: Notification) => void;
+  onMarkAllAsRead: (e: React.MouseEvent) => void;
+  onClose: () => void;
+}
+
+export function NotificationDropdown({
+  notifications,
+  recentNotifications,
+  unreadCount,
+  isLoading,
+  isMarkingAllAsRead,
+  formatTimeAgo,
+  onNotificationClick,
+  onMarkAllAsRead,
+  onClose,
+}: NotificationDropdownProps) {
+  return (
+    <div className="absolute right-0 mt-4 w-[calc(100vw-6rem)] sm:w-96 max-w-96 bg-popover border border-border rounded-xl shadow-lg z-40 overflow-hidden">
+      <NotificationDropdownHeader
+        unreadCount={unreadCount}
+        isMarkingAllAsRead={isMarkingAllAsRead}
+        isLoading={isLoading}
+        onMarkAllAsRead={onMarkAllAsRead}
+      />
+
+      <div className="max-h-[min(450px,calc(100vh-12rem))]
+ overflow-y-auto">
+        {isLoading && <NotificationLoadingState />}
+
+        {!isLoading && notifications.length === 0 && (
+          <EmptyState
+            icon={Bell}
+            title="No notifications yet"
+            description="We'll notify you when something happens"
+          />
+        )}
+
+        {!isLoading &&
+          recentNotifications.map((notification) => (
+            <NotificationListItem
+              key={notification.id}
+              notification={notification}
+              formatTimeAgo={formatTimeAgo}
+              onClick={() => onNotificationClick(notification)}
+            />
+          ))}
+      </div>
+
+      {notifications.length > 0 && (
+        <NotificationDropdownFooter onClose={onClose} />
+      )}
+    </div>
+  );
+}

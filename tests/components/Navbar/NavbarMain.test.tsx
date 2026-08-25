@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import NavbarMain from '@/components/Navbar/NavbarMain'
+import NavbarMain from '@/components/navbar/NavbarMain'
 
 const mockLogout = vi.fn()
 
@@ -22,7 +22,7 @@ vi.mock('next-auth/react', () => ({
   useSession: () => ({ status: 'unauthenticated', data: null }),
 }))
 
-vi.mock('@/components/Themes/ThemeSwitcher', () => ({
+vi.mock('@/components/themes/ThemeSwitcher', () => ({
   default: () => <div data-testid="theme-switcher" />,
 }))
 

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { AiWeeklyInsights } from "@/components/AI/AiWeeklyInsights";
+import { AiWeeklyInsights } from "@/components/ai/AiWeeklyInsights";
 import { mockWorkspace } from "@/tests/mock/handlers/workspace.handlers";
 
 function renderCard(workspaceId?: string | null) {

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { userEvent } from '@testing-library/user-event'
-import { HelpSearchBar } from '@/components/Dashboard/help/HelpSearchBar'
+import { HelpSearchBar } from '@/components/dashboard/help/HelpSearchBar'
 
 describe('HelpSearchBar', () => {
   const defaultProps = {

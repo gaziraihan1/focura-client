@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { RepeatControl, EMPTY_REPEAT, type RepeatValue } from "@/components/Tasks/form/RepeatControl";
+import { RepeatControl, EMPTY_REPEAT, type RepeatValue } from "@/components/tasks/form/RepeatControl";
 
 function renderControlled(initial: RepeatValue, onChange = vi.fn()) {
   render(<RepeatControl value={initial} onChange={onChange} />);

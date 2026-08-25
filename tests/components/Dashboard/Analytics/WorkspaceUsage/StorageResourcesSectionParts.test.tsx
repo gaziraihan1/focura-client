@@ -5,7 +5,7 @@ import {
   StorageUsageCard,
   TotalFilesCard,
   FileTypeDistribution,
-} from '@/components/Dashboard/Analytics/WorkspaceUsage/StorageResourcesSectionParts'
+} from '@/components/dashboard/analytics/WorkspaceUsage/StorageResourcesSectionParts'
 
 vi.mock('recharts', () => ({
   ResponsiveContainer: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,

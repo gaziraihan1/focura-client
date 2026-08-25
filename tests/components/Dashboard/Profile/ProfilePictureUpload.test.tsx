@@ -282,11 +282,11 @@ vi.mock("@/hooks/useProjectAnalyticsPage", () => ({
 
 vi.mock("@/hooks/useWorkspace", () => ({}));
 
-vi.mock("@/components/Themes/ThemeSwitcher", () => ({
+vi.mock("@/components/themes/ThemeSwitcher", () => ({
   default: () => <div data-testid="theme-switcher" />,
 }));
 
-vi.mock("@/components/Shared/Pagination", () => ({
+vi.mock("@/components/shared/Pagination", () => ({
   Pagination: ({ currentPage, totalPages, onPageChange }: Record<string, unknown>) => (
     <div data-testid="pagination">
       <span>Page {currentPage} of {totalPages}</span>
@@ -307,7 +307,7 @@ vi.mock("@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[
 
 describe("ProfilePictureUpload", () => {
   it("renders without image", async () => {
-    const { ProfilePictureUpload } = await import("@/components/Dashboard/Profile/ProfilePictureUpload");
+    const { ProfilePictureUpload } = await import("@/components/dashboard/profile/ProfilePictureUpload");
     render(
       <ProfilePictureUpload name="Alice" isEditing={false} isUploading={false} onImageUpload={vi.fn()} />
     );
@@ -315,7 +315,7 @@ describe("ProfilePictureUpload", () => {
   });
 
   it("renders upload button when editing", async () => {
-    const { ProfilePictureUpload } = await import("@/components/Dashboard/Profile/ProfilePictureUpload");
+    const { ProfilePictureUpload } = await import("@/components/dashboard/profile/ProfilePictureUpload");
     render(
       <ProfilePictureUpload name="Alice" isEditing isUploading={false} onImageUpload={vi.fn()} />
     );

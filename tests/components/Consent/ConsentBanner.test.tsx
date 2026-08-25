@@ -4,7 +4,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 // Spy on the GoogleAnalytics module so we can assert the `enabled` gating.
 const { GaMock } = vi.hoisted(() => ({ GaMock: vi.fn() }));
 
-vi.mock('@/components/Analytics/GoogleAnalytics', () => ({
+vi.mock('@/components/analytics/GoogleAnalytics', () => ({
   GoogleAnalytics: (props: { enabled?: boolean }) => {
     GaMock(props);
     return <div data-testid="mock-ga" />;
@@ -32,8 +32,8 @@ vi.mock('@/lib/utils', () => ({
   cn: (...args: (string | boolean | undefined | null)[]) => args.filter(Boolean).join(' '),
 }));
 
-import { ConsentProvider } from '@/components/Consent/ConsentProvider';
-import { CONSENT_STORAGE_KEY } from '@/components/Consent/ConsentProvider';
+import { ConsentProvider } from '@/components/consent/ConsentProvider';
+import { CONSENT_STORAGE_KEY } from '@/components/consent/ConsentProvider';
 
 describe('ConsentProvider + ConsentBanner', () => {
   beforeEach(() => {

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { AiMeetingSummary } from "@/components/AI/AiMeetingSummary";
+import { AiMeetingSummary } from "@/components/ai/AiMeetingSummary";
 
 vi.mock("react-hot-toast", () => ({
   default: { success: vi.fn(), error: vi.fn() },

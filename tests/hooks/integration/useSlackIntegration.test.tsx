@@ -2,7 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { http, HttpResponse } from 'msw'
 import { server } from '../../mock/server'
-import { createWrapper } from '../../utils/renderWithProviders'
+import { createWrapper } from '@/tests/utils/renderWithProviders'
 import {
   useSlackIntegration,
   useWorkspaceSlackIntegration,

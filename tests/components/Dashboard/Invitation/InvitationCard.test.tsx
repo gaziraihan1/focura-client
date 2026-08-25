@@ -282,11 +282,11 @@ vi.mock("@/hooks/useProjectAnalyticsPage", () => ({
 
 vi.mock("@/hooks/useWorkspace", () => ({}));
 
-vi.mock("@/components/Themes/ThemeSwitcher", () => ({
+vi.mock("@/components/themes/ThemeSwitcher", () => ({
   default: () => <div data-testid="theme-switcher" />,
 }));
 
-vi.mock("@/components/Shared/Pagination", () => ({
+vi.mock("@/components/shared/Pagination", () => ({
   Pagination: ({ currentPage, totalPages, onPageChange }: Record<string, unknown>) => (
     <div data-testid="pagination">
       <span>Page {currentPage} of {totalPages}</span>
@@ -314,7 +314,7 @@ describe("InvitationCard", () => {
   };
 
   it("renders invitation card", async () => {
-    const { InvitationCard } = await import("@/components/Dashboard/Invitation/InvitationCard");
+    const { InvitationCard } = await import("@/components/dashboard/invitation/InvitationCard");
     render(
       <InvitationCard
         invitation={invitation}

@@ -17,7 +17,7 @@ vi.mock('@/lib/error/error', () => ({
   },
 }));
 
-import { ErrorState } from '@/components/Dashboard/Storage/Files/FileManagementPage/ErrorState';
+import { ErrorState } from '@/components/dashboard/storage/files/FileManagementPage/ErrorState';
 
 describe('ErrorState', () => {
   it('renders the default error message when error is unknown', () => {

@@ -7,7 +7,7 @@ import {
 } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { AiUsageSection } from "@/components/Dashboard/Analytics/WorkspaceUsage/AiUsageSection";
+import { AiUsageSection } from "@/components/dashboard/analytics/WorkspaceUsage/AiUsageSection";
 
 function renderSection() {
   const qc = new QueryClient({

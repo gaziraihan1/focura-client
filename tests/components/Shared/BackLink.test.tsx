@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { BackLink } from '@/components/Shared/BackLink'
+import { BackLink } from '@/components/shared/BackLink'
 
 vi.mock('next/link', () => ({
   default: ({ href, children, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => (
