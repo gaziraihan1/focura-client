@@ -7,7 +7,7 @@ interface TaskModalHeaderProps {
   priority: string;
   isOverdue: boolean;
   onClose: () => void;
-  project?: { id: string; name: string; color: string; workspace?: { id: string; name: string } } | null;
+  project?: { id: string; name: string; color: string; workspace?: { id: string; name: string } | null } | null;
   dueDate?: string | null;
 }
 

@@ -13,7 +13,10 @@ export interface Task {
   estimatedHours?: number;
   createdBy: { id: string; name: string; image?: string };
   assignees: Array<{ user: { id: string; name: string; image?: string } }>;
-  project?: { id: string; slug: string; name: string; color: string; workspace: { id: string; name: string } };
+  // NOTE: `workspace` is nullable in API responses — Project's relation is a
+  // compound FK on (workspaceId, workspaceSlug) and legacy rows (pre-migration
+  // 20260613051929) resolve it to null. Always guard before reading `.name`.
+  project?: { id: string; slug: string; name: string; color: string; workspace: { id: string; name: string } | null };
   sectionId?: string | null;
   sprintId?: string | null;
   milestoneId?: string | null;

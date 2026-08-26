@@ -11,16 +11,19 @@ interface TaskCardProps {
     title: string;
     status: string;
     priority: string;
-    workspace: {
+    // Both relations are nullable: Task.projectId / Task.workspaceId are
+    // optional in the schema, and Project.workspace resolves to null for
+    // legacy rows (compound FK on workspaceId + workspaceSlug).
+    workspace?: {
       id: string;
       name: string;
       slug: string;
-    };
-    project: {
+    } | null;
+    project?: {
       id: string;
       name: string;
       slug: string;
-    };
+    } | null;
   };
 }
 
@@ -37,17 +40,18 @@ export function TaskCard({ task }: TaskCardProps) {
     estimatedHours: undefined,
     createdBy: { id: "", name: "" },
     assignees: [],
-    project: {
-      id: task.project.id,
-      slug: task.project.slug,
-      name: task.project.name,
-      color: "#3b82f6",
-      workspace: {
-        id: task.workspace.id,
-        name: task.workspace.name,
+    ...(task.project && {
+      project: {
+        id: task.project.id,
+        slug: task.project.slug,
+        name: task.project.name,
+        color: "#3b82f6",
+        workspace: task.workspace
+          ? { id: task.workspace.id, name: task.workspace.name }
+          : null,
       },
-    },
-    workspaceId: task.workspace.id,
+    }),
+    workspaceId: task.workspace?.id,
     _count: { comments: 0, subtasks: 0, files: 0 },
     createdAt: "",
     updatedAt: "",
@@ -58,7 +62,7 @@ export function TaskCard({ task }: TaskCardProps) {
       task={fullTask}
       variant="label"
       showWorkspaceMeta={true}
-      workspaceSlug={task.workspace.slug}
+      workspaceSlug={task.workspace?.slug}
     />
   );
 }

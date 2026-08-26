@@ -21,10 +21,12 @@ interface Project {
   id: string;
   name: string;
   color: string;
-  workspace: {
+  // Nullable in API responses — Project's compound FK (workspaceId,
+  // workspaceSlug) resolves to null for legacy rows.
+  workspace?: {
     id: string;
     name: string;
-  };
+  } | null;
 }
 
 interface Milestone {

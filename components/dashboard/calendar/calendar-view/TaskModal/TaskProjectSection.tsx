@@ -4,10 +4,12 @@ interface Project {
   id: string;
   name: string;
   color: string;
-  workspace: {
+  // Nullable in API responses — Project's compound FK (workspaceId,
+  // workspaceSlug) resolves to null for legacy rows.
+  workspace?: {
     id: string;
     name: string;
-  };
+  } | null;
 }
 
 interface TaskProjectSectionProps {
@@ -33,9 +35,11 @@ export function TaskProjectSection({ project }: TaskProjectSectionProps) {
             <div className="text-sm font-medium text-foreground">
               {project.name}
             </div>
-            <div className="text-xs text-muted-foreground">
-              {project.workspace.name}
-            </div>
+            {project.workspace && (
+              <div className="text-xs text-muted-foreground">
+                {project.workspace.name}
+              </div>
+            )}
           </div>
         </div>
       </div>
