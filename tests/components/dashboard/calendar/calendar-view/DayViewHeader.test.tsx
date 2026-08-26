@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { DayViewHeader } from '@/components/dashboard/calendar/calendar-view/CalendarDayView/DayViewHeader'
+import { DayViewHeader } from '@/components/dashboard/calendar/calendar-view/DayViewHeader'
 
 describe('DayViewHeader', () => {
   it('renders day name', () => {

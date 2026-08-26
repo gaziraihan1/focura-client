@@ -10,15 +10,15 @@ vi.mock('@/hooks/useCalendarDayView', () => ({
   }),
 }))
 
-vi.mock('@/components/dashboard/calendar/calendar-view/CalendarDayView/DayViewHeader', () => ({
+vi.mock('@/components/dashboard/calendar/calendar-view/DayViewHeader', () => ({
   DayViewHeader: () => <div data-testid="day-view-header">Day Header</div>,
 }))
 
-vi.mock('@/components/dashboard/calendar/calendar-view/CalendarDayView/DayViewStats', () => ({
+vi.mock('@/components/dashboard/calendar/calendar-view/DayViewStats', () => ({
   DayViewStats: () => <div data-testid="day-view-stats">Day Stats</div>,
 }))
 
-vi.mock('@/components/dashboard/calendar/calendar-view/CalendarDayView/TaskPrioritySection', () => ({
+vi.mock('@/components/dashboard/calendar/calendar-view/TaskPrioritySection', () => ({
   TaskPrioritySection: ({ priority }: { priority: string }) => <div data-testid={`priority-${priority}`}>{priority}</div>,
 }))
 
@@ -26,7 +26,7 @@ vi.mock('@/components/shared/EmptyState', () => ({
   EmptyState: () => <div data-testid="day-view-empty">No tasks</div>,
 }))
 
-vi.mock('@/components/dashboard/calendar/calendar-view/CalendarDayView/DayViewLoadingState', () => ({
+vi.mock('@/components/dashboard/calendar/calendar-view/DayViewLoadingState', () => ({
   DayViewLoadingState: () => <div data-testid="day-view-loading">Loading...</div>,
 }))
 

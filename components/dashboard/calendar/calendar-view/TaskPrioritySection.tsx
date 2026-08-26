@@ -1,6 +1,6 @@
 import { Task } from "@/hooks/useTask";
 import { AlertCircle, Flag } from "lucide-react";
-import DetailedTaskCard from "../DetailedTaskCard";
+import DetailedTaskCard from "./DetailedTaskCard";
 
 type Priority = "overdue" | "urgent" | "high" | "medium" | "low";
 

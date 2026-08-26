@@ -1,10 +1,10 @@
 import { Task } from "@/hooks/useTask";
-import { DayViewHeader } from "./CalendarDayView/DayViewHeader";
-import { DayViewStats } from "./CalendarDayView/DayViewStats";
-import { TaskPrioritySection } from "./CalendarDayView/TaskPrioritySection";
+import { DayViewHeader } from "./DayViewHeader";
+import { DayViewStats } from "./DayViewStats";
+import { TaskPrioritySection } from "./TaskPrioritySection";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { EmptyState } from "@/components/shared/EmptyState";
-import { DayViewLoadingState } from "./CalendarDayView/DayViewLoadingState";
+import { DayViewLoadingState } from "./DayViewLoadingState";
 import { useCalendarDayView } from "@/hooks/useCalendarDayView";
 
 interface CalendarDayViewProps {

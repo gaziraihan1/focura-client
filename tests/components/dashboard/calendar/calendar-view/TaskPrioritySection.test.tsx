@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { TaskPrioritySection } from '@/components/dashboard/calendar/calendar-view/CalendarDayView/TaskPrioritySection'
+import { TaskPrioritySection } from '@/components/dashboard/calendar/calendar-view/TaskPrioritySection'
 
 vi.mock('lucide-react', () => ({
   AlertCircle: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} />,

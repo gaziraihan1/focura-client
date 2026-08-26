@@ -1,4 +1,4 @@
-import { EmptyState } from "@/components/dashboard/projects/all-projects/EmptyState";
+import { ProjectsEmptyState } from "./ProjectsEmptyState";
 import { ProjectsGridView } from "./ProjectsGridView";
 import { ProjectsListView } from "./ProjectsListView";
 import { ViewMode, ProjectData } from "@/types/project.types";
@@ -24,9 +24,14 @@ export function ProjectsContent({
 }: ProjectsContentProps) {
   if (projects.length === 0) {
     return (
-      <EmptyState
-        hasSearchOrFilters={hasSearchOrFilters}
-        onBrowseWorkspaces={onBrowseWorkspaces}
+      <ProjectsEmptyState
+        hasSearchQuery={hasSearchOrFilters}
+        variant="page"
+        action={
+          !hasSearchOrFilters
+            ? { label: "Browse Workspaces", onClick: onBrowseWorkspaces }
+            : undefined
+        }
       />
     );
   }

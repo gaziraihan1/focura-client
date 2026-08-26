@@ -1,6 +1,7 @@
 "use client";
 
-import { ProjectsEmptyState } from "@/components/dashboard/projects/all-projects/WorkspaceProjects/ProjectsEmptyState";
+import { useRouter } from "next/navigation";
+import { ProjectsEmptyState } from "@/components/dashboard/projects/all-projects/ProjectsEmptyState";
 import { ProjectsSearchBar } from "@/components/dashboard/projects/all-projects/WorkspaceProjects/ProjectsSearchBar";
 import { WorkspaceProjectCard } from "@/components/dashboard/projects/all-projects/WorkspaceProjects/WorkspaceProjectCard";
 import { WorkspaceProjectsErrorState } from "@/components/dashboard/projects/all-projects/WorkspaceProjects/WorkspaceProjectsErrorState";
@@ -13,6 +14,7 @@ interface ProjectsPageContentProps {
 }
 
 export function ProjectsPageContent({ workspaceSlug }: ProjectsPageContentProps) {
+  const router = useRouter();
   const {
     workspace,
     projects,
@@ -48,8 +50,18 @@ export function ProjectsPageContent({ workspaceSlug }: ProjectsPageContentProps)
       {projects?.length === 0 ? (
         <ProjectsEmptyState
           hasSearchQuery={!!searchQuery}
-          workspaceSlug={workspaceSlug}
-          canCreateProjects={canCreateProjects}
+          variant="panel"
+          action={
+            !searchQuery && canCreateProjects
+              ? {
+                  label: "Create Project",
+                  onClick: () =>
+                    router.push(
+                      `/dashboard/workspaces/${workspaceSlug}/projects/new-project`
+                    ),
+                }
+              : undefined
+          }
         />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">

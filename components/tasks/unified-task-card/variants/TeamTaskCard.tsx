@@ -64,11 +64,14 @@ export function TeamTaskCard({
               showDescription={showDescription}
             />
 
+            {/* NOTE: task.project.workspace resolves to null for legacy
+                projects whose workspaceSlug was never backfilled (compound FK
+                on Project(workspaceId, workspaceSlug)) — never assume it exists. */}
             {showProject && task.project && (
               <div className="mt-2">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Briefcase size={12} />
-                  <span>{task.project.workspace.name}</span>
+                  <span>{task.project.workspace?.name ?? "No workspace"}</span>
                   <span>•</span>
                   <FolderOpen size={12} />
                   <span>{task.project.name}</span>

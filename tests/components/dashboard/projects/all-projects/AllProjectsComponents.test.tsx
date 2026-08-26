@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { EmptyState } from '@/components/dashboard/projects/all-projects/EmptyState'
+import { ProjectsEmptyState } from '@/components/dashboard/projects/all-projects/ProjectsEmptyState'
 import { ProjectStats } from '@/components/dashboard/projects/all-projects/ProjectStats'
 import { WorkspaceQuickFilter } from '@/components/dashboard/projects/all-projects/WorkspaceQuickFilter'
 
@@ -20,42 +20,52 @@ vi.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: { children?: React.ReactNode }) => children,
 }))
 
-describe('EmptyState', () => {
-  const defaultProps = {
-    hasSearchOrFilters: false,
-    onBrowseWorkspaces: vi.fn(),
-  }
+describe('ProjectsEmptyState (page variant)', () => {
+  const onBrowseWorkspaces = vi.fn()
+
+  const renderPageEmptyState = (hasSearchQuery: boolean) =>
+    render(
+      <ProjectsEmptyState
+        hasSearchQuery={hasSearchQuery}
+        variant="page"
+        action={
+          !hasSearchQuery
+            ? { label: 'Browse Workspaces', onClick: onBrowseWorkspaces }
+            : undefined
+        }
+      />
+    )
 
   beforeEach(() => vi.clearAllMocks())
 
   it('renders no projects message when no filters', () => {
-    render(<EmptyState {...defaultProps} />)
+    renderPageEmptyState(false)
     expect(screen.getByText('No projects yet')).toBeInTheDocument()
   })
 
   it('renders search message when filters active', () => {
-    render(<EmptyState {...defaultProps} hasSearchOrFilters={true} />)
+    renderPageEmptyState(true)
     expect(screen.getByText('No projects match your search')).toBeInTheDocument()
   })
 
   it('renders browse workspaces button when no filters', () => {
-    render(<EmptyState {...defaultProps} />)
+    renderPageEmptyState(false)
     expect(screen.getByText('Browse Workspaces')).toBeInTheDocument()
   })
 
   it('hides browse button when filters active', () => {
-    render(<EmptyState {...defaultProps} hasSearchOrFilters={true} />)
+    renderPageEmptyState(true)
     expect(screen.queryByText('Browse Workspaces')).not.toBeInTheDocument()
   })
 
   it('calls onBrowseWorkspaces when button clicked', () => {
-    render(<EmptyState {...defaultProps} />)
+    renderPageEmptyState(false)
     fireEvent.click(screen.getByText('Browse Workspaces'))
-    expect(defaultProps.onBrowseWorkspaces).toHaveBeenCalled()
+    expect(onBrowseWorkspaces).toHaveBeenCalled()
   })
 
   it('renders folder icon', () => {
-    render(<EmptyState {...defaultProps} />)
+    renderPageEmptyState(false)
     expect(screen.getByTestId('folder-icon')).toBeInTheDocument()
   })
 })

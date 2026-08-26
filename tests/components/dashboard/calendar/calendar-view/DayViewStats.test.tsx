@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { DayViewStats } from '@/components/dashboard/calendar/calendar-view/CalendarDayView/DayViewStats'
+import { DayViewStats } from '@/components/dashboard/calendar/calendar-view/DayViewStats'
 
 const mockTasks = [
   { id: '1', assignees: [] },
