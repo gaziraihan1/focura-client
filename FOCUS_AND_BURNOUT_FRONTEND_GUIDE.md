@@ -355,7 +355,7 @@ export function CalendarInsightsBar({ insights }: CalendarInsightsBarProps) {
 
 ### Recommendations Panel
 
-**Location**: `components/dashboard/shell/WellnessRecommendations.tsx` (rendered on the Wellness page)
+**Location**: `components/dashboard/wellness/WellnessRecommendations.tsx` (rendered on the Wellness page)
 
 **Mock Design**:
 

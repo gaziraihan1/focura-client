@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { DashboardGreeting } from '@/components/dashboard/shell/DashboardGreeting'
+import { DashboardGreeting } from '@/components/dashboard/home/DashboardGreeting'
 
 describe('DashboardGreeting', () => {
   it('renders greeting with user name', () => {

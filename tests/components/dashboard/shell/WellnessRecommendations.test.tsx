@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { WellnessRecommendations } from '@/components/dashboard/shell/WellnessRecommendations'
+import { WellnessRecommendations } from '@/components/dashboard/wellness/WellnessRecommendations'
 
 const mockDismiss = vi.fn()
 const mockDismissAll = vi.fn()

@@ -35,13 +35,13 @@
 | `CapacityScheduleForm` | `components/settings/CapacityScheduleForm.tsx` | ✅ Covered | `/tests/components/Settings/CapacityScheduleForm.test.tsx` |
 | `WeeklyComparison` | `components/dashboard/calendar/WeeklyComparison.tsx` | ✅ Covered | `tests/components/Dashboard/Calendar/calendar/WeeklyComparison.test.tsx` (committed) |
 | `ExportButton` | `components/dashboard/calendar/ExportButton.tsx` | ✅ Covered | `tests/components/Dashboard/Calendar/calendar/ExportButton.test.tsx` (committed) |
-| `WellnessRecommendations` | `components/dashboard/shell/WellnessRecommendations.tsx` | ✅ Covered | Dedicated test incl. dismiss-all button |
+| `WellnessRecommendations` | `components/dashboard/wellness/WellnessRecommendations.tsx` | ✅ Covered | Dedicated test incl. dismiss-all button |
 | `CalendarInsightsBar` | `components/dashboard/calendar/CalendarInsightsBar.tsx` | ✅ Covered | - |
 | `BurnoutTrendsChart` | `components/dashboard/calendar/BurnoutTrendsChart.tsx` | ✅ Covered | **2026-08-02:** new test file — data/loading/error/empty + auto-expand on HIGH/CRITICAL |
 | `EnergyTrendChart` | `components/dashboard/calendar/EnergyTrendChart.tsx` | ✅ Covered | **2026-08-02:** new component + test (data/loading/error/empty/expand) |
 | `CapacityChart` | `components/dashboard/calendar/CapacityChart.tsx` | ✅ Covered | Error-state + retry tests added |
 | `DailyCapacityView` | `components/dashboard/calendar/DailyCapacityView.tsx` | ✅ Covered | Error-state + retry tests added |
-| `FocusDailySummary` | `components/dashboard/shell/FocusDailySummary.tsx` | ✅ Covered | Dedicated test |
+| `FocusDailySummary` | `components/dashboard/wellness/FocusDailySummary.tsx` | ✅ Covered | Dedicated test |
 
 ### 1.2 Frontend — Hook Tests
 

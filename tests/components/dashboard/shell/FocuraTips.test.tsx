@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { FocuraTips } from '@/components/dashboard/shell/FocuraTips'
+import { FocuraTips } from '@/components/dashboard/wellness/FocuraTips'
 
 describe('FocuraTips', () => {
   it('renders the heading', () => {

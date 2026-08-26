@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
-import { WorkspaceList } from '@/components/dashboard/shell/WorkspaceList'
+import { WorkspaceList } from '@/components/dashboard/home/WorkspaceList'
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),

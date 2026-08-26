@@ -4,15 +4,15 @@ import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query
 import { authOptions } from "@/lib/auth/authOptions";
 import { serverApi } from "@/lib/api/server";
 import { workspaceKeys } from "@/hooks/workspaceKeys";
-import { DashboardGreeting } from "@/components/dashboard/shell/DashboardGreeting";
-import { QuickActions } from "@/components/dashboard/shell/QuickActions";
-import { WorkspaceList } from "@/components/dashboard/shell/WorkspaceList";
-import { RecentActivity } from "@/components/dashboard/shell/RecentActivity";
-import { FocuraTips } from "@/components/dashboard/shell/FocuraTips";
-import { WellnessRecommendations } from "@/components/dashboard/shell/WellnessRecommendations";
-import { FocusStreakBadge } from "@/components/dashboard/shell/FocusStreakBadge";
-import { GettingStartedChecklist } from "@/components/dashboard/shell/GettingStartedChecklist";
-import { TaskHighlights } from "@/components/dashboard/shell/TaskHighlights";
+import { DashboardGreeting } from "@/components/dashboard/home/DashboardGreeting";
+import { QuickActions } from "@/components/dashboard/home/QuickActions";
+import { WorkspaceList } from "@/components/dashboard/home/WorkspaceList";
+import { RecentActivity } from "@/components/dashboard/home/RecentActivity";
+import { FocuraTips } from "@/components/dashboard/wellness/FocuraTips";
+import { WellnessRecommendations } from "@/components/dashboard/wellness/WellnessRecommendations";
+import { FocusStreakBadge } from "@/components/dashboard/wellness/FocusStreakBadge";
+import { GettingStartedChecklist } from "@/components/dashboard/home/GettingStartedChecklist";
+import { TaskHighlights } from "@/components/dashboard/home/TaskHighlights";
 import type { Workspace } from "@/hooks/useWorkspace";
 
 export default async function DashboardPage() {

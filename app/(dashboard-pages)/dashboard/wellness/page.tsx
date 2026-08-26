@@ -1,7 +1,7 @@
 import { Brain, HeartPulse, Sparkles } from "lucide-react";
-import { FocusStreakBadge } from "@/components/dashboard/shell/FocusStreakBadge";
-import { FocusDailySummary } from "@/components/dashboard/shell/FocusDailySummary";
-import { WellnessRecommendations } from "@/components/dashboard/shell/WellnessRecommendations";
+import { FocusStreakBadge } from "@/components/dashboard/wellness/FocusStreakBadge";
+import { FocusDailySummary } from "@/components/dashboard/wellness/FocusDailySummary";
+import { WellnessRecommendations } from "@/components/dashboard/wellness/WellnessRecommendations";
 import { BurnoutTrendsChart } from "@/components/dashboard/calendar/BurnoutTrendsChart";
 import { EnergyTrendChart } from "@/components/dashboard/calendar/EnergyTrendChart";
 import { WeeklyStrainBreakdown } from "@/components/dashboard/calendar/wellness/WeeklyStrainBreakdown";

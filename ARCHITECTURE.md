@@ -162,110 +162,82 @@ focura-client/
 │   └── not-found.tsx                    # 404 page
 │
 ├── components/                          # React Components
-│   ├── AdminDashboard/                  # Admin UI
-│   │   ├── AdminHeader.tsx
-│   │   ├── AdminStats.tsx
-│   │   ├── UserManagement.tsx
+│   ├── admin-dashboard/                 # Admin UI
+│   │   ├── AdminOverviewContent.tsx
+│   │   ├── AdminUsersContent.tsx
+│   │   ├── StatCard.tsx
 │   │   └── [...other-admin-components]
 │   │
-│   ├── Authentication/                  # Auth components
-│   │   ├── LoginForm.tsx
-│   │   ├── SignupForm.tsx
-│   │   ├── GoogleAuthButton.tsx
-│   │   └── PasswordReset.tsx
-│   │
-│   ├── Dashboard/                       # Dashboard layouts
-│   │   ├── DashboardLayout.tsx
-│   │   ├── Sidebar.tsx
-│   │   └── MainContent.tsx
-│   │
-│   ├── Tasks/                           # Task components
-│   │   ├── TaskList.tsx
-│   │   ├── TaskCard.tsx
-│   │   ├── TaskDetails.tsx
-│   │   ├── TaskForm.tsx
-│   │   ├── SubtaskList.tsx
-│   │   ├── TaskFilters.tsx
-│   │   └── TaskActions.tsx
-│   │
-│   ├── KanbanView/                      # Kanban board (Dashboard)
-│   │   ├── KanbanBoard.tsx
-│   │   ├── KanbanColumn.tsx
-│   │   ├── KanbanCard.tsx
-│   │   └── KanbanInsightFooter.tsx
-│   │
-│   ├── Calendar/                        # Calendar components
-│   │   ├── CalendarView.tsx
-│   │   ├── CalendarDay.tsx
-│   │   ├── EventPopover.tsx
-│   │   └── DayViewModal.tsx
-│   │
-│   ├── Projects/                        # Project components
-│   │   ├── ProjectList.tsx
-│   │   ├── ProjectCard.tsx
-│   │   ├── ProjectForm.tsx
-│   │   └── ProjectDetails.tsx
-│   │
-│   ├── Workspace/                       # Workspace components
-│   │   ├── WorkspaceSelector.tsx
-│   │   ├── WorkspaceSettings.tsx
-│   │   ├── MemberManagement.tsx
-│   │   └── WorkspaceDetails.tsx
-│   │
-│   ├── Labels/                          # Label management
-│   │   ├── LabelList.tsx
-│   │   ├── LabelForm.tsx
-│   │   └── LabelBadge.tsx
-│   │
-│   ├── Notifications/                   # Notifications
-│   │   ├── NotificationBell.tsx
-│   │   ├── NotificationPanel.tsx
-│   │   ├── NotificationItem.tsx
-│   │   └── NotificationCenter.tsx
-│   │
-│   ├── Shared/                          # Reusable components
-│   │   ├── Modal.tsx
-│   │   ├── Button.tsx
-│   │   ├── Input.tsx
-│   │   ├── Card.tsx
-│   │   ├── Badge.tsx
-│   │   ├── Toast.tsx
-│   │   ├── Spinner.tsx
+│   ├── shared/                          # Reusable primitives
 │   │   ├── EmptyState.tsx
-│   │   ├── ErrorBoundary.tsx
+│   │   ├── ErrorFallback.tsx
+│   │   ├── StatCard.tsx
+│   │   ├── ConfirmModal.tsx
+│   │   ├── SearchModal.tsx
+│   │   ├── LoadingState.tsx
+│   │   ├── Pagination.tsx
 │   │   └── [...other-shared-components]
 │   │
-│   ├── Navbar/                          # Navigation
-│   │   ├── Navbar.tsx
-│   │   ├── NavMenu.tsx
-│   │   └── UserDropdown.tsx
+│   ├── dashboard/                       # Dashboard feature modules
+│   │   ├── shell/                       #   Nav & layout (DashboardShell,
+│   │   │   │                            #     Sidebar, TopNavbar)
+│   │   ├── home/                        #   Dashboard page widgets
+│   │   │   │                            #     (DashboardGreeting, QuickActions,
+│   │   │   │                            #      WorkspaceList, TaskHighlights,
+│   │   │   │                            #      RecentActivity,
+│   │   │   │                            #      GettingStartedChecklist)
+│   │   ├── wellness/                    #   Focus & burnout widgets
+│   │   │   │                            #     (WellnessRecommendations,
+│   │   │   │                            #      FocusStreakBadge,
+│   │   │   │                            #      FocusDailySummary, FocuraTips)
+│   │   ├── tasks/                       #   Task management
+│   │   ├── calendar/                    #   Calendar view
+│   │   ├── projects/                    #   Project management
+│   │   ├── workspace/                   #   Workspace features
+│   │   │   ├── analytics/               #     Analytics & charts
+│   │   │   ├── billing/                 #     Billing & upgrades
+│   │   │   ├── meetings/                #     Meeting management
+│   │   │   ├── members/                 #     Team members
+│   │   │   ├── project-overview/        #     Project detail pages
+│   │   │   ├── detail/                  #     Workspace detail pages
+│   │   │   ├── settings/                #     Workspace settings
+│   │   │   ├── list/                    #     Workspace listing
+│   │   │   ├── layout/                  #     Workspace layout shell
+│   │   │   ├── announcements/           #     Announcements
+│   │   │   └── project-card/            #     Project card components
+│   │   ├── storage/                     #   File management
+│   │   ├── notifications/               #   Notifications
+│   │   ├── activity-logs/               #   Activity feed
+│   │   ├── profile/                     #   User profile
+│   │   ├── help/                        #   Help & support
+│   │   ├── labels/                      #   Label management
+│   │   ├── task-details/                #   Task detail views
+│   │   ├── team-task/                   #   Team task views
+│   │   ├── meeting-details/             #   Meeting detail views
+│   │   ├── analytics/                   #   Workspace usage analytics
+│   │   ├── create-workspace/            #   Workspace creation
+│   │   └── invitation/                  #   Invitation flows
 │   │
-│   ├── Footer/                          # Footer
-│   │   ├── Footer.tsx
-│   │   └── FooterLinks.tsx
+│   ├── settings/                        # Settings forms
+│   │   ├── SecuritySettingsForm.tsx
+│   │   ├── NotificationsSettingsForm.tsx
+│   │   ├── BillingSettingsForm.tsx
+│   │   └── [...other-settings-forms]
 │   │
-│   ├── Billing/                         # Payment & billing
-│   │   ├── PricingCard.tsx
-│   │   ├── UpgradeModal.tsx
-│   │   ├── InvoiceHistory.tsx
-│   │   └── BillingSettings.tsx
+│   ├── ai/                              # AI-powered features
+│   │   ├── AiDailyPlan.tsx
+│   │   ├── AiMeetingSummary.tsx
+│   │   ├── AiWeeklyInsights.tsx
+│   │   └── [...other-ai-components]
 │   │
-│   ├── Storage/                         # File management
-│   │   ├── FileUploader.tsx
-│   │   ├── FileList.tsx
-│   │   ├── StorageUsage.tsx
-│   │   └── FilePreview.tsx
-│   │
-│   ├── Analytics/                       # Analytics charts
-│   │   ├── TaskChart.tsx
-│   │   ├── ProductivityChart.tsx
-│   │   ├── TeamChart.tsx
-│   │   └── StatCard.tsx
-│   │
-│   └── Providers/                       # Context providers
-│       ├── SessionProvider.tsx
-│       ├── ThemeProvider.tsx
-│       └── QueryProvider.tsx
+│   ├── themes/                          # Theme switching
+│   ├── navbar/                           # Global navigation
+│   ├── footer/                           # Footer
+│   ├── providers/                        # Context providers
+│   │   ├── SessionProvider.tsx
+│   │   ├── ThemeProvider.tsx
+│   │   └── QueryProvider.tsx
+│   └── [...other-top-level-components]
 │
 ├── hooks/                               # Custom React Hooks (122) — see hooks/README.md
 │   ├── useTaskQueries.ts                # Task queries (TanStack Query)
@@ -386,19 +358,29 @@ focura-client/
 
 ### Component Patterns
 
-**1. Server Component (Data Fetching)**
+**1. Feature-Based Module Organization**
+```
+components/dashboard/
+├── shell/        → Nav/layout (DashboardShell, Sidebar, TopNavbar)
+├── home/         → Dashboard page widgets (greeting, quick actions, task highlights)
+├── wellness/     → Focus & burnout widgets (streak badge, recommendations)
+├── tasks/        → Task management (all-tasks, kanban, time-log)
+├── workspace/    → Workspace features (analytics, billing, meetings, members)
+└── [feature]/    → Each feature owns its sub-components
+```
+
+**2. Server Component (Data Fetching)**
 ```typescript
 // app/dashboard/tasks/page.tsx
 export default async function TasksPage() {
-  // Server-side data fetching
   const tasks = await fetchTasks();
   return <TaskList tasks={tasks} />;
 }
 ```
 
-**2. Client Component (Interactivity)**
+**3. Client Component (Interactivity)**
 ```typescript
-// components/Tasks/TaskCard.tsx
+// components/dashboard/tasks/all-tasks/TaskCard.tsx
 "use client";
 
 import { useState } from "react";
@@ -409,7 +391,7 @@ export default function TaskCard({ task }) {
 }
 ```
 
-**3. Container/Presenter Pattern**
+**4. Container/Presenter Pattern**
 ```typescript
 // Container (logic)
 export function TaskListContainer() {
@@ -1186,5 +1168,5 @@ Creator & Maintainer of Focura
 
 ---
 
-**Last Updated**: August 24, 2026  
+**Last Updated**: August 26, 2026  
 **Version**: 1.1.0 (matches package.json)

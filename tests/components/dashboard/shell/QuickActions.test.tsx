@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { QuickActions } from '@/components/dashboard/shell/QuickActions'
+import { QuickActions } from '@/components/dashboard/home/QuickActions'
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),

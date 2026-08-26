@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { LucideIcon, LayoutGrid, UserPlus, FolderPlus, Keyboard } from "lucide-react";
-import { ShortcutsCard } from "./ShortcutsCard";
+import { ShortcutsCard } from "@/components/dashboard/shell/ShortcutsCard";
 
 interface QuickAction {
   label: string;

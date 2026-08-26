@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest';
-import { DashboardGreeting } from '@/components/dashboard/shell/DashboardGreeting'
+import { DashboardGreeting } from '@/components/dashboard/home/DashboardGreeting'
 import { DashboardHeader } from '@/components/dashboard/shell/DashboardHeader'
-import { FocuraTips } from '@/components/dashboard/shell/FocuraTips'
+import { FocuraTips } from '@/components/dashboard/wellness/FocuraTips'
 
 describe('DashboardGreeting', () => {
   it('renders greeting text', () => {

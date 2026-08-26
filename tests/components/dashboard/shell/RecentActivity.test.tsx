@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react';
-import { RecentActivity } from '@/components/dashboard/shell/RecentActivity'
+import { RecentActivity } from '@/components/dashboard/home/RecentActivity'
 
 vi.mock('@/hooks/useWorkspace', () => ({
   useWorkspaces: vi.fn(),

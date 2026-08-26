@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { FocusStreakBadge } from '@/components/dashboard/shell/FocusStreakBadge'
+import { FocusStreakBadge } from '@/components/dashboard/wellness/FocusStreakBadge'
 import { useFocusSessionStats } from '@/hooks/useFocusSession'
 
 vi.mock('@/hooks/useFocusSession', () => ({

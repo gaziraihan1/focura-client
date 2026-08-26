@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { FocusDailySummary } from '@/components/dashboard/shell/FocusDailySummary'
+import { FocusDailySummary } from '@/components/dashboard/wellness/FocusDailySummary'
 import { useFocusSessionDailySummary } from '@/hooks/useFocusSession'
 
 vi.mock('@/hooks/useFocusSession', () => ({

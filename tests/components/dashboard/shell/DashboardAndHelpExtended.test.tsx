@@ -26,7 +26,7 @@ function createTestWrapper(children: React.ReactNode) {
 }
 
 // ─── WorkspaceList ───────────────────────────────────────────────────────────
-import { WorkspaceList } from '@/components/dashboard/shell/WorkspaceList'
+import { WorkspaceList } from '@/components/dashboard/home/WorkspaceList'
 
 const mockWorkspaces = [
   {

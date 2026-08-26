@@ -82,10 +82,6 @@ vi.mock('@/components/dashboard/storage/overview/LargestFilesTable/BulkActionsBa
 vi.mock('@/components/dashboard/storage/overview/LargestFilesTable/FileTableRow', () => ({
   FileTableRow: (props: React.HTMLAttributes<HTMLTableRowElement>) => <tr data-testid="file-table-row" {...props} />,
 }))
-vi.mock('@/components/dashboard/storage/overview/LargestFilesTable/EmptyState', () => ({
-  EmptyState: () => <div data-testid="empty-state" />,
-}))
-
 vi.mock('@/components/dashboard/tasks/all-tasks/FocusTaskCard/FocusBadge', () => ({
   FocusBadge: (props: React.HTMLAttributes<HTMLDivElement>) => <div data-testid="focus-badge" {...props} />,
 }))
