@@ -307,8 +307,8 @@ vi.mock("@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[
 
 describe("AdminStatCard", () => {
   it("renders stat card with value", async () => {
-    const { StatCard } = await import("@/components/admin-dashboard/StatCard");
-    render(<StatCard icon={vi.fn(() => null)} label="Users" value={1500} />);
+    const { StatCard } = await import("@/components/shared/StatCard");
+    render(<StatCard variant="row" icon={vi.fn(() => null)} label="Users" value={1500} />);
     expect(screen.getByText("1,500")).toBeInTheDocument();
     expect(screen.getByText("Users")).toBeInTheDocument();
   });

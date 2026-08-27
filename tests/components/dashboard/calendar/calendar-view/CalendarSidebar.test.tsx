@@ -2,9 +2,9 @@ import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { CalendarSidebar } from '@/components/dashboard/calendar/calendar-view/CalendarSidebar'
 
-vi.mock('@/components/dashboard/calendar/calendar-view/StatCard', () => ({
+vi.mock('@/components/shared/StatCard', () => ({
   __esModule: true,
-  default: ({ label, value }: Record<string, unknown>) => (
+  StatCard: ({ label, value }: Record<string, unknown>) => (
     <div data-testid="stat-card">{label}: {value}</div>
   ),
 }))

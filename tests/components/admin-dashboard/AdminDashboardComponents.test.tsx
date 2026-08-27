@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { AdminPageHeader } from '@/components/admin-dashboard/AdminPageHeader'
 import { StorageBar } from '@/components/admin-dashboard/StorageBar'
-import { StatCard } from '@/components/admin-dashboard/StatCard'
+import { StatCard } from '@/components/shared/StatCard'
 
 describe('AdminPageHeader', () => {
   it('renders title', () => {
@@ -67,12 +67,12 @@ describe('StorageBar', () => {
 
 describe('StatCard', () => {
   it('renders label', () => {
-    render(<StatCard icon={() => null} label="Users" value={100} />)
+    render(<StatCard variant="row" icon={() => null} label="Users" value={100} />)
     expect(screen.getByText('Users')).toBeInTheDocument()
   })
 
   it('renders formatted value', () => {
-    render(<StatCard icon={() => null} label="Users" value={1234} />)
+    render(<StatCard variant="row" icon={() => null} label="Users" value={1234} />)
     expect(screen.getByText('1,234')).toBeInTheDocument()
   })
 })

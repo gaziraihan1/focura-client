@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { createWrapper } from '@/tests/utils/renderWithProviders'
 import ProjectStats from '@/components/dashboard/projects/project-details/ProjectStats'
 import AllStats from '@/components/dashboard/projects/project-details/AllStats'
-import StatCard from '@/components/dashboard/projects/project-details/StatCard'
+import { StatCard } from '@/components/shared/StatCard'
 import ProjectsTopPerformer from '@/components/dashboard/projects/project-details/ProjectsTopPerformer'
 import PerformerEmptyState from '@/components/dashboard/projects/project-details/PerformerEmptyState'
 import { AccessDeniedProject } from '@/components/dashboard/projects/project-details/AccessDeniedProject'
@@ -147,8 +147,7 @@ describe('ProjectDetails/AllStats', () => {
 
 describe('ProjectDetails/StatCard', () => {
   it('renders stat card with label and value', () => {
-    render(
-      <StatCard icon={vi.fn()} label="Total Tasks" value={25} color="text-blue-500" />,
+    render(      <StatCard variant="outline" icon={vi.fn()} label="Total Tasks" value={25} color="text-blue-500" />, 
       { wrapper: createWrapper() }
     )
     expect(screen.getByText('Total Tasks')).toBeInTheDocument()
@@ -157,7 +156,7 @@ describe('ProjectDetails/StatCard', () => {
 
   it('renders stat card with string value', () => {
     render(
-      <StatCard icon={vi.fn()} label="Completion" value="85%" color="text-green-500" />,
+      <StatCard variant="outline" icon={vi.fn()} label="Completion" value="85%" color="text-green-500" />,
       { wrapper: createWrapper() }
     )
     expect(screen.getByText('Completion')).toBeInTheDocument()
@@ -166,7 +165,7 @@ describe('ProjectDetails/StatCard', () => {
 
   it('renders stat card with zero value', () => {
     render(
-      <StatCard icon={vi.fn()} label="Overdue" value={0} color="text-red-500" />,
+      <StatCard variant="outline" icon={vi.fn()} label="Overdue" value={0} color="text-red-500" />,
       { wrapper: createWrapper() }
     )
     expect(screen.getByText('Overdue')).toBeInTheDocument()

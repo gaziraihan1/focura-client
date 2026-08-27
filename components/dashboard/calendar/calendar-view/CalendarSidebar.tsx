@@ -9,7 +9,7 @@ import {
   Users,
   User
 } from 'lucide-react';
-import StatCard from './StatCard';
+import { StatCard } from "@/components/shared/StatCard";
 import TaskSection from './TaskSection';
 
 interface CalendarSidebarProps {
@@ -82,12 +82,14 @@ export function CalendarSidebar({ currentDate, tasks, onTaskClick }: CalendarSid
 
         <div className="grid grid-cols-2 gap-3">
           <StatCard
+            variant="muted"
             icon={<User className="w-4 h-4" />}
             label="Personal"
             value={analysis.totalPersonal}
             color="text-blue-500"
           />
           <StatCard
+            variant="muted"
             icon={<Users className="w-4 h-4" />}
             label="Assigned"
             value={analysis.totalAssigned}

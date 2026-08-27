@@ -203,6 +203,9 @@ vi.mock('@/components/shared/StatCard', () => ({
   default: ({ label, value }: Record<string, unknown>) => (
     <div data-testid="stat-card"><span>{label}</span><span>{value}</span></div>
   ),
+  StatCard: ({ label, value, icon }: Record<string, unknown> & { icon?: React.ReactNode }) => (
+    <div><span>{icon}</span><span>{label}</span><span>{value}</span></div>
+  ),
 }))
 
 vi.mock('@/hooks/useTask', () => ({
@@ -401,8 +404,8 @@ const makeTask = (overrides: Record<string, unknown> = {}) => ({
 
 describe('CalendarView/StatCard', () => {
   it('renders label, value, and icon', async () => {
-    const StatCard = (await import('@/components/dashboard/calendar/calendar-view/StatCard')).default
-    render(<StatCard icon={<span data-testid="test-icon" />} label="Tasks" value={42} color="text-blue-500" />)
+    const { StatCard } = await import('@/components/shared/StatCard')
+    render(<StatCard variant="muted" icon={<span data-testid="test-icon" />} label="Tasks" value={42} color="text-blue-500" />)
     expect(screen.getByText('Tasks')).toBeInTheDocument()
     expect(screen.getByText('42')).toBeInTheDocument()
     expect(screen.getByTestId('test-icon')).toBeInTheDocument()

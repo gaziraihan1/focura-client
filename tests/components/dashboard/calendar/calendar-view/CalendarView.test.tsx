@@ -4,7 +4,7 @@ import { createWrapper } from '@/tests/utils/renderWithProviders'
 import { CalendarDay } from '@/components/dashboard/calendar/calendar-view/CalendarDay'
 import { CalendarGrid } from '@/components/dashboard/calendar/calendar-view/CalendarGrid'
 import TaskPill from '@/components/dashboard/calendar/calendar-view/TaskPill'
-import StatCard from '@/components/dashboard/calendar/calendar-view/StatCard'
+import { StatCard } from '@/components/shared/StatCard'
 
 const mockTask = {
   id: 'task-1',
@@ -251,7 +251,7 @@ describe('CalendarView/CalendarGrid', () => {
 describe('CalendarView/StatCard', () => {
   it('renders stat card with label and value', () => {
     render(
-      <StatCard label="Total Tasks" value={25} icon={<span>icon</span>} color="text-blue-500" />,
+      <StatCard variant="muted" label="Total Tasks" value={25} icon={<span>icon</span>} color="text-blue-500" />,
       { wrapper: createWrapper() }
     )
     expect(screen.getByText('Total Tasks')).toBeInTheDocument()
@@ -260,7 +260,7 @@ describe('CalendarView/StatCard', () => {
 
   it('renders stat card with zero value', () => {
     render(
-      <StatCard label="Overdue" value={0} icon={<span>icon</span>} color="text-red-500" />,
+      <StatCard variant="muted" label="Overdue" value={0} icon={<span>icon</span>} color="text-red-500" />,
       { wrapper: createWrapper() }
     )
     expect(screen.getByText('Overdue')).toBeInTheDocument()
