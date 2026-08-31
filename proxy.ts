@@ -24,10 +24,11 @@ export async function proxy(request: NextRequest) {
     path.startsWith("/dashboard") || path.startsWith("/admin-dashboard");
   const isAdminRoute = path.startsWith("/admin-dashboard");
 
-  // Google sign-in with 2FA: session exists but backend tokens are not yet
-  // minted.  Route to the 2FA verification page from ANY page the user
-  // might land on (e.g. /dashboard after the OAuth callback).
-  if (token && (token as Record<string, unknown>).twoFactorPending && !isTwoFactorPage) {
+  // 2FA enforcement: redirect to the 2FA page only from protected routes.
+  // Public pages (/, /pricing, /features, etc.) remain fully accessible —
+  // interactive features that need backend tokens will simply fail gracefully
+  // until the user completes 2FA.
+  if (token && (token as Record<string, unknown>).twoFactorPending && !isTwoFactorPage && isProtectedRoute) {
     return NextResponse.redirect(new URL("/authentication/2fa", request.url));
   }
 
