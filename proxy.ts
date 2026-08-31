@@ -4,6 +4,7 @@ import type { NextRequest } from "next/server";
 
 export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
+  const backendOrigin = process.env.NEXT_PUBLIC_API_URL ? new URL(process.env.NEXT_PUBLIC_API_URL).origin : 'http://localhost:5000';
 
   // Get NextAuth token
   const token = await getToken({
@@ -72,7 +73,7 @@ export async function proxy(request: NextRequest) {
   if (process.env.NODE_ENV === "production") {
     response.headers.set(
       "Content-Security-Policy",
-      "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' http://localhost:5000 https:; frame-ancestors 'none';"
+      `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' ${backendOrigin} https:; frame-ancestors 'none';`
     );
   }
 
