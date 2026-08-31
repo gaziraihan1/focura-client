@@ -13,6 +13,7 @@ export async function proxy(request: NextRequest) {
   });
 
   const isAuthPage = path.startsWith("/authentication");
+  const isTwoFactorPage = path === "/authentication/2fa";
   // Post-auth pages (success / verified) must render for authenticated users
   // so they can read the `callbackUrl` and continue to the intended page.
   const isPostAuthPage =
@@ -22,6 +23,13 @@ export async function proxy(request: NextRequest) {
   const isProtectedRoute =
     path.startsWith("/dashboard") || path.startsWith("/admin-dashboard");
   const isAdminRoute = path.startsWith("/admin-dashboard");
+
+  // Google sign-in with 2FA: session exists but backend tokens are not yet
+  // minted.  Route to the 2FA verification page from ANY page the user
+  // might land on (e.g. the public "/" after the OAuth callback).
+  if (token && (token as Record<string, unknown>).twoFactorPending && !isTwoFactorPage) {
+    return NextResponse.redirect(new URL("/authentication/2fa", request.url));
+  }
 
   // Redirect authenticated users away from auth entry pages (login, register, etc.)
   if (isAuthPage && !isPostAuthPage && token) {
@@ -88,6 +96,7 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/",
     "/authentication/:path*",
     "/dashboard/:path*",
     "/admin-dashboard/:path*",

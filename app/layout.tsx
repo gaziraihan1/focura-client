@@ -4,7 +4,6 @@ import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { ConsentProvider } from "@/components/consent/ConsentProvider";
 import Providers from "@/components/providers/SessionProvider";
-import TwoFactorGuard from "@/components/providers/TwoFactorGuard";
 import { SidebarCollapseProvider } from "@/context/sidebarCollapse/SidebarCollapseContext";
 // import { OfflineProvider } from "@/components/providers/OfflineProvider";
 
@@ -82,7 +81,6 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <TwoFactorGuard>
           <ConsentProvider>
             <SidebarCollapseProvider>
               <a
@@ -95,7 +93,6 @@ export default async function RootLayout({
             </SidebarCollapseProvider>
             <SpeedInsights />
           </ConsentProvider>
-          </TwoFactorGuard>
         </Providers>
       </body>
     </html>
