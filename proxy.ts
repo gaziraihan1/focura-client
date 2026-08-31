@@ -26,14 +26,17 @@ export async function proxy(request: NextRequest) {
 
   // Google sign-in with 2FA: session exists but backend tokens are not yet
   // minted.  Route to the 2FA verification page from ANY page the user
-  // might land on (e.g. the public "/" after the OAuth callback).
+  // might land on (e.g. /dashboard after the OAuth callback).
   if (token && (token as Record<string, unknown>).twoFactorPending && !isTwoFactorPage) {
     return NextResponse.redirect(new URL("/authentication/2fa", request.url));
   }
 
   // Redirect authenticated users away from auth entry pages (login, register, etc.)
+  // But allow the 2FA page to remain accessible when 2FA verification is pending
   if (isAuthPage && !isPostAuthPage && token) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    if (!(isTwoFactorPage && (token as Record<string, unknown>).twoFactorPending)) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
   }
 
   // Redirect unauthenticated users to login

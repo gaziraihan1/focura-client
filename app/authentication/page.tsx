@@ -6,7 +6,7 @@ export default async function AuthenticationPage() {
   const session = await getServerSession(authOptions);
 
   if (session) {
-    redirect("/dashboard");
+    redirect(session.twoFactorPending ? "/authentication/2fa" : "/dashboard");
   } else {
     redirect("/authentication/login");
   }
