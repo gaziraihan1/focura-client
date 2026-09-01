@@ -13,7 +13,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const twoFactorSchema = z.object({
-  password: z.string().min(1, "Password is required"),
+  password: z.string().optional(),
   totpCode: z
     .string()
     .length(6, "Code must be exactly 6 digits")
@@ -37,6 +37,7 @@ function TwoFactorContent() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<TwoFactorFormData>({
     resolver: zodResolver(twoFactorSchema),
   });
@@ -94,11 +95,15 @@ function TwoFactorContent() {
       return;
     }
 
-  // Credentials flow without email param is invalid — show error card.
-  // Google flow (isGooglePending) doesn't need an email query param.
-  if (!email && !isGooglePending) {
+    // Credentials flow: require email and password
+    if (!email) {
       toast.error("Session expired. Please sign in again.");
       router.push("/authentication/login");
+      return;
+    }
+
+    if (!values.password) {
+      setError("password", { message: "Password is required" });
       return;
     }
 
