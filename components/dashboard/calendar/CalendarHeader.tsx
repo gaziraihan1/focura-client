@@ -66,7 +66,7 @@ export function CalendarHeader({
           </div>
 
           {/* Controls */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 flex-wrap sm:gap-3">
             {/* View Switcher */}
             <div
               className="flex items-center gap-0.5 p-1 rounded-lg bg-muted border border-border"

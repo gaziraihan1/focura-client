@@ -107,7 +107,7 @@ export function WellnessRecommendations() {
         {active.length > 0 && (
           <button
             onClick={handleDismissAll}
-            className="flex items-center gap-1 ml-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center flex-wrap gap-1 ml-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
             aria-label="Dismiss all suggestions"
           >
             <Trash2 className="w-3.5 h-3.5" />

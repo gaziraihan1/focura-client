@@ -72,11 +72,11 @@ export function ProjectListItem({ project, index, onNavigate, showModal, onClose
             </div>
           </div>
 
-          <div className="flex items-center gap-6 mt-3 text-sm text-muted-foreground">
+          <div className="flex items-center flex-wrap gap-6 mt-3 text-sm text-muted-foreground">
             {project.workspace && (
               <div className="flex flex-wrap items-center gap-1.5">
                 <Building2 size={14} />
-                <span>{project.workspace.name}</span>
+                <span className="truncate">{project.workspace.name}</span>
               </div>
             )}
             <div className="flex flex-wrap items-center gap-1.5">
