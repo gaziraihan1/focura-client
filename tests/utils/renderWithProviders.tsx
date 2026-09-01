@@ -10,6 +10,8 @@ import { Subtask } from '@/types/subtasks.types'
 import { subtaskKeys } from '@/hooks/useSubtasks'
 import { featureKeys  } from '@/hooks/useFeatures' // ← ADD THIS
 import { FeatureRequest, FeaturesResponse } from '@/types/feature.types'
+import { ratingKeys } from '@/hooks/useRatings'
+import { Rating, RatingsResponse } from '@/types/rating.types'
 
 interface WrapperOptions {
   defaultWorkspace?: Workspace
@@ -19,6 +21,8 @@ interface WrapperOptions {
   defaultSubtasks?: { parentId: string; subtasks: Subtask[] }
   defaultFeatures?: FeaturesResponse  // ← ADD THIS
   defaultFeature?: FeatureRequest     // ← ADD THIS
+  defaultRatings?: RatingsResponse
+  defaultMyRating?: Rating | null
 }
 
 function makeQueryClient(options?: WrapperOptions) {
@@ -77,6 +81,18 @@ if (options?.defaultSubtasks) {
 
   if (options?.defaultFeature) {
     qc.setQueryData(featureKeys.detail(options.defaultFeature.id), options.defaultFeature)
+  }
+
+  // ─── Rating Seeding ────────────────────────────────────────────────────────
+  if (options?.defaultRatings) {
+    qc.setQueryData(
+      ratingKeys.list(1, 10),
+      options.defaultRatings
+    )
+  }
+
+  if (options?.defaultMyRating !== undefined) {
+    qc.setQueryData(ratingKeys.mine, options.defaultMyRating)
   }
 
   return qc

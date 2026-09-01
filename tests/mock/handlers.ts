@@ -20,6 +20,7 @@ import { jobsHandlers } from "./handlers/job.handlers";
 import { automationHandlers } from "./handlers/automation.handlers";
 import { templateHandlers } from "./handlers/template.handlers";
 import { aiHandlers } from "./handlers/ai.handlers";
+import { ratingHandlers } from "./handlers/rating.handlers";
 
 export const handlers = [
   ...workspaceHandlers,
@@ -43,4 +44,5 @@ export const handlers = [
   ...automationHandlers,
   ...templateHandlers,
   ...aiHandlers,
+  ...ratingHandlers,
 ];
