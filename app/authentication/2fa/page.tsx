@@ -41,11 +41,13 @@ function TwoFactorContent() {
     resolver: zodResolver(twoFactorSchema),
   });
 
-  // Authenticated and not pending → already verified (or the credentials
-  // email flow, which needs the password step). Unauthenticated → sign in.
+  // Redirect guards:
+  // - Authenticated without pending 2FA → already verified, go to dashboard
+  // - Unauthenticated without email param → invalid state, back to login
+  // - Everything else → render the appropriate 2FA form
   useEffect(() => {
     if (status === "loading") return;
-    if (status === "authenticated" && !session?.twoFactorPending && !email) {
+    if (status === "authenticated" && !session?.twoFactorPending) {
       router.replace("/dashboard");
     } else if (status === "unauthenticated" && !email) {
       router.replace("/authentication/login");
@@ -92,7 +94,9 @@ function TwoFactorContent() {
       return;
     }
 
-    if (!email) {
+  // Credentials flow without email param is invalid — show error card.
+  // Google flow (isGooglePending) doesn't need an email query param.
+  if (!email && !isGooglePending) {
       toast.error("Session expired. Please sign in again.");
       router.push("/authentication/login");
       return;
@@ -124,7 +128,9 @@ function TwoFactorContent() {
     }
   };
 
-  if (!email) {
+  // Credentials flow without email param is invalid — show error card.
+  // Google flow (isGooglePending) doesn't need an email query param.
+  if (!email && !isGooglePending) {
     return (
       <section className="min-h-screen flex items-center justify-center bg-background px-6 py-20">
         <motion.div
