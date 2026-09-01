@@ -135,6 +135,8 @@ function TwoFactorContent() {
 
   // Credentials flow without email param is invalid — show error card.
   // Google flow (isGooglePending) doesn't need an email query param.
+  // Skip during loading/submitting to avoid a flash while the session updates.
+  if (status === "loading" || isSubmitting) return null;
   if (!email && !isGooglePending) {
     return (
       <section className="min-h-screen flex items-center justify-center bg-background px-6 py-20">
