@@ -12,6 +12,7 @@ import { featureKeys  } from '@/hooks/useFeatures' // ← ADD THIS
 import { FeatureRequest, FeaturesResponse } from '@/types/feature.types'
 import { ratingKeys } from '@/hooks/useRatings'
 import { Rating, RatingsResponse } from '@/types/rating.types'
+import { DensityProvider } from '@/context/density/DensityContext'
 
 interface WrapperOptions {
   defaultWorkspace?: Workspace
@@ -102,7 +103,9 @@ if (options?.defaultSubtasks) {
 export function createWrapper(options?: WrapperOptions) {
   const qc = makeQueryClient(options)
   const Wrapper = ({ children }: { children: ReactNode }) => (
-    <QueryClientProvider client={qc}>{children}</QueryClientProvider>
+    <QueryClientProvider client={qc}>
+      <DensityProvider>{children}</DensityProvider>
+    </QueryClientProvider>
   )
   return Wrapper
 }
@@ -111,7 +114,11 @@ export function createWrapper(options?: WrapperOptions) {
 export function renderWithProviders(ui: ReactNode, options?: WrapperOptions) {
   const qc = makeQueryClient(options)
   return {
-    ...render(<QueryClientProvider client={qc}>{ui}</QueryClientProvider>),
+    ...render(
+      <QueryClientProvider client={qc}>
+        <DensityProvider>{ui}</DensityProvider>
+      </QueryClientProvider>
+    ),
     qc,
   }
 }

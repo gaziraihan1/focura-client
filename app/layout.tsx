@@ -5,6 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { ConsentProvider } from "@/components/consent/ConsentProvider";
 import Providers from "@/components/providers/SessionProvider";
 import { SidebarCollapseProvider } from "@/context/sidebarCollapse/SidebarCollapseContext";
+import { DensityProvider } from "@/context/density/DensityContext";
 // import { OfflineProvider } from "@/components/providers/OfflineProvider";
 
 const geistSans = Geist({
@@ -83,13 +84,15 @@ export default async function RootLayout({
         <Providers>
           <ConsentProvider>
             <SidebarCollapseProvider>
-              <a
-                href="#main-content"
-                className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-9999 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg focus:outline-none"
-              >
-                Skip to main content
-              </a>
-              {children}
+              <DensityProvider>
+                <a
+                  href="#main-content"
+                  className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-9999 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg focus:outline-none"
+                >
+                  Skip to main content
+                </a>
+                {children}
+              </DensityProvider>
             </SidebarCollapseProvider>
             <SpeedInsights />
           </ConsentProvider>

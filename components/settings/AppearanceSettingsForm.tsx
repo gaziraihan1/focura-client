@@ -4,40 +4,28 @@ import { useState, useEffect } from 'react';
 import { Monitor, Sun, Moon, Save, Loader2, PanelLeftClose, Sparkles, Lock } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/Button';
+import { useDensity } from '@/context/density/DensityContext';
 import toast from 'react-hot-toast';
 
 const DENSITY_OPTIONS = [
-  { value: 'compact', label: 'Compact', description: 'Less spacing, more content on screen' },
-  { value: 'default', label: 'Default', description: 'Balanced spacing for comfortable viewing' },
-  { value: 'comfortable', label: 'Comfortable', description: 'More spacing, easier to scan' },
+  { value: 'compact' as const, label: 'Compact', description: 'Less spacing, more content on screen' },
+  { value: 'default' as const, label: 'Default', description: 'Balanced spacing for comfortable viewing' },
+  { value: 'comfortable' as const, label: 'Comfortable', description: 'More spacing, easier to scan' },
 ];
 
 export function AppearanceSettingsForm() {
   const { theme, setTheme, resolvedTheme } = useTheme();
-  const [density, setDensity] = useState('default');
+  const { density, setDensity } = useDensity();
   const [saving, setSaving] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // SSR hydration guard: must flip after mount to avoid theme/density mismatch.
-    // react-doctor-disable-next-line react-doctor/no-initialize-state -- mounted is a hydration guard (Next.js SSR pattern, see `if (!mounted)` below), not state whose initializer belongs in useState.
     setMounted(true);
-    const savedDensity = localStorage.getItem('density') || 'default';
-    setDensity(savedDensity);
-    // Apply density class to document
-    document.documentElement.setAttribute('data-density', savedDensity);
   }, []);
-
-  const handleDensityChange = (value: string) => {
-    setDensity(value);
-    document.documentElement.setAttribute('data-density', value);
-  };
 
   const handleSave = async () => {
     setSaving(true);
     try {
-      localStorage.setItem('density', density);
-      document.documentElement.setAttribute('data-density', density);
       toast.success('Appearance settings saved');
     } finally {
       setSaving(false);
@@ -148,7 +136,7 @@ export function AppearanceSettingsForm() {
                 name="density"
                 value={option.value}
                 checked={density === option.value}
-                onChange={(e) => handleDensityChange(e.target.value)}
+                onChange={() => setDensity(option.value)}
                 className="w-4 h-4 text-primary"
               />
               <div>

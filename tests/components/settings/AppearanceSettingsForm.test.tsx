@@ -116,14 +116,15 @@ describe('AppearanceSettingsForm', () => {
     expect(screen.getByText('Save Settings')).toBeInTheDocument()
   })
 
-  it('saves preferences to localStorage on save', async () => {
+  it('saves preferences to localStorage when density is changed', async () => {
+    const user = userEvent.setup()
     renderWithProviders(<AppearanceSettingsForm />)
 
-    const saveButton = screen.getByText('Save Settings')
-    userEvent.click(saveButton)
+    const compactRadio = screen.getByDisplayValue('compact')
+    await user.click(compactRadio)
 
     await waitFor(() => {
-      expect(localStorage.getItem('density')).toBeTruthy()
+      expect(localStorage.getItem('density')).toBe('compact')
     })
   })
 
