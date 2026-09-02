@@ -10,6 +10,7 @@ import {
   isMeetingLive,
 } from '@/utils/meeting.utils';
 import Image from 'next/image';
+import { Button } from '@/components/ui/Button';
 
 interface Props {
   meeting: Meeting | null;
@@ -48,12 +49,12 @@ export function MeetingDetailModal({
               {meeting.title}
             </h2>
           </div>
-          <button aria-label="Close"
+          <Button aria-label="Close" variant="ghost"
             onClick={onClose}
-            className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+            className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors p-0"
           >
             <X size={15} />
-          </button>
+          </Button>
         </div>
 
         <div className="divide-y divide-border">
@@ -167,20 +168,22 @@ export function MeetingDetailModal({
             {canManage && !isCancelled && (
               <>
                 {onEdit && (
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={() => onEdit(meeting)}
                     className="flex-1 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-medium text-foreground hover:bg-accent transition-colors"
                   >
                     Edit
-                  </button>
+                  </Button>
                 )}
                 {onCancel && (
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={() => onCancel(meeting)}
                     className="rounded-lg border border-destructive/30 px-4 py-2.5 text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors"
                   >
                     Cancel
-                  </button>
+                  </Button>
                 )}
               </>
             )}

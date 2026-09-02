@@ -17,6 +17,7 @@ import {
   useTimeReport,
   type TimeTrackingReportRow,
 } from "@/hooks/useAnalytics";
+import { Button } from "@/components/ui/Button";
 
 interface TimeReportCardProps {
   workspaceId: string;
@@ -156,14 +157,14 @@ export function TimeReportCard({ workspaceId }: TimeReportCardProps) {
           <p className="text-sm text-muted-foreground flex-1">
             Failed to load the time report. Please try again.
           </p>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             onClick={() => refetch()}
             className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Retry
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -190,9 +191,10 @@ export function TimeReportCard({ workspaceId }: TimeReportCardProps) {
         </div>
         <div className="flex items-center gap-1 p-1 rounded-xl border border-border bg-card">
           {RANGES.map((r) => (
-            <button
+            <Button
               key={r}
               type="button"
+              variant="primary"
               onClick={() => setDays(r)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                 days === r
@@ -201,7 +203,7 @@ export function TimeReportCard({ workspaceId }: TimeReportCardProps) {
               }`}
             >
               {r}d
-            </button>
+            </Button>
           ))}
         </div>
       </div>

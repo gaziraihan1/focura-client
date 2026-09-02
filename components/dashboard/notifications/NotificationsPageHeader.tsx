@@ -1,4 +1,5 @@
 import { Bell, CheckCheck, Trash2, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface NotificationsPageHeaderProps {
   unreadCount: number;
@@ -32,10 +33,11 @@ export function NotificationsPageHeader({
 
       <div className="flex items-center gap-2">
         {unreadCount > 0 && (
-          <button
+          <Button
+            variant="outline"
             onClick={onMarkAllAsRead}
             disabled={isMarkingAllAsRead}
-            className="px-4 py-2 text-sm font-medium border border-border rounded-lg hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+            className="flex items-center gap-2"
           >
             {isMarkingAllAsRead ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -43,14 +45,15 @@ export function NotificationsPageHeader({
               <CheckCheck className="w-4 h-4" />
             )}
             Mark all as read
-          </button>
+          </Button>
         )}
 
         {hasReadNotifications && (
-          <button
+          <Button
+            variant="outline"
             onClick={onDeleteAllRead}
             disabled={isDeletingAllRead}
-            className="px-4 py-2 text-sm font-medium border border-border rounded-lg hover:bg-destructive/10 hover:text-destructive hover:border-destructive disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+            className="flex items-center gap-2 hover:bg-destructive/10 hover:text-destructive hover:border-destructive"
           >
             {isDeletingAllRead ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -58,7 +61,7 @@ export function NotificationsPageHeader({
               <Trash2 className="w-4 h-4" />
             )}
             Clear read
-          </button>
+          </Button>
         )}
       </div>
     </div>

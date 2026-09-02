@@ -1,5 +1,6 @@
 import { AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/Button";
 
 export function WorkspaceDetailErrorState() {
   const router = useRouter();
@@ -13,12 +14,13 @@ export function WorkspaceDetailErrorState() {
       <p className="text-sm sm:text-base text-muted-foreground mb-6">
         This workspace doesn&apos;t exist or you don&apos;t have access to it
       </p>
-      <button
+      <Button
         onClick={() => router.push("/dashboard/workspaces")}
+        variant="primary"
         className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition text-sm sm:text-base"
       >
         Back to Workspaces
-      </button>
+      </Button>
     </div>
   );
 }

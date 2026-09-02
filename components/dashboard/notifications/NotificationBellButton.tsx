@@ -1,4 +1,5 @@
 import { Bell } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface NotificationBellButtonProps {
   badge: string | number | null;
@@ -10,9 +11,10 @@ export function NotificationBellButton({
   onClick,
 }: NotificationBellButtonProps) {
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={onClick}
-      className="relative p-2 rounded-lg hover:bg-accent transition"
+      className="relative p-2 rounded-lg"
       aria-label="Notifications"
     >
       <Bell className="w-5 h-5 text-foreground" />
@@ -22,6 +24,6 @@ export function NotificationBellButton({
           {badge}
         </span>
       )}
-    </button>
+    </Button>
   );
 }

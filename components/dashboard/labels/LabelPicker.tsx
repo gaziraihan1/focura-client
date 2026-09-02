@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Plus } from 'lucide-react';
 import { useLabels, Label } from '@/hooks/useLabels';
+import { Button } from '@/components/ui/Button';
 import { LabelBadge } from './LabelBadge';
 
 interface LabelPickerProps {
@@ -67,10 +68,11 @@ export function LabelPicker({
 
       {/* Add Label Button */}
       <div className="relative">
-        <button
+        <Button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 px-3 py-2 bg-muted hover:bg-accent text-foreground rounded-lg transition-colors text-sm"
+          variant="secondary"
+          className="flex items-center gap-2 px-3 py-2 bg-muted text-sm"
         >
           <Plus className="w-4 h-4" />
           <span>Add label</span>
@@ -79,7 +81,7 @@ export function LabelPicker({
               ({selectedLabels.length}/{maxLabels})
             </span>
           )}
-        </button>
+        </Button>
 
         {/* Dropdown */}
         {isOpen && (
@@ -105,14 +107,15 @@ export function LabelPicker({
               ) : (
                 <div className="p-2">
                   {availableLabels.map((label) => (
-                    <button
+                    <Button
                       key={label.id}
                       type="button"
                       onClick={() => {
                         handleToggle(label.id);
                         setIsOpen(false);
                       }}
-                      className="w-full flex items-center gap-3 px-3 py-2 hover:bg-accent rounded-lg transition-colors text-left"
+                      variant="ghost"
+                      className="w-full justify-start gap-3 px-3 py-2 text-left rounded-lg"
                     >
                       <div
                         className="w-4 h-4 rounded-full shrink-0"
@@ -126,7 +129,7 @@ export function LabelPicker({
                           {label._count.tasks}
                         </span>
                       )}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               )}

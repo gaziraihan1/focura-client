@@ -72,19 +72,15 @@ describe('FormActions', () => {
     expect(defaultProps.onCancel).toHaveBeenCalled()
   })
 
-  it('shows Creating text when loading', () => {
-    render(<FormActions {...defaultProps} isLoading={true} />)
-    expect(screen.getByText('Creating')).toBeInTheDocument()
-  })
-
   it('shows loading spinner when loading', () => {
     render(<FormActions {...defaultProps} isLoading={true} />)
-    expect(screen.getByTestId('loader-icon')).toBeInTheDocument()
+    const createBtn = screen.getByText('Create Task').closest('button')
+    expect(createBtn).toHaveAttribute('aria-busy', 'true')
   })
 
   it('disables button when loading', () => {
     render(<FormActions {...defaultProps} isLoading={true} />)
-    const createBtn = screen.getByText('Creating').closest('button')
+    const createBtn = screen.getByText('Create Task').closest('button')
     expect(createBtn).toBeDisabled()
   })
 })

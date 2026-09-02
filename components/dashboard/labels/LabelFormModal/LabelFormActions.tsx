@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { m as motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 
@@ -16,14 +17,15 @@ export function LabelFormActions({
 }: LabelFormActionsProps) {
   return (
     <div className="flex items-center justify-end gap-3 p-6 border-t border-border">
-      <button
+      <Button
         type="button"
         onClick={onCancel}
-        className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+        variant="ghost"
+        className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
         disabled={isSubmitting}
       >
         Cancel
-      </button>
+      </Button>
       <motion.button
         type="submit"
         whileHover={{ scale: 1.02 }}

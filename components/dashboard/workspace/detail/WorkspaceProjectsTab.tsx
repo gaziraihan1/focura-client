@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { FolderKanban, Loader2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useProjects } from "@/hooks/useProjects";
@@ -37,14 +38,14 @@ export function WorkspaceProjectsTab({
             <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 px-4">
               Create your first project to get started
             </p>
-            <button
+            <Button
               onClick={() =>
                 router.push(`/dashboard/workspaces/${workspaceSlug}/projects/new-project`)
               }
-              className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition text-sm sm:text-base"
+              className="px-4 py-2 rounded-lg hover:opacity-90 text-sm sm:text-base"
             >
               Create Project
-            </button>
+            </Button>
           </>
         )}
       </div>
@@ -59,16 +60,16 @@ export function WorkspaceProjectsTab({
           <h3 className="text-base sm:text-lg font-semibold text-foreground">
             Projects ({projects.length})
           </h3>
-          <button
+          <Button
             onClick={() =>
               router.push(`/dashboard/workspaces/${workspaceSlug}/projects/new-project`)
             }
-            className="px-3 sm:px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2 text-sm sm:text-base"
+            className="px-3 sm:px-4 py-2 rounded-lg hover:opacity-90 flex items-center gap-2 text-sm sm:text-base"
           >
             <Plus size={16} className="sm:w-4.5 sm:h-4.5" />
             <span className="hidden sm:inline">New Project</span>
             <span className="sm:hidden">New</span>
-          </button>
+          </Button>
         </div>
       )}
 

@@ -1,5 +1,6 @@
 import { m as motion } from "framer-motion";
 import { Users, Tag, Plus, AlertCircle, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import { LabelPicker } from "@/components/dashboard/labels/LabelPicker";
 
 interface Member {
@@ -73,9 +74,10 @@ export function TeamLabelsSection({
               const canSelect = canAssignToOthers || isCurrentUser;
 
               return (
-                <button
+                <Button
                   key={member.user.id}
                   type="button"
+                  variant="ghost"
                   onClick={() => onToggleAssignee(member.user.id)}
                   disabled={!canSelect}
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition ${
@@ -93,7 +95,7 @@ export function TeamLabelsSection({
                     {member.user.name}
                     {isCurrentUser && " (You)"}
                   </span>
-                </button>
+                </Button>
               );
             })}
           </div>
@@ -121,14 +123,15 @@ export function TeamLabelsSection({
             <Tag size={16} className="inline mr-2" />
             Labels
           </span>
-          <button
+          <Button
             type="button"
+            variant="ghost"
             onClick={onOpenLabelManager}
-            className="text-xs text-primary hover:text-primary/80 transition flex items-center gap-1"
+            className="text-xs text-primary hover:text-primary/80 hover:bg-transparent transition flex items-center gap-1"
           >
             <Plus size={14} />
             Manage Labels
-          </button>
+          </Button>
         </div>
 
         <LabelPicker

@@ -2,6 +2,7 @@
 
 import { HardDrive, AlertTriangle } from "lucide-react";
 import type { ResourceUsageMetrics } from "@/types/workspace-usage.types";
+import { Button } from "@/components/ui/Button";
 import {
   StorageUsageCard,
   TotalFilesCard,
@@ -44,9 +45,13 @@ export function StorageResourcesSection({
               </p>
             </div>
           </div>
-          <button className="shrink-0 px-3 py-1.5 rounded-lg bg-destructive text-white text-xs font-semibold hover:bg-destructive/90 transition-colors w-full sm:w-auto text-center">
+          <Button
+            variant="destructive"
+            size="sm"
+            className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold w-full sm:w-auto text-center"
+          >
             Upgrade
-          </button>
+          </Button>
         </div>
       )}
 

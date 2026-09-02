@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { ArrowLeft, X } from "lucide-react";
 
 interface WorkspaceTaskFormHeaderProps {
@@ -12,12 +13,12 @@ export function WorkspaceTaskFormHeader({
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <button aria-label="Previous page"
+        <Button aria-label="Previous page" variant="ghost"
           onClick={onCancel}
-          className="p-2 rounded-lg hover:bg-accent transition"
+          className="p-2 rounded-lg transition"
         >
           <ArrowLeft size={20} className="text-muted-foreground" />
-        </button>
+        </Button>
         <div>
           <h1 className="text-3xl font-bold text-foreground">Create New Task</h1>
           <p className="text-muted-foreground mt-1">
@@ -25,12 +26,12 @@ export function WorkspaceTaskFormHeader({
           </p>
         </div>
       </div>
-      <button aria-label="Close"
+      <Button aria-label="Close" variant="ghost"
         onClick={onCancel}
-        className="p-2 rounded-lg hover:bg-accent transition"
+        className="p-2 rounded-lg transition"
       >
         <X size={24} className="text-foreground" />
-      </button>
+      </Button>
     </div>
   );
 }

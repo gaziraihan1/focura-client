@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useAiWeeklyInsights } from "@/hooks/useAi";
 import { useWorkspaces } from "@/hooks/useWorkspace";
+import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import {
   AI_ERROR_CODES,
@@ -173,14 +174,16 @@ export function AiWeeklyInsights({ workspaceId, className }: AiWeeklyInsightsPro
       )}
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        <button
+        <Button
           type="button"
+          variant="primary"
+          size="sm"
           onClick={handleGenerate}
           disabled={!canGenerate}
           className={cn(
-            "inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold transition-opacity",
+            "gap-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold transition-opacity",
             canGenerate
-              ? "bg-primary text-primary-foreground hover:opacity-90"
+              ? "hover:opacity-90"
               : "cursor-not-allowed bg-muted text-muted-foreground",
           )}
         >
@@ -190,10 +193,12 @@ export function AiWeeklyInsights({ workspaceId, className }: AiWeeklyInsightsPro
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
           )}
           {weeklyInsights.isPending ? "Analyzing…" : "Generate weekly insights"}
-        </button>
+        </Button>
         {insights && (
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => {
               setInsights(null);
               setQuotaError(false);
@@ -201,10 +206,10 @@ export function AiWeeklyInsights({ workspaceId, className }: AiWeeklyInsightsPro
               setServiceError(false);
               setProviderBusyError(false);
             }}
-            className="inline-flex items-center gap-1 rounded-lg px-2.5 py-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+            className="gap-1 rounded-lg px-2.5 py-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Clear
-          </button>
+          </Button>
         )}
       </div>
 

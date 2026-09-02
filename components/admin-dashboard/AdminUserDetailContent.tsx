@@ -18,6 +18,7 @@ import {
 } from '@/constants/admin.constants';
 import { useState } from 'react';
 import { BanUserModal } from '@/components/admin-dashboard/user/BanUserModal';
+import { Button } from '@/components/ui/Button';
 import type { AdminUserDetail } from '@/types/admin.types';
 
 interface AdminUserHeaderProps {
@@ -49,21 +50,25 @@ function AdminUserHeader({ user, unbanning, onUnban, onOpenBanModal }: AdminUser
     <span className="text-[10px] px-2 py-0.5 rounded-full bg-destructive/10 text-destructive border border-destructive/20 font-semibold">
       BANNED
     </span>
-    <button
+    <Button
+      variant="outline"
+      size="sm"
       onClick={onUnban}
       disabled={unbanning}
-      className="text-[11px] px-2.5 py-1 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-40"
+      className="text-[11px] px-2.5 py-1 h-auto rounded-lg border-border text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-40"
     >
       {unbanning ? 'Unbanning…' : 'Unban'}
-    </button>
+    </Button>
   </div>
 ) : (
-  <button
+  <Button
+    variant="outline"
+    size="sm"
     onClick={onOpenBanModal}
-    className="text-[11px] px-2.5 py-1 rounded-lg border border-destructive/30 text-destructive hover:bg-destructive/10 transition-colors"
+    className="text-[11px] px-2.5 py-1 h-auto rounded-lg border-destructive/30 text-destructive hover:bg-destructive/10"
   >
     Ban User
-  </button>
+  </Button>
 )}
 
 {user.bannedAt && user.banReason && (

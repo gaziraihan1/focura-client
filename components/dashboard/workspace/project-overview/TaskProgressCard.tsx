@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { ChevronRight, Circle } from "lucide-react";
 import { StatusBar } from "@/components/dashboard/workspace/project-overview/StatusBar";
 
@@ -29,13 +30,14 @@ export function TaskProgressCard({
               : `${totalTasks - completedTasks - inProgressTasks} remaining to start`}
           </p>
         </div>
-        <button
+        <Button
+          variant="outline"
           onClick={onViewAll}
           className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-border hover:bg-accent transition-colors"
         >
           View all
           <ChevronRight size={12} />
-        </button>
+        </Button>
       </div>
 
       {totalTasks === 0 ? (
@@ -44,12 +46,13 @@ export function TaskProgressCard({
             <Circle size={18} className="text-muted-foreground" />
           </div>
           <p className="text-sm text-muted-foreground">No tasks yet — create your first task to get started.</p>
-          <button
+          <Button
+            variant="primary"
             onClick={() => onViewAll()}
-            className="mt-1 text-xs font-semibold px-4 py-1.5 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
+            className="mt-1 text-xs font-semibold px-4 py-1.5 rounded-lg hover:opacity-90 transition"
           >
             Go to Tasks
-          </button>
+          </Button>
         </div>
       ) : (
         <StatusBar

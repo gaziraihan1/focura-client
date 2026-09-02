@@ -4,6 +4,7 @@ import { m as motion, AnimatePresence } from 'framer-motion';
 import { X, Globe, Lock, Pin, Calendar, Megaphone, Pencil } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 import { Avatar } from '@/components/shared/Avatar';
 import type { Announcement } from '@/types/announcement.types';
 import { RenderedContent } from './RenderedContent';
@@ -87,13 +88,13 @@ export function AnnouncementDetailModal({
                   </h2>
                 </div>
 
-                <button aria-label="Close"
-                  type="button"
+                <Button aria-label="Close"
+                  variant="ghost"
                   onClick={onClose}
                   className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shrink-0"
                 >
                   <X className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
 
               <div className="flex-1 overflow-y-auto px-5 sm:px-6 py-5 space-y-5">

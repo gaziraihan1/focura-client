@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { ExportButton } from "@/components/dashboard/calendar/ExportButton";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 import {
   useWeeklyComparison,
 } from "@/hooks/useWeeklyComparison";
@@ -64,11 +65,11 @@ export function WeeklyComparison() {
     <div className="rounded-2xl border border-border bg-card overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 p-4">
-        <button
-          type="button"
+        <Button
+          variant="ghost"
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
-          className="flex min-w-0 flex-1 items-center gap-3 rounded-lg text-left transition-colors hover:bg-accent/30"
+          className="min-w-0 flex-1 gap-3 rounded-lg text-left hover:bg-accent/30"
         >
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-500/10">
             <CalendarRange className="w-4.5 h-4.5 text-indigo-600 dark:text-indigo-400" />
@@ -81,7 +82,7 @@ export function WeeklyComparison() {
               This week vs 8-week average
             </p>
           </div>
-        </button>
+        </Button>
         <div className="flex shrink-0 items-center gap-1">
           {expanded && (
             <ExportButton
@@ -100,19 +101,20 @@ export function WeeklyComparison() {
             {difference > 0 ? "+" : ""}
             {(difference * 100).toFixed(0)}%
           </span>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setExpanded(!expanded)}
             aria-expanded={expanded}
             aria-label={expanded ? "Collapse chart" : "Expand chart"}
-            className="rounded-lg p-1 transition-colors hover:bg-accent"
+            className="h-auto w-auto rounded-lg p-1"
           >
             {expanded ? (
               <ChevronUp className="w-4 h-4 text-muted-foreground" />
             ) : (
               <ChevronDown className="w-4 h-4 text-muted-foreground" />
             )}
-          </button>
+          </Button>
         </div>
       </div>
 

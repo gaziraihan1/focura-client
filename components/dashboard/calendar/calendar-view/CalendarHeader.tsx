@@ -5,6 +5,7 @@ import {
   Calendar,
   Clock
 } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 interface CalendarHeaderProps {
   currentDate: Date;
@@ -31,21 +32,25 @@ export function CalendarHeader({
     <header className="border-b border-border bg-card px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
         <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onToday}
-            className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-foreground hover:bg-accent rounded-lg transition-colors whitespace-nowrap"
+            className="whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-medium sm:px-4 sm:py-2 sm:text-sm"
           >
             Today
-          </button>
-          
+          </Button>
+
           <div className="flex items-center gap-1 sm:gap-2 flex-1 sm:flex-initial">
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={onPrevious}
-              className="p-1.5 hover:bg-accent rounded-lg transition-colors"
+              className="rounded-lg p-1.5"
               aria-label="Previous"
             >
               <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
-            </button>
+            </Button>
             
             <h1 className="text-base sm:text-xl font-semibold min-w-25 sm:min-w-35 text-center">
               {view === 'month' && (
@@ -68,20 +73,23 @@ export function CalendarHeader({
               )}
             </h1>
             
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={onNext}
-              className="p-1.5 hover:bg-accent rounded-lg transition-colors"
+              className="rounded-lg p-1.5"
               aria-label="Next"
             >
               <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
-            </button>
+            </Button>
           </div>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-between sm:justify-end">
-          <button
+          <Button
+            variant="ghost"
             onClick={() => onToggleTimeBound(!showOnlyTimeBound)}
-            className={`flex items-center gap-1.5 sm:gap-2 px-2 xl:px-3 py-1.5 xl:py-2 text-xs sm:text-sm rounded-lg transition-all ${
+            className={`gap-1.5 rounded-lg px-2 py-1.5 text-xs sm:gap-2 sm:text-sm xl:px-3 xl:py-2 ${
               showOnlyTimeBound
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-muted text-muted-foreground hover:bg-accent'
@@ -90,14 +98,15 @@ export function CalendarHeader({
             <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             <span className="hidden md:inline">Time-bound only</span>
             <span className="md:hidden">Time</span>
-          </button>
+          </Button>
 
           <div className="flex items-center gap-0.5 sm:gap-1 bg-muted rounded-lg p-0.5 sm:p-1">
             {(['month', 'week', 'day'] as const).map((v) => (
-              <button
+              <Button
                 key={v}
+                variant="ghost"
                 onClick={() => onViewChange(v)}
-                className={`px-2 sm:px-3 lg:px-4 py-1 sm:py-1.5 text-xs sm:text-sm font-medium rounded-md transition-all capitalize ${
+                className={`rounded-md px-2 py-1 text-xs font-medium capitalize transition-all sm:px-3 sm:py-1.5 sm:text-sm lg:px-4 ${
                   view === v
                     ? 'bg-background text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
@@ -105,7 +114,7 @@ export function CalendarHeader({
               >
                 <span className="hidden sm:inline">{v}</span>
                 <span className="sm:hidden">{v.charAt(0).toUpperCase()}</span>
-              </button>
+              </Button>
             ))}
           </div>
 

@@ -1,5 +1,6 @@
 import { FileWithDetails } from "@/hooks/useFileManagement";
 import { Download, Eye, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface FileCardOverlayProps {
   canDelete: boolean;
@@ -18,13 +19,14 @@ export default function FileCardOverlay({
 }: FileCardOverlayProps) {
   return (
     <div className="absolute inset-0 bg-black/60 md:opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-      <button
+      <Button
+        variant="ghost"
         onClick={() => onShowPreview(true)}
-        className="p-2 bg-white/90 rounded-full hover:bg-white transition-colors"
+        className="h-auto w-auto rounded-full bg-white/90 p-2 hover:bg-white"
         title="Preview"
       >
         <Eye className="w-4 h-4 text-gray-900" />
-      </button>
+      </Button>
       <a
         href={file.url}
         download={file.originalName}
@@ -34,14 +36,15 @@ export default function FileCardOverlay({
         <Download className="w-4 h-4 text-gray-900" />
       </a>
       {canDelete && (
-        <button
+        <Button
+          variant="ghost"
           onClick={() => onDeleteModal(true)}
           disabled={isPending}
-          className="p-2 bg-white/90 rounded-full hover:bg-white transition-colors disabled:opacity-50"
+          className="h-auto w-auto rounded-full bg-white/90 p-2 hover:bg-white"
           title="Delete"
         >
           <Trash2 className="w-4 h-4 text-red-600" />
-        </button>
+        </Button>
       )}
     </div>
   );

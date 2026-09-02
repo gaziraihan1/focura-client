@@ -1,6 +1,7 @@
 // components/BillingSuccess/SubscriptionDetails.tsx
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 import type { SubscriptionDetail } from '@/types/billing.success.types';
 
 interface SubscriptionDetailsProps {
@@ -20,7 +21,8 @@ export function SubscriptionDetails({
         visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
       }`}
     >
-      <button
+      <Button
+        variant="ghost"
         onClick={() => setShowDetails(!showDetails)}
         className="w-full flex items-center justify-between px-6 py-4 text-sm font-semibold text-foreground hover:bg-muted/50 transition-colors"
       >
@@ -30,7 +32,7 @@ export function SubscriptionDetails({
             showDetails ? 'rotate-180' : ''
           }`}
         />
-      </button>
+      </Button>
 
       {showDetails && (
         <div className="border-t border-border divide-y divide-border">

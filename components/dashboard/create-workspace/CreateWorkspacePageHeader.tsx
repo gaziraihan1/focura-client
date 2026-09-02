@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface CreateWorkspacePageHeaderProps {
   onCancel: () => void;
@@ -17,12 +18,14 @@ export function CreateWorkspacePageHeader({
           Set up a new workspace for your team
         </p>
       </div>
-      <button aria-label="Close"
+      <Button aria-label="Close"
+        variant="ghost"
+        size="icon"
         onClick={onCancel}
-        className="p-2 rounded-lg hover:bg-accent transition"
+        className="rounded-lg"
       >
         <X size={24} className="text-foreground" />
-      </button>
+      </Button>
     </div>
   );
 }

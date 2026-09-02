@@ -4,6 +4,7 @@ import { useEffect, useEffectEvent } from "react";
 import { Mail, Loader2 } from "lucide-react";
 import { WorkspaceRole } from "@/hooks/useWorkspaceSettings";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { Button } from "@/components/ui/Button";
 
 interface InviteMemberModalProps {
   isOpen: boolean;
@@ -94,10 +95,10 @@ export function WorkspaceInviteMemberModal({
           </div>
 
           <div className="flex gap-3">
-            <button
+            <Button
               onClick={onInvite}
               disabled={!email || isInviting}
-              className="flex-1 px-4 py-3 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition disabled:opacity-50 flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-3 hover:opacity-90 flex items-center justify-center gap-2"
             >
               {isInviting ? (
                 <Loader2 className="animate-spin" size={18} />
@@ -105,13 +106,10 @@ export function WorkspaceInviteMemberModal({
                 <Mail size={18} />
               )}
               Send Invitation
-            </button>
-            <button
-              onClick={onClose}
-              className="px-4 py-3 rounded-lg border border-border hover:bg-accent transition"
-            >
+            </Button>
+            <Button variant="outline" onClick={onClose} className="px-4 py-3 hover:bg-accent">
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       </div>

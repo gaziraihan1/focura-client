@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { m as motion, AnimatePresence } from 'framer-motion';
 import { Settings2, Loader2, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 import { useUpdateFeatureStatus } from '@/hooks/useFeatures';
 import type { FeatureRequest, FeatureStatus } from '@/types/feature.types';
 
@@ -30,16 +31,16 @@ export function AdminStatusChanger({ feature }: { feature: FeatureRequest }) {
 
   return (
     <div className="relative">
-      <button
-        type="button"
+      <Button
+        variant="ghost"
         onClick={(e) => { e.stopPropagation(); setOpen((o) => !o); }}
-        className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+        className="h-auto w-auto p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
         title="Change status"
       >
         {isPending
           ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
           : <Settings2 className="w-3.5 h-3.5" />}
-      </button>
+      </Button>
 
       <AnimatePresence>
         {open && (
@@ -58,13 +59,13 @@ export function AdminStatusChanger({ feature }: { feature: FeatureRequest }) {
               <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">
                 Set status
               </span>
-              <button aria-label="Close"
-                type="button"
+              <Button aria-label="Close"
+                variant="ghost"
                 onClick={() => setOpen(false)}
-                className="p-0.5 rounded text-muted-foreground hover:text-foreground"
+                className="h-auto w-auto p-0.5 rounded text-muted-foreground hover:text-foreground"
               >
                 <X className="w-3 h-3" />
-              </button>
+              </Button>
             </div>
 
             <textarea aria-label="Optional admin note…"
@@ -81,13 +82,13 @@ export function AdminStatusChanger({ feature }: { feature: FeatureRequest }) {
 
             <div className="flex flex-col gap-0.5">
               {STATUS_OPTIONS.map(({ value, label, className }) => (
-                <button
+                <Button
                   key={value}
-                  type="button"
+                  variant="ghost"
                   disabled={isPending || feature.status === value}
                   onClick={() => handleChange(value)}
                   className={cn(
-                    'flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-left transition-colors',
+                    'h-auto w-auto flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-left transition-colors',
                     'hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed',
                     className,
                     feature.status === value && 'bg-muted',
@@ -100,7 +101,7 @@ export function AdminStatusChanger({ feature }: { feature: FeatureRequest }) {
                   {feature.status === value && (
                     <span className="ml-auto text-[9px] text-muted-foreground">current</span>
                   )}
-                </button>
+                </Button>
               ))}
             </div>
           </motion.div>

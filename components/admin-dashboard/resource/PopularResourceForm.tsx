@@ -8,6 +8,7 @@ import { Loader2 } from "lucide-react";
 import { StatusSelect } from "./StatusSelect";
 import { useCreatePopularResource, useUpdatePopularResource } from "@/hooks/useResource";
 import type { PopularResourceDTO } from "@/types/resource.types";
+import { Button } from "@/components/ui/Button";
 
 const schema = z.object({
   title: z.string().trim().min(3, "Title is too short").max(150),
@@ -138,10 +139,12 @@ export function PopularResourceForm({ onSuccess, editData }: PopularResourceForm
 
       {error && <p className="text-sm text-destructive">{error.message}</p>}
 
-      <button
+      <Button
         type="submit"
+        variant="primary"
+        size="md"
         disabled={isPending || isSubmitting}
-        className="inline-flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+        className="rounded-md px-4 py-2 hover:bg-primary/90"
       >
         {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
         {isPending
@@ -151,7 +154,7 @@ export function PopularResourceForm({ onSuccess, editData }: PopularResourceForm
           : isEditing
             ? "Save changes"
             : "Save popular resource"}
-      </button>
+      </Button>
     </form>
   );
 }

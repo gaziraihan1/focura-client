@@ -3,6 +3,7 @@
 import { useEffect, useRef, useEffectEvent } from "react";
 import { Loader2 } from "lucide-react";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { Button } from "@/components/ui/Button";
 
 interface DeleteNotificationsDialogProps {
   isOpen: boolean;
@@ -55,20 +56,22 @@ export function DeleteNotificationsDialog({
           cannot be undone.
         </p>
         <div className="flex justify-end gap-3">
-          <button
+          <Button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium border border-border rounded-lg hover:bg-accent transition-colors"
+            variant="outline"
+            className="px-4 py-2 text-sm font-medium rounded-lg"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={onConfirm}
             disabled={isPending}
-            className="px-4 py-2 text-sm font-medium bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+            variant="destructive"
+            className="px-4 py-2 text-sm font-medium rounded-lg hover:bg-destructive/90 text-destructive-foreground flex items-center gap-2"
           >
             {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
             Delete
-          </button>
+          </Button>
         </div>
       </div>
     </div>

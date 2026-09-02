@@ -1,5 +1,6 @@
 import { m as motion } from "framer-motion";
 import { Save, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface FormActionsProps {
   isLoading: boolean;
@@ -19,18 +20,19 @@ export function FormActions({
       transition={{ delay: 0.3 }}
       className="flex items-center justify-end gap-3 pb-6"
     >
-      <button
+      <Button
         type="button"
+        variant="outline"
         onClick={onCancel}
         disabled={isLoading}
-        className="px-6 py-3 rounded-lg border border-border text-foreground hover:bg-accent transition disabled:opacity-50"
+        className="px-6 py-3 rounded-lg border border-border text-foreground hover:bg-accent"
       >
         Cancel
-      </button>
-      <button
+      </Button>
+      <Button
         type="submit"
         disabled={isLoading || !canSubmit}
-        className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition flex items-center gap-2 disabled:opacity-50"
+        className="px-6 py-3 rounded-lg font-medium hover:opacity-90 flex items-center gap-2"
       >
         {isLoading ? (
           <>
@@ -43,7 +45,7 @@ export function FormActions({
             Create Task
           </>
         )}
-      </button>
+      </Button>
     </motion.div>
   );
 }

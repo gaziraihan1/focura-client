@@ -2,6 +2,7 @@
 
 import { m as motion } from "framer-motion";
 import { Search } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 const filters = ["Guides", "Tutorials", "Blogs", "Product Updates"];
 export default function ResourcesHero() {
@@ -50,10 +51,11 @@ export default function ResourcesHero() {
         </div>
         <div className="flex flex-wrap justify-center gap-3 mt-7">
           {filters.map((tag) => (
-            <button
+            <Button
               key={tag}
+              variant="outline"
               className="
-                px-4 py-2 rounded-full text-sm font-medium
+                px-4 py-2 rounded-full h-auto text-sm font-medium
                 bg-background/50 backdrop-blur
                 border border-border
                 text-foreground hover:bg-primary/10 hover:text-primary
@@ -61,7 +63,7 @@ export default function ResourcesHero() {
               "
             >
               {tag}
-            </button>
+            </Button>
           ))}
         </div>
       </div>

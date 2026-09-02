@@ -1,4 +1,5 @@
 import { ProjectDetails } from '@/hooks/useProjects';
+import { Button } from '@/components/ui/Button';
 interface ProjectStatsProps {
     activeTab: string;
     setActiveTab: (v: string) => void;
@@ -9,36 +10,39 @@ export default function ProjectStats({activeTab, setActiveTab, project}: Project
   return (
     <div className="border-b border-border">
           <div className="flex gap-6">
-            <button
+            <Button
+              variant="ghost"
               onClick={() => setActiveTab('tasks')}
-              className={`pb-4 px-2 font-medium transition border-b-2 ${
+              className={`h-auto rounded-none pb-4 px-2 font-medium border-b-2 hover:bg-transparent ${
                 activeTab === 'tasks'
                   ? 'border-primary text-primary'
                   : 'border-transparent text-muted-foreground hover:text-foreground'
               }`}
             >
               Tasks ({project.stats.totalTasks})
-            </button>
-             <button
+            </Button>
+             <Button
+              variant="ghost"
               onClick={() => setActiveTab('announcements')}
-              className={`pb-4 px-2 font-medium transition border-b-2 ${
+              className={`h-auto rounded-none pb-4 px-2 font-medium border-b-2 hover:bg-transparent ${
                 activeTab === 'announcements'
                   ? 'border-primary text-primary'
                   : 'border-transparent text-muted-foreground hover:text-foreground'
               }`}
             >
               Announcement ({project.stats.totalAnnouncement})
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="ghost"
               onClick={() => setActiveTab('members')}
-              className={`pb-4 px-2 font-medium transition border-b-2 ${
+              className={`h-auto rounded-none pb-4 px-2 font-medium border-b-2 hover:bg-transparent ${
                 activeTab === 'members'
                   ? 'border-primary text-primary'
                   : 'border-transparent text-muted-foreground hover:text-foreground'
               }`}
             >
               Members ({project.stats.totalMembers})
-            </button>
+            </Button>
           </div>
         </div>
 

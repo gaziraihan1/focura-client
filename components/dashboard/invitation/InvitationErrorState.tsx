@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface InvitationErrorStateProps {
   error: string | null;
@@ -22,12 +23,12 @@ export function InvitationErrorState({
           <p className="text-muted-foreground mb-6">
             {error || "This invitation link is invalid or has expired."}
           </p>
-          <button
+          <Button
             onClick={onGoToDashboard}
-            className="w-full bg-primary text-primary-foreground px-6 py-2.5 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+            className="w-full px-6 py-2.5 rounded-lg"
           >
             Go to Dashboard
-          </button>
+          </Button>
         </div>
       </div>
     </div>

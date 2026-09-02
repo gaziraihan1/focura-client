@@ -8,6 +8,7 @@
 
 import { AlertTriangle, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 
 interface ConfirmModalProps {
   isOpen: boolean;
@@ -97,23 +98,21 @@ export function ConfirmModal({
 
         {/* Actions */}
         <div className="flex justify-end gap-3 mt-6">
-          <button
+          <Button
+            variant="outline"
             onClick={handleClose}
             disabled={isLoading}
-            className="px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors disabled:opacity-50"
           >
             {cancelText}
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="destructive"
             onClick={onConfirm}
             disabled={isLoading}
-            className={cn(
-              "px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50",
-              styles.button
-            )}
+            loading={isLoading}
           >
-            {isLoading ? "Processing..." : confirmText}
-          </button>
+            {confirmText}
+          </Button>
         </div>
       </div>
     </div>

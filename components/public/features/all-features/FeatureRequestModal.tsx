@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { m as motion, AnimatePresence } from 'framer-motion';
 import { X, Lightbulb, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 import { useCreateFeatureRequest } from '@/hooks/useFeatures';
 
 interface Props { isOpen: boolean; onClose: () => void; }
@@ -56,12 +57,12 @@ export function FeatureRequestModal({ isOpen, onClose }: Props) {
                   </div>
                   <h2 className="text-base font-semibold text-foreground">Request a Feature</h2>
                 </div>
-                <button aria-label="Close"
-                  type="button" onClick={handleClose} disabled={isPending}
-                  className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                <Button aria-label="Close"
+                  variant="ghost" onClick={handleClose} disabled={isPending}
+                  className="h-auto w-auto p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 >
                   <X className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
 
               {/* Body */}
@@ -121,12 +122,12 @@ export function FeatureRequestModal({ isOpen, onClose }: Props) {
 
               {/* Footer */}
               <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border">
-                <button
-                  type="button" onClick={handleClose} disabled={isPending}
-                  className="px-4 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                <Button
+                  variant="ghost" onClick={handleClose} disabled={isPending}
+                  className="h-auto w-auto px-4 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 >
                   Cancel
-                </button>
+                </Button>
                 <motion.button
                   whileTap={{ scale: 0.97 }}
                   type="button" onClick={handleSubmit}

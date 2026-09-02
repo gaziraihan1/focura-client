@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { m as motion, AnimatePresence } from "framer-motion";
 import { faqs } from "@/constants/pricing.constants";
+import { Button } from "@/components/ui/Button";
 
 export default function PricingFAQ() {
   const [open, setOpen] = useState<number | null>(null);
@@ -30,9 +31,10 @@ export default function PricingFAQ() {
               className="border border-border rounded-xl bg-muted/40 dark:bg-muted/30 
                          backdrop-blur-sm"
             >
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => toggle(i)}
-                className="w-full flex items-center justify-between p-5 text-left"
+                className="w-full flex items-center justify-between p-5 text-left h-auto"
               >
                 <span className="text-base md:text-lg font-medium text-foreground">
                   {item.q}
@@ -43,7 +45,7 @@ export default function PricingFAQ() {
                 >
                   <ChevronDown className="w-5 h-5 text-muted-foreground" />
                 </motion.div>
-              </button>
+              </Button>
               <AnimatePresence initial={false}>
                 {open === i && (
                   <motion.div

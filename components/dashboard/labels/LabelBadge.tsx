@@ -1,6 +1,7 @@
 import { Label } from "@/hooks/useLabels";
 import { cn } from "@/lib/utils";
 import { Tag, X } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface LabelBadgeProps {
   label: Label;
@@ -32,8 +33,9 @@ export function LabelBadge({
       <Tag className={cn(size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5')} />
       <span>{label.name}</span>
       {onRemove && (
-        <button aria-label="Close"
+        <Button aria-label="Close"
           type="button"
+          variant="ghost"
           onClick={(e) => {
             e.stopPropagation();
             onRemove();
@@ -41,7 +43,7 @@ export function LabelBadge({
           className="hover:opacity-70 transition-opacity"
         >
           <X className={cn(size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5')} />
-        </button>
+        </Button>
       )}
     </span>
   );

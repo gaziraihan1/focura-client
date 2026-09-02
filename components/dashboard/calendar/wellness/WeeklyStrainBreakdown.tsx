@@ -4,6 +4,8 @@ import { useMemo } from "react";
 import { BarChart3, Loader2, AlertCircle, RefreshCw } from "lucide-react";
 import { useBurnoutTrends } from "@/hooks/useBurnoutTrends";
 import type { BurnoutTrend } from "@/types/calendar.types";
+import { Button } from "@/components/ui/Button";
+
 import { formatHours } from "@/utils/analytics.utils";
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
@@ -186,15 +188,17 @@ export function WeeklyStrainBreakdown() {
             <h4 className="text-sm font-semibold text-foreground">Weekly Strain Breakdown</h4>
             <p className="text-xs text-muted-foreground mt-0.5">{error}</p>
           </div>
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => refetch()}
-            className="flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            className="shrink-0 px-2.5 py-1.5 text-muted-foreground"
             aria-label="Retry"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Retry
-          </button>
+          </Button>
         </div>
       </div>
     );

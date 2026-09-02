@@ -3,6 +3,7 @@
 import { useRef, useEffect } from "react";
 import { Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 
 interface HelpSearchBarProps {
   query: string;
@@ -61,13 +62,15 @@ export function HelpSearchBar({
 
       <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
         {query ? (
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={onClear}
-            className="rounded p-0.5 text-muted-foreground hover:text-foreground transition-colors"
+            className="rounded p-0.5 text-muted-foreground hover:text-foreground hover:bg-transparent"
             aria-label="Clear search"
           >
             <X size={14} />
-          </button>
+          </Button>
         ) : (
           <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground select-none">
             ⌘K

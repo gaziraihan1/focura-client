@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { PRIORITY_COLORS } from "@/constants/intent.constants";
 import { Flag } from "lucide-react";
 
@@ -18,9 +19,10 @@ export default function PriorityDetailsSection({
       </span>
       <div className="grid grid-cols-2 gap-2">
         {(["URGENT", "HIGH", "MEDIUM", "LOW"] as const).map((priorityLevel) => (
-          <button
+          <Button
             key={priorityLevel}
             type="button"
+            variant="ghost"
             onClick={() => onPriorityChange(priorityLevel)}
             className={`px-4 py-2.5 rounded-lg border transition text-sm font-medium ${
               priority === priorityLevel
@@ -29,7 +31,7 @@ export default function PriorityDetailsSection({
             }`}
           >
             {priorityLevel}
-          </button>
+          </Button>
         ))}
       </div>
     </div>

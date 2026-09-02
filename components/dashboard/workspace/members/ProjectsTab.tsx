@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Search, FolderOpen } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 import { ProjectCard }          from './ProjectCard';
 import { ProjectMembersPanel }  from './ProjectMembersPanel';
 import { ProjectSummary } from '@/hooks/useTeamPage';
@@ -73,8 +74,9 @@ export function ProjectsTab({
           {STATUS_CHIPS.map((chip) => {
             const active = statusFilter === chip.value;
             return (
-              <button
+              <Button
                 key={chip.label}
+                variant="ghost"
                 onClick={() => setStatusFilter(chip.value)}
                 className={[
                   'px-3 py-1 rounded-full text-xs font-medium border transition-colors duration-150',
@@ -84,7 +86,7 @@ export function ProjectsTab({
                 ].join(' ')}
               >
                 {chip.label}
-              </button>
+              </Button>
             );
           })}
         </div>

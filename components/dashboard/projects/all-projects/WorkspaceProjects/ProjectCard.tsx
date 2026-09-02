@@ -5,6 +5,7 @@ import ProjectMembers from "./ProjectMembers";
 import ProjectStatsCount from "./ProjectStatsCount";
 import ProjectDetails from "./ProjectDetails";
 import { ProjectDetails as Details } from "@/hooks/useProjects";
+import { Button } from "@/components/ui/Button";
 import { prefetchProjectOverview } from "@/hooks/useNavigationPrefetch";
 
 // oxlint-disable-next-line react-doctor/only-export-components -- shared status palette imported by ProjectDetails
@@ -97,13 +98,14 @@ export function ProjectCard({
   }
 
   return (
-    <button
+    <Button
       type="button"
+      variant="ghost"
       onClick={onClick}
       className="w-full text-left"
       aria-label={`Open project ${project?.name}`}
     >
       {CardContent}
-    </button>
+    </Button>
   );
 }

@@ -1,5 +1,6 @@
 // components/Tasks/CreateTaskModal/CreateTaskModal.tsx
-import { X, Loader2 } from "lucide-react";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import { useProjectRoleCheck } from "@/hooks/useProjects";
 import { LabelPicker } from "@/components/dashboard/labels/LabelPicker";
 import { FocusEnergySection } from "@/components/tasks/form/FocusEnergySection";
@@ -51,12 +52,14 @@ export default function CreateTaskModal({
           <h2 className="text-xl font-semibold text-foreground">
             Create Project Task
           </h2>
-          <button aria-label="Header"
+          <Button aria-label="Header"
             onClick={onClose}
-            className="p-2 hover:bg-accent rounded-lg transition"
+            variant="ghost"
+            size="icon"
+            className="rounded-lg"
           >
             <X size={20} />
-          </button>
+          </Button>
         </div>
 
         <div className="space-y-5">
@@ -220,27 +223,22 @@ export default function CreateTaskModal({
 
           {/* Actions */}
           <div className="flex gap-3 pt-4">
-            <button
+            <Button
               onClick={onClose}
               disabled={isSubmitting}
-              className="flex-1 px-4 py-2 rounded-lg border border-border hover:bg-accent transition disabled:opacity-50"
+              variant="outline"
+              className="flex-1 px-4 py-2 rounded-lg"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="flex-1 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition flex items-center justify-center gap-2 disabled:opacity-50"
+              loading={isSubmitting}
+              className="flex-1 px-4 py-2 rounded-lg hover:bg-primary/90"
             >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Creating…
-                </>
-              ) : (
-                "Create Task"
-              )}
-            </button>
+              Create Task
+            </Button>
           </div>
         </div>
       </div>

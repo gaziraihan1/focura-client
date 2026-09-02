@@ -1,5 +1,6 @@
 import { SidebarContent, SidebarContentProps } from "./SidebarContent";
 import { X } from "lucide-react"
+import { Button } from "@/components/ui/Button";
 
 interface MobileDrawerProps extends SidebarContentProps {
   open: boolean;
@@ -29,12 +30,13 @@ export function MobileDrawer({ open, onClose, ...contentProps }: MobileDrawerPro
         ].join(" ")}
       >
         {/* Close btn */}
-        <button aria-label="Close btn"
+        <Button aria-label="Close btn"
+          variant="ghost"
           onClick={onClose}
-          className="absolute top-3 right-3 z-10 p-1.5 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+          className="absolute top-3 right-3 z-10 p-1.5 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"
         >
           <X size={14} />
-        </button>
+        </Button>
 
         <SidebarContent {...contentProps} onNavClick={onClose} />
       </div>

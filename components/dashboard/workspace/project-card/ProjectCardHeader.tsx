@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { MoreVertical } from "lucide-react";
 
 interface ProjectCardHeaderProps {
@@ -57,15 +58,15 @@ export function ProjectCardHeader({
           </div>
         </div>
       </div>
-      <button aria-label="More options"
+      <Button aria-label="More options" variant="ghost"
         onClick={(e) => {
           e.preventDefault();
           // Add menu logic here
         }}
-        className="p-1.5 rounded-lg hover:bg-accent transition shrink-0"
+        className="p-1.5 rounded-lg transition shrink-0"
       >
         <MoreVertical size={16} className="text-muted-foreground" />
-      </button>
+      </Button>
     </div>
   );
 }

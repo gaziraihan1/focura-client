@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { CheckCircle2, Plus } from "lucide-react";
 
 export function EmptyTasks({ onAddTask, canCreate, isArchived }: { onAddTask: () => void; canCreate: boolean; isArchived: boolean }) {
@@ -13,12 +14,13 @@ export function EmptyTasks({ onAddTask, canCreate, isArchived }: { onAddTask: ()
         </p>
       </div>
       {canCreate && !isArchived && (
-        <button
+        <Button
+          variant="outline"
           onClick={onAddTask}
           className="flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
         >
           <Plus className="size-4" /> Create task
-        </button>
+        </Button>
       )}
     </div>
   );

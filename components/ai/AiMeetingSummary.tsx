@@ -11,6 +11,7 @@ import {
 } from "@/types/ai.types";
 import { AiQuotaBadge } from "./AiQuotaBadge";
 import { AiUpgradeCta } from "./AiUpgradeCta";
+import { Button } from "@/components/ui/Button";
 
 function getErrorCode(error: unknown): string | undefined {
   const e = error as { response?: { data?: { code?: string } }; code?: string };
@@ -108,14 +109,15 @@ export function AiMeetingSummary({
       />
 
       <div className="mt-2 flex items-center justify-end gap-2">
-        <button
+        <Button
           type="button"
+          variant="primary"
           onClick={handleSummarize}
           disabled={!canGenerate}
           className={cn(
-            "inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold transition-opacity",
+            "rounded-lg px-3.5 py-2 text-xs font-semibold gap-1.5",
             canGenerate
-              ? "bg-primary text-primary-foreground hover:opacity-90"
+              ? "hover:opacity-90"
               : "cursor-not-allowed bg-muted text-muted-foreground",
           )}
         >
@@ -125,7 +127,7 @@ export function AiMeetingSummary({
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
           )}
           {summarize.isPending ? "Summarizing…" : "Summarize meeting"}
-        </button>
+        </Button>
       </div>
 
       {quotaError && <AiUpgradeCta className="mt-4" workspaceSlug={resolvedWorkspaceSlug} />}

@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { Megaphone, Plus } from "lucide-react";
 
 export function EmptyAnnouncements({
@@ -35,13 +36,13 @@ export function EmptyAnnouncements({
       </div>
 
       {!filtered && canManage && (
-        <button
+        <Button
           onClick={onNew}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold hover:opacity-90"
         >
           <Plus size={15} />
           Create Announcement
-        </button>
+        </Button>
       )}
     </div>
   );

@@ -3,6 +3,7 @@
 
 import { m as motion, AnimatePresence } from "framer-motion";
 import { Search, Filter, Grid3x3, List } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import { ViewMode, ProjectFilters as Filters, WorkspaceData } from "@/types/project.types";
 
 interface ProjectFiltersProps {
@@ -75,26 +76,26 @@ export function ProjectFilters({
 
         {/* View Toggle */}
         <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-muted/50 border border-border/50">
-          <button aria-label="View Toggle"
+          <Button aria-label="View Toggle" variant="ghost"
             onClick={() => onViewModeChange("grid")}
-            className={`p-2.5 rounded-lg transition ${
+            className={`p-2.5 rounded-lg ${
               viewMode === "grid"
                 ? "bg-background shadow-sm border border-border"
                 : "hover:bg-background/50"
             }`}
           >
             <Grid3x3 size={18} />
-          </button>
-          <button aria-label="List view"
+          </Button>
+          <Button aria-label="List view" variant="ghost"
             onClick={() => onViewModeChange("list")}
-            className={`p-2.5 rounded-lg transition ${
+            className={`p-2.5 rounded-lg ${
               viewMode === "list"
                 ? "bg-background shadow-sm border border-border"
                 : "hover:bg-background/50"
             }`}
           >
             <List size={18} />
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -169,14 +170,14 @@ export function ProjectFilters({
               </div>
 
               <div className="flex items-end">
-                <button
+                <Button variant="outline"
                   onClick={() =>
                     onFiltersChange({ status: "all", priority: "all", workspace: "all" })
                   }
-                  className="w-full px-4 py-2.5 rounded-xl border border-border hover:bg-accent text-foreground transition font-medium"
+                  className="w-full px-4 py-2.5 rounded-xl font-medium"
                 >
                   Clear Filters
-                </button>
+                </Button>
               </div>
             </div>
           </motion.div>

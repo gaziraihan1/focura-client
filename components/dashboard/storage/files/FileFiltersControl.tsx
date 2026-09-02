@@ -1,4 +1,5 @@
 import { Filter, Grid, List } from 'lucide-react'
+import { Button } from '@/components/ui/Button'
 
 interface FileFiltersControlProps {
     showFilters: boolean;
@@ -13,9 +14,10 @@ export default function FileFiltersControl({showFilters, activeFilterCount, onSh
   return (
     <div className="flex gap-2">
           {/* Filter Toggle */}
-          <button
+          <Button
+            variant="ghost"
             onClick={() => onShowFilters(!showFilters)}
-            className={`px-4 py-2.5 border rounded-lg hover:bg-muted transition-colors flex items-center gap-2 ${
+            className={`h-auto w-auto gap-2 px-4 py-2.5 rounded-lg border border-border ${
               showFilters || activeFilterCount > 0 ? 'bg-muted' : ''
             }`}
           >
@@ -26,28 +28,30 @@ export default function FileFiltersControl({showFilters, activeFilterCount, onSh
                 {activeFilterCount}
               </span>
             )}
-          </button>
+          </Button>
 
           {/* View Toggle */}
           <div className="flex border rounded-lg overflow-hidden">
-            <button
+            <Button
+              variant="ghost"
               onClick={() => onViewModeChange('grid')}
-              className={`px-4 py-2.5 hover:bg-muted transition-colors ${
+              className={`h-auto w-auto px-4 py-2.5 rounded-none ${
                 viewMode === 'grid' ? 'bg-muted' : ''
               }`}
               title="Grid view"
             >
               <Grid className="w-4 h-4" />
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="ghost"
               onClick={() => onViewModeChange('list')}
-              className={`px-4 py-2.5 hover:bg-muted transition-colors border-l ${
+              className={`h-auto w-auto px-4 py-2.5 rounded-none border-l border-border ${
                 viewMode === 'list' ? 'bg-muted' : ''
               }`}
               title="List view"
             >
               <List className="w-4 h-4" />
-            </button>
+            </Button>
           </div>
         </div>
   )

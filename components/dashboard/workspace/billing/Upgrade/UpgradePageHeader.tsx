@@ -1,5 +1,6 @@
 // components/WorkspaceUpgrade/PageHeader.tsx
 import { ArrowLeft, Crown } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 interface PageHeaderProps {
   onBack: () => void;
@@ -9,13 +10,14 @@ export function UpgradePageHeader({ onBack }: PageHeaderProps) {
   return (
     <>
       {/* Back Button */}
-      <button
+      <Button
+        variant="ghost"
         onClick={onBack}
         className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to billing
-      </button>
+      </Button>
 
       {/* Header */}
       <div className="text-center mb-10">

@@ -13,6 +13,7 @@ import {
 } from "@/hooks/useAutomations";
 import { AutomationRuleForm } from "@/components/settings/AutomationRuleForm";
 import { ConfirmModal } from "@/components/shared/ConfirmModal";
+import { Button } from "@/components/ui/Button";
 import { RunAutomationModal } from "@/components/settings/RunAutomationModal";
 import { useProjects } from "@/hooks/useProjectQueries";
 import { useWorkspaceMembers } from "@/hooks/useWorkspaceQueries";
@@ -214,15 +215,16 @@ export function AutomationsSettingsForm({
               </p>
             </div>
           </div>
-          <button
+          <Button
             type="button"
             onClick={openCreate}
             disabled={!selectedWorkspaceId}
+            leftIcon={<Plus className="h-4 w-4" />}
+            variant="primary"
             className="inline-flex items-center gap-2 self-start rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 sm:self-auto"
           >
-            <Plus className="h-4 w-4" />
             New rule
-          </button>
+          </Button>
         </div>
 
         {!isFixed && (
@@ -394,31 +396,37 @@ function RuleCard({
             <div className="h-6 w-11 rounded-full bg-muted transition-colors peer-checked:bg-primary peer-disabled:opacity-50" />
             <div className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-background shadow transition-transform peer-checked:translate-x-5" />
           </label>
-          <button
+          <Button
             type="button"
             onClick={onRun}
             disabled={isRunning}
+            variant="ghost"
+            size="icon"
             className="p-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors disabled:opacity-50"
             aria-label={`Run ${rule.name} now`}
           >
             <Play className="h-4 w-4" />
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
             onClick={onEdit}
+            variant="ghost"
+            size="icon"
             className="p-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
             aria-label={`Edit ${rule.name}`}
           >
             <Pencil className="h-4 w-4" />
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
             onClick={onDelete}
+            variant="ghost"
+            size="icon"
             className="p-2 rounded-lg text-red-500 hover:bg-red-500/10 transition-colors"
             aria-label={`Delete ${rule.name}`}
           >
             <Trash2 className="h-4 w-4" />
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Brain, ChevronDown, ChevronUp, Loader2, AlertCircle, RefreshCw } from "lucide-react";
 import { useEnergyHistory } from "@/hooks/useEnergyLevel";
+import { Button } from "@/components/ui/Button";
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
 
@@ -56,15 +57,16 @@ export function EnergyTrendChart() {
             <h4 className="text-sm font-semibold text-foreground">Energy Trend</h4>
             <p className="text-xs text-muted-foreground mt-0.5">{error}</p>
           </div>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => refetch()}
-            className="flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            className="shrink-0 gap-1.5 px-2.5 py-1.5 text-muted-foreground"
             aria-label="Retry"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Retry
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -96,10 +98,10 @@ export function EnergyTrendChart() {
   return (
     <div className="rounded-2xl border border-border bg-card overflow-hidden">
       {/* Header */}
-      <button
-        type="button"
+      <Button
+        variant="ghost"
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between p-4 hover:bg-accent/30 transition-colors"
+        className="w-full justify-between p-4 text-left hover:bg-accent/30"
         aria-expanded={expanded}
       >
         <div className="flex items-center gap-3">
@@ -118,7 +120,7 @@ export function EnergyTrendChart() {
         ) : (
           <ChevronDown className="w-4 h-4 text-muted-foreground" />
         )}
-      </button>
+      </Button>
 
       {expanded && (
         <div className="px-4 pb-4 space-y-3">

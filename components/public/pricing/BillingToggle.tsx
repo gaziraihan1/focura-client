@@ -1,6 +1,7 @@
 "use client";
 
 import { m as motion } from "framer-motion";
+import { Button } from "@/components/ui/Button";
 
 type Props = {
   billing: "monthly" | "yearly";
@@ -23,26 +24,28 @@ export default function BillingToggle({ billing, setBilling }: Props) {
             width: "calc(50% - 4px)",
           }}
         />
-        <button
+        <Button
+          variant="ghost"
           onClick={() => setBilling("monthly")}
-          className={`relative z-10 px-4 sm:px-6 py-1.5 text-sm font-medium transition whitespace-nowrap ${
+          className={`h-auto w-auto relative z-10 px-4 sm:px-6 py-1.5 text-sm font-medium transition whitespace-nowrap ${
             billing === "monthly"
               ? "text-primary"
               : "text-muted-foreground hover:text-foreground"
           }`}
         >
           Monthly
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="ghost"
           onClick={() => setBilling("yearly")}
-          className={`relative z-10 px-4 sm:px-6 py-1.5 text-sm font-medium transition whitespace-nowrap ${
+          className={`h-auto w-auto relative z-10 px-4 sm:px-6 py-1.5 text-sm font-medium transition whitespace-nowrap ${
             billing === "yearly"
               ? "text-primary"
               : "text-muted-foreground hover:text-foreground"
           }`}
         >
           Yearly
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import {
   Loader2,
 } from "lucide-react";
 import ThemeSwitcher from "@/components/themes/ThemeSwitcher";
+import { Button } from "@/components/ui/Button";
 import { logout } from "@/lib/auth/logout";
 import { Session } from "next-auth";
 import { SidebarToggle } from "@/components/dashboard/shell/SidebarToggle";
@@ -70,13 +71,14 @@ export function WorkspaceLayoutHeader({
   return (
     <header className="sticky top-0 z-30 flex flex-wrap items-center gap-3 px-4 sm:px-6 py-3 bg-card border-b border-border">
       {/* Mobile Menu Button */}
-      <button
+      <Button
+        variant="ghost"
         aria-label="Open workspace sidebar"
         onClick={onSidebarOpen}
-        className="lg:hidden p-2 rounded-lg hover:bg-accent transition shrink-0"
+        className="lg:hidden p-2 rounded-lg transition shrink-0"
       >
         <Menu size={20} />
-      </button>
+      </Button>
 
       {onSidebarToggle && (
         <SidebarToggle
@@ -106,12 +108,13 @@ export function WorkspaceLayoutHeader({
       <div className="flex items-center gap-2 ml-auto shrink-0">
         {/* User menu */}
         <div className="relative">
-          <button
+          <Button
+            variant="ghost"
             onClick={() => setUserMenuOpen((prev) => !prev)}
             aria-label="User menu"
             aria-expanded={userMenuOpen}
             aria-haspopup="menu"
-            className="flex items-center gap-2 rounded-xl p-1.5 transition hover:bg-accent"
+            className="flex items-center gap-2 rounded-xl p-1.5 transition"
           >
             {session?.user.image ? (
               <Image
@@ -132,7 +135,7 @@ export function WorkspaceLayoutHeader({
                 userMenuOpen ? "rotate-180" : ""
               }`}
             />
-          </button>
+          </Button>
 
           {userMenuOpen && (
             <>
@@ -169,13 +172,14 @@ export function WorkspaceLayoutHeader({
                 </div>
 
                 <div className="border-t border-border py-1.5">
-                  <button
+                  <Button
+                    variant="ghost"
                     onClick={() => {
                       setUserMenuOpen(false);
                       handleLogout();
                     }}
                     disabled={isLoggingOut}
-                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-destructive transition hover:bg-destructive/8 disabled:opacity-50"
+                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-destructive transition hover:bg-destructive/8"
                   >
                     {isLoggingOut ? (
                       <Loader2 size={15} className="animate-spin" />
@@ -183,7 +187,7 @@ export function WorkspaceLayoutHeader({
                       <LogOut size={15} />
                     )}
                     {isLoggingOut ? "Logging out…" : "Log out"}
-                  </button>
+                  </Button>
                 </div>
               </div>
             </>

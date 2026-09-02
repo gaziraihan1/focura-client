@@ -1,4 +1,5 @@
 import { X, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 import { useMeetingForm } from '@/hooks/useMeetingForm';
 import { VisibilityPicker } from './VisibilityPicker';
 import { AttendeePicker } from './AttendeePicker';
@@ -33,12 +34,12 @@ export function MeetingFormModalInner({
           <h2 className="text-base font-semibold text-foreground">
             {isEditing ? 'Edit Meeting' : 'New Meeting'}
           </h2>
-          <button aria-label="Header"
+          <Button aria-label="Header" variant="ghost"
             onClick={onClose}
-            className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+            className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors p-0"
           >
             <X size={15} />
-          </button>
+          </Button>
         </div>
 
         <div className="divide-y divide-border">
@@ -138,23 +139,24 @@ export function MeetingFormModalInner({
             <p className="text-xs text-destructive text-center">{displayError}</p>
           )}
           <div className="flex gap-3">
-            <button
+            <Button
               type="button"
+              variant="outline"
               onClick={onClose}
               disabled={isPending}
-              className="flex-1 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent disabled:opacity-50"
+              className="flex-1 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
               onClick={handleSubmit}
               disabled={isPending}
-              className="flex-1 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+              className="flex-1 rounded-lg px-4 py-2.5 text-sm font-medium transition-opacity hover:opacity-90 flex items-center justify-center gap-2"
             >
               {isPending && <Loader2 size={14} className="animate-spin" />}
               {isEditing ? 'Save changes' : 'Create meeting'}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

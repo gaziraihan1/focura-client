@@ -1,5 +1,6 @@
 import { Filter, ArrowUpDown, AlertCircle, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 import { FilterDropdown } from "@/components/shared/FilterDropdown";
 import { KanbanSort, KanbanFilters } from "@/hooks/useKanbanPage";
 
@@ -31,7 +32,8 @@ export function ControlBarActions({
   return (
     <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
       {/* Filters Button */}
-      <button
+      <Button
+        variant="primary"
         onClick={onToggleFilters}
         className={cn(
           "flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg transition-colors",
@@ -47,7 +49,7 @@ export function ControlBarActions({
             {activeFilterCount}
           </span>
         )}
-      </button>
+      </Button>
 
       {/* Sort Dropdown — click-to-open (touch friendly, viewport clamped) */}
       <FilterDropdown
@@ -58,8 +60,9 @@ export function ControlBarActions({
         {(close) => (
           <>
             {(["priority", "aging", "recent", "comments"] as const).map((s) => (
-              <button
+              <Button
                 key={s}
+                variant="ghost"
                 onClick={() => {
                   onSortChange(s);
                   close();
@@ -70,14 +73,15 @@ export function ControlBarActions({
                 )}
               >
                 {s}
-              </button>
+              </Button>
             ))}
           </>
         )}
       </FilterDropdown>
 
       {/* Blocked Only Button */}
-      <button
+      <Button
+        variant="destructive"
         onClick={onToggleBlockedOnly}
         className={cn(
           "flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg transition-colors",
@@ -88,10 +92,11 @@ export function ControlBarActions({
       >
         <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         <span className="hidden sm:inline">Blocked only</span>
-      </button>
+      </Button>
 
       {/* Stale Tasks Button */}
-      <button
+      <Button
+        variant="primary"
         onClick={onToggleStaleOnly}
         className={cn(
           "flex items-center gap-1.5 px-2 sm:px-3 py-1.5 text-xs sm:text-sm rounded-lg transition-colors",
@@ -102,7 +107,7 @@ export function ControlBarActions({
       >
         <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         <span className="hidden sm:inline">Stale tasks</span>
-      </button>
+      </Button>
 
       {/* WIP Limits Toggle */}
       <div className="ml-auto flex items-center gap-2">

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ChevronDown, Copy, Check, Globe, Lock, ShieldAlert } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AUTH_BADGE, Endpoint, METHOD_COLORS } from '@/lib/apiData';
+import { Button } from '@/components/ui/Button';
 
 export type EndpointTab = 'params' | 'body' | 'responses' | 'examples';
 
@@ -22,9 +23,10 @@ export function EndpointHeader({ endpoint, open, onToggle }: EndpointHeaderProps
   const authBadge = AUTH_BADGE[endpoint.auth];
 
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={onToggle}
-      className='w-full text-left flex items-start justify-between gap-4 px-5 py-4 hover:bg-muted/50 transition-colors'
+      className='w-full text-left flex items-start justify-between gap-4 px-5 py-4 hover:bg-muted/50'
     >
       <div className='flex items-start gap-3 min-w-0 flex-1'>
         {/* Method badge */}
@@ -70,7 +72,7 @@ export function EndpointHeader({ endpoint, open, onToggle }: EndpointHeaderProps
           )}
         />
       </div>
-    </button>
+    </Button>
   );
 }
 
@@ -102,11 +104,12 @@ export function EndpointTabs({ endpoint, tab, onTabChange }: EndpointTabsProps) 
       {/* Tab bar */}
       <div className='flex gap-0 border-y border-border bg-muted/40 overflow-x-auto'>
         {availableTabs.map((t) => (
-          <button
+          <Button
+            variant="ghost"
             key={t}
             onClick={() => onTabChange(t)}
             className={cn(
-              'px-4 py-2.5 text-xs font-semibold whitespace-nowrap border-b-2 -mb-px transition-colors',
+              'px-4 py-2.5 text-xs font-semibold whitespace-nowrap border-b-2 -mb-px',
               tab === t
                 ? 'border-foreground text-foreground'
                 : 'border-transparent text-muted-foreground hover:text-foreground'
@@ -123,7 +126,7 @@ export function EndpointTabs({ endpoint, tab, onTabChange }: EndpointTabsProps) 
                 {endpoint.bodyFields?.length}
               </span>
             )}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -173,15 +176,16 @@ export function CopyButton({ text }: { text: string }) {
   };
 
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={copy}
-      className='inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors'
+      className='inline-flex items-center gap-1 text-muted-foreground hover:text-foreground'
       title='Copy'
     >
       {copied
         ? <Check className='w-3.5 h-3.5 text-emerald-500' strokeWidth={2.5} />
         : <Copy className='w-3.5 h-3.5' />}
-    </button>
+    </Button>
   );
 }
 
@@ -304,9 +308,10 @@ export function CodeExamples({ examples }: { examples: Endpoint['examples'] }) {
       {/* Tab bar */}
       <div className='flex border-b border-border bg-muted/60'>
         {examples.map((ex) => (
-          <button
+          <Button
             key={ex.label}
             onClick={() => setActive(ex.label)}
+            variant="ghost"
             className={cn(
               'px-4 py-2 text-xs font-semibold transition-colors border-b-2 -mb-px',
               active === ex.label
@@ -315,7 +320,7 @@ export function CodeExamples({ examples }: { examples: Endpoint['examples'] }) {
             )}
           >
             {ex.label}
-          </button>
+          </Button>
         ))}
         <div className='ml-auto flex items-center pr-3'>
           {current && <CopyButton text={current.code} />}

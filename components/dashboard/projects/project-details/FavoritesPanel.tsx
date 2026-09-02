@@ -8,6 +8,7 @@ import {
   FavoriteItem,
 } from "@/hooks/useProjectFeatures";
 import Link from "next/link";
+import { Button } from "@/components/ui/Button";
 
 export default function FavoritesPanel() {  const { data, isLoading } = useMyFavorites();
 
@@ -103,22 +104,25 @@ function FavoriteRow({ fav }: { fav: FavoriteItem }) {
             {fav.project.status}
           </span>
           <div className="relative">
-            <button aria-label="More options"
+            <Button aria-label="More options"
               onClick={() => setShowMenu(!showMenu)}
-              className="p-1 rounded hover:bg-accent transition opacity-0 group-hover:opacity-100"
+              variant="ghost"
+              size="icon"
+              className="p-1 rounded opacity-0 group-hover:opacity-100"
             >
               <MoreHorizontal size={12} className="text-muted-foreground" />
-            </button>
+            </Button>
             {showMenu && (
               <>
                 <div className="fixed inset-0 z-10" onClick={() => setShowMenu(false)} role="presentation" />
                 <div className="absolute right-0 top-6 z-20 w-36 rounded-lg border border-border bg-popover shadow-lg py-1">
-                  <button
+                  <Button
                     onClick={() => { setShowMenu(false); setEditing(true); }}
-                    className="w-full px-3 py-1.5 text-xs text-left hover:bg-accent transition"
+                    variant="ghost"
+                    className="h-auto w-full justify-start px-3 py-1.5 text-xs text-left"
                   >
                     Set Group
-                  </button>
+                  </Button>
                 </div>
               </>
             )}
@@ -136,12 +140,13 @@ function FavoriteRow({ fav }: { fav: FavoriteItem }) {
             onKeyDown={(e) => e.key === "Enter" && handleUpdateGroup()}
             autoFocus
           />
-          <button
+          <Button
             onClick={handleUpdateGroup}
-            className="px-2 py-1 rounded bg-primary text-primary-foreground text-[10px] font-semibold"
+            size="sm"
+            className="px-2 py-1 rounded text-[10px] font-semibold"
           >
             Save
-          </button>
+          </Button>
         </div>
       )}
     </div>

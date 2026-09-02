@@ -1,5 +1,6 @@
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/Button";
 
 interface WorkspaceProjectsPageHeaderProps {
   workspaceName: string;
@@ -25,17 +26,17 @@ export function WorkspaceProjectsPageHeader({
         </p>
       </div>
       {canCreateProjects && (
-        <button
+        <Button
           onClick={() =>
             router.push(
               `/dashboard/workspaces/${workspaceSlug}/projects/new-project`
             )
           }
-          className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2"
+          className="py-2 rounded-lg flex items-center gap-2"
         >
           <Plus size={18} />
           New Project
-        </button>
+        </Button>
       )}
     </div>
   );

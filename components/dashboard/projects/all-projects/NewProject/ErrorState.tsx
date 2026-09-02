@@ -1,4 +1,5 @@
 import { AlertCircle, ShieldAlert } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface ErrorStateProps {
   type: "not-found" | "no-access" | "no-permission";
@@ -42,12 +43,12 @@ export function ErrorState({ type, onNavigate }: ErrorStateProps) {
         {config.title}
       </h2>
       <p className="text-muted-foreground mb-6">{config.description}</p>
-      <button
+      <Button
         onClick={onNavigate}
-        className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
+        className="hover:opacity-90"
       >
         {config.buttonText}
-      </button>
+      </Button>
     </div>
   );
 }

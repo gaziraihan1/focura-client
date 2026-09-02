@@ -1,4 +1,5 @@
 import { AlertTriangle, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface ClearActivitiesDialogProps {
   isOpen: boolean;
@@ -44,20 +45,22 @@ export function ClearActivitiesDialog({
           </div>
         </div>
         <div className="flex justify-end gap-3">
-          <button
+          <Button
+            variant="outline"
             onClick={onClose}
-            className="rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-accent transition-colors"
+            className="rounded-lg px-4 py-2 text-sm font-medium text-foreground"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="destructive"
             onClick={onConfirm}
             disabled={isPending}
-            className="inline-flex items-center gap-2 rounded-lg bg-destructive px-4 py-2 text-sm font-medium text-white hover:bg-destructive/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-destructive/90"
           >
             {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
             {isPending ? "Clearing..." : "Clear Activities"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

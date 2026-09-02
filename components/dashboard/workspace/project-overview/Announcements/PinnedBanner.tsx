@@ -3,6 +3,7 @@ import { Loader2, Pin, PinOff, Trash2 } from "lucide-react";
 import { AuthorAvatar } from "./AuthorAvatar";
 import { stripTokens } from "@/utils/announcement.utils";
 import { Announcement } from "@/types/announcement.types";
+import { Button } from "@/components/ui/Button";
 
 export function PinnedBanner({
   announcements,
@@ -70,30 +71,32 @@ export function PinnedBanner({
  
           {canManage && !isArchived && (
             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => onTogglePin(a.id)}
                 disabled={pinningId === a.id}
                 title="Unpin"
-                className="p-1.5 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors text-amber-600"
+                className="p-1.5 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/40 text-amber-600"
               >
                 {pinningId === a.id ? (
                   <Loader2 size={13} className="animate-spin" />
                 ) : (
                   <PinOff size={13} />
                 )}
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="ghost"
                 onClick={() => onDelete(a.id)}
                 disabled={deletingId === a.id}
                 title="Delete"
-                className="p-1.5 rounded-lg hover:bg-destructive/10 text-destructive/70 hover:text-destructive transition-colors"
+                className="p-1.5 rounded-lg hover:bg-destructive/10 text-destructive/70 hover:text-destructive"
               >
                 {deletingId === a.id ? (
                   <Loader2 size={13} className="animate-spin" />
                 ) : (
                   <Trash2 size={13} />
                 )}
-              </button>
+              </Button>
             </div>
           )}
         </div>

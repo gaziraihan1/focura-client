@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import AddMemberModal from "@/components/dashboard/projects/project-details/AddMemberModal";
 import { RoleDropdown } from "./RoleDropdown";
 import { Loader2, Users, Search, UserPlus } from "lucide-react";
@@ -109,13 +110,14 @@ export function MembersTab({
           />
         </div>
         {canManage && (
-          <button
+          <Button
+            variant="primary"
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity shrink-0"
+            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity shrink-0"
           >
             <UserPlus size={14} />
             <span className="hidden sm:inline">Add Member</span>
-          </button>
+          </Button>
         )}
       </div>
  

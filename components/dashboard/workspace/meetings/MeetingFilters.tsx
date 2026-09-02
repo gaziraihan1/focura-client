@@ -1,6 +1,7 @@
 'use client';
 
 import { CalendarClock } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 import type { MeetingStatus } from '@/types/meeting.types';
 import { STATUS_LABELS } from '@/utils/meeting.utils';
 
@@ -25,22 +26,24 @@ export function MeetingFilters({
         {STATUSES.map((s) => {
           const active = s === 'ALL' ? !activeStatus : activeStatus === s;
           return (
-            <button
+            <Button
               key={s}
+              variant="primary"
               onClick={() => onStatusChange(s === 'ALL' ? undefined : s)}
               className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${
                 active
-                  ? 'bg-primary text-primary-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-foreground/70 bg-primary/5 hover:bg-primary hover:text-primary-foreground'
               }`}
             >
               {s === 'ALL' ? 'All' : STATUS_LABELS[s]}
-            </button>
+            </Button>
           );
         })}
       </div>
 
-      <button
+      <Button
+        variant="ghost"
         onClick={() => onUpcomingChange(!upcoming)}
         className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
           upcoming
@@ -50,7 +53,7 @@ export function MeetingFilters({
       >
         <CalendarClock size={12} />
         Upcoming only
-      </button>
+      </Button>
 
       <span className="ml-auto text-xs text-muted-foreground">
         {total} meeting{total !== 1 ? 's' : ''}

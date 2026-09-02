@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { Crown, FolderKanban, Users, Settings } from "lucide-react";
 import { useWorkspacesPage } from "@/hooks/useWorkspacePage";
@@ -69,15 +70,15 @@ export function WorkspaceCard({ workspace }: WorkspaceCardProps) {
             {badge.label}
           </span>
 
-          <button aria-label="Settings"
+          <Button aria-label="Settings" variant="ghost"
             onClick={(e) => {
               e.preventDefault();
               navigateToSettings(workspace.slug);
             }}
-            className="p-2 rounded-lg hover:bg-accent"
+            className="p-2 rounded-lg"
           >
             <Settings size={16} />
-          </button>
+          </Button>
         </div>
       </div>
     </Link>

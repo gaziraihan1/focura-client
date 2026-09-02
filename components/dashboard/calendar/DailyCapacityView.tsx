@@ -14,6 +14,7 @@ import {
   useDailyCapacityView,
 } from "@/hooks/useDailyCapacityView";
 import { DayRow } from "./DayRow";
+import { Button } from "@/components/ui/Button";
 
 // ─── Component ─────────────────────────────────────────────────────────────
 
@@ -55,15 +56,16 @@ export function DailyCapacityView() {
             <h4 className="text-sm font-semibold text-foreground">This Week Daily</h4>
             <p className="text-xs text-muted-foreground mt-0.5">{error}</p>
           </div>
-          <button
+          <Button
             type="button"
+            variant="ghost"
             onClick={() => refetch()}
-            className="flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            className="flex shrink-0 gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-muted-foreground"
             aria-label="Retry"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Retry
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -82,12 +84,13 @@ export function DailyCapacityView() {
               No tasks planned this week. Add tasks to see daily capacity.
             </p>
           </div>
-          <button
+          <Button
+            variant="ghost"
             onClick={() => setExpanded(true)}
-            className="text-xs font-medium px-2.5 py-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors shrink-0"
+            className="text-xs font-medium px-2.5 py-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/50 shrink-0"
           >
             Show empty view
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -97,11 +100,12 @@ export function DailyCapacityView() {
     <div className="rounded-2xl border border-border bg-card overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 p-4">
-        <button
+        <Button
           type="button"
+          variant="ghost"
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
-          className="flex min-w-0 flex-1 items-center gap-3 rounded-lg text-left transition-colors hover:bg-accent/30"
+          className="flex min-w-0 flex-1 items-center justify-start gap-3 rounded-lg text-left hover:bg-accent/30"
         >
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10">
             <CalendarDays className="w-4.5 h-4.5 text-emerald-600 dark:text-emerald-400" />
@@ -115,7 +119,7 @@ export function DailyCapacityView() {
               {totalPlanned > 0 && ` | ${totalPlanned.toFixed(0)}h planned`}
             </p>
           </div>
-        </button>
+        </Button>
         <div className="flex shrink-0 items-center gap-1">
           {expanded && (
             <ExportButton
@@ -128,19 +132,20 @@ export function DailyCapacityView() {
               {overDays} over
             </span>
           )}
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setExpanded(!expanded)}
             aria-expanded={expanded}
             aria-label={expanded ? "Collapse chart" : "Expand chart"}
-            className="rounded-lg p-1 transition-colors hover:bg-accent"
+            className="rounded-lg p-1"
           >
             {expanded ? (
               <ChevronUp className="w-4 h-4 text-muted-foreground" />
             ) : (
               <ChevronDown className="w-4 h-4 text-muted-foreground" />
             )}
-          </button>
+          </Button>
         </div>
       </div>
 

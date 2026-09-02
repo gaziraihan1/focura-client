@@ -1,5 +1,6 @@
 import { m as motion } from "framer-motion";
 import { Loader2, Save } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface ProjectFormActionsProps {
   isSubmitting: boolean;
@@ -17,18 +18,21 @@ export function ProjectFormActions({
       transition={{ delay: 0.2 }}
       className="flex items-center justify-end gap-3 pb-6"
     >
-      <button
+      <Button
         type="button"
+        variant="outline"
+        size="lg"
         onClick={onCancel}
         disabled={isSubmitting}
-        className="px-6 py-3 rounded-lg border border-border text-foreground hover:bg-accent transition disabled:opacity-50"
+        className="rounded-lg"
       >
         Cancel
-      </button>
-      <button
+      </Button>
+      <Button
         type="submit"
+        size="lg"
         disabled={isSubmitting}
-        className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition flex items-center gap-2 disabled:opacity-50"
+        className="rounded-lg flex items-center gap-2 hover:opacity-90"
       >
         {isSubmitting ? (
           <>
@@ -41,7 +45,7 @@ export function ProjectFormActions({
             Create Project
           </>
         )}
-      </button>
+      </Button>
     </motion.div>
   );
 }

@@ -1,4 +1,5 @@
 import { Lock, RefreshCw, AlertTriangle, Copy } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 const steps = [
   {
@@ -126,12 +127,12 @@ export const ApiDocsAuthentication = () => {
             <RefreshCw className='w-3.5 h-3.5 text-neutral-400' strokeWidth={1.8} />
             <p className='text-xs font-semibold text-neutral-600 dark:text-neutral-400'>JWT Access Token Payload</p>
           </div>
-          <button aria-label="Copy"
+          <Button variant="ghost" aria-label="Copy"
             onClick={() => navigator.clipboard.writeText(tokenPayload)}
-            className='text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors'
+            className='text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200'
           >
             <Copy className='w-3.5 h-3.5' />
-          </button>
+          </Button>
         </div>
         <pre className='overflow-x-auto p-5 text-[12px] font-mono text-neutral-700 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-950/60 leading-relaxed'>
           <code>{tokenPayload}</code>

@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 import { EDITOR_TOOLS } from '@/constants/announcement.constants';
 import type { EditorTool } from '@/types/announcement.types';
 
@@ -13,9 +14,9 @@ export function EditorToolbar({ disabled, onApplyFormat }: EditorToolbarProps) {
       {EDITOR_TOOLS.map((tool) => {
         const Icon = tool.icon;
         return (
-          <button
+          <Button
             key={tool.id}
-            type="button"
+            variant="ghost"
             disabled={disabled}
             onClick={() => onApplyFormat(tool)}
             title={tool.label}
@@ -26,7 +27,7 @@ export function EditorToolbar({ disabled, onApplyFormat }: EditorToolbarProps) {
             )}
           >
             <Icon className="w-3.5 h-3.5" />
-          </button>
+          </Button>
         );
       })}
 

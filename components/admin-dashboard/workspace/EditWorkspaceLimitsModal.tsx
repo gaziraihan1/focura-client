@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { X, Loader2, Sparkles } from 'lucide-react';
 import { useUpdateWorkspaceLimits } from '@/hooks/useAdmin';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 
 const PLAN_OPTIONS = ['FREE', 'PRO', 'BUSINESS', 'ENTERPRISE'] as const;
 type PlanOption = typeof PLAN_OPTIONS[number];
@@ -173,9 +174,9 @@ export function EditWorkspaceLimitsModal({
           <h2 className="text-sm font-semibold text-foreground">
             Edit Limits — {workspaceName}
           </h2>
-          <button onClick={onClose} className="text-muted-foreground hover:text-foreground" aria-label="Close">
+          <Button onClick={onClose} variant="ghost" className="text-muted-foreground hover:text-foreground" aria-label="Close">
             <X className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -280,22 +281,24 @@ export function EditWorkspaceLimitsModal({
           </div>
 
           <div className="flex items-center justify-end gap-2 pt-2">
-            <button
+            <Button
               type="button"
+              variant="outline"
               onClick={onClose}
               disabled={isPending}
-              className="text-xs px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:bg-muted transition-colors disabled:opacity-40"
+              className="text-xs px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:bg-muted transition-colors"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
+              variant="primary"
               disabled={isPending}
-              className="text-xs px-3 py-1.5 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-colors disabled:opacity-40 flex items-center gap-1.5"
+              className="text-xs px-3 py-1.5 rounded-lg hover:opacity-90 transition-colors flex items-center gap-1.5"
             >
               {isPending && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               {isPending ? 'Saving…' : 'Save changes'}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

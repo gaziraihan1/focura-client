@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { Zap, X, Check, Loader2, AlertCircle } from "lucide-react";
 import { useEnergyLevel } from "@/hooks/useEnergyLevel";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 
 // ─── Component ─────────────────────────────────────────────────────────────
 
@@ -66,15 +67,15 @@ export function EnergyQuickLog() {
   return (
     <>
       {/* Floating button */}
-      <button
-        type="button"
+      <Button
+        variant="primary"
         onClick={handleToggle}
         aria-label="Log energy level"
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-primary px-5 py-3.5 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition-colors transition-transform hover:bg-primary/90 hover:shadow-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/40 active:scale-95"
+        className="fixed bottom-6 right-6 z-50 gap-2 rounded-full px-5 py-3.5 shadow-lg shadow-primary/25 transition-transform hover:bg-primary/90 hover:shadow-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/40 active:scale-95"
       >
         <Zap className="h-4.5 w-4.5" />
         <span>Log energy</span>
-      </button>
+      </Button>
 
       {/* Popup */}
       {open && (
@@ -104,14 +105,15 @@ export function EnergyQuickLog() {
                 </p>
               </div>
             </div>
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => setOpen(false)}
-              className="rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+              className="h-auto w-auto rounded-md p-1 text-muted-foreground"
               aria-label="Close"
             >
               <X className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
 
           {/* Slider */}
@@ -143,11 +145,11 @@ export function EnergyQuickLog() {
 
           {/* Save */}
           <div className="mt-4 flex items-center gap-3">
-            <button
-              type="button"
+            <Button
+              variant="primary"
               onClick={handleSave}
               disabled={status === "saving"}
-              className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex-1 rounded-lg px-4 py-2.5 hover:bg-primary/90 disabled:opacity-60"
             >
               {status === "saving" ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -155,7 +157,7 @@ export function EnergyQuickLog() {
                 <Zap className="h-4 w-4" />
               )}
               {status === "saving" ? "Saving…" : "Save"}
-            </button>
+            </Button>
 
             {status === "success" && (
               <span

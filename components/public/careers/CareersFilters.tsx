@@ -1,6 +1,7 @@
 "use client";
 
 import { Search, X } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import {
   JobDepartment,
@@ -69,13 +70,14 @@ export const CareersFilters = ({
           />
         </div>
         {hasFilters && (
-          <button
+          <Button
             onClick={clearAll}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors shrink-0"
+            variant="ghost"
+            className="gap-1.5 text-xs font-semibold text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 shrink-0"
           >
             <X className="w-3.5 h-3.5 shrink-0" />
             Clear
-          </button>
+          </Button>
         )}
       </div>
 

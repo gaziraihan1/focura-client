@@ -1,5 +1,6 @@
 import { m as motion } from "framer-motion";
 import { AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface ProjectsErrorStateProps {
   onRetry: () => void;
@@ -17,12 +18,9 @@ export function ProjectsErrorState({ onRetry }: ProjectsErrorStateProps) {
           Unable to fetch your projects. Please check your connection and try
           again.
         </p>
-        <button
-          onClick={onRetry}
-          className="px-6 py-3 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition font-medium"
-        >
+        <Button onClick={onRetry} className="px-6 py-3 rounded-xl hover:opacity-90">
           Retry
-        </button>
+        </Button>
       </motion.div>
     </div>
   );

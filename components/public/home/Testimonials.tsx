@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Star, Quote } from "lucide-react";
 import { testimonials } from "@/constants/home.constants";
+import { Button } from "@/components/ui/Button";
 
 function initialsOf(name: string) {
   return name
@@ -79,11 +80,12 @@ export default function TestimonialSection() {
         <div className="mt-10 flex justify-center gap-2.5">
           {testimonials.map((_, i) => (
             // react-doctor-disable-next-line react-doctor/no-array-index-as-key -- carousel dots are position-bound indicators with no per-item identity
-            <button
+            <Button
               key={i}
+              variant="ghost"
               onClick={() => setIndex(i)}
               aria-label={`Show testimonial ${i + 1}`}
-              className={`h-2 rounded-full transition-colors duration-300 ${
+              className={`h-auto w-auto p-0 rounded-full transition-colors duration-300 ${
                 index === i ? "w-6 bg-foreground" : "w-2 bg-foreground/20 hover:bg-foreground/40"
               }`}
             />

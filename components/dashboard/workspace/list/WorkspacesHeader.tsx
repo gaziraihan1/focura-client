@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { Plus } from "lucide-react";
 
 interface WorkspacesHeaderProps {
@@ -14,13 +15,13 @@ export function WorkspacesHeader({ onCreate }: WorkspacesHeaderProps) {
         </p>
       </div>
 
-      <button
+      <Button
         onClick={onCreate}
-        className="px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-lg bg-primary text-primary-foreground flex items-center gap-2"
+        className="px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-lg flex items-center gap-2"
       >
         <Plus size={18} />
         Create Workspace
-      </button>
+      </Button>
     </div>
   );
 }

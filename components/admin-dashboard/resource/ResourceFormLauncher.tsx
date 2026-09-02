@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 import { PopularResourceForm } from "./PopularResourceForm";
 import { ProductUpdateForm } from "./ProductUpdateForm";
 import { PopularResourceList } from "./PopularResourceList";
@@ -44,9 +45,10 @@ export function ResourceFormLauncher() {
       {/* ── Tabs ── */}
       <div className="flex items-center gap-1 rounded-lg border border-border bg-muted/50 p-1">
         {(["popular", "product-update"] as const).map((tab) => (
-          <button
+          <Button
             key={tab}
             type="button"
+            variant="ghost"
             onClick={() => {
               setActiveTab(tab);
               closePanel();
@@ -59,7 +61,7 @@ export function ResourceFormLauncher() {
             )}
           >
             {tab === "popular" ? "Popular resources" : "Product updates"}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -70,8 +72,9 @@ export function ResourceFormLauncher() {
           <h2 className="text-sm font-semibold text-foreground">
             {activeTab === "popular" ? "Popular resources" : "Product updates"}
           </h2>
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={() =>
               setPanel(
                 isCreatingForTab
@@ -82,7 +85,7 @@ export function ResourceFormLauncher() {
               )
             }
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors",
+              "rounded-md border px-3 py-1.5 text-xs font-medium transition-colors gap-1.5",
               isCreatingForTab
                 ? "border-primary/30 bg-primary/10 text-primary"
                 : "border-border bg-background text-foreground hover:bg-muted",
@@ -90,7 +93,7 @@ export function ResourceFormLauncher() {
           >
             <Plus className="h-3.5 w-3.5" />
             {activeTab === "popular" ? "New resource" : "New update"}
-          </button>
+          </Button>
         </div>
 
         {/* List body */}
@@ -129,14 +132,15 @@ export function ResourceFormLauncher() {
               </span>
               <h2 className="text-sm font-semibold text-foreground">{panelTitle}</h2>
             </div>
-            <button
+            <Button
               type="button"
+              variant="ghost"
               onClick={closePanel}
               aria-label="Close form"
               className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               <X className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
 
           <div className="p-4 sm:p-5">

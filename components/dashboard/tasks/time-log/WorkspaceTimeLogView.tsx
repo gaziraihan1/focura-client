@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/Button";
 import { Briefcase, CalendarDays, Clock, Folder, X } from "lucide-react";
 import { useWorkspaceTimeEntries } from "@/hooks/useTimeEntries";
 import { useWorkspace, useWorkspaceMembers } from "@/hooks/useWorkspaceQueries";
@@ -131,14 +132,15 @@ export function WorkspaceTimeLogView({ workspaceSlug }: { workspaceSlug: string 
             />
           </div>
           {hasFilters && (
-            <button
+            <Button
               type="button"
+              variant="outline"
               onClick={clearFilters}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+              className="items-center gap-1.5 px-3 py-2 rounded-lg border text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
             >
               <X className="w-4 h-4" />
               Clear
-            </button>
+            </Button>
           )}
         </div>
       </div>

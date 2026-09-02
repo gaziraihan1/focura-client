@@ -1,5 +1,6 @@
 // components/ActivityFilters/ActiveFiltersBadge.tsx
 import { X } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 interface ActiveFiltersBadgeProps {
   label: string;
@@ -15,13 +16,15 @@ export function ActiveFiltersBadge({
   return (
     <span className="inline-flex items-center gap-1 rounded-full bg-accent px-2 py-1 text-xs font-medium text-foreground">
       {label}: {value}
-      <button
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={onClear}
-        className="ml-1 rounded-full text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+        className="ml-1 h-auto w-auto p-0.5 rounded-full text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
         aria-label={`Clear ${label.toLowerCase()} filter`}
       >
         <X className="h-3 w-3" />
-      </button>
+      </Button>
     </span>
   );
 }

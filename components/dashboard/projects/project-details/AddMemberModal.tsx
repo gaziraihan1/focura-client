@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { X, Loader2 } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useAddProjectMember } from '@/hooks/useProjects';
+import { Button } from '@/components/ui/Button';
 
 
 interface AddMemberModalProps {
@@ -57,9 +58,9 @@ export default function AddMemberModal({
       <div className="bg-card rounded-xl p-6 max-w-md w-full mx-4 border border-border">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-foreground">Add Member</h2>
-          <button onClick={onClose} className="p-2 hover:bg-accent rounded-lg transition" aria-label="Close">
+          <Button onClick={onClose} variant="ghost" size="icon" className="rounded-lg" aria-label="Close">
             <X size={20} />
-          </button>
+          </Button>
         </div>
 
         <div className="space-y-4">
@@ -101,27 +102,22 @@ export default function AddMemberModal({
           )}
 
           <div className="flex gap-3 pt-4">
-            <button
+            <Button
               onClick={onClose}
-              className="flex-1 px-4 py-2 rounded-lg bg-secondary text-secondary-foreground hover:opacity-90 transition"
+              variant="secondary"
+              className="flex-1 px-4 py-2 rounded-lg hover:opacity-90 transition"
             >
               Cancel
-            </button>
+            </Button>
             {availableMembers.length > 0 && (
-              <button
+              <Button
                 onClick={handleSubmit}
                 disabled={addMember.isPending || !selectedUser}
-                className="flex-1 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition disabled:opacity-50 flex items-center justify-center gap-2"
+                loading={addMember.isPending}
+                className="flex-1 px-4 py-2 rounded-lg hover:opacity-90 transition"
               >
-                {addMember.isPending ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Adding...
-                  </>
-                ) : (
-                  'Add Member'
-                )}
-              </button>
+                Add Member
+              </Button>
             )}
           </div>
         </div>

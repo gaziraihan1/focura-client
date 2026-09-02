@@ -1,5 +1,6 @@
 import { Task } from "@/hooks/useTask";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 import { CalendarDays, ChevronDown, Eye, Filter, Flag, FolderOpen, GanttChartSquare, LayoutGrid, List, Search, SlidersHorizontal, Sprout, X } from "lucide-react";
 import { useState } from "react";
 import { FilterDropdown } from "@/components/shared/FilterDropdown";
@@ -30,8 +31,9 @@ function ViewToggle({
   return (
     <div className="flex items-center rounded-lg border border-border bg-background p-0.5 gap-0.5">
       {buttons.map(({ mode, label, icon }) => (
-        <button
+        <Button
           key={mode}
+          variant="ghost"
           onClick={() => setViewMode(mode)}
           aria-label={label}
           title={label}
@@ -41,7 +43,7 @@ function ViewToggle({
           )}
         >
           {icon}
-        </button>
+        </Button>
       ))}
     </div>
   );
@@ -110,7 +112,8 @@ export function Toolbar({
     <div className="flex flex-col gap-2">
       {/* Mobile controls row — filters toggle + view switch, always visible */}
       <div className="flex items-center justify-between gap-2 sm:hidden">
-        <button
+        <Button
+          variant="outline"
           type="button"
           onClick={() => setFiltersOpen((v) => !v)}
           aria-expanded={filtersOpen}
@@ -128,7 +131,7 @@ export function Toolbar({
             </span>
           )}
           <ChevronDown className={cn('size-3.5 transition-transform', filtersOpen && 'rotate-180')} />
-        </button>
+        </Button>
 
         <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
       </div>
@@ -148,9 +151,9 @@ export function Toolbar({
             className="w-full rounded-lg border border-border bg-background pl-8 pr-8 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/50 transition-shadow"
           />
           {search && (
-            <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label="Search">
+            <Button variant="ghost" onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label="Search">
               <X className="size-3.5" />
-            </button>
+            </Button>
           )}
         </div>
 
@@ -165,14 +168,15 @@ export function Toolbar({
             {(close) => (
               <>
                 {(['ALL', 'LOW', 'MEDIUM', 'HIGH', 'URGENT'] as const).map((p) => (
-                  <button
+                  <Button
                     key={p}
+                    variant="ghost"
                     onClick={() => { setPriorityFilter(p); close(); }}
                     className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', priorityFilter === p && 'bg-muted font-medium')}
                   >
                     {p !== 'ALL' && <span className={cn('size-2 rounded-full shrink-0', PRIORITY_CONFIG[p].dot)} />}
                     {p === 'ALL' ? 'All priorities' : PRIORITY_CONFIG[p].label}
-                  </button>
+                  </Button>
                 ))}
               </>
             )}
@@ -190,14 +194,15 @@ export function Toolbar({
                 {(['ALL', ...COLUMNS.map((c) => c.status)] as const).map((s) => {
                   const col = COLUMNS.find((c) => c.status === s);
                   return (
-                    <button
+                    <Button
                       key={s}
+                      variant="ghost"
                       onClick={() => { setStatusFilter(s as TaskStatus | 'ALL'); close(); }}
                       className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', statusFilter === s && 'bg-muted font-medium')}
                     >
                       {col && <span className={col.color}>{col.icon}</span>}
                       {s === 'ALL' ? 'All statuses' : col?.label}
-                    </button>
+                    </Button>
                   );
                 })}
               </>
@@ -213,21 +218,23 @@ export function Toolbar({
           >
             {(close) => (
               <>
-                <button
+                <Button
+                  variant="ghost"
                   onClick={() => { setSectionFilter?.('ALL'); close(); }}
                   className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', sectionFilter === 'ALL' && 'bg-muted font-medium')}
                 >
                   All sections
-                </button>
+                </Button>
                 {sections.map((section) => (
-                  <button
+                  <Button
                     key={section.id}
+                    variant="ghost"
                     onClick={() => { setSectionFilter?.(section.id); close(); }}
                     className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', sectionFilter === section.id && 'bg-muted font-medium')}
                   >
                     <span className="size-2 rounded-full shrink-0" style={{ backgroundColor: section.color ?? '#667eea' }} />
                     {section.name}
-                  </button>
+                  </Button>
                 ))}
               </>
             )}
@@ -242,21 +249,23 @@ export function Toolbar({
           >
             {(close) => (
               <>
-                <button
+                <Button
+                  variant="ghost"
                   onClick={() => { setSprintFilter?.('ALL'); close(); }}
                   className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', sprintFilter === 'ALL' && 'bg-muted font-medium')}
                 >
                   All sprints
-                </button>
+                </Button>
                 {sprints.map((sprint) => (
-                  <button
+                  <Button
                     key={sprint.id}
+                    variant="ghost"
                     onClick={() => { setSprintFilter?.(sprint.id); close(); }}
                     className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', sprintFilter === sprint.id && 'bg-muted font-medium')}
                   >
                     <span className={cn('size-2 rounded-full shrink-0', sprint.status === 'ACTIVE' ? 'bg-emerald-500' : sprint.status === 'COMPLETED' ? 'bg-blue-500' : 'bg-muted-foreground/40')} />
                     <span className="truncate">{sprint.name}</span>
-                  </button>
+                  </Button>
                 ))}
               </>
             )}
@@ -271,21 +280,23 @@ export function Toolbar({
           >
             {(close) => (
               <>
-                <button
+                <Button
+                  variant="ghost"
                   onClick={() => { setMilestoneFilter?.('ALL'); close(); }}
                   className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', milestoneFilter === 'ALL' && 'bg-muted font-medium')}
                 >
                   All milestones
-                </button>
+                </Button>
                 {milestones.map((milestone) => (
-                  <button
+                  <Button
                     key={milestone.id}
+                    variant="ghost"
                     onClick={() => { setMilestoneFilter?.(milestone.id); close(); }}
                     className={cn('w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-muted transition-colors', milestoneFilter === milestone.id && 'bg-muted font-medium')}
                   >
                     <span className={cn('size-2 rounded-full shrink-0', milestone.status === 'COMPLETED' ? 'bg-blue-500' : milestone.status === 'DELAYED' ? 'bg-red-500' : milestone.status === 'AT_RISK' ? 'bg-amber-500' : 'bg-emerald-500')} />
                     <span className="truncate">{milestone.title}</span>
-                  </button>
+                  </Button>
                 ))}
               </>
             )}
@@ -293,12 +304,13 @@ export function Toolbar({
 
           {/* Clear */}
           {hasFilters && (
-            <button
+            <Button
+              variant="outline"
               onClick={onClearFilters}
               className="flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
             >
               <X className="size-3.5" /> Clear
-            </button>
+            </Button>
           )}
 
           <div className="hidden sm:block flex-1" />
@@ -317,8 +329,9 @@ export function Toolbar({
               <Eye className="size-3" /> Views
             </span>
             {views.map((view) => (
-              <button
+              <Button
                 key={view.id}
+                variant="outline"
                 onClick={() => onApplyView?.(view)}
                 className={cn(
                   'flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors',
@@ -332,15 +345,16 @@ export function Toolbar({
                 {view.isDefault && (
                   <span className="rounded bg-primary/15 px-1 text-[9px] font-semibold text-primary">Default</span>
                 )}
-              </button>
+              </Button>
             ))}
             {activeViewId && (
-              <button
+              <Button
+                variant="outline"
                 onClick={onResetView}
                 className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               >
                 Reset view
-              </button>
+              </Button>
             )}
           </div>
         )}

@@ -1,6 +1,7 @@
 import { m as motion } from "framer-motion";
 import { Crown, Check } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/Button";
 
 interface Workspace {
   id: string;
@@ -73,10 +74,10 @@ export function ProfilePlanCard({ ownedWorkspaces }: ProfilePlanCardProps) {
           </div>
 
           <Link href={`/dashboard/workspaces/${workspace.slug}/billing/upgrade`}>
-          <button className="w-full mt-4 py-2 rounded-lg border border-primary text-primary hover:bg-primary/10 transition text-sm font-medium">
+          <Button variant="outline" className="w-full mt-4 py-2 rounded-lg border-primary text-primary hover:bg-primary/10 hover:border-primary text-sm font-medium">
 
             Upgrade Plan
-          </button>
+          </Button>
           </Link>
         </div>
       ) : (

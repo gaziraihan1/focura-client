@@ -7,6 +7,7 @@ import { signOut } from 'next-auth/react';
 import { api } from '@/lib/axios';
 import toast from 'react-hot-toast';
 import { announce } from '@/lib/a11y';
+import { Button } from '@/components/ui/Button';
 
 interface GuardedWorkspace {
   id: string;
@@ -104,13 +105,12 @@ export function DeleteAccountCard() {
               Irreversible — all personal data is purged within 30 days
             </p>
           </div>
-          <button
-            type="button"
+          <Button
+            variant="destructive"
             onClick={() => setConfirming(true)}
-            className="inline-flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
           >
             Delete Account
-          </button>
+          </Button>
         </div>
       ) : (
         <div className="space-y-4">
@@ -186,24 +186,21 @@ export function DeleteAccountCard() {
             )}
 
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <button
-                type="button"
+              <Button
+                variant="destructive"
                 onClick={handleDelete}
                 disabled={!canConfirm || deleting}
-                aria-busy={deleting}
-                className="inline-flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                loading={deleting}
               >
-                {deleting && <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />}
                 {deleting ? 'Deleting...' : 'Permanently delete my account'}
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                variant="outline"
                 onClick={reset}
                 disabled={deleting}
-                className="rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent disabled:opacity-50"
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </div>
         </div>

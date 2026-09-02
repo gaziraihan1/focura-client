@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { faqs } from "@/constants/home.constants";
+import { Button } from "@/components/ui/Button";
 
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -34,17 +35,18 @@ export default function FAQSection() {
                   open ? "border-foreground/25 bg-card shadow-lg shadow-foreground/5" : "border-border bg-card/50"
                 }`}
               >
-                <button
+                <Button
+                  variant="ghost"
                   onClick={() => toggleFAQ(i)}
                   aria-expanded={open}
-                  className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
+                  className="h-auto w-auto flex items-center justify-between gap-4 px-6 py-5 text-left"
                 >
                   <span className="text-base font-semibold text-foreground">{faq.q}</span>
                   <ChevronDown
                     size={18}
                     className={`shrink-0 text-muted-foreground transition-transform duration-300 ${open ? "rotate-180" : ""}`}
                   />
-                </button>
+                </Button>
                 <div
                   inert={!open}
                   aria-hidden={!open}

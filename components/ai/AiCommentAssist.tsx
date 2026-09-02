@@ -7,6 +7,7 @@ import { useAiCommentAssist, useWorkspaceSlug } from "@/hooks/useAi";
 import { cn } from "@/lib/utils";
 import { AI_ERROR_CODES, type AiCommentTone } from "@/types/ai.types";
 import { AiUpgradeCta } from "./AiUpgradeCta";
+import { Button } from "@/components/ui/Button";
 
 function getErrorCode(error: unknown): string | undefined {
   const e = error as { response?: { data?: { code?: string } }; code?: string };
@@ -83,8 +84,9 @@ export function AiCommentAssist({
   return (
     <div className={cn("relative", className)}>
       {open && (
-        <button
+        <Button
           type="button"
+          variant="ghost"
           aria-label="Close rewrite menu"
           className="fixed inset-0 z-10 cursor-default"
           onClick={() => setOpen(false)}
@@ -92,8 +94,9 @@ export function AiCommentAssist({
         />
       )}
 
-      <button
+      <Button
         type="button"
+        variant="outline"
         onClick={() => setOpen((v) => !v)}
         disabled={!canAssist}
         aria-expanded={open}
@@ -104,7 +107,7 @@ export function AiCommentAssist({
             : "Write a little more to use AI rewriting"
         }
         className={cn(
-          "inline-flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium transition-colors",
+          "rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium transition-colors gap-1.5",
           canAssist
             ? "text-foreground hover:border-primary/50 hover:text-primary"
             : "cursor-not-allowed text-muted-foreground/50",
@@ -116,7 +119,7 @@ export function AiCommentAssist({
           <Wand2 className="h-3.5 w-3.5" aria-hidden="true" />
         )}
         <span className="hidden sm:inline">{assist.isPending ? "Rewriting…" : "Rewrite"}</span>
-      </button>
+      </Button>
 
       {open && (
         <div
@@ -125,9 +128,10 @@ export function AiCommentAssist({
           className="absolute bottom-full left-0 z-20 mb-1 w-44 rounded-xl border border-border bg-card p-1 shadow-lg animate-in fade-in slide-in-from-bottom-1 duration-150"
         >
           {TONES.map((tone) => (
-            <button
+            <Button
               key={tone.value}
               type="button"
+              variant="ghost"
               role="menuitem"
               onClick={() => handleTone(tone.value)}
               className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-medium text-foreground transition-colors hover:bg-muted"
@@ -136,7 +140,7 @@ export function AiCommentAssist({
               {assist.isPending && (
                 <Check className="h-3 w-3 text-primary opacity-0" aria-hidden="true" />
               )}
-            </button>
+            </Button>
           ))}
         </div>
       )}

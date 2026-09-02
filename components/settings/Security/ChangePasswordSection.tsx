@@ -9,6 +9,7 @@ import {
   formatLastPasswordChange,
 } from '@/hooks/useSecurity';
 import { announce } from '@/lib/a11y';
+import { Button } from '@/components/ui/Button';
 
 // Hoisted so the formatter is created once instead of on every render.
 // timeZone is fixed to avoid hydration mismatches from server/local timezone drift.
@@ -193,14 +194,15 @@ export function ChangePasswordSection() {
           )}
         </div>
 
-        <button
+        <Button
+          variant="primary"
           onClick={handlePasswordChange}
           disabled={changePassword.isPending || !currentPassword || !newPassword || !confirmPassword || !passwordsMatch}
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
         >
           {changePassword.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           {changePassword.isPending ? 'Updating...' : 'Update Password'}
-        </button>
+        </Button>
       </div>
     </div>
   );

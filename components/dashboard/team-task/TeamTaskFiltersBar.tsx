@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/Button";
 import { Search, Users, AlertTriangle, Brain } from "lucide-react";
 
 export type TeamTaskScope =
@@ -51,18 +52,19 @@ export function TeamTaskFiltersBar({
           { key: "i_assigned", label: "I Assigned" },
           { key: "collaborative", label: "Collaborative" },
         ].map(({ key, label, icon: Icon }) => (
-          <button
+          <Button
             key={key}
+            variant="primary"
             onClick={() => onScopeChange(key as TeamTaskScope)}
             className={`text-xs px-4 py-2 rounded-lg sm:text-sm font-medium flex items-center gap-2 transition ${
               scope === key
                 ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:bg-accent"
+                : "text-muted hover:bg-accent hover:text-foreground"
             }`}
           >
             {Icon && <Icon size={16} />}
             {label}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -110,7 +112,8 @@ export function TeamTaskFiltersBar({
         </select>
 
         {/* Needs Attention */}
-        <button
+        <Button
+          variant="ghost"
           onClick={onAttentionToggle}
           className={`text-xs sm:text-sm px-4 py-2 rounded-lg border flex items-center gap-2 transition ${
             attentionOnly
@@ -120,10 +123,11 @@ export function TeamTaskFiltersBar({
         >
           <AlertTriangle size={16} />
           Needs Attention
-        </button>
+        </Button>
 
         {/* Focus Needed */}
-        <button
+        <Button
+          variant="ghost"
           onClick={onFocusToggle}
           className={`text-xs sm:text-sm px-4 py-2 rounded-lg border flex items-center gap-2 transition ${
             focusOnly
@@ -133,7 +137,7 @@ export function TeamTaskFiltersBar({
         >
           <Brain size={16} />
           Focus Needed
-        </button>
+        </Button>
       </div>
     </div>
   );

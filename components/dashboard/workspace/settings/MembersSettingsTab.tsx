@@ -4,6 +4,7 @@ import { m as motion } from "framer-motion";
 import { Users, UserPlus, Crown, X } from "lucide-react";
 import { WorkspaceRole } from "@/hooks/useWorkspaceSettings";
 import { Avatar } from "@/components/shared/Avatar";
+import { Button } from "@/components/ui/Button";
 
 interface Member {
   id: string;
@@ -44,13 +45,13 @@ export function MembersSettingsTab({
     >
       {isAdmin && (
         <div className="flex justify-end">
-          <button
+          <Button
             onClick={onInviteClick}
-            className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2"
+            className="px-4 py-2 hover:opacity-90 flex items-center gap-2"
           >
             <UserPlus size={18} />
             Invite Member
-          </button>
+          </Button>
         </div>
       )}
 
@@ -115,14 +116,15 @@ export function MembersSettingsTab({
                   ? member.role !== "OWNER"
                   : isAdmin &&
                     (member.role === "MEMBER" || member.role === "GUEST")) && (
-                  <button
+                  <Button
+                    variant="ghost"
                     onClick={() => onRemoveMember(member.id)}
                     disabled={isRemovingMember}
-                    className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 transition"
+                    className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500"
                     aria-label={`Remove ${member.user.name} from workspace`}
                   >
                     <X size={16} />
-                  </button>
+                  </Button>
                 )}
               </div>
             </li>

@@ -5,6 +5,7 @@ import { m as motion } from 'framer-motion';
 import { Trash2, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 import { Avatar } from '@/components/shared/Avatar';
 import { FeatureStatusBadge } from './FeatureStatusBadge';
 import { FeatureVoteButtons }  from './FeatureVoteButtons';
@@ -54,16 +55,16 @@ export function FeatureCard({ feature, isAdmin, isDeleting, onDelete, index }: P
           </div>
 
           {isAdmin && (
-            <button aria-label="Delete"
-              type="button"
+            <Button aria-label="Delete"
+              variant="ghost"
               onClick={(e) => { e.stopPropagation(); setConfirmOpen(true); }}
               disabled={isDeleting}
-              className="p-1.5 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors opacity-0 group-hover:opacity-100 disabled:opacity-40"
+              className="h-auto w-auto p-1.5 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors opacity-0 group-hover:opacity-100 disabled:opacity-40"
             >
               {isDeleting
                 ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
                 : <Trash2  className="w-3.5 h-3.5" />}
-            </button>
+            </Button>
           )}
         </div>
 
@@ -75,13 +76,13 @@ export function FeatureCard({ feature, isAdmin, isDeleting, onDelete, index }: P
         </p>
 
         {feature.description.length > 120 && (
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             onClick={() => setExpanded((e) => !e)}
-            className="self-start flex items-center gap-1 text-[11px] text-primary hover:text-primary/80 transition-colors"
+            className="h-auto w-auto self-start flex items-center gap-1 text-[11px] text-primary hover:text-primary/80 transition-colors"
           >
             {expanded ? <><ChevronUp className="w-3 h-3" /> Show less</> : <><ChevronDown className="w-3 h-3" /> Read more</>}
-          </button>
+          </Button>
         )}
 
         {feature.adminNote && (

@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { X, Brain, ChevronLeft, ChevronRight, BarChart3, Download } from 'lucide-react';
 import type { CalendarDayAggregate, GoalCheckpoint, SystemCalendarEvent } from '@/types/calendar.types';
 import { useEnergyLevel, useEnergyHistory, exportEnergyHistory } from '@/hooks/useEnergyLevel';
+import { Button } from '@/components/ui/Button';
 import {
   PlannedHoursCard,
   FocusSessionsCard,
@@ -54,22 +55,24 @@ function EnergyLevelSection({ date }: { date: Date }) {
           {energy.note && (
             <p className="text-xs text-muted-foreground mt-1 italic">{energy.note}</p>
           )}
-          <button
+          <Button
+            variant="ghost"
             onClick={() => { setValue(energy.energyLevel); setShowSlider(!showSlider); }}
-            className="mt-2 text-xs text-primary hover:underline"
+            className="mt-2 text-xs text-primary hover:underline hover:text-primary"
           >
             {showSlider ? 'Cancel' : 'Update'}
-          </button>
+          </Button>
         </div>
       ) : (
         <div>
           {!showSlider ? (
-            <button
+            <Button
+              variant="ghost"
               onClick={() => setShowSlider(true)}
-              className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+              className="text-muted-foreground hover:text-foreground text-sm"
             >
               + Log your energy level
-            </button>
+            </Button>
           ) : null}
         </div>
       )}
@@ -99,12 +102,14 @@ function EnergyLevelSection({ date }: { date: Date }) {
             className="w-full rounded-lg border border-border bg-background px-3 py-1.5 text-xs"
             maxLength={500}
           />
-          <button
+          <Button
+            variant="primary"
+            size="sm"
             onClick={handleLog}
-            className="w-full py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors"
+            className="w-full py-1.5 rounded-lg text-xs font-medium"
           >
             Save
-          </button>
+          </Button>
         </div>
       )}
     </div>
@@ -144,14 +149,15 @@ function EnergyHistorySection({ date }: { date: Date }) {
           </div>
           <h4 className="text-sm font-medium text-muted-foreground">Energy History</h4>
         </div>
-        <button
+        <Button
+          variant="ghost"
           onClick={handleExport}
           disabled={exporting}
-          className="flex items-center gap-1.5 text-xs font-medium text-primary hover:underline disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
         >
           <Download className="w-3.5 h-3.5" />
           {exporting ? 'Exporting…' : 'Export CSV'}
-        </button>
+        </Button>
       </div>
 
       {loading ? (
@@ -183,23 +189,23 @@ function EnergyHistorySection({ date }: { date: Date }) {
 
           {pagination && pagination.totalPages > 1 && (
             <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">
-              <button aria-label="Previous page"
+              <Button variant="ghost" size="icon" aria-label="Previous page"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={!pagination.hasPrev}
-                className="p-1 rounded-md hover:bg-accent disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="rounded-md p-1"
               >
                 <ChevronLeft className="w-4 h-4" />
-              </button>
+              </Button>
               <span className="text-xs text-muted-foreground">
                 Page {pagination.page} of {pagination.totalPages} ({pagination.total} entries)
               </span>
-              <button aria-label="Next page"
+              <Button variant="ghost" size="icon" aria-label="Next page"
                 onClick={() => setPage((p) => p + 1)}
                 disabled={!pagination.hasNext}
-                className="p-1 rounded-md hover:bg-accent disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="rounded-md p-1"
               >
                 <ChevronRight className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
           )}
         </>
@@ -233,13 +239,15 @@ export function DayDetailsPanel({
               Day overview and insights
             </p>
           </div>
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={onClose}
-            className="p-2 hover:bg-accent rounded-lg transition-colors"
+            className="rounded-lg"
             aria-label="Close panel"
           >
             <X className="w-5 h-5" />
-          </button>
+          </Button>
         </div>
 
         {/* Content Grid */}

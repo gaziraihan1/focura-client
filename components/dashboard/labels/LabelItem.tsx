@@ -1,5 +1,6 @@
 import { Edit2, Trash2 } from 'lucide-react';
 import { Label } from '@/hooks/useLabels';
+import { Button } from '@/components/ui/Button';
 
 interface LabelItemProps {
   label: Label;
@@ -46,23 +47,27 @@ export default function LabelItem({
       {showActions && (
         <div className="flex items-center gap-1 md:opacity-0 group-hover:opacity-100 transition-opacity">
           {onEdit && (
-            <button
+            <Button
               onClick={onEdit}
-              className="p-2 hover:bg-background rounded transition-colors"
+              variant="ghost"
+              size="icon"
+              className="p-2 rounded hover:bg-background"
               title="Edit label"
             >
               <Edit2 className="w-4 h-4 text-muted-foreground hover:text-foreground" />
-            </button>
+            </Button>
           )}
           {onDelete && (
-            <button
+            <Button
               onClick={onDelete}
               disabled={isDeleting}
-              className="p-2 hover:bg-background rounded transition-colors disabled:opacity-50"
+              variant="ghost"
+              size="icon"
+              className="p-2 rounded hover:bg-background"
               title="Delete label"
             >
               <Trash2 className="w-4 h-4 text-destructive hover:text-destructive/80" />
-            </button>
+            </Button>
           )}
         </div>
       )}

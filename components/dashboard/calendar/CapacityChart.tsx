@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { ExportButton } from "@/components/dashboard/calendar/ExportButton";
 import { useCapacityChart } from "@/hooks/useCapacityChart";
+import { Button } from "@/components/ui/Button";
 
 // ─── Component ─────────────────────────────────────────────────────────────
 
@@ -60,15 +61,16 @@ export function CapacityChart() {
             <h4 className="text-sm font-semibold text-foreground">Capacity vs Planned</h4>
             <p className="text-xs text-muted-foreground mt-0.5">{error}</p>
           </div>
-          <button
+          <Button
             type="button"
+            variant="ghost"
             onClick={() => refetch()}
-            className="flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            className="flex shrink-0 gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-muted-foreground"
             aria-label="Retry"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Retry
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -96,11 +98,12 @@ export function CapacityChart() {
     <div className="rounded-2xl border border-border bg-card overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 p-4">
-        <button
+        <Button
           type="button"
+          variant="ghost"
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
-          className="flex min-w-0 flex-1 items-center gap-3 rounded-lg text-left transition-colors hover:bg-accent/30"
+          className="flex min-w-0 flex-1 items-center justify-start gap-3 rounded-lg text-left hover:bg-accent/30"
         >
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-500/10">
             <BarChart3 className="w-4.5 h-4.5 text-blue-600 dark:text-blue-400" />
@@ -116,7 +119,7 @@ export function CapacityChart() {
                 : `${(totalCapacityAll - totalPlannedAll).toFixed(0)}h under capacity`}
             </p>
           </div>
-        </button>
+        </Button>
         <div className="flex shrink-0 items-center gap-1">
           {expanded && (
             <ExportButton
@@ -129,19 +132,21 @@ export function CapacityChart() {
               {overCapacityWeeks} overloaded
             </span>
           )}
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="icon"
             onClick={() => setExpanded(!expanded)}
             aria-expanded={expanded}
             aria-label={expanded ? "Collapse chart" : "Expand chart"}
-            className="rounded-lg p-1 transition-colors hover:bg-accent"
+            className="rounded-lg p-1"
           >
             {expanded ? (
               <ChevronUp className="w-4 h-4 text-muted-foreground" />
             ) : (
               <ChevronDown className="w-4 h-4 text-muted-foreground" />
             )}
-          </button>
+          </Button>
         </div>
       </div>
 

@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { Button } from "@/components/ui/Button";
 
 interface NotificationItemProps {
   notification: {
@@ -63,16 +64,18 @@ export const NotificationItem = memo(function NotificationItem({
           </div>
         </div>
 
-        <button
+        <Button
           onClick={(e) => {
             e.stopPropagation();
             onDelete();
           }}
-          className="md:opacity-0 group-hover:opacity-100 p-2 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-colors transition-opacity"
+          variant="ghost"
+          size="icon"
+          className="md:opacity-0 group-hover:opacity-100 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-opacity"
           title="Delete notification"
         >
           <Trash2 className="w-4 h-4" />
-        </button>
+        </Button>
       </div>
     </div>
   );

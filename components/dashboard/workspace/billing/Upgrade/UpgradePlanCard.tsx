@@ -1,5 +1,6 @@
 // components/WorkspaceUpgrade/PlanCard.tsx
 import { Check } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import type {
   Plan,
   BillingCycle,
@@ -105,7 +106,8 @@ export function UpgradePlanCard({
         </ul>
 
         {/* Action Button */}
-        <button
+        <Button
+          variant={isCurrent ? "secondary" : plan.highlight || isUpgrade ? "primary" : "secondary"}
           onClick={() => onSelect(plan.name)}
           disabled={isCurrent || isLoading}
           className={`w-full py-3 rounded-xl font-semibold text-sm transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed ${
@@ -125,7 +127,7 @@ export function UpgradePlanCard({
                 : hasActiveSub
                   ? `Switch to ${plan.displayName}`
                   : `Get ${plan.displayName}`}
-        </button>
+        </Button>
       </div>
     </div>
   );

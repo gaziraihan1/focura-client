@@ -1,4 +1,5 @@
 import { Priority } from "@/types/taskForm.types";
+import { Button } from "@/components/ui/Button";
 
 interface TaskPriorityPickerProps {
   value: Priority;
@@ -23,18 +24,18 @@ export function TaskPriorityPicker({
       <span className="text-sm font-medium mb-2 block">Priority</span>
       <div className="grid grid-cols-4 gap-2">
         {PRIORITY_OPTIONS.map((priority) => (
-          <button
+          <Button
             key={priority}
-            type="button"
+            variant="ghost"
             onClick={() => onChange(priority)}
-            className={`px-3 py-2 rounded-lg border text-sm font-medium transition ${
+            className={`h-auto px-3 py-2 rounded-lg border text-sm font-medium ${
               value === priority
                 ? PRIORITY_COLORS[priority]
                 : "border-border text-muted-foreground hover:bg-accent"
             }`}
           >
             {priority}
-          </button>
+          </Button>
         ))}
       </div>
     </div>

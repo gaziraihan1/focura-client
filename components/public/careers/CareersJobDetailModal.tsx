@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { X, MapPin, Clock, Briefcase, Pin, DollarSign, Calendar, Link as LinkIcon, Mail } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 import type { JobPosting } from '@/types/job.types'; // ✅ Changed from JobListItem
 import { DEPARTMENT_LABELS, LOCATION_LABELS, TYPE_LABELS, EXPERIENCE_LABELS } from '@/types/job.types';
@@ -90,13 +91,14 @@ export const CareersJobDetailModal = ({ job, onClose }: CareersJobDetailModalPro
               {DEPARTMENT_LABELS[job.department]}
             </p>
           </div>
-          <button
+          <Button
             onClick={onClose}
             aria-label='Close modal'
-            className='w-9 h-9 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shrink-0'
+            variant='ghost'
+            className='w-9 h-9 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted shrink-0'
           >
             <X className='w-4 h-4' />
-          </button>
+          </Button>
         </div>
 
         {/* Scrollable Body */}
@@ -212,12 +214,13 @@ export const CareersJobDetailModal = ({ job, onClose }: CareersJobDetailModalPro
         {/* Footer CTA */}
         <div className='px-5 py-4 sm:px-6 sm:py-5 border-t border-border bg-muted/50 shrink-0'>
           <div className='flex flex-col sm:flex-row gap-3'>
-            <button
+            <Button
               onClick={onClose}
-              className='flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-background text-foreground text-sm font-semibold px-4 py-2.5 hover:bg-muted transition-colors'
+              variant='outline'
+              className='flex-1 gap-2 rounded-xl text-sm font-semibold px-4 py-2.5 hover:bg-muted'
             >
               Close
-            </button>
+            </Button>
             <a
               href={job.applicationUrl || `mailto:${job.applicationEmail}`}
               target={job.applicationUrl ? '_blank' : undefined}

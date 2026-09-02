@@ -1,6 +1,7 @@
 import { m as motion } from 'framer-motion';
 import { User, Users, Building2, Check } from 'lucide-react';
 import type { ElementType } from 'react';
+import { Button } from '@/components/ui/Button';
 
 interface WorkspaceType {
   id: string;
@@ -63,9 +64,10 @@ export function WorkspaceTypeSelector({
           const Icon = type.icon;
           const isSelected = selectedType === type.id;
           return (
-            <button
+            <Button
               key={type.id}
               type="button"
+              variant="ghost"
               onClick={() => onTypeSelect(type.id)}
               className={`relative p-4 rounded-2xl border-2 transition-all duration-200 text-left group ${
                 isSelected
@@ -87,7 +89,7 @@ export function WorkspaceTypeSelector({
               </div>
               <h3 className="font-semibold text-foreground text-sm mb-0.5">{type.title}</h3>
               <p className="text-xs text-muted-foreground leading-relaxed">{type.description}</p>
-            </button>
+            </Button>
           );
         })}
       </div>

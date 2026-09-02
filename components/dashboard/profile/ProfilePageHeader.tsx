@@ -1,4 +1,5 @@
 import { X, Save, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface ProfilePageHeaderProps {
   isEditing: boolean;
@@ -26,26 +27,27 @@ export function ProfilePageHeader({
       </div>
 
       {!isEditing ? (
-        <button
+        <Button
           onClick={onEdit}
-          className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
+          className="hover:opacity-90"
         >
           Edit Profile
-        </button>
+        </Button>
       ) : (
         <div className="flex gap-2">
-          <button
+          <Button
+            variant="outline"
             onClick={onCancel}
             disabled={isSaving}
-            className="px-4 py-2 rounded-lg border border-border hover:bg-accent transition flex items-center gap-2"
+            className="flex items-center gap-2"
           >
             <X size={18} />
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={onSave}
             disabled={isSaving}
-            className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2 disabled:opacity-50"
+            className="flex items-center gap-2 hover:opacity-90"
           >
             {isSaving ? (
               <Loader2 className="animate-spin" size={18} />
@@ -53,7 +55,7 @@ export function ProfilePageHeader({
               <Save size={18} />
             )}
             Save Changes
-          </button>
+          </Button>
         </div>
       )}
     </div>

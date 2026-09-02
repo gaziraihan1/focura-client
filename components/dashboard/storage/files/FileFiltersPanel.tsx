@@ -1,5 +1,6 @@
 import { FileFilters, Uploader } from '@/hooks/useFileManagement';
 import { ArrowUpDown, X } from 'lucide-react'
+import { Button } from '@/components/ui/Button'
 
 interface FileFiltersPanelProps {
     showFilters: boolean;
@@ -67,24 +68,26 @@ export default function FileFiltersPanel({ showFilters, onFiltersChange, filters
           {/* Sort Order */}
           <div>
             <span className="block text-sm font-medium mb-2">Order</span>
-            <button
+            <Button
+              variant="outline"
               onClick={() =>
                 onFiltersChange({
                   ...filters,
                   sortOrder: filters.sortOrder === 'asc' ? 'desc' : 'asc',
                 })
               }
-              className="w-full px-3 py-2 border rounded-lg hover:bg-muted flex items-center justify-center gap-2 bg-background"
+              className="w-full h-auto justify-center gap-2 bg-background"
             >
               <ArrowUpDown className="w-4 h-4" />
               {filters.sortOrder === 'asc' ? 'Ascending' : 'Descending'}
-            </button>
+            </Button>
           </div>
 
           {/* Clear Filters */}
           {activeFilterCount > 0 && (
             <div className="md:col-span-2 lg:col-span-4 flex justify-end">
-              <button
+              <Button
+                variant="ghost"
                 onClick={() =>
                   onFiltersChange({
                     search: undefined,
@@ -95,11 +98,11 @@ export default function FileFiltersPanel({ showFilters, onFiltersChange, filters
                     page: 1,
                   })
                 }
-                className="px-4 py-2 text-sm text-destructive hover:bg-destructive/10 rounded-lg transition-colors flex items-center gap-2"
+                className="h-auto w-auto gap-2 px-4 py-2 text-sm text-destructive hover:bg-destructive/10"
               >
                 <X className="w-4 h-4" />
                 Clear All Filters
-              </button>
+              </Button>
             </div>
           )}
         </div>

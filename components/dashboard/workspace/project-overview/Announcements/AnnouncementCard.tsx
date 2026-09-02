@@ -1,5 +1,6 @@
 import { formatFullDate, timeAgo } from "@/app/(dashboard-pages)/dashboard/workspaces/[workspaceSlug]/projects/[projectSlug]/announcements/utils";
 import { Globe, Loader2, Lock, Pin, Pencil, Trash2, User, Megaphone, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import { AuthorAvatar } from "./AuthorAvatar";
 import { stripTokens } from "@/utils/announcement.utils";
 import { Announcement } from "@/types/announcement.types";
@@ -117,16 +118,18 @@ export function AnnouncementCard({
           // On mobile: always visible. On desktop: hidden until group-hover.
           <div className="flex items-center gap-1 shrink-0">
             {onEdit && (
-              <button
+              <Button
+                variant="ghost"
                 onClick={(e) => { e.stopPropagation(); onEdit(); }}
                 aria-label={`Edit announcement: ${a.title}`}
                 title="Edit"
                 className="p-1.5 rounded-lg text-muted-foreground/60 hover:text-primary hover:bg-primary/10 transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100"
               >
                 <Pencil size={13} />
-              </button>
+              </Button>
             )}
-            <button
+            <Button
+              variant="ghost"
               onClick={(e) => { e.stopPropagation(); onTogglePin(a.id); }}
               disabled={pinningId === a.id}
               aria-label={a.isPinned ? `Unpin announcement: ${a.title}` : `Pin announcement: ${a.title}`}
@@ -143,9 +146,10 @@ export function AnnouncementCard({
               ) : (
                 <Pin size={13} className={a.isPinned ? "fill-amber-500" : ""} />
               )}
-            </button>
+            </Button>
 
-            <button
+            <Button
+              variant="ghost"
               onClick={(e) => { e.stopPropagation(); onDelete(a.id); }}
               disabled={deletingId === a.id}
               aria-label={`Delete announcement: ${a.title}`}
@@ -156,7 +160,7 @@ export function AnnouncementCard({
               ) : (
                 <Trash2 size={13} />
               )}
-            </button>
+            </Button>
           </div>
         )}
       </div>

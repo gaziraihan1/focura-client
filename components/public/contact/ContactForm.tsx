@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@/lib/axios";
 import type { ApiErrorResponse } from "@/lib/axios";
 import { Send, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import { ContactFields } from "./ContactFormFields";
 import { contactFormSchema, type ContactFormValues } from "./contact-form-schema";
 
@@ -35,12 +36,13 @@ function SuccessState({ onReset }: { onReset: () => void }) {
       <p className="text-xs text-muted-foreground mb-8">
         Didn&apos;t get the confirmation? Check your spam folder.
       </p>
-      <button
+      <Button
         onClick={onReset}
+        variant="ghost"
         className="text-sm font-medium text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors"
       >
         Send another message
-      </button>
+      </Button>
     </div>
   );
 }
@@ -116,10 +118,11 @@ export const ContactForm = () => {
       <ContactFields register={register} control={control} errors={errors} />
 
       {/* Submit */}
-      <button
+      <Button
         type="submit"
         disabled={isSubmitting}
-          className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-xl px-5 py-3.5 text-sm font-bold transition-colors hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed"
+        loading={isSubmitting}
+        className="w-full gap-2 rounded-xl px-5 py-3.5 text-sm font-bold hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {isSubmitting ? (
           <>
@@ -132,7 +135,7 @@ export const ContactForm = () => {
             Send Message
           </>
         )}
-      </button>
+      </Button>
 
       {/* Rate limit notice */}
       <p className="text-center text-xs text-muted-foreground">

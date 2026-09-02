@@ -21,6 +21,7 @@ vi.mock("lucide-react", () => {
   return {
     AlertTriangle: icon("AlertTriangle"),
     X: icon("X"),
+    Loader2: icon("Loader2"),
   };
 });
 
@@ -99,7 +100,7 @@ describe("ConfirmModal", () => {
     render(createElement(ConfirmModal, defaultProps));
 
     const confirmButton = screen.getByText("Confirm");
-    expect(confirmButton.className).toContain("bg-red-600");
+    expect(confirmButton.className).toContain("bg-destructive");
   });
 
   it("renders warning variant", () => {
@@ -111,7 +112,7 @@ describe("ConfirmModal", () => {
     );
 
     const confirmButton = screen.getByText("Confirm");
-    expect(confirmButton.className).toContain("bg-amber-600");
+    expect(confirmButton.className).toContain("bg-destructive");
   });
 
   it("renders info variant", () => {
@@ -123,7 +124,7 @@ describe("ConfirmModal", () => {
     );
 
     const confirmButton = screen.getByText("Confirm");
-    expect(confirmButton.className).toContain("bg-blue-600");
+    expect(confirmButton.className).toContain("bg-destructive");
   });
 
   it("disables buttons when isLoading is true", () => {
@@ -134,14 +135,14 @@ describe("ConfirmModal", () => {
       })
     );
 
-    const confirmButton = screen.getByText("Processing...");
+    const confirmButton = screen.getByText("Confirm");
     const cancelButton = screen.getByText("Cancel");
 
     expect(confirmButton).toBeDisabled();
     expect(cancelButton).toBeDisabled();
   });
 
-  it("shows loading text when isLoading is true", () => {
+  it("shows loading spinner when isLoading is true", () => {
     render(
       createElement(ConfirmModal, {
         ...defaultProps,
@@ -149,7 +150,8 @@ describe("ConfirmModal", () => {
       })
     );
 
-    expect(screen.getByText("Processing...")).toBeInTheDocument();
+    const confirmButton = screen.getByText("Confirm");
+    expect(confirmButton).toHaveAttribute("aria-busy", "true");
   });
 
   it("does not call onClose when loading and cancel is clicked", () => {

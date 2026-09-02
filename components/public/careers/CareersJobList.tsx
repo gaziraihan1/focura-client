@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { api, unwrap, unwrapList } from '@/lib/axios';
 import { Loader2 }              from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 import type { JobListItem, JobPosting } from '@/types/job.types';
 import type { CareersFiltersState } from './CareersFilters';
 import {CareersFilters}           from './CareersFilters';
@@ -115,12 +116,13 @@ const CareersJobList = () => {
         <p className='text-sm text-muted-foreground mb-3'>
           {error}
         </p>
-        <button
+        <Button
           onClick={fetchJobs}
+          variant='ghost'
           className='text-sm font-semibold text-foreground underline underline-offset-2'
         >
           Try again
-        </button>
+        </Button>
       </div>
     );
   }

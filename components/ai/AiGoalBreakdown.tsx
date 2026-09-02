@@ -13,6 +13,7 @@ import {
 } from "@/types/ai.types";
 import { AiQuotaBadge } from "./AiQuotaBadge";
 import { AiUpgradeCta } from "./AiUpgradeCta";
+import { Button } from "@/components/ui/Button";
 
 interface AiGoalBreakdownProps {
   /** Optional workspace scope — when provided, tasks are created in this workspace and the AI resolves the plan from the workspace's tier. */
@@ -162,14 +163,15 @@ export function AiGoalBreakdown({ workspaceId, workspaceSlug }: AiGoalBreakdownP
               ? "Describe your goal with at least 5 characters"
               : "AI will order steps from easiest to hardest"}
           </p>
-          <button
+          <Button
             type="button"
+            variant="primary"
             onClick={handleGenerate}
             disabled={!canGenerate}
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold transition-opacity",
+              "rounded-lg px-3.5 py-2 text-xs font-semibold gap-1.5",
               canGenerate
-                ? "bg-primary text-primary-foreground hover:opacity-90"
+                ? "hover:opacity-90"
                 : "cursor-not-allowed bg-muted text-muted-foreground",
             )}
           >
@@ -179,7 +181,7 @@ export function AiGoalBreakdown({ workspaceId, workspaceSlug }: AiGoalBreakdownP
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
             )}
             {breakdown.isPending ? "Planning…" : "Generate plan"}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -198,8 +200,9 @@ export function AiGoalBreakdown({ workspaceId, workspaceSlug }: AiGoalBreakdownP
               const isSelected = selected.has(index);
               return (
                 <li key={`${task.title}-${index}`}>
-                  <button
+                  <Button
                     type="button"
+                    variant="outline"
                     onClick={() => toggleTask(index)}
                     aria-pressed={isSelected}
                     className={cn(
@@ -239,7 +242,7 @@ export function AiGoalBreakdown({ workspaceId, workspaceSlug }: AiGoalBreakdownP
                         </span>
                       )}
                     </span>
-                  </button>
+                  </Button>
                 </li>
               );
             })}
@@ -247,22 +250,23 @@ export function AiGoalBreakdown({ workspaceId, workspaceSlug }: AiGoalBreakdownP
           {rationale && (
             <p className="mt-2 text-xs italic text-muted-foreground">{rationale}</p>
           )}
-          <button
+          <Button
             type="button"
+            variant="primary"
             onClick={handleAddToTasks}
             disabled={selectedCount === 0 || createTask.isPending}
             className={cn(
-              "mt-3 inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold transition-opacity",
+              "mt-3 rounded-lg px-3.5 py-2 text-xs font-semibold gap-1.5",
               selectedCount === 0 || createTask.isPending
                 ? "cursor-not-allowed bg-muted text-muted-foreground"
-                : "bg-primary text-primary-foreground hover:opacity-90",
+                : "hover:opacity-90",
             )}
           >
             {createTask.isPending && (
               <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
             )}
             Add {selectedCount} task{selectedCount === 1 ? "" : "s"} to my tasks
-          </button>
+          </Button>
         </div>
       )}
     </div>

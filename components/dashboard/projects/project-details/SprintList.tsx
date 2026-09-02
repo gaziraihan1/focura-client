@@ -13,6 +13,7 @@ import {
   useDeleteSprint,
   SprintItem,
 } from "@/hooks/useProjectFeatures";
+import { Button } from "@/components/ui/Button";
 
 const SPRINT_STATUS_COLORS: Record<string, string> = {
   PLANNING: "text-purple-500 bg-purple-50 dark:bg-purple-950/20",
@@ -109,12 +110,12 @@ export default function SprintList({ projectId }: SprintListProps) {
                 <p className="text-xs text-muted-foreground mt-0.5 italic">Goal: {activeSprint.goal}</p>
               )}
             </div>
-            <button
+            <Button
               onClick={() => setRetroModal({ sprintId: activeSprint.id, name: activeSprint.name })}
-              className="px-3 py-1.5 rounded-lg bg-emerald-500 text-white text-xs font-semibold hover:bg-emerald-600 transition"
+              className="h-auto px-3 py-1.5 bg-emerald-500 text-white text-xs font-semibold hover:bg-emerald-600"
             >
               Complete Sprint
-            </button>
+            </Button>
           </div>
           <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
             <span>{new Date(activeSprint.startDate).toLocaleDateString("en-US", { timeZone: "UTC" })} → {new Date(activeSprint.endDate).toLocaleDateString("en-US", { timeZone: "UTC" })}</span>
@@ -182,26 +183,27 @@ export default function SprintList({ projectId }: SprintListProps) {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button
+              <Button
                 onClick={handleCreate}
                 disabled={!name.trim() || !startDate || !endDate || createSprint.isPending}
-                className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition disabled:opacity-50"
+                className="h-auto px-3 py-1.5 text-xs font-semibold hover:opacity-90"
               >
                 {createSprint.isPending ? "Creating..." : "Create Sprint"}
-              </button>
-              <button onClick={() => setShowNew(false)} className="px-3 py-1.5 rounded-lg border border-border text-xs hover:bg-accent transition">
+              </Button>
+              <Button variant="outline" onClick={() => setShowNew(false)} className="h-auto px-3 py-1.5 text-xs hover:bg-accent">
                 Cancel
-              </button>
+              </Button>
             </div>
           </div>
         ) : (
-          <button
+          <Button
+            variant="outline"
             onClick={() => setShowNew(true)}
-            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-dashed border-border text-sm text-muted-foreground hover:text-foreground hover:border-solid transition"
+            className="w-full h-auto gap-2 py-2.5 rounded-xl border-dashed text-sm text-muted-foreground hover:text-foreground hover:border-solid hover:border-border"
           >
             <Plus size={16} />
             New Sprint
-          </button>
+          </Button>
         )}
       </div>
 
@@ -218,18 +220,19 @@ export default function SprintList({ projectId }: SprintListProps) {
               onChange={(e) => setRetroText(e.target.value)}
             />
             <div className="flex items-center gap-2 mt-4">
-              <button
+              <Button
                 onClick={handleCompleteWithRetro}
-                className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition"
+                className="h-auto px-4 py-2 text-sm font-semibold hover:opacity-90"
               >
                 Complete Sprint
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="outline"
                 onClick={() => setRetroModal(null)}
-                className="px-4 py-2 rounded-lg border border-border text-sm hover:bg-accent transition"
+                className="h-auto px-4 py-2 text-sm hover:bg-accent"
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -320,21 +323,21 @@ function SprintCard({
           </div>
         </div>
         <div className="relative">
-          <button onClick={() => setMenuOpen(!menuOpen)} className="p-1 rounded-lg hover:bg-accent transition" aria-label="More options">
+          <Button onClick={() => setMenuOpen(!menuOpen)} variant="ghost" aria-label="More options" className="h-auto w-auto p-1 rounded-lg">
             <MoreHorizontal size={14} className="text-muted-foreground" />
-          </button>
+          </Button>
           {menuOpen && (
             <>
               <div className="fixed inset-0 z-10" role="presentation" onClick={() => setMenuOpen(false)} />
               <div className="absolute right-0 top-8 z-20 w-36 rounded-lg border border-border bg-popover shadow-lg py-1">
                 {sprint.status === "ACTIVE" && (
-                  <button onClick={() => { setMenuOpen(false); onComplete(); }} className="w-full px-3 py-1.5 text-xs text-left text-emerald-500 hover:bg-accent transition">
+                  <Button onClick={() => { setMenuOpen(false); onComplete(); }} variant="ghost" className="h-auto w-full justify-start px-3 py-1.5 text-left text-xs text-emerald-500 hover:bg-accent">
                     Complete
-                  </button>
+                  </Button>
                 )}
-                <button onClick={() => { setMenuOpen(false); onDelete(); }} className="w-full flex items-center gap-1.5 px-3 py-1.5 text-xs text-left text-red-500 hover:bg-accent transition">
+                <Button onClick={() => { setMenuOpen(false); onDelete(); }} variant="ghost" className="h-auto w-full justify-start px-3 py-1.5 text-left text-xs text-red-500 hover:bg-accent">
                   <Trash2 size={12} /> Delete
-                </button>
+                </Button>
               </div>
             </>
           )}

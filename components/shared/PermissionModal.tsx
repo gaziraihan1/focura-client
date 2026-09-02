@@ -4,6 +4,7 @@ import { useEffect, useRef, useEffectEvent } from "react";
 import { X, ShieldCheck, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { Button } from "@/components/ui/Button";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -145,12 +146,9 @@ export function PermissionModal({
           </div>
 
           {/* CTA */}
-          <button
-            onClick={onClose}
-            className="mt-1 w-full rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
+          <Button onClick={onClose} className="w-full mt-1">
             Got it
-          </button>
+          </Button>
         </div>
       </div>
     </div>

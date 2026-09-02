@@ -1,6 +1,7 @@
 'use client';
 
 import { ChevronDown, Users, CheckCircle2, Circle } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 import { ProjectSummary } from '@/hooks/useTeamPage';
 
 // Status / priority colour helpers
@@ -43,10 +44,11 @@ export function ProjectCard({ project, isExpanded, onToggle, children }: Project
       isExpanded ? 'ring-2 ring-ring shadow-md' : 'hover:shadow-md',
     ].join(' ')}>
       {/* ── card header (always visible, clickable) ─────────────────────── */}
-      <button
+      <Button
         type="button"
+        variant="ghost"
         onClick={onToggle}
-        className="w-full text-left p-4"
+        className="w-full text-left p-4 rounded-none hover:bg-transparent"
       >
         <div className="flex items-start justify-between gap-3">
           {/* left: icon stub + title + description */}
@@ -115,7 +117,7 @@ export function ProjectCard({ project, isExpanded, onToggle, children }: Project
             />
           </div>
         </div>
-      </button>
+      </Button>
 
       {/* ── expandable members panel ────────────────────────────────────── */}
       {isExpanded && (

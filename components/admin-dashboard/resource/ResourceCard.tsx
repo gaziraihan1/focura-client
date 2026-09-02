@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DeleteConfirmModal } from "./DeleteConfirmationModal";
+import { Button } from "@/components/ui/Button";
 
 interface ResourceCardProps {
   onEdit: () => void;
@@ -78,23 +79,27 @@ export function ResourceCard({
             "md:opacity-0 md:transition-opacity md:group-hover:opacity-100",
           )}
         >
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={onEdit}
             aria-label="Edit"
-            className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="rounded-md p-1.5 h-auto text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <Pencil className="h-3.5 w-3.5" />
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => setConfirmOpen(true)}
             disabled={isDeleting}
             aria-label="Delete"
-            className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+            className="rounded-md p-1.5 h-auto text-muted-foreground hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
           >
             <Trash2 className="h-3.5 w-3.5" />
-          </button>
+          </Button>
         </div>
       </div>
 

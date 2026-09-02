@@ -2,6 +2,7 @@ import { Check, Loader2, Palette } from "lucide-react";
 import { Section } from "./Section";
 import { ProjectDetails, useUpdateProject } from "@/hooks/useProjects";
 import { useState } from "react";
+import { Button } from "@/components/ui/Button";
 
 const PRESET_COLORS = [
   "#667eea", "#f59e0b", "#10b981", "#ef4444",
@@ -69,18 +70,19 @@ export function AppearanceTab({
             </p>
             <div className="grid grid-cols-6 sm:grid-cols-12 gap-2">
               {PRESET_COLORS.map((c) => (
-                <button
+                <Button
                   key={c}
+                  variant="ghost"
                   onClick={() => { setCustom(""); setSelected(c); }}
                   disabled={!canManage}
-                  className="relative w-8 h-8 rounded-lg transition-transform hover:scale-110 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="relative w-8 h-8 rounded-lg transition-transform hover:scale-110"
                   style={{ backgroundColor: c }}
                   title={c}
                 >
                   {selected === c && !custom && (
                     <Check size={12} className="absolute inset-0 m-auto text-white drop-shadow" />
                   )}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -110,19 +112,20 @@ export function AppearanceTab({
 
           {canManage && (
             <div className="flex justify-end">
-              <button
+              <Button
+                variant="primary"
                 onClick={handleSave}
                 disabled={saving}
                 className={[
-                  "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-colors transition-opacity",
+                  "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-opacity",
                   saved
                     ? "bg-emerald-500 text-white"
-                    : "bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-40",
+                    : "hover:opacity-90 disabled:opacity-40",
                 ].join(" ")}
               >
                 {saving ? <Loader2 size={14} className="animate-spin" /> : saved ? <Check size={14} /> : <Palette size={14} />}
                 {saved ? "Applied!" : saving ? "Applying…" : "Apply Color"}
-              </button>
+              </Button>
             </div>
           )}
         </div>

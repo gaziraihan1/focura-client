@@ -1,4 +1,5 @@
 import { Check } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 import type { WorkspaceMember } from '@/hooks/useWorkspace';
 import { MemberAvatar } from './MemberAvatar';
 
@@ -52,9 +53,10 @@ export function AttendeePicker({
           filtered.map((m) => {
             const selected = attendeeSet.has(m.userId);
             return (
-              <button
+              <Button
                 key={m.userId}
                 type="button"
+                variant="ghost"
                 onClick={() => onToggle(m.userId)}
                 className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-left transition-colors ${
                   selected ? 'bg-primary/10 text-primary' : 'hover:bg-accent text-foreground'
@@ -66,7 +68,7 @@ export function AttendeePicker({
                   <p className="text-xs text-muted-foreground truncate">{m.user.email}</p>
                 </div>
                 {selected && <Check size={14} />}
-              </button>
+              </Button>
             );
           })
         )}

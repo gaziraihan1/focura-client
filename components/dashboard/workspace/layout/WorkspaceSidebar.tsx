@@ -3,6 +3,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/Button";
 import { ChevronDown, ChevronRight, Settings, LogOut, LucideIcon, Sparkles, Lock } from "lucide-react";
 import { Workspace } from "@/hooks/useWorkspace";
 import { useState } from "react";
@@ -96,9 +97,10 @@ const toggleExpanded = (name: string) => {
       </div>
     </div>
   ) : (
-    <button
+    <Button
+      variant="ghost"
       onClick={onSwitcherOpen}
-      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition group"
+      className="w-full flex items-center gap-3 p-3 rounded-lg transition group text-left"
     >
       <div
         className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold"
@@ -111,7 +113,7 @@ const toggleExpanded = (name: string) => {
         <p className="text-xs text-muted-foreground">{currentMember?.role || "Member"}</p>
       </div>
       <ChevronDown size={16} className="text-muted-foreground" />
-    </button>
+    </Button>
   )}
 </div>
           {/* Navigation */}
@@ -163,9 +165,9 @@ const toggleExpanded = (name: string) => {
 
         {/* Chevron — separate toggle, only when there are children */}
         {hasChildren && (
-          <button aria-label="Next page"
+          <Button aria-label="Next page" variant="ghost"
             onClick={() => toggleExpanded(item.name)}
-            className={`shrink-0 p-0.5 rounded transition-colors  ${
+            className={`shrink-0 p-0.5 rounded transition-colors ${
               isActive
                 ? "hover:bg-primary-foreground/20"
                 : "hover:bg-accent-foreground/10"
@@ -176,7 +178,7 @@ const toggleExpanded = (name: string) => {
             ) : (
               <ChevronRight size={14} />
             )}
-          </button>
+          </Button>
         )}
       </div>
 
@@ -220,7 +222,7 @@ const toggleExpanded = (name: string) => {
               </div>
             ))}
           </div>
-          <button onClick={() => { router.push(`/dashboard/workspaces/${slug}/billing`); onSidebarClose(); }} className="mt-3 w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-primary/30 bg-primary/5 text-primary text-xs font-medium hover:bg-primary/10 transition-colors" > <Sparkles size={13} /> Upgrade to unlock </button>
+          <Button onClick={() => { router.push(`/dashboard/workspaces/${slug}/billing`); onSidebarClose(); }} variant="outline" className="mt-3 w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-primary/30 bg-primary/5 text-primary text-xs font-medium hover:bg-primary/10 transition-colors" > <Sparkles size={13} /> Upgrade to unlock </Button>
         </div>
       )}
     </>

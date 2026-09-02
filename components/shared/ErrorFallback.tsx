@@ -2,6 +2,7 @@
 
 import { AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/Button";
 
 interface ErrorFallbackProps {
   error: Error & { digest?: string };
@@ -32,18 +33,10 @@ export function ErrorFallback({
         </p>
 
         <div className="flex items-center justify-center gap-3">
-          <button
-            onClick={reset}
-            className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition font-medium"
-          >
-            Try Again
-          </button>
-          <button
-            onClick={() => router.back()}
-            className="px-4 py-2 rounded-lg border border-border hover:bg-accent transition font-medium"
-          >
+          <Button onClick={reset}>Try Again</Button>
+          <Button variant="outline" onClick={() => router.back()}>
             Go Back
-          </button>
+          </Button>
         </div>
 
         {(error.message || error.stack) && (

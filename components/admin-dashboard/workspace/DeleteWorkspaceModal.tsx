@@ -5,6 +5,7 @@ import { m as motion, AnimatePresence } from 'framer-motion';
 import { Trash2, Loader2, X, AlertTriangle } from 'lucide-react';
 import { cn }                  from '@/lib/utils';
 import { useDeleteWorkspace }  from '@/hooks/useAdmin';
+import { Button } from '@/components/ui/Button';
 
 interface Props {
   workspaceSlug: string;
@@ -75,12 +76,12 @@ export function DeleteWorkspaceModal({
                     </p>
                   </div>
                 </div>
-                <button aria-label="Close"
-                  type="button" onClick={handleClose} disabled={isPending}
+                <Button aria-label="Close"
+                  type="button" variant="ghost" onClick={handleClose} disabled={isPending}
                   className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 >
                   <X className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
 
               {/* Delete type */}
@@ -185,12 +186,12 @@ export function DeleteWorkspaceModal({
 
               {/* Actions */}
               <div className="flex items-center gap-2">
-                <button
-                  type="button" onClick={handleClose} disabled={isPending}
+                <Button
+                  type="button" variant="outline" onClick={handleClose} disabled={isPending}
                   className="flex-1 px-4 py-2 rounded-lg text-sm font-medium border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-40"
                 >
                   Cancel
-                </button>
+                </Button>
                 <motion.button
                   whileTap={{ scale: 0.97 }}
                   type="button"

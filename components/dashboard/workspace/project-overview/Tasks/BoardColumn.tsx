@@ -2,6 +2,7 @@
 import TaskCard, { type SectionsById } from "@/components/dashboard/projects/project-details/TaskCard";
 import { Task } from "@/hooks/useTask";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 import { Plus } from "lucide-react";
 import { memo } from "react";
 
@@ -40,13 +41,14 @@ export const BoardColumn = memo(function BoardColumn({
             {tasks.length}
           </span>
         </div>
-        <button
+        <Button
+          variant="ghost"
           onClick={onAddTask}
           aria-label={`Add task to ${label}`}
           className="flex size-6 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
         >
           <Plus className="size-3.5" />
-        </button>
+        </Button>
       </div>
 
       {/*
@@ -82,12 +84,13 @@ export const BoardColumn = memo(function BoardColumn({
           ))
         )}
 
-        <button
+        <Button
+          variant="ghost"
           onClick={onAddTask}
           className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-muted-foreground hover:bg-muted hover:text-foreground transition-colors mt-auto"
         >
           <Plus className="size-3.5" /> Add task
-        </button>
+        </Button>
       </div>
     </div>
   );

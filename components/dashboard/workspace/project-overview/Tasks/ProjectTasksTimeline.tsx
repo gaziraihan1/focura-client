@@ -23,6 +23,7 @@ import { CalendarRange, Inbox, Loader2 } from "lucide-react";
 import { Task } from "@/hooks/useTask";
 import { TaskDetailsModal } from "@/components/dashboard/calendar/calendar-view/TaskDetailsModal";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 
 interface ProjectTasksTimelineProps {
   tasks: Task[];
@@ -205,7 +206,8 @@ export function ProjectTasksTimeline({ tasks, isLoading }: ProjectTasksTimelineP
                           width: Math.max(width * DAY_W - 4, 14),
                         }}
                       >
-                        <button
+                        <Button
+                          variant="primary"
                           onClick={() => setSelectedTask(task)}
                           className={cn(
                             "flex h-6 w-full items-center gap-1.5 truncate rounded-md px-2 text-left text-[10px] font-medium text-white transition-opacity hover:opacity-90",
@@ -214,7 +216,7 @@ export function ProjectTasksTimeline({ tasks, isLoading }: ProjectTasksTimelineP
                           title={`${task.title}${endLabel ? ` · due ${endLabel}` : ""}`}
                         >
                           <span className="truncate">{task.title}</span>
-                        </button>
+                        </Button>
                       </div>
                       <span className="ml-2 whitespace-nowrap text-[10px] text-muted-foreground">
                         {startLabel || "—"} → {endLabel || "—"}
@@ -241,14 +243,15 @@ export function ProjectTasksTimeline({ tasks, isLoading }: ProjectTasksTimelineP
           </p>
           <div className="flex flex-wrap gap-1.5">
             {unscheduled.map((task) => (
-              <button
+              <Button
                 key={task.id}
+                variant="outline"
                 onClick={() => setSelectedTask(task)}
                 className="flex items-center gap-1.5 rounded-full border border-border bg-background px-2.5 py-1 text-[11px] font-medium text-foreground transition-colors hover:bg-muted"
               >
                 <span className={cn("size-1.5 rounded-full", STATUS_BAR[task.status])} />
                 {task.title}
-              </button>
+              </Button>
             ))}
           </div>
         </div>

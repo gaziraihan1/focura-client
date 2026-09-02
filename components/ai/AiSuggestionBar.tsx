@@ -2,6 +2,7 @@
 
 import { Check, Sparkles, Wand2 } from "lucide-react";
 import { useAiTaskSuggestions, useWorkspaceSlug } from "@/hooks/useAi";
+import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { AI_ERROR_CODES, type AiEnergyType, type AiPriority, type AiTaskSuggestion } from "@/types/ai.types";
 import { AiQuotaBadge } from "./AiQuotaBadge";
@@ -164,14 +165,16 @@ export function AiSuggestionBar({
             </div>
           )}
 
-          <button
+          <Button
             type="button"
+            variant="primary"
+            size="sm"
             onClick={() => onApply(data)}
-            className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+            className="mt-2 gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-opacity hover:opacity-90"
           >
             <Check className="h-3.5 w-3.5" aria-hidden="true" />
             Apply all
-          </button>
+          </Button>
         </>
       ) : null}
     </div>
@@ -189,17 +192,19 @@ function SuggestionChip({
 }) {
   if (!label) return null;
   return (
-    <button
+    <Button
       type="button"
+      variant="outline"
+      size="sm"
       onClick={onClick}
       title={`Apply ${label}`}
       className={cn(
-        "inline-flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 text-[11px] font-medium text-foreground/90",
+        "h-auto gap-1 rounded-full border border-border bg-background px-2.5 py-1 text-[11px] font-medium text-foreground/90",
         "transition-colors hover:border-primary/50 hover:text-primary",
       )}
     >
       {icon}
       {label}
-    </button>
+    </Button>
   );
 }

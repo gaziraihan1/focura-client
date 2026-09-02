@@ -8,6 +8,7 @@ import {
 } from "@/constants/activityFilter.constants";
 import { useActivityFilters } from "@/hooks/useActivityFilters";
 import { FilterSelect } from "./ActivityFilters/FilterSelect";
+import { Button } from "@/components/ui/Button";
 import { DatePresetSelect } from "./ActivityFilters/DatePresetSelect";
 import { DateRangeFilter } from "./ActivityFilters/DateRangeFilter";
 import { ActiveFiltersDisplay } from "./ActivityFilters/ActiveFiltersDisplay";
@@ -66,13 +67,14 @@ export function ActivityFilters({
 
           {/* Clear All Filters Button */}
           {activeFiltersCount > 0 && (
-            <button
+            <Button
+              variant="outline"
               onClick={handleClearFilters}
-              className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+              className="gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
             >
               <X className="h-4 w-4" />
               Clear ({activeFiltersCount})
-            </button>
+            </Button>
           )}
         </div>
 

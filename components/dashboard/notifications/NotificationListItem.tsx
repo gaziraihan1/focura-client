@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/Button";
+
 interface Notification {
   id: string;
   title: string;
@@ -18,9 +20,10 @@ export function NotificationListItem({
   onClick,
 }: NotificationListItemProps) {
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={onClick}
-      className={`w-full text-left p-4 border-b border-border transition-colors ${
+      className={`w-full text-left p-4 border-b border-border ${
         !notification.read
           ? "bg-accent/30 hover:bg-accent/40"
           : "hover:bg-accent/20"
@@ -44,6 +47,6 @@ export function NotificationListItem({
           </p>
         </div>
       </div>
-    </button>
+    </Button>
   );
 }

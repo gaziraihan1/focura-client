@@ -5,6 +5,7 @@ import { User2, Mail, Trash2,  Loader2 } from 'lucide-react';
 import { useWorkspace, useWorkspaceMembers, useInviteMember, useRemoveMember, useUpdateMemberRole, type WorkspaceRole } from '@/hooks/useWorkspace';
 import toast from 'react-hot-toast';
 import { announce } from '@/lib/a11y';
+import { Button } from '@/components/ui/Button';
 
 interface MembersRolesFormProps {
   workspaceSlug: string;
@@ -132,14 +133,16 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
               <option value="GUEST">Guest</option>
             </select>
           </div>
-          <button
+          <Button
             onClick={handleInvite}
             disabled={inviting || !inviteEmail.trim()}
+            loading={inviting}
+            leftIcon={<Mail className="w-4 h-4" />}
+            variant="primary"
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
           >
-            {inviting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
             Invite
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -192,13 +195,15 @@ export function MembersRolesForm({ workspaceSlug }: MembersRolesFormProps) {
                   ))}
                 </select>
                 {member.role !== 'OWNER' && (
-                  <button
+                  <Button
                     onClick={() => handleRemove(member.id)}
+                    variant="ghost"
+                    size="icon"
                     className="p-1.5 rounded-lg text-red-500 hover:bg-red-500/10 transition-colors"
                     aria-label={`Remove ${member.user?.name} from workspace`}
                   >
                     <Trash2 className="w-4 h-4" />
-                  </button>
+                  </Button>
                 )}
               </div>
             </li>

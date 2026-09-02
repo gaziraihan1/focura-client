@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Button } from '@/components/ui/Button';
 import { Lightbulb, X, Brain, Flame, Clock, Zap, AlertTriangle, Coffee, Eye, EyeOff, Trash2 } from 'lucide-react';
 import { useRecommendations } from '@/hooks/useBurnoutTrends';
 import type { WellnessRecommendation } from '@/types/calendar.types';
@@ -105,14 +106,15 @@ export function WellnessRecommendations() {
           {active.length} suggestion{active.length !== 1 ? 's' : ''}
         </span>
         {active.length > 0 && (
-          <button
+          <Button
+            variant="ghost"
             onClick={handleDismissAll}
-            className="flex items-center flex-wrap gap-1 ml-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center flex-wrap gap-1 ml-2 text-xs text-muted-foreground hover:text-foreground hover:bg-transparent transition-colors"
             aria-label="Dismiss all suggestions"
           >
             <Trash2 className="w-3.5 h-3.5" />
             Dismiss all
-          </button>
+          </Button>
         )}
       </div>
 
@@ -138,13 +140,14 @@ export function WellnessRecommendations() {
                 </div>
                 <p className="text-sm leading-5 text-foreground">{rec.message}</p>
               </div>
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => handleDismiss(rec)}
-                className="shrink-0 p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-accent transition-colors transition-opacity"
+                className="shrink-0 p-1 rounded-md opacity-0 group-hover:opacity-100 transition-colors transition-opacity"
                 aria-label="Dismiss"
               >
                 <X className="w-3.5 h-3.5 text-muted-foreground" />
-              </button>
+              </Button>
             </div>
           );
         })}
@@ -153,14 +156,15 @@ export function WellnessRecommendations() {
       {/* Dismissed toggle */}
       {dismissed.length > 0 && (
         <div className="mt-4 border-t border-border pt-3">
-          <button
+          <Button
+            variant="ghost"
             onClick={() => setShowDismissed(!showDismissed)}
-            className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-transparent transition-colors"
             aria-expanded={showDismissed}
           >
             {showDismissed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
             {showDismissed ? 'Hide dismissed' : `Show dismissed (${dismissed.length})`}
-          </button>
+          </Button>
 
           {showDismissed && (
             <div className="mt-2 space-y-2">

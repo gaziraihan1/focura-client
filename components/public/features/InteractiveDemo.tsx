@@ -2,6 +2,7 @@
 
 import { m as motion } from "framer-motion";
 import { PlayCircle } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 /* ─── Mini workspace preview (pure CSS — replaces the missing demo-preview.png) ─── */
 
@@ -124,14 +125,13 @@ export default function InteractiveDemo() {
             Want to explore more? Take a full tour of the Focura platform.
           </p>
 
-          <button
+          <Button
             className="
-              rounded-lg bg-primary px-8 py-3 font-semibold text-primary-foreground
-              shadow-md transition hover:opacity-90
+              rounded-lg px-8 py-3 h-auto font-semibold transition hover:opacity-90
             "
           >
             Launch Full Demo
-          </button>
+          </Button>
         </div>
       </div>
     </section>

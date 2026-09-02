@@ -2,6 +2,7 @@
 
 import { Component, type ReactNode } from "react";
 import { AlertCircle, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface Props {
   children: ReactNode;
@@ -40,13 +41,14 @@ export class SectionErrorBoundary extends Component<Props, State> {
               <p className="text-xs text-muted-foreground mt-1">
                 {this.state.error?.message || "An unexpected error occurred"}
               </p>
-              <button
+              <Button
+                variant="ghost"
                 onClick={this.handleRetry}
-                className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+                className="mt-3 gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
               >
                 <RefreshCw className="w-3 h-3" />
                 Retry
-              </button>
+              </Button>
             </div>
           </div>
         </div>

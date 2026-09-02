@@ -1,6 +1,7 @@
 import { m as motion } from "framer-motion";
 import { AlertCircle, FileText, Loader2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/Button";
 
 interface Project {
   id: string;
@@ -98,18 +99,18 @@ export function BasicInformationSection({
             <p className="text-sm text-muted-foreground mb-3">
               No projects available. Create a project first.
             </p>
-            <button
+            <Button
               type="button"
               onClick={() =>
                 router.push(
                   `/dashboard/workspaces/${workspaceSlug}/projects/new-project`
                 )
               }
-              className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2 text-sm"
+              className="px-4 py-2 rounded-lg hover:opacity-90 flex items-center gap-2 text-sm"
             >
               <Plus size={16} />
               Create Project
-            </button>
+            </Button>
           </div>
         ) : (
           <>

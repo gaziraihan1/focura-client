@@ -10,6 +10,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import type { PlanLimitsMetrics } from "@/types/workspace-usage.types";
+import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 
 interface PlanLimitsSectionProps {
@@ -136,9 +137,12 @@ function LimitCard({ icon: Icon, label, current, max, unit, percentage }: LimitC
               {Math.round(percentage)}% used
             </span>
             {isWarning && (
-              <button className="text-xs font-medium text-primary hover:underline">
+              <Button
+                variant="ghost"
+                className="text-xs font-medium text-primary hover:underline hover:text-primary"
+              >
                 Upgrade →
-              </button>
+              </Button>
             )}
           </div>
         </>
@@ -204,10 +208,14 @@ export function PlanLimitsSection({ planLimits, workspaceSlug }: PlanLimitsSecti
         </div>
 
         {hasWarnings && (
-          <button className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-primary text-primary-foreground text-xs sm:text-sm font-semibold hover:bg-primary/90 transition-colors shadow-sm">
+          <Button
+            variant="primary"
+            size="sm"
+            className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold shadow-sm"
+          >
             <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             Upgrade
-          </button>
+          </Button>
         )}
       </div>
 
@@ -245,9 +253,13 @@ export function PlanLimitsSection({ planLimits, workspaceSlug }: PlanLimitsSecti
                 )}
               </div>
             </div>
-            <button className="shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors w-full sm:w-auto text-center">
+            <Button
+              variant="primary"
+              size="sm"
+              className="shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold w-full sm:w-auto text-center"
+            >
               Upgrade Now
-            </button>
+            </Button>
           </div>
         </div>
       )}

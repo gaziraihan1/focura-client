@@ -1,5 +1,6 @@
 "use client"
 import { parseAnnouncement } from "@/utils/announcement.utils";
+import { Button } from "@/components/ui/Button";
 import { Check, Copy } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useState } from "react";
@@ -38,8 +39,8 @@ export function RenderedContent({ raw }: { raw: string }) {
               <code className="px-1.5 py-0.5 rounded bg-muted text-[0.8em] font-mono border border-border/60 text-foreground/80">
                 {token.value}
               </code>
-              <button
-                type="button"
+              <Button
+                variant="ghost"
                 onClick={() => handleCopy(token.value)}
                 className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors"
                 title="Copy"
@@ -47,7 +48,7 @@ export function RenderedContent({ raw }: { raw: string }) {
                 {copied === token.value
                   ? <Check className="w-3 h-3 text-green-500" />
                   : <Copy  className="w-3 h-3" />}
-              </button>
+              </Button>
             </span>
           );
 

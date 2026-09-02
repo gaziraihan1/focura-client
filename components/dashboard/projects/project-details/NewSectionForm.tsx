@@ -1,5 +1,6 @@
 import { TaskStatus } from "@/hooks/useProjectFeatures";
 import { SECTION_COLORS, TASK_STATUS_OPTIONS } from "./SectionList";
+import { Button } from "@/components/ui/Button";
 
 interface NewSectionFormProps {
   name: string;
@@ -53,11 +54,12 @@ export function NewSectionForm({
       />
       <div className="flex items-center gap-2">
         {SECTION_COLORS.map((c) => (
-          <button
+          <Button
             key={c}
+            variant="ghost"
             aria-label={`Select section color ${c}`}
             onClick={() => onChangeColor(c)}
-            className={`w-6 h-6 rounded-full transition-all ${color === c ? "ring-2 ring-offset-2 ring-primary" : "ring-1 ring-border"}`}
+            className={`h-auto w-6 h-6 rounded-full transition-all ${color === c ? "ring-2 ring-offset-2 ring-primary" : "ring-1 ring-border"}`}
             style={{ backgroundColor: c }}
           />
         ))}
@@ -92,19 +94,20 @@ export function NewSectionForm({
         folder-only section — the board stays untouched.
       </p>
       <div className="flex items-center gap-2">
-        <button
+        <Button
           onClick={onCreate}
           disabled={!canSubmit || isPending}
-          className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition disabled:opacity-50"
+          className="h-auto px-3 py-1.5 text-xs font-semibold hover:opacity-90"
         >
           {isPending ? "Adding..." : "Add Section"}
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="outline"
           onClick={onCancel}
-          className="px-3 py-1.5 rounded-lg border border-border text-xs hover:bg-accent transition"
+          className="h-auto px-3 py-1.5 text-xs hover:bg-accent"
         >
           Cancel
-        </button>
+        </Button>
       </div>
     </div>
   );

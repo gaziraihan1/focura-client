@@ -1,5 +1,6 @@
 import { FileFilters } from "@/hooks/useFileManagement";
 import { Search, X } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface FileFiltersSearchProps {
   filters: FileFilters;
@@ -24,12 +25,13 @@ export default function FileFiltersSearch({
         className="w-full pl-10 pr-4 py-2.5 border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
       />
       {filters.search && (
-        <button aria-label="Clear search"
+        <Button aria-label="Clear search"
+          variant="ghost"
           onClick={() => onFiltersChange({ ...filters, search: undefined, page: 1 })}
-          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-muted rounded transition-colors"
+          className="h-auto w-auto absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-muted"
         >
           <X className="w-4 h-4" />
-        </button>
+        </Button>
       )}
     </div>
   );

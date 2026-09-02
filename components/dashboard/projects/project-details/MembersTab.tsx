@@ -1,5 +1,6 @@
 // components/Dashboard/ProjectDetails/MembersTab.tsx
 import { UserPlus, Users, Crown, Eye, X } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import {
   useUpdateProjectMemberRole,
   useRemoveProjectMember,
@@ -87,13 +88,14 @@ export default function MembersTab({
       {/* Add Member Button */}
       {project.isAdmin && (
         <div className="flex justify-end">
-          <button
+          <Button
             onClick={() => setShowAddMember(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
+            size="sm"
+            className="gap-2 px-4 py-2 rounded-lg"
           >
             <UserPlus size={18} />
             Add Member
-          </button>
+          </Button>
         </div>
       )}
 
@@ -170,13 +172,15 @@ export default function MembersTab({
                   )}
 
                   {project.isAdmin && member.role !== "MANAGER" && (
-                    <button aria-label="Close"
+                    <Button aria-label="Close"
                       onClick={() => handleRemoveMember(member.id)}
                       disabled={removeMember.isPending}
-                      className="p-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition disabled:opacity-50"
+                      variant="ghost"
+                      size="icon"
+                      className="rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
                     >
                       <X size={16} />
-                    </button>
+                    </Button>
                   )}
                 </div>
               </div>

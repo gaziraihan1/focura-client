@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { TrendingUp, ChevronDown, ChevronUp, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { useBurnoutTrends } from '@/hooks/useBurnoutTrends';
+import { Button } from '@/components/ui/Button';
 
 const RISK_COLORS: Record<string, string> = {
   LOW: 'bg-green-500',
@@ -71,15 +72,16 @@ export function BurnoutTrendsChart() {
             <h4 className="text-sm font-semibold text-foreground">Burnout Trends</h4>
             <p className="text-xs text-muted-foreground mt-0.5">{error}</p>
           </div>
-          <button
+          <Button
             type="button"
+            variant="ghost"
             onClick={() => refetch()}
-            className="flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            className="flex shrink-0 gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-muted-foreground"
             aria-label="Retry"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Retry
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -109,10 +111,11 @@ export function BurnoutTrendsChart() {
 
   return (
     <div className="rounded-2xl border border-border bg-card overflow-hidden">
-      <button
+      <Button
         type="button"
+        variant="ghost"
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between p-4 hover:bg-accent/30 transition-colors"
+        className="w-full flex items-center justify-between rounded-lg p-4 text-left hover:bg-accent/30"
       >
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-500/10">
@@ -131,7 +134,7 @@ export function BurnoutTrendsChart() {
           </span>
           {expanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
         </div>
-      </button>
+      </Button>
 
       {expanded && (
         <div className="px-4 pb-4 space-y-4">

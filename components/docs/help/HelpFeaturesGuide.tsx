@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 import { GUIDE_SECTIONS, GuideSection, Article } from './helpGuideData';
 
 interface ArticleRowProps {
@@ -14,10 +15,11 @@ interface ArticleRowProps {
 function ArticleRow({ article, isOpen, onToggle }: ArticleRowProps) {
   return (
     <div className='border-b border-border last:border-0'>
-      <button
+      <Button
+        variant="ghost"
         onClick={onToggle}
         aria-expanded={isOpen}
-        className='w-full flex items-center justify-between gap-4 py-3.5 text-left group'
+        className='w-full flex items-center justify-between gap-4 py-3.5 text-left group h-auto px-0 rounded-none'
       >
         <span className='text-sm font-semibold text-foreground group-hover:text-muted-foreground transition-colors leading-snug'>
           {article.title}
@@ -28,7 +30,7 @@ function ArticleRow({ article, isOpen, onToggle }: ArticleRowProps) {
             isOpen && 'rotate-180'
           )}
         />
-      </button>
+      </Button>
       <div className={cn('overflow-hidden transition-all duration-200', isOpen ? 'max-h-500 pb-4' : 'max-h-0')}>
         <p className='text-sm text-muted-foreground leading-relaxed'>
           {article.content}
@@ -61,9 +63,10 @@ export const HelpFeaturesGuide = () => {
               className='rounded-2xl border border-border bg-card overflow-hidden'
             >
               {/* Section header */}
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => setOpenSection(openSection === section.id ? null : section.id)}
-                className='w-full flex items-center justify-between gap-4 px-5 py-4 text-left hover:bg-muted/50 transition-colors'
+                className='w-full flex items-center justify-between gap-4 px-5 py-4 text-left h-auto hover:bg-muted/50'
               >
                 <div>
                   <p className='text-sm font-bold text-foreground'>
@@ -79,7 +82,7 @@ export const HelpFeaturesGuide = () => {
                     openSection === section.id && 'rotate-180'
                   )}
                 />
-              </button>
+              </Button>
 
               {/* Articles */}
               {openSection === section.id && (

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Brush, Save, Loader2 } from 'lucide-react';
 import { useWorkspace, useUpdateWorkspace } from '@/hooks/useWorkspace';
+import { Button } from '@/components/ui/Button';
 import toast from 'react-hot-toast';
 
 interface BrandingFormProps {
@@ -102,18 +103,14 @@ export function BrandingForm({ workspaceSlug }: BrandingFormProps) {
 
       {/* Save */}
       <div className="flex justify-end">
-        <button
+        <Button
           onClick={handleSave}
           disabled={saving}
-          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
+          loading={saving}
+          leftIcon={<Save className="w-4 h-4" />}
         >
-          {saving ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Save className="w-4 h-4" />
-          )}
-          {saving ? 'Saving...' : 'Save Branding'}
-        </button>
+          Save Branding
+        </Button>
       </div>
     </div>
   );

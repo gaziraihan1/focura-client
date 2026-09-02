@@ -8,10 +8,10 @@ import {
   Zap,
   Link2,
   Unlink2,
-  Loader2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 import type { Integration, IntegrationDefinition } from './index';
 
 interface IntegrationCardProps {
@@ -77,14 +77,16 @@ export function IntegrationCard({
         <div className="flex flex-wrap items-center gap-2">
           {isConnected ? (
             <>
-              <button
+              <Button
+                variant="outline"
                 onClick={() => onConfigure(connectedIntegration!)}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-xs font-medium hover:bg-accent transition-colors"
               >
                 <Settings2 className="w-3.5 h-3.5" />
                 Configure
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="ghost"
                 onClick={() =>
                   onDisconnect(connectedIntegration!.id, integration.name)
                 }
@@ -92,24 +94,23 @@ export function IntegrationCard({
               >
                 <Unlink2 className="w-3.5 h-3.5" />
                 Disconnect
-              </button>
+              </Button>
             </>
           ) : (
-            <button
+            <Button
+              variant="primary"
               onClick={() => onConnect(integration.id)}
               disabled={isConnecting}
+              loading={isConnecting}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
             >
-              {isConnecting ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Link2 className="w-4 h-4" />
-              )}
+              {!isConnecting && <Link2 className="w-4 h-4" />}
               Connect
-            </button>
+            </Button>
           )}
 
-          <button
+          <Button
+            variant="ghost"
             onClick={onToggleExpand}
             className="p-2 rounded-lg hover:bg-accent transition-colors"
             aria-label={expanded ? 'Collapse details' : 'Expand details'}
@@ -119,7 +120,7 @@ export function IntegrationCard({
             ) : (
               <ChevronDown className="w-4 h-4 text-muted-foreground" />
             )}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -188,7 +189,8 @@ export function IntegrationCard({
                 </div>
                 <div className="flex items-center gap-2 p-2 rounded-lg bg-muted/50 font-mono text-xs text-muted-foreground overflow-x-auto">
                   <code className="flex-1">{connectedIntegration.webhookUrl}</code>
-                  <button
+                  <Button
+                    variant="ghost"
                     onClick={() => {
                       navigator.clipboard.writeText(
                         connectedIntegration.webhookUrl!,
@@ -198,7 +200,7 @@ export function IntegrationCard({
                     className="shrink-0 text-xs text-primary hover:underline"
                   >
                     Copy
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}

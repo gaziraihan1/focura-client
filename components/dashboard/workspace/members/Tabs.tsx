@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { ProjectSummary, WorkspaceMemberRow } from "@/hooks/useTeamPage";
 
 type Tab = {
@@ -25,12 +26,13 @@ export default function Tabs({
       {tabs.map((tab) => {
         const active = activeTab === tab.id;
         return (
-          <button
+          <Button
             key={tab.id}
+            variant="ghost"
             onClick={() => onActiveTab(tab.id)}
             className={[
               "relative px-4 py-2.5 text-sm font-medium transition-colors duration-150",
-              "border-b-2",
+              "border-b-2 rounded-none",
               active
                 ? "border-foreground text-foreground"
                 : "border-transparent text-muted-foreground hover:text-foreground",
@@ -47,7 +49,7 @@ export default function Tabs({
             >
               {tab.id === "members" ? members.length : projects.length}
             </span>
-          </button>
+          </Button>
         );
       })}
     </div>

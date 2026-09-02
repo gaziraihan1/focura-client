@@ -3,6 +3,7 @@ import {
   Tag, FolderOpen, CreditCard, Bell, Shield, Settings2,
   LayoutGrid, Megaphone, HelpCircle, MonitorSmartphone,
 } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 export interface HelpCategory {
   id      : string;
@@ -197,10 +198,11 @@ export const HelpCategories = ({ onCategoryClick }: HelpCategoriesProps) => {
 
       <div className='grid sm:grid-cols-2 lg:grid-cols-4 gap-3'>
         {HELP_CATEGORIES.map(({ id, icon: Icon, title, description, articleCount, color, iconBg, iconColor }) => (
-          <button
+          <Button
             key={id}
+            variant="outline"
             onClick={() => onCategoryClick(id)}
-            className={`group text-left rounded-2xl border bg-white dark:bg-neutral-900 p-4 transition-all hover:shadow-sm hover:border-neutral-300 dark:hover:border-neutral-600 ${color}`}
+            className={`group text-left rounded-2xl border bg-white dark:bg-neutral-900 p-4 h-auto justify-start transition-all hover:shadow-sm hover:border-neutral-300 dark:hover:border-neutral-600 ${color}`}
           >
             <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform ${iconBg}`}>
               <Icon className={`w-4.5 h-4.5 ${iconColor}`} strokeWidth={1.8} />
@@ -214,7 +216,7 @@ export const HelpCategories = ({ onCategoryClick }: HelpCategoriesProps) => {
             <span className='text-[11px] font-semibold text-neutral-400 dark:text-neutral-500'>
               {articleCount} articles
             </span>
-          </button>
+          </Button>
         ))}
       </div>
     </section>

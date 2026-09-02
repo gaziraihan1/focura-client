@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Lock, Eye, EyeOff } from "lucide-react";
 import { UseFormRegister, FieldErrors } from "react-hook-form";
+import { Button } from "@/components/ui/Button";
 
 type ResetPasswordForm = {
   password: string;
@@ -39,15 +40,17 @@ export function ResetPasswordInput({
           error ? "border-red-500" : "border-border"
         } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
       />
-      <button
+      <Button
         type="button"
+        variant="ghost"
+        size="icon"
         onClick={() => setShowPassword((prev) => !prev)}
         disabled={disabled}
         className="absolute right-3 top-3.5 text-foreground/50 hover:text-foreground transition"
         aria-label={showPassword ? "Hide password" : "Show password"}
       >
         {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-      </button>
+      </Button>
       {error && (
         <p className="text-red-500 text-xs mt-1 ml-1">
           {error.message as string}

@@ -1,5 +1,6 @@
 import { useForgetPasswordPage } from "@/hooks/useForgetPasswordPage";
 import { Loader2, Mail } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 export default function PasswordResetForm() {
   const { register, handleSubmit, onSubmit, isSubmitting, success, errors } =
@@ -27,14 +28,15 @@ export default function PasswordResetForm() {
         )}
       </div>
 
-      <button
+      <Button
         type="submit"
+        variant="primary"
         disabled={isSubmitting || success}
-        className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium hover:opacity-90 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full py-3 rounded-xl font-medium hover:opacity-90 transition flex items-center justify-center gap-2"
       >
         {isSubmitting && <Loader2 className="animate-spin" size={18} />}
         Send Reset Link
-      </button>
+      </Button>
     </form>
   );
 }

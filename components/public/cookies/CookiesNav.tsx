@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
 export interface CookiesNavItem {
@@ -52,10 +53,11 @@ export const CookiesNav = ({ items }: CookiesNavProps) => {
       <ul className="space-y-0.5">
         {items.map((item, index) => (
           <li key={item.id}>
-            <button
+            <Button
               onClick={() => scrollTo(item.id)}
+              variant="ghost"
               className={cn(
-                "w-full text-left flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 group",
+                "w-full text-left flex items-center gap-3 px-3 py-2 rounded-lg text-sm group",
                 activeId === item.id
                   ? "text-neutral-900 dark:text-neutral-50 bg-neutral-100 dark:bg-neutral-800/60 font-medium"
                   : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/40"
@@ -72,7 +74,7 @@ export const CookiesNav = ({ items }: CookiesNavProps) => {
                 {index + 1}
               </span>
               <span className="leading-tight">{item.label}</span>
-            </button>
+            </Button>
           </li>
         ))}
       </ul>

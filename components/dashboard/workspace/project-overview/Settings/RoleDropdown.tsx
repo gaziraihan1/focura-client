@@ -1,6 +1,7 @@
 "use client";
 
 import { LogOut, UserMinus, ChevronDown, Check } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import { RoleBadge } from "./RoleBadge";
 import { ProjectRole } from "@/hooks/useProjects";import React, { useState, useRef, useEffect } from "react";
 
@@ -89,8 +90,9 @@ export function RoleDropdown({
  
   return (
     <div className="relative">
-      <button
+      <Button
         ref={btnRef}
+        variant="outline"
         onClick={handleOpen}
         disabled={!canManage}
         aria-haspopup="menu"
@@ -104,7 +106,7 @@ export function RoleDropdown({
       >
         <RoleBadge role={current} />
         {canManage && <ChevronDown size={11} className="text-muted-foreground" />}
-      </button>
+      </Button>
  
       {open && (
         <>
@@ -122,8 +124,9 @@ export function RoleDropdown({
           >
             <div className="p-1.5 space-y-0.5">
               {ROLES.map((r, i) => (
-                <button
+                <Button
                   key={r}
+                  variant="ghost"
                   role="menuitem"
                   tabIndex={activeIndex === i ? 0 : -1}
                   onClick={() => { onChangeRole(memberId, r); setOpen(false); }}
@@ -136,11 +139,12 @@ export function RoleDropdown({
                 >
                   <RoleBadge role={r} />
                   {r === current && <Check size={11} className="text-primary" />}
-                </button>
+                </Button>
               ))}
             </div>
             <div className="border-t border-border p-1.5">
-              <button
+              <Button
+                variant="ghost"
                 role="menuitem"
                 tabIndex={activeIndex === ROLES.length ? 0 : -1}
                 onClick={() => { onRemove(memberId); setOpen(false); }}
@@ -148,7 +152,7 @@ export function RoleDropdown({
               >
                 {isSelf ? <LogOut size={12} /> : <UserMinus size={12} />}
                 {isSelf ? "Leave project" : "Remove member"}
-              </button>
+              </Button>
             </div>
           </div>
         </>

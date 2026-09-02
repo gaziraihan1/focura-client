@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { Label, useLabelNameExists } from "@/hooks/useLabels";
 import { cn } from "@/lib/utils";
 // import { Label } from "@/types";
@@ -84,11 +85,12 @@ export default function LabelForm({ label, workspaceId, onSave, onCancel, isSavi
         </span>
         <div className="grid grid-cols-8 gap-2">
           {PRESET_COLORS.map((presetColor) => (
-            <button
+            <Button
               key={presetColor}
               type="button"
               aria-label={`Select color ${presetColor}`}
               onClick={() => setColor(presetColor)}
+              variant="ghost"
               className={cn(
                 'w-8 h-8 rounded-full transition-all',
                 color === presetColor && 'ring-2 ring-primary ring-offset-2 ring-offset-background'
@@ -98,7 +100,7 @@ export default function LabelForm({ label, workspaceId, onSave, onCancel, isSavi
               {color === presetColor && (
                 <Check className="w-4 h-4 mx-auto text-white" />
               )}
-            </button>
+            </Button>
           ))}
         </div>
         <input aria-label="Label color"
@@ -126,21 +128,22 @@ export default function LabelForm({ label, workspaceId, onSave, onCancel, isSavi
 
       {/* Actions */}
       <div className="flex gap-2">
-        <button
+        <Button
           type="submit"
           disabled={isSaving}
-          className="flex-1 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors"
+          className="flex-1 px-4 py-2 rounded-lg hover:bg-primary/90"
         >
           {isSaving ? 'Saving...' : label ? 'Update' : 'Create'}
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           onClick={onCancel}
           disabled={isSaving}
-          className="px-4 py-2 bg-muted text-foreground rounded-lg hover:bg-accent disabled:opacity-50 transition-colors"
+          variant="secondary"
+          className="px-4 py-2 rounded-lg"
         >
           Cancel
-        </button>
+        </Button>
       </div>
     </form>
   );

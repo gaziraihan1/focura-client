@@ -2,6 +2,7 @@
 import { useState, useCallback } from 'react';
 import { Copy, Check } from 'lucide-react';
 import type { CopyableIdProps } from '@/types/admin.types';
+import { Button } from '@/components/ui/Button';
 
 export function CopyableId({ id }: CopyableIdProps) {
   const [copied, setCopied] = useState(false);
@@ -14,8 +15,10 @@ export function CopyableId({ id }: CopyableIdProps) {
   }, [id]);
 
   return (
-    <button
+    <Button
       type="button"
+      variant="secondary"
+      size="sm"
       onClick={copy}
       className="group inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-muted border border-border hover:border-primary/30 transition-colors"
     >
@@ -27,6 +30,6 @@ export function CopyableId({ id }: CopyableIdProps) {
       ) : (
         <Copy className="w-3 h-3 text-muted-foreground/60 group-hover:text-muted-foreground shrink-0 transition-colors" />
       )}
-    </button>
+    </Button>
   );
 }

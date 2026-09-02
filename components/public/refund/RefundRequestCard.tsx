@@ -7,8 +7,9 @@ import {
   FileText,
   Layers,
   MessageSquare,
-  Copy,
+  Copy
 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 const fields = [
   {
@@ -79,16 +80,17 @@ export const RefundRequestCard = () => {
               focurabusiness@gmail.com
             </span>
           </div>
-          <button
+          <Button
+            variant="ghost"
             onClick={() =>
               navigator.clipboard.writeText("focurabusiness@gmail.com")
             }
-            className="flex items-center gap-1 text-xs text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors"
+            className="h-auto w-auto flex items-center gap-1 text-xs text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors"
             title="Copy email address"
           >
             <Copy className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Copy</span>
-          </button>
+          </Button>
         </div>
       </div>
 

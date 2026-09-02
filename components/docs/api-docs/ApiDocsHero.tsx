@@ -1,5 +1,6 @@
 import { Copy, Globe, Lock, Zap } from 'lucide-react';
 import { FULL_BASE, API_VERSION }  from '@/lib/apiData';
+import { Button } from '@/components/ui/Button';
 
 export const ApiDocsHero = () => {
   return (
@@ -81,13 +82,14 @@ export const ApiDocsHero = () => {
                       <code className='text-xs font-mono text-neutral-800 dark:text-neutral-200 break-all'>
                         {url}
                       </code>
-                      <button
+                      <Button
+                        variant="ghost"
                         onClick={() => navigator.clipboard.writeText(url)}
                         className='shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200'
                         title='Copy URL'
                       >
                         <Copy className='w-3.5 h-3.5' />
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 ))}

@@ -1,4 +1,5 @@
 import { CheckCheck, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface NotificationDropdownHeaderProps {
   unreadCount: number;
@@ -28,15 +29,16 @@ export function NotificationDropdownHeader({
       </div>
 
       {unreadCount > 0 && (
-        <button
+        <Button
           onClick={onMarkAllAsRead}
           disabled={isMarkingAllAsRead}
-          className="text-xs text-primary hover:text-primary/80 disabled:opacity-50 flex items-center gap-1 transition-colors"
+          variant="ghost"
+          className="text-xs text-primary hover:text-primary/80 flex items-center gap-1"
           title="Mark all as read"
         >
           <CheckCheck className="w-3.5 h-3.5" />
           Mark all read
-        </button>
+        </Button>
       )}
     </div>
   );

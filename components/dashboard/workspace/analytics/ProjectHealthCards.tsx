@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ProjectHealth } from '@/hooks/useAnalytics';
 import { formatDate, getHealthColor } from '@/utils/analytics.utils';
+import { Button } from '@/components/ui/Button';
 import { Folder, AlertCircle, CheckCircle2, Clock, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface ProjectHealthCardsProps {
@@ -104,8 +105,8 @@ export function ProjectHealthCards({ data }: ProjectHealthCardsProps) {
       </div>
 
       {hiddenCount > 0 && (
-        <button
-          type="button"
+        <Button
+          variant="outline"
           onClick={() => setExpanded((prev) => !prev)}
           aria-expanded={expanded}
           className="mt-6 w-full flex items-center justify-center gap-1.5 py-2 text-sm font-medium text-muted-foreground rounded-lg border border-border transition-colors hover:bg-accent hover:text-foreground"
@@ -121,7 +122,7 @@ export function ProjectHealthCards({ data }: ProjectHealthCardsProps) {
               See More Project Health ({hiddenCount})
             </>
           )}
-        </button>
+        </Button>
       )}
     </div>
   );

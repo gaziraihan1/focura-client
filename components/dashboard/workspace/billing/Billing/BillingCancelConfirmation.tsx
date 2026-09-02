@@ -1,4 +1,5 @@
 // components/WorkspaceBilling/CancelConfirmation.tsx
+import { Button } from "@/components/ui/Button";
 
 interface CancelConfirmationProps {
   onConfirm: () => void;
@@ -18,19 +19,21 @@ export function BillingCancelConfirmation({
         period ends. Your other workspaces are not affected.
       </p>
       <div className="flex gap-2">
-        <button
+        <Button
+          variant="destructive"
           onClick={onConfirm}
           disabled={isLoading}
           className="px-4 py-1.5 rounded-lg bg-destructive text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-60"
         >
           {isLoading ? 'Canceling…' : 'Yes, cancel plan'}
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="outline"
           onClick={onCancel}
           className="px-4 py-1.5 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted transition-colors"
         >
           Keep plan
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ import {
   type AutomationTrigger,
 } from "@/hooks/useAutomations";
 import { STATUS_OPTIONS } from "@/constants/task.constants";
+import { Button } from "@/components/ui/Button";
 import { useWorkspaceMembers } from "@/hooks/useWorkspaceQueries";
 import type { WorkspaceMember } from "@/hooks/useWorkspace";
 
@@ -416,15 +417,16 @@ export function AutomationRuleForm({
             <span className="text-xs font-medium text-muted-foreground">
               Actions ({actions.length}/5)
             </span>
-            <button
+            <Button
               type="button"
               onClick={addAction}
               disabled={actions.length >= 5}
+              variant="ghost"
               className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline disabled:opacity-50"
             >
               <Plus className="h-3.5 w-3.5" />
               Add action
-            </button>
+            </Button>
           </div>
 
           {actions.length === 0 && (
@@ -449,23 +451,25 @@ export function AutomationRuleForm({
         {error && <p className="text-xs font-medium text-red-500">{error}</p>}
 
         <div className="flex items-center justify-end gap-2 pt-1">
-          <button
+          <Button
             type="button"
             onClick={onCancel}
             disabled={isPending}
+            variant="outline"
             className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-accent transition-colors disabled:opacity-50"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
             onClick={handleSubmit}
             disabled={isPending}
+            loading={isPending}
+            variant="primary"
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50"
           >
-            {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
             {initial ? "Save changes" : "Create rule"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -558,14 +562,16 @@ function ActionRow({ action, members, onChange, onRemove }: ActionRowProps) {
             </select>
           )}
         </div>
-        <button
+        <Button
           type="button"
           onClick={onRemove}
+          variant="ghost"
+          size="icon"
           className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
           aria-label="Remove action"
         >
           <Trash2 className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
     );
   }
@@ -601,14 +607,16 @@ function ActionRow({ action, members, onChange, onRemove }: ActionRowProps) {
             ))}
           </select>
         </div>
-        <button
+        <Button
           type="button"
           onClick={onRemove}
+          variant="ghost"
+          size="icon"
           className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
           aria-label="Remove action"
         >
           <Trash2 className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
     );
   }

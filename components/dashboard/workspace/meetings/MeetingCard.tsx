@@ -20,6 +20,7 @@ import {
   isMeetingLive,
 } from '@/utils/meeting.utils';
 import Image from 'next/image';
+import { Button } from '@/components/ui/Button';
 
 interface Props {
   meeting: Meeting;
@@ -89,13 +90,14 @@ export function MeetingCard({
 
         {canManage && !isCancelled && (
           <div className="relative shrink-0" onClick={(e) => e.stopPropagation()}>
-            <button
+            <Button
+              variant="ghost"
               onClick={() => setMenuOpen((v) => !v)}
-              className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground md:opacity-0 transition-opacity group-hover:opacity-100 hover:bg-accent hover:text-foreground"
+              className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground md:opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground p-0"
               aria-label="Meeting actions"
             >
               <MoreVertical size={15} />
-            </button>
+            </Button>
             {menuOpen && (
               <MenuDropdown
                 meeting={meeting}
@@ -210,8 +212,9 @@ function MenuDropdown({
   onClose: () => void;
 }) {
   const item = (label: string, action: () => void, danger = false) => (
-    <button
+    <Button
       key={label}
+      variant="ghost"
       onClick={() => { action(); onClose(); }}
       className={`w-full px-3 py-1.5 text-left text-sm rounded-md transition-colors ${
         danger
@@ -220,7 +223,7 @@ function MenuDropdown({
       }`}
     >
       {label}
-    </button>
+    </Button>
   );
 
   return (

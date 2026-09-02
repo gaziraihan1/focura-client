@@ -2,6 +2,7 @@
 import { ProjectMember } from "@/types/taskForm.types";
 import { Users } from "lucide-react";
 import Image from "next/image";
+import { Button } from "@/components/ui/Button";
 
 interface TaskAssigneePickerProps {
   projectMembers: ProjectMember[];
@@ -27,11 +28,11 @@ export function TaskAssigneePicker({
           const isSelected = selectedSet.has(member.userId);
 
           return (
-            <button
+            <Button
               key={member.id}
-              type="button"
+              variant="ghost"
               onClick={() => onToggle(member.userId)}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg border transition ${
+              className={`h-auto w-full justify-start gap-3 px-3 py-2 rounded-lg border ${
                 isSelected
                   ? "bg-primary/10 border-primary"
                   : "border-border hover:bg-accent"
@@ -71,7 +72,7 @@ export function TaskAssigneePicker({
                   </svg>
                 </div>
               )}
-            </button>
+            </Button>
           );
         })}
       </div>

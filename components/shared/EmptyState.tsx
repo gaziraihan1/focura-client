@@ -1,5 +1,6 @@
 import { type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 
 interface EmptyStateProps {
   icon: LucideIcon;
@@ -34,12 +35,7 @@ export function EmptyState({
         {description}
       </p>
       {action && (
-        <button
-          onClick={action.onClick}
-          className="inline-flex items-center px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition font-medium"
-        >
-          {action.label}
-        </button>
+        <Button onClick={action.onClick}>{action.label}</Button>
       )}
     </div>
   );

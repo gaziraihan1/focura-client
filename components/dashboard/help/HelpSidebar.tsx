@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import type { HelpTopic, HelpTopicId } from "@/types/help.types";
+import { Button } from "@/components/ui/Button";
 
 interface HelpSidebarProps {
   topics: HelpTopic[];
@@ -33,10 +34,11 @@ export function HelpSidebar({
       {topics.map((topic) => {
         const isActive = topic.id === activeTopicId;
         return (
-          <button
+          <Button
             key={topic.id}
             onClick={() => onSelect(topic.id)}
             aria-current={isActive ? "page" : undefined}
+            variant="ghost"
             className={cn(
               "group flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-left w-full",
               "transition-all duration-150 outline-none",
@@ -59,7 +61,7 @@ export function HelpSidebar({
             <span className="sm:hidden text-sm leading-none">{topic.icon}</span>
 
             <span className="truncate">{topic.label}</span>
-          </button>
+          </Button>
         );
       })}
     </nav>

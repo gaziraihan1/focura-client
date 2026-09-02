@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Search, Users } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 import { MemberRow }    from './MemberRow';
 import { EmptyState }   from '@/components/shared/EmptyState';
 import { WorkspaceRoleOption } from './RoleDropdown';
@@ -68,8 +69,9 @@ export function MembersTab({ members, currentUserId, canChangeRoles, onRoleChang
           {ROLE_FILTERS.map((chip) => {
             const active = roleFilter === chip.value;
             return (
-              <button
+              <Button
                 key={chip.label}
+                variant="ghost"
                 onClick={() => setRoleFilter(chip.value)}
                 className={[
                   'whitespace-nowrap px-3 py-1 rounded-full text-xs font-medium border transition-colors duration-150',
@@ -79,7 +81,7 @@ export function MembersTab({ members, currentUserId, canChangeRoles, onRoleChang
                 ].join(' ')}
               >
                 {chip.label}
-              </button>
+              </Button>
             );
           })}
         </div>

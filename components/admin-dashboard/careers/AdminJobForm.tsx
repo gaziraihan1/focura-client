@@ -11,6 +11,7 @@ import {
   ApplicationFields,
 } from './JobFormFields';
 import { jobFormSchema, type AdminJobFormValues } from './job-form-schema';
+import { Button } from '@/components/ui/Button';
 
 // Re-exported for backward compatibility (useJob.ts / AdminJobManager import
 // it from this module historically).
@@ -114,10 +115,12 @@ export const AdminJobForm = ({ initial, onSubmit, submitLabel }: AdminJobFormPro
       <ApplicationFields register={register} errors={errors} />
 
       <div className='pt-2 border-t border-border'>
-        <button
+        <Button
           type='submit'
+          variant='primary'
+          size='lg'
           disabled={isSubmitting}
-          className='inline-flex items-center gap-2 bg-primary text-primary-foreground rounded-xl px-5 py-3 text-sm font-bold hover:bg-primary/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed'
+          className='rounded-xl px-5 py-3 text-sm font-bold hover:bg-primary/90'
         >
           {isSubmitting ? (
             <>
@@ -130,7 +133,7 @@ export const AdminJobForm = ({ initial, onSubmit, submitLabel }: AdminJobFormPro
               {submitLabel}
             </>
           )}
-        </button>
+        </Button>
       </div>
     </form>
   );

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useEffectEvent }    from 'react';
 import { X, MapPin, Clock, Briefcase, ExternalLink, Mail, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 import { DEPARTMENT_LABELS, LOCATION_LABELS, TYPE_LABELS, EXPERIENCE_LABELS,JobListItem  } from '@/types/job.types';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 
@@ -57,14 +58,15 @@ export const CareersApplyModal = ({ job, onClose }: CareersApplyModalProps) => {
               {job.title}
             </h2>
           </div>
-          <button
+          <Button
             ref={closeRef}
             onClick={onClose}
             aria-label='Close'
-            className='shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors'
+            variant='ghost'
+            className='shrink-0 w-8 h-8 rounded-lg text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800'
           >
             <X className='w-4 h-4' />
-          </button>
+          </Button>
         </div>
 
         {/* Body */}

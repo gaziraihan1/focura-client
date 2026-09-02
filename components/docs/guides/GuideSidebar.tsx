@@ -3,6 +3,7 @@
 import { X } from "lucide-react";
 import type { GuideSection } from "@/types/guides.types";
 import { COLOR_MAP } from "@/constants/guides.constants";
+import { Button } from "@/components/ui/Button";
 
 interface GuideSidebarProps {
   sections: GuideSection[];
@@ -23,11 +24,11 @@ function NavItem({
 }) {
   const c = COLOR_MAP[section.color];
   return (
-    <button
-      type="button"
+    <Button
+      variant="ghost"
       onClick={onClick}
       aria-current={isActive ? "page" : undefined}
-      className={`group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+      className={`group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm h-auto justify-start ${
         isActive
           ? `${c.bg} font-medium ${c.text}`
           : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -44,7 +45,7 @@ function NavItem({
       >
         {section.articles.length}
       </span>
-    </button>
+    </Button>
   );
 }
 
@@ -88,14 +89,15 @@ export function GuideSidebar({
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
               Topics
             </p>
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={onClose}
               aria-label="Close guide topics"
-              className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+              className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground h-auto w-auto"
             >
               <X className="w-4 h-4" />
-            </button>
+            </Button>
           </div>
           <nav aria-label="Guide topics" className="flex flex-col gap-0.5 px-3 pb-8">
             {sections.map((section) => (

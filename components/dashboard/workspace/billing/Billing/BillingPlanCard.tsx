@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ChevronRight, CreditCard, ExternalLink } from 'lucide-react';
 import { PLAN_META } from '@/constants/billing.upgrade.constants';
+import { Button } from '@/components/ui/Button';
 import { formatDate } from '@/utils/billing.upgrade.utils';
 import { BillingCancelConfirmation } from './BillingCancelConfirmation';
 import type { PlanCardProps } from '@/types/billing.upgrade.types';
@@ -102,7 +103,8 @@ export function BillingPlanCard({
         {/* Actions */}
         {!isFree && (
           <div className="flex flex-wrap gap-2">
-            <button
+            <Button
+              variant="primary"
               onClick={onPortal}
               disabled={portalPending}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
@@ -110,19 +112,21 @@ export function BillingPlanCard({
               <CreditCard className="w-4 h-4" />
               {portalPending ? 'Opening…' : 'Manage payment'}
               <ExternalLink className="w-3.5 h-3.5 opacity-60" />
-            </button>
+            </Button>
 
             {!sub?.cancelAtPeriodEnd && (
-              <button
+              <Button
+                variant="outline"
                 onClick={() => setCancelConfirm(true)}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-destructive/30 text-destructive text-sm font-medium hover:bg-destructive/5 transition-colors"
               >
                 Cancel plan
-              </button>
+              </Button>
             )}
 
             {sub?.cancelAtPeriodEnd && (
-              <button
+              <Button
+                variant="outline"
                 onClick={onReactivate}
                 disabled={reactivatePending}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-foreground text-sm font-medium hover:bg-muted transition-colors disabled:opacity-50"
@@ -130,7 +134,7 @@ export function BillingPlanCard({
                 {reactivatePending
                   ? 'Reactivating…'
                   : 'Keep subscription active'}
-              </button>
+              </Button>
             )}
           </div>
         )}

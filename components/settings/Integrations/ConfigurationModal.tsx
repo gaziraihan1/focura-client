@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Loader2, AlertCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { api } from '@/lib/axios';
 import toast from 'react-hot-toast';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 import type { Integration, IntegrationConfig, Workspace } from '@/types/integration.types';
 
 interface ConfigurationModalProps {
@@ -46,12 +47,13 @@ export function ConfigurationModal({
           <h3 className="text-lg font-semibold">
             Configure {integration.name}
           </h3>
-          <button aria-label="Close"
+          <Button variant="ghost"
             onClick={onClose}
             className="p-1 rounded-lg hover:bg-accent transition-colors"
+            aria-label="Close"
           >
             <AlertCircle className="w-5 h-5 text-muted-foreground" />
-          </button>
+          </Button>
         </div>
 
         <div className="space-y-6">
@@ -79,8 +81,9 @@ export function ConfigurationModal({
             <span className="text-sm font-medium">Sync Direction</span>
             <div className="flex gap-2">
               {(['one-way', 'two-way'] as const).map((dir) => (
-                <button
+                <Button
                   key={dir}
+                  variant="outline"
                   onClick={() => setConfig({ ...config, syncDirection: dir })}
                   className={cn(
                     'flex-1 px-4 py-2 rounded-lg border text-sm font-medium transition-colors',
@@ -90,7 +93,7 @@ export function ConfigurationModal({
                   )}
                 >
                   {dir === 'one-way' ? 'Focura → Provider' : 'Two-way'}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -177,23 +180,22 @@ export function ConfigurationModal({
         </div>
 
         <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-border">
-          <button
+          <Button
+            variant="outline"
             onClick={onClose}
             className="px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-accent transition-colors"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="primary"
             onClick={handleSave}
             disabled={saving}
+            loading={saving}
             className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
           >
-            {saving ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              'Save Configuration'
-            )}
-          </button>
+            Save Configuration
+          </Button>
         </div>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { m as motion } from "framer-motion";
 import { AlertCircle } from "lucide-react";
 
@@ -42,13 +43,14 @@ export function DangerZoneTab({
                   Remove yourself from this workspace
                 </p>
               </div>
-              <button
+              <Button
+                variant="destructive"
                 onClick={onLeaveWorkspace}
                 disabled={isLeavingWorkspace}
-                className="px-4 py-2 rounded-lg bg-red-500 text-white hover:opacity-90 transition disabled:opacity-50"
+                className="px-4 py-2 rounded-lg hover:opacity-90 transition"
               >
                 Leave
-              </button>
+              </Button>
             </div>
           )}
 
@@ -61,12 +63,13 @@ export function DangerZoneTab({
                   can be restored by Focura support)
                 </p>
               </div>
-              <button
+              <Button
+                variant="destructive"
                 onClick={onDeleteWorkspace}
-                className="px-4 py-2 rounded-lg bg-red-500 text-white hover:opacity-90 transition"
+                className="px-4 py-2 rounded-lg hover:opacity-90 transition"
               >
                 Delete
-              </button>
+              </Button>
             </div>
           )}
         </div>

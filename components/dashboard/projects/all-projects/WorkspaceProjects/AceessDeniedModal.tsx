@@ -1,5 +1,6 @@
 // AccessDeniedModal.tsx
 import { X } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface AccessDeniedModalProps {
   isOpen: boolean;
@@ -18,13 +19,13 @@ export function AccessDeniedModal({ isOpen, onClose }: AccessDeniedModalProps) {
         className="bg-card border border-border rounded-xl p-6 max-w-md w-full mx-4 relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <button
+        <Button variant="ghost"
           onClick={onClose}
-          className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition"
+          className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
           aria-label="Close modal"
         >
           <X size={20} />
-        </button>
+        </Button>
 
         <h3 className="text-xl font-semibold mb-2">Access Restricted</h3>
         <p className="text-muted-foreground mb-4">
@@ -32,12 +33,9 @@ export function AccessDeniedModal({ isOpen, onClose }: AccessDeniedModalProps) {
           project owner or workspace administrator to request access.
         </p>
 
-        <button
-          onClick={onClose}
-          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition py-2 px-4 rounded-lg font-medium"
-        >
+        <Button onClick={onClose} className="w-full py-2 rounded-lg">
           Close
-        </button>
+        </Button>
       </div>
     </div>
   );

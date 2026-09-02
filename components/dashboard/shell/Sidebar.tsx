@@ -19,6 +19,7 @@ import {
   HeartPulse,
 } from "lucide-react";
 import SidebarNewProjectButton from "./SidebarNewProjectButton";
+import { Button } from "@/components/ui/Button";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -186,13 +187,14 @@ export default function Sidebar({ isOpen, onClose, collapsed = false }: SidebarP
             Focura
           </span>
         </Link>
-        <button
+        <Button
+          variant="ghost"
           onClick={onClose}
           aria-label="Close sidebar"
-          className="lg:hidden p-1.5 rounded-lg hover:bg-sidebar-accent transition text-sidebar-foreground/60 hover:text-sidebar-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="h-auto w-auto lg:hidden p-1.5 rounded-lg text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent"
         >
           <X size={18} />
-        </button>
+        </Button>
       </div>
 
       {/* Quick project start — opens the template quick-picker */}
@@ -215,18 +217,16 @@ export default function Sidebar({ isOpen, onClose, collapsed = false }: SidebarP
             <div key={item.name}>
               {item.children ? (
                 <>
-                  <button
+                  <Button
+                    variant="ghost"
                     onClick={() => toggleGroup(item)}
                     aria-expanded={visible}
-                    className={`
-                      w-full flex items-center justify-between px-3 py-2.5 rounded-xl
-                      text-sm font-medium transition-colors duration-150 group
-                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+                    className={`h-auto w-full justify-between gap-0 px-3 py-2.5 rounded-xl
+                      text-sm font-medium group hover:bg-sidebar-accent/60
                       ${active
                         ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
-                      }
-                    `}
+                        : "text-sidebar-foreground/70 hover:text-sidebar-foreground"
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <item.icon
@@ -242,7 +242,7 @@ export default function Sidebar({ isOpen, onClose, collapsed = false }: SidebarP
                         visible ? "rotate-180" : ""
                       }`}
                     />
-                  </button>
+                  </Button>
 
                   {visible && (
                     <div className="ml-8 mt-0.5 mb-1 space-y-0.5 border-l border-sidebar-border/60 pl-3" role="group" aria-label={`${item.name} submenu`}>

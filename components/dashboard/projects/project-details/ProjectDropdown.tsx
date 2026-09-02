@@ -9,6 +9,7 @@ import { ProjectMember, useProjects } from '@/hooks/useProjects';
 import { useWorkspaceProjectsPage } from '@/hooks/useProjectsPage';
 import { ProjectData } from '@/types/project.types';
 import { useWorkspaceSlug } from '@/hooks/useRouteParams';
+import { Button } from '@/components/ui/Button';
 
 export default function ProjectDropdown() {
   const [open, setOpen] = useState(false);
@@ -24,9 +25,10 @@ export default function ProjectDropdown() {
 
   return (
     <div className="relative">
-      <button
+      <Button
+        variant="outline"
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium hover:bg-accent transition-colors"
+        className="h-auto gap-2 px-3 py-2 text-sm font-medium hover:bg-accent"
       >
         <FolderKanban className="h-4 w-4 text-muted-foreground" />
         <span>Projects</span>
@@ -35,7 +37,7 @@ export default function ProjectDropdown() {
             open ? 'rotate-180' : ''
           }`}
         />
-      </button>
+      </Button>
 
       {open && (
         <div className="absolute min-[400px]:right-0 mt-2 w-64 rounded-xl border border-border bg-popover text-popover-foreground shadow-lg z-50 animate-in fade-in-0 zoom-in-95">

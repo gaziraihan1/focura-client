@@ -1,5 +1,7 @@
 import { Search, Filter, ArrowUpDown, ArrowUp, ArrowDown, X } from "lucide-react";
 import { m as motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 import { FilterPanel } from "./FilterPanel";
 
 interface Project {
@@ -112,13 +114,15 @@ export function TaskSearchAndFilters({
         </div>
 
         {/* Filter Button */}
-        <button
+        <Button
+          variant="primary"
           onClick={onToggleFilters}
-          className={`px-4 py-2 rounded-lg border transition flex items-center gap-2 whitespace-nowrap ${
+          className={cn(
+            "px-4 py-2 rounded-lg flex items-center gap-2 whitespace-nowrap",
             showFilters || activeFiltersCount > 0
               ? "bg-primary text-primary-foreground border-primary"
-              : "border-border text-foreground hover:bg-accent"
-          }`}
+              : "border border-border text-foreground hover:bg-accent"
+          )}
         >
           <Filter size={18} />
           Filters
@@ -127,7 +131,7 @@ export function TaskSearchAndFilters({
               {activeFiltersCount}
             </span>
           )}
-        </button>
+        </Button>
 
         {/* Sort Dropdown */}
         <div className="flex items-center gap-2">
@@ -184,13 +188,14 @@ export function TaskSearchAndFilters({
 
           {activeFiltersCount > 0 && (
             <div className="flex justify-end mt-4">
-              <button
+              <Button
+                variant="ghost"
                 onClick={onClearFilters}
-                className="px-4 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition flex items-center gap-2"
+                className="px-4 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-accent flex items-center gap-2"
               >
                 <X size={16} />
                 Clear all filters
-              </button>
+              </Button>
             </div>
           )}
         </motion.div>

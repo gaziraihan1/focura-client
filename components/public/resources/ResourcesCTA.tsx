@@ -1,6 +1,7 @@
 "use client";
 
 import { m as motion } from "framer-motion";
+import { Button } from "@/components/ui/Button";
 
 export default function ResourcesCTA() {
   return (
@@ -35,14 +36,14 @@ export default function ResourcesCTA() {
                 border border-border w-full max-w-sm focus:ring-2 ring-primary outline-none 
               "
             />
-            <button
+            <Button
               className="
-                px-6 py-3 rounded-xl font-medium bg-primary text-primary-foreground 
-                hover:opacity-90 transition
+                px-6 py-3 rounded-xl h-auto font-medium transition
+                hover:opacity-90
               "
             >
               Subscribe
-            </button>
+            </Button>
           </div>
         </motion.div>
       </div>

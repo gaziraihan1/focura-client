@@ -3,6 +3,7 @@
 import { useEffect, useRef, useEffectEvent } from "react";
 import { AlertTriangle, X } from "lucide-react";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { Button } from "@/components/ui/Button";
 
 interface DeleteConfirmModalProps {
   title: string;
@@ -56,34 +57,40 @@ export function DeleteConfirmModal({ title, isDeleting, onCancel, onConfirm }: D
               permanently deleted. This action cannot be undone.
             </p>
           </div>
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={onCancel}
             disabled={isDeleting}
             aria-label="Close"
-            className="shrink-0 rounded-md p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground disabled:opacity-50"
+            className="shrink-0 rounded-md p-1 h-auto text-muted-foreground hover:bg-accent hover:text-accent-foreground disabled:opacity-50"
           >
             <X className="h-3.5 w-3.5" />
-          </button>
+          </Button>
         </div>
 
         <div className="mt-4 flex justify-end gap-2">
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={onCancel}
             disabled={isDeleting}
-            className="rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-accent disabled:opacity-50"
+            className="rounded-md px-3 py-1.5 h-auto text-xs font-medium text-foreground hover:bg-accent"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="destructive"
+            size="sm"
             onClick={onConfirm}
             disabled={isDeleting}
-            className="rounded-md bg-destructive px-3 py-1.5 text-xs font-medium text-destructive-foreground transition-colors hover:bg-destructive/90 disabled:opacity-50"
+            className="rounded-md px-3 py-1.5 h-auto text-xs font-medium hover:bg-destructive/90"
           >
             {isDeleting ? "Deleting…" : "Delete"}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

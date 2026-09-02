@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Lock, Sparkles } from 'lucide-react';
 import { useWorkspaceSlug } from '@/hooks/useRouteParams';
+import { Button } from '@/components/ui/Button';
 
 interface UpgradeSectionCardProps {
   /** Name of the locked section, e.g. "Member Leaderboard" */
@@ -60,15 +61,14 @@ export function UpgradeSectionCard({
         </div>
 
         {/* CTA */}
-        <button
+        <Button
+          size="sm"
           onClick={() => router.push(`/dashboard/workspaces/${slug}/billing/upgrade`)}
-          className="shrink-0 inline-flex items-center justify-center gap-1.5 h-9 px-4 rounded-lg
-                     bg-primary text-primary-foreground text-sm font-medium
-                     hover:bg-primary/90 active:scale-[0.98] transition-colors transition-transform"
+          leftIcon={<Sparkles className="w-3.5 h-3.5" aria-hidden="true" />}
+          className="shrink-0"
         >
-          <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
           {ctaLabel}
-        </button>
+        </Button>
       </div>
     </section>
   );

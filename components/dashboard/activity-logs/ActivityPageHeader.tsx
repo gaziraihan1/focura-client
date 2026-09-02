@@ -1,4 +1,5 @@
 import { Activity, RefreshCw, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface ActivityPageHeaderProps {
   onRefresh: () => void;
@@ -26,21 +27,23 @@ export function ActivityPageHeader({
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <button
+        <Button
+          variant="outline"
           onClick={onRefresh}
-          className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium text-foreground hover:bg-accent transition-colors"
+          className="gap-2 rounded-lg px-3 py-2 text-sm font-medium text-foreground hover:bg-accent"
         >
           <RefreshCw className="h-4 w-4" />
           Refresh
-        </button>
+        </Button>
 
-        <button
+        <Button
+          variant="outline"
           onClick={onClearAll}
-          className="inline-flex items-center gap-2 rounded-lg border border-destructive/30 bg-background px-3 py-2 text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors"
+          className="gap-2 rounded-lg border border-destructive/30 bg-background px-3 py-2 text-sm font-medium text-destructive hover:bg-destructive/10"
         >
           <Trash2 className="h-4 w-4" />
           Clear All
-        </button>
+        </Button>
       </div>
     </div>
   );

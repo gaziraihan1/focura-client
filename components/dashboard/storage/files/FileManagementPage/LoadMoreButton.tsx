@@ -1,5 +1,5 @@
 // components/FileManagement/LoadMoreButton.tsx
-import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 interface LoadMoreButtonProps {
   hasMore: boolean;
@@ -16,14 +16,14 @@ export function LoadMoreButton({
 
   return (
     <div className="flex justify-center">
-      <button
+      <Button
+        variant="outline"
         onClick={onLoadMore}
-        disabled={isLoading}
-        className="px-6 py-3 border rounded-lg hover:bg-muted transition-colors disabled:opacity-50 flex items-center gap-2"
+        loading={isLoading}
+        className="px-6 py-3 rounded-lg border hover:bg-muted"
       >
-        {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
         Load More Files
-      </button>
+      </Button>
     </div>
   );
 }

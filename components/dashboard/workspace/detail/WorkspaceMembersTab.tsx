@@ -1,6 +1,7 @@
 import { m as motion } from "framer-motion";
 import { Users, UserPlus, X, Crown, LucideIcon } from "lucide-react";
 import Image from "next/image";
+import { Button } from "@/components/ui/Button";
 import {
   useRemoveMember,
   useUpdateMemberRole,
@@ -103,14 +104,14 @@ export function WorkspaceMembersTab({
     >
       {(isAdmin || isOwner) && (
         <div className="flex justify-end">
-          <button
+          <Button
             onClick={onInviteClick}
-            className="px-3 sm:px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2 text-sm sm:text-base"
+            className="px-3 sm:px-4 py-2 rounded-lg hover:opacity-90 flex items-center gap-2 text-sm sm:text-base"
           >
             <UserPlus size={16} className="sm:w-4.5 sm:h-4.5" />
             <span className="hidden xs:inline">Invite Member</span>
             <span className="xs:hidden">Invite</span>
-          </button>
+          </Button>
         </div>
       )}
 
@@ -192,14 +193,15 @@ export function WorkspaceMembersTab({
                       ? member.role !== "OWNER"
                       : isAdmin &&
                         (member.role === "MEMBER" || member.role === "GUEST")) && (
-                      <button
+                      <Button
+                        variant="ghost"
                         onClick={() => handleRemoveMember(member.id)}
                         disabled={removeMember.isPending}
-                        className="p-1.5 sm:p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 transition disabled:opacity-50"
+                        className="p-1.5 sm:p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 transition"
                         aria-label="Remove member"
                       >
                         <X size={14} className="sm:w-4 sm:h-4" />
-                      </button>
+                      </Button>
                     )}
                   </div>
                 </div>

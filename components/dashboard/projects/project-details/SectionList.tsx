@@ -15,6 +15,7 @@ import {
 } from "@/hooks/useProjectFeatures";
 import { NewSectionForm } from "./NewSectionForm";
 import { SectionCard } from "./SectionCard"
+import { Button } from "@/components/ui/Button";
 
 interface SectionListProps {
   projectId: string;
@@ -192,13 +193,14 @@ export default function SectionList({ projectId, tasksBaseHref }: SectionListPro
           onCancel={() => setShowNew(false)}
         />
       ) : (
-        <button
+        <Button
+          variant="outline"
           onClick={() => setShowNew(true)}
-          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-dashed border-border text-sm text-muted-foreground hover:text-foreground hover:border-solid transition"
+          className="w-full h-auto gap-2 py-2.5 rounded-xl border-dashed text-sm text-muted-foreground hover:text-foreground hover:border-solid hover:border-border"
         >
           <Plus size={16} />
           Add Section
-        </button>
+        </Button>
       )}
 
       <ConfirmModal

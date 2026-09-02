@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { User, Camera, Loader2 } from "lucide-react";
 import Image from "next/image";
+import { Button } from "@/components/ui/Button";
 
 interface ProfilePictureUploadProps {
   image?: string;
@@ -37,17 +38,19 @@ export function ProfilePictureUpload({
         </div>
         {isEditing && (
           <>
-            <button aria-label="Upload"
+            <Button aria-label="Upload"
+              variant="primary"
+              size="icon"
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
-              className="absolute bottom-0 right-0 p-2 rounded-full bg-primary text-primary-foreground hover:opacity-90 transition disabled:opacity-50"
+              className="absolute bottom-0 right-0 rounded-full hover:opacity-90"
             >
               {isUploading ? (
                 <Loader2 className="animate-spin" size={16} />
               ) : (
                 <Camera size={16} />
               )}
-            </button>
+            </Button>
             <input
               ref={fileInputRef}
               type="file"

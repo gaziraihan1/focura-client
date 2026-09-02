@@ -4,6 +4,8 @@ import { useEffect, useState, useEffectEvent } from "react";
 import { AlertCircle, Trash2, Loader2 } from "lucide-react";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 
+import { Button } from "@/components/ui/Button";
+
 interface DeleteWorkspaceModalProps {
   isOpen: boolean;
   workspaceName: string;
@@ -99,10 +101,11 @@ export function DeleteWorkspaceModal({
         </div>
 
         <div className="flex gap-3">
-          <button
+          <Button
+            variant="destructive"
             onClick={onDelete}
             disabled={isDeleting || !isConfirmed}
-            className="flex-1 px-4 py-3 rounded-lg bg-red-500 text-white hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-3 bg-red-500 text-white hover:opacity-90"
             aria-label={`Delete ${workspaceName}`}
           >
             {isDeleting ? (
@@ -111,13 +114,10 @@ export function DeleteWorkspaceModal({
               <Trash2 size={18} />
             )}
             Delete Workspace
-          </button>
-          <button
-            onClick={onClose}
-            className="px-4 py-3 rounded-lg border border-border hover:bg-accent transition"
-          >
+          </Button>
+          <Button variant="outline" onClick={onClose} className="px-4 py-3 hover:bg-accent">
             Cancel
-          </button>
+          </Button>
         </div>
       </div>
     </div>

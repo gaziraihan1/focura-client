@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { ProjectDetails, useUpdateProject } from "@/hooks/useProjects";
 import { useSaveAsTemplate } from "@/hooks/useTemplates";
 import { Check, Loader2, Save, Lock } from "lucide-react";
@@ -94,14 +95,15 @@ export function GeneralTab({
  
           {canManage && (
             <div className="flex justify-end">
-              <button
+              <Button
+                variant="primary"
                 onClick={handleSave}
                 disabled={!isDirty || saving}
                 className={[
                   "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all",
                   saved
                     ? "bg-emerald-500 text-white"
-                    : "bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed",
+                    : "hover:opacity-90 disabled:opacity-40",
                 ].join(" ")}
               >
                 {saving ? (
@@ -112,7 +114,7 @@ export function GeneralTab({
                   <Save size={14} />
                 )}
                 {saved ? "Saved!" : saving ? "Saving…" : "Save Changes"}
-              </button>
+              </Button>
             </div>
           )}
         </div>
@@ -127,14 +129,15 @@ export function GeneralTab({
             <p className="text-xs text-muted-foreground leading-relaxed">
               The template is saved privately to your workspace and can be reused from the Templates library.
             </p>
-            <button
+            <Button
+              variant="primary"
               onClick={handleSaveAsTemplate}
               disabled={savingTemplate || templateSaved}
               className={[
                 "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all shrink-0",
                 templateSaved
                   ? "bg-emerald-500 text-white"
-                  : "bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed",
+                  : "hover:opacity-90 disabled:opacity-40",
               ].join(" ")}
             >
               {savingTemplate ? (
@@ -145,7 +148,7 @@ export function GeneralTab({
                 <Save size={14} />
               )}
               {templateSaved ? "Template Saved!" : savingTemplate ? "Saving…" : "Save as Template"}
-            </button>
+            </Button>
           </div>
         </Section>
       )}

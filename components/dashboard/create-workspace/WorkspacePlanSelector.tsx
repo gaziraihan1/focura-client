@@ -1,6 +1,7 @@
 import { m as motion } from 'framer-motion';
 import { Check, Zap, Crown, CreditCard } from 'lucide-react';
 import { plans } from '@/constants/pricing.constants';
+import { Button } from '@/components/ui/Button';
 
 type PlanChoice = 'FREE' | 'PRO';
 
@@ -75,9 +76,10 @@ export function WorkspacePlanSelector({
           const Icon = option.icon;
 
           return (
-            <button
+            <Button
               key={planKey}
               type="button"
+              variant="ghost"
               onClick={() => onPlanSelect(planKey)}
               aria-pressed={isSelected}
               className={`relative p-5 rounded-2xl border-2 transition-all duration-200 text-left flex flex-col group ${
@@ -138,7 +140,7 @@ export function WorkspacePlanSelector({
                   </p>
                 </div>
               )}
-            </button>
+            </Button>
           );
         })}
       </div>

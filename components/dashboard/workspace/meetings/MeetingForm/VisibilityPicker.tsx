@@ -1,4 +1,5 @@
 import { Globe, Lock } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 import type { MeetingVisibility } from '@/types/meeting.types';
 
 interface Props {
@@ -25,9 +26,10 @@ export function VisibilityPicker({ value, onChange }: Props) {
   return (
     <div className="grid grid-cols-2 gap-3">
       {OPTIONS.map((opt) => (
-        <button
+        <Button
           key={opt.value}
           type="button"
+          variant="ghost"
           onClick={() => onChange(opt.value)}
           className={`flex flex-col gap-1 rounded-xl border p-4 text-left transition-all ${
             value === opt.value
@@ -40,7 +42,7 @@ export function VisibilityPicker({ value, onChange }: Props) {
             {opt.label}
           </span>
           <span className="text-xs text-muted-foreground">{opt.description}</span>
-        </button>
+        </Button>
       ))}
     </div>
   );

@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, X, FolderPlus, ArrowRight, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 import { useWorkspaces } from '@/hooks/useWorkspaceQueries';
 import { useTemplateImport } from '@/hooks/useTemplates';
 import type { Template, TemplateAccessTier } from '@/types/templates.types';
@@ -76,13 +77,14 @@ const TemplateImportModal = ({ template, accessTier, onClose }: TemplateImportMo
               </p>
             </div>
           </div>
-          <button
+          <Button
+            variant='ghost'
             aria-label='Close'
             onClick={onClose}
-            className='shrink-0 p-1.5 rounded-lg text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors'
+            className='h-auto w-auto shrink-0 p-1.5 rounded-lg text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors'
           >
             <X className='w-4 h-4' />
-          </button>
+          </Button>
         </div>
 
         <div className='px-6 pb-6 space-y-5'>
@@ -109,7 +111,8 @@ const TemplateImportModal = ({ template, accessTier, onClose }: TemplateImportMo
               <p className='text-xs text-neutral-500 dark:text-neutral-400 max-w-xs mx-auto leading-relaxed mb-4'>
                 Upgrade your workspace to unlock this template and the rest of the {template.tier === 'BUSINESS' ? 'Business' : 'Pro'} catalog.
               </p>
-              <button
+              <Button
+                variant='primary'
                 onClick={() => {
                   onClose();
                   const target = selectedWorkspace
@@ -117,10 +120,10 @@ const TemplateImportModal = ({ template, accessTier, onClose }: TemplateImportMo
                     : '/pricing';
                   router.push(target);
                 }}
-                className='inline-flex items-center gap-2 rounded-xl bg-neutral-900 dark:bg-neutral-50 text-white dark:text-neutral-900 px-5 py-2.5 text-sm font-bold hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors'
+                className='h-auto w-auto inline-flex items-center gap-2 rounded-xl bg-neutral-900 dark:bg-neutral-50 text-white dark:text-neutral-900 px-5 py-2.5 text-sm font-bold hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors shadow-none'
               >
                 Upgrade plan <ArrowRight className='w-4 h-4' />
-              </button>
+              </Button>
             </div>
           ) : (
             <>
@@ -177,14 +180,15 @@ const TemplateImportModal = ({ template, accessTier, onClose }: TemplateImportMo
               )}
 
               {/* CTA */}
-              <button
+              <Button
+                variant='primary'
                 onClick={handleSubmit}
                 disabled={!canSubmit}
                 className={cn(
-                  'w-full inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition-colors',
+                  'w-full h-auto inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition-colors',
                   canSubmit
-                    ? 'bg-neutral-900 dark:bg-neutral-50 text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200'
-                    : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500 cursor-not-allowed'
+                    ? 'bg-neutral-900 dark:bg-neutral-50 text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 shadow-none'
+                    : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500 cursor-not-allowed shadow-none'
                 )}
               >
                 {importTemplate.isPending ? (
@@ -196,7 +200,7 @@ const TemplateImportModal = ({ template, accessTier, onClose }: TemplateImportMo
                     <FolderPlus className='w-4 h-4' /> Import template
                   </>
                 )}
-              </button>
+              </Button>
             </>
           )}
         </div>

@@ -1,4 +1,5 @@
 import { Menu } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface MobileTopBarProps {
   projectName: string | undefined;
@@ -10,13 +11,14 @@ interface MobileTopBarProps {
 export function MobileTopBar({ projectName, currentLabel, projectColor, onOpen }: MobileTopBarProps) {
   return (
     <div className="xl:hidden flex items-center gap-3 px-3 py-2.5 bg-card/95 backdrop-blur-sm border-b border-border sticky -top-6 z-30">
-      <button
+      <Button
+        variant="ghost"
         aria-label="Open menu"
         onClick={onOpen}
-        className="p-1.5 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors shrink-0"
+        className="p-1.5 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground shrink-0"
       >
         <Menu size={16} />
-      </button>
+      </Button>
 
       <div className="flex items-center gap-2 min-w-0 flex-1">
         <div

@@ -2,6 +2,7 @@
 
 import { API_SECTIONS, HttpMethod, METHOD_DOT } from '@/lib/apiData';
 import { cn }             from '@/lib/utils';
+import { Button }         from '@/components/ui/Button';
 
 interface ApiDocsSidebarProps {
   activeSection  : string;
@@ -29,18 +30,19 @@ export const ApiDocsSidebar = ({
           { id: 'sse-guide',            label: 'Real-time (SSE)' },
           { id: 'errors',               label: 'Errors' },
         ].map(({ id, label }) => (
-          <button
+          <Button
+            variant="ghost"
             key={id}
             onClick={() => onSectionClick(id)}
             className={cn(
-              'w-full text-left px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+              'w-full text-left px-3 py-1.5 rounded-lg text-xs font-medium',
               activeSection === id
                 ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-semibold'
                 : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
             )}
           >
             {label}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -52,27 +54,29 @@ export const ApiDocsSidebar = ({
         {API_SECTIONS.map((section) => (
           <div key={section.id} className='mb-2'>
             {/* Section header */}
-            <button
+            <Button
+              variant="ghost"
               onClick={() => onSectionClick(section.id)}
               className={cn(
-                'w-full text-left px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors',
+                'w-full text-left px-3 py-1.5 rounded-lg text-xs font-semibold',
                 activeSection === section.id
                   ? 'text-neutral-900 dark:text-neutral-100'
                   : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100'
               )}
             >
               {section.title}
-            </button>
+            </Button>
 
             {/* Endpoint list — shown when section is active */}
             {activeSection === section.id && (
               <div className='ml-3 mt-0.5 space-y-0.5 border-l border-neutral-200 dark:border-neutral-700'>
                 {section.endpoints.map((ep) => (
-                  <button
+                  <Button
+                    variant="ghost"
                     key={ep.id}
                     onClick={() => onEndpointClick(section.id, ep.id)}
                     className={cn(
-                      'w-full text-left flex items-center gap-2 pl-3 pr-2 py-1 rounded-r-lg text-[11px] transition-colors',
+                      'w-full text-left flex items-center gap-2 pl-3 pr-2 py-1 rounded-r-lg text-[11px]',
                       activeEndpoint === ep.id
                         ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-semibold'
                         : 'text-neutral-400 dark:text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
@@ -85,7 +89,7 @@ export const ApiDocsSidebar = ({
                       )}
                     />
                     <span className='truncate leading-tight'>{ep.summary}</span>
-                  </button>
+                  </Button>
                 ))}
               </div>
             )}

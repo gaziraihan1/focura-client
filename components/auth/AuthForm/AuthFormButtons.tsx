@@ -1,4 +1,5 @@
 import { Loader2, Chrome } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface AuthFormButtonsProps {
   mode: "login" | "register";
@@ -18,24 +19,17 @@ export function AuthFormButtons({
   return (
     <div className="space-y-3 pt-2">
       {/* Primary CTA */}
-      <button
+      <Button
         type="submit"
+        variant="primary"
         disabled={isLoading}
-        className="
-          group relative w-full py-3 rounded-xl
-          bg-primary text-primary-foreground text-sm font-semibold tracking-wide
-          overflow-hidden transition-colors transition-transform duration-200
-          hover:brightness-110 active:scale-[0.98]
-          disabled:opacity-50 disabled:cursor-not-allowed
-          flex items-center justify-center gap-2
-          shadow-md shadow-primary/30
-        "
+        className="group relative w-full py-3 rounded-xl text-sm font-semibold tracking-wide overflow-hidden"
       >
         {/* Shimmer sweep on hover */}
         <span className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-linear-to-r from-transparent via-white/15 to-transparent" />
         {isSubmitting && <Loader2 className="animate-spin" size={16} />}
         {mode === "login" ? "Sign in" : "Create account"}
-      </button>
+      </Button>
 
       {/* Divider */}
       <div className="flex items-center gap-3">
@@ -45,19 +39,12 @@ export function AuthFormButtons({
       </div>
 
       {/* Google OAuth */}
-      <button
+      <Button
         type="button"
+        variant="outline"
         disabled={isLoading}
         onClick={onGoogleClick}
-        className="
-          group w-full py-3 rounded-xl
-          bg-transparent text-foreground text-sm font-medium
-          border border-border/70
-          hover:border-primary/40 hover:bg-primary/5
-          transition-colors transition-transform duration-200 active:scale-[0.98]
-          disabled:opacity-50 disabled:cursor-not-allowed
-          flex items-center justify-center gap-2.5
-        "
+        className="group w-full py-3 rounded-xl text-sm font-medium"
       >
         {isGoogleLoading ? (
           <Loader2 className="animate-spin" size={16} />
@@ -65,7 +52,7 @@ export function AuthFormButtons({
           <Chrome size={16} className="text-muted-foreground group-hover:text-primary transition-colors duration-150" />
         )}
         Continue with Google
-      </button>
+      </Button>
     </div>
   );
 }

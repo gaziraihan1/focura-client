@@ -20,6 +20,7 @@ import Image from "next/image";
 import NotificationBell from "@/components/dashboard/notifications/NotificationBell";
 import { SearchModal } from "@/components/shared/SearchModal";
 import { SidebarToggle } from "./SidebarToggle";
+import { Button } from "@/components/ui/Button";
 import type { UserProfile } from "@/hooks/useUserProfile";
 
 interface TopNavbarProps {
@@ -82,13 +83,14 @@ export default function TopNavbar({
         <div className="flex h-14 items-center justify-between px-4 lg:px-6 gap-3">
 
           <div className="flex items-center gap-3 flex-1 min-w-0">
-            <button
+            <Button
+              variant="ghost"
               onClick={onMenuClick}
               aria-label="Open sidebar"
-              className="shrink-0 rounded-xl p-2 transition hover:bg-accent lg:hidden"
+              className="h-auto w-auto shrink-0 rounded-xl p-2 lg:hidden"
             >
               <Menu size={20} className="text-foreground" />
-            </button>
+            </Button>
 
             {onSidebarToggle && (
               <SidebarToggle
@@ -98,10 +100,11 @@ export default function TopNavbar({
               />
             )}
 
-            <button
+            <Button
+              variant="outline"
               onClick={() => setShowSearch(true)}
               aria-label="Open search"
-              className="hidden md:flex flex-1 max-w-sm items-center gap-2 rounded-xl border border-border bg-muted/40 px-3.5 py-2 hover:border-primary/30 hover:bg-muted/60 transition-colors duration-200 group cursor-text"
+              className="hidden md:flex h-auto w-auto flex-1 max-w-sm justify-start gap-2 rounded-xl bg-muted/40 px-3.5 py-2 hover:border-primary/30 hover:bg-muted/60 group cursor-text"
             >
               <Search size={15} className="text-muted-foreground shrink-0" />
               <span className="flex-1 text-[11px] text-muted-foreground text-left min-w-0">
@@ -110,17 +113,18 @@ export default function TopNavbar({
               <kbd className="hidden lg:inline-flex h-5 select-none items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground shrink-0">
                 <span className="text-xs">⌘</span>K
               </kbd>
-            </button>
+            </Button>
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
-            <button
+            <Button
+              variant="ghost"
               onClick={() => setShowSearch(true)}
               aria-label="Open search"
-              className="md:hidden rounded-xl p-2 transition hover:bg-accent"
+              className="h-auto w-auto md:hidden rounded-xl p-2"
             >
               <Search size={19} className="text-foreground" />
-            </button>
+            </Button>
 
             <Link
               href="/dashboard/tasks/add-task"
@@ -221,10 +225,11 @@ export default function TopNavbar({
 
                     {/* Logout */}
                     <div className="border-t border-border py-1.5">
-                      <button
+                      <Button
+                        variant="ghost"
                         onClick={() => { setShowUserMenu(false); handleLogout(); }}
                         disabled={isLoggingOut}
-                        className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-destructive transition hover:bg-destructive/8 disabled:opacity-50"
+                        className="h-auto w-full justify-start gap-3 px-4 py-2.5 text-left text-sm text-destructive hover:bg-destructive/8"
                       >
                         {isLoggingOut ? (
                           <Loader2 size={15} className="animate-spin" />
@@ -232,7 +237,7 @@ export default function TopNavbar({
                           <LogOut size={15} />
                         )}
                         {isLoggingOut ? "Logging out…" : "Log out"}
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </>

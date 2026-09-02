@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import type { CookiesNavItem } from "./CookiesNav";
 
@@ -22,8 +23,9 @@ export const CookiesMobileNav = ({ items }: CookiesMobileNavProps) => {
 
   return (
     <div className="relative lg:hidden mb-6">
-      <button
+      <Button
         onClick={() => setOpen((v) => !v)}
+        variant="outline"
         className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-sm font-medium text-neutral-700 dark:text-neutral-300 shadow-sm"
       >
         <span>Jump to section</span>
@@ -33,21 +35,22 @@ export const CookiesMobileNav = ({ items }: CookiesMobileNavProps) => {
             open && "rotate-180"
           )}
         />
-      </button>
+      </Button>
 
       {open && (
         <div className="absolute z-20 mt-1.5 w-full rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-lg overflow-hidden">
           {items.map((item, i) => (
-            <button
+            <Button
               key={item.id}
               onClick={() => scrollTo(item.id)}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-left text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+              variant="ghost"
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-left text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800"
             >
               <span className="shrink-0 w-5 h-5 rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-500 text-[10px] font-bold flex items-center justify-center">
                 {i + 1}
               </span>
               {item.label}
-            </button>
+            </Button>
           ))}
         </div>
       )}

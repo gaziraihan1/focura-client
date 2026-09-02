@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { COLUMNS } from "@/hooks/useKanbanBoard";
 
@@ -14,23 +15,23 @@ export function MobileColumnNavigator({
 }: MobileColumnNavigatorProps) {
   return (
     <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card">
-      <button aria-label="Previous page"
+      <Button aria-label="Previous page" variant="ghost"
         onClick={onPrevious}
         disabled={currentColumnIndex === 0}
-        className="p-2 disabled:opacity-30 disabled:cursor-not-allowed"
+        className="p-2 disabled:opacity-30"
       >
         <ChevronLeft className="w-5 h-5" />
-      </button>
+      </Button>
       <span className="text-sm font-medium">
         {COLUMNS[currentColumnIndex].title}
       </span>
-      <button aria-label="Next page"
+      <Button aria-label="Next page" variant="ghost"
         onClick={onNext}
         disabled={currentColumnIndex === COLUMNS.length - 1}
-        className="p-2 disabled:opacity-30 disabled:cursor-not-allowed"
+        className="p-2 disabled:opacity-30"
       >
         <ChevronRight className="w-5 h-5" />
-      </button>
+      </Button>
     </div>
   );
 }

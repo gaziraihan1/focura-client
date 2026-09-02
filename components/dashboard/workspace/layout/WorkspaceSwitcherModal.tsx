@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useEffectEvent } from "react";
+import { Button } from "@/components/ui/Button";
 import { Command, Plus } from "lucide-react";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 
@@ -82,12 +83,13 @@ export function WorkspaceSwitcherModal({
 
         <div className="overflow-y-auto max-h-64" role="listbox" aria-label="Workspaces">
           {allWorkspaces.map((ws) => (
-            <button
+            <Button
               key={ws.id}
+              variant="ghost"
               role="option"
               aria-selected={ws.workspaceSlug === currentSlug || ws.slug === currentSlug}
               onClick={() => onWorkspaceSwitch(ws.slug)}
-              className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition ${
+              className={`w-full flex items-center gap-3 px-4 py-3 transition text-left ${
                 ws.workspaceSlug === currentSlug || ws.slug === currentSlug
                   ? "bg-accent"
                   : ""
@@ -105,18 +107,19 @@ export function WorkspaceSwitcherModal({
                   {ws._count.members} members · {ws._count.projects} projects
                 </p>
               </div>
-            </button>
+            </Button>
           ))}
 
-          <button
+          <Button
+            variant="ghost"
             onClick={onCreateWorkspace}
-            className="w-full flex items-center gap-3 px-4 py-3 text-primary hover:bg-accent transition border-t border-border"
+            className="w-full flex items-center gap-3 px-4 py-3 text-primary transition border-t border-border rounded-none text-left"
           >
             <div className="w-10 h-10 rounded-lg border-2 border-dashed border-primary flex items-center justify-center">
               <Plus size={20} />
             </div>
             <span className="font-medium">Create new workspace</span>
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface PaginationInfo {
   page: number;
@@ -36,13 +37,14 @@ export function Pagination({
       </p>
 
       <div className="flex items-center gap-1">
-        <button aria-label="Previous page"
+        <Button aria-label="Previous page"
+          variant="outline"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={!pagination.hasPrev}
-          className="p-1.5 rounded-lg border border-border hover:bg-accent disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className="p-1.5 rounded-lg border border-border hover:bg-accent disabled:opacity-30"
         >
           <ChevronLeft size={14} />
-        </button>
+        </Button>
 
         {visible.map((p, i) => {
           const prev = visible[i - 1];
@@ -52,28 +54,30 @@ export function Pagination({
               {showEllipsis && (
                 <span className="px-1 text-xs text-muted-foreground">…</span>
               )}
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => onPageChange(p)}
                 className={[
-                  "w-7 h-7 rounded-lg text-xs font-semibold transition-colors",
+                  "w-7 h-7 rounded-lg text-xs font-semibold",
                   p === currentPage
                     ? "bg-primary text-primary-foreground"
                     : "border border-border hover:bg-accent text-foreground",
                 ].join(" ")}
               >
                 {p}
-              </button>
+              </Button>
             </React.Fragment>
           );
         })}
 
-        <button aria-label="Next page"
+        <Button aria-label="Next page"
+          variant="outline"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={!pagination.hasNext}
-          className="p-1.5 rounded-lg border border-border hover:bg-accent disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className="p-1.5 rounded-lg border border-border hover:bg-accent disabled:opacity-30"
         >
           <ChevronRight size={14} />
-        </button>
+        </Button>
       </div>
     </div>
   );

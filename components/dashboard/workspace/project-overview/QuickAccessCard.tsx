@@ -20,8 +20,9 @@ export function QuickAccessCard({
 }) {
   return (
     <button
+      type="button"
       onClick={onClick}
-      className="group relative w-full text-left rounded-2xl border border-border bg-card overflow-hidden hover:border-border/0 hover:shadow-xl transition-colors  duration-300 hover:-translate-y-0.5"
+      className="group relative w-full text-left rounded-2xl border border-border bg-card p-5 sm:p-6 overflow-hidden hover:border-border/0 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
       {/* Gradient sweep on hover */}
       <div
@@ -31,7 +32,7 @@ export function QuickAccessCard({
         }}
       />
 
-      <div className="p-5 sm:p-6">
+      <div className="relative">
         {/* Icon + title row */}
         <div className="flex items-start justify-between gap-3 mb-4">
           <div

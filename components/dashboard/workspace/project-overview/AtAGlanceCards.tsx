@@ -1,6 +1,7 @@
 import { Flame, Users, ChevronRight } from "lucide-react";
 import { ProjectData } from "@/types/project.types";
 import { MemberAvatars } from "./MemberAvatars"
+import { Button } from "@/components/ui/Button";
 
 interface AtAGlanceProps {
   project: ProjectData;
@@ -64,12 +65,13 @@ export function AtAGlanceCards({ project, isOverdue, dueLabel, totalMembers, can
             <p className="text-sm font-semibold text-foreground">Team</p>
           </div>
           {canManage && (
-            <button
+            <Button
+              variant="ghost"
               onClick={onManage}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+              className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
             >
               Manage <ChevronRight size={11} />
-            </button>
+            </Button>
           )}
         </div>
 

@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { ENERGY_OPTIONS } from "@/constants/intent.constants";
 
 interface EnergySelectorProps {
@@ -20,9 +21,10 @@ export function EnergySelector({
           const selected = selectedEnergy === energy.value;
 
           return (
-            <button
+            <Button
               key={energy.value}
               type="button"
+              variant="ghost"
               onClick={() => onEnergyChange(energy.value)}
               className={`px-3 py-2 rounded-lg border text-sm font-medium transition ${
                 selected
@@ -31,7 +33,7 @@ export function EnergySelector({
               }`}
             >
               {energy.label}
-            </button>
+            </Button>
           );
         })}
       </div>

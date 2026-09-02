@@ -2,6 +2,7 @@
 
 import { ThumbsUp, ThumbsDown, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 import { useCastVote } from '@/hooks/useFeatures';
 import type { FeatureRequest, VoteType } from '@/types/feature.types';
 
@@ -22,12 +23,12 @@ export function FeatureVoteButtons({ feature, disabled }: Props) {
 
   return (
     <div className="flex items-center gap-1.5">
-      <button
-        type="button"
+      <Button
+        variant="outline"
         disabled={disabled || !canVote || isPending}
         onClick={() => handleVote('UP')}
         className={cn(
-          'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-all',
+          'h-auto w-auto flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-all',
           feature.userVote === 'UP'
             ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30'
             : 'border-border text-muted-foreground hover:text-emerald-600 hover:border-emerald-500/30 hover:bg-emerald-500/5',
@@ -38,14 +39,14 @@ export function FeatureVoteButtons({ feature, disabled }: Props) {
           ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
           : <ThumbsUp className={cn('w-3.5 h-3.5', feature.userVote === 'UP' && 'fill-emerald-500/30')} />}
         <span>{feature._count.upvotes}</span>
-      </button>
+      </Button>
 
-      <button
-        type="button"
+      <Button
+        variant="outline"
         disabled={disabled || !canVote || isPending}
         onClick={() => handleVote('DOWN')}
         className={cn(
-          'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-all',
+          'h-auto w-auto flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-all',
           feature.userVote === 'DOWN'
             ? 'bg-destructive/10 text-destructive border-destructive/30'
             : 'border-border text-muted-foreground hover:text-destructive hover:border-destructive/30 hover:bg-destructive/5',
@@ -54,7 +55,7 @@ export function FeatureVoteButtons({ feature, disabled }: Props) {
       >
         <ThumbsDown className={cn('w-3.5 h-3.5', feature.userVote === 'DOWN' && 'fill-destructive/30')} />
         <span>{feature._count.downvotes}</span>
-      </button>
+      </Button>
     </div>
   );
 }

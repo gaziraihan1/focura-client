@@ -13,6 +13,7 @@ import {
 } from "@/types/ai.types";
 import { AiQuotaBadge } from "./AiQuotaBadge";
 import { AiUpgradeCta } from "./AiUpgradeCta";
+import { Button } from "@/components/ui/Button";
 
 const ENERGY_DOT: Record<AiEnergyType, string> = {
   LOW: "bg-emerald-500",
@@ -104,14 +105,15 @@ export function AiDailyPlan({ tasks, workspaceId, workspaceSlug, className }: Ai
       </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        <button
+        <Button
           type="button"
+          variant="primary"
           onClick={handleGenerate}
           disabled={!canGenerate}
           className={cn(
-            "inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold transition-opacity",
+            "rounded-lg px-3.5 py-2 text-xs font-semibold gap-1.5",
             canGenerate
-              ? "bg-primary text-primary-foreground hover:opacity-90"
+              ? "hover:opacity-90"
               : "cursor-not-allowed bg-muted text-muted-foreground",
           )}
         >
@@ -121,18 +123,19 @@ export function AiDailyPlan({ tasks, workspaceId, workspaceSlug, className }: Ai
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
           )}
           {dailyPlan.isPending ? "Planning…" : "Generate order"}
-        </button>
+        </Button>
         {plan && (
-          <button
+          <Button
             type="button"
+            variant="ghost"
             onClick={() => {
               setPlan(null);
               setRationale(undefined);
             }}
-            className="inline-flex items-center gap-1 rounded-lg px-2.5 py-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+            className="items-center gap-1 rounded-lg px-2.5 py-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Clear
-          </button>
+          </Button>
         )}
       </div>
 

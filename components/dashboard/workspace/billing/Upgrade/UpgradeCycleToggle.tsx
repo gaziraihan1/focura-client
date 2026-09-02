@@ -1,5 +1,6 @@
 // components/WorkspaceUpgrade/BillingCycleToggle.tsx
 import type { BillingCycle } from '@/types/billing.upgrade.types';
+import { Button } from '@/components/ui/Button';
 
 interface BillingCycleToggleProps {
   cycle: BillingCycle;
@@ -16,8 +17,9 @@ export function UpgradeCycleToggle({
     <div className="flex justify-center mb-10">
       <div className="inline-flex rounded-xl border border-border p-1 bg-card shadow-sm">
         {(['monthly', 'yearly'] as const).map((c) => (
-          <button
+          <Button
             key={c}
+            variant="primary"
             onClick={() => onCycleChange(c)}
             className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${
               cycle === c
@@ -26,7 +28,7 @@ export function UpgradeCycleToggle({
             }`}
           >
             {c === 'yearly' ? `Yearly · save ${discount}%` : 'Monthly'}
-          </button>
+          </Button>
         ))}
       </div>
     </div>

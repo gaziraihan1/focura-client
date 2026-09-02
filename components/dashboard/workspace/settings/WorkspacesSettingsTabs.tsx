@@ -1,6 +1,7 @@
 import { useRef, useCallback } from "react";
 import { Save, Users, AlertCircle, Globe, Zap } from "lucide-react";
 import { TabType } from "@/hooks/useWorkspaceSettings";
+import { Button } from "@/components/ui/Button";
 
 interface WorkspaceSettingsTabsProps {
   activeTab: TabType;
@@ -73,7 +74,8 @@ export function WorkspaceSettingsTabs({
       {TABS.map((tab) => {
         const isActive = activeTab === tab.id;
         return (
-          <button
+          <Button
+            variant="ghost"
             key={tab.id}
             data-tab={tab.id}
             role="tab"
@@ -82,7 +84,7 @@ export function WorkspaceSettingsTabs({
             id={`tab-${tab.id}`}
             tabIndex={isActive ? 0 : -1}
             onClick={() => onTabChange(tab.id)}
-            className={`flex items-center gap-2 px-4 py-3 border-b-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+            className={`flex items-center gap-2 px-4 py-3 border-b-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
               isActive
                 ? "border-primary text-primary"
                 : "border-transparent text-muted-foreground hover:text-foreground"
@@ -90,7 +92,7 @@ export function WorkspaceSettingsTabs({
           >
             <tab.icon size={16} aria-hidden="true" />
             {tab.label}
-          </button>
+          </Button>
         );
       })}
     </div>

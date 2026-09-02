@@ -1,6 +1,7 @@
 "use client"
 import { m as motion, AnimatePresence } from 'framer-motion'
 import { AlertTriangle, Loader2, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 export function DeleteConfirm({
   title, isDeleting, onConfirm, onCancel,
@@ -31,19 +32,19 @@ export function DeleteConfirm({
             </div>
           </div>
           <div className="flex gap-2">
-            <button
-              type="button" onClick={onCancel} disabled={isDeleting}
-              className="flex-1 px-4 py-2 rounded-lg text-sm font-medium border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-40"
+            <Button
+              variant="outline" onClick={onCancel} disabled={isDeleting}
+              className="flex-1 h-auto w-auto px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-40"
             >
               Cancel
-            </button>
-            <button
-              type="button" onClick={onConfirm} disabled={isDeleting}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors disabled:opacity-60"
+            </Button>
+            <Button
+              variant="destructive" onClick={onConfirm} disabled={isDeleting}
+              className="flex-1 h-auto w-auto flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-destructive-foreground hover:bg-destructive/90 transition-colors disabled:opacity-60"
             >
               {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
               {isDeleting ? 'Deleting…' : 'Delete'}
-            </button>
+            </Button>
           </div>
         </motion.div>
       </motion.div>

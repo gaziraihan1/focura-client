@@ -11,6 +11,7 @@ import { DeleteWorkspaceModal } from '@/components/admin-dashboard/workspace/Del
 import { cn }                  from '@/lib/utils';
 import Link from 'next/link';
 import { EditWorkspaceLimitsModal } from '@/components/admin-dashboard/workspace/EditWorkspaceLimitsModal';
+import { Button } from '@/components/ui/Button';
 
 function StatPill({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -60,34 +61,40 @@ export function AdminWorkspaceDetailContent({ workspaceSlug }: { workspaceSlug: 
         <span className="px-2 py-0.5 rounded-full bg-muted border border-border text-[10px] font-semibold uppercase">
   {ws.plan}
 </span>
-<button
+<Button
+  variant="ghost"
+  size="sm"
   onClick={() => setEditLimitsOpen(true)}
-  className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+  className="p-1 h-auto rounded-md text-muted-foreground hover:text-foreground hover:bg-muted"
   title="Edit plan & limits"
 >
   <Pencil className="w-3.5 h-3.5" />
-</button>
+</Button>
 <div className="ml-auto flex items-center gap-2">
   {ws.deletedAt ? (
     <div className="flex items-center gap-2">
       <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 border border-amber-500/20 font-semibold">
         SUSPENDED
       </span>
-      <button
+      <Button
+        variant="outline"
+        size="sm"
         onClick={() => restore(ws.slug)}
         disabled={restoring}
-        className="text-[11px] px-2.5 py-1 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-40"
+        className="text-[11px] px-2.5 py-1 h-auto rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-40"
       >
         {restoring ? 'Restoring…' : 'Restore'}
-      </button>
+      </Button>
     </div>
   ) : (
-    <button
+    <Button
+      variant="outline"
+      size="sm"
       onClick={() => setDeleteModalOpen(true)}
-      className="text-[11px] px-2.5 py-1 rounded-lg border border-destructive/30 text-destructive hover:bg-destructive/10 transition-colors"
+      className="text-[11px] px-2.5 py-1 h-auto rounded-lg border-destructive/30 text-destructive hover:bg-destructive/10"
     >
       Delete Workspace
-    </button>
+    </Button>
   )}
 </div>
 

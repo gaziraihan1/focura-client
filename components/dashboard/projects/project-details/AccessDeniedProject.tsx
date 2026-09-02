@@ -3,6 +3,7 @@
 import { m as motion } from "framer-motion";
 import { ShieldX, ArrowLeft, Home } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/Button";
 
 interface AccessDeniedProjectProps {
   projectName?: string;
@@ -68,20 +69,21 @@ export function AccessDeniedProject({
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3">
-          <button
+          <Button
             onClick={() => router.back()}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors font-medium"
+            variant="secondary"
+            className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium"
           >
             <ArrowLeft className="w-4 h-4" />
             Go Back
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => router.push('/dashboard')}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity font-medium"
+            className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-lg hover:opacity-90 transition-opacity font-medium"
           >
             <Home className="w-4 h-4" />
             Go to Dashboard
-          </button>
+          </Button>
         </div>
 
         {/* Additional Help */}

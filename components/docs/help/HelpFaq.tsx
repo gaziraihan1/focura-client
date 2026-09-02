@@ -3,6 +3,7 @@
 import { useState }   from 'react';
 import { ChevronDown } from 'lucide-react';
 import { cn }          from '@/lib/utils';
+import { Button }      from '@/components/ui/Button';
 
 interface FAQItem {
   q: string;
@@ -177,12 +178,13 @@ export const HelpFAQ = () => {
                     const buttonId = `faq-button-${key}`;
                     return (
                       <div key={key}>
-                        <button
+                        <Button
                           id={buttonId}
+                          variant="ghost"
                           onClick={() => setOpenKey(isOpen ? null : key)}
                           aria-expanded={isOpen}
                           aria-controls={panelId}
-                          className='w-full flex items-start justify-between gap-4 py-4 text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded'
+                          className='w-full flex items-start justify-between gap-4 py-4 text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded h-auto px-0 rounded-none'
                         >
                           <span className='text-sm font-semibold text-neutral-800 dark:text-neutral-200 group-hover:text-neutral-600 dark:group-hover:text-neutral-400 transition-colors leading-snug'>
                             {item.q}
@@ -194,7 +196,7 @@ export const HelpFAQ = () => {
                             )}
                             aria-hidden="true"
                           />
-                        </button>
+                        </Button>
                         <div
                           id={panelId}
                           role="region"

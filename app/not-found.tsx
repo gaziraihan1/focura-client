@@ -4,6 +4,7 @@ import { m as motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Home, ArrowLeft, Search } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/Button";
 
 export default function NotFound() {
   const router = useRouter();
@@ -50,17 +51,19 @@ export default function NotFound() {
           transition={{ delay: 0.6, duration: 0.5 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          <button
+          <Button
+            variant="secondary"
+            size="lg"
             onClick={() => router.back()}
-            className="group w-full sm:w-auto px-6 py-3 rounded-xl bg-secondary text-secondary-foreground font-medium hover:bg-secondary/80 transition-colors flex items-center justify-center gap-2 border border-border"
+            leftIcon={<ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />}
+            className="w-full sm:w-auto group"
           >
-            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             Go Back
-          </button>
+          </Button>
 
           <Link
             href="/"
-            className="group w-full sm:w-auto px-6 py-3 rounded-xl bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+            className={buttonVariants({ variant: "primary", size: "lg" }) + " w-full sm:w-auto group"}
           >
             <Home className="w-5 h-5 group-hover:scale-110 transition-transform" />
             Back to Home

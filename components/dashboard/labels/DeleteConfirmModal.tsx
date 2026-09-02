@@ -1,5 +1,6 @@
 "use client";
 import { Label, useDeleteLabel } from "@/hooks/useLabels";
+import { Button } from "@/components/ui/Button";
 import { m as motion } from "framer-motion";
 import { AlertCircle, Loader2 } from "lucide-react";
 
@@ -75,14 +76,15 @@ export default function DeleteConfirmModal({
           </div>
 
           <div className="flex items-center justify-end gap-3 p-6 border-t border-border">
-            <button
+            <Button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              variant="ghost"
+              className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground"
               disabled={deleteMutation.isPending}
             >
               Cancel
-            </button>
+            </Button>
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}

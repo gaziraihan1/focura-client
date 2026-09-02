@@ -5,6 +5,7 @@ import { StarRating } from './StarRating';
 import { useCreateRating, useUpdateRating, useDeleteRating } from '@/hooks/useRatings';
 import type { Rating } from '@/types/rating.types';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 import { Pencil, Trash2, Send } from 'lucide-react';
 
 interface RatingFormProps {
@@ -56,13 +57,12 @@ export function RatingForm({ existingRating, className }: RatingFormProps) {
         <p className="text-sm text-muted-foreground mb-3">
           You haven&apos;t rated this application yet.
         </p>
-        <button
+        <Button
           onClick={() => setIsEditing(true)}
-          className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition"
+          leftIcon={<StarIcon className="h-4 w-4" />}
         >
-          <StarIcon className="h-4 w-4" />
           Write a Review
-        </button>
+        </Button>
       </div>
     );
   }
@@ -74,26 +74,29 @@ export function RatingForm({ existingRating, className }: RatingFormProps) {
         <div className="flex items-center justify-between mb-2">
           <h4 className="text-sm font-medium text-foreground">Your Review</h4>
           <div className="flex items-center gap-1">
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => {
                 setStars(existingRating.stars);
                 setComment(existingRating.comment ?? '');
                 setIsEditing(true);
               }}
-              className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-muted-foreground hover:bg-muted transition"
+              leftIcon={<Pencil className="h-3 w-3" />}
               disabled={isPending}
             >
-              <Pencil className="h-3 w-3" />
               Edit
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={handleDelete}
-              className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-destructive hover:bg-destructive/10 transition"
+              leftIcon={<Trash2 className="h-3 w-3" />}
+              className="text-destructive hover:bg-destructive/10"
               disabled={isPending}
             >
-              <Trash2 className="h-3 w-3" />
               Delete
-            </button>
+            </Button>
           </div>
         </div>
         <StarRating rating={currentStars} size="md" />
@@ -138,22 +141,20 @@ export function RatingForm({ existingRating, className }: RatingFormProps) {
       />
 
       <div className="mt-3 flex items-center gap-2">
-        <button
+        <Button
           type="submit"
           disabled={currentStars === 0 || isPending}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition disabled:opacity-50"
+          leftIcon={<Send className="h-3.5 h-3.5" />}
         >
-          <Send className="h-3.5 w-3.5" />
           {existingRating ? 'Update Review' : 'Submit Review'}
-        </button>
+        </Button>
         {existingRating && (
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             onClick={() => setIsEditing(false)}
-            className="rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-muted transition"
           >
             Cancel
-          </button>
+          </Button>
         )}
       </div>
     </form>

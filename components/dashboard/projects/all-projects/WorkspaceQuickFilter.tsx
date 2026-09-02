@@ -3,6 +3,7 @@
 
 import { m as motion } from "framer-motion";
 import { Building2 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import { WorkspaceData } from "@/types/project.types";
 
 interface WorkspaceQuickFilterProps {
@@ -30,28 +31,28 @@ export function WorkspaceQuickFilter({
         <span className="font-medium">Filter by Workspace:</span>
       </div>
       <div className="flex flex-wrap gap-2">
-        <button
+        <Button variant="ghost"
           onClick={() => onSelectWorkspace("all")}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+          className={`px-4 py-2 rounded-lg font-medium ${
             selectedWorkspaceId === "all"
               ? "bg-primary text-primary-foreground shadow-md"
               : "bg-card border border-border hover:bg-accent"
           }`}
         >
           All Workspaces
-        </button>
+        </Button>
         {workspaces.map((workspace) => (
-          <button
+          <Button variant="ghost"
             key={workspace.id}
             onClick={() => onSelectWorkspace(workspace.id)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+            className={`px-4 py-2 rounded-lg font-medium ${
               selectedWorkspaceId === workspace.id
                 ? "bg-primary text-primary-foreground shadow-md"
                 : "bg-card border border-border hover:bg-accent"
             }`}
           >
             {workspace.name}
-          </button>
+          </Button>
         ))}
       </div>
     </motion.div>

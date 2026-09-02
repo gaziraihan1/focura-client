@@ -22,6 +22,7 @@ import {
   useExportAiUsage,
 } from "@/hooks/useAi";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 import type { AiUsageByFeature } from "@/types/ai.types";
 import { SectionSkeleton } from "./SectionSkeleton";
 
@@ -217,9 +218,10 @@ export function AiUsageSection({ workspaceId }: AiUsageSectionProps) {
             aria-label="Report period"
           >
             {[7, 30, 90].map((days) => (
-              <button
+              <Button
                 key={days}
                 type="button"
+                variant="ghost"
                 aria-pressed={periodDays === days}
                 aria-label={`Show last ${days} days`}
                 onClick={() => setPeriodDays(days)}
@@ -231,18 +233,19 @@ export function AiUsageSection({ workspaceId }: AiUsageSectionProps) {
                 )}
               >
                 {days}d
-              </button>
+              </Button>
             ))}
           </div>
 
           <div className="relative">
-            <button
+            <Button
               type="button"
+              variant="outline"
               aria-haspopup="menu"
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen((open) => !open)}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-colors",
+                "gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-colors",
                 exported
                   ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                   : "border-border bg-background text-foreground hover:border-primary/30",
@@ -257,7 +260,7 @@ export function AiUsageSection({ workspaceId }: AiUsageSectionProps) {
               {!exported && (
                 <ChevronDown className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
               )}
-            </button>
+            </Button>
 
             {menuOpen && (
               <>
@@ -272,24 +275,26 @@ export function AiUsageSection({ workspaceId }: AiUsageSectionProps) {
                   aria-label="Export options"
                   className="absolute right-0 z-20 mt-1 w-44 rounded-lg border border-border bg-card p-1 shadow-lg"
                 >
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
                     role="menuitem"
                     onClick={() => void handleExport("csv")}
-                    className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-xs font-medium text-foreground transition-colors hover:bg-muted"
+                    className="flex w-full items-center justify-start gap-2 rounded-md px-2.5 py-2 text-left text-xs font-medium text-foreground transition-colors"
                   >
                     <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-500" aria-hidden="true" />
                     Export as CSV
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
+                    variant="ghost"
                     role="menuitem"
                     onClick={() => void handleExport("json")}
-                    className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-xs font-medium text-foreground transition-colors hover:bg-muted"
+                    className="flex w-full items-center justify-start gap-2 rounded-md px-2.5 py-2 text-left text-xs font-medium text-foreground transition-colors"
                   >
                     <FileJson className="h-3.5 w-3.5 text-amber-500" aria-hidden="true" />
                     Export as JSON
-                  </button>
+                  </Button>
                 </div>
               </>
             )}

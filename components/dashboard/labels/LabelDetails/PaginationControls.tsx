@@ -3,6 +3,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PaginationMeta } from "@/hooks/useLabels";
+import { Button } from "@/components/ui/Button";
 
 interface PaginationControlsProps {
   pagination: PaginationMeta;
@@ -81,20 +82,21 @@ interface PageButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
 
 function PageButton({ active, className, children, ...props }: PageButtonProps) {
   return (
-    <button
+    <Button
       type="button"
+      variant={active ? "primary" : "outline"}
       className={cn(
-        "flex h-8 min-w-8 items-center justify-center rounded-md px-2 text-xs font-medium transition-colors",
+        "flex h-8 min-w-8 items-center justify-center rounded-md px-2 text-xs font-medium",
         "disabled:pointer-events-none disabled:opacity-40",
         active
           ? "bg-primary text-primary-foreground"
-          : "border border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground",
+          : "bg-background text-foreground hover:bg-accent hover:text-accent-foreground",
         className
       )}
       {...props}
     >
       {children}
-    </button>
+    </Button>
   );
 }
 

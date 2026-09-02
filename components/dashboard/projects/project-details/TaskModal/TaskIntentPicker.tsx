@@ -2,6 +2,7 @@
 import { Brain } from "lucide-react";
 import { INTENT_OPTIONS } from "@/constants/intent.constants";
 import { TaskIntent } from "@/types/taskForm.types";
+import { Button } from "@/components/ui/Button";
 
 interface TaskIntentPickerProps {
   value?: TaskIntent;
@@ -22,11 +23,11 @@ export function TaskIntentPicker({ value, onChange }: TaskIntentPickerProps) {
           const selected = value === intent.value;
 
           return (
-            <button
+            <Button
               key={intent.value}
-              type="button"
+              variant="ghost"
               onClick={() => onChange(intent.value)}
-              className={`p-3 rounded-lg border text-left transition ${
+              className={`h-auto p-3 rounded-lg border text-left ${
                 selected ? intent.activeClass : "border-border hover:bg-accent"
               }`}
             >
@@ -37,7 +38,7 @@ export function TaskIntentPicker({ value, onChange }: TaskIntentPickerProps) {
               <p className="text-xs text-muted-foreground">
                 {intent.description}
               </p>
-            </button>
+            </Button>
           );
         })}
       </div>

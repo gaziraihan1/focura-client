@@ -1,5 +1,6 @@
 "use client"
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 import {AnimatePresence, m as motion} from 'framer-motion'
 import { AlertTriangle, Loader2, Trash2 } from 'lucide-react';
 interface DeleteConfirmProps {
@@ -44,14 +45,14 @@ export function DeleteConfirmModal({ title, isDeleting, onConfirm, onCancel }: D
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <button
-              type="button"
+            <Button
+              variant="outline"
               onClick={onCancel}
               disabled={isDeleting}
               className="flex-1 px-4 py-2 rounded-lg text-sm font-medium border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-40"
             >
               Cancel
-            </button>
+            </Button>
             <motion.button
               whileTap={{ scale: 0.97 }}
               type="button"

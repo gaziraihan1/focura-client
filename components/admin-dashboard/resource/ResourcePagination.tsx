@@ -2,6 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 
 interface ResourcePaginationProps {
   page: number;
@@ -24,24 +25,26 @@ export function ResourcePagination({
         Page {page} of {totalPages}
       </p>
       <div className="flex items-center gap-1">
-        <button
+        <Button
           type="button"
+          variant="outline"
           disabled={page <= 1}
           onClick={() => onPageChange(page - 1)}
           className="rounded-md border border-border bg-background p-1.5 text-muted-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
           aria-label="Previous page"
         >
           <ChevronLeft className="h-3.5 w-3.5" />
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="outline"
           disabled={page >= totalPages}
           onClick={() => onPageChange(page + 1)}
           className="rounded-md border border-border bg-background p-1.5 text-muted-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
           aria-label="Next page"
         >
           <ChevronRight className="h-3.5 w-3.5" />
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 'use client';
 
 import { useSyncExternalStore } from 'react';
+import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 import {
   Check,
@@ -118,12 +119,13 @@ export function GettingStartedChecklist({
               {completedCount} of {items.length} complete
             </p>
           </div>
-        </div>          <button
+        </div>          <Button
           onClick={dismiss}
+          variant="ghost"
           className="text-xs text-muted-foreground hover:text-foreground transition"
         >
           Dismiss
-        </button>
+        </Button>
       </div>
 
       {/* Progress bar */}

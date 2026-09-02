@@ -3,6 +3,7 @@
 import { useRef, useState, type KeyboardEvent } from 'react';
 import { Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 
 interface TemplateRatingStarsProps {
   /** Average rating (0–5). Rounded for display. */
@@ -71,15 +72,15 @@ const TemplateRatingStars = ({
     if (!interactive) return star;
 
     return (
-      <button
+      <Button
         key={n}
-        type='button'
+        variant='ghost'
         role='radio'
         aria-checked={active === n}
         aria-label={`${n} star${n > 1 ? 's' : ''}`}
         disabled={pending}
         className={cn(
-          'p-0.5 -m-0.5 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/60',
+          'h-auto w-auto p-0.5 -m-0.5 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/60',
           pending && 'opacity-50 cursor-wait',
         )}
         ref={(el) => {
@@ -93,7 +94,7 @@ const TemplateRatingStars = ({
         onFocus={() => setHover(n)}
       >
         {star}
-      </button>
+      </Button>
     );
   });
 

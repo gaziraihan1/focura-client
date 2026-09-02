@@ -3,6 +3,7 @@
 import { Pin, Pencil, Trash2, Eye, EyeOff } from 'lucide-react';
 import { cn }  from '@/lib/utils';
 import { DEPARTMENT_LABELS, JobPosting, TYPE_LABELS } from '@/types/job.types';
+import { Button } from '@/components/ui/Button';
 
 interface AdminJobTableProps {
   jobs       : JobPosting[];
@@ -88,45 +89,53 @@ const AdminJobTable = ({ jobs, onEdit, onDelete, onTogglePin, onToggleStatus }: 
                 <td className='px-4 py-3 align-middle'>
                   <div className='flex items-center justify-end gap-1'>
                     {/* Toggle status OPEN ↔ CLOSED */}
-                    <button
+                    <Button
+                      variant='ghost'
+                      size='sm'
                       onClick={() => onToggleStatus(job)}
                       title={job.status === 'OPEN' ? 'Pause listing' : 'Set to Open'}
-                      className='w-7 h-7 rounded-lg flex items-center justify-center text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors'
+                      className='w-7 h-7 rounded-lg p-0 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800'
                     >
                       {job.status === 'OPEN'
                         ? <EyeOff className='w-3.5 h-3.5' strokeWidth={1.8} />
                         : <Eye    className='w-3.5 h-3.5' strokeWidth={1.8} />}
-                    </button>
+                    </Button>
 
                     {/* Pin */}
-                    <button
+                    <Button
+                      variant='ghost'
+                      size='sm'
                       onClick={() => onTogglePin(job)}
                       title={job.isPinned ? 'Unpin' : 'Pin to top'}
                       className={cn(
-                        'w-7 h-7 rounded-lg flex items-center justify-center transition-colors',
+                        'w-7 h-7 rounded-lg p-0',
                         job.isPinned
                           ? 'text-neutral-700 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-800'
                           : 'text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800'
                       )}
                     >
                       <Pin className='w-3.5 h-3.5' strokeWidth={1.8} />
-                    </button>
+                    </Button>
 
                     {/* Edit */}
-                    <button aria-label="Edit"
+                    <Button aria-label="Edit"
+                      variant='ghost'
+                      size='sm'
                       onClick={() => onEdit(job)}
-                      className='w-7 h-7 rounded-lg flex items-center justify-center text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors'
+                      className='w-7 h-7 rounded-lg p-0 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800'
                     >
                       <Pencil className='w-3.5 h-3.5' strokeWidth={1.8} />
-                    </button>
+                    </Button>
 
                     {/* Delete */}
-                    <button aria-label="Delete"
+                    <Button aria-label="Delete"
+                      variant='ghost'
+                      size='sm'
                       onClick={() => onDelete(job)}
-                      className='w-7 h-7 rounded-lg flex items-center justify-center text-neutral-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors'
+                      className='w-7 h-7 rounded-lg p-0 text-neutral-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30'
                     >
                       <Trash2 className='w-3.5 h-3.5' strokeWidth={1.8} />
-                    </button>
+                    </Button>
                   </div>
                 </td>
               </tr>

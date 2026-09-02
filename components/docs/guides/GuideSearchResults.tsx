@@ -3,6 +3,7 @@
 import { ArrowRight, SearchX } from "lucide-react";
 import { getArticleText, type GuideSearchResult } from "@/utils/guides.utils";
 import { COLOR_MAP } from "@/constants/guides.constants";
+import { Button } from "@/components/ui/Button";
 
 interface GuideSearchResultsProps {
   query: string;
@@ -38,11 +39,11 @@ export function GuideSearchResults({ query, results, onOpen }: GuideSearchResult
         {results.map(({ section, article, key }) => {
           const col = COLOR_MAP[section.color];
           return (
-            <button
+            <Button
               key={key}
-              type="button"
+              variant="outline"
               onClick={() => onOpen(section.id, key)}
-              className="group w-full rounded-xl border border-border bg-card p-4 text-left hover:border-foreground/20 hover:bg-muted/40 transition-colors"
+              className="group w-full rounded-xl border border-border bg-card p-4 text-left h-auto hover:border-foreground/20 hover:bg-muted/40"
             >
               <span className="flex items-center gap-2 mb-1.5">
                 <span className={`text-xs shrink-0 ${col.text}`}>{section.icon}</span>
@@ -57,7 +58,7 @@ export function GuideSearchResults({ query, results, onOpen }: GuideSearchResult
               <span className="mt-1 block text-sm text-muted-foreground leading-relaxed">
                 {snippet(getArticleText(article))}
               </span>
-            </button>
+            </Button>
           );
         })}
       </div>

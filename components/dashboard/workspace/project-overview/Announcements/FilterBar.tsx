@@ -1,4 +1,5 @@
 import { RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 export type FilterType = "all" | "pinned" | "public" | "private";
 
@@ -23,8 +24,9 @@ export function FilterBar({
   return (
     <div className="flex items-center gap-1 p-1 rounded-xl bg-muted/50 border border-border w-fit">
       {tabs.map((t) => (
-        <button
+        <Button
           key={t.key}
+          variant="ghost"
           onClick={() => onChange(t.key)}
           className={[
             "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150",
@@ -34,7 +36,7 @@ export function FilterBar({
           ].join(" ")}
         >
           {t.label}
-        </button>
+        </Button>
       ))}
       {isFetching && (
         <RefreshCw size={11} className="ml-1 text-muted-foreground animate-spin" />

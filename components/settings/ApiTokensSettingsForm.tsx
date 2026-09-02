@@ -9,6 +9,7 @@ import {
   type ApiToken,
 } from '@/hooks/useApiTokens';
 import { ConfirmModal } from '@/components/shared/ConfirmModal';
+import { Button } from '@/components/ui/Button';
 import toast from 'react-hot-toast';
 
 function copyToClipboard(text: string) {
@@ -64,23 +65,26 @@ function NewTokenCard({
               <code className="flex-1 px-3 py-2 rounded-lg bg-background border border-border text-sm font-mono break-all">
                 {newTokenValue}
               </code>
-              <button aria-label="Copy"
+              <Button aria-label="Copy"
                 onClick={onCopy}
+                variant="outline"
+                size="icon"
                 className="p-2 rounded-lg border border-border hover:bg-accent transition-colors"
               >
                 <Copy className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
           </div>
-          <button
+          <Button
             onClick={onDismiss}
+            variant="primary"
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
             I&apos;ve saved my token
-          </button>
+          </Button>
         </div>
       ) : (
         <div className="flex items-end gap-3">
@@ -97,14 +101,16 @@ function NewTokenCard({
               onKeyDown={(e) => e.key === 'Enter' && onCreate()}
             />
           </div>
-          <button
+          <Button
             onClick={onCreate}
             disabled={isPending || !newTokenName.trim()}
+            loading={isPending}
+            leftIcon={<Plus className="w-4 h-4" />}
+            variant="primary"
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
           >
-            {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
             Create
-          </button>
+          </Button>
         </div>
       )}
     </div>
@@ -176,14 +182,16 @@ function TokenListCard({ tokens, isPending, onDelete }: TokenListCardProps) {
                   </div>
                 </div>
               </div>
-              <button
+              <Button
                 onClick={() => onDelete(token.id, token.name)}
                 disabled={isPending}
+                variant="ghost"
+                size="icon"
                 className="p-2 rounded-lg text-red-500 hover:bg-red-500/10 transition-colors disabled:opacity-50"
                 title="Delete token"
               >
                 <Trash2 className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
           ))}
         </div>
@@ -268,12 +276,13 @@ function DocsCard({ activeTab, onTabChange }: DocsCardProps) {
           <div className="p-4 rounded-xl bg-muted/50">
             <div className="flex items-center justify-between mb-2">
               <h4 className="text-sm font-medium">Get Your Tasks</h4>
-              <button
+              <Button
                 onClick={() => copyToClipboard('curl -H "Authorization: Bearer YOUR_TOKEN" https://api.focura.com/api/v1/tasks')}
+                variant="ghost"
                 className="text-xs text-primary hover:underline"
               >
                 Copy
-              </button>
+              </Button>
             </div>
             <code className="block text-xs font-mono text-muted-foreground p-2 bg-background rounded border border-border break-all">
               curl -H &quot;Authorization: Bearer YOUR_TOKEN&quot; https://api.focura.com/api/v1/tasks
@@ -283,12 +292,13 @@ function DocsCard({ activeTab, onTabChange }: DocsCardProps) {
           <div className="p-4 rounded-xl bg-muted/50">
             <div className="flex items-center justify-between mb-2">
               <h4 className="text-sm font-medium">Create a Task</h4>
-              <button
+              <Button
                 onClick={() => copyToClipboard(`curl -X POST -H "Authorization: Bearer YOUR_TOKEN" -H "Content-Type: application/json" -d '{"title": "New Task", "status": "TODO"}' https://api.focura.com/api/v1/tasks`)}
+                variant="ghost"
                 className="text-xs text-primary hover:underline"
               >
                 Copy
-              </button>
+              </Button>
             </div>
             <code className="block text-xs font-mono text-muted-foreground p-2 bg-background rounded border border-border break-all">
               curl -X POST -H &quot;Authorization: Bearer YOUR_TOKEN&quot; -H &quot;Content-Type: application/json&quot; -d &apos;{`{"title": "New Task"}`}&apos; https://api.focura.com/api/v1/tasks
@@ -298,12 +308,13 @@ function DocsCard({ activeTab, onTabChange }: DocsCardProps) {
           <div className="p-4 rounded-xl bg-muted/50">
             <div className="flex items-center justify-between mb-2">
               <h4 className="text-sm font-medium">JavaScript (fetch)</h4>
-              <button
+              <Button
                 onClick={() => copyToClipboard(`fetch('https://api.focura.com/api/v1/tasks', {\n  headers: {\n    'Authorization': 'Bearer YOUR_TOKEN'\n  }\n}).then(r => r.json())`)}
+                variant="ghost"
                 className="text-xs text-primary hover:underline"
               >
                 Copy
-              </button>
+              </Button>
             </div>
             <code className="block text-xs font-mono text-muted-foreground p-2 bg-background rounded border border-border whitespace-pre-wrap">
 {`fetch('https://api.focura.com/api/v1/tasks', {
@@ -317,12 +328,13 @@ function DocsCard({ activeTab, onTabChange }: DocsCardProps) {
           <div className="p-4 rounded-xl bg-muted/50">
             <div className="flex items-center justify-between mb-2">
               <h4 className="text-sm font-medium">Python (requests)</h4>
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => copyToClipboard(`import requests\n\nheaders = {'Authorization': 'Bearer YOUR_TOKEN'}\nresponse = requests.get('https://api.focura.com/api/v1/tasks', headers=headers)\nprint(response.json())`)}
                 className="text-xs text-primary hover:underline"
               >
                 Copy
-              </button>
+              </Button>
             </div>
             <code className="block text-xs font-mono text-muted-foreground p-2 bg-background rounded border border-border whitespace-pre-wrap">
 {`import requests

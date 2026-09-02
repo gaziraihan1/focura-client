@@ -6,6 +6,7 @@ import { Label }                   from "@/hooks/useLabels";
 import { Edit2, MoreVertical, Tag, Trash2 } from "lucide-react";
 import Link                        from "next/link";
 import { PermissionModal }         from "@/components/shared/PermissionModal";
+import { Button }                   from "@/components/ui/Button";
 
 interface LabelCardProps {
   label:            Label;
@@ -71,13 +72,14 @@ export default function LabelCard({
           </Link>
 
           <div className="relative">
-            <button
+            <Button
               onClick={onDropdownToggle}
-              className="p-1.5 md:opacity-0 group-hover:opacity-100 hover:bg-accent rounded transition-colors transition-opacity"
+              variant="ghost"
+              className="p-1.5 md:opacity-0 group-hover:opacity-100 hover:bg-accent rounded transition-opacity"
               aria-label="Label options"
             >
               <MoreVertical className="w-4 h-4 text-muted-foreground" />
-            </button>
+            </Button>
 
             <AnimatePresence>
               {isDropdownActive && (
@@ -90,20 +92,22 @@ export default function LabelCard({
                     transition={{ duration: 0.15 }}
                     className="absolute right-0 mt-1 w-40 bg-popover border border-border rounded-lg shadow-lg py-1 z-20"
                   >
-                    <button
+                    <Button
                       onClick={handleEdit}
-                      className="w-full px-3 py-2 text-left text-sm text-popover-foreground hover:bg-accent transition-colors flex items-center gap-2"
+                      variant="ghost"
+                      className="w-full px-3 py-2 text-left text-sm text-popover-foreground flex items-center gap-2 rounded-none"
                     >
                       <Edit2 className="w-4 h-4" />
                       Edit
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={handleDelete}
-                      className="w-full px-3 py-2 text-left text-sm text-destructive hover:bg-accent transition-colors flex items-center gap-2"
+                      variant="ghost"
+                      className="w-full px-3 py-2 text-left text-sm text-destructive flex items-center gap-2 rounded-none"
                     >
                       <Trash2 className="w-4 h-4" />
                       Delete
-                    </button>
+                    </Button>
                   </motion.div>
                 </>
               )}

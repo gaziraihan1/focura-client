@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { CreditCard, Loader2 } from 'lucide-react';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { useWorkspacePlan } from '@/context/workspacePlan/WorkspacePlanContext';
+import { Button } from '@/components/ui/Button';
 import { api } from '@/lib/axios';
 
 interface BillingSettingsFormProps {
@@ -128,9 +129,12 @@ export function BillingSettingsForm({ workspaceSlug }: BillingSettingsFormProps)
                   ))}
                 </ul>
                 {!isCurrent && plan.price > 0 && (
-                  <button className="w-full mt-3 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors">
+                  <Button
+                    variant="primary"
+                    className="w-full mt-3 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors"
+                  >
                     Upgrade
-                  </button>
+                  </Button>
                 )}
               </div>
             );

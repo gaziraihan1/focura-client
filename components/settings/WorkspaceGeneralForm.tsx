@@ -3,6 +3,7 @@
 import { useState, useEffect, useReducer } from 'react';
 import { Settings2, Save, Loader2 } from 'lucide-react';
 import { useWorkspace, useUpdateWorkspace, type Workspace } from '@/hooks/useWorkspace';
+import { Button } from '@/components/ui/Button';
 import toast from 'react-hot-toast';
 
 const PREDEFINED_COLORS = [
@@ -202,18 +203,16 @@ export function WorkspaceGeneralForm({ workspaceSlug }: WorkspaceGeneralFormProp
 
       {/* Save */}
       <div className="flex justify-end">
-        <button
+        <Button
           onClick={handleSave}
           disabled={saving}
+          loading={saving}
+          leftIcon={<Save className="w-4 h-4" />}
+          variant="primary"
           className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
         >
-          {saving ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Save className="w-4 h-4" />
-          )}
           {saving ? 'Saving...' : 'Save Changes'}
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { ArrowLeft, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -22,13 +23,14 @@ export function PageHeader({
   return (
     <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-3 min-w-0">
-        <button
+        <Button
+          variant="outline"
           onClick={() => router.back()}
           aria-label="Go back"
           className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border bg-background text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
         >
           <ArrowLeft className="size-4" />
-        </button>
+        </Button>
         <div className="flex items-center gap-2 min-w-0">
           <span className="size-3 rounded-full shrink-0" style={{ backgroundColor: projectColor }} />
           <div className="min-w-0">
@@ -46,13 +48,14 @@ export function PageHeader({
       </div>
 
       {canCreate && !isArchived && (
-        <button
+        <Button
+          variant="primary"
           onClick={onAddTask}
-          className="flex items-center gap-1.5 self-start sm:self-auto rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm shrink-0"
+          className="flex items-center gap-1.5 self-start sm:self-auto rounded-lg px-4 py-2 text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm shrink-0"
         >
           <Plus className="size-4" />
           New Task
-        </button>
+        </Button>
       )}
     </div>
   );

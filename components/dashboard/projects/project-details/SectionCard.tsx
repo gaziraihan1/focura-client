@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ProjectSectionItem, TaskStatus } from "@/hooks/useProjectFeatures";
 import { ChevronDown, ChevronUp, ListChecks, MoreHorizontal, Trash2 } from "lucide-react";
 import { TASK_STATUS_OPTIONS } from "./SectionList";
+import { Button } from "@/components/ui/Button";
 
 interface SectionCardProps {
   section: ProjectSectionItem;
@@ -77,22 +78,24 @@ export function SectionCard({
 
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
-            <button
+            <Button
+              variant="ghost"
               onClick={() => onMove(index, -1)}
               disabled={index === 0 || reorderPending}
               aria-label={`Move ${section.name} left`}
-              className="p-1 rounded-lg hover:bg-accent transition disabled:opacity-30"
+              className="h-auto w-auto p-1 rounded-lg disabled:opacity-30"
             >
               <ChevronUp size={14} className="text-muted-foreground" />
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="ghost"
               onClick={() => onMove(index, 1)}
               disabled={isLast || reorderPending}
               aria-label={`Move ${section.name} right`}
-              className="p-1 rounded-lg hover:bg-accent transition disabled:opacity-30"
+              className="h-auto w-auto p-1 rounded-lg disabled:opacity-30"
             >
               <ChevronDown size={14} className="text-muted-foreground" />
-            </button>
+            </Button>
           </div>
 
           <select
@@ -141,37 +144,40 @@ export function SectionCard({
           </span>
 
           {editingId !== section.id && (
-            <button
+            <Button
+              variant="ghost"
               onClick={() => onStartEdit(section)}
               aria-label={`Edit ${section.name}`}
-              className="flex size-7 items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-accent hover:text-foreground transition"
+              className="h-auto w-auto size-7 rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground"
             >
               <MoreHorizontal size={12} />
-            </button>
+            </Button>
           )}
           {editingId === section.id && (
             <>
-              <button
+              <Button
                 onClick={() => onRename(section.id)}
-                className="rounded-lg bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground hover:opacity-90 transition disabled:opacity-50"
+                className="h-auto rounded-lg px-2.5 py-1 text-xs font-semibold hover:opacity-90"
               >
                 Save
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="ghost"
                 onClick={onCancelEdit}
-                className="rounded-lg border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition"
+                className="h-auto rounded-lg px-2.5 py-1 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
               >
                 Cancel
-              </button>
+              </Button>
             </>
           )}
-          <button
+          <Button
+            variant="ghost"
             onClick={() => onDelete(section.id)}
             aria-label={`Delete ${section.name}`}
-            className="flex size-7 items-center justify-center rounded-lg border border-border text-muted-foreground hover:border-red-500/40 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/20 transition"
+            className="h-auto w-auto size-7 rounded-lg text-muted-foreground hover:border-red-500/40 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/20"
           >
             <Trash2 size={12} />
-          </button>
+          </Button>
         </div>
       </div>
     </div>

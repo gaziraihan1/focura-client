@@ -1,6 +1,7 @@
 // components/ActivityFilters/DateRangeFilter.tsx
 import { X } from 'lucide-react';
 import { ActivityFilterValues } from '@/types/activityFilter.types';
+import { Button } from '@/components/ui/Button';
 
 interface DateRangeFilterProps {
   filters: ActivityFilterValues;
@@ -49,13 +50,15 @@ export function DateRangeFilter({
         />
       </div>
 
-      <button
+      <Button
+        variant="outline"
+        size="sm"
         onClick={onClose}
-        className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-3 py-2 text-foreground hover:bg-accent transition-colors"
+        className="rounded-lg text-foreground hover:bg-accent"
         aria-label="Close custom date range"
       >
         <X className="h-4 w-4" />
-      </button>
+      </Button>
     </div>
   );
 }

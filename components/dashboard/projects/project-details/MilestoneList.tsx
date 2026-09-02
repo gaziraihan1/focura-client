@@ -7,6 +7,7 @@ import { Flag, Plus, MoreHorizontal, AlertTriangle, CheckCircle2, Loader2, Trash
 import { ConfirmModal } from "@/components/shared/ConfirmModal";
 import FeatureListError from "@/components/dashboard/projects/project-details/FeatureListError";
 import { useProjectMilestones, useCreateMilestone, useDeleteMilestone, useUpdateMilestoneProgress, MilestoneItem } from "@/hooks/useProjectFeatures";
+import { Button } from "@/components/ui/Button";
 
 const STATUS_COLORS: Record<string, string> = {
   ON_TRACK: "text-emerald-500 bg-emerald-50 dark:bg-emerald-950/20",
@@ -139,29 +140,31 @@ export default function MilestoneList({ projectId }: MilestoneListProps) {
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
               />
-              <button
+              <Button
                 onClick={handleCreate}
                 disabled={!title.trim() || createMilestone.isPending}
-                className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition disabled:opacity-50"
+                className="h-auto px-3 py-1.5 text-xs font-semibold hover:opacity-90"
               >
                 {createMilestone.isPending ? "Creating..." : "Create"}
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="outline"
                 onClick={() => setShowNew(false)}
-                className="px-3 py-1.5 rounded-lg border border-border text-xs hover:bg-accent transition"
+                className="h-auto px-3 py-1.5 text-xs hover:bg-accent"
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </div>
         ) : (
-          <button
+          <Button
+            variant="outline"
             onClick={() => setShowNew(true)}
-            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-dashed border-border text-sm text-muted-foreground hover:text-foreground hover:border-solid transition"
+            className="w-full h-auto gap-2 py-2.5 rounded-xl border-dashed text-sm text-muted-foreground hover:text-foreground hover:border-solid hover:border-border"
           >
             <Plus size={16} />
             Add Milestone
-          </button>
+          </Button>
         )}
       </div>
 
@@ -223,19 +226,22 @@ function MilestoneCard({
           )}
         </div>
         <div className="relative">
-          <button aria-label="Delete"
+          <Button
+            aria-label="Delete"
+            variant="ghost"
+            size="icon"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="p-1 rounded-lg hover:bg-accent transition"
+            className="h-auto w-auto p-1 rounded-lg"
           >
             <MoreHorizontal size={14} className="text-muted-foreground" />
-          </button>
+          </Button>
           {menuOpen && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} role="presentation" />
               <div className="absolute right-0 top-8 z-20 w-32 rounded-lg border border-border bg-popover shadow-lg py-1">
-                <button onClick={onDelete} className="w-full flex items-center gap-1.5 px-3 py-1.5 text-xs text-left text-red-500 hover:bg-accent transition">
+                <Button onClick={onDelete} variant="ghost" className="h-auto w-full justify-start px-3 py-1.5 text-left text-xs text-red-500 hover:bg-accent">
                   <Trash2 size={12} /> Delete
-                </button>
+                </Button>
               </div>
             </>
           )}
@@ -256,17 +262,18 @@ function MilestoneCard({
       {/* Quick progress buttons */}
       <div className="mt-2 flex gap-1">
         {[0, 25, 50, 75, 100].map((pct) => (
-          <button
+          <Button
             key={pct}
+            variant="ghost"
             onClick={() => onUpdateProgress(pct)}
-            className={`flex-1 py-1 rounded text-[10px] font-medium transition ${
+            className={`h-auto flex-1 py-1 rounded text-[10px] font-medium ${
               milestone.progress === pct
                 ? "bg-primary/10 text-primary"
                 : "text-muted-foreground hover:bg-accent"
             }`}
           >
             {pct}%
-          </button>
+          </Button>
         ))}
       </div>
 

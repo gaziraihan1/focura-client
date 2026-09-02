@@ -2,6 +2,7 @@
 
 import { Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 
 interface GuideSearchInputProps {
   value: string;
@@ -33,14 +34,15 @@ export function GuideSearchInput({ value, onChange, className, id }: GuideSearch
         className="w-full h-9 rounded-lg border border-border bg-card pl-9 pr-8 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-ring transition-colors"
       />
       {value && (
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={() => onChange("")}
           aria-label="Clear search"
-          className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted h-auto w-auto"
         >
           <X className="w-3.5 h-3.5" />
-        </button>
+        </Button>
       )}
     </div>
   );

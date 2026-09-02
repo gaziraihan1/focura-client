@@ -1,4 +1,5 @@
 import { Check, Loader2 } from 'lucide-react'
+import { Button } from '@/components/ui/Button'
 
 interface InvitationActionsProps {
     onDecline: () => void;
@@ -9,17 +10,18 @@ interface InvitationActionsProps {
 export default function InvitationActions({onDecline, onAccept, isAccepting}: InvitationActionsProps) {
   return (
     <div className="flex gap-3">
-              <button
+              <Button
                 onClick={onDecline}
                 disabled={isAccepting}
-                className="flex-1 px-6 py-3 rounded-lg font-medium border border-border bg-background text-foreground hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                variant="outline"
+                className="flex-1 px-6 py-3 rounded-lg bg-background hover:bg-muted"
               >
                 Decline
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={onAccept}
                 disabled={isAccepting}
-                className="flex-1 px-6 py-3 rounded-lg font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="flex-1 px-6 py-3 rounded-lg hover:bg-primary/90 gap-2"
               >
                 {isAccepting ? (
                   <>
@@ -32,7 +34,7 @@ export default function InvitationActions({onDecline, onAccept, isAccepting}: In
                     Accept Invitation
                   </>
                 )}
-              </button>
+              </Button>
             </div>
 
   )

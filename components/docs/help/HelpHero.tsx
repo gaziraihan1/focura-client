@@ -2,6 +2,7 @@
 
 import { useState }       from 'react';
 import { Search, Zap }    from 'lucide-react';
+import { Button }         from '@/components/ui/Button';
 
 interface HelpHeroProps {
   onSearch: (q: string) => void;
@@ -68,13 +69,14 @@ export const HelpHero = ({ onSearch }: HelpHeroProps) => {
         {/* Quick links */}
         <div className='flex flex-wrap justify-center gap-2'>
           {quickLinks.map((l) => (
-            <button
+            <Button
               key={l}
+              variant="outline"
               onClick={() => handleChange(l)}
-              className='text-xs font-medium rounded-full border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 px-3 py-1.5 hover:border-neutral-400 dark:hover:border-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors'
+              className='text-xs font-medium rounded-full border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 px-3 py-1.5 h-auto hover:border-neutral-400 dark:hover:border-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100'
             >
               {l}
-            </button>
+            </Button>
           ))}
         </div>
       </div>

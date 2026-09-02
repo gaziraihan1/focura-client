@@ -4,6 +4,7 @@ import { ChevronDown } from "lucide-react";
 import type { GuideSection } from "@/types/guides.types";
 import { COLOR_MAP } from "@/constants/guides.constants";
 import { GuideSearchInput } from "./GuideSearchInput";
+import { Button } from "@/components/ui/Button";
 
 interface GuideHeaderProps {
   current: GuideSection;
@@ -55,12 +56,13 @@ export function GuideHeader({
             onChange={onQueryChange}
             id="guide-search-desktop"
             className="hidden sm:block w-56 lg:w-72"
-          />          <button
-            type="button"
+          />          <Button
+            variant="outline"
+            size="sm"
             onClick={onMobileToggle}
             aria-expanded={mobileOpen}
             aria-label="Toggle guide topics"
-            className="md:hidden flex items-center gap-2 min-w-0 text-sm border border-border rounded-lg px-3 py-1.5 bg-card hover:bg-muted transition-colors"
+            className="md:hidden flex items-center gap-2 min-w-0 text-sm rounded-lg px-3 py-1.5 bg-card hover:bg-muted"
           >
             <span className={`text-xs shrink-0 ${col.text}`}>{current.icon}</span>
             {/* Constrain the label so long section names never push the header
@@ -71,7 +73,7 @@ export function GuideHeader({
             <ChevronDown
               className={`w-3.5 h-3.5 shrink-0 text-muted-foreground transition-transform ${mobileOpen ? "rotate-180" : ""}`}
             />
-          </button>
+          </Button>
         </div>
       </div>
     </header>

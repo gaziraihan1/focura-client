@@ -16,6 +16,7 @@ import {
 import LabelItem from './LabelItem';
 import LabelForm from './LabelForm';
 import { useWorkspaceRoleCheck } from '@/hooks/useWorkspace';
+import { Button } from '@/components/ui/Button';
 import { useSession } from 'next-auth/react';
 import { getErrorMessage } from '@/lib/error/error';
 
@@ -134,23 +135,25 @@ export function LabelManager({ workspaceId, onClose }: LabelManagerProps) {
             </h2>
           </div>
           {onClose && (
-            <button aria-label="Close"
+            <Button aria-label="Close"
               onClick={onClose}
-              className="p-2 hover:bg-accent rounded-lg transition-colors"
+              variant="ghost"
+              size="icon"
+              className="p-2 rounded-lg"
             >
               <X className="w-5 h-5" />
-            </button>
+            </Button>
           )}
         </div>
 
         {!isCreating && !editingId && (
-          <button
+          <Button
             onClick={handleCreate}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 mb-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+            className="w-full px-4 py-3 mb-4"
           >
             <Plus className="w-4 h-4" />
             <span>Create New Label</span>
-          </button>
+          </Button>
         )}
 
         {isCreating && (
@@ -257,20 +260,22 @@ export function LabelManager({ workspaceId, onClose }: LabelManagerProps) {
               )}
 
               <div className="flex gap-3">
-                <button
+                <Button
                   onClick={handleDeleteCancel}
                   disabled={deleteLabel.isPending}
-                  className="flex-1 px-4 py-2.5 rounded-lg border border-border text-foreground hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  variant="outline"
+                  className="flex-1 px-4 py-2.5 rounded-lg"
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={handleDeleteConfirm}
                   disabled={deleteLabel.isPending}
-                  className="flex-1 px-4 py-2.5 rounded-lg bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  variant="destructive"
+                  className="flex-1 px-4 py-2.5 rounded-lg hover:bg-destructive/90 text-destructive-foreground"
                 >
                   {deleteLabel.isPending ? 'Deleting...' : 'Delete Label'}
-                </button>
+                </Button>
               </div>
             </div>
           </div>

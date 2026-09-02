@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 import { KanbanFilters } from "@/hooks/useKanbanPage";
 
 interface FiltersPanelProps {
@@ -45,8 +46,9 @@ export function FiltersPanel({
             {PRIORITIES.map((priority) => {
               const isActive = filters.priority?.includes(priority) || false;
               return (
-                <button
+                <Button
                   key={priority}
+                  variant="primary"
                   onClick={() => onTogglePriority(priority)}
                   className={cn(
                     "px-3 py-1.5 text-xs rounded-md transition-all",
@@ -54,19 +56,20 @@ export function FiltersPanel({
                   )}
                 >
                   {priority}
-                </button>
+                </Button>
               );
             })}
           </div>
         </div>
 
-        <button
+        <Button
+          variant="ghost"
           onClick={onClearFilters}
-          className="self-end flex items-center gap-1.5 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+          className="self-end flex items-center gap-1.5 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-transparent transition-colors"
         >
           <X className="w-3.5 h-3.5" />
           <span>Clear filters</span>
-        </button>
+        </Button>
       </div>
     </div>
   );

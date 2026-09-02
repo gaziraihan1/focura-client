@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { INTENT_OPTIONS } from "@/constants/intent.constants";
 
 interface IntentSelectorProps {
@@ -28,9 +29,10 @@ export function IntentSelector({
           const selected = selectedIntent === intent.value;
 
           return (
-            <button
+            <Button
               key={intent.value}
               type="button"
+              variant="ghost"
               onClick={() => onIntentChange(intent.value)}
               className={`p-3 rounded-lg border text-left transition ${
                 selected ? intent.activeClass : "border-border hover:bg-accent"
@@ -43,7 +45,7 @@ export function IntentSelector({
               <p className="text-xs text-muted-foreground">
                 {intent.description}
               </p>
-            </button>
+            </Button>
           );
         })}
       </div>

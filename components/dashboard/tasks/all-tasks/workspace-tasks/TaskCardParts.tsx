@@ -10,6 +10,7 @@ import {
   Plus,
   Loader2,
 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import { Task } from "@/hooks/useTask";
 import {
   formatTimeDuration,
@@ -95,7 +96,9 @@ export function TaskCardHeader({
         {showButtons && (
           <div className="flex gap-1.5 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             {/* Primary */}
-            <button
+            <Button
+              variant="primary"
+              size="icon"
               onClick={handlePrimaryClick}
               disabled={primaryDisabled}
               title={
@@ -106,7 +109,7 @@ export function TaskCardHeader({
                   : "Set as Primary task"
               }
               className={`
-                flex items-center justify-center w-7 h-7 rounded-lg text-white text-xs font-bold
+                w-7 h-7 rounded-lg text-white text-xs font-bold
                 transition-all duration-150 shadow-sm
                 ${
                   primaryDisabled
@@ -120,10 +123,12 @@ export function TaskCardHeader({
               ) : (
                 <Plus size={13} strokeWidth={2.8} />
               )}
-            </button>
+            </Button>
 
             {/* Secondary */}
-            <button
+            <Button
+              variant="primary"
+              size="icon"
               onClick={handleSecondaryClick}
               disabled={secondaryDisabled}
               title={
@@ -132,7 +137,7 @@ export function TaskCardHeader({
                   : "Add to Secondary"
               }
               className={`
-                flex items-center justify-center w-7 h-7 rounded-lg text-white text-xs font-bold
+                w-7 h-7 rounded-lg text-white text-xs font-bold
                 transition-all duration-150 shadow-sm
                 ${
                   secondaryDisabled
@@ -146,7 +151,7 @@ export function TaskCardHeader({
               ) : (
                 <Plus size={13} strokeWidth={2.8} />
               )}
-            </button>
+            </Button>
           </div>
         )}
       </div>

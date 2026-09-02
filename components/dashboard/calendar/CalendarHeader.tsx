@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, CalendarDays, CalendarRange, Calendar } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 type CalendarViewType = "month" | "week" | "day";
 
@@ -74,8 +75,9 @@ export function CalendarHeader({
               aria-label="Calendar view"
             >
               {VIEW_OPTIONS.map(({ value, label, icon: Icon }) => (
-                <button
+                <Button
                   key={value}
+                  variant="ghost"
                   onClick={() => onViewChange(value)}
                   role="radio"
                   aria-checked={view === value}
@@ -88,31 +90,34 @@ export function CalendarHeader({
                 >
                   <Icon className="w-3.5 h-3.5" aria-hidden="true" />
                   <span className="hidden sm:inline">{label}</span>
-                </button>
+                </Button>
               ))}
             </div>
 
             {/* Today Button */}
-            <button
+            <Button
+              variant="outline"
               onClick={onToday}
               aria-label="Go to today"
-              className="px-3 py-2 text-sm font-medium border border-border rounded-lg hover:bg-accent transition-colors"
+              className="px-3 py-2 text-sm font-medium rounded-lg"
             >
               Today
-            </button>
+            </Button>
 
             {/* Navigation */}
             <nav
               className="flex items-center gap-1 border border-border rounded-lg p-1 bg-background"
               aria-label="Calendar navigation"
             >
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={onPrevious}
                 aria-label="Previous period"
-                className="p-2 hover:bg-accent rounded-md transition-colors"
+                className="rounded-md"
               >
                 <ChevronLeft className="w-4 h-4" aria-hidden="true" />
-              </button>
+              </Button>
 
               <span
                 className="px-2 sm:px-4 text-sm font-medium min-w-24 sm:min-w-35 text-center whitespace-nowrap"
@@ -122,13 +127,15 @@ export function CalendarHeader({
                 {formatDateForHeader(currentDate, view)}
               </span>
 
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={onNext}
                 aria-label="Next period"
-                className="p-2 hover:bg-accent rounded-md transition-colors"
+                className="rounded-md"
               >
                 <ChevronRight className="w-4 h-4" aria-hidden="true" />
-              </button>
+              </Button>
             </nav>
           </div>
         </div>

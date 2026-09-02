@@ -13,6 +13,7 @@ import {
   type ProjectViewItem,
 } from "@/hooks/useProjectFeatures";
 import { useProjectRouteSlugs } from "@/hooks/useRouteParams";
+import { Button } from "@/components/ui/Button";
 
 const VIEW_TYPES = ["KANBAN", "LIST", "CALENDAR", "TIMELINE"] as const;
 type ViewType = (typeof VIEW_TYPES)[number];
@@ -95,27 +96,29 @@ export default function ViewList({ projectId }: ViewListProps) {
               </div>
             </div>
             <div className="flex items-center gap-1.5">
-              <button
+              <Button
+                variant="outline"
                 onClick={() => updateView.mutateAsync({ viewId: view.id, projectId, isDefault: true })}
                 disabled={view.isDefault}
                 title={view.isDefault ? "Default view" : "Make this the default view"}
-                className="inline-flex items-center gap-1 rounded-lg border border-border px-2 py-1.5 text-[10px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition disabled:opacity-40 disabled:cursor-default"
+                className="h-auto w-auto gap-1 px-2 py-1.5 text-[10px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-default"
               >
                 <Check className="size-3" /> {view.isDefault ? "Default" : "Set default"}
-              </button>
+              </Button>
               <Link
                 href={tasksHref(view.id)}
                 className="inline-flex items-center gap-1 rounded-lg border border-border px-2 py-1.5 text-[10px] font-medium text-primary hover:bg-primary/5 transition"
               >
                 <ExternalLink className="size-3" /> Apply
               </Link>
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => setDeleteTarget(view)}
                 aria-label={`Delete view ${view.name}`}
-                className="p-1.5 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition"
+                className="h-auto w-auto p-1.5 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20"
               >
                 <Trash2 className="size-3.5" />
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -153,26 +156,27 @@ export default function ViewList({ projectId }: ViewListProps) {
             <option value="TIMELINE">Timeline</option>
           </select>
           <div className="flex items-center gap-2">
-            <button
+            <Button
               onClick={handleCreate}
               disabled={!name.trim() || createView.isPending}
-              className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition disabled:opacity-50"
+              className="h-auto px-3 py-1.5 text-xs font-semibold hover:opacity-90"
             >
               {createView.isPending ? "Saving..." : "Create View"}
-            </button>
-            <button onClick={() => setShowNew(false)} className="px-3 py-1.5 rounded-lg border border-border text-xs hover:bg-accent transition">
+            </Button>
+            <Button variant="outline" onClick={() => setShowNew(false)} className="h-auto px-3 py-1.5 text-xs hover:bg-accent">
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       ) : (
-        <button
+        <Button
+          variant="outline"
           onClick={() => setShowNew(true)}
-          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-dashed border-border text-sm text-muted-foreground hover:text-foreground hover:border-solid transition"
+          className="w-full h-auto gap-2 py-2.5 rounded-xl border-dashed text-sm text-muted-foreground hover:text-foreground hover:border-solid hover:border-border"
         >
           <Plus size={16} />
           New View
-        </button>
+        </Button>
       )}
 
       <ConfirmModal

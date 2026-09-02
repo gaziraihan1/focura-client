@@ -1,4 +1,5 @@
 import { MapPin, Clock, Briefcase, Pin, DollarSign } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 import { DEPARTMENT_LABELS, LOCATION_LABELS, TYPE_LABELS, EXPERIENCE_LABELS, JobListItem } from '@/types/job.types';
 
@@ -129,12 +130,12 @@ export const CareersJobCard = ({ job, isNew, onClick, onApply }: CareersJobCardP
 
         {/* Right — CTA */}
         <div className='shrink-0' onClick={(e) => e.stopPropagation()}>
-          <button
+          <Button
             onClick={() => onApply(job)}
-            className='inline-flex items-center gap-1.5 rounded-xl bg-primary text-primary-foreground text-xs font-bold px-4 py-2.5 hover:bg-primary/90 transition-colors group-hover:shadow-sm'
+            className='gap-1.5 rounded-xl text-xs font-bold px-4 py-2.5 group-hover:shadow-sm'
           >
             Apply
-          </button>
+          </Button>
         </div>
       </div>
     </div>

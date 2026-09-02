@@ -2,6 +2,7 @@
 
 import { Pin, Globe, Lock, FolderOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 import { AnnouncementContentEditor } from './AnnouncementContentEditor';
 import type { AnnouncementFormProps, AnnouncementVisibility } from '@/types/announcement.types';
 import Image from 'next/image';
@@ -114,9 +115,10 @@ export function AnnouncementForm({
         </span>
         <div className="grid grid-cols-2 gap-2">
           {VISIBILITY_OPTIONS.map(({ value, label, icon: Icon, desc }) => (
-            <button
+            <Button
               key={value}
               type="button"
+              variant="ghost"
               disabled={disabled}
               onClick={() => onVisibilityChange(value)}
               className={cn(
@@ -140,7 +142,7 @@ export function AnnouncementForm({
                 </span>
               </div>
               <span className="text-[11px] text-muted-foreground">{desc}</span>
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -165,9 +167,10 @@ export function AnnouncementForm({
               members.map(({ userId, user }) => {
                 const selected = targetIdSet.has(userId);
                 return (
-                  <button
+                  <Button
                     key={userId}
                     type="button"
+                    variant="ghost"
                     disabled={disabled}
                     onClick={() => onTargetToggle(userId)}
                     className={cn(
@@ -199,7 +202,7 @@ export function AnnouncementForm({
                       )}
                     </span>
                     <span className="text-sm">{user.name}</span>
-                  </button>
+                  </Button>
                 );
               })
             )}
@@ -208,8 +211,8 @@ export function AnnouncementForm({
       )}
 
       {/* Pin toggle */}
-      <button
-        type="button"
+      <Button
+        variant="outline"
         disabled={disabled}
         onClick={() => onIsPinnedChange(!formState.isPinned)}
         className={cn(
@@ -224,7 +227,7 @@ export function AnnouncementForm({
         <span className="text-sm font-medium">
           {formState.isPinned ? 'Pinned to top' : 'Pin this announcement'}
         </span>
-      </button>
+      </Button>
     </div>
   );
 }

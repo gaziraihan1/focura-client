@@ -1,4 +1,5 @@
 import { X } from 'lucide-react'
+import { Button } from '@/components/ui/Button';
 
 interface LabelFormHeaderProps {
     onClose: () => void;
@@ -9,13 +10,15 @@ export default function LabelFormHeader({onClose, isSubmitting, title}: LabelFor
   return (
     <div className="flex items-center justify-between p-6 border-b border-border">
             <h2 className="text-xl font-semibold text-foreground">{title}</h2>
-            <button aria-label="Close"
+            <Button aria-label="Close"
               onClick={onClose}
-              className="p-1 hover:bg-accent rounded transition-colors"
+              variant="ghost"
+              size="icon"
+              className="p-1 rounded"
               disabled={isSubmitting}
             >
               <X className="w-5 h-5 text-muted-foreground" />
-            </button>
+            </Button>
           </div>
   )
 }

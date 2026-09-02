@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { LucideIcon, Eye, EyeOff } from "lucide-react";
 import { UseFormRegister, FieldErrors, FieldValues, Path } from "react-hook-form";
+import { Button } from "@/components/ui/Button";
 
 interface AuthFormInputProps<TFieldValues extends FieldValues> {
   name: Path<TFieldValues>;
@@ -61,15 +62,17 @@ export function AuthFormInput<TFieldValues extends FieldValues>({
 
         {/* Password toggle */}
         {isPassword && (
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="icon"
             onClick={() => setShowPassword((p) => !p)}
             disabled={disabled}
             className="absolute right-3.5 text-muted-foreground/50 hover:text-foreground transition-colors duration-150"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-          </button>
+          </Button>
         )}
       </div>
 

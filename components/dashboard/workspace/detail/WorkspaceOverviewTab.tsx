@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Loader2, Activity, ChevronUp } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 import { TaskActivityList } from '@/components/dashboard/task-details/TaskActivityList';
 import { useWorkspaceActivities } from '@/hooks/useActivity';
 import WorkspaceInformation from './WorkspaceInformation';
@@ -47,12 +48,13 @@ export function WorkspaceOverviewTab({
             <h3 className="text-sm font-semibold text-foreground">Recent Activity</h3>
           </div>
           {hasMore && (
-            <button
+            <Button
+              variant="ghost"
               onClick={() => setLimit((prev) => prev + 5)}
-              className="text-xs text-primary hover:underline font-medium"
+              className="text-xs text-primary hover:underline hover:bg-transparent font-medium"
             >
               View more
-            </button>
+            </Button>
           )}
         </div>
 
@@ -76,13 +78,14 @@ export function WorkspaceOverviewTab({
 
         {limit > 5 && (
           <div className="flex justify-center pt-4 border-t border-border/50 mt-4">
-            <button
+            <Button
+              variant="ghost"
               onClick={() => setLimit(5)}
-              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition font-medium"
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-transparent transition font-medium"
             >
               <ChevronUp size={14} />
               Show less
-            </button>
+            </Button>
           </div>
         )}
       </div>

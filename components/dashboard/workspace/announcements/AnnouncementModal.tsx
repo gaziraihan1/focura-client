@@ -3,6 +3,7 @@
 import { m as motion, AnimatePresence } from 'framer-motion';
 import { X, Megaphone, Loader2, Pin } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 import { AnnouncementForm } from './AnnouncementForm';
 import type {
   AnnouncementModalProps,
@@ -68,14 +69,14 @@ export function AnnouncementModal({
                     )}
                   </div>
                 </div>
-                <button aria-label="Close"
-                  type="button"
+                <Button aria-label="Close"
+                  variant="ghost"
                   onClick={onClose}
                   disabled={isLoading}
                   className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shrink-0"
                 >
                   <X className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
 
               {/* Body — pure form, no state */}
@@ -97,14 +98,14 @@ export function AnnouncementModal({
 
               {/* Footer */}
               <div className="flex items-center justify-end gap-3 px-5 sm:px-6 py-4 border-t border-border shrink-0">
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
                   onClick={onClose}
                   disabled={isLoading}
                   className="px-4 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 >
                   Cancel
-                </button>
+                </Button>
                 <motion.button
                   whileTap={{ scale: 0.97 }}
                   type="button"

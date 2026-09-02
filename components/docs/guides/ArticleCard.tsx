@@ -3,6 +3,7 @@
 import { ChevronDown } from "lucide-react";
 import type { GuideArticle } from "@/types/guides.types";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 
 interface ArticleCardProps {
   article: GuideArticle;
@@ -16,12 +17,12 @@ export function ArticleCard({ article, index, isOpen, onToggle }: ArticleCardPro
 
   return (
     <div className="rounded-xl border border-border bg-card overflow-hidden">
-      <button
-        type="button"
+      <Button
+        variant="ghost"
         onClick={onToggle}
         aria-expanded={isOpen}
         aria-controls={contentId}
-        className="flex w-full items-center gap-3 px-4 py-3.5 text-left hover:bg-muted/60 transition-colors"
+        className="flex w-full items-center gap-3 px-4 py-3.5 text-left hover:bg-muted/60"
       >
         <span className="w-6 h-6 shrink-0 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-[11px] font-semibold tabular-nums">
           {index + 1}
@@ -35,7 +36,7 @@ export function ArticleCard({ article, index, isOpen, onToggle }: ArticleCardPro
             isOpen && "rotate-180"
           )}
         />
-      </button>
+      </Button>
       {isOpen && (
         <div
           id={contentId}

@@ -5,6 +5,7 @@ import { Plus, X, Loader2, AlertTriangle } from 'lucide-react';
 import AdminJobTable from './AdminJobTable';
 import type { JobPosting } from '@/types/job.types';
 import { AdminJobForm, type AdminJobFormValues } from './AdminJobForm';
+import { Button } from '@/components/ui/Button';
 import {
   useAdminJobs,
   useCreateJob,
@@ -106,13 +107,15 @@ const AdminJobsManager = () => {
             Manage careers page listings. Drafts are hidden from public view.
           </p>
         </div>
-        <button
+        <Button
+          variant='primary'
+          size='sm'
           onClick={() => setPanel({ mode: 'create' })}
-          className='inline-flex items-center gap-1.5 bg-neutral-900 dark:bg-neutral-50 text-white dark:text-neutral-900 text-xs font-bold rounded-xl px-4 py-2.5 hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors'
+          className='bg-neutral-900 dark:bg-neutral-50 text-white dark:text-neutral-900 text-xs font-bold rounded-xl px-4 py-2.5 hover:bg-neutral-700 dark:hover:bg-neutral-200'
         >
           <Plus className='w-3.5 h-3.5 shrink-0' strokeWidth={2.5} />
           New Role
-        </button>
+        </Button>
       </div>
 
       {isPending ? (
@@ -124,12 +127,14 @@ const AdminJobsManager = () => {
           <p className='text-sm text-neutral-500 dark:text-neutral-400 mb-3'>
             Failed to load job postings.
           </p>
-          <button
+          <Button
+            variant='ghost'
+            size='sm'
             onClick={() => refetch()}
-            className='text-sm font-semibold underline underline-offset-2 text-neutral-600 dark:text-neutral-300'
+            className='text-sm font-semibold underline underline-offset-2 text-neutral-600 dark:text-neutral-300 hover:bg-transparent'
           >
             Retry
-          </button>
+          </Button>
         </div>
       ) : (
         <AdminJobTable
@@ -164,13 +169,15 @@ const AdminJobsManager = () => {
                   ? 'New Job Posting'
                   : `Edit: ${panel.job?.title}`}
               </p>
-              <button
+              <Button
+                variant='ghost'
+                size='sm'
                 onClick={() => setPanel(null)}
                 aria-label='Close modal'
-                className='w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors'
+                className='w-8 h-8 rounded-lg p-0 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800'
               >
                 <X className='w-4 h-4' />
-              </button>
+              </Button>
             </div>
             {/* Scrollable form body */}
             <div className='overflow-y-auto px-6 py-6'>
@@ -213,21 +220,25 @@ const AdminJobsManager = () => {
               </div>
             </div>
             <div className='flex items-center gap-2'>
-              <button
+              <Button
+                variant='destructive'
+                size='sm'
                 onClick={handleDelete}
                 disabled={deleting}
-                className='flex-1 flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 text-white text-xs font-bold rounded-xl py-2.5 transition-colors disabled:opacity-60'
+                className='flex-1 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 text-white text-xs font-bold rounded-xl py-2.5 disabled:opacity-60'
               >
                 {deleting && <Loader2 className='w-3.5 h-3.5 shrink-0 animate-spin' />}
                 Yes, delete
-              </button>
-              <button
+              </Button>
+              <Button
+                variant='outline'
+                size='sm'
                 onClick={() => setDeleteTarget(null)}
                 disabled={deleting}
-                className='flex-1 text-xs font-semibold border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded-xl py-2.5 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors disabled:opacity-60'
+                className='flex-1 text-xs font-semibold border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded-xl py-2.5 hover:bg-neutral-50 dark:hover:bg-neutral-700 disabled:opacity-60'
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </div>
         </div>

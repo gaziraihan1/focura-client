@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { Task } from "@/hooks/useTask";
 import { TaskCard } from "./TaskCard";
 import { X } from "lucide-react";
@@ -33,7 +34,8 @@ export function RemovableTaskCard({
         - The flag icon is inside the flex row at the top of the card content,
           so we nudge right to sit just after it with a small gap
       */}
-      <button
+      <Button
+        variant="outline"
         onClick={() => onRemove(task.id)}
         disabled={isRemoving}
         className={`
@@ -41,7 +43,7 @@ export function RemovableTaskCard({
           p-1.5 rounded-lg
           bg-background border border-border text-muted-foreground
           opacity-100 md:opacity-0 group-hover/removable:opacity-100
-          transition-all disabled:cursor-not-allowed disabled:opacity-50
+          transition-all
           ${hoverColor}
         `}
         title="Remove from daily tasks"
@@ -51,7 +53,7 @@ export function RemovableTaskCard({
         ) : (
           <X size={14} />
         )}
-      </button>
+      </Button>
     </div>
   );
 }

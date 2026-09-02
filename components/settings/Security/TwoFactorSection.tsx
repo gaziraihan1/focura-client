@@ -10,6 +10,7 @@ import {
   useDisableTwoFactor,
 } from '@/hooks/useSecurity';
 import { announce } from '@/lib/a11y';
+import { Button } from '@/components/ui/Button';
 
 export function TwoFactorSection() {
   const { data: securitySettings, isLoading: settingsLoading } = useSecuritySettings();
@@ -111,7 +112,8 @@ export function TwoFactorSection() {
                   <code className="flex-1 px-3 py-2 rounded-lg bg-muted text-xs font-mono break-all select-all">
                     {setupData.secret}
                   </code>
-                  <button
+                  <Button
+                    variant="ghost"
                     onClick={copySecretToClipboard}
                     className="p-2 rounded-lg hover:bg-muted transition-colors shrink-0"
                     aria-label="Copy secret key"
@@ -121,7 +123,7 @@ export function TwoFactorSection() {
                     ) : (
                       <Copy className="w-4 h-4 text-muted-foreground" />
                     )}
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -152,7 +154,8 @@ export function TwoFactorSection() {
             </div>
 
             <div className="flex items-center gap-3">
-              <button
+              <Button
+                variant="primary"
                 onClick={handleVerify2FA}
                 disabled={verifyTwoFactor.isPending || verificationCode.length < 6}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-purple-600 text-white text-sm font-medium hover:bg-purple-700 transition-colors disabled:opacity-50"
@@ -163,13 +166,14 @@ export function TwoFactorSection() {
                   <CheckCircle2 className="w-4 h-4" />
                 )}
                 {verifyTwoFactor.isPending ? 'Verifying...' : 'Verify & Enable'}
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="ghost"
                 onClick={handleCancel2FA}
                 className="px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -204,7 +208,8 @@ export function TwoFactorSection() {
           </div>
 
           <div className="flex items-center gap-3">
-            <button
+            <Button
+              variant="destructive"
               onClick={handleDisable2FA}
               disabled={disableTwoFactor.isPending || !disablePassword}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700 transition-colors disabled:opacity-50"
@@ -215,13 +220,14 @@ export function TwoFactorSection() {
                 <XCircle className="w-4 h-4" />
               )}
               {disableTwoFactor.isPending ? 'Disabling...' : 'Disable 2FA'}
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="ghost"
               onClick={handleCancel2FA}
               className="px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       ) : (
@@ -249,7 +255,8 @@ export function TwoFactorSection() {
               </p>
             </div>
           </div>
-          <button
+          <Button
+            variant="primary"
             onClick={() => {
               if (securitySettings?.twoFactorEnabled) {
                 setTwoFactorStep('disable');
@@ -264,7 +271,7 @@ export function TwoFactorSection() {
             }`}
           >
             {securitySettings?.twoFactorEnabled ? 'Disable' : 'Set Up'}
-          </button>
+          </Button>
         </div>
       )}
     </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { AlertTriangle, X, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 interface DeleteConfirmModalProps {
   fileName: string;
@@ -20,13 +21,14 @@ export function DeleteConfirmModal({
       <div className="relative bg-background border rounded-lg shadow-xl w-full max-w-md">
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <h2 className="text-lg font-semibold">Delete File</h2>
-          <button aria-label="Close"
+          <Button aria-label="Close"
+            variant="ghost"
             onClick={onCancel}
             disabled={isDeleting}
-            className="p-1 hover:bg-muted rounded transition-colors disabled:opacity-50"
+            className="h-auto w-auto p-1 hover:bg-muted"
           >
             <X className="w-5 h-5" />
-          </button>
+          </Button>
         </div>
 
         <div className="px-6 py-4">
@@ -46,21 +48,23 @@ export function DeleteConfirmModal({
         </div>
 
         <div className="flex items-center justify-end gap-3 px-6 py-4 border-t bg-muted/30">
-          <button
+          <Button
+            variant="outline"
             onClick={onCancel}
             disabled={isDeleting}
-            className="px-4 py-2 border rounded-lg hover:bg-muted transition-colors disabled:opacity-50"
+            className="h-auto px-4 py-2 hover:bg-muted"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="destructive"
             onClick={onConfirm}
             disabled={isDeleting}
-            className="px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors disabled:opacity-50 flex items-center gap-2"
+            loading={isDeleting}
+            className="h-auto px-4 py-2"
           >
-            {isDeleting && <Loader2 className="w-4 h-4 animate-spin" />}
             Delete
-          </button>
+          </Button>
         </div>
       </div>
 

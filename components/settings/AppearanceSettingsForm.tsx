@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Monitor, Sun, Moon, Save, Loader2, PanelLeftClose, Sparkles, Lock } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import { Button } from '@/components/ui/Button';
 import toast from 'react-hot-toast';
 
 const DENSITY_OPTIONS = [
@@ -218,18 +219,14 @@ export function AppearanceSettingsForm() {
 
       {/* Save */}
       <div className="flex justify-end">
-        <button
+        <Button
           onClick={handleSave}
           disabled={saving}
-          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
+          loading={saving}
+          leftIcon={<Save className="w-4 h-4" />}
         >
-          {saving ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Save className="w-4 h-4" />
-          )}
-          {saving ? 'Saving...' : 'Save Settings'}
-        </button>
+          Save Settings
+        </Button>
       </div>
     </div>
   );

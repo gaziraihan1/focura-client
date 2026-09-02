@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/Button';
 import { Task } from '@/hooks/useTask';
 import { X, TrendingUp, Clock, AlertCircle, CheckCircle } from 'lucide-react';
 import { useKanbanInsightFooter } from '@/hooks/useKanbanInsightFooter';
@@ -19,12 +20,12 @@ export function InsightFooter({ tasks, onClose }: InsightFooterProps) {
             <TrendingUp className="w-5 h-5 text-primary" />
             Execution Insights
           </h3>
-          <button aria-label="Close"
+          <Button aria-label="Close" variant="ghost"
             onClick={onClose}
-            className="p-1.5 hover:bg-accent rounded-lg transition-colors"
+            className="p-1.5 rounded-lg transition-colors"
           >
             <X className="w-4 h-4 sm:w-5 sm:h-5" />
-          </button>
+          </Button>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">

@@ -3,6 +3,7 @@
 import { RatingCard } from './RatingCard';
 import type { Rating, RatingPagination } from '@/types/rating.types';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { Star } from 'lucide-react';
@@ -50,20 +51,22 @@ export function RatingList({
             Page {pagination.page} of {pagination.totalPages}
           </p>
           <div className="flex items-center gap-1">
-            <button
+            <Button
+              variant="ghost"
               onClick={() => onPageChange(pagination.page - 1)}
               disabled={!pagination.hasPrev}
               className="inline-flex items-center justify-center rounded-md p-1.5 text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
               <ChevronLeft className="h-4 w-4" />
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="ghost"
               onClick={() => onPageChange(pagination.page + 1)}
               disabled={!pagination.hasNext}
               className="inline-flex items-center justify-center rounded-md p-1.5 text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
               <ChevronRight className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
         </div>
       )}

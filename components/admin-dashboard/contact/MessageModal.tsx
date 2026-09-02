@@ -2,6 +2,7 @@ import { formatCategory, formatDate } from "@/app/(dashboard-pages)/admin-dashbo
 import { ContactMessage } from "@/hooks/useContactMessage";
 import { Calendar, Hash, Mail, Tag, User, X } from "lucide-react";
 import { InfoRow } from "./InfoRow";
+import { Button } from "@/components/ui/Button";
 import { CATEGORY_CLASSES, STATUS_CLASSES } from "@/constants/adminContact.constants";
 
 export function MessageModal({
@@ -31,12 +32,14 @@ export function MessageModal({
               {formatDate(message.createdAt)}
             </p>
           </div>
-          <button aria-label="Close"
+          <Button aria-label="Close"
+            variant="ghost"
+            size="sm"
             onClick={onClose}
-            className="shrink-0 p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+            className="shrink-0 p-1.5 h-auto rounded-md text-muted-foreground hover:text-foreground hover:bg-accent"
           >
             <X className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
 
         {/* Sender info grid */}

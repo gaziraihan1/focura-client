@@ -5,6 +5,7 @@ import { Download, Loader2, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { api } from '@/lib/axios';
 import toast from 'react-hot-toast';
 import { announce } from '@/lib/a11y';
+import { Button } from '@/components/ui/Button';
 import { useUserProfile } from '@/hooks/useUserProfile';
 
 type ExportState = 'idle' | 'loading' | 'requested' | 'error';
@@ -55,19 +56,14 @@ export function DataExportCard() {
       </p>
 
       <div className="mt-5 flex flex-wrap items-center gap-3">
-        <button
-          type="button"
+        <Button
           onClick={handleExport}
           disabled={state === 'loading' || state === 'requested'}
-          className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
+          loading={state === 'loading'}
+          leftIcon={<Download className="w-4 h-4" aria-hidden="true" />}
         >
-          {state === 'loading' ? (
-            <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
-          ) : (
-            <Download className="w-4 h-4" aria-hidden="true" />
-          )}
           {state === 'loading' ? 'Preparing export...' : 'Export my data'}
-        </button>
+        </Button>
 
         {state === 'requested' && (
           <span className="inline-flex items-center gap-1.5 text-xs font-medium text-green-600 dark:text-green-400">

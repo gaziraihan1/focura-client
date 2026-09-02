@@ -1,6 +1,7 @@
 // components/BillingSuccess/ActionButtons.tsx
 import Link from 'next/link';
 import { ArrowRight, Zap } from 'lucide-react';
+import { buttonVariants } from '@/components/ui/Button';
 import type { PlanName } from '@/types/billing.success.types';
 
 interface ActionButtonsProps {
@@ -26,10 +27,10 @@ export function ActionButtons({
       {/* Primary — go to workspace */}
       <Link
         href={`/dashboard/workspaces/${workspaceSlug}`}
-        className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity"
+        className={buttonVariants({ variant: "primary", size: "lg" }) + " w-full group"}
       >
         Go to workspace
-        <ArrowRight className="w-4 h-4" />
+        <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
       </Link>
 
       {/* Secondary row */}
@@ -37,7 +38,7 @@ export function ActionButtons({
         {canUpgrade && (
           <Link
             href={`/dashboard/workspaces/${workspaceSlug}/billing/upgrade`}
-            className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-border bg-card text-sm font-medium text-foreground hover:bg-muted transition-colors"
+            className={buttonVariants({ variant: "outline", size: "sm" }) + " w-full"}
           >
             <Zap className="w-3.5 h-3.5" />
             Upgrade plan
@@ -46,7 +47,7 @@ export function ActionButtons({
         {canDowngrade && (
           <Link
             href={`/dashboard/workspaces/${workspaceSlug}/billing`}
-            className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-border bg-card text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+            className={buttonVariants({ variant: "outline", size: "sm" }) + " w-full text-muted-foreground hover:text-foreground"}
           >
             Manage billing
           </Link>
@@ -54,7 +55,7 @@ export function ActionButtons({
         {!canUpgrade && !canDowngrade && (
           <Link
             href={`/dashboard/workspaces/${workspaceSlug}/billing`}
-            className="col-span-2 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-border bg-card text-sm font-medium text-muted-foreground hover:bg-muted transition-colors"
+            className={buttonVariants({ variant: "outline", size: "sm" }) + " col-span-2 w-full text-muted-foreground hover:text-foreground"}
           >
             Manage billing
           </Link>

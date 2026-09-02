@@ -5,6 +5,7 @@ import { Download, Image, FileText, Loader2 } from "lucide-react";
 import { toPng } from "html-to-image";
 import { jsPDF } from "jspdf";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -111,18 +112,15 @@ export function ExportButton({
   return (
     <div className="relative" ref={dropdownRef}>
       {/* Trigger button */}
-      <button
-        type="button"
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={(e) => {
           e.stopPropagation();
           if (!isExporting) setOpen(!open);
         }}
         disabled={isExporting}
-        className={cn(
-          "flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-lg transition-colors",
-          "text-muted-foreground hover:text-foreground hover:bg-accent/50",
-          "disabled:opacity-50 disabled:cursor-not-allowed",
-        )}
+        className="gap-1.5 px-2.5 py-1.5 text-muted-foreground hover:text-foreground hover:bg-accent/50"
         aria-label="Export chart"
         aria-expanded={open}
         aria-haspopup="menu"
@@ -135,7 +133,7 @@ export function ExportButton({
         {showLabel && (
           <span>{isExporting ? "Exporting…" : "Export"}</span>
         )}
-      </button>
+      </Button>
 
       {/* Dropdown menu */}
       {open && !isExporting && (
@@ -148,24 +146,26 @@ export function ExportButton({
           role="menu"
           aria-label="Export options"
         >
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={handleExportPNG}
-            className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-foreground hover:bg-accent transition-colors"
+            className="w-full justify-start gap-2.5 rounded-none px-3 py-2 text-xs"
             role="menuitem"
           >
             <Image className="w-3.5 h-3.5 text-muted-foreground"  />
             Download as PNG
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={handleExportPDF}
-            className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-foreground hover:bg-accent transition-colors"
+            className="w-full justify-start gap-2.5 rounded-none px-3 py-2 text-xs"
             role="menuitem"
           >
             <FileText className="w-3.5 h-3.5 text-muted-foreground" />
             Download as PDF
-          </button>
+          </Button>
         </div>
       )}
     </div>

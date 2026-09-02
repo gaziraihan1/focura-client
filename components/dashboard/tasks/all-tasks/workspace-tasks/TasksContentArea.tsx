@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { Loader2, AlertCircle } from "lucide-react";
 import { Task, TaskPagination } from "@/hooks/useTask";
 import { EmptyState } from "@/components/dashboard/tasks/all-tasks/workspace-tasks/EmptyState";
@@ -61,12 +62,12 @@ export function TasksContentArea({
       <div className="text-center py-12 rounded-xl bg-card border border-border">
         <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
         <p className="text-muted-foreground mb-4">Failed to load tasks</p>
-        <button
+        <Button
           onClick={() => window.location.reload()}
-          className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition"
+          className="px-4 py-2 rounded-lg hover:opacity-90"
         >
           Retry
-        </button>
+        </Button>
       </div>
     );
   }

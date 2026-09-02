@@ -1,5 +1,6 @@
 import { Loader2 } from "lucide-react";
 import { UseFormRegister, FieldErrors } from "react-hook-form";
+import { Button } from "@/components/ui/Button";
 import { ResetPasswordInput } from "./ResetPasswordInput";
 
 type ResetPasswordForm = {
@@ -42,14 +43,15 @@ export function ResetPasswordPageForm({
         disabled={isDisabled}
       />
 
-      <button
+      <Button
         type="submit"
+        variant="primary"
         disabled={isDisabled}
-        className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium hover:opacity-90 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full py-3 rounded-xl font-medium hover:opacity-90 transition flex items-center justify-center gap-2"
       >
         {isSubmitting && <Loader2 className="animate-spin" size={18} />}
         Reset Password
-      </button>
+      </Button>
     </form>
   );
 }

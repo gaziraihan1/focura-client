@@ -2,6 +2,8 @@ import { m as motion } from "framer-motion";
 import { Save, Loader2, AlertTriangle } from "lucide-react";
 import { WorkspaceForm, PREDEFINED_COLORS } from "@/hooks/useWorkspaceSettings";
 
+import { Button } from "@/components/ui/Button";
+
 const COLOR_NAMES: Record<string, string> = {
   "#6366f1": "Indigo",
   "#8b5cf6": "Violet",
@@ -127,7 +129,8 @@ export function GeneralSettingsTab({
               const colorName = COLOR_NAMES[color] || color;
               const isSelected = formData.color === color;
               return (
-                <button
+                <Button
+                  variant="ghost"
                   key={color}
                   type="button"
                   role="radio"
@@ -135,7 +138,7 @@ export function GeneralSettingsTab({
                   aria-label={colorName}
                   onClick={() => isAdmin && onUpdateField("color", color)}
                   disabled={!isAdmin}
-                  className={`w-10 h-10 rounded-lg transition-all disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+                  className={`w-10 h-10 rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
                     isSelected
                       ? "ring-2 ring-offset-2 ring-primary scale-110"
                       : "hover:scale-105"
@@ -188,10 +191,10 @@ export function GeneralSettingsTab({
 
         {/* Save Button */}
         {isAdmin && (
-          <button
+          <Button
             onClick={onSave}
             disabled={isUpdating || !isDirty}
-            className="px-6 py-3 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-6 py-3 hover:opacity-90 flex items-center gap-2"
           >
             {isUpdating ? (
               <Loader2 className="animate-spin" size={18} />
@@ -199,7 +202,7 @@ export function GeneralSettingsTab({
               <Save size={18} />
             )}
             {isUpdating ? "Saving..." : "Save Changes"}
-          </button>
+          </Button>
         )}
       </div>
     </motion.div>

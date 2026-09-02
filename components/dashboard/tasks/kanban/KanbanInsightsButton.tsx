@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { Button } from "@/components/ui/Button";
 
 interface KanbanInsightsButtonProps {
   showInsights: boolean;
@@ -12,11 +13,12 @@ export const KanbanInsightsButton = memo(function KanbanInsightsButton({
   if (showInsights) return null;
 
   return (
-    <button
+    <Button
+      variant="outline"
       onClick={onToggle}
-      className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-card border border-border px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-colors text-sm font-medium z-10"
+      className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-card px-4 py-2 rounded-full shadow-lg hover:shadow-xl hover:bg-card transition-colors text-sm font-medium z-10"
     >
       Show Insights
-    </button>
+    </Button>
   );
 });

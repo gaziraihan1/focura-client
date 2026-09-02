@@ -1,6 +1,7 @@
 import { m as motion } from "framer-motion";
 import { AlertCircle, Calendar, Flag } from "lucide-react";
 import { CreateProjectDto } from "@/hooks/useProjects";
+import { Button } from "@/components/ui/Button";
 
 type ProjectForm = Omit<CreateProjectDto, "workspaceId">;
 
@@ -51,19 +52,20 @@ export function ProjectPlanningSection({
           </span>
           <div className="grid grid-cols-2 gap-2">
             {priorityOptions.map((priority) => (
-              <button
+              <Button
                 key={priority}
                 type="button"
+                variant="outline"
                 onClick={() => onFieldChange("priority", priority)}
-                className={`px-4 py-2.5 rounded-lg border transition text-sm font-medium ${
+                className={`rounded-lg text-sm font-medium ${
                   form.priority === priority
                     ? priorityColors[priority as string]
-                    : "border-border text-muted-foreground hover:bg-accent"
+                    : "text-muted-foreground hover:bg-accent"
                 }`}
               >
                 <Flag size={14} className="inline mr-2" />
                 {priority}
-              </button>
+              </Button>
             ))}
           </div>
         </div>

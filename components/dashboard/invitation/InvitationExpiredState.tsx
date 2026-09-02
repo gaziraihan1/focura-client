@@ -1,4 +1,5 @@
 import { Clock } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface InvitationExpiredStateProps {
   workspaceName: string;
@@ -23,12 +24,12 @@ export function InvitationExpiredState({
             This invitation to <strong>{workspaceName}</strong> has expired.
             Please contact the workspace administrator for a new invitation.
           </p>
-          <button
+          <Button
             onClick={onGoToDashboard}
-            className="w-full bg-primary text-primary-foreground px-6 py-2.5 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+            className="w-full px-6 py-2.5 rounded-lg"
           >
             Go to Dashboard
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/Button";
+
 interface ColorOption {
   name: string;
   value: string;
@@ -25,10 +27,11 @@ export function LabelColorPicker({
       </span>
       <div className="grid grid-cols-9 gap-2">
         {colors.map((preset) => (
-          <button
+          <Button
             key={preset.value}
             type="button"
             onClick={() => onColorSelect(preset.value)}
+            variant="ghost"
             className={`w-full aspect-square rounded-lg transition-all hover:scale-110 ${
               selectedColor === preset.value
                 ? "ring-2 ring-ring ring-offset-2 ring-offset-background scale-110"

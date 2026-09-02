@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Sparkles, BarChart2, Users, Zap, Lock } from 'lucide-react';
 import { useWorkspaceSlug } from '@/hooks/useRouteParams';
+import { Button } from '@/components/ui/Button';
 
 const FEATURE_ICONS: Record<string, React.ReactNode> = {
   Analytics:   <BarChart2 className="w-5 h-5" />,
@@ -81,22 +82,21 @@ export function UpgradePlanCard({ feature, description, workspaceSlug: slugProp 
 
             {/* Actions */}
             <div className="flex flex-wrap gap-3 pt-1">
-              <button
+              <Button
+                size="sm"
                 onClick={() => router.push(`/dashboard/workspaces/${slug}/billing/upgrade`)}
-                className="flex-1 flex items-center justify-center gap-2 h-9 px-4 rounded-lg
-                           bg-primary text-primary-foreground text-sm font-medium
-                           hover:bg-primary/90 transition-colors"
+                leftIcon={<Sparkles className="w-3.5 h-3.5" />}
+                className="flex-1"
               >
-                <Sparkles className="w-3.5 h-3.5" />
                 Upgrade to Pro
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => router.push(`/dashboard/workspaces/${slug}/billing/upgrade`)}
-                className="h-9 px-4 rounded-lg border text-sm font-medium text-muted-foreground
-                           hover:text-foreground hover:bg-muted/50 transition-colors"
               >
                 See plans
-              </button>
+              </Button>
             </div>
           </div>
         </div>

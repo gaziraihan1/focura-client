@@ -12,6 +12,7 @@ import {
   Briefcase,
   Timer,
 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import {
   useProjectTimeReport,
   type ProjectTimeReportRow,
@@ -163,14 +164,15 @@ export function ProjectTimeReport({
           <p className="text-sm text-muted-foreground flex-1">
             Failed to load the time report. Please try again.
           </p>
-          <button
+          <Button
+            variant="ghost"
             type="button"
             onClick={() => refetch()}
-            className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            className="items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Retry
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -195,18 +197,19 @@ export function ProjectTimeReport({
         </div>
         <div className="flex items-center gap-1 p-1 rounded-xl border border-border bg-card">
           {RANGES.map((r) => (
-            <button
+            <Button
               key={r}
               type="button"
+              variant="ghost"
               onClick={() => setDays(r)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium ${
                 days === r
                   ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:bg-accent hover:text-foreground"
               }`}
             >
               {r}d
-            </button>
+            </Button>
           ))}
         </div>
       </div>

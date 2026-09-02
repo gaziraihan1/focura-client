@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { WorkspaceRole } from "@/hooks/useWorkspace";
 import { Plus } from "lucide-react";
 
@@ -22,13 +23,13 @@ export function TasksPageHeader({
       </div>
       {
         memberRole !== "GUEST" && (
-          <button
+          <Button
             onClick={onCreateTask}
-            className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition flex items-center gap-2"
+            className="px-4 py-2 rounded-lg hover:opacity-90 flex items-center gap-2"
           >
             <Plus size={18} />
             New Task
-          </button>
+          </Button>
         )
       }
       

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Cookie } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import { useConsent } from "./ConsentProvider";
 
 /**
@@ -45,20 +46,22 @@ export function ConsentBanner() {
             </div>
           </div>
           <div className="flex shrink-0 flex-wrap items-center gap-2 lg:flex-col xl:flex-row">
-            <button
+            <Button
               type="button"
+              variant="primary"
               onClick={accept}
-              className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background lg:flex-none"
+              className="flex-1 gap-1.5 rounded-lg px-5 py-2.5 text-sm font-semibold focus-visible:outline-none lg:flex-none"
             >
               Accept
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="outline"
               onClick={decline}
-              className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-border bg-transparent px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background lg:flex-none"
+              className="flex-1 gap-1.5 rounded-lg px-5 py-2.5 text-sm font-semibold focus-visible:outline-none lg:flex-none"
             >
               Decline
-            </button>
+            </Button>
           </div>
         </div>
       </div>

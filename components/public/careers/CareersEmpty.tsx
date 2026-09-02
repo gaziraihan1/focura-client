@@ -1,4 +1,5 @@
 import { Briefcase, Mail } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 interface CareersEmptyProps {
   hasFilters: boolean;
@@ -20,12 +21,13 @@ export const CareersEmpty = ({ hasFilters, onClear }: CareersEmptyProps) => {
           <p className='text-sm text-neutral-500 dark:text-neutral-400 max-w-xs leading-relaxed mb-6'>
             Try adjusting your search or filters — or clear them to see all open positions.
           </p>
-          <button
+          <Button
             onClick={onClear}
-            className='text-sm font-semibold text-neutral-700 dark:text-neutral-300 underline underline-offset-2 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors'
+            variant='ghost'
+            className='text-sm font-semibold text-neutral-700 dark:text-neutral-300 underline underline-offset-2 hover:text-neutral-900 dark:hover:text-neutral-100'
           >
             Clear filters
-          </button>
+          </Button>
         </>
       ) : (
         <>

@@ -12,6 +12,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { useUserCapacity, useUserSchedule } from "@/hooks/useUserSettings";
+import { Button } from "@/components/ui/Button";
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
@@ -309,18 +310,16 @@ export function CapacityScheduleForm() {
           )}
         </div>
 
-        <button
+        <Button
           onClick={handleSave}
           disabled={saveStatus === "saving"}
+          loading={saveStatus === "saving"}
+          leftIcon={<Save className="h-4 w-4" />}
+          variant="primary"
           className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {saveStatus === "saving" ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Save className="h-4 w-4" />
-          )}
           {saveStatus === "saving" ? "Saving…" : "Save Settings"}
-        </button>
+        </Button>
       </div>
     </div>
   );

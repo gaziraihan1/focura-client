@@ -1,6 +1,7 @@
 import { ArrowLeft, BarChart3, Plus, Settings } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/Button";
 
 interface WorkspaceHeaderProps {
   workspaceName: string;
@@ -41,13 +42,14 @@ export function WorkspaceHeader({
   return (
     <div className="flex flex-col space-y-4">
       <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-        <button
+        <Button
           onClick={() => router.push("/dashboard/workspaces")}
+          variant="ghost"
           className="p-2 rounded-lg hover:bg-accent transition shrink-0"
           aria-label="Back to workspaces"
         >
           <ArrowLeft size={20} className="text-muted-foreground" />
-        </button>
+        </Button>
 
         <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
           <div
@@ -84,14 +86,15 @@ export function WorkspaceHeader({
 
       <div className="flex flex-wrap items-center gap-2 sm:gap-3">
         {canCreateProjects && (
-          <button
+          <Button
             onClick={() => router.push(`/dashboard/workspaces/${workspaceSlug}/projects/new-project`)}
+            variant="primary"
             className="shrink-0 w-10 sm:w-auto h-10 sm:h-auto sm:px-4 sm:py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition inline-flex items-center justify-center gap-2 text-sm sm:text-base"
             aria-label="New Project"
           >
             <Plus size={16} />
             <span className="hidden sm:inline">New Project</span>
-          </button>
+          </Button>
         )}
 
         {(isAdmin || isOwner) && (
@@ -107,12 +110,13 @@ export function WorkspaceHeader({
 
         {(isAdmin || isOwner) && (
           <Link href={`/dashboard/workspaces/${workspaceSlug}/settings`} className="shrink-0">
-            <button 
+            <Button
+              variant="ghost"
               className="p-2 rounded-lg hover:bg-accent transition"
               aria-label="Settings"
             >
               <Settings size={20} className="text-muted-foreground" />
-            </button>
+            </Button>
           </Link>
         )}
       </div>

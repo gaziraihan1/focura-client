@@ -1,5 +1,6 @@
 import { m as motion } from "framer-motion";
 import { AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface WorkspaceDetailsSectionProps {
   name: string;
@@ -84,7 +85,7 @@ export function WorkspaceDetailsSection({
         </span>
         <div className="flex flex-wrap gap-3">
           {colors.map((colorOption) => (
-            <button
+            <Button
               key={colorOption}
               type="button"
               aria-label={`Select color ${colorOption}`}

@@ -3,6 +3,7 @@ import { AlertTriangle, Loader2, Shield, Trash2, Lock, ArchiveRestore, RefreshCw
 import { useRouter } from "next/navigation";
 import { Section } from "./Section";
 import { useState } from "react";
+import { Button } from "@/components/ui/Button";
 
 type ProjectStatus = "PLANNING" | "ACTIVE" | "ON_HOLD" | "COMPLETED" | "ARCHIVED";
 
@@ -110,8 +111,9 @@ export function DangerTab({
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {STATUS_OPTIONS.map((s) => (
-                  <button
+                  <Button
                     key={s.value}
+                    variant="ghost"
                     onClick={() => setNewStatus(s.value)}
                     className={[
                       "px-3 py-2 rounded-xl text-xs font-semibold border transition-colors",
@@ -121,23 +123,24 @@ export function DangerTab({
                     ].join(" ")}
                   >
                     {s.label}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
 
-            <button
+            <Button
+              variant="primary"
               onClick={handleUnarchive}
               disabled={unarchiving}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
-                         bg-emerald-500 text-white hover:bg-emerald-600 transition-colors
-                         disabled:opacity-40 disabled:cursor-not-allowed"
+                         bg-emerald-500 text-white hover:bg-emerald-600
+                         disabled:opacity-40"
             >
               {unarchiving
                 ? <Loader2 size={14} className="animate-spin" />
                 : <ArchiveRestore size={14} />}
               {unarchiving ? "Restoring…" : `Restore as ${STATUS_OPTIONS.find(s => s.value === newStatus)?.label}`}
-            </button>
+            </Button>
           </div>
         </Section>
       )}
@@ -170,16 +173,17 @@ export function DangerTab({
               />
             </div>
 
-            <button
+            <Button
+              variant="primary"
               disabled={archiveConfirm !== projectName || archiving}
               onClick={handleArchive}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
-                         bg-amber-500 text-white hover:bg-amber-600 transition-colors
-                         disabled:opacity-40 disabled:cursor-not-allowed"
+                         bg-amber-500 text-white hover:bg-amber-600
+                         disabled:opacity-40"
             >
               {archiving ? <Loader2 size={14} className="animate-spin" /> : <Shield size={14} />}
               {archiving ? "Archiving…" : "Archive Project"}
-            </button>
+            </Button>
           </div>
         </Section>
       )}
@@ -193,8 +197,9 @@ export function DangerTab({
           <div className="space-y-3">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {STATUS_OPTIONS.map((s) => (
-                <button
+                <Button
                   key={s.value}
+                  variant="ghost"
                   onClick={() =>
                     project?.id &&
                     updateProject.mutateAsync({ projectId: project.id, data: { status: s.value } })
@@ -210,7 +215,7 @@ export function DangerTab({
                   {updateProject.isPending && project?.status !== s.value
                     ? <RefreshCw size={11} className="animate-spin mx-auto" />
                     : s.label}
-                </button>
+                </Button>
               ))}
             </div>
             <p className="text-[11px] text-muted-foreground">
@@ -248,16 +253,17 @@ export function DangerTab({
               />
             </div>
 
-            <button
+            <Button
+              variant="destructive"
               disabled={deleteConfirm !== projectName || deleting}
               onClick={handleDelete}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
-                         bg-destructive text-white hover:bg-destructive/90 transition-colors
-                         disabled:opacity-40 disabled:cursor-not-allowed"
+                         bg-destructive text-white hover:bg-destructive/90
+                         disabled:opacity-40"
             >
               {deleting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
               {deleting ? "Deleting…" : "Delete Project Forever"}
-            </button>
+            </Button>
           </div>
         </Section>
       )}

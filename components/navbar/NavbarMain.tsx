@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, LogOut, Loader2 } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/Button";
 import ThemeSwitcher from "../themes/ThemeSwitcher";
 import { useSession } from "next-auth/react";
 import { logout } from "@/lib/auth/logout";
@@ -117,18 +118,15 @@ export default function NavbarMain() {
                   Dashboard
                 </Link>
                 <ThemeSwitcher />
-                <button
+                <Button
                   onClick={handleLogout}
                   disabled={isLoggingOut}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  loading={isLoggingOut}
+                  className="gap-2 px-4 py-2 rounded-lg font-medium hover:opacity-90"
                 >
-                  {isLoggingOut ? (
-                    <Loader2 size={16} className="animate-spin" />
-                  ) : (
-                    <LogOut size={16} />
-                  )}
+                  <LogOut size={16} />
                   {isLoggingOut ? "Logging out..." : "Logout"}
-                </button>
+                </Button>
               </>
             ) : (
               <>
@@ -141,7 +139,7 @@ export default function NavbarMain() {
                 <ThemeSwitcher />
                 <Link
                   href="/authentication/registration"
-                  className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition"
+                  className={buttonVariants({ variant: "primary", size: "sm" })}
                 >
                   Get Started
                 </Link>
@@ -149,16 +147,17 @@ export default function NavbarMain() {
             )}
           </div>
 
-          <button
-            type="button"
+          <Button
             onClick={() => setOpen((prev) => !prev)}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             aria-controls={open ? "mobile-nav" : undefined}
-            className="lg:hidden inline-flex items-center justify-center p-2 rounded-xl border border-border/60 text-foreground hover:bg-accent hover:border-border transition active:scale-95"
+            variant="outline"
+            size="icon"
+            className="lg:hidden"
           >
             {open ? <X size={22} /> : <Menu size={22} />}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -212,40 +211,36 @@ export default function NavbarMain() {
                 <Link
                   href="/dashboard"
                   onClick={() => setOpen(false)}
-                  className="w-full flex items-center justify-center rounded-lg border border-border bg-accent/40 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-accent transition"
+                  className={buttonVariants({ variant: "outline" }) + " w-full"}
                 >
                   Dashboard
                 </Link>
-                <button
-                  type="button"
+                <Button
                   onClick={() => {
                     setOpen(false);
                     handleLogout();
                   }}
                   disabled={isLoggingOut}
-                  className="w-full flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  loading={isLoggingOut}
+                  leftIcon={<LogOut size={16} />}
+                  className="w-full"
                 >
-                  {isLoggingOut ? (
-                    <Loader2 size={16} className="animate-spin" />
-                  ) : (
-                    <LogOut size={16} />
-                  )}
                   {isLoggingOut ? "Logging out..." : "Logout"}
-                </button>
+                </Button>
               </>
             ) : (
               <>
                 <Link
                   href="/authentication/login"
                   onClick={() => setOpen(false)}
-                  className="w-full flex items-center justify-center rounded-lg border border-border bg-accent/40 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-accent transition"
+                  className={buttonVariants({ variant: "outline" }) + " w-full"}
                 >
                   Login
                 </Link>
                 <Link
                   href="/authentication/registration"
                   onClick={() => setOpen(false)}
-                  className="w-full flex items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 transition"
+                  className={buttonVariants({ variant: "primary" }) + " w-full"}
                 >
                   Get Started
                 </Link>

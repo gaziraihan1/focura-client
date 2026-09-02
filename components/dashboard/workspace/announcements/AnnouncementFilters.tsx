@@ -2,6 +2,7 @@
 
 import { Globe, Lock, Pin, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 import type { AnnouncementVisibility } from '@/types/announcement.types';
 
 interface AnnouncementFiltersProps {
@@ -34,9 +35,10 @@ export function AnnouncementFilters({
           const Icon    = opt.icon;
           const active  = visibility === opt.value;
           return (
-            <button
+            <Button
               key={opt.value}
               type="button"
+              variant="ghost"
               onClick={() => onVisibilityChange(opt.value)}
               className={cn(
                 'flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-150',
@@ -47,13 +49,13 @@ export function AnnouncementFilters({
             >
               <Icon className="w-3 h-3" />
               {opt.label}
-            </button>
+            </Button>
           );
         })}
       </div>
 
-      <button
-        type="button"
+      <Button
+        variant="outline"
         onClick={() => onIsPinnedChange(isPinned === true ? undefined : true)}
         className={cn(
           'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150',
@@ -65,17 +67,17 @@ export function AnnouncementFilters({
       >
         <Pin className="w-3 h-3" />
         Pinned
-      </button>
+      </Button>
 
       {activeFiltersCount > 0 && (
-        <button
-          type="button"
+        <Button
+          variant="ghost"
           onClick={onReset}
           className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
         >
           <RotateCcw className="w-3 h-3" />
           Reset
-        </button>
+        </Button>
       )}
     </div>
   );

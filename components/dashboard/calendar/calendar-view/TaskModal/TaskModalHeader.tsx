@@ -1,5 +1,6 @@
 import { X, AlertCircle, Folder, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 
 interface TaskModalHeaderProps {
   title: string;
@@ -119,12 +120,14 @@ export function TaskModalHeader({
           )}
         </div>
 
-        <button aria-label="Close"
+        <Button
+          aria-label="Close"
+          variant="ghost"
+          size="icon"
           onClick={onClose}
-          className="p-2 hover:bg-accent rounded-lg transition-colors"
         >
           <X className="w-5 h-5" />
-        </button>
+        </Button>
       </div>
     </div>
   );

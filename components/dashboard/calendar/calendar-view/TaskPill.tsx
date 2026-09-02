@@ -1,5 +1,6 @@
 import { Task } from "@/hooks/useTask";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 import { Clock, Users } from "lucide-react";
 
 interface TaskPillProps {
@@ -33,10 +34,11 @@ export default function TaskPill({ task, isPersonal, isOverdue, onClick }: TaskP
   };
 
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={onClick}
       className={cn(
-        'w-full text-left px-1 sm:px-1.5 lg:px-2 py-0.5 sm:py-1 lg:py-1.5 rounded text-[9px] sm:text-[10px] lg:text-xs transition-all hover:shadow-md group',
+        'w-full justify-start px-1 py-0.5 text-left rounded text-[9px] transition-all hover:shadow-md group sm:px-1.5 sm:py-1 lg:px-2 lg:py-1.5 lg:text-xs sm:text-[10px]',
         getPriorityColor(),
         isOverdue && 'bg-destructive/20 border-l-destructive animate-pulse',
         'relative overflow-hidden'
@@ -76,6 +78,6 @@ export default function TaskPill({ task, isPersonal, isOverdue, onClick }: TaskP
           style={{ backgroundColor: task.project.color }}
         />
       )}
-    </button>
+    </Button>
   );
 }

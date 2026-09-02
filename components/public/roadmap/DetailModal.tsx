@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { CATEGORY_COLORS, CATEGORY_LABELS, RoadmapItem, STATUS_CONFIG } from "@/lib/roadmapData";
 import { AnimatePresence, m as motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 export default function DetailModal({
@@ -86,13 +87,14 @@ export default function DetailModal({
               </div>
 
               {/* Close button */}
-              <button
+              <Button
+                variant="ghost"
                 onClick={onClose}
                 aria-label='Close'
-                className='shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors'
+                className='h-auto w-auto shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors'
               >
                 <X className='w-4 h-4' />
-              </button>
+              </Button>
             </div>
 
             {/* Status badge */}

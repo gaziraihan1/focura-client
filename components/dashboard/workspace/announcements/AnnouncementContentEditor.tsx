@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 import { PreviewContent } from './PreviewContent';
 import { EditorToolbar } from './EditorToolbar';
 import { CharacterCounter } from './CharacterCounter';
@@ -26,8 +27,8 @@ export function AnnouncementContentEditor({
         <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
           Content
         </span>
-        <button
-          type="button"
+        <Button
+          variant="ghost"
           onClick={togglePreview}
           className={cn(
             'text-xs px-2.5 py-1 rounded-md transition-colors',
@@ -37,7 +38,7 @@ export function AnnouncementContentEditor({
           )}
         >
           {preview ? 'Edit' : 'Preview'}
-        </button>
+        </Button>
       </div>
 
       <EditorToolbar disabled={disabled || preview} onApplyFormat={applyFormat} />

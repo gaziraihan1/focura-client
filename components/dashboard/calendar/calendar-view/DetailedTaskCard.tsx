@@ -1,5 +1,6 @@
 import { Task } from "@/hooks/useTask";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 import {
   Clock,
   MessageSquare,
@@ -72,10 +73,11 @@ export default function DetailedTaskCard({ task, onClick, variant }: DetailedTas
     : null;
 
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={onClick}
       className={cn(
-        'w-full text-left p-4 rounded-lg transition-all group',
+        'w-full justify-start p-4 text-left rounded-lg transition-all group',
         getVariantStyles()
       )}
     >
@@ -241,6 +243,6 @@ export default function DetailedTaskCard({ task, onClick, variant }: DetailedTas
           )}
         </div>
       )}
-    </button>
+    </Button>
   );
 }

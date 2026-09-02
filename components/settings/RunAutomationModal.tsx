@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Play, Search, X, Loader2 } from "lucide-react";
 import { api } from "@/lib/axios";
+import { Button } from "@/components/ui/Button";
 import {
   useTestAutomation,
   type AutomationRule,
@@ -77,14 +78,14 @@ export function RunAutomationModal({
               <p className="text-xs text-muted-foreground">{rule.name}</p>
             </div>
           </div>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-accent"
             aria-label="Close"
           >
             <X className="h-4 w-4" />
-          </button>
+          </Button>
         </div>
 
         <p className="mb-3 text-xs text-muted-foreground">
@@ -132,26 +133,20 @@ export function RunAutomationModal({
         </div>
 
         <div className="mt-4 flex items-center justify-end gap-2">
-          <button
-            type="button"
+          <Button
+            variant="outline"
             onClick={onClose}
-            className="rounded-lg border border-border px-4 py-2 text-sm font-medium transition-colors hover:bg-accent"
           >
             Cancel
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
             onClick={handleRun}
             disabled={!taskId || testAutomation.isPending}
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+            loading={testAutomation.isPending}
+            leftIcon={<Play className="h-4 h-4" />}
           >
-            {testAutomation.isPending ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Play className="h-4 w-4" />
-            )}
-            {testAutomation.isPending ? "Running..." : "Run rule"}
-          </button>
+            Run rule
+          </Button>
         </div>
       </div>
     </div>

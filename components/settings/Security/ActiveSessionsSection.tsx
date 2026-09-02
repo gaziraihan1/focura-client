@@ -2,6 +2,7 @@
 
 import { Shield, Monitor, Laptop, Smartphone, SmartphoneIcon, LogOut, Loader2 } from 'lucide-react';
 import { useActiveSessions, useRevokeSession, useRevokeAllSessions } from '@/hooks/useSecurity';
+import { Button } from '@/components/ui/Button';
 
 function getDeviceIcon(device: string) {
   if (device.toLowerCase().includes('mobile') || device.toLowerCase().includes('iphone') || device.toLowerCase().includes('android')) {
@@ -43,7 +44,8 @@ export function ActiveSessionsSection() {
           </div>
         </div>
         {sessions.length > 1 && (
-          <button
+          <Button
+            variant="ghost"
             onClick={handleRevokeAllSessions}
             disabled={revokeAllSessions.isPending}
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 hover:bg-red-500/10 transition-colors"
@@ -54,7 +56,7 @@ export function ActiveSessionsSection() {
               <LogOut className="w-3 h-3" />
             )}
             Revoke All Others
-          </button>
+          </Button>
         )}
       </div>
 
@@ -104,7 +106,8 @@ export function ActiveSessionsSection() {
                   </div>
                 </div>
                 {!session.isCurrent && (
-                  <button
+                  <Button
+                    variant="ghost"
                     onClick={() => handleRevokeSession(session.id)}
                     disabled={revokeSession.isPending}
                     className="p-2 rounded-lg text-red-500 hover:bg-red-500/10 transition-colors"
@@ -115,7 +118,7 @@ export function ActiveSessionsSection() {
                     ) : (
                       <LogOut className="w-4 h-4" />
                     )}
-                  </button>
+                  </Button>
                 )}
               </li>
             );

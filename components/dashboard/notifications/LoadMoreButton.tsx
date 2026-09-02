@@ -1,4 +1,5 @@
 import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface LoadMoreButtonProps {
   hasNextPage: boolean;
@@ -14,10 +15,11 @@ export function LoadMoreButton({
   if (!hasNextPage) return null;
 
   return (
-    <button
+    <Button
+      variant="outline"
       onClick={onLoadMore}
       disabled={isFetchingNextPage}
-      className="w-full py-3 border border-border rounded-lg hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium flex items-center justify-center gap-2"
+      className="w-full py-3 rounded-lg"
     >
       {isFetchingNextPage ? (
         <>
@@ -27,6 +29,6 @@ export function LoadMoreButton({
       ) : (
         "Load More"
       )}
-    </button>
+    </Button>
   );
 }

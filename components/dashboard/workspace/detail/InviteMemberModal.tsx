@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useEffectEvent } from "react";
 import { Mail, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import { useInviteMember } from "@/hooks/useWorkspace";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 
@@ -106,15 +107,17 @@ export function InviteMemberModal({
           </div>
 
           <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 pt-2">
-            <button
+            <Button
               onClick={onClose}
+              variant="outline"
               className="w-full sm:w-auto px-4 py-2 sm:py-3 rounded-lg border border-border hover:bg-accent transition text-sm sm:text-base"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={handleInvite}
               disabled={!inviteEmail || inviteMember.isPending}
+              variant="primary"
               className="w-full sm:flex-1 px-4 py-2 sm:py-3 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition disabled:opacity-50 flex items-center justify-center gap-2 text-sm sm:text-base"
             >
               {inviteMember.isPending ? (
@@ -123,7 +126,7 @@ export function InviteMemberModal({
                 <Mail size={16} className="sm:w-4.5 sm:h-4.5" />
               )}
               Send Invitation
-            </button>
+            </Button>
           </div>
         </div>
       </div>
