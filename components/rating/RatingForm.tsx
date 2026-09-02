@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { StarRating } from './StarRating';
 import { useCreateRating, useUpdateRating, useDeleteRating } from '@/hooks/useRatings';
 import type { Rating } from '@/types/rating.types';
@@ -13,36 +13,32 @@ interface RatingFormProps {
 }
 
 export function RatingForm({ existingRating, className }: RatingFormProps) {
-  const [stars, setStars] = useState(existingRating?.stars ?? 0);
-  const [comment, setComment] = useState(existingRating?.comment ?? '');
+  const [stars, setStars] = useState(0);
+  const [comment, setComment] = useState('');
   const [isEditing, setIsEditing] = useState(false);
 
   const createMutation = useCreateRating();
   const updateMutation = useUpdateRating();
   const deleteMutation = useDeleteRating();
 
-  useEffect(() => {
-    if (existingRating) {
-      setStars(existingRating.stars);
-      setComment(existingRating.comment ?? '');
-      setIsEditing(false);
-    }
-  }, [existingRating]);
+  // Use existing rating values when not editing, otherwise use local state
+  const currentStars = isEditing ? stars : (existingRating?.stars ?? 0);
+  const currentComment = isEditing ? comment : (existingRating?.comment ?? '');
 
   const isPending = createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (stars === 0) return;
+    if (currentStars === 0) return;
 
     if (existingRating) {
       updateMutation.mutate(
-        { id: existingRating.id, stars, comment: comment || null },
+        { id: existingRating.id, stars: currentStars, comment: currentComment || null },
         { onSuccess: () => setIsEditing(false) },
       );
     } else {
       createMutation.mutate(
-        { stars, comment: comment || null },
+        { stars: currentStars, comment: currentComment || null },
         { onSuccess: () => setIsEditing(false) },
       );
     }
@@ -79,7 +75,11 @@ export function RatingForm({ existingRating, className }: RatingFormProps) {
           <h4 className="text-sm font-medium text-foreground">Your Review</h4>
           <div className="flex items-center gap-1">
             <button
-              onClick={() => setIsEditing(true)}
+              onClick={() => {
+                setStars(existingRating.stars);
+                setComment(existingRating.comment ?? '');
+                setIsEditing(true);
+              }}
               className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-muted-foreground hover:bg-muted transition"
               disabled={isPending}
             >
@@ -96,10 +96,10 @@ export function RatingForm({ existingRating, className }: RatingFormProps) {
             </button>
           </div>
         </div>
-        <StarRating rating={existingRating.stars} size="md" />
-        {existingRating.comment && (
+        <StarRating rating={currentStars} size="md" />
+        {currentComment && (
           <p className="mt-2 text-sm text-muted-foreground whitespace-pre-wrap">
-            {existingRating.comment}
+            {currentComment}
           </p>
         )}
       </div>
@@ -118,18 +118,18 @@ export function RatingForm({ existingRating, className }: RatingFormProps) {
 
       <div className="mb-3">
         <StarRating
-          rating={stars}
+          rating={currentStars}
           size="lg"
           interactive
           onChange={setStars}
         />
-        {stars === 0 && (
+        {currentStars === 0 && (
           <p className="mt-1 text-xs text-muted-foreground">Click a star to rate</p>
         )}
       </div>
 
       <textarea
-        value={comment}
+        value={currentComment}
         onChange={(e) => setComment(e.target.value)}
         placeholder="Share your experience (optional)"
         rows={3}
@@ -140,7 +140,7 @@ export function RatingForm({ existingRating, className }: RatingFormProps) {
       <div className="mt-3 flex items-center gap-2">
         <button
           type="submit"
-          disabled={stars === 0 || isPending}
+          disabled={currentStars === 0 || isPending}
           className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition disabled:opacity-50"
         >
           <Send className="h-3.5 w-3.5" />
@@ -149,11 +149,7 @@ export function RatingForm({ existingRating, className }: RatingFormProps) {
         {existingRating && (
           <button
             type="button"
-            onClick={() => {
-              setStars(existingRating.stars);
-              setComment(existingRating.comment ?? '');
-              setIsEditing(false);
-            }}
+            onClick={() => setIsEditing(false)}
             className="rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-muted transition"
           >
             Cancel
