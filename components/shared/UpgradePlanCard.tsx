@@ -104,7 +104,7 @@ export function UpgradePlanCard({ feature, description, workspaceSlug: slugProp 
         {/* Sub-note */}
         <p className="text-center text-xs text-muted-foreground mt-4">
           Questions?{' '}
-          <a href="mailto:support@yourapp.com"
+          <a href="mailto:focurabusiness@gmail.com"
              className="underline underline-offset-2 hover:text-foreground transition-colors">
             Contact support
           </a>

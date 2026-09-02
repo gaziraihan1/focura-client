@@ -96,6 +96,6 @@ describe('UpgradePlanCard', () => {
     render(<UpgradePlanCard {...defaultProps} />)
 
     const link = screen.getByText('Contact support')
-    expect(link).toHaveAttribute('href', 'mailto:support@yourapp.com')
+    expect(link).toHaveAttribute('href', 'mailto:focurabusiness@gmail.com')
   })
 })

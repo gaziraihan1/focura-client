@@ -157,7 +157,7 @@ describe("UpgradePlanCard", () => {
       expect(link).toBeInTheDocument();
       expect(link).toHaveAttribute(
         "href",
-        "mailto:support@yourapp.com"
+        "mailto:focurabusiness@gmail.com"
       );
     });
   });
