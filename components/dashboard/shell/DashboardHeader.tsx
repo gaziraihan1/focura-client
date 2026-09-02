@@ -8,7 +8,7 @@ export function DashboardHeader({ userName }: DashboardHeaderProps) {
   return (
     <div>
       <h1 className="text-3xl font-bold">
-        Welcome back, {firstName}! 👋
+        Welcome back, {firstName}!
       </h1>
       <p className="text-muted-foreground mt-2">
         Here&apos;s what&apos;s happening with your projects today.

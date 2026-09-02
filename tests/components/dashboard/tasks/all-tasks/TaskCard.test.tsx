@@ -9,6 +9,9 @@ vi.mock('framer-motion', () => ({
 vi.mock('next/link', () => ({
   default: ({ children, href, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => <a href={href} {...props}>{children}</a>,
 }))
+vi.mock('next/navigation', () => ({
+  useParams: () => ({ workspaceSlug: 'ws-1', projectSlug: 'proj-1' }),
+}))
 vi.mock('@/utils/task.utils', () => ({
   getStatusColor: () => 'bg-green-100',
   getPriorityColor: () => 'text-red-500',
@@ -27,6 +30,8 @@ vi.mock('lucide-react', () => ({
   Clock: () => <div data-testid="clock" />,
   Flag: () => <div data-testid="flag" />,
   Folder: () => <div data-testid="folder" />,
+  File: () => <div data-testid="file" />,
+  MessageSquare: () => <div data-testid="message-square" />,
   Timer: () => <div data-testid="timer" />,
   AlertCircle: () => <div data-testid="alert-circle" />,
   TrendingUp: () => <div data-testid="trending-up" />,

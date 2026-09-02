@@ -40,7 +40,6 @@ const navigation: NavItem[] = [
   {
     name: "Tasks",
     icon: CheckSquare,
-    badge: "12",
     children: [
       { name: "All Tasks", href: "/dashboard/tasks" },
       { name: "Team Task", href: "/dashboard/tasks/team-task" },

@@ -110,7 +110,7 @@ export default function DashboardShell({
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div role="presentation"
-          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}

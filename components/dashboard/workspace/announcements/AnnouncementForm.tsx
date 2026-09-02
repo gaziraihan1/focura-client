@@ -115,18 +115,18 @@ export function AnnouncementForm({
         </span>
         <div className="grid grid-cols-2 gap-2">
           {VISIBILITY_OPTIONS.map(({ value, label, icon: Icon, desc }) => (
-            <Button
+            <button
               key={value}
               type="button"
-              variant="ghost"
               disabled={disabled}
               onClick={() => onVisibilityChange(value)}
               className={cn(
                 'flex flex-col items-start gap-1 px-3.5 py-3 rounded-xl border text-left transition-all',
+                'font-medium select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                'disabled:opacity-50 disabled:cursor-not-allowed',
                 formState.visibility === value
                   ? 'border-primary/60 bg-primary/5 ring-1 ring-primary/20'
                   : 'border-border hover:border-border/80 hover:bg-muted/50',
-                'disabled:opacity-50 disabled:cursor-not-allowed',
               )}
             >
               <div className="flex items-center gap-2">
@@ -142,7 +142,7 @@ export function AnnouncementForm({
                 </span>
               </div>
               <span className="text-[11px] text-muted-foreground">{desc}</span>
-            </Button>
+            </button>
           ))}
         </div>
       </div>
