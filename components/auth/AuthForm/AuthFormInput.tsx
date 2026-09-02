@@ -36,8 +36,8 @@ export function AuthFormInput<TFieldValues extends FieldValues>({
           group relative flex items-center rounded-xl
           bg-background/60 border
           transition-all duration-200
-          focus-within:border-primary/70 focus-within:bg-background/80 focus-within:shadow-[0_0_0_3px_hsl(var(--primary)/0.12)]
-          ${error ? "border-destructive/70 shadow-[0_0_0_3px_hsl(var(--destructive)/0.10)]" : "border-border/70"}
+          focus-within:border-primary/70 focus-within:bg-background/80 focus-within:shadow-[0_0_0_3px_var(--primary-glow)]
+          ${error ? "border-destructive/70 shadow-[0_0_0_3px_var(--destructive-glow)]" : "border-border/70"}
           ${disabled ? "opacity-50 cursor-not-allowed" : ""}
         `}
       >

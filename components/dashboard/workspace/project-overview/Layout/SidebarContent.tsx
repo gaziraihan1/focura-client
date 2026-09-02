@@ -27,7 +27,7 @@ export function SidebarContent({
         <Link
           href={`/dashboard/workspaces/${workspaceSlug}/projects`}
           onClick={onNavClick}
-          className="group inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors duration-150"
+          className="group inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/60 transition-colors duration-150"
         >
           <ChevronLeft
             size={11}
@@ -39,7 +39,7 @@ export function SidebarContent({
 
       {/* Project identity block */}
       <div className="px-3 pb-4">
-        <div className="flex items-center gap-3 p-2.5 rounded-xl bg-accent/40">
+        <div className="flex items-center gap-3 p-2.5 rounded-xl bg-sidebar-accent/40">
           {/* Color swatch / avatar */}
           <div
             className="w-9 h-9 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm ring-1 ring-black/5"
@@ -49,13 +49,13 @@ export function SidebarContent({
           </div>
           <div className="min-w-0 flex-1">
             {projectName ? (
-              <p className="text-sm font-semibold text-foreground truncate leading-tight">
+              <p className="text-sm font-semibold text-sidebar-foreground truncate leading-tight">
                 {projectName}
               </p>
             ) : (
               <div className="h-3.5 w-24 bg-muted animate-pulse rounded mb-1" />
             )}
-            <p className="text-[10px] text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
+            <p className="text-[10px] text-sidebar-foreground/50 mt-0.5 font-medium uppercase tracking-wide">
               Project
             </p>
           </div>
@@ -63,11 +63,11 @@ export function SidebarContent({
       </div>
 
       {/* Divider */}
-      <div className="mx-3 mb-3 border-t border-border" />
+      <div className="mx-3 mb-3 border-t border-sidebar-border" />
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto px-2 space-y-0.5">
-        <p className="px-3 mb-2 text-[9px] font-bold uppercase tracking-[0.12em] text-muted-foreground/50">
+        <p className="px-3 mb-2 text-[9px] font-bold uppercase tracking-[0.12em] text-sidebar-foreground/40">
           Menu
         </p>
 
@@ -83,13 +83,13 @@ export function SidebarContent({
               className={[
                 "group relative flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-150",
                 active
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-foreground/80 hover:text-foreground hover:bg-accent",
+                  ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
+                  : "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/60",
               ].join(" ")}
             >
               {/* Active indicator bar */}
               {active && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-r-full bg-primary-foreground/40" />
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-r-full bg-sidebar-accent-foreground/40" />
               )}
 
               <Icon
@@ -106,8 +106,8 @@ export function SidebarContent({
                   className={[
                     "ml-auto text-[10px] font-semibold px-1.5 py-0.5 rounded-full",
                     active
-                      ? "bg-primary-foreground/20 text-primary-foreground"
-                      : "bg-muted text-muted-foreground",
+                      ? "bg-sidebar-accent-foreground/20 text-sidebar-accent-foreground"
+                      : "bg-sidebar-accent/60 text-sidebar-foreground/60",
                   ].join(" ")}
                 >
                   {item.badge}
@@ -120,8 +120,8 @@ export function SidebarContent({
 
       {/* Bottom footer */}
       <div className="px-3 py-3 mt-2">
-        <div className="px-2 py-2 rounded-lg bg-accent/30 text-center">
-          <p className="text-[9px] text-muted-foreground/50 font-medium uppercase tracking-widest">
+        <div className="px-2 py-2 rounded-lg bg-sidebar-accent/30 text-center">
+          <p className="text-[9px] text-sidebar-foreground/40 font-medium uppercase tracking-widest">
             Project Workspace
           </p>
         </div>

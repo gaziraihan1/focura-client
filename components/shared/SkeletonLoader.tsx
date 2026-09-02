@@ -11,7 +11,7 @@ export function SkeletonLoader({
   count = 1,
   variant = "text",
 }: SkeletonLoaderProps) {
-  const baseClass = "animate-pulse rounded bg-muted";
+  const baseClass = "skeleton-shimmer rounded bg-muted";
 
   const variantClass = {
     text: "h-4 w-full",
@@ -32,9 +32,9 @@ export function SkeletonLoader({
 export function CardSkeleton() {
   return (
     <div className="rounded-xl border border-border bg-card p-5 space-y-3">
-      <div className="h-4 w-1/3 animate-pulse rounded bg-muted" />
-      <div className="h-8 w-1/4 animate-pulse rounded bg-muted" />
-      <div className="h-3 w-1/2 animate-pulse rounded bg-muted" />
+      <div className="h-4 w-1/3 skeleton-shimmer rounded bg-muted" />
+      <div className="h-8 w-1/4 skeleton-shimmer rounded bg-muted" />
+      <div className="h-3 w-1/2 skeleton-shimmer rounded bg-muted" />
     </div>
   );
 }
@@ -44,10 +44,10 @@ export function ListSkeleton({ count = 5 }: { count?: number }) {
     <div className="space-y-3">
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="flex items-center gap-3 rounded-xl border border-border bg-card p-4">
-          <div className="h-10 w-10 animate-pulse rounded-full bg-muted" />
+          <div className="h-10 w-10 skeleton-shimmer rounded-full bg-muted" />
           <div className="flex-1 space-y-2">
-            <div className="h-4 w-3/4 animate-pulse rounded bg-muted" />
-            <div className="h-3 w-1/2 animate-pulse rounded bg-muted" />
+            <div className="h-4 w-3/4 skeleton-shimmer rounded bg-muted" />
+            <div className="h-3 w-1/2 skeleton-shimmer rounded bg-muted" />
           </div>
         </div>
       ))}

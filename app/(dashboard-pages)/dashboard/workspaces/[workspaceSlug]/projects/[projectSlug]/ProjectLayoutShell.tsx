@@ -128,7 +128,7 @@ export function ProjectLayoutShell({
   };
 
   return (
-    <div className="flex -mx-4 -my-6 sm:-mx-6 lg:-mx-8 min-h-[calc(100vh-57px)]">
+    <div className="flex -mx-4 -my-6 min-h-[calc(100vh-57px)]">
       {/* Desktop sidebar */}
       <aside
         className={[

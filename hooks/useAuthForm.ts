@@ -31,6 +31,7 @@ interface UseAuthFormProps {
 
 export function useAuthForm({ mode }: UseAuthFormProps) {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -47,6 +48,7 @@ export function useAuthForm({ mode }: UseAuthFormProps) {
   });
 
   const onSubmit = async (values: AuthFormData) => {
+    setFormError(null);
     try {
       if (mode === "login") {
         const result = await signIn("credentials", {
@@ -64,7 +66,9 @@ export function useAuthForm({ mode }: UseAuthFormProps) {
             return;
           }
 
-          toast.error("Invalid email or password. Please try again.");
+          const errorMessage = "Invalid email or password. Please try again.";
+          setFormError(errorMessage);
+          toast.error(errorMessage);
           return;
         }
 
@@ -90,13 +94,18 @@ export function useAuthForm({ mode }: UseAuthFormProps) {
 
         if (!res.ok) {
           const data = await res.json().catch(() => null);
+          let errorMessage: string;
+
           if (res.status === 429) {
-            toast.error("Too many attempts. Please try again later.");
+            errorMessage = "Too many attempts. Please try again later.";
           } else if (data.error?.toLowerCase().includes("already exists")) {
-            toast.error("An account with this email already exists. Please login instead.");
+            errorMessage = "An account with this email already exists. Please login instead.";
           } else {
-            toast.error(data.error || "Registration failed. Please try again.");
+            errorMessage = data.error || "Registration failed. Please try again.";
           }
+
+          setFormError(errorMessage);
+          toast.error(errorMessage);
           return;
         }
 
@@ -105,7 +114,9 @@ export function useAuthForm({ mode }: UseAuthFormProps) {
       }
     } catch (err) {
       console.error("Auth error:", err);
-      toast.error("Something went wrong. Please check your connection and try again.");
+      const errorMessage = "Something went wrong. Please check your connection and try again.";
+      setFormError(errorMessage);
+      toast.error(errorMessage);
     }
   };
 
@@ -134,5 +145,7 @@ export function useAuthForm({ mode }: UseAuthFormProps) {
     isLoading,
     onSubmit,
     handleGoogle,
+    formError,
+    clearFormError: () => setFormError(null),
   };
 }

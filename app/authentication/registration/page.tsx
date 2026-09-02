@@ -1,12 +1,10 @@
 import { Suspense } from "react";
-import AuthForm from "@/components/auth/AuthForm";
+import { AuthPage } from "@/components/auth/AuthPage";
 
-export default function LoginPage() {
+export default function RegistrationPage() {
   return (
     <Suspense>
-      <section className="min-h-screen flex items-center justify-center bg-background px-6 py-20">
-        <AuthForm mode="register" />
-      </section>
+      <AuthPage />
     </Suspense>
   );
 }

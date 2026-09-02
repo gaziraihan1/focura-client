@@ -173,7 +173,7 @@ export default function Sidebar({ isOpen, onClose, collapsed = false }: SidebarP
         fixed top-0 left-0 z-50 h-full w-64
         bg-sidebar border-r border-sidebar-border
         flex flex-col
-        transition-transform duration-300 ease-in-out
+        transition-transform duration-300 ease-in-out will-change-transform
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
         ${collapsed ? "lg:-translate-x-full" : "lg:translate-x-0"}
       `}

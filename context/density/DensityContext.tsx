@@ -27,7 +27,10 @@ function useStoredDensity(): [Density, (value: Density) => void] {
 
   // After hydration, read the real value from localStorage.
   useEffect(() => {
+    if (hasHydrated.current) return;
+    
     const stored = readStoredDensity();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDensity(stored);
     applyDensityAttr(stored);
     hasHydrated.current = true;
@@ -47,12 +50,12 @@ function useStoredDensity(): [Density, (value: Density) => void] {
   }, []);
 
   const setValue = useCallback((next: Density) => {
+    setDensity(next);
     try {
       window.localStorage.setItem(DENSITY_KEY, next);
     } catch {
       // localStorage unavailable (private mode etc.)
     }
-    setDensity(next);
     applyDensityAttr(next);
   }, []);
 

@@ -80,14 +80,14 @@ const toggleExpanded = (name: string) => {
   return (
     <>
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border
-          flex flex-col transform transition-transform duration-200
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-sidebar border-r border-sidebar-border
+          flex flex-col transform transition-transform duration-300 ease-in-out will-change-transform
           ${collapsed ? "lg:-translate-x-full" : "lg:translate-x-0"} ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="flex flex-col h-full">
 
           {/* Workspace switcher */}
-<div className="p-4 border-b border-border">
+<div className="p-4 border-b border-sidebar-border">
   {isLoading ? (
     <div className="flex items-center gap-3 p-3">
       <Skeleton className="w-10 h-10 rounded-lg" />
@@ -139,8 +139,8 @@ const toggleExpanded = (name: string) => {
       <div
         className={`flex items-center gap-3 px-3 py-2 rounded-lg transition ${
           isActive
-            ? "bg-primary text-primary-foreground"
-            : "text-foreground hover:bg-accent"
+            ? "bg-sidebar-accent text-sidebar-accent-foreground"
+            : "text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
         }`}
       >
         {/* If no href, the whole row just toggles the dropdown */}
@@ -169,8 +169,8 @@ const toggleExpanded = (name: string) => {
             onClick={() => toggleExpanded(item.name)}
             className={`shrink-0 p-0.5 rounded transition-colors ${
               isActive
-                ? "hover:bg-primary-foreground/20"
-                : "hover:bg-accent-foreground/10"
+                ? "hover:bg-sidebar-accent-foreground/20"
+                : "hover:bg-sidebar-accent/60"
             }`}
           >
             {isExpanded ? (
@@ -194,8 +194,8 @@ const toggleExpanded = (name: string) => {
                 onClick={onSidebarClose}
                 className={`flex items-center gap-2.5 text-sm px-2.5 py-1.5 rounded-md transition ${
                   isChildActive
-                    ? "bg-primary/15 text-primary font-medium"
-                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    ? "bg-sidebar-primary/10 text-sidebar-primary font-medium"
+                    : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/60"
                 }`}
               >
                 <child.icon size={15} className="shrink-0" />
@@ -214,7 +214,7 @@ const toggleExpanded = (name: string) => {
             {lockedItems.map((item) => (
               <div
                 key={item.name}
-                className="flex items-center gap-3 px-3 py-2 rounded-lg text-foreground"
+                className="flex items-center gap-3 px-3 py-2 rounded-lg text-sidebar-foreground/70"
               >
                 <item.icon size={18} />
                 <span>{item.name}</span>
@@ -230,7 +230,7 @@ const toggleExpanded = (name: string) => {
 </nav>
 
           {/* Bottom links */}
-          <div className="p-4 border-t border-border space-y-2">
+          <div className="p-4 border-t border-sidebar-border space-y-2">
   {isLoading ? (
     <>
       <div className="flex items-center gap-3 px-3 py-2">
@@ -246,14 +246,14 @@ const toggleExpanded = (name: string) => {
     <>
       <Link
         href={`/dashboard/workspaces/${slug}/settings`}
-        className="flex items-center gap-3 px-3 py-2 rounded-lg text-foreground hover:bg-accent transition"
+        className="flex items-center gap-3 px-3 py-2 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground transition"
       >
         <Settings size={18} />
         <span>Settings</span>
       </Link>
       <Link
         href="/dashboard/workspaces"
-        className="flex items-center gap-3 px-3 py-2 rounded-lg text-foreground hover:bg-accent transition"
+        className="flex items-center gap-3 px-3 py-2 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground transition"
       >
         <LogOut size={18} />
         <span>All Workspaces</span>
