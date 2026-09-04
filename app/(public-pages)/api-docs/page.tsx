@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "Gablura API Documentation – Developer Reference",
     description:
       "Complete API reference for Gablura. Authentication, rate limits, SSE, errors, and endpoints.",
-    url: "https://gablura-client.vercel.app/api-docs",
+    url: "https://gablura.vercel.app/api-docs",
     siteName: "Gablura",
     type: "website",
   },
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
       "Complete API reference for Gablura. Authentication, rate limits, SSE, errors, and endpoints.",
   },
   alternates: {
-    canonical: "https://gablura-client.vercel.app/api-docs",
+    canonical: "https://gablura.vercel.app/api-docs",
   },
 };
 

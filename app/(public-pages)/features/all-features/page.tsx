@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "Gablura Feature Requests – Vote & Submit Ideas",
     description:
       "Vote on features you'd love to see in Gablura, or submit your own idea.",
-    url: "https://gablura-client.vercel.app/features/all-features",
+    url: "https://gablura.vercel.app/features/all-features",
     siteName: "Gablura",
     type: "website",
   },
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
       "Vote on features you'd love to see in Gablura, or submit your own idea.",
   },
   alternates: {
-    canonical: "https://gablura-client.vercel.app/features/all-features",
+    canonical: "https://gablura.vercel.app/features/all-features",
   },
 };
 

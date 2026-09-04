@@ -664,7 +664,7 @@ export async function generateOGImage({
             }}
           />
           <span style={{ fontSize: '15px', color: '#64748b', fontFamily: 'monospace' }}>
-            gablura-client.vercel.app
+            gablura.vercel.app
           </span>
         </div>
       </div>

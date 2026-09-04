@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "Contact Gablura – Get in Touch",
     description:
       "Reach out to the Gablura team. We respond to all messages within 2 business days.",
-    url: "https://gablura-client.vercel.app/contact",
+    url: "https://gablura.vercel.app/contact",
     siteName: "Gablura",
     type: "website",
   },
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
       "Reach out to the Gablura team. We respond to all messages within 2 business days.",
   },
   alternates: {
-    canonical: "https://gablura-client.vercel.app/contact",
+    canonical: "https://gablura.vercel.app/contact",
   },
 };
 

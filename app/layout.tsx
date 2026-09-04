@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     title: "Gablura – Focus Smarter. Work Better.",
     description:
       "Organize workspaces, manage tasks, collaborate with your team, and track productivity—all in one focused platform.",
-    url: "https://gablura-client.vercel.app",
+    url: "https://gablura.vercel.app",
     siteName: "Gablura",
     type: "website",
   },
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
   },
 
   alternates: {
-    canonical: "https://gablura-client.vercel.app",
+    canonical: "https://gablura.vercel.app",
   },
 };
 

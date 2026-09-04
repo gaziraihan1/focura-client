@@ -263,12 +263,12 @@ const TermsContent = () => {
           <p>
             Website:{" "}
             <a
-              href="https://gablura-client.vercel.app"
+              href="https://gablura.vercel.app"
               target="_blank"
               rel="noopener noreferrer"
               className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
             >
-              gablura-client.vercel.app
+              gablura.vercel.app
             </a>
           </p>
           <p className="text-neutral-500 dark:text-neutral-500 text-xs pt-1">

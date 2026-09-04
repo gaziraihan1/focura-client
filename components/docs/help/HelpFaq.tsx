@@ -21,7 +21,7 @@ const FAQ_GROUPS: FAQGroup[] = [
     items: [
       {
         q: 'Can I use Gablura without creating an account?',
-        a: 'No — all Gablura features require an account. You can sign up free at gablura-client.vercel.app with your email or Google account. No credit card is required for the free plan.',
+        a: 'No — all Gablura features require an account. You can sign up free at gablura.vercel.app with your email or Google account. No credit card is required for the free plan.',
       },
       {
         q: 'Can I have multiple accounts?',

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "Gablura Roadmap – What We're Building Next",
     description:
       "A transparent view of everything we've shipped and everything we're building next.",
-    url: "https://gablura-client.vercel.app/roadmap",
+    url: "https://gablura.vercel.app/roadmap",
     siteName: "Gablura",
     type: "website",
   },
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
       "A transparent view of everything we've shipped and everything we're building next.",
   },
   alternates: {
-    canonical: "https://gablura-client.vercel.app/roadmap",
+    canonical: "https://gablura.vercel.app/roadmap",
   },
 };
 

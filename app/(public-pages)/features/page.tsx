@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     title: "Gablura Features – Work Smarter, Not Harder",
     description:
       "Explore all features of Gablura: workspace management, task tracking, team collaboration, and productivity insights.",
-    url: "https://gablura-client.vercel.app/features",
+    url: "https://gablura.vercel.app/features",
     siteName: "Gablura",
     type: "website",
   },
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
       "Explore all features of Gablura: workspace management, task tracking, team collaboration, and productivity insights.",
   },
   alternates: {
-    canonical: "https://gablura-client.vercel.app/features",
+    canonical: "https://gablura.vercel.app/features",
   },
 };
 

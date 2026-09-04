@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: "Gablura Solutions – Productivity for Every Team",
     description:
       "See how Gablura's tailored solutions help teams of all sizes manage workspaces, tasks, and projects efficiently.",
-    url: "https://gablura-client.vercel.app/solutions",
+    url: "https://gablura.vercel.app/solutions",
     siteName: "Gablura",
     type: "website",
   },
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
       "See how Gablura's tailored solutions help teams of all sizes manage workspaces, tasks, and projects efficiently.",
   },
   alternates: {
-    canonical: "https://gablura-client.vercel.app/solutions",
+    canonical: "https://gablura.vercel.app/solutions",
   },
 };
 

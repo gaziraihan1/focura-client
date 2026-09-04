@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "Gablura Help Center – Guides, FAQs & Tutorials",
     description:
       "Get help with Gablura. Browse guides, FAQs, and tutorials to master workspace management.",
-    url: "https://gablura-client.vercel.app/help",
+    url: "https://gablura.vercel.app/help",
     siteName: "Gablura",
     type: "website",
   },
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
       "Get help with Gablura. Browse guides, FAQs, and tutorials to master workspace management.",
   },
   alternates: {
-    canonical: "https://gablura-client.vercel.app/help",
+    canonical: "https://gablura.vercel.app/help",
   },
 };
 

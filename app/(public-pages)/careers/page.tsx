@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Careers at Gablura – Build the Future of Focused Work",
     description: "Build the future of focused work. See our open roles and join the Gablura team.",
-    url: "https://gablura-client.vercel.app/careers",
+    url: "https://gablura.vercel.app/careers",
     siteName: "Gablura",
     type: "website",
   },
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     description: "Build the future of focused work. See our open roles and join the Gablura team.",
   },
   alternates: {
-    canonical: "https://gablura-client.vercel.app/careers",
+    canonical: "https://gablura.vercel.app/careers",
   },
 };
 

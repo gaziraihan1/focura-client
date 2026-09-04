@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Privacy Policy – Gablura",
     description:
       "Learn how Gablura collects, uses, and protects your personal data. We are committed to transparency and your privacy rights.",
-    url: "https://gablura-client.vercel.app/privacy",
+    url: "https://gablura.vercel.app/privacy",
     siteName: "Gablura",
     type: "website",
   },
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
       "Learn how Gablura collects, uses, and protects your personal data.",
   },
   alternates: {
-    canonical: "https://gablura-client.vercel.app/privacy",
+    canonical: "https://gablura.vercel.app/privacy",
   },
 };
 

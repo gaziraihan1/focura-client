@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Cookie Policy – Gablura",
     description:
       "Learn exactly which cookies Gablura sets, why, and how to manage or opt out of non-essential tracking.",
-    url: "https://gablura-client.vercel.app/cookies",
+    url: "https://gablura.vercel.app/cookies",
     siteName: "Gablura",
     type: "website",
   },
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
       "Learn exactly which cookies Gablura sets, why, and how to manage or opt out.",
   },
   alternates: {
-    canonical: "https://gablura-client.vercel.app/cookies",
+    canonical: "https://gablura.vercel.app/cookies",
   },
 };
 

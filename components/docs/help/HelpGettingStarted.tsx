@@ -5,7 +5,7 @@ const steps = [
   {
     number : '01',
     title  : 'Create your account',
-    detail : 'Sign up at gablura-client.vercel.app using your email and password, or continue with Google OAuth for one-click access. Verify your email address when prompted — the confirmation link is valid for 24 hours.',
+    detail : 'Sign up at gablura.vercel.app using your email and password, or continue with Google OAuth for one-click access. Verify your email address when prompted — the confirmation link is valid for 24 hours.',
     tips   : [
       'Use Google OAuth to skip email verification entirely.',
       'Your password is hashed with Argon2id — Gablura never stores plaintext passwords.',

@@ -325,7 +325,7 @@ function CookiesConsentSections() {
         <CookiesHighlight variant="warning">
           Blocking strictly necessary cookies at the browser level will prevent
           Gablura from authenticating your session. You will be signed out and
-          unable to log back in until cookies are re-enabled for{" "}            <span className="font-mono font-semibold">gablura-client.vercel.app</span>.
+          unable to log back in until cookies are re-enabled for{" "}            <span className="font-mono font-semibold">gablura.vercel.app</span>.
         </CookiesHighlight>
         <p>
           You can also opt out of analytics tracking across many websites using

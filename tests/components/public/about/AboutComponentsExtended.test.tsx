@@ -249,7 +249,7 @@ describe('AboutFounder', () => {
   it('renders GitHub and website links', () => {
     render(<AboutFounder />)
     expect(screen.getByText('@gaziraihan1')).toBeInTheDocument()
-    expect(screen.getByText('gablura-client.vercel.app')).toBeInTheDocument()
+    expect(screen.getByText('gablura.vercel.app')).toBeInTheDocument()
   })
 
   it('renders stats', () => {

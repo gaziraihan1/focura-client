@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "Gablura Pricing – Simple, Transparent Plans",
     description:
       "Choose the right Gablura plan for your team. Free, Pro, and Team options with no hidden fees.",
-    url: "https://gablura-client.vercel.app/pricing",
+    url: "https://gablura.vercel.app/pricing",
     siteName: "Gablura",
     type: "website",
   },
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
       "Choose the right Gablura plan for your team. Free, Pro, and Team options with no hidden fees.",
   },
   alternates: {
-    canonical: "https://gablura-client.vercel.app/pricing",
+    canonical: "https://gablura.vercel.app/pricing",
   },
 };
 

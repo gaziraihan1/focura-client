@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Refund Policy – Gablura",
     description:
       "Gablura's refund policy — a fair 14-day window for first-time subscribers.",
-    url: "https://gablura-client.vercel.app/refund",
+    url: "https://gablura.vercel.app/refund",
     siteName: "Gablura",
     type: "website",
   },
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
       "Gablura's refund policy — a fair 14-day window for first-time subscribers.",
   },
   alternates: {
-    canonical: "https://gablura-client.vercel.app/refund",
+    canonical: "https://gablura.vercel.app/refund",
   },
 };
 

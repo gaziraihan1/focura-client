@@ -4,7 +4,7 @@
 
 A modern, full-stack productivity and collaboration SaaS platform built with **Next.js 16, React 19, TypeScript, and TanStack Query**. Gablura helps teams turn scattered tasks into clear priorities, protect deep work time, and maintain steady progress without unnecessary complexity.
 
-**Live Demo:** https://gablura-client.vercel.app
+**Live Demo:** https://gablura.vercel.app
 
 ---
 
@@ -1210,7 +1210,7 @@ await api.upload('/api/v1/resources/upload', formData);
 | `GET` | `/api/v1/jobs/:jobId` | Poll background job status |
 | `GET` | `/api/v1/csrf-token` | Get CSRF token |
 
-For complete API documentation, see the [API Documentation](https://gablura-client.vercel.app/api-docs) page or backend [README](https://github.com/gaziraihan1/gablura-backend).
+For complete API documentation, see the [API Documentation](https://gablura.vercel.app/api-docs) page or backend [README](https://github.com/gaziraihan1/gablura-backend).
 
 ---
 
@@ -1515,13 +1515,13 @@ For more details, see [AUTHENTICATION.md](./AUTHENTICATION.md)
 - [**FRONTEND_ANALYSIS.md**](./FRONTEND_ANALYSIS.md) - Frontend analysis
 - [**INTEGRATIONS_CONNECTOR.md**](./INTEGRATIONS_CONNECTOR.md) - Integration connector docs
 - [**Backend README**](https://github.com/gaziraihan1/gablura-backend) - Backend API documentation
-- [**API Documentation**](https://gablura-client.vercel.app/api-docs) - Interactive API docs (in-app)
+- [**API Documentation**](https://gablura.vercel.app/api-docs) - Interactive API docs (in-app)
 
 ---
 
 ## 🔗 Quick Links
 
-- **Live Demo**: https://gablura-client.vercel.app
+- **Live Demo**: https://gablura.vercel.app
 - **Backend Repository**: https://github.com/gaziraihan1/gablura-backend
 - **Issues**: https://github.com/gaziraihan1/gablura-client/issues
 

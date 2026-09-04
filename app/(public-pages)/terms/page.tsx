@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     title: "Terms & Conditions – Gablura",
     description:
       "Read Gablura's Terms & Conditions to understand your rights and obligations when using our platform.",
-    url: "https://gablura-client.vercel.app/terms",
+    url: "https://gablura.vercel.app/terms",
     siteName: "Gablura",
     type: "website",
   },
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
       "Read Gablura's Terms & Conditions to understand your rights and obligations.",
   },
   alternates: {
-    canonical: "https://gablura-client.vercel.app/terms",
+    canonical: "https://gablura.vercel.app/terms",
   },
 };
 

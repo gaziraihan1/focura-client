@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: 'Gablura Reviews – What Our Users Say',
     description:
       'Real reviews from real users. See how Gablura helps teams stay focused and productive.',
-    url: 'https://gablura-client.vercel.app/reviews',
+    url: 'https://gablura.vercel.app/reviews',
     siteName: 'Gablura',
     type: 'website',
   },
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
       'Real reviews from real users. See how Gablura helps teams stay focused and productive.',
   },
   alternates: {
-    canonical: 'https://gablura-client.vercel.app/reviews',
+    canonical: 'https://gablura.vercel.app/reviews',
   },
 };
 

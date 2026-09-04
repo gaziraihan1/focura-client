@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph  : {
     title      : 'Gablura Templates',
     description: 'Start fast with pre-built project templates for every team. Engineering sprints, product roadmaps, content calendars, hiring pipelines, and more.',
-    url        : 'https://gablura-client.vercel.app/templates',
+    url        : 'https://gablura.vercel.app/templates',
     siteName   : 'Gablura',
     type       : 'website',
   },
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     description: 'Pre-built project templates for engineering, product, marketing, HR, startups, and personal productivity.',
   },
   alternates : {
-    canonical  : 'https://gablura-client.vercel.app/templates',
+    canonical  : 'https://gablura.vercel.app/templates',
   },
 };
 

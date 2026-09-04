@@ -137,6 +137,6 @@ describe('TermsContent', () => {
 
   it('renders the website link', () => {
     render(<TermsContentDefault />)
-    expect(screen.getByText('gablura-client.vercel.app')).toBeInTheDocument()
+    expect(screen.getByText('gablura.vercel.app')).toBeInTheDocument()
   })
 })

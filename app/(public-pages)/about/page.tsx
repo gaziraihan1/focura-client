@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     title: "About Gablura – Focus Smarter. Manage Workspaces, Projects & Teams",
     description:
       "Meet the stack, architecture, and founder behind Gablura. A modern productivity platform built with Next.js 16, React 19, TypeScript, and Tailwind v4.",
-    url: "https://gablura-client.vercel.app/about",
+    url: "https://gablura.vercel.app/about",
     siteName: "Gablura",
     type: "website",
   },
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
       "Meet the stack, architecture, and founder behind Gablura. Next.js 16 · React 19 · TypeScript · Tailwind v4.",
   },
   alternates: {
-    canonical: "https://gablura-client.vercel.app/about",
+    canonical: "https://gablura.vercel.app/about",
   },
 };
 
