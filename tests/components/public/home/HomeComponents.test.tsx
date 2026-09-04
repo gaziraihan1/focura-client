@@ -68,7 +68,7 @@ import WorkflowSteps from '@/components/public/home/WorkflowSteps'
 describe('WorkflowSteps', () => {
   it('renders the heading', () => {
     render(<WorkflowSteps />)
-    expect(screen.getByText('How Focura streamlines your workflow')).toBeInTheDocument()
+    expect(screen.getByText('How Gablura streamlines your workflow')).toBeInTheDocument()
   })
 
   it('renders all four steps', () => {
@@ -129,7 +129,7 @@ describe('SecuritySection', () => {
 
   it('renders descriptions for each item', () => {
     render(<SecuritySection />)
-    expect(screen.getByText(/Focura uses industry-standard encryption/)).toBeInTheDocument()
+    expect(screen.getByText(/Gablura uses industry-standard encryption/)).toBeInTheDocument()
     expect(screen.getByText(/All data is encrypted in transit/)).toBeInTheDocument()
   })
 })
@@ -350,7 +350,7 @@ describe('ProductShowcase', () => {
 
   it('renders the description', () => {
     render(<ProductShowcase />)
-    expect(screen.getByText(/Focura brings clarity to your workflow/)).toBeInTheDocument()
+    expect(screen.getByText(/Gablura brings clarity to your workflow/)).toBeInTheDocument()
   })
 
   it('renders the dashboard mockup image', () => {

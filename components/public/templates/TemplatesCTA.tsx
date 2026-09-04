@@ -4,7 +4,7 @@ import { ArrowRight, Zap, MessageSquare, BookOpen } from 'lucide-react';
 const links = [
   {
     icon       : Zap,
-    label      : 'Try Focura free',
+    label      : 'Try Gablura free',
     sublabel   : 'Start a workspace in 30 seconds',
     href       : '/dashboard/create-workspace',
     external   : true,
@@ -38,7 +38,7 @@ const TemplatesCTA = () => {
           </h2>
           <p className='text-sm text-neutral-500 dark:text-neutral-400 max-w-md mx-auto leading-relaxed'>
             Templates are coming. In the meantime, your team can start building
-            in Focura today — create projects from scratch and we&apos;ll import the
+            in Gablura today — create projects from scratch and we&apos;ll import the
             template structure when it launches.
           </p>
         </div>

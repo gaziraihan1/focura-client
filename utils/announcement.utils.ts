@@ -2,7 +2,7 @@
 'use client';
 
 /**
- * Focura Announcement Rich-Text Format
+ * Gablura Announcement Rich-Text Format
  * //text//   → <em>italic</em>
  * **text**   → <strong>bold</strong>
  * $$text$$   → <code>mono + copy</code>

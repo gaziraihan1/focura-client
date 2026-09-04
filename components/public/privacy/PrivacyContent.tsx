@@ -24,10 +24,10 @@ function PrivacySectionsPart1() {
       {/* 1. Overview */}
       <PrivacySection id="overview" title="Overview" icon={FileText} index={1}>
         <p>
-          Focura (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is a productivity and collaboration
+          Gablura (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is a productivity and collaboration
           SaaS platform. This Privacy Policy describes how we collect, use,
           disclose, and protect personal information when you visit our website
-          or use the Focura platform (collectively, the &quot;Service&quot;).
+          or use the Gablura platform (collectively, the &quot;Service&quot;).
         </p>
         <p>
           We are committed to data minimisation — we collect only what we need,
@@ -35,15 +35,15 @@ function PrivacySectionsPart1() {
           to third parties.
         </p>
         <PrivacyHighlight variant="success">
-          Focura is designed to comply with the General Data Protection Regulation
+          Gablura is designed to comply with the General Data Protection Regulation
           (GDPR), the California Consumer Privacy Act (CCPA), and other applicable
           data protection laws. You can exercise your rights at any time by
           contacting{" "}
           <a
-            href="mailto:privacy@focura.app"
+            href="mailto:privacy@gablura.app"
             className="underline underline-offset-2 font-medium"
           >
-            privacy@focura.app
+            privacy@gablura.app
           </a>
           .
         </PrivacyHighlight>
@@ -114,7 +114,7 @@ function PrivacySectionsPart1() {
         <p>Specifically, we use your data to:</p>
         <PrivacyList
           items={[
-            "Provide, operate, and maintain the Focura platform and its features.",
+            "Provide, operate, and maintain the Gablura platform and its features.",
             "Process transactions and manage your subscription.",
             "Send transactional emails such as account verification, password resets, and billing receipts.",
             "Detect, investigate, and prevent fraudulent transactions and other illegal activities.",
@@ -168,7 +168,7 @@ function PrivacySectionsPart1() {
                 Legal Requirements
               </strong>{" "}
               — when disclosure is required by law, subpoena, or court order, or
-              to protect the rights, property, or safety of Focura, its users,
+              to protect the rights, property, or safety of Gablura, its users,
               or others.
             </span>,
             <span key="business">
@@ -198,7 +198,7 @@ function PrivacySectionsPart2() {
         index={5}
       >
         <p>
-          Focura is operated globally and your data may be transferred to, and
+          Gablura is operated globally and your data may be transferred to, and
           processed in, countries other than your own. Where we transfer
           personal data outside the European Economic Area (EEA) or the UK, we
           ensure appropriate safeguards are in place, including:
@@ -214,10 +214,10 @@ function PrivacySectionsPart2() {
           You may request details of the specific safeguards applied to your
           data transfers by contacting us at{" "}
           <a
-            href="mailto:privacy@focura.app"
+            href="mailto:privacy@gablura.app"
             className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
           >
-             privacy@focura.app
+             privacy@gablura.app
           </a>
           .
         </p>
@@ -250,10 +250,10 @@ function PrivacySectionsPart2() {
           secure. If you discover a security vulnerability, please report it
           responsibly to{" "}
           <a
-            href="mailto:security@focura.app"
+            href="mailto:security@gablura.app"
             className="underline underline-offset-2 font-medium"
           >
-            security@focura.app
+            security@gablura.app
           </a>{" "}
           rather than opening a public issue.
         </PrivacyHighlight>
@@ -336,10 +336,10 @@ function PrivacySectionsPart3() {
         <p className="mt-2">
           To exercise any of these rights, email us at{" "}
           <a
-            href="mailto:privacy@focura.app"
+            href="mailto:privacy@gablura.app"
             className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
           >
-            privacy@focura.app
+            privacy@gablura.app
           </a>{" "}
           with the subject line &quot;Privacy Request&quot;. We may ask you to verify
           your identity before processing the request. We will not discriminate
@@ -360,10 +360,10 @@ function PrivacySectionsPart3() {
           child has provided us with personal information without parental
           consent, please contact us immediately at{" "}
           <a
-            href="mailto:privacy@focura.app"
+            href="mailto:privacy@gablura.app"
             className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
           >
-            privacy@focura.app
+            privacy@gablura.app
           </a>{" "}
           and we will take steps to delete such data promptly.
         </p>
@@ -410,10 +410,10 @@ function PrivacySectionsPart3() {
             <p className="text-neutral-500 dark:text-neutral-400">
               Email:{" "}
               <a
-                href="mailto:privacy@focura.app"
+                href="mailto:privacy@gablura.app"
                 className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
               >
-                privacy@focura.app
+                privacy@gablura.app
               </a>
             </p>
             <p className="text-neutral-500 dark:text-neutral-400">
@@ -427,10 +427,10 @@ function PrivacySectionsPart3() {
             <p className="text-neutral-500 dark:text-neutral-400">
               Email:{" "}
               <a
-                href="mailto:security@focura.app"
+                href="mailto:security@gablura.app"
                 className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
               >
-                security@focura.app
+                security@gablura.app
               </a>
             </p>
             <p className="text-neutral-500 dark:text-neutral-400">

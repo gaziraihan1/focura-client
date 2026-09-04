@@ -1,6 +1,6 @@
-# Releasing Focura Client
+# Releasing Gablura Client
 
-How to cut a release. The backend repo (`Focura-backend`) uses the same steps —
+How to cut a release. The backend repo (`Gablura-backend`) uses the same steps —
 **keep both repos on the same version**.
 
 ## Versioning

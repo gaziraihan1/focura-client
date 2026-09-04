@@ -24,7 +24,7 @@ const values = [
   {
     icon       : Heart,
     title      : 'Users first, always',
-    description: 'Every decision starts with the user. We obsess over the details that make Focura feel fast, reliable, and genuinely pleasant to use.',
+    description: 'Every decision starts with the user. We obsess over the details that make Gablura feel fast, reliable, and genuinely pleasant to use.',
   },
   {
     icon       : Clock,
@@ -39,7 +39,7 @@ export const CareersValues = () => {
       <div className='max-w-5xl mx-auto px-6 py-16 md:py-20'>
         <div className='mb-10'>
           <p className='text-xs font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-3'>
-            Why Focura
+            Why Gablura
           </p>
           <h2 className='text-2xl md:text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50'>
             What it&apos;s like to work here.

@@ -84,7 +84,7 @@ function SectionHeader() {
       <div>
         <h2 className="text-xl font-semibold text-foreground">Reviews</h2>
         <p className="text-sm text-muted-foreground">
-          See what others think about Focura
+          See what others think about Gablura
         </p>
       </div>
     </div>

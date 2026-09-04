@@ -2,32 +2,32 @@ import type { Metadata } from "next";
 import ApiDocsContent from "./api-docs-content";
 
 export const metadata: Metadata = {
-  title: "API Documentation | Focura",
+  title: "API Documentation | Gablura",
   description:
-    "Complete API reference for Focura. Learn about authentication, rate limits, server-sent events, error handling, and available endpoints.",
+    "Complete API reference for Gablura. Learn about authentication, rate limits, server-sent events, error handling, and available endpoints.",
   keywords: [
-    "focura api",
-    "focura api documentation",
-    "focura rest api",
-    "focura developer docs",
-    "focura api reference",
+    "gablura api",
+    "gablura api documentation",
+    "gablura rest api",
+    "gablura developer docs",
+    "gablura api reference",
   ],
   openGraph: {
-    title: "Focura API Documentation – Developer Reference",
+    title: "Gablura API Documentation – Developer Reference",
     description:
-      "Complete API reference for Focura. Authentication, rate limits, SSE, errors, and endpoints.",
-    url: "https://focura-client.vercel.app/api-docs",
-    siteName: "Focura",
+      "Complete API reference for Gablura. Authentication, rate limits, SSE, errors, and endpoints.",
+    url: "https://gablura-client.vercel.app/api-docs",
+    siteName: "Gablura",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Focura API Documentation – Developer Reference",
+    title: "Gablura API Documentation – Developer Reference",
     description:
-      "Complete API reference for Focura. Authentication, rate limits, SSE, errors, and endpoints.",
+      "Complete API reference for Gablura. Authentication, rate limits, SSE, errors, and endpoints.",
   },
   alternates: {
-    canonical: "https://focura-client.vercel.app/api-docs",
+    canonical: "https://gablura-client.vercel.app/api-docs",
   },
 };
 

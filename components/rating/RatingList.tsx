@@ -28,7 +28,7 @@ export function RatingList({
       <EmptyState
         icon={Star}
         title="No reviews yet"
-        description="Be the first to share your experience with Focura."
+        description="Be the first to share your experience with Gablura."
         className={className}
       />
     );

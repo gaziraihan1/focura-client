@@ -94,7 +94,7 @@ describe("AiUsageSection", () => {
     expect(screen.getByText("Monthly tokens")).toBeInTheDocument();
     expect(screen.getByText(/Rate & response/)).toBeInTheDocument();
     expect(screen.getByText(/3\/min · 15\/hr · 512 tokens\/response/)).toBeInTheDocument();
-    expect(screen.queryByText(/customized by Focura admin/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/customized by Gablura admin/i)).not.toBeInTheDocument();
   });
 
   it("flags admin-raised caps with the plan default alongside", async () => {
@@ -142,7 +142,7 @@ describe("AiUsageSection", () => {
 
     expect(screen.getByText("ENTERPRISE plan")).toBeInTheDocument();
     // The raised caps are surfaced with the tier default for comparison.
-    expect(screen.getByText("Customized by Focura admin")).toBeInTheDocument();
+    expect(screen.getByText("Customized by Gablura admin")).toBeInTheDocument();
     expect(screen.getAllByText(/Plan default:/).length).toBeGreaterThan(0);
     expect(screen.getByText(/10,000/)).toBeInTheDocument();
     expect(screen.getByText(/2,000/)).toBeInTheDocument();

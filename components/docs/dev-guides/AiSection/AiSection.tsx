@@ -18,13 +18,13 @@ export const aiArticles: GuideArticle[] = [
     id: "ai-overview",
     title: "AI overview & where it lives",
     summary:
-      "AI is server-side only. The Focura backend (src/modules/ai) talks to Google Gemini; the client only calls Focura's own /api/v1/ai endpoints.",
+      "AI is server-side only. The Gablura backend (src/modules/ai) talks to Google Gemini; the client only calls Gablura's own /api/v1/ai endpoints.",
     content: (
       <>
         <Prose>
-          Focura&apos;s AI layer runs entirely in the <IC>Focura-backend</IC>{" "}
+          Gablura&apos;s AI layer runs entirely in the <IC>Gablura-backend</IC>{" "}
           <IC>src/modules/ai</IC> module. The client never talks to Google
-          directly — it calls Focura&apos;s own{" "}
+          directly — it calls Gablura&apos;s own{" "}
           <IC>/api/v1/ai/*</IC> endpoints through the existing{" "}
           <IC>lib/axios.ts</IC> instance. This keeps{" "}
           <IC>GEMINI_API_KEY</IC> server-side only and lets the backend enforce
@@ -91,7 +91,7 @@ export const aiArticles: GuideArticle[] = [
     content: (
       <>
         <Prose>
-          AI calls cost real money per token, so Focura uses plan-based limits
+          AI calls cost real money per token, so Gablura uses plan-based limits
           defined in <IC>src/modules/ai/ai.types.ts</IC>{" "}
           (<IC>AI_PLAN_LIMITS</IC>). FREE gets 3 calls/minute and 60 calls/day;
           PRO and BUSINESS scale up. The middleware fails closed — if Redis is
@@ -100,10 +100,10 @@ export const aiArticles: GuideArticle[] = [
         <Table
           headers={["Layer", "Key", "Mechanism"]}
           rows={[
-            ["Burst", "focura:ai:rl:min:{wsId}", "Sorted-set sliding window (60 s)"],
-            ["Hourly", "focura:ai:rl:hour:{wsId}", "Sorted-set sliding window (3 600 s)"],
-            ["Daily quota", "focura:ai:q:daily:{date}:{wsId}", "INCR + EXPIRE (25 h grace)"],
-            ["Monthly tokens", "focura:ai:q:month:{ym}:{wsId}", "INCRBY token count"],
+            ["Burst", "gablura:ai:rl:min:{wsId}", "Sorted-set sliding window (60 s)"],
+            ["Hourly", "gablura:ai:rl:hour:{wsId}", "Sorted-set sliding window (3 600 s)"],
+            ["Daily quota", "gablura:ai:q:daily:{date}:{wsId}", "INCR + EXPIRE (25 h grace)"],
+            ["Monthly tokens", "gablura:ai:q:month:{ym}:{wsId}", "INCRBY token count"],
           ]}
         />
         <Prose>

@@ -10,7 +10,7 @@ export const mockProjectMember: ProjectMember = {
   userId: 'user-1',
   role: 'MANAGER',
   joinedAt: '2024-01-01T00:00:00.000Z',
-  user: { id: 'user-1', name: 'Test User', email: 'test@focura.com' },
+  user: { id: 'user-1', name: 'Test User', email: 'test@gablura.com' },
 }
 
 export const mockAnnouncement: Announcement = {

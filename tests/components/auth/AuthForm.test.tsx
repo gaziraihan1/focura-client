@@ -59,14 +59,14 @@ describe('AuthForm', () => {
   it('calls signIn with correct credentials on login submit', async () => {
     render(<AuthForm mode="login" />, { wrapper: createWrapper() })
 
-    fireEvent.change(screen.getByPlaceholderText(/Email address/i), { target: { value: 'test@focura.com' } })
+    fireEvent.change(screen.getByPlaceholderText(/Email address/i), { target: { value: 'test@gablura.com' } })
     fireEvent.change(screen.getByPlaceholderText(/Password/i), { target: { value: 'password123' } })
     
     fireEvent.click(screen.getByRole('button', { name: /Sign In/i }))
 
     await waitFor(() => {
       expect(signIn).toHaveBeenCalledWith('credentials', expect.objectContaining({
-        email: 'test@focura.com',
+        email: 'test@gablura.com',
         password: 'password123',
         redirect: false,
       }))

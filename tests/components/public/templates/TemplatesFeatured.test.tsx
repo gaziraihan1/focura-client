@@ -81,7 +81,7 @@ const base: Template = {
   featured: true,
   estimatedSetupMinutes: 3,
   tags: [],
-  author: { name: 'Focura Team', role: 'Official' },
+  author: { name: 'Gablura Team', role: 'Official' },
 };
 
 describe('TemplatesFeatured', () => {

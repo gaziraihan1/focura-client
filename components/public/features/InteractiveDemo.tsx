@@ -14,14 +14,14 @@ import { Button } from "@/components/ui/Button";
 function DemoPreview() {
 
   return (
-    <div role="img" aria-label="Focura Demo" className="overflow-hidden rounded-3xl border border-border bg-background shadow-2xl shadow-foreground/10">
+    <div role="img" aria-label="Gablura Demo" className="overflow-hidden rounded-3xl border border-border bg-background shadow-2xl shadow-foreground/10">
       {/* Window chrome */}
       <div className="flex items-center gap-2 border-b border-border bg-muted/40 px-3 py-2">
         <span className="h-2.5 w-2.5 rounded-full bg-red-400/70" />
         <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/70" />
         <span className="h-2.5 w-2.5 rounded-full bg-green-400/70" />
         <span className="ml-2 hidden sm:inline-block truncate rounded-md border border-border bg-background px-2.5 py-0.5 text-[9px] font-medium text-muted-foreground">
-          app.focura.com/workspace/demo
+          app.gablura.com/workspace/demo
         </span>
       </div>
 
@@ -30,7 +30,7 @@ function DemoPreview() {
         <div className="hidden sm:flex flex-col border-r border-border bg-muted/20 p-2">
           <div className="flex items-center gap-1.5 px-1.5 pb-2.5">
             <div className="flex h-5 w-5 items-center justify-center rounded-md bg-foreground text-[8px] font-bold text-background">F</div>
-            <span className="text-[10px] font-semibold text-foreground">Focura</span>
+            <span className="text-[10px] font-semibold text-foreground">Gablura</span>
           </div>
           {["Dashboard", "Tasks", "Projects", "Calendar", "Wellness"].map((label, i) => (
             <div
@@ -92,12 +92,12 @@ export default function InteractiveDemo() {
       <div className="relative mx-auto max-w-6xl px-6">
         <div className="mb-16 text-center">
           <h2 className="text-3xl font-bold text-foreground md:text-5xl">
-            Experience how <span className="text-primary">Focura</span> works
+            Experience how <span className="text-primary">Gablura</span> works
           </h2>
 
           <p className="mx-auto mt-4 max-w-2xl text-foreground/70">
             Get a quick look at how teams plan, collaborate, and execute using
-            Focura&apos;s modern and intuitive workspace.
+            Gablura&apos;s modern and intuitive workspace.
           </p>
         </div>
 
@@ -122,7 +122,7 @@ export default function InteractiveDemo() {
 
         <div className="mt-12 text-center">
           <p className="mb-6 text-foreground/70">
-            Want to explore more? Take a full tour of the Focura platform.
+            Want to explore more? Take a full tour of the Gablura platform.
           </p>
 
           <Button

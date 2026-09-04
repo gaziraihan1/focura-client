@@ -39,7 +39,7 @@ export const CareersEmpty = ({ hasFilters, onClear }: CareersEmptyProps) => {
             interested in hearing from exceptional people.
           </p>
           <a
-            href='mailto:focurabusiness@gmail.com?subject=General Application — Focura'
+            href='mailto:focurabusiness@gmail.com?subject=General Application — Gablura'
             className='inline-flex items-center gap-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-sm font-semibold text-neutral-700 dark:text-neutral-300 px-4 py-2.5 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors'
           >
             <Mail className='w-4 h-4 shrink-0' strokeWidth={1.8} />

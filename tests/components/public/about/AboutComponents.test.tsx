@@ -23,18 +23,18 @@ describe('AboutHero', () => {
 
   it('renders description', () => {
     render(<AboutHero />)
-    expect(screen.getByText(/Focura helps teams turn scattered tasks/)).toBeInTheDocument()
+    expect(screen.getByText(/Gablura helps teams turn scattered tasks/)).toBeInTheDocument()
   })
 
   it('renders CTA buttons', () => {
     render(<AboutHero />)
-    expect(screen.getByText('Try Focura Live')).toBeInTheDocument()
+    expect(screen.getByText('Try Gablura Live')).toBeInTheDocument()
     expect(screen.getByText('View on GitHub')).toBeInTheDocument()
   })
 
-  it('links Try Focura Live to the registration page', () => {
+  it('links Try Gablura Live to the registration page', () => {
     render(<AboutHero />)
-    expect(screen.getByText('Try Focura Live').closest('a')).toHaveAttribute('href', '/authentication/registration')
+    expect(screen.getByText('Try Gablura Live').closest('a')).toHaveAttribute('href', '/authentication/registration')
   })
 
   it('renders stat pills', () => {
@@ -53,7 +53,7 @@ describe('AboutCTA', () => {
 
   it('renders description', () => {
     render(<AboutCTA />)
-    expect(screen.getByText(/Start a free workspace on Focura today/)).toBeInTheDocument()
+    expect(screen.getByText(/Start a free workspace on Gablura today/)).toBeInTheDocument()
   })
 
   it('renders start for free button', () => {

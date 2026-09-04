@@ -68,7 +68,7 @@ export const mockAdminStats: AdminStats = {
     {
       id: 'user-1',
       name: 'Test User',
-      email: 'test@focura.com',
+      email: 'test@gablura.com',
       image: null,
       createdAt: '2024-01-01T00:00:00.000Z',
     },
@@ -80,7 +80,7 @@ export const mockAdminStats: AdminStats = {
       slug: 'test-ws',
       plan: 'FREE',
       createdAt: '2024-01-01T00:00:00.000Z',
-      owner: { id: 'user-1', name: 'Test User', email: 'test@focura.com' },
+      owner: { id: 'user-1', name: 'Test User', email: 'test@gablura.com' },
       _count: { members: 3, projects: 2 },
     },
   ],
@@ -95,7 +95,7 @@ export const mockAdminWorkspace: AdminWorkspace = {
   maxMembers: 5,
   maxStorageMb: 1024,
   usedStorageMb: 128,
-  owner: { id: 'user-1', name: 'Test User', email: 'test@focura.com', image: null },
+  owner: { id: 'user-1', name: 'Test User', email: 'test@gablura.com', image: null },
   subscription: null,
   _count: { members: 3, projects: 2, tasks: 15 },
 }
@@ -114,14 +114,14 @@ export const mockAdminWorkspaceDetail: AdminWorkspaceDetail = {
   maxMembers: 5,
   maxStorageMb: 1024,
   usedStorageMb: 128,
-  owner: { id: 'user-1', name: 'Test User', email: 'test@focura.com', image: null },
+  owner: { id: 'user-1', name: 'Test User', email: 'test@gablura.com', image: null },
   subscription: null,
   members: [
     {
       id: 'member-1',
       role: 'OWNER',
       joinedAt: '2024-01-01T00:00:00.000Z',
-      user: { id: 'user-1', name: 'Test User', email: 'test@focura.com', image: null },
+      user: { id: 'user-1', name: 'Test User', email: 'test@gablura.com', image: null },
     },
   ],
   projects: [
@@ -142,7 +142,7 @@ export const mockAdminWorkspaceDetail: AdminWorkspaceDetail = {
 export const mockAdminUser: AdminUser = {
   id: 'user-1',
   name: 'Test User',
-  email: 'test@focura.com',
+  email: 'test@gablura.com',
   image: null,
   role: 'USER',
   createdAt: '2024-01-01T00:00:00.000Z',
@@ -160,7 +160,7 @@ export const mockAdminUser: AdminUser = {
 export const mockAdminUserDetail: AdminUserDetail = {
   id: 'user-1',
   name: 'Test User',
-  email: 'test@focura.com',
+  email: 'test@gablura.com',
   image: null,
   bannedAt: null,
   banReason: null,
@@ -226,7 +226,7 @@ export const mockAdminProject: AdminProject = {
   dueDate: null,
   completedAt: null,
   workspace: { id: 'ws-1', name: 'Test Workspace', slug: 'test-ws' },
-  createdBy: { id: 'user-1', name: 'Test User', email: 'test@focura.com' },
+  createdBy: { id: 'user-1', name: 'Test User', email: 'test@gablura.com' },
   manager: null,
   taskBreakdown: { total: 10, todo: 4, inProgress: 3, completed: 2, cancelled: 1 },
   _count: { tasks: 10, members: 3, files: 2 },
@@ -254,7 +254,7 @@ export const mockAdminBilling: AdminBilling = {
     name: 'Test Workspace',
     slug: 'test-ws',
     plan: 'PRO',
-    owner: { id: 'user-1', name: 'Test User', email: 'test@focura.com' },
+    owner: { id: 'user-1', name: 'Test User', email: 'test@gablura.com' },
   },
   recentInvoices: [
     {
@@ -275,7 +275,7 @@ export const mockAdminActivity: AdminActivity = {
   entityId: 'task-1',
   createdAt: '2024-01-01T00:00:00.000Z',
   metadata: {},
-  user: { id: 'user-1', name: 'Test User', email: 'test@focura.com', image: null },
+  user: { id: 'user-1', name: 'Test User', email: 'test@gablura.com', image: null },
   workspace: { id: 'ws-1', name: 'Test Workspace', slug: 'test-ws' },
 }
 

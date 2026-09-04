@@ -49,7 +49,7 @@ export default function WhyChooseFocura() {
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold text-foreground">
-            Why teams choose <span className="text-primary">Focura</span>
+            Why teams choose <span className="text-primary">Gablura</span>
           </h2>
           <p className="mt-4 text-foreground/70 max-w-2xl mx-auto">
             A platform crafted to help modern teams move faster, stay aligned,

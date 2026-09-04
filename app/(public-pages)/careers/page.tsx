@@ -4,30 +4,30 @@ import { CareersValues } from '@/components/public/careers/CareersValues';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Careers | Focura",
+  title: "Careers | Gablura",
   description:
-    "Join the Focura team. We are building the productivity platform for focused teams. See open roles and learn what it is like to work here.",
+    "Join the Gablura team. We are building the productivity platform for focused teams. See open roles and learn what it is like to work here.",
   keywords: [
-    "focura careers",
-    "focura jobs",
+    "gablura careers",
+    "gablura jobs",
     "productivity platform jobs",
     "saas startup careers",
-    "join focura",
+    "join gablura",
   ],
   openGraph: {
-    title: "Careers at Focura – Build the Future of Focused Work",
-    description: "Build the future of focused work. See our open roles and join the Focura team.",
-    url: "https://focura-client.vercel.app/careers",
-    siteName: "Focura",
+    title: "Careers at Gablura – Build the Future of Focused Work",
+    description: "Build the future of focused work. See our open roles and join the Gablura team.",
+    url: "https://gablura-client.vercel.app/careers",
+    siteName: "Gablura",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Careers at Focura – Build the Future of Focused Work",
-    description: "Build the future of focused work. See our open roles and join the Focura team.",
+    title: "Careers at Gablura – Build the Future of Focused Work",
+    description: "Build the future of focused work. See our open roles and join the Gablura team.",
   },
   alternates: {
-    canonical: "https://focura-client.vercel.app/careers",
+    canonical: "https://gablura-client.vercel.app/careers",
   },
 };
 
@@ -89,11 +89,11 @@ const CareersPage = async () => {
           </h2>
           <p className='text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed mb-6 max-w-md mx-auto'>
             We occasionally hire for roles we haven&apos;t listed yet. If you&apos;re
-            exceptional at what you do and think you&apos;d be a great fit for Focura,
+            exceptional at what you do and think you&apos;d be a great fit for Gablura,
             we&apos;d love to hear from you.
           </p>
           <a
-            href='mailto:focurabusiness@gmail.com?subject=General Application — Focura'
+            href='mailto:focurabusiness@gmail.com?subject=General Application — Gablura'
             className='inline-flex items-center gap-2 rounded-xl bg-neutral-900 dark:bg-neutral-50 text-white dark:text-neutral-900 text-sm font-bold px-5 py-3 hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors'
           >
             Send a general application

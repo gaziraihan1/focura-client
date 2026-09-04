@@ -95,7 +95,7 @@ export function AdminOverviewContent() {
               <span className="text-[10px] text-emerald-400 font-semibold uppercase tracking-widest">Live</span>
             </div>
             <h1 className="text-2xl font-bold text-foreground tracking-tight">Platform Overview</h1>
-            <p className="text-sm text-muted-foreground mt-1">Real-time stats across all of Focura.</p>
+            <p className="text-sm text-muted-foreground mt-1">Real-time stats across all of Gablura.</p>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-border bg-card/40 text-xs text-muted-foreground">
             <Activity className="w-3.5 h-3.5" /> Updated just now

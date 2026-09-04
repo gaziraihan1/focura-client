@@ -11,7 +11,7 @@ import {
 } from "@/hooks/useBilling";
 import type { PlanName, BillingCycle } from "@/types/billing.upgrade.types";
 
-const UPGRADE_PLAN_KEY = "focura:upgrade-plan";
+const UPGRADE_PLAN_KEY = "gablura:upgrade-plan";
 
 export function useWorkspaceUpgrade(workspaceId: string, workspaceSlug?: string) {
   const [cycle, setCycle] = useState<BillingCycle>("monthly");

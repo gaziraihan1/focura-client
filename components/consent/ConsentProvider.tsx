@@ -13,10 +13,10 @@ import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 export type ConsentChoice = "accepted" | "declined";
 
 /** Storage key for the visitor's analytics-consent choice. */
-export const CONSENT_STORAGE_KEY = "focura-consent";
+export const CONSENT_STORAGE_KEY = "gablura-consent";
 
 /** Event dispatched on this tab after the choice is persisted. */
-const CONSENT_CHANGE_EVENT = "focura-consent";
+const CONSENT_CHANGE_EVENT = "gablura-consent";
 
 function subscribe(callback: () => void) {
   window.addEventListener("storage", callback);
@@ -58,7 +58,7 @@ const ConsentContext = createContext<ConsentContextValue>({
  *
  * - Strictly necessary + functional cookies are always on (no consent needed).
  * - Google Analytics only loads once the visitor explicitly accepts.
- * - The choice is persisted in `localStorage` under `focura-consent`.
+ * - The choice is persisted in `localStorage` under `gablura-consent`.
  */
 export function ConsentProvider({ children }: { children: React.ReactNode }) {
   const mounted = useSyncExternalStore(

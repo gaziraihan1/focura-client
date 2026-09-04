@@ -22,7 +22,7 @@ export default function FAQSection() {
           Frequently asked questions
         </h2>
         <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-          Find answers to the most common questions about Focura.
+          Find answers to the most common questions about Gablura.
         </p>
 
         <div className="mt-14 space-y-3 text-left">

@@ -1,5 +1,5 @@
 import type { Activity, ActivityMetadata, GroupedActivities } from '@/types/task-activity.types';
-import { isFocuraAdminChange } from '@/utils/workspace-limits';
+import { isGabluraAdminChange } from '@/utils/workspace-limits';
 
 export function getActivityIcon(action: string): string {
   switch (action) {
@@ -59,7 +59,7 @@ export function getActivityDescription(
 
     case 'UPDATED':
       if (entityType === 'COMMENT') return 'edited a comment';
-      if (isFocuraAdminChange(metadata?.source)) return 'updated workspace limits';
+      if (isGabluraAdminChange(metadata?.source)) return 'updated workspace limits';
       return metadata?.changes
         ? `updated ${Object.keys(metadata.changes).join(', ')} on this ${subject}`
         : `updated this ${subject}`;

@@ -52,7 +52,7 @@ export default function SolutionUseCases() {
             Built for every fast-moving team
           </h2>
           <p className="mt-4 text-lg text-foreground/70 max-w-2xl mx-auto">
-            Whether you&apos;re a solo founder or a large organization, Focura adapts 
+            Whether you&apos;re a solo founder or a large organization, Gablura adapts 
             to your workflow and boosts productivity at every level.
           </p>
         </motion.div>

@@ -40,7 +40,7 @@ export interface CreateWorkspaceDto {
   isPublic?: boolean;
   // NOTE: `plan` is intentionally absent — the backend ignores/strips it on
   // creation and always starts workspaces on FREE (a paid tier can only be
-  // granted by the billing flow or a Focura admin).
+  // granted by the billing flow or a Gablura admin).
 }
 
 export interface WorkspaceStats {

@@ -11,7 +11,7 @@ export const databaseArticles: GuideArticle[] = [
       "PostgreSQL hosted on Supabase accessed via Prisma ORM, with workspace isolation enforced on every major model through a workspaceId field.",
     content: (
       <Prose>
-        Focura uses PostgreSQL (hosted on Supabase) accessed via Prisma ORM. The schema enforces
+        Gablura uses PostgreSQL (hosted on Supabase) accessed via Prisma ORM. The schema enforces
         workspace isolation — every major model carries a <IC>workspaceId</IC> field.
       </Prose>
     ),

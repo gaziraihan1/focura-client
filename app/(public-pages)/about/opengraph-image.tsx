@@ -9,8 +9,8 @@ export const contentType = 'image/png';
 
 export default async function Image() {
   return generateOGImage({
-    title: 'About Focura',
-    description: 'Meet the team, stack, and vision behind Focura.',
+    title: 'About Gablura',
+    description: 'Meet the team, stack, and vision behind Gablura.',
     gradient: 'emerald',
   });
 }

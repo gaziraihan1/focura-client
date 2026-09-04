@@ -35,7 +35,7 @@ export const CareersApplyModal = ({ job, onClose }: CareersApplyModalProps) => {
 
   if (!job) return null;
 
-  const emailSubject = `Application: ${job.title} — Focura`;
+  const emailSubject = `Application: ${job.title} — Gablura`;
   const mailtoHref   = `mailto:${job.applicationEmail ?? 'focurabusiness@gmail.com'}?subject=${encodeURIComponent(emailSubject)}`;
 
   return (
@@ -137,7 +137,7 @@ export const CareersApplyModal = ({ job, onClose }: CareersApplyModalProps) => {
               {[
                 'Your CV or LinkedIn profile',
                 `Subject line: "${emailSubject}"`,
-                'A short paragraph on why you want to join Focura',
+                'A short paragraph on why you want to join Gablura',
                 'Links to relevant work, projects, or portfolio (if applicable)',
               ].map((item) => (
                 <li key={item} className='flex items-start gap-2 text-xs text-neutral-500 dark:text-neutral-400'>

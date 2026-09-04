@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Focura API — Complete Endpoint Registry
+// Gablura API — Complete Endpoint Registry
 // Re-exports from lib/apiData/index for backward compatibility.
 // ─────────────────────────────────────────────────────────────────────────────
 

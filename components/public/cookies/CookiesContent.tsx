@@ -43,7 +43,7 @@ function CookiesBasicsSections() {
           do not have to re-enter that information every time you return.
         </p>
         <p>
-          In addition to cookies, Focura may use similar technologies such as{" "}
+          In addition to cookies, Gablura may use similar technologies such as{" "}
           <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
             localStorage
           </strong>
@@ -59,9 +59,9 @@ function CookiesBasicsSections() {
           technologies equally.
         </p>
         <CookiesHighlight variant="info">
-          Cookies set by Focura (&quot;first-party cookies&quot;) are used exclusively to
+          Cookies set by Gablura (&quot;first-party cookies&quot;) are used exclusively to
           operate and improve our platform. We do not allow third-party
-          advertising networks to set cookies on Focura pages.
+          advertising networks to set cookies on Gablura pages.
         </CookiesHighlight>
       </CookiesSection>
 
@@ -81,7 +81,7 @@ function CookiesBasicsSections() {
         <CookiesHighlight variant="success">
           We do not use advertising cookies, cross-site tracking cookies, or
           any cookies that build profiles used to serve targeted ads — on
-          Focura or anywhere else.
+          Gablura or anywhere else.
         </CookiesHighlight>
       </CookiesSection>
 
@@ -93,7 +93,7 @@ function CookiesBasicsSections() {
         index={3}
       >
         <p>
-          The table below lists every cookie currently set by Focura, its
+          The table below lists every cookie currently set by Gablura, its
           purpose, how long it lasts, and whether it requires your consent. We
           keep this list up to date whenever a cookie is added, changed, or
           removed.
@@ -114,7 +114,7 @@ function CookiesBasicsSections() {
         index={4}
       >
         <p>
-          Some features of Focura embed or connect to third-party services.
+          Some features of Gablura embed or connect to third-party services.
           These services may set their own cookies subject to their own privacy
           policies. The third parties we currently integrate with are:
         </p>
@@ -175,7 +175,7 @@ function CookiesBasicsSections() {
               — our image and file storage provider. Cloudinary stores the
               files you upload (e.g. avatars, attachments) so they can be
               served to your team. Files are transmitted and stored securely;
-              Cloudinary does not set cookies on Focura pages. See{" "}
+              Cloudinary does not set cookies on Gablura pages. See{" "}
               <a
                 href="https://cloudinary.com/privacy"
                 target="_blank"
@@ -231,7 +231,7 @@ function CookiesConsentSections() {
           the bottom of the screen where you can accept or decline analytics
           cookies. Your choice is stored on your device and can be changed at
           any time without affecting your ability to use the core features of
-          Focura.
+          Gablura.
         </p>
         <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-hidden shadow-sm">
           {/* Header */}
@@ -240,7 +240,7 @@ function CookiesConsentSections() {
               Current Cookie Controls
             </p>
             <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-0.5">
-              What Focura sets today and how to control it
+              What Gablura sets today and how to control it
             </p>
           </div>
 
@@ -294,7 +294,7 @@ function CookiesConsentSections() {
           <div className="px-5 py-3 bg-neutral-50 dark:bg-neutral-900/60 border-t border-neutral-100 dark:border-neutral-800">
             <p className="text-xs text-neutral-400 dark:text-neutral-500">
               Your consent choice is stored on this device (
-              <span className="font-mono font-semibold">focura-consent</span>{" "}
+              <span className="font-mono font-semibold">gablura-consent</span>{" "}
               in localStorage). To change it later, clear your saved
               preferences using the browser controls in the next section — the
               banner will reappear on your next visit.
@@ -303,7 +303,7 @@ function CookiesConsentSections() {
         </div>
         <CookiesHighlight variant="warning">
           Strictly necessary cookies are exempt from consent under the ePrivacy
-          Directive — blocking them in your browser will prevent Focura from
+          Directive — blocking them in your browser will prevent Gablura from
           authenticating your session. Functional and analytics cookies can be
           blocked at any time without breaking core functionality.
         </CookiesHighlight>
@@ -324,8 +324,8 @@ function CookiesConsentSections() {
         <CookiesBrowserGuide />
         <CookiesHighlight variant="warning">
           Blocking strictly necessary cookies at the browser level will prevent
-          Focura from authenticating your session. You will be signed out and
-          unable to log back in until cookies are re-enabled for{" "}            <span className="font-mono font-semibold">focura-client.vercel.app</span>.
+          Gablura from authenticating your session. You will be signed out and
+          unable to log back in until cookies are re-enabled for{" "}            <span className="font-mono font-semibold">gablura-client.vercel.app</span>.
         </CookiesHighlight>
         <p>
           You can also opt out of analytics tracking across many websites using
@@ -381,7 +381,7 @@ function CookiesConsentSections() {
       {/* 8. Contact */}
       <CookiesSection id="contact" title="Contact Us" icon={Mail} index={8}>
         <p>
-          If you have questions about how Focura uses cookies, or wish to
+          If you have questions about how Gablura uses cookies, or wish to
           exercise any rights related to your data, please contact us:
         </p>
         <div className="grid sm:grid-cols-2 gap-3">
@@ -392,10 +392,10 @@ function CookiesConsentSections() {
             <p className="text-neutral-500 dark:text-neutral-400">
               Email:{" "}
               <a
-                href="mailto:privacy@focura.app"
+                href="mailto:privacy@gablura.app"
                 className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
               >
-                privacy@focura.app
+                privacy@gablura.app
               </a>
             </p>
             <p className="text-neutral-500 dark:text-neutral-400">

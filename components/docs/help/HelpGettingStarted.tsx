@@ -5,10 +5,10 @@ const steps = [
   {
     number : '01',
     title  : 'Create your account',
-    detail : 'Sign up at focura-client.vercel.app using your email and password, or continue with Google OAuth for one-click access. Verify your email address when prompted — the confirmation link is valid for 24 hours.',
+    detail : 'Sign up at gablura-client.vercel.app using your email and password, or continue with Google OAuth for one-click access. Verify your email address when prompted — the confirmation link is valid for 24 hours.',
     tips   : [
       'Use Google OAuth to skip email verification entirely.',
-      'Your password is hashed with Argon2id — Focura never stores plaintext passwords.',
+      'Your password is hashed with Argon2id — Gablura never stores plaintext passwords.',
       'You can change your email later from Settings → Account.',
     ],
   },
@@ -25,7 +25,7 @@ const steps = [
   {
     number : '03',
     title  : 'Invite your team',
-    detail : 'Go to Settings → Members → Invite. Enter the email addresses of your team members and assign each a role. Invitations are sent via email and expire after 7 days. Members must have a Focura account (or create one) to accept.',
+    detail : 'Go to Settings → Members → Invite. Enter the email addresses of your team members and assign each a role. Invitations are sent via email and expire after 7 days. Members must have a Gablura account (or create one) to accept.',
     tips   : [
       'Roles: Owner (full control), Admin (member & project management), Member (task access).',
       'The free plan supports up to 5 members per workspace.',
@@ -73,7 +73,7 @@ export const HelpGettingStarted = () => {
             Getting Started
           </p>
           <h2 className='text-2xl font-bold text-neutral-900 dark:text-neutral-50 mb-2'>
-            Set up Focura in 6 steps
+            Set up Gablura in 6 steps
           </h2>
           <p className='text-sm text-neutral-500 dark:text-neutral-400'>
             From account creation to your first focus session — a complete walkthrough.

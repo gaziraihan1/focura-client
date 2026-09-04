@@ -87,7 +87,7 @@ export interface AdminWorkspaceDetail {
   updatedAt: string;
   maxMembers: number;
   maxStorageMb: number;
-  /** Focura-admin AI overrides — null means the plan default applies. */
+  /** Gablura-admin AI overrides — null means the plan default applies. */
   aiDailyCalls: number | null;
   aiMonthlyTokens: number | null;
   aiMaxOutputTokens: number | null;

@@ -16,8 +16,8 @@ describe('HelpFAQ', () => {
 
   it('expands a FAQ item when clicked', () => {
     render(<HelpFAQ />);
-    const question = screen.getByText('Can I use Focura without creating an account?');
+    const question = screen.getByText('Can I use Gablura without creating an account?');
     fireEvent.click(question);
-    expect(screen.getByText(/all Focura features require an account/)).toBeInTheDocument();
+    expect(screen.getByText(/all Gablura features require an account/)).toBeInTheDocument();
   });
 });

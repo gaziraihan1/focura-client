@@ -38,7 +38,7 @@ const highlights = [
   {
     icon: <Sparkles className="text-primary" size={32} />,
     title: "Automated productivity",
-    desc: "Let Focura handle repetitive work with automations and smart triggers.",
+    desc: "Let Gablura handle repetitive work with automations and smart triggers.",
   },
 ];
 export default function FeaturesHighlights() {
@@ -54,7 +54,7 @@ export default function FeaturesHighlights() {
             Everything you need in one powerful platform
           </h2>
           <p className="mt-4 text-lg text-foreground/70 max-w-2xl mx-auto">
-            Focura enhances your productivity with tools that adapt to your
+            Gablura enhances your productivity with tools that adapt to your
             workflow and scale with your team.
           </p>
         </div>

@@ -25,7 +25,7 @@ export default function WorkflowSteps() {
           How it works
         </span>
         <h2 className="mt-3 text-3xl md:text-5xl font-bold tracking-tight text-foreground">
-          How Focura streamlines your workflow
+          How Gablura streamlines your workflow
         </h2>
         <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
           A smooth, intuitive flow that helps your team plan, collaborate, and

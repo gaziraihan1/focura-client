@@ -66,7 +66,7 @@ const SEARCH_INDEX: SearchResult[] = [
   { category: 'Troubleshooting', article: 'Tasks not in Kanban',          excerpt: 'Tasks must be assigned to a project to appear in its Kanban view.' },
   { category: 'Troubleshooting', article: 'Invitation email not received', excerpt: 'Check spam folder. Resend from Settings → Members → Pending Invitations.' },
   { category: 'Troubleshooting', article: 'Reporting a bug',              excerpt: 'Contact form → Technical Issue. Include browser, OS, steps to reproduce, screenshots.' },
-  { category: 'Troubleshooting', article: 'Reporting a security vulnerability', excerpt: 'Email security@focura.app. Do not open a public GitHub issue.' },
+  { category: 'Troubleshooting', article: 'Reporting a security vulnerability', excerpt: 'Email security@gablura.app. Do not open a public GitHub issue.' },
   // Workspace settings
   { category: 'Workspace',       article: 'Renaming your workspace',      excerpt: 'Settings → Workspace → General. Only Owner and Admins can edit.' },
   { category: 'Workspace',       article: 'Workspace plan limits',        excerpt: 'Free: 5 members, 3 projects, 500 MB storage. Settings → Usage.' },

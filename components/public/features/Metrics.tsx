@@ -8,7 +8,7 @@ export default function Metrics() {
           Proven <span className="text-primary">Productivity Gains</span>
         </h2>
         <p className="mx-auto max-w-2xl text-muted-foreground">
-          Teams switching to Focura experience immediate improvements in
+          Teams switching to Gablura experience immediate improvements in
           clarity, execution, and collaboration.
         </p>
       </div>

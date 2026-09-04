@@ -28,7 +28,7 @@ export function HelpPageContent() {
       {/* ── Hero / Search header ── */}
       <div className="border-b border-border px-6 py-8 sm:px-8">
         <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-          focura / help center
+          gablura / help center
         </p>
         <h1 className="mb-1 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
           How can we help?

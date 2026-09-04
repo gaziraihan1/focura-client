@@ -21,7 +21,7 @@ export default function PricingFAQ() {
             Pricing FAQ
           </h2>
           <p className="text-muted-foreground mt-2">
-            Quick answers to the most common questions about Focura’s pricing.
+            Quick answers to the most common questions about Gablura’s pricing.
           </p>
         </div>
         <div className="max-w-3xl mx-auto space-y-4">

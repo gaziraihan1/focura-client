@@ -63,7 +63,7 @@ export function DashboardMockup() {
       <div className="flex items-center gap-3 border-b border-border bg-muted/50 px-4 py-3">
         <WindowDots />
         <div className="ml-2 flex-1 truncate rounded-md border border-border bg-background px-3 py-1 text-[11px] text-muted-foreground">
-          app.focura.com/dashboard
+          app.gablura.com/dashboard
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export function DashboardMockup() {
             <span className="flex h-4 w-4 items-center justify-center rounded-sm bg-foreground text-[8px] font-bold text-background">
               F
             </span>
-            <span className="text-[11px] font-semibold text-foreground">Focura</span>
+            <span className="text-[11px] font-semibold text-foreground">Gablura</span>
           </div>
           {SIDEBAR_ITEMS.map((item) => (
             <span

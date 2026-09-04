@@ -15,7 +15,7 @@ export interface ServerApiOptions {
 }
 
 /**
- * Server-side GET against the Focura backend using the session's backendToken.
+ * Server-side GET against the Gablura backend using the session's backendToken.
  * Returns null on ANY failure (no session/token, non-2xx, network/timeout) —
  * callers must treat null as "no data" and degrade gracefully.
  */

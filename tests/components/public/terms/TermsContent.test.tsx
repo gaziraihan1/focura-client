@@ -130,13 +130,13 @@ describe('TermsContent', () => {
     expect(screen.getByText('Contact Us')).toBeInTheDocument()
   })
 
-  it('renders the Focura Legal Team contact', () => {
+  it('renders the Gablura Legal Team contact', () => {
     render(<TermsContentDefault />)
-    expect(screen.getByText('Focura Legal Team')).toBeInTheDocument()
+    expect(screen.getByText('Gablura Legal Team')).toBeInTheDocument()
   })
 
   it('renders the website link', () => {
     render(<TermsContentDefault />)
-    expect(screen.getByText('focura-client.vercel.app')).toBeInTheDocument()
+    expect(screen.getByText('gablura-client.vercel.app')).toBeInTheDocument()
   })
 })

@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Focura API — Types, config, and UI constants
+// Gablura API — Types, config, and UI constants
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
@@ -56,7 +56,7 @@ export interface ApiSection {
 }
 
 // ─── Base config ──────────────────────────────────────────────────────────────
-export const API_BASE_URL = 'https://focura-backend-vr75.onrender.com';
+export const API_BASE_URL = 'https://gablura-backend-vr75.onrender.com';
 export const API_VERSION  = 'v1';
 export const API_PREFIX   = '/api/v1';
 export const FULL_BASE    = `${API_BASE_URL}${API_PREFIX}`;

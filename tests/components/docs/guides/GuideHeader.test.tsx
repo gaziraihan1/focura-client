@@ -14,7 +14,7 @@ describe("GuideHeader", () => {
         onQueryChange={vi.fn()}
       />
     );
-    expect(screen.getByText("Focura")).toBeInTheDocument();
+    expect(screen.getByText("Gablura")).toBeInTheDocument();
     expect(screen.getByText("User Guide")).toBeInTheDocument();
   });
 

@@ -8,7 +8,7 @@ export default function FeatureFinalCTA() {
       <div className="mx-auto max-w-5xl space-y-6 px-4 text-center">
         <h2 className="text-4xl font-bold md:text-5xl">
           Ready to supercharge your workflow with{" "}
-          <span className="text-primary">Focura?</span>
+          <span className="text-primary">Gablura?</span>
         </h2>
         <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
           Start building a faster, more organized, and more collaborative

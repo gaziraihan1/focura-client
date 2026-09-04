@@ -28,7 +28,7 @@ export const CookiesHero = () => {
         </h1>
 
         <p className="text-base md:text-lg text-neutral-500 dark:text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-          We use cookies to keep Focura working, remember your preferences, and
+          We use cookies to keep Gablura working, remember your preferences, and
           understand how the product is used. Here is exactly what we set, why,
           and how you can control it.
         </p>

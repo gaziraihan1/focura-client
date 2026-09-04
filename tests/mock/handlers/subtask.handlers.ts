@@ -7,7 +7,7 @@ const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 export const mockSubtaskUser = {
   id: 'user-1',
   name: 'Test User',
-  email: 'test@focura.com',
+  email: 'test@gablura.com',
   image: null,
 }
 

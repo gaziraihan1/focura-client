@@ -18,7 +18,7 @@ const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 const mockProfile = {
   id: 'user-1',
   name: 'Test User',
-  email: 'test@focura.com',
+  email: 'test@gablura.com',
   image: 'https://example.com/avatar.png',
   bio: 'Software developer',
   timezone: 'UTC',
@@ -48,7 +48,7 @@ describe('useUserProfile', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data?.name).toBe('Test User')
-    expect(result.current.data?.email).toBe('test@focura.com')
+    expect(result.current.data?.email).toBe('test@gablura.com')
     expect(result.current.data?.ownedWorkspaces).toHaveLength(1)
   })
 

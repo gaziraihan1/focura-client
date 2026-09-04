@@ -68,7 +68,7 @@ describe('WorkspaceConfigurationModal', () => {
     render(<WorkspaceConfigurationModal {...defaultProps} />);
 
     expect(screen.getByText('Sync Direction')).toBeInTheDocument();
-    expect(screen.getByText('Focura → Provider')).toBeInTheDocument();
+    expect(screen.getByText('Gablura → Provider')).toBeInTheDocument();
     expect(screen.getByText('Two-way')).toBeInTheDocument();
   });
 
@@ -144,9 +144,9 @@ describe('WorkspaceConfigurationModal', () => {
   it('should select sync direction when clicked', () => {
     render(<WorkspaceConfigurationModal {...defaultProps} />);
 
-    fireEvent.click(screen.getByText('Focura → Provider'));
+    fireEvent.click(screen.getByText('Gablura → Provider'));
 
     // The button should have primary styling
-    expect(screen.getByText('Focura → Provider').className).toContain('bg-primary');
+    expect(screen.getByText('Gablura → Provider').className).toContain('bg-primary');
   });
 });

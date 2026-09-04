@@ -7,7 +7,7 @@ import type { AuthBroadcastEvent } from "./types";
 
 export const authChannel =
   typeof BroadcastChannel !== "undefined"
-    ? new BroadcastChannel("focura-auth")
+    ? new BroadcastChannel("gablura-auth")
     : null;
 
 export function broadcastAuthEvent(event: AuthBroadcastEvent): void {

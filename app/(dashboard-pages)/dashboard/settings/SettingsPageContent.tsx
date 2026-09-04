@@ -24,7 +24,7 @@ const globalSettings = [
   {
     title: "Appearance",
     description:
-      "Customize theme, sidebar behavior, density, and visual preferences across Focura.",
+      "Customize theme, sidebar behavior, density, and visual preferences across Gablura.",
     icon: Palette,
     active: true,
   },
@@ -145,7 +145,7 @@ export function SettingsPageContent() {
         ) : (
           <SettingsSection
             title="Account Settings"
-            description="Personal preferences and settings that apply across all workspaces inside Focura. Workspace settings are managed under each workspace."
+            description="Personal preferences and settings that apply across all workspaces inside Gablura. Workspace settings are managed under each workspace."
             items={globalSettings}
             onItemClick={setActiveSection}
           />

@@ -162,7 +162,7 @@ export const HELP_CATEGORIES: HelpCategory[] = [
     id         : 'mobile',
     icon       : MonitorSmartphone,
     title      : 'Mobile & Responsive',
-    description: 'Using Focura on phone, tablet, and desktop — tips and known limitations.',
+    description: 'Using Gablura on phone, tablet, and desktop — tips and known limitations.',
     articleCount: 4,
     color      : 'border-sky-200 dark:border-sky-800/50',
     iconBg     : 'bg-sky-50 dark:bg-sky-950/40',

@@ -8,7 +8,7 @@ const steps = [
     title     : 'Browse & choose',
     description:
       'Filter by category — Engineering, Product, Marketing, HR, and more. Preview each template\'s task list, sections, labels, and milestones before importing.',
-    detail    : 'Every template shows you exactly what you\'ll get: the number of tasks, the sections structure, the colour-coded labels, and which Focura views (Kanban, List, Calendar) will be pre-configured.',
+    detail    : 'Every template shows you exactly what you\'ll get: the number of tasks, the sections structure, the colour-coded labels, and which Gablura views (Kanban, List, Calendar) will be pre-configured.',
     color     : 'bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800/50',
     iconBg    : 'bg-blue-100 dark:bg-blue-900/60',
     iconColor : 'text-blue-600 dark:text-blue-400',
@@ -18,7 +18,7 @@ const steps = [
     number    : '02',
     title     : 'Import in one click',
     description:
-      'Hit "Use Template" and choose a destination workspace. Focura clones the entire project structure — all tasks, labels, sections, views, and milestones — instantly.',
+      'Hit "Use Template" and choose a destination workspace. Gablura clones the entire project structure — all tasks, labels, sections, views, and milestones — instantly.',
     detail    : 'Import creates a new project in your workspace. Nothing from the template overwrites existing projects. You can import the same template multiple times (e.g. one sprint board per sprint cycle).',
     color     : 'bg-violet-50 dark:bg-violet-950/30 border-violet-200 dark:border-violet-800/50',
     iconBg    : 'bg-violet-100 dark:bg-violet-900/60',

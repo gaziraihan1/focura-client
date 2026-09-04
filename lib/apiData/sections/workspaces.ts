@@ -3,7 +3,7 @@ import { FULL_BASE, type ApiSection } from '../types';
 export const workspacesSection: ApiSection = {
   id         : 'workspaces',
   title      : 'Workspaces',
-  description: 'Create and manage workspaces — the top-level container for all projects, tasks, and team members in Focura.',
+  description: 'Create and manage workspaces — the top-level container for all projects, tasks, and team members in Gablura.',
   endpoints  : [
     {
       id         : 'workspace-list',
@@ -51,7 +51,7 @@ export const workspacesSection: ApiSection = {
         {
           label: 'Axios',
           code: `const { data } = await axios.post('/api/workspaces',
-{ name: 'Focura Engineering', color: '#667eea' },
+{ name: 'Gablura Engineering', color: '#667eea' },
 { headers: { Authorization: \`Bearer \${token}\` } }
 );`,
         },

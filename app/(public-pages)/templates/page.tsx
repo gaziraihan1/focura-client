@@ -2,22 +2,22 @@ import TemplatesPageClient from '@/components/public/templates/TemplatesPageClie
 import type { Metadata }     from 'next';
 
 export const metadata: Metadata = {
-  title      : 'Templates | Focura',
-  description: 'Pre-built project templates for engineering, product, marketing, HR, and more. Import a full project structure — tasks, labels, sections, views, and milestones — into your Focura workspace in one click.',
+  title      : 'Templates | Gablura',
+  description: 'Pre-built project templates for engineering, product, marketing, HR, and more. Import a full project structure — tasks, labels, sections, views, and milestones — into your Gablura workspace in one click.',
   openGraph  : {
-    title      : 'Focura Templates',
+    title      : 'Gablura Templates',
     description: 'Start fast with pre-built project templates for every team. Engineering sprints, product roadmaps, content calendars, hiring pipelines, and more.',
-    url        : 'https://focura-client.vercel.app/templates',
-    siteName   : 'Focura',
+    url        : 'https://gablura-client.vercel.app/templates',
+    siteName   : 'Gablura',
     type       : 'website',
   },
   twitter    : {
     card       : 'summary_large_image',
-    title      : 'Focura Templates',
+    title      : 'Gablura Templates',
     description: 'Pre-built project templates for engineering, product, marketing, HR, startups, and personal productivity.',
   },
   alternates : {
-    canonical  : 'https://focura-client.vercel.app/templates',
+    canonical  : 'https://gablura-client.vercel.app/templates',
   },
 };
 
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
  *     TemplatesHowItWorks     ← 3-step explainer + what gets cloned table
  *     TemplatesForCreators    ← User-created templates roadmap + feature cards
  *     TemplatesNotifyBanner   ← Tier-value banner (why upgrade)
- *     TemplatesCTA            ← Final links: Try Focura, Request, Guides
+ *     TemplatesCTA            ← Final links: Try Gablura, Request, Guides
  *
  * Data layer:
  *   useTemplates + templateKeys ← TanStack Query hooks hitting GET /templates/catalog

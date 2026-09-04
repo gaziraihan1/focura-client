@@ -121,12 +121,12 @@ export async function validateCsrfToken(userId, sessionId, token): Promise<boole
 ```typescript
 // Revoke access token (stored in Redis with TTL = token expiry)
 export async function revokeAccessToken(jti, expiresInSeconds): Promise<void> {
-  await getRedisClient().setex(`focura:revoked:access:${jti}`, expiresInSeconds, "1");
+  await getRedisClient().setex(`gablura:revoked:access:${jti}`, expiresInSeconds, "1");
 }
 
 // Check if access token is revoked
 export async function isAccessTokenRevoked(jti): Promise<boolean> {
-  const val = await getRedisClient().get(`focura:revoked:access:${jti}`);
+  const val = await getRedisClient().get(`gablura:revoked:access:${jti}`);
   return val === "1";
 }
 ```
@@ -182,12 +182,12 @@ export async function revokeAllRefreshTokens(userId): Promise<void> {
 ```typescript
 // Mark session as revoked
 export async function markSessionRevoked(sessionId): Promise<void> {
-  await getRedisClient().setex(`focura:session:revoked:${sessionId}`, 7 * 24 * 60 * 60, "1");
+  await getRedisClient().setex(`gablura:session:revoked:${sessionId}`, 7 * 24 * 60 * 60, "1");
 }
 
 // Check if session is revoked
 export async function isSessionRevoked(sessionId): Promise<boolean> {
-  const val = await getRedisClient().get(`focura:session:revoked:${sessionId}`);
+  const val = await getRedisClient().get(`gablura:session:revoked:${sessionId}`);
   return val === "1";
 }
 ```
@@ -282,7 +282,7 @@ export async function trackUserSession(userId, sessionId): Promise<void> {
 
 ```typescript
 export async function acquireRefreshLock(sessionId): Promise<boolean> {
-  const result = await redis.set(`focura:refresh:lock:${sessionId}`, "1", "EX", 45, "NX");
+  const result = await redis.set(`gablura:refresh:lock:${sessionId}`, "1", "EX", 45, "NX");
   return result === "OK";
 }
 ```
@@ -301,12 +301,12 @@ export async function acquireRefreshLock(sessionId): Promise<boolean> {
 ```typescript
 // Token creation (backend only)
 export function createAccessToken(p): string {
-  return jwt.sign({ sub: p.id, email: p.email, role: p.role, type: "access", version: 1, jti: crypto.randomUUID(), sessionId }, privateKey, { algorithm: "RS256", expiresIn: "15m", issuer: "focura-app", audience: "focura-backend" });
+  return jwt.sign({ sub: p.id, email: p.email, role: p.role, type: "access", version: 1, jti: crypto.randomUUID(), sessionId }, privateKey, { algorithm: "RS256", expiresIn: "15m", issuer: "gablura-app", audience: "gablura-backend" });
 }
 
 // Token verification (every request)
 export function verifyToken(token, expectedType?): TokenPayload {
-  return jwt.verify(token, publicKey, { algorithms: ["RS256"], issuer: "focura-app", audience: "focura-backend" });
+  return jwt.verify(token, publicKey, { algorithms: ["RS256"], issuer: "gablura-app", audience: "gablura-backend" });
 }
 ```
 

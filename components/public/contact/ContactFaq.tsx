@@ -22,7 +22,7 @@ const faqs: FAQItem[] = [
     category: "General",
     question: "Can I contact support without creating an account?",
     answer:
-      "Yes — the contact form is open to everyone. No Focura account is required to reach us. Simply fill in your name, email, and message.",
+      "Yes — the contact form is open to everyone. No Gablura account is required to reach us. Simply fill in your name, email, and message.",
   },
   {
     category: "Billing",
@@ -46,13 +46,13 @@ const faqs: FAQItem[] = [
     category: "Technical",
     question: "I found a security vulnerability. How should I report it?",
     answer:
-      "Please do NOT open a public GitHub issue. Instead, email security@focura.app with a detailed description. We follow a responsible disclosure process and will acknowledge your report within 48 hours.",
+      "Please do NOT open a public GitHub issue. Instead, email security@gablura.app with a detailed description. We follow a responsible disclosure process and will acknowledge your report within 48 hours.",
   },
   {
     category: "Feature Requests",
     question: "Can I suggest a new feature?",
     answer:
-      "Absolutely — select \"Feature Request\" from the category dropdown. Describe what you're trying to accomplish and why the feature would help. You can also vote on existing feature requests from inside your Focura account under Settings → Feature Requests.",
+      "Absolutely — select \"Feature Request\" from the category dropdown. Describe what you're trying to accomplish and why the feature would help. You can also vote on existing feature requests from inside your Gablura account under Settings → Feature Requests.",
   },
   {
     category: "Partnership",

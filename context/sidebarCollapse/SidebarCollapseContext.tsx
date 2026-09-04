@@ -2,8 +2,8 @@
 
 import { createContext, useCallback, useContext, useMemo, useSyncExternalStore } from "react";
 
-const MAIN_SIDEBAR_KEY = "focura.main-sidebar-collapsed";
-const PROJECT_SIDEBAR_KEY = "focura.project-sidebar-collapsed";
+const MAIN_SIDEBAR_KEY = "gablura.main-sidebar-collapsed";
+const PROJECT_SIDEBAR_KEY = "gablura.project-sidebar-collapsed";
 
 type Listener = () => void;
 const listeners = new Map<string, Set<Listener>>();

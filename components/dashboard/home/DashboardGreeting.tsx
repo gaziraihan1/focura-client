@@ -52,7 +52,7 @@ export function DashboardGreeting({
             </span>
           </div>
           <p className="text-sm text-muted-foreground">
-            Here&apos;s your Focura hub — pick a workspace to dive in.
+            Here&apos;s your Gablura hub — pick a workspace to dive in.
           </p>              {workspaceCount > 0 && (
             <div className="flex items-center gap-2 mt-3">
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-muted/50 text-xs text-muted-foreground">

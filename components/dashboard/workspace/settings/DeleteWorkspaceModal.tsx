@@ -75,7 +75,7 @@ export function DeleteWorkspaceModal({
 
         <p id="delete-workspace-desc" className="text-muted-foreground mb-4">
           This will remove <strong>{workspaceName}</strong> and its content from
-          your dashboard. Your data is kept so it can be restored by Focura
+          your dashboard. Your data is kept so it can be restored by Gablura
           support if this was a mistake.
         </p>
 

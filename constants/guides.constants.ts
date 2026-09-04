@@ -88,7 +88,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
     label: "Getting Started",
     color: "blue",
     title: "Getting Started",
-    subtitle: "Your first steps in Focura",
+    subtitle: "Your first steps in Gablura",
     articles: [
       {
         title: "Creating your account",
@@ -98,17 +98,17 @@ export const GUIDE_SECTIONS: GuideSection[] = [
       {
         title: "Creating your workspace",
         content:
-          'On your first sign-in, Focura prompts you to create a workspace. Enter a name that represents your team or organization and confirm. The creator automatically becomes the workspace Owner with full administrative control, including billing access.',
+          'On your first sign-in, Gablura prompts you to create a workspace. Enter a name that represents your team or organization and confirm. The creator automatically becomes the workspace Owner with full administrative control, including billing access.',
       },
       {
         title: "Inviting your team",
         content:
-          'Go to Settings → Members → Invite and enter the email addresses of your teammates. Choose a role for each person and send the invites. Invites are valid for 7 days, and recipients can create a Focura account when they accept. New members only see projects they have been explicitly assigned to.',
+          'Go to Settings → Members → Invite and enter the email addresses of your teammates. Choose a role for each person and send the invites. Invites are valid for 7 days, and recipients can create a Gablura account when they accept. New members only see projects they have been explicitly assigned to.',
       },
       {
         title: "Your first project and task",
         content:
-          'Click "New Project" to create a container for related work, then open it and click "New Task". Give the task a clear title, set a status and priority, assign a teammate, and add a due date. That is everything you need to start collaborating in Focura.',
+          'Click "New Project" to create a container for related work, then open it and click "New Task". Give the task a clear title, set a status and priority, assign a teammate, and add a due date. That is everything you need to start collaborating in Gablura.',
       },
     ],
   },
@@ -228,7 +228,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
       {
         title: "Deep Work mode",
         content:
-          "Deep Work mode sets a single 90-minute uninterrupted focus block with no scheduled breaks. It is designed for complex, cognitively demanding work that benefits from sustained attention. Notifications are not automatically silenced — use your device's Do Not Disturb setting alongside Focura's focus timer.",
+          "Deep Work mode sets a single 90-minute uninterrupted focus block with no scheduled breaks. It is designed for complex, cognitively demanding work that benefits from sustained attention. Notifications are not automatically silenced — use your device's Do Not Disturb setting alongside Gablura's focus timer.",
       },
       {
         title: "Custom focus sessions",
@@ -318,7 +318,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
       {
         title: "Real-time updates (SSE)",
         content:
-          "Focura uses Server-Sent Events to push updates instantly without page refreshes. When a teammate assigns you a task, comments on a task, or @mentions you, you receive the notification in real-time. The notification bell in the top bar shows the unread count. You do not need to refresh the page.",
+          "Gablura uses Server-Sent Events to push updates instantly without page refreshes. When a teammate assigns you a task, comments on a task, or @mentions you, you receive the notification in real-time. The notification bell in the top bar shows the unread count. You do not need to refresh the page.",
       },
     ],
   },
@@ -338,7 +338,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
       {
         title: "Inviting members",
         content:
-          "Settings → Members → Invite. Enter one or more email addresses (comma-separated). Choose a role for each invitation. The invited person receives an email with a unique invitation link that expires in 7 days. If they don't have a Focura account, they are prompted to create one first. You can resend or cancel pending invitations.",
+          "Settings → Members → Invite. Enter one or more email addresses (comma-separated). Choose a role for each invitation. The invited person receives an email with a unique invitation link that expires in 7 days. If they don't have a Gablura account, they are prompted to create one first. You can resend or cancel pending invitations.",
       },
       {
         title: "Changing member roles",
@@ -398,7 +398,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
       {
         title: "Updating payment method",
         content:
-          "Settings → Billing → Payment Method. Click \"Update\" to enter new card details via Stripe's secure form. Your new card is charged on the next billing date. The old card is immediately replaced and no data is stored on Focura's servers — all payment data is held by Stripe.",
+          "Settings → Billing → Payment Method. Click \"Update\" to enter new card details via Stripe's secure form. Your new card is charged on the next billing date. The old card is immediately replaced and no data is stored on Gablura's servers — all payment data is held by Stripe.",
       },
     ],
   },
@@ -428,7 +428,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
       {
         title: "Google OAuth login",
         content:
-          "You can sign in with your Google account. If your Google email matches an existing Focura account, they are linked. If not, a new Focura account is created. Google OAuth accounts do not have a Focura password by default — you can set one from Settings → Account → Security if needed.",
+          "You can sign in with your Google account. If your Google email matches an existing Gablura account, they are linked. If not, a new Gablura account is created. Google OAuth accounts do not have a Gablura password by default — you can set one from Settings → Account → Security if needed.",
       },
       {
         title: "Active sessions and logout",
@@ -473,7 +473,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
       {
         title: "Supported file types",
         content:
-          "Focura accepts any file type — documents, images, videos, archives, code files, etc. Images are automatically optimised and thumbnailed by Cloudinary for faster loading in the file browser. Very large video files may take several seconds to process after upload before the preview is available.",
+          "Gablura accepts any file type — documents, images, videos, archives, code files, etc. Images are automatically optimised and thumbnailed by Cloudinary for faster loading in the file browser. Very large video files may take several seconds to process after upload before the preview is available.",
       },
     ],
   },
@@ -488,12 +488,12 @@ export const GUIDE_SECTIONS: GuideSection[] = [
       {
         title: "Notification types",
         content:
-          "Focura sends notifications for: Task Assigned, Task Completed, Task Commented, @Mention, Task Due Soon, Task Overdue, Member Joined, Member Removed, Role Updated, Workspace Invite, Project Update, File Shared, Meeting Created/Updated/Cancelled, Meeting Reminder, and Deadline Reminder. Each type can be individually toggled in your notification preferences.",
+          "Gablura sends notifications for: Task Assigned, Task Completed, Task Commented, @Mention, Task Due Soon, Task Overdue, Member Joined, Member Removed, Role Updated, Workspace Invite, Project Update, File Shared, Meeting Created/Updated/Cancelled, Meeting Reminder, and Deadline Reminder. Each type can be individually toggled in your notification preferences.",
       },
       {
         title: "Real-time vs email notifications",
         content:
-          "All notifications are delivered in real-time inside Focura via SSE (no page refresh needed). For email delivery, go to Settings → Notifications and toggle the email option for each notification type. By default, email notifications are disabled to avoid inbox noise.",
+          "All notifications are delivered in real-time inside Gablura via SSE (no page refresh needed). For email delivery, go to Settings → Notifications and toggle the email option for each notification type. By default, email notifications are disabled to avoid inbox noise.",
       },
       {
         title: "Marking notifications as read",
@@ -516,9 +516,9 @@ export const GUIDE_SECTIONS: GuideSection[] = [
     subtitle: "Suggestions, goal breakdowns, daily plans & weekly insights",
     articles: [
       {
-        title: "What Focura AI can do for you",
+        title: "What Gablura AI can do for you",
         content:
-          "Focura AI (powered by Google Gemini) helps you plan faster. While typing a task title, it suggests a description, priority, energy type, estimated hours, due date, and subtasks. On the Wellness page it breaks a big goal into a Low/Medium/High energy task list, and in the comment editor it can polish, shorten, or rephrase your message. Everything runs server-side — your data is only used to answer your own request.",
+          "Gablura AI (powered by Google Gemini) helps you plan faster. While typing a task title, it suggests a description, priority, energy type, estimated hours, due date, and subtasks. On the Wellness page it breaks a big goal into a Low/Medium/High energy task list, and in the comment editor it can polish, shorten, or rephrase your message. Everything runs server-side — your data is only used to answer your own request.",
       },
       {
         title: "Using AI task suggestions",
@@ -528,12 +528,12 @@ export const GUIDE_SECTIONS: GuideSection[] = [
       {
         title: "Breaking goals into manageable tasks",
         content:
-          "On the Wellness page, describe a goal (for example \"plan the quarterly team offsite\") and click Generate. Focura AI breaks it into a sequence of small tasks with energy types (Low, Medium, High) and estimated hours, so you can tackle it without overwhelm. Review the list, tweak anything, and save the tasks you want.",
+          "On the Wellness page, describe a goal (for example \"plan the quarterly team offsite\") and click Generate. Gablura AI breaks it into a sequence of small tasks with energy types (Low, Medium, High) and estimated hours, so you can tackle it without overwhelm. Review the list, tweak anything, and save the tasks you want.",
       },
       {
         title: "Polishing comments with AI",
         content:
-          "In any task comment box, write a draft and open the AI assist toolbar. Choose a style — Professional, Friendly, Concise, Formal, or Persuasive — and Focura rewrites your comment in that tone. You stay in control: the rewrite fills the box for you to edit before posting.",
+          "In any task comment box, write a draft and open the AI assist toolbar. Choose a style — Professional, Friendly, Concise, Formal, or Persuasive — and Gablura rewrites your comment in that tone. You stay in control: the rewrite fills the box for you to edit before posting.",
       },
       {
         title: "AI usage limits",
@@ -543,7 +543,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
       {
         title: "Planning your day with AI",
         content:
-          "On the workspace Tasks page (Pro and Business plans), open a set of tasks and click \"Plan my day with AI\". Focura AI orders them into a recommended sequence — urgent work first, high-energy tasks in your peak windows, lighter work in between — with a short reason for each slot. It is purely advisory: nothing is changed automatically, so you stay in control of your plan.",
+          "On the workspace Tasks page (Pro and Business plans), open a set of tasks and click \"Plan my day with AI\". Gablura AI orders them into a recommended sequence — urgent work first, high-energy tasks in your peak windows, lighter work in between — with a short reason for each slot. It is purely advisory: nothing is changed automatically, so you stay in control of your plan.",
       },
       {
         title: "Summarizing meetings with AI",
@@ -553,17 +553,17 @@ export const GUIDE_SECTIONS: GuideSection[] = [
       {
         title: "Weekly insights (Business plan)",
         content:
-          "On the Wellness page, the AI Insights card (Business plan) analyses your workspace's real weekly activity — tasks completed, overdue work, focus minutes, energy levels, and each member's workload — and summarises what went well and what to watch. Burnout warnings are flagged with a severity level (low, medium, high). Everything is advisory: Focura only suggests, it never changes your tasks or schedule. If you are in more than one workspace, the insights card analyses your first workspace.",
+          "On the Wellness page, the AI Insights card (Business plan) analyses your workspace's real weekly activity — tasks completed, overdue work, focus minutes, energy levels, and each member's workload — and summarises what went well and what to watch. Burnout warnings are flagged with a severity level (low, medium, high). Everything is advisory: Gablura only suggests, it never changes your tasks or schedule. If you are in more than one workspace, the insights card analyses your first workspace.",
       },
       {
         title: "AI usage reports (owners & admins)",
         content:
-          "Workspace owners and admins can see exactly how their team uses Focura AI from the workspace-usage page (Workspace Usage → AI Usage). The section shows total AI calls, tokens used, and an estimated cost for the last 7, 30, or 90 days, plus a breakdown of calls by feature (task autocomplete, goal breakdown, daily plans, meeting summaries, weekly insights) and by model. A recent-calls list shows the latest calls with their token counts. Costs are estimates calculated from token usage — the provider invoice is the source of truth. Regular members cannot see this section.",
+          "Workspace owners and admins can see exactly how their team uses Gablura AI from the workspace-usage page (Workspace Usage → AI Usage). The section shows total AI calls, tokens used, and an estimated cost for the last 7, 30, or 90 days, plus a breakdown of calls by feature (task autocomplete, goal breakdown, daily plans, meeting summaries, weekly insights) and by model. A recent-calls list shows the latest calls with their token counts. Costs are estimates calculated from token usage — the provider invoice is the source of truth. Regular members cannot see this section.",
       },
       {
         title: "Upgrading for more AI",
         content:
-          "When your daily AI credits are exhausted, Focura shows an upgrade prompt. Upgrade from Settings to increase your AI limits, and unlock higher caps on every feature. If the AI service is temporarily unavailable you will see a clear message and can retry shortly — your data stays safe.",
+          "When your daily AI credits are exhausted, Gablura shows an upgrade prompt. Upgrade from Settings to increase your AI limits, and unlock higher caps on every feature. If the AI service is temporarily unavailable you will see a clear message and can retry shortly — your data stays safe.",
       },
     ],
   },
@@ -583,7 +583,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
       {
         title: "Real-time notifications are not working",
         content:
-          "Real-time updates use SSE which requires a persistent HTTP connection. This can be blocked by corporate firewalls, VPNs, or browser extensions. Try: disabling VPN temporarily, disabling ad-blockers, or testing in a different browser. If the SSE connection drops, Focura reconnects automatically — you may see a brief \"reconnecting\" indicator in the notification bell.",
+          "Real-time updates use SSE which requires a persistent HTTP connection. This can be blocked by corporate firewalls, VPNs, or browser extensions. Try: disabling VPN temporarily, disabling ad-blockers, or testing in a different browser. If the SSE connection drops, Gablura reconnects automatically — you may see a brief \"reconnecting\" indicator in the notification bell.",
       },
       {
         title: "File upload fails",
@@ -603,7 +603,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
       {
         title: "My focus session timer stopped",
         content:
-          "Browser tabs that are backgrounded may have their timers throttled by the browser to save resources. For best results, keep the Focura tab in the foreground during a focus session. The session state is preserved even if the page is briefly hidden — open the tab again and the timer should resume correctly.",
+          "Browser tabs that are backgrounded may have their timers throttled by the browser to save resources. For best results, keep the Gablura tab in the foreground during a focus session. The session state is preserved even if the page is briefly hidden — open the tab again and the timer should resume correctly.",
       },
       {
         title: "Reporting a bug",
@@ -613,7 +613,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
       {
         title: "Reporting a security vulnerability",
         content:
-          "Do NOT open a public GitHub issue for security vulnerabilities. Email security@focura.app with a detailed description of the vulnerability, steps to reproduce, and potential impact. We follow a responsible disclosure policy and will acknowledge your report within 48 hours.",
+          "Do NOT open a public GitHub issue for security vulnerabilities. Email security@gablura.app with a detailed description of the vulnerability, steps to reproduce, and potential impact. We follow a responsible disclosure policy and will acknowledge your report within 48 hours.",
       },
     ],
   },

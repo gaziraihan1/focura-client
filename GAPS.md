@@ -1,7 +1,7 @@
-# 🕳️ Focura — Focus & Burnout Feature Gap Analysis
+# 🕳️ Gablura — Focus & Burnout Feature Gap Analysis
 
 > **Generated:** July 30, 2026  ·  **Last reviewed / updated:** August 16, 2026
-> **Scope:** Frontend (`Focura-client/focura`) & Backend (`Focura-backend`)
+> **Scope:** Frontend (`Gablura-client/gablura`) & Backend (`Gablura-backend`)
 > **Focus areas:** Focus Sessions, Burnout Detection, Capacity Management, Energy Levels, AI Features, Daily Tasks
 
 **Status summary (2026-08-16):** All previously-identified gaps remain implemented, tested, and documented. All five milestones in `FEATURE_PLANS.md` shipped end-to-end — **Custom Workflows**, **Recurring Tasks**, **Automation Rules**, **Workspace Templates**, and the **M5 public template gallery** (ratings, featured strip, author credits). The **AI feature suite also shipped** (Phases 1–4, server-side Google Gemini — see §2): task autocomplete, goal breakdown, comment assist, daily planning, meeting summaries, and weekly insights are live with per-workspace quota + rate-limit enforcement. Three original AI sub-features remain unbuilt by decision: **natural-language search**, **standalone task description generation**, and **project health scoring**.
@@ -75,9 +75,9 @@
 
 ## 2. AI Features — Implemented (Gemini) + Remaining Items
 
-The AI feature suite described in the original [`AI_IMPLEMENTATION_GUIDE.md`](./AI_IMPLEMENTATION_GUIDE.md) (an OpenAI-in-Next.js plan) is **implemented** — but **server-side with Google Gemini**, per the authoritative [`GEMINI.md`](../Focura-backend/GEMINI.md) spec. The Next.js client only calls Focura's own `/api/v1/ai/*` endpoints through `lib/axios`; there is no `app/api/ai/*`, and the API key never reaches the client.
+The AI feature suite described in the original [`AI_IMPLEMENTATION_GUIDE.md`](./AI_IMPLEMENTATION_GUIDE.md) (an OpenAI-in-Next.js plan) is **implemented** — but **server-side with Google Gemini**, per the authoritative [`GEMINI.md`](../Gablura-backend/GEMINI.md) spec. The Next.js client only calls Gablura's own `/api/v1/ai/*` endpoints through `lib/axios`; there is no `app/api/ai/*`, and the API key never reaches the client.
 
-**Shipped endpoints** (module `Focura-backend/src/modules/ai`, with per-workspace quota, burst/hourly/daily/monthly rate limits, and `X-AI-RateLimit-*` response headers):
+**Shipped endpoints** (module `Gablura-backend/src/modules/ai`, with per-workspace quota, burst/hourly/daily/monthly rate limits, and `X-AI-RateLimit-*` response headers):
 
 | Endpoint | Feature | Gating |
 |----------|---------|--------|

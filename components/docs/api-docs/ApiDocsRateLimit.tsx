@@ -60,7 +60,7 @@ export const ApiDocsRateLimit = () => {
         <div>
           <h2 className='text-xl font-bold text-neutral-900 dark:text-neutral-100'>Rate Limits</h2>
           <p className='text-sm text-neutral-500 dark:text-neutral-400 mt-0.5'>
-            Focura enforces per-endpoint rate limits via Upstash Redis sliding window
+            Gablura enforces per-endpoint rate limits via Upstash Redis sliding window
             counters. Limits are applied per IP for public routes and per user for
             authenticated routes.
           </p>

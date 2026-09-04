@@ -50,7 +50,7 @@ export const AVAILABLE_INTEGRATIONS: IntegrationDefinition[] = [
   {
     id: 'trello',
     name: 'Trello',
-    description: 'Import boards and lists into Focura projects',
+    description: 'Import boards and lists into Gablura projects',
     icon: Trello,
     color: 'bg-[#0079BF]/10',
     textColor: 'text-[#0079BF]',

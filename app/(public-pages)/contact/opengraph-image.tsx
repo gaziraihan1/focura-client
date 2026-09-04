@@ -9,7 +9,7 @@ export const contentType = 'image/png';
 
 export default async function Image() {
   return generateOGImage({
-    title: 'Contact Focura',
+    title: 'Contact Gablura',
     description: 'Get in touch with our team.',
     gradient: 'blue',
   });

@@ -5,32 +5,32 @@ import { PrivacyNav, PrivacyNavItem } from "@/components/public/privacy/PrivacyN
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Focura",
+  title: "Privacy Policy | Gablura",
   description:
-    "Learn how Focura collects, uses, and protects your personal data. We are committed to transparency and your privacy rights.",
+    "Learn how Gablura collects, uses, and protects your personal data. We are committed to transparency and your privacy rights.",
   keywords: [
-    "focura privacy",
-    "focura privacy policy",
+    "gablura privacy",
+    "gablura privacy policy",
     "data protection",
     "gdpr",
     "privacy rights",
   ],
   openGraph: {
-    title: "Privacy Policy – Focura",
+    title: "Privacy Policy – Gablura",
     description:
-      "Learn how Focura collects, uses, and protects your personal data. We are committed to transparency and your privacy rights.",
-    url: "https://focura-client.vercel.app/privacy",
-    siteName: "Focura",
+      "Learn how Gablura collects, uses, and protects your personal data. We are committed to transparency and your privacy rights.",
+    url: "https://gablura-client.vercel.app/privacy",
+    siteName: "Gablura",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Privacy Policy – Focura",
+    title: "Privacy Policy – Gablura",
     description:
-      "Learn how Focura collects, uses, and protects your personal data.",
+      "Learn how Gablura collects, uses, and protects your personal data.",
   },
   alternates: {
-    canonical: "https://focura-client.vercel.app/privacy",
+    canonical: "https://gablura-client.vercel.app/privacy",
   },
 };
 

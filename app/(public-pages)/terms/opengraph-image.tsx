@@ -10,7 +10,7 @@ export const contentType = 'image/png';
 export default async function Image() {
   return generateOGImage({
     title: 'Terms & Conditions',
-    description: 'Your rights and obligations when using Focura.',
+    description: 'Your rights and obligations when using Gablura.',
     gradient: 'neutral',
   });
 }

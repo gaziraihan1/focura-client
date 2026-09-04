@@ -4,7 +4,7 @@ const items = [
   {
     icon: ShieldCheck,
     title: "Enterprise-grade protection",
-    desc: "Focura uses industry-standard encryption and zero-trust principles to keep your data secure.",
+    desc: "Gablura uses industry-standard encryption and zero-trust principles to keep your data secure.",
   },
   {
     icon: Lock,

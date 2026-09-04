@@ -5,32 +5,32 @@ import { RefundNav, RefundNavItem } from "@/components/public/refund/RefundNav";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Refund Policy | Focura",
+  title: "Refund Policy | Gablura",
   description:
-    "Focura's refund policy — a fair 14-day window for first-time subscribers. Learn what qualifies, how to request, and how Paddle processes refunds.",
+    "Gablura's refund policy — a fair 14-day window for first-time subscribers. Learn what qualifies, how to request, and how Paddle processes refunds.",
   keywords: [
-    "focura refund",
-    "focura refund policy",
+    "gablura refund",
+    "gablura refund policy",
     "money back guarantee",
     "paddle refund",
     "subscription refund",
   ],
   openGraph: {
-    title: "Refund Policy – Focura",
+    title: "Refund Policy – Gablura",
     description:
-      "Focura's refund policy — a fair 14-day window for first-time subscribers.",
-    url: "https://focura-client.vercel.app/refund",
-    siteName: "Focura",
+      "Gablura's refund policy — a fair 14-day window for first-time subscribers.",
+    url: "https://gablura-client.vercel.app/refund",
+    siteName: "Gablura",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Refund Policy – Focura",
+    title: "Refund Policy – Gablura",
     description:
-      "Focura's refund policy — a fair 14-day window for first-time subscribers.",
+      "Gablura's refund policy — a fair 14-day window for first-time subscribers.",
   },
   alternates: {
-    canonical: "https://focura-client.vercel.app/refund",
+    canonical: "https://gablura-client.vercel.app/refund",
   },
 };
 

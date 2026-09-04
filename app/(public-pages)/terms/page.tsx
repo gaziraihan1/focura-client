@@ -5,31 +5,31 @@ import { TermsNav, TermsNavItem } from "@/components/public/terms/TermsNav";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions | Focura",
+  title: "Terms & Conditions | Gablura",
   description:
-    "Read Focura's Terms & Conditions to understand your rights and obligations when using our platform.",
+    "Read Gablura's Terms & Conditions to understand your rights and obligations when using our platform.",
   keywords: [
-    "focura terms",
-    "focura terms and conditions",
-    "focura tos",
+    "gablura terms",
+    "gablura terms and conditions",
+    "gablura tos",
     "terms of service",
   ],
   openGraph: {
-    title: "Terms & Conditions – Focura",
+    title: "Terms & Conditions – Gablura",
     description:
-      "Read Focura's Terms & Conditions to understand your rights and obligations when using our platform.",
-    url: "https://focura-client.vercel.app/terms",
-    siteName: "Focura",
+      "Read Gablura's Terms & Conditions to understand your rights and obligations when using our platform.",
+    url: "https://gablura-client.vercel.app/terms",
+    siteName: "Gablura",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Terms & Conditions – Focura",
+    title: "Terms & Conditions – Gablura",
     description:
-      "Read Focura's Terms & Conditions to understand your rights and obligations.",
+      "Read Gablura's Terms & Conditions to understand your rights and obligations.",
   },
   alternates: {
-    canonical: "https://focura-client.vercel.app/terms",
+    canonical: "https://gablura-client.vercel.app/terms",
   },
 };
 

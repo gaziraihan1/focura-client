@@ -22,7 +22,7 @@ export const RefundPaymentProviderNote = () => {
       {/* Body */}
       <div className="px-5 py-5 space-y-4 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
         <p>
-          Focura uses{" "}
+          Gablura uses{" "}
           <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
             Lemon Squeezy
           </strong>{" "}
@@ -41,12 +41,12 @@ export const RefundPaymentProviderNote = () => {
             {
               title: "Payment Receipt",
               body:
-                "Your payment receipt comes from Lemon Squeezy, not Focura directly. Use the Order ID in that receipt when submitting a refund request.",
+                "Your payment receipt comes from Lemon Squeezy, not Gablura directly. Use the Order ID in that receipt when submitting a refund request.",
             },
             {
               title: "Refund Processing",
               body:
-                "Once Focura approves your request, we instruct Lemon Squeezy to issue the refund. Processing time is 5–10 business days depending on your bank or card issuer.",
+                "Once Gablura approves your request, we instruct Lemon Squeezy to issue the refund. Processing time is 5–10 business days depending on your bank or card issuer.",
             },
           ].map(({ title, body }) => (
             <div

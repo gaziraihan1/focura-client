@@ -30,7 +30,7 @@ export default function SolutionsHero() {
             </h1>
 
             <p className="mt-6 max-w-lg text-base text-foreground/70 sm:text-lg">
-              From project alignment to team communication — Focura helps you
+              From project alignment to team communication — Gablura helps you
               eliminate chaos, work smarter, and deliver faster. Built for
               agencies, founders, remote teams, creators, and fast-growing
               businesses.

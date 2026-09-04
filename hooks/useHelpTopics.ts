@@ -59,7 +59,7 @@ const TOPICS_DATA: HelpTopic[] = [
       },
     ],
     notice:
-      "New to Focura? The interactive onboarding tour appears automatically on your first login — click Resume Tour anytime from the Help menu.",
+      "New to Gablura? The interactive onboarding tour appears automatically on your first login — click Resume Tour anytime from the Help menu.",
   },
   {
     id: "workspace",

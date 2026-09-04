@@ -26,14 +26,14 @@ interface GettingStartedChecklistProps {
   totalMembers?: number;
 }
 
-const DISMISS_KEY = 'focura-onboarding-dismissed';
+const DISMISS_KEY = 'gablura-onboarding-dismissed';
 
 function subscribe(callback: () => void) {
   window.addEventListener('storage', callback);
-  window.addEventListener('focura-onboarding-dismissed', callback);
+  window.addEventListener('gablura-onboarding-dismissed', callback);
   return () => {
     window.removeEventListener('storage', callback);
-    window.removeEventListener('focura-onboarding-dismissed', callback);
+    window.removeEventListener('gablura-onboarding-dismissed', callback);
   };
 }
 
@@ -42,8 +42,8 @@ function getDismissedSnapshot() {
 }
 
 const dismiss = () => {
-  localStorage.setItem('focura-onboarding-dismissed', 'true');
-  window.dispatchEvent(new Event('focura-onboarding-dismissed'));
+  localStorage.setItem('gablura-onboarding-dismissed', 'true');
+  window.dispatchEvent(new Event('gablura-onboarding-dismissed'));
 };
 function getServerSnapshot() {
   return false;

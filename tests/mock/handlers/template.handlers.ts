@@ -22,7 +22,7 @@ export const mockTemplateCatalogItem: TemplateCatalogItem = {
   featured: true,
   estimatedSetupMinutes: 3,
   status: 'available',
-  author: { name: 'Focura Team', role: 'Official' },
+  author: { name: 'Gablura Team', role: 'Official' },
   content: {
     sections: [
       { name: 'Backlog', color: '#94a3b8', taskStatus: 'TODO', wipLimit: 20 },

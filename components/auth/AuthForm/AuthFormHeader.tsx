@@ -15,7 +15,7 @@ export function AuthFormHeader({ mode }: AuthFormHeaderProps) {
         {mode === "login" ? (
           <>
             Sign in to
-            <span className="text-primary"> Focura</span>
+            <span className="text-primary"> Gablura</span>
           </>
         ) : (
           <>
@@ -28,7 +28,7 @@ export function AuthFormHeader({ mode }: AuthFormHeaderProps) {
       <p className="text-sm text-muted-foreground pt-1">
         {mode === "login"
           ? "Enter your credentials to continue."
-          : "Join Focura for free — no credit card required."}
+          : "Join Gablura for free — no credit card required."}
       </p>
     </div>
   );

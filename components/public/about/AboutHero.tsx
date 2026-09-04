@@ -36,7 +36,7 @@ export const AboutHero = () => {
         </h1>
 
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-10">
-          Focura helps teams turn scattered tasks into clear priorities, protect
+          Gablura helps teams turn scattered tasks into clear priorities, protect
           deep work time, and maintain steady progress — without the complexity
           that slows everyone down.
         </p>
@@ -48,11 +48,11 @@ export const AboutHero = () => {
             className="inline-flex items-center gap-2 bg-primary text-primary-foreground rounded-xl px-5 py-3 text-sm font-semibold hover:bg-primary/90 transition-colors"
           >
             <Zap className="w-4 h-4" strokeWidth={2} />
-            Try Focura Live
+            Try Gablura Live
             <ArrowRight className="w-4 h-4" strokeWidth={2} />
           </Link>
           <Link
-            href="https://github.com/gaziraihan1/focura-client"
+            href="https://github.com/gaziraihan1/gablura-client"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 border bg-card text-foreground rounded-xl px-5 py-3 text-sm font-semibold hover:bg-muted transition-colors"

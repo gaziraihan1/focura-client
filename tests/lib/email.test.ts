@@ -20,8 +20,8 @@ describe('lib/email', () => {
     process.env.EMAIL_SERVER_PORT = '587'
     process.env.EMAIL_SERVER_USER = 'test@test.com'
     process.env.EMAIL_SERVER_PASSWORD = 'password'
-    process.env.EMAIL_FROM = 'noreply@focura.com'
-    process.env.NEXTAUTH_URL = 'https://focura.com'
+    process.env.EMAIL_FROM = 'noreply@gablura.com'
+    process.env.NEXTAUTH_URL = 'https://gablura.com'
   })
 
   it('EmailError has correct name and message', async () => {

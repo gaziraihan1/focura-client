@@ -32,7 +32,7 @@ export function ConsentBanner() {
                 We respect your privacy
               </h2>
               <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
-                Strictly necessary cookies keep Focura working — no consent
+                Strictly necessary cookies keep Gablura working — no consent
                 needed. Google Analytics is optional and only loads if you
                 accept. You can change your choice at any time — see our{" "}
                 <Link

@@ -43,7 +43,7 @@ const channels = [
     title      : 'GitHub Issues',
     description: 'Report non-security bugs or follow along with open issues.',
     label      : 'View on GitHub',
-    href       : 'https://github.com/gaziraihan1/focura-client/issues',
+    href       : 'https://github.com/gaziraihan1/gablura-client/issues',
     external   : true,
     accent     : 'bg-neutral-50 dark:bg-neutral-900/40 border-neutral-200 dark:border-neutral-800',
     iconBg     : 'bg-neutral-100 dark:bg-neutral-800',
@@ -55,22 +55,22 @@ const docLinks = [
   {
     icon : FileText,
     label: 'Architecture Documentation',
-    href : 'https://github.com/gaziraihan1/focura-client/blob/main/ARCHITECTURE.md',
+    href : 'https://github.com/gaziraihan1/gablura-client/blob/main/ARCHITECTURE.md',
   },
   {
     icon : Shield,
     label: 'Authentication & Security Docs',
-    href : 'https://github.com/gaziraihan1/focura-client/blob/main/AUTHENTICATION.md',
+    href : 'https://github.com/gaziraihan1/gablura-client/blob/main/AUTHENTICATION.md',
   },
   {
     icon : BookOpen,
     label: 'Contributing Guidelines',
-    href : 'https://github.com/gaziraihan1/focura-client/blob/main/CONTRIBUTING.md',
+    href : 'https://github.com/gaziraihan1/gablura-client/blob/main/CONTRIBUTING.md',
   },
   {
     icon : FileText,
     label: 'Code of Conduct',
-    href : 'https://github.com/gaziraihan1/focura-client/blob/main/CODE_OF_CONDUCT.md',
+    href : 'https://github.com/gaziraihan1/gablura-client/blob/main/CODE_OF_CONDUCT.md',
   },
 ];
 

@@ -83,13 +83,13 @@ interface LimitRowProps {
   limit: number;
   /** Plan default — shown in the hint when an admin override is active. */
   defaultLimit: number;
-  /** Whether a Focura-admin override is active for this field. */
+  /** Whether a Gablura-admin override is active for this field. */
   overridden: boolean;
   format?: (n: number) => string;
 }
 
 /**
- * One quota row: usage bar plus a "Plan default: X — customized by Focura
+ * One quota row: usage bar plus a "Plan default: X — customized by Gablura
  * admin" hint whenever the effective limit was raised (or lowered) from the
  * workspace's tier default by an admin.
  */
@@ -127,7 +127,7 @@ function LimitRow({
       </div>
       {overridden && (
         <p className="mt-1 text-[10px] text-amber-600/80 dark:text-amber-400/80">
-          Plan default: {format(defaultLimit)} — customized by Focura admin
+          Plan default: {format(defaultLimit)} — customized by Gablura admin
         </p>
       )}
     </li>
@@ -141,7 +141,7 @@ interface AiUsageSectionProps {
 /**
  * "AI Usage" section — a workspace's AI spend report (calls, tokens, estimated
  * cost) read from `AiUsageLog`, plus the effective AI limits (plan defaults,
- * honoring any Focura-admin overrides) so owners see their raised caps. The
+ * honoring any Gablura-admin overrides) so owners see their raised caps. The
  * backend restricts this endpoint to workspace owners and admins; the section
  * is also only rendered for admins/owners by the parent page. Purely read-only.
  */
@@ -195,7 +195,7 @@ export function AiUsageSection({ workspaceId }: AiUsageSectionProps) {
     quota != null && quota.defaults.maxOutputTokens !== quota.maxOutputTokens;
 
   // Single source of truth for "customized": the backend's `overrides` object
-  // only contains fields a Focura admin actually set on this workspace.
+  // only contains fields a Gablura admin actually set on this workspace.
   const hasOverrides = Boolean(
     quota && Object.keys(quota.overrides).length > 0,
   );
@@ -302,7 +302,7 @@ export function AiUsageSection({ workspaceId }: AiUsageSectionProps) {
         </div>
       </div>
 
-      {/* Effective AI limits — plan defaults plus any Focura-admin overrides */}
+      {/* Effective AI limits — plan defaults plus any Gablura-admin overrides */}
       {quota && (
         <div className="rounded-xl sm:rounded-2xl border border-border bg-card p-3.5 sm:p-5">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -314,7 +314,7 @@ export function AiUsageSection({ workspaceId }: AiUsageSectionProps) {
               {hasOverrides && (
                 <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/25 bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold text-amber-600 dark:text-amber-400">
                   <SlidersHorizontal className="h-3 w-3" aria-hidden="true" />
-                  Customized by Focura admin
+                  Customized by Gablura admin
                 </span>
               )}
             </div>
@@ -358,7 +358,7 @@ export function AiUsageSection({ workspaceId }: AiUsageSectionProps) {
             {maxOutputOverridden && (
               <p className="mt-1 text-right text-[10px] text-amber-600/80 dark:text-amber-400/80">
                 Plan default: {quota.defaults.maxOutputTokens.toLocaleString()}{" "}
-                tokens/response — customized by Focura admin
+                tokens/response — customized by Gablura admin
               </p>
             )}
           </div>

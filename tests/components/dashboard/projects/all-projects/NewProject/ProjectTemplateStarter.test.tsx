@@ -60,7 +60,7 @@ vi.mock('@/lib/templatesData', () => ({
     usageCount: 0,
     estimatedSetupMinutes: item.estimatedSetupMinutes ?? 5,
     tags: [],
-    author: { name: 'Focura', role: 'Official' },
+    author: { name: 'Gablura', role: 'Official' },
   }),
   TEMPLATES: [],
 }));

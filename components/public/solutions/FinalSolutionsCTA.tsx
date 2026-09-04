@@ -17,7 +17,7 @@ export default function FinalSolutionsCTA() {
           className="text-3xl font-bold text-foreground md:text-5xl"
         >
           Ready to streamline your workflow <br className="hidden sm:block" />{" "}
-          with Focura?
+          with Gablura?
         </motion.h2>
 
         <motion.p

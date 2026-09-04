@@ -114,7 +114,7 @@ export interface AiQuota {
   hourly: number;
   dailyTokens: number;
   monthlyTokens: number;
-  /** Effective per-response output cap (honors Focura-admin overrides). */
+  /** Effective per-response output cap (honors Gablura-admin overrides). */
   maxOutputTokens: number;
   tokensUsedToday: number;
   tokensUsedThisMonth: number;
@@ -122,7 +122,7 @@ export interface AiQuota {
   resetAt: string;
   /** Plan defaults for the overrideable fields — what the tier gives without admin changes. */
   defaults: { daily: number; monthlyTokens: number; maxOutputTokens: number };
-  /** Per-workspace Focura-admin overrides currently active (absent field = plan default). */
+  /** Per-workspace Gablura-admin overrides currently active (absent field = plan default). */
   overrides: Partial<{ daily: number; monthlyTokens: number; maxOutputTokens: number }>;
 }
 

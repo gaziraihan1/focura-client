@@ -14,7 +14,7 @@ import { HelpHero } from '@/components/docs/help/HelpHero'
 describe('HelpHero', () => {
   it('renders the badge', () => {
     render(<HelpHero onSearch={vi.fn()} />)
-    expect(screen.getByText('Focura Help Center')).toBeInTheDocument()
+    expect(screen.getByText('Gablura Help Center')).toBeInTheDocument()
   })
 
   it('renders the heading', () => {
@@ -94,7 +94,7 @@ import { HelpGettingStarted } from '@/components/docs/help/HelpGettingStarted'
 describe('HelpGettingStarted', () => {
   it('renders the heading', () => {
     render(<HelpGettingStarted />)
-    expect(screen.getByText('Set up Focura in 6 steps')).toBeInTheDocument()
+    expect(screen.getByText('Set up Gablura in 6 steps')).toBeInTheDocument()
   })
 
   it('renders all 6 steps', () => {
@@ -180,12 +180,12 @@ describe('HelpFAQ', () => {
 
   it('renders FAQ questions', () => {
     render(<HelpFAQ />)
-    expect(screen.getByText(/Can I use Focura without/)).toBeInTheDocument()
+    expect(screen.getByText(/Can I use Gablura without/)).toBeInTheDocument()
   })
 
   it('toggles FAQ answer on click', () => {
     render(<HelpFAQ />)
-    const question = screen.getByText(/Can I use Focura without/)
+    const question = screen.getByText(/Can I use Gablura without/)
     expect(question.closest('button')).toHaveAttribute('aria-expanded', 'false')
     fireEvent.click(question)
     expect(question.closest('button')).toHaveAttribute('aria-expanded', 'true')

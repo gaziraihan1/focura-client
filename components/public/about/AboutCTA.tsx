@@ -5,8 +5,8 @@ const links = [
   {
     icon: Github,
     label: "View Source",
-    sub: "focura-client on GitHub",
-    href: "https://github.com/gaziraihan1/focura-client",
+    sub: "gablura-client on GitHub",
+    href: "https://github.com/gaziraihan1/gablura-client",
     variant: "secondary" as const,
   },
   {
@@ -47,7 +47,7 @@ export const AboutCTA = () => {
               Ready to focus?
             </h2>
             <p className="text-base text-muted-foreground max-w-xl mx-auto leading-relaxed mb-10">
-              Start a free workspace on Focura today. No credit card required.
+              Start a free workspace on Gablura today. No credit card required.
               Full feature access from day one.
             </p>
 

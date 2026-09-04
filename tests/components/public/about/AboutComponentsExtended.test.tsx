@@ -23,7 +23,7 @@ import { AboutMission } from '@/components/public/about/AboutMission'
 describe('AboutMission', () => {
   it('renders the label', () => {
     render(<AboutMission />)
-    expect(screen.getByText('Why Focura Exists')).toBeInTheDocument()
+    expect(screen.getByText('Why Gablura Exists')).toBeInTheDocument()
   })
 
   it('renders the heading', () => {
@@ -143,7 +143,7 @@ import { AboutFeatures } from '@/components/public/about/AboutFeatures'
 describe('AboutFeatures', () => {
   it('renders the label', () => {
     render(<AboutFeatures />)
-    expect(screen.getByText('What Focura Ships')).toBeInTheDocument()
+    expect(screen.getByText('What Gablura Ships')).toBeInTheDocument()
   })
 
   it('renders the heading', () => {
@@ -249,7 +249,7 @@ describe('AboutFounder', () => {
   it('renders GitHub and website links', () => {
     render(<AboutFounder />)
     expect(screen.getByText('@gaziraihan1')).toBeInTheDocument()
-    expect(screen.getByText('focura-client.vercel.app')).toBeInTheDocument()
+    expect(screen.getByText('gablura-client.vercel.app')).toBeInTheDocument()
   })
 
   it('renders stats', () => {
@@ -298,7 +298,7 @@ describe('AboutOpenSource', () => {
 
   it('renders step details', () => {
     render(<AboutOpenSource />)
-    expect(screen.getByText(/Fork gaziraihan1\/focura-client/)).toBeInTheDocument()
+    expect(screen.getByText(/Fork gaziraihan1\/gablura-client/)).toBeInTheDocument()
   })
 
   it('renders resource links', () => {

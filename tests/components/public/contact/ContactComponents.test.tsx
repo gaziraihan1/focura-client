@@ -28,7 +28,7 @@ describe('ContactHero', () => {
 
   it('renders the heading', () => {
     render(<ContactHero />)
-    expect(screen.getByText('Contact Focura')).toBeInTheDocument()
+    expect(screen.getByText('Contact Gablura')).toBeInTheDocument()
   })
 
   it('renders the description', () => {
@@ -58,7 +58,7 @@ describe('ContactInfo', () => {
   it('renders email addresses', () => {
     render(<ContactInfo />)
     expect(screen.getByText('focurabusiness@gmail.com')).toBeInTheDocument()
-    expect(screen.getByText('security@focura.app')).toBeInTheDocument()
+    expect(screen.getByText('security@gablura.app')).toBeInTheDocument()
   })
 
   it('renders support hours', () => {
@@ -169,7 +169,7 @@ describe('ContactForm', () => {
 
   it('renders consent checkbox', () => {
     render(<ContactForm />)
-    expect(screen.getByText(/I agree to Focura's/)).toBeInTheDocument()
+    expect(screen.getByText(/I agree to Gablura's/)).toBeInTheDocument()
   })
 
   it('renders rate limit notice', () => {
@@ -198,7 +198,7 @@ describe('ContactForm', () => {
     await user.type(screen.getByLabelText(/Email Address/), 'invalid-email')
     await user.type(screen.getByLabelText(/Subject/), 'Test Subject')
     await user.type(screen.getByLabelText(/Message/), 'This is a test message with enough characters.')
-    await user.click(screen.getByLabelText(/I agree to Focura's/))
+    await user.click(screen.getByLabelText(/I agree to Gablura's/))
     await user.click(screen.getByRole('button', { name: /send message/i }))
     await waitFor(() => {
       expect(screen.getByText(/Please enter a valid email address/)).toBeInTheDocument()

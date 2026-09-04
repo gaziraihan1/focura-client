@@ -2,15 +2,15 @@
 import { describe, it, expect } from 'vitest'
 import {
   formatWorkspaceLimitValue,
-  isFocuraAdminChange,
+  isGabluraAdminChange,
   getWorkspaceLimitParts,
 } from '@/utils/workspace-limits'
 
-describe('isFocuraAdminChange', () => {
-  it('detects the focura-admin marker only', () => {
-    expect(isFocuraAdminChange('focura-admin')).toBe(true)
-    expect(isFocuraAdminChange(undefined)).toBe(false)
-    expect(isFocuraAdminChange('user')).toBe(false)
+describe('isGabluraAdminChange', () => {
+  it('detects the gablura-admin marker only', () => {
+    expect(isGabluraAdminChange('gablura-admin')).toBe(true)
+    expect(isGabluraAdminChange(undefined)).toBe(false)
+    expect(isGabluraAdminChange('user')).toBe(false)
   })
 })
 

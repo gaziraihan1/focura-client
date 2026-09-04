@@ -2,8 +2,8 @@ import AdminJobsManager from '@/components/admin-dashboard/careers/AdminJobManag
 import type { Metadata }      from 'next';
 
 export const metadata: Metadata = {
-  title: 'Job Postings | Admin | Focura',
-  description: 'Create, edit, and manage job postings on the Focura careers page.',
+  title: 'Job Postings | Admin | Gablura',
+  description: 'Create, edit, and manage job postings on the Gablura careers page.',
 };
 
 /**

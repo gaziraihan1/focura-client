@@ -46,7 +46,7 @@ const TemplatesHero = ({ onSearch }: TemplatesHeroProps) => {
         <p className='text-base md:text-lg text-neutral-500 dark:text-neutral-400 max-w-2xl mx-auto leading-relaxed mb-9'>
           Pre-built project templates for engineering teams, product managers,
           marketers, and more. One click to import the full structure — tasks,
-          labels, sections, views, and milestones — into your Focura workspace.
+          labels, sections, views, and milestones — into your Gablura workspace.
         </p>
 
         {/* Search */}

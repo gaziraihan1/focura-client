@@ -26,13 +26,13 @@ const ACCENT_COLORS: Record<string, { primary: string; secondary: string }> = {
 
 let cachedLogo: string | null | undefined;
 
-/** Resolves the focura.png asset as a base64 data URI (cached), trying bundled and public locations. */
-function getFocuraLogo(): string | null {
+/** Resolves the gablura-logo-rounded.png asset as a base64 data URI (cached), trying bundled and public locations. */
+function getGabluraLogo(): string | null {
   if (cachedLogo !== undefined) return cachedLogo;
   const cwd = process.cwd();
   const candidates = [
-    join(cwd, 'lib', 'assets', 'focura.png'),
-    join(cwd, 'public', 'focura.png'),
+    join(cwd, 'lib', 'assets', 'gablura-logo-rounded.png'),
+    join(cwd, 'public', 'gablura-logo-rounded.png'),
   ];
   for (const path of candidates) {
     try {
@@ -84,7 +84,7 @@ const GEIST_FONT_URLS: Array<{ weight: 400 | 600 | 700; url: string }> = [
 export async function generateOGImage({
   title,
   description,
-  badge = 'Focura',
+  badge = 'Gablura',
   gradient = 'emerald',
 }: OGImageProps) {
   const accent = ACCENT_COLORS[gradient] || ACCENT_COLORS.emerald;
@@ -97,7 +97,7 @@ export async function generateOGImage({
       })
     )
   ).filter((f): f is NonNullable<typeof f> => f !== null);
-  const logo = getFocuraLogo();
+  const logo = getGabluraLogo();
 
   const TITLE_FONT =
     title.length > 60 ? '46px' : title.length > 40 ? '52px' : '58px';
@@ -157,7 +157,7 @@ export async function generateOGImage({
           {/* Logo + wordmark */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             {logo ? (
-              <img src={logo} width={52} height={52} style={{ objectFit: 'contain' }} alt="Focura logo" />
+              <img src={logo} width={52} height={52} style={{ objectFit: 'contain' }} alt="Gablura logo" />
             ) : (
               <div
                 style={{
@@ -307,7 +307,7 @@ export async function generateOGImage({
                   color: '#64748b',
                 }}
               >
-                app.focura.com/dashboard
+                app.gablura.com/dashboard
               </div>
             </div>
 
@@ -350,7 +350,7 @@ export async function generateOGImage({
                     F
                   </div>
                   <span style={{ fontSize: '11px', fontWeight: 600, color: '#0f172a' }}>
-                    Focura
+                    Gablura
                   </span>
                 </div>
 
@@ -664,7 +664,7 @@ export async function generateOGImage({
             }}
           />
           <span style={{ fontSize: '15px', color: '#64748b', fontFamily: 'monospace' }}>
-            focura-client.vercel.app
+            gablura-client.vercel.app
           </span>
         </div>
       </div>

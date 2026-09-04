@@ -135,6 +135,6 @@ describe('FeaturesHero', () => {
 
   it('renders the dashboard preview mockup', () => {
     render(<FeaturesHero />)
-    expect(screen.getByRole('img', { name: 'Focura dashboard preview' })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'Gablura dashboard preview' })).toBeInTheDocument()
   })
 })

@@ -18,7 +18,7 @@ vi.mock("framer-motion", () => ({
 describe("SolutionsMetrics", () => {
   it("renders the section heading", () => {
     render(<SolutionsMetrics />);
-    expect(screen.getByText(/Real results teams achieve with Focura/)).toBeInTheDocument();
+    expect(screen.getByText(/Real results teams achieve with Gablura/)).toBeInTheDocument();
   });
 
   it("renders all four metric labels", () => {

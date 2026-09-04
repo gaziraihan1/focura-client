@@ -7,7 +7,7 @@ export const guideSections: GuideSection[] = [
     label: "Getting Started",
     color: "blue",
     title: "Getting Started",
-    subtitle: "Your first steps in Focura",
+    subtitle: "Your first steps in Gablura",
     articles: [
       { title: "Creating your account", content: "Sign up with your email address or Google." },
       { title: "Creating your workspace", content: "Enter a name that represents your team." },

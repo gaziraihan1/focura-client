@@ -45,7 +45,7 @@ export function normalizeError(error: unknown): AppError {
 // ─── Response-envelope normalization ──────────────────────────────────────────
 // The backend guarantees every success body is shaped:
 //   { success: boolean, data?: T, message?: string, pagination?: {...} }
-// (verified across all src/modules/** controllers in Focura-backend — no raw
+// (verified across all src/modules/** controllers in Gablura-backend — no raw
 // arrays are ever returned). `unwrap` is the SINGLE place that knows this
 // contract; hooks and components must not re-implement envelope sniffing.
 

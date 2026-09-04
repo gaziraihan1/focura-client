@@ -247,7 +247,7 @@ function DocsCard({ activeTab, onTabChange }: DocsCardProps) {
           <div className="p-4 rounded-xl bg-muted/50">
             <h4 className="text-sm font-medium mb-2">What are API Tokens?</h4>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              API tokens allow external applications, scripts, or services to interact with Focura
+              API tokens allow external applications, scripts, or services to interact with Gablura
               on your behalf without sharing your password. Use them for automation, integrations,
               and custom workflows.
             </p>
@@ -277,7 +277,7 @@ function DocsCard({ activeTab, onTabChange }: DocsCardProps) {
             <div className="flex items-center justify-between mb-2">
               <h4 className="text-sm font-medium">Get Your Tasks</h4>
               <Button
-                onClick={() => copyToClipboard('curl -H "Authorization: Bearer YOUR_TOKEN" https://api.focura.com/api/v1/tasks')}
+                onClick={() => copyToClipboard('curl -H "Authorization: Bearer YOUR_TOKEN" https://api.gablura.com/api/v1/tasks')}
                 variant="ghost"
                 className="text-xs text-primary hover:underline"
               >
@@ -285,7 +285,7 @@ function DocsCard({ activeTab, onTabChange }: DocsCardProps) {
               </Button>
             </div>
             <code className="block text-xs font-mono text-muted-foreground p-2 bg-background rounded border border-border break-all">
-              curl -H &quot;Authorization: Bearer YOUR_TOKEN&quot; https://api.focura.com/api/v1/tasks
+              curl -H &quot;Authorization: Bearer YOUR_TOKEN&quot; https://api.gablura.com/api/v1/tasks
             </code>
           </div>
 
@@ -293,7 +293,7 @@ function DocsCard({ activeTab, onTabChange }: DocsCardProps) {
             <div className="flex items-center justify-between mb-2">
               <h4 className="text-sm font-medium">Create a Task</h4>
               <Button
-                onClick={() => copyToClipboard(`curl -X POST -H "Authorization: Bearer YOUR_TOKEN" -H "Content-Type: application/json" -d '{"title": "New Task", "status": "TODO"}' https://api.focura.com/api/v1/tasks`)}
+                onClick={() => copyToClipboard(`curl -X POST -H "Authorization: Bearer YOUR_TOKEN" -H "Content-Type: application/json" -d '{"title": "New Task", "status": "TODO"}' https://api.gablura.com/api/v1/tasks`)}
                 variant="ghost"
                 className="text-xs text-primary hover:underline"
               >
@@ -301,7 +301,7 @@ function DocsCard({ activeTab, onTabChange }: DocsCardProps) {
               </Button>
             </div>
             <code className="block text-xs font-mono text-muted-foreground p-2 bg-background rounded border border-border break-all">
-              curl -X POST -H &quot;Authorization: Bearer YOUR_TOKEN&quot; -H &quot;Content-Type: application/json&quot; -d &apos;{`{"title": "New Task"}`}&apos; https://api.focura.com/api/v1/tasks
+              curl -X POST -H &quot;Authorization: Bearer YOUR_TOKEN&quot; -H &quot;Content-Type: application/json&quot; -d &apos;{`{"title": "New Task"}`}&apos; https://api.gablura.com/api/v1/tasks
             </code>
           </div>
 
@@ -309,7 +309,7 @@ function DocsCard({ activeTab, onTabChange }: DocsCardProps) {
             <div className="flex items-center justify-between mb-2">
               <h4 className="text-sm font-medium">JavaScript (fetch)</h4>
               <Button
-                onClick={() => copyToClipboard(`fetch('https://api.focura.com/api/v1/tasks', {\n  headers: {\n    'Authorization': 'Bearer YOUR_TOKEN'\n  }\n}).then(r => r.json())`)}
+                onClick={() => copyToClipboard(`fetch('https://api.gablura.com/api/v1/tasks', {\n  headers: {\n    'Authorization': 'Bearer YOUR_TOKEN'\n  }\n}).then(r => r.json())`)}
                 variant="ghost"
                 className="text-xs text-primary hover:underline"
               >
@@ -317,7 +317,7 @@ function DocsCard({ activeTab, onTabChange }: DocsCardProps) {
               </Button>
             </div>
             <code className="block text-xs font-mono text-muted-foreground p-2 bg-background rounded border border-border whitespace-pre-wrap">
-{`fetch('https://api.focura.com/api/v1/tasks', {
+{`fetch('https://api.gablura.com/api/v1/tasks', {
   headers: {
     'Authorization': 'Bearer YOUR_TOKEN'
   }
@@ -330,7 +330,7 @@ function DocsCard({ activeTab, onTabChange }: DocsCardProps) {
               <h4 className="text-sm font-medium">Python (requests)</h4>
               <Button
                 variant="ghost"
-                onClick={() => copyToClipboard(`import requests\n\nheaders = {'Authorization': 'Bearer YOUR_TOKEN'}\nresponse = requests.get('https://api.focura.com/api/v1/tasks', headers=headers)\nprint(response.json())`)}
+                onClick={() => copyToClipboard(`import requests\n\nheaders = {'Authorization': 'Bearer YOUR_TOKEN'}\nresponse = requests.get('https://api.gablura.com/api/v1/tasks', headers=headers)\nprint(response.json())`)}
                 className="text-xs text-primary hover:underline"
               >
                 Copy
@@ -341,7 +341,7 @@ function DocsCard({ activeTab, onTabChange }: DocsCardProps) {
 
 headers = {'Authorization': 'Bearer YOUR_TOKEN'}
 response = requests.get(
-    'https://api.focura.com/api/v1/tasks',
+    'https://api.gablura.com/api/v1/tasks',
     headers=headers
 )
 print(response.json())`}

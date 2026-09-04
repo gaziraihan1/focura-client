@@ -8,10 +8,10 @@ export const realtimeArticles: GuideArticle[] = [
     id: "sse-overview",
     title: "SSE overview",
     summary:
-      "Focura uses Server-Sent Events for real-time notifications, pushing task, comment, and meeting events to all connected clients.",
+      "Gablura uses Server-Sent Events for real-time notifications, pushing task, comment, and meeting events to all connected clients.",
     content: (
       <Prose>
-        Focura uses Server-Sent Events (SSE) for real-time notifications. The backend maintains a
+        Gablura uses Server-Sent Events (SSE) for real-time notifications. The backend maintains a
         persistent SSE stream per user. When a task is assigned, a comment is posted, or a meeting
         is scheduled, the backend pushes an event to all relevant connected clients.
       </Prose>

@@ -25,7 +25,7 @@ describe('DashboardGreeting', () => {
 
   it('works without userName', () => {
     render(<DashboardGreeting userName={null} />)
-    expect(screen.getByText(/Here's your Focura hub/)).toBeInTheDocument()
+    expect(screen.getByText(/Here's your Gablura hub/)).toBeInTheDocument()
   })
 })
 

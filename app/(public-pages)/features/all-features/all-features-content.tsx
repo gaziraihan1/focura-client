@@ -8,7 +8,7 @@ import {
   useFeatureRequests,
   useFeatureFilters,
   useDeleteFeatureRequest,
-  useIsFocuraAdmin,
+  useIsGabluraAdmin,
 } from '@/hooks/useFeatures';
 import { FeatureCard }          from '@/components/public/features/all-features/FeatureCard';
 import { FeatureRequestModal }  from '@/components/public/features/all-features/FeatureRequestModal';
@@ -30,7 +30,7 @@ export default function AllFeaturesContent() {
 
   const { filters, setStatus, setSearch, setPage } = useFeatureFilters();
   const { data,  isLoading  } = useFeatureRequests(filters);
-  const { data: isAdmin = false } = useIsFocuraAdmin();
+  const { data: isAdmin = false } = useIsGabluraAdmin();
   const deleteFeature = useDeleteFeatureRequest();
 
   const handleSearch = (v: string) => {

@@ -33,7 +33,7 @@ export const RefundHero = () => {
         </h1>
 
         <p className="text-base md:text-lg text-neutral-500 dark:text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-          We want you to love Focura. If something isn&apos;t right, here is
+          We want you to love Gablura. If something isn&apos;t right, here is
           everything you need to know about requesting a refund — clearly and
           fairly.
         </p>

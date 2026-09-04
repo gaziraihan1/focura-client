@@ -15,7 +15,7 @@ const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
 import { useBillingSuccess } from '@/hooks/useBillingSuccess'
 
-const STORAGE_KEY = 'focura:upgrade-plan'
+const STORAGE_KEY = 'gablura:upgrade-plan'
 
 describe('useBillingSuccess', () => {
   beforeEach(() => {

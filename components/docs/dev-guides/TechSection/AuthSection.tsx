@@ -11,7 +11,7 @@ export const authArticles: GuideArticle[] = [
       "NextAuth manages client sessions while the Express backend is the sole authority for issuing RS256 JWTs — the private key never leaves the backend.",
     content: (
       <Prose>
-        Focura uses a hybrid auth model. NextAuth manages sessions on the client; the Express
+        Gablura uses a hybrid auth model. NextAuth manages sessions on the client; the Express
         backend is the sole authority for issuing RS256 JWTs. The private key never leaves the
         backend.
       </Prose>

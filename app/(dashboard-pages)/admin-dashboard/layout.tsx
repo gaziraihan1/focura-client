@@ -5,7 +5,7 @@ import { AdminLayoutShell } from "./AdminLayoutShell";
 
 // Server-side authorization boundary for every /admin-dashboard/* route.
 // Layered defense (in order): proxy.ts edge JWT/role check → THIS layout →
-// backend `requireFocuraAdmin` on /api/v1/admin/*. AdminLayoutShell's own
+// backend `requireGabluraAdmin` on /api/v1/admin/*. AdminLayoutShell's own
 // client redirect remains UX polish only.
 export default async function AdminLayout({
   children,

@@ -5,7 +5,7 @@ import { m as motion } from "framer-motion";
 const guides = [
   {
     title: "Organizing Projects the Smart Way",
-    desc: "Learn how teams structure projects inside Focura for maximum clarity.",
+    desc: "Learn how teams structure projects inside Gablura for maximum clarity.",
   },
   {
     title: "Using Real-Time Collaboration",
@@ -16,7 +16,7 @@ const guides = [
     desc: "Control access levels and manage who can view or edit workspaces.",
   },
   {
-    title: "Integrating Focura with Third-Party Apps",
+    title: "Integrating Gablura with Third-Party Apps",
     desc: "Connect your favorite tools to build a cohesive workflow.",
   },
 ];
@@ -37,7 +37,7 @@ export default function ResourcesFeaturedGuides() {
             Featured Guides
           </h2>
           <p className="mt-3 text-foreground/70 max-w-xl mx-auto">
-            Step-by-step articles to help you master every part of Focura.
+            Step-by-step articles to help you master every part of Gablura.
           </p>
         </motion.div>
 

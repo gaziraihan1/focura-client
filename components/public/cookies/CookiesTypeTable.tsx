@@ -14,7 +14,7 @@ const cookies: CookieRow[] = [
     name: "next-auth.session-token",
     type: "Strictly Necessary",
     purpose:
-      "Maintains your authenticated session. Stores your login state and the encrypted backend tokens used to call the Focura API, so you stay signed in and your access token is renewed silently.",
+      "Maintains your authenticated session. Stores your login state and the encrypted backend tokens used to call the Gablura API, so you stay signed in and your access token is renewed silently.",
     duration: "7 days (rolling)",
     required: true,
   },

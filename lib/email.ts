@@ -121,7 +121,7 @@ export async function sendVerificationEmail(email: string, token: string): Promi
 
   await sendMail({
     to: email,
-    subject: "🎉 Verify your email - Welcome to Focura!",
+    subject: "🎉 Verify your email - Welcome to Gablura!",
     html: verificationEmailHtml(verificationUrl),
   });
 }
@@ -134,7 +134,7 @@ export async function sendPasswordResetEmail(email: string, token: string): Prom
 
   await sendMail({
     to: email,
-    subject: "🔐 Reset your password - Focura",
+    subject: "🔐 Reset your password - Gablura",
     html: passwordResetEmailHtml(resetUrl),
   });
 }
@@ -167,7 +167,7 @@ function verificationEmailHtml(verificationUrl: string): string {
                     </svg>
                   </div>
                   <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 700; letter-spacing: -0.5px;">Verify Your Email</h1>
-                  <p style="margin: 10px 0 0; color: rgba(255,255,255,0.9); font-size: 16px;">Welcome to Focura! 🚀</p>
+                  <p style="margin: 10px 0 0; color: rgba(255,255,255,0.9); font-size: 16px;">Welcome to Gablura! 🚀</p>
                 </td>
               </tr>
 
@@ -175,7 +175,7 @@ function verificationEmailHtml(verificationUrl: string): string {
                 <td style="padding: 50px 40px;">
                   <h2 style="margin: 0 0 20px; color: #1a1a1a; font-size: 24px; font-weight: 600;">Hey there! 👋</h2>
                   <p style="margin: 0 0 20px; color: #4a5568; font-size: 16px; line-height: 1.6;">
-                    Thanks for signing up with <strong style="color: #667eea;">Focura</strong>! We're excited to have you on board. To get started, please verify your email address by clicking the button below.
+                    Thanks for signing up with <strong style="color: #667eea;">Gablura</strong>! We're excited to have you on board. To get started, please verify your email address by clicking the button below.
                   </p>
 
                   <table width="100%" cellpadding="0" cellspacing="0" style="margin: 35px 0;">
@@ -200,14 +200,14 @@ function verificationEmailHtml(verificationUrl: string): string {
                   </div>
 
                   <p style="margin: 30px 0 0; color: #718096; font-size: 14px; line-height: 1.6;">
-                    If you didn't create a Focura account, you can safely ignore this email. No further action is required.
+                    If you didn't create a Gablura account, you can safely ignore this email. No further action is required.
                   </p>
                 </td>
               </tr>
 
               <tr>
                 <td style="background: #f7fafc; padding: 40px; text-align: center; border-top: 1px solid #e2e8f0;">
-                  <p style="margin: 0 0 15px; color: #1a1a1a; font-size: 18px; font-weight: 600;">Focura</p>
+                  <p style="margin: 0 0 15px; color: #1a1a1a; font-size: 18px; font-weight: 600;">Gablura</p>
                   <p style="margin: 0 0 20px; color: #718096; font-size: 14px;">Focus. Create. Achieve.</p>
                   <div style="margin: 20px 0;">
                     <a href="#" style="display: inline-block; margin: 0 10px; color: #667eea; text-decoration: none; font-size: 14px;">Website</a>
@@ -216,7 +216,7 @@ function verificationEmailHtml(verificationUrl: string): string {
                     <span style="color: #cbd5e0;">•</span>
                     <a href="#" style="display: inline-block; margin: 0 10px; color: #667eea; text-decoration: none; font-size: 14px;">Privacy</a>
                   </div>
-                  <p style="margin: 20px 0 0; color: #a0aec0; font-size: 12px;">© 2025 Focura. All rights reserved.</p>
+                  <p style="margin: 20px 0 0; color: #a0aec0; font-size: 12px;">© 2026 Gablura. All rights reserved.</p>
                 </td>
               </tr>
 
@@ -261,7 +261,7 @@ function passwordResetEmailHtml(resetUrl: string): string {
                 <td style="padding: 50px 40px;">
                   <h2 style="margin: 0 0 20px; color: #1a1a1a; font-size: 24px; font-weight: 600;">Hi there! 👋</h2>
                   <p style="margin: 0 0 20px; color: #4a5568; font-size: 16px; line-height: 1.6;">
-                    We received a request to reset your password for your <strong style="color: #f5576c;">Focura</strong> account. Don't worry—it happens to the best of us!
+                    We received a request to reset your password for your <strong style="color: #f5576c;">Gablura</strong> account. Don't worry—it happens to the best of us!
                   </p>
                   <p style="margin: 0 0 20px; color: #4a5568; font-size: 16px; line-height: 1.6;">
                     Click the button below to create a new password and regain access to your account.
@@ -313,7 +313,7 @@ function passwordResetEmailHtml(resetUrl: string): string {
 
               <tr>
                 <td style="background: #f7fafc; padding: 40px; text-align: center; border-top: 1px solid #e2e8f0;">
-                  <p style="margin: 0 0 15px; color: #1a1a1a; font-size: 18px; font-weight: 600;">Focura</p>
+                  <p style="margin: 0 0 15px; color: #1a1a1a; font-size: 18px; font-weight: 600;">Gablura</p>
                   <p style="margin: 0 0 20px; color: #718096; font-size: 14px;">Focus. Create. Achieve.</p>
                   <div style="margin: 20px 0;">
                     <a href="#" style="display: inline-block; margin: 0 10px; color: #f5576c; text-decoration: none; font-size: 14px;">Website</a>
@@ -322,7 +322,7 @@ function passwordResetEmailHtml(resetUrl: string): string {
                     <span style="color: #cbd5e0;">•</span>
                     <a href="#" style="display: inline-block; margin: 0 10px; color: #f5576c; text-decoration: none; font-size: 14px;">Privacy</a>
                   </div>
-                  <p style="margin: 20px 0 0; color: #a0aec0; font-size: 12px;">© 2025 Focura. All rights reserved.</p>
+                  <p style="margin: 20px 0 0; color: #a0aec0; font-size: 12px;">© 2026 Gablura. All rights reserved.</p>
                 </td>
               </tr>
 

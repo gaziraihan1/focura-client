@@ -2,33 +2,33 @@ import type { Metadata } from "next";
 import HelpContent from "./help-content";
 
 export const metadata: Metadata = {
-  title: "Help Center | Focura",
+  title: "Help Center | Gablura",
   description:
-    "Get help with Focura. Browse guides, FAQs, and tutorials to get started with workspace management, task tracking, and team collaboration.",
+    "Get help with Gablura. Browse guides, FAQs, and tutorials to get started with workspace management, task tracking, and team collaboration.",
   keywords: [
-    "focura help",
-    "focura support",
-    "focura guide",
-    "focura tutorial",
-    "focura FAQ",
+    "gablura help",
+    "gablura support",
+    "gablura guide",
+    "gablura tutorial",
+    "gablura FAQ",
     "workspace help",
   ],
   openGraph: {
-    title: "Focura Help Center – Guides, FAQs & Tutorials",
+    title: "Gablura Help Center – Guides, FAQs & Tutorials",
     description:
-      "Get help with Focura. Browse guides, FAQs, and tutorials to master workspace management.",
-    url: "https://focura-client.vercel.app/help",
-    siteName: "Focura",
+      "Get help with Gablura. Browse guides, FAQs, and tutorials to master workspace management.",
+    url: "https://gablura-client.vercel.app/help",
+    siteName: "Gablura",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Focura Help Center – Guides, FAQs & Tutorials",
+    title: "Gablura Help Center – Guides, FAQs & Tutorials",
     description:
-      "Get help with Focura. Browse guides, FAQs, and tutorials to master workspace management.",
+      "Get help with Gablura. Browse guides, FAQs, and tutorials to master workspace management.",
   },
   alternates: {
-    canonical: "https://focura-client.vercel.app/help",
+    canonical: "https://gablura-client.vercel.app/help",
   },
 };
 

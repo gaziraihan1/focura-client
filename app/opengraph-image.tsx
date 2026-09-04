@@ -8,7 +8,7 @@ export const contentType = 'image/png';
 
 export default async function Image() {
   return generateOGImage({
-    title: 'Focura',
+    title: 'Gablura',
     description: 'Focus Smarter. Manage Workspaces, Projects & Teams.',
     gradient: 'emerald',
   });

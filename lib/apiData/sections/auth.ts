@@ -3,7 +3,7 @@ import { FULL_BASE, type ApiSection } from '../types';
 export const authSection: ApiSection = {
   id         : 'auth',
   title      : 'Authentication',
-  description: 'Register, login, logout, token exchange, refresh, and session management. Focura uses a dual-token system: NextAuth issues a session on the frontend, which is exchanged for a backend RS256 JWT via HMAC proof. All subsequent API requests use that JWT in the Authorization header.',
+  description: 'Register, login, logout, token exchange, refresh, and session management. Gablura uses a dual-token system: NextAuth issues a session on the frontend, which is exchanged for a backend RS256 JWT via HMAC proof. All subsequent API requests use that JWT in the Authorization header.',
   endpoints  : [
     {
       id         : 'auth-register',

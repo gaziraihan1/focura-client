@@ -162,7 +162,7 @@ vi.mock("@/lib/apiData", () => ({
       ],
     },
   ],
-  FULL_BASE: "https://api.focura.app/api/v1",
+  FULL_BASE: "https://api.gablura.app/api/v1",
   API_VERSION: "v1",
   METHOD_COLORS: { GET: "bg-blue-100 text-blue-700", POST: "bg-green-100 text-green-700", PUT: "bg-amber-100 text-amber-700", PATCH: "bg-violet-100 text-violet-700", DELETE: "bg-red-100 text-red-700" },
   METHOD_DOT: { GET: "bg-blue-500", POST: "bg-green-500", PUT: "bg-amber-500", PATCH: "bg-violet-500", DELETE: "bg-red-500" },

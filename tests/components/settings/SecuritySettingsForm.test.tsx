@@ -124,7 +124,7 @@ describe('SecuritySettingsForm', () => {
     mockSetupTwoFactor.mockReturnValue({
       mutateAsync: vi.fn().mockResolvedValue({
         secret: 'MOCKBASE32SECRET',
-        uri: 'otpauth://totp/Focura:test@test.com?secret=MOCKBASE32SECRET&issuer=Focura',
+        uri: 'otpauth://totp/Gablura:test@test.com?secret=MOCKBASE32SECRET&issuer=Gablura',
       }),
       isPending: false,
     })

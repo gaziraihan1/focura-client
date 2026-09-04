@@ -60,7 +60,7 @@ export function DangerZoneTab({
                 <p className="font-medium text-foreground">Delete Workspace</p>
                 <p className="text-sm text-muted-foreground">
                   Remove this workspace from your dashboard (data is kept and
-                  can be restored by Focura support)
+                  can be restored by Gablura support)
                 </p>
               </div>
               <Button

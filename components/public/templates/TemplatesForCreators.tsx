@@ -19,7 +19,7 @@ const features = [
   {
     icon       : Share2,
     title      : 'Share publicly with the community',
-    description: 'Opt-in to publish your template to the Focura public gallery. Other teams can discover and import it. You\'ll be credited as the template author.',
+    description: 'Opt-in to publish your template to the Gablura public gallery. Other teams can discover and import it. You\'ll be credited as the template author.',
     status     : 'Live now',
     statusColor: 'bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400',
   },
@@ -51,7 +51,7 @@ const TemplatesForCreators = () => {
               </span>
             </h2>
             <p className='text-sm text-neutral-500 dark:text-neutral-400 max-w-lg leading-relaxed'>
-              Turn any Focura project into a reusable template — privately for
+              Turn any Gablura project into a reusable template — privately for
               your team, or published publicly for the whole community with
               ratings, usage stats, and author credits.
             </p>

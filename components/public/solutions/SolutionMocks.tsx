@@ -59,7 +59,7 @@ function MockSidebar({ activeIndex = 2 }: { activeIndex?: number }) {
     <div className="hidden flex-col border-r border-border bg-muted/20 p-2 sm:flex">
       <div className="flex items-center gap-1.5 px-1.5 pb-2.5">
         <div className="flex h-5 w-5 items-center justify-center rounded-md bg-foreground text-[8px] font-bold text-background">F</div>
-        <span className="text-[10px] font-semibold text-foreground">Focura</span>
+        <span className="text-[10px] font-semibold text-foreground">Gablura</span>
       </div>
       {NAV.map(({ icon: Icon, label, active }, i) => (
         <div
@@ -203,7 +203,7 @@ const KANBAN: { name: string; count: number; color: string; tasks: TaskCardData[
 export function KanbanMock({ project, sub }: { project?: string; sub?: string }) {
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-background shadow-xl shadow-foreground/5">
-      <WindowChrome url="app.focura.com/projects/northwind-q3/board" />
+      <WindowChrome url="app.gablura.com/projects/northwind-q3/board" />
       <div className="grid grid-cols-1 sm:grid-cols-[150px_1fr]">
         <MockSidebar />
         <div className="min-w-0 p-2.5 sm:p-3">
@@ -307,7 +307,7 @@ export function ThreadMock({
 }) {
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-background shadow-xl shadow-foreground/5">
-      <WindowChrome url="app.focura.com/tasks/124/discussion" />
+      <WindowChrome url="app.gablura.com/tasks/124/discussion" />
       <div className={showSidebar ? "grid grid-cols-1 lg:grid-cols-[1fr_190px]" : ""}>
         <div className="min-w-0 p-2.5 sm:p-3">
           <div className="flex items-center gap-2 border-b border-border pb-2.5">
@@ -400,7 +400,7 @@ const PROGRESS_ROWS = [
 export function ProgressMock() {
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-background shadow-xl shadow-foreground/5">
-      <WindowChrome url="app.focura.com/projects/northwind-q3" />
+      <WindowChrome url="app.gablura.com/projects/northwind-q3" />
       <div className="grid grid-cols-1 sm:grid-cols-[150px_1fr]">
         <MockSidebar activeIndex={0} />
         <div className="min-w-0 p-3">
@@ -442,7 +442,7 @@ export function ProgressMock() {
 /* ─── 4. Automation / workflow mock ──────────────────────────────────────── */
 
 const RULES = [
-  { title: "When a task is marked done", action: "Notify the assignee", app: "Focura", active: true, runs: "128 runs" },
+  { title: "When a task is marked done", action: "Notify the assignee", app: "Gablura", active: true, runs: "128 runs" },
   { title: "When a deadline is near", action: "Send a reminder", app: "Email", active: true, runs: "46 runs" },
   { title: "When a project ships", action: "Post to Slack", app: "Slack", active: false, runs: "12 runs" },
 ];
@@ -450,7 +450,7 @@ const RULES = [
 export function AutomationMock() {
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-background shadow-xl shadow-foreground/5">
-      <WindowChrome url="app.focura.com/settings/automations" />
+      <WindowChrome url="app.gablura.com/settings/automations" />
       <div className="p-2.5 sm:p-3">
         <div className="flex items-center gap-2">
           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-foreground/10 text-foreground">
@@ -510,7 +510,7 @@ const WORKFLOW_COLS = [
 export function WorkflowMock() {
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-background shadow-xl shadow-foreground/5">
-      <WindowChrome url="app.focura.com/workflows/marketing-pipeline" />
+      <WindowChrome url="app.gablura.com/workflows/marketing-pipeline" />
       <div className="grid grid-cols-1 sm:grid-cols-[150px_1fr]">
         <MockSidebar activeIndex={3} />
         <div className="min-w-0 p-2.5 sm:p-3">

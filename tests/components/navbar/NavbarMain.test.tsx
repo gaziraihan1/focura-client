@@ -27,7 +27,7 @@ vi.mock('@/components/themes/ThemeSwitcher', () => ({
 }))
 
 vi.mock('@/hooks/useFeatures', () => ({
-  useIsFocuraAdmin: () => ({ data: false }),
+  useIsGabluraAdmin: () => ({ data: false }),
 }))
 
 describe('NavbarMain', () => {
@@ -35,10 +35,10 @@ describe('NavbarMain', () => {
     vi.clearAllMocks()
   })
 
-  it('renders the Focura logo', () => {
+  it('renders the Gablura logo', () => {
     render(<NavbarMain />)
 
-    expect(screen.getByText('Focura')).toBeInTheDocument()
+    expect(screen.getByText('Gablura')).toBeInTheDocument()
   })
 
   it('renders all nav links', () => {
@@ -75,8 +75,8 @@ describe('NavbarMain', () => {
     render(<NavbarMain />)
 
     const img = screen.getByRole('img')
-    expect(img).toHaveAttribute('src', '/focura.png')
-    expect(img).toHaveAttribute('alt', 'Focura')
+    expect(img).toHaveAttribute('src', '/gablura-logo-rounded.png')
+    expect(img).toHaveAttribute('alt', 'Gablura')
   })
 
   it('toggles mobile menu on hamburger click', async () => {

@@ -90,7 +90,7 @@ export const ApiDocsAuthentication = () => {
         <div>
           <h2 className='text-xl font-bold text-neutral-900 dark:text-neutral-100'>Authentication</h2>
           <p className='text-sm text-neutral-500 dark:text-neutral-400 mt-0.5'>
-            Focura uses a dual-token RS256 JWT system. Short-lived access tokens are
+            Gablura uses a dual-token RS256 JWT system. Short-lived access tokens are
             attached to requests; long-lived refresh tokens are stored HTTP-only and
             rotated on each use.
           </p>

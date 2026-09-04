@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 
-const BASE_URL = process.env.SITE_URL || 'https://focura-client.vercel.app';
+const BASE_URL = process.env.SITE_URL || 'https://gablura-client.vercel.app';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

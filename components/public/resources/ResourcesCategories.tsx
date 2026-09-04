@@ -7,7 +7,7 @@ const categories = [
   {
     icon: Folder,
     title: "Project Management",
-    desc: "Learn how to structure tasks, flows and teams using Focura.",
+    desc: "Learn how to structure tasks, flows and teams using Gablura.",
   },
   {
     icon: BookOpen,

@@ -15,8 +15,8 @@ describe('home.constants', () => {
       })
     })
 
-    it('first FAQ is "What is Focura?"', () => {
-      expect(faqs[0].q).toBe('What is Focura?')
+    it('first FAQ is "What is Gablura?"', () => {
+      expect(faqs[0].q).toBe('What is Gablura?')
     })
   })
 

@@ -16,7 +16,7 @@ jobs:
       
       # --- Server Environment Variables (Dummies for Build/Test) ---
       # These are required for 'next build' to pass when the code uses non-null assertions (!)
-      DATABASE_URL: "postgresql://postgres:password@localhost:5432/focura"
+      DATABASE_URL: "postgresql://postgres:password@localhost:5432/gablura"
       NEXTAUTH_SECRET: "dummy_secret_for_ci_build_1234567890"
       NEXTAUTH_URL: "http://localhost:3000"
       BACKEND_URL: "http://localhost:5000"
@@ -27,7 +27,7 @@ jobs:
       UPSTASH_REDIS_TOKEN: "dummy_token"
       UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
       UPSTASH_REDIS_REST_TOKEN: "dummy_token"
-      EMAIL_FROM: "noreply@focura.com"
+      EMAIL_FROM: "noreply@gablura.com"
 
     steps:
       - name: Checkout code

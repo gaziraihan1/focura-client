@@ -19,9 +19,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Focura – Focus Smarter. Manage Workspaces, Projects & Teams",
+  title: "Gablura – Focus Smarter. Manage Workspaces, Projects & Teams",
   description:
-    "Focura helps teams stay focused with smart workspaces, task management, real-time collaboration, and productivity insights—all in one platform.",
+    "Gablura helps teams stay focused with smart workspaces, task management, real-time collaboration, and productivity insights—all in one platform.",
 
   keywords: [
     "productivity platform",
@@ -29,29 +29,29 @@ export const metadata: Metadata = {
     "task management",
     "team collaboration",
     "project tracking",
-    "focura",
+    "gablura",
   ],
 
-  applicationName: "Focura",
+  applicationName: "Gablura",
   icons: {
-    icon: "/focura.png",
+    icon: "/gablura-logo-rounded.png",
   },
   category: "productivity",
 
   openGraph: {
-    title: "Focura – Focus Smarter. Work Better.",
+    title: "Gablura – Focus Smarter. Work Better.",
     description:
       "Organize workspaces, manage tasks, collaborate with your team, and track productivity—all in one focused platform.",
-    url: "https://focura-client.vercel.app",
-    siteName: "Focura",
+    url: "https://gablura-client.vercel.app",
+    siteName: "Gablura",
     type: "website",
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "Focura – Focus Smarter. Work Better.",
+    title: "Gablura – Focus Smarter. Work Better.",
     description:
-      "Manage workspaces, tasks, and teams with clarity. Stay focused with Focura.",
+      "Manage workspaces, tasks, and teams with clarity. Stay focused with Gablura.",
   },
 
   robots: {
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
   },
 
   alternates: {
-    canonical: "https://focura-client.vercel.app",
+    canonical: "https://gablura-client.vercel.app",
   },
 };
 
@@ -76,7 +76,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
-        <link rel="preload" href="/focura.png" as="image" />
+        <link rel="preload" href="/gablura-logo-rounded.png" as="image" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

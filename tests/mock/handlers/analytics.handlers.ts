@@ -87,7 +87,7 @@ export const mockMemberContribution: MemberContribution[] = [
   {
     userId: 'user-1',
     userName: 'Test User',
-    userEmail: 'test@focura.com',
+    userEmail: 'test@gablura.com',
     userImage: null,
     role: 'OWNER',
     completedTasks: 10,
@@ -129,14 +129,14 @@ export const mockWorkload: WorkloadMember[] = [
   {
     userId: 'user-1',
     userName: 'Test User',
-    userEmail: 'test@focura.com',
+    userEmail: 'test@gablura.com',
     assignedTasks: 5,
     status: 'normal',
   },
   {
     userId: 'user-2',
     userName: 'Busy User',
-    userEmail: 'busy@focura.com',
+    userEmail: 'busy@gablura.com',
     assignedTasks: 20,
     status: 'overloaded',
   },

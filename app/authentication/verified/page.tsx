@@ -14,7 +14,7 @@ export default function VerifiedPage() {
         </h1>
 
         <p className="mt-3 text-foreground/70">
-          Your account is now active. You can log in and start using Focura.
+          Your account is now active. You can log in and start using Gablura.
         </p>
 
         <Link

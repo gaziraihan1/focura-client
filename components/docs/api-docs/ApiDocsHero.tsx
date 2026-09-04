@@ -29,10 +29,10 @@ export const ApiDocsHero = () => {
             </div>
 
             <h1 className='text-3xl md:text-4xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 mb-3 leading-tight'>
-              Focura API Reference
+              Gablura API Reference
             </h1>
             <p className='text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed'>
-              The Focura REST API lets you programmatically access workspaces,
+              The Gablura REST API lets you programmatically access workspaces,
               projects, tasks, focus sessions, files, notifications, and more.
               All endpoints return JSON. Authentication uses RS256 JWT Bearer tokens.
             </p>

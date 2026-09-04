@@ -9,7 +9,7 @@ export const contentType = 'image/png';
 
 export default async function Image() {
   return generateOGImage({
-    title: 'Focura Pricing',
+    title: 'Gablura Pricing',
     description: 'Simple, transparent plans for every team.',
     gradient: 'emerald',
   });

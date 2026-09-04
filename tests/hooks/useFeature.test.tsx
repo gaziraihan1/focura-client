@@ -3,7 +3,7 @@ import { renderHook, waitFor, act } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { createWrapper } from '../utils/renderWithProviders'
 import {
-  useIsFocuraAdmin,
+  useIsGabluraAdmin,
   useFeatureRequests,
   useFeatureRequest,
   useCreateFeatureRequest,
@@ -13,12 +13,12 @@ import {
   useFeatureFilters,
 } from '@/hooks/useFeatures'
 
-// ─── useIsFocuraAdmin ─────────────────────────────────────────────────────────
+// ─── useIsGabluraAdmin ─────────────────────────────────────────────────────────
 
-describe('useIsFocuraAdmin', () => {
+describe('useIsGabluraAdmin', () => {
   it('returns false for regular user', async () => {
     const { result } = renderHook(
-      () => useIsFocuraAdmin(),
+      () => useIsGabluraAdmin(),
       { wrapper: createWrapper() }
     )
 

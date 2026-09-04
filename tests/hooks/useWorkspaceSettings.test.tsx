@@ -19,7 +19,7 @@ const mocks = vi.hoisted(() => {
       {
         id: 'm1',
         role: 'OWNER',
-        user: { id: 'user-1', name: 'Test User', email: 'test@focura.com' },
+        user: { id: 'user-1', name: 'Test User', email: 'test@gablura.com' },
       },
     ],
     update: vi.fn(),

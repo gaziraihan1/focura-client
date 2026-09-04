@@ -26,7 +26,7 @@ export default function ResourcesPopular({data}: ResourcesPopularProps) {
             Popular Resources
           </h2>
           <p className="mt-3 text-foreground/70 max-w-xl mx-auto">
-            Hand-picked resources that help you get the most out of Focura.
+            Hand-picked resources that help you get the most out of Gablura.
           </p>
         </motion.div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">

@@ -14,7 +14,7 @@ export default function FinalCTA() {
             </h2>
 
             <p className="mx-auto mt-5 max-w-2xl text-muted-foreground md:text-lg">
-              Join thousands of professionals who trust Focura to streamline
+              Join thousands of professionals who trust Gablura to streamline
               tasks, organize projects, and scale with confidence.
             </p>
 

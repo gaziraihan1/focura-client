@@ -27,7 +27,7 @@ export default function UseCases() {
           Use Cases <span className="text-primary">For Any Team</span>
         </h2>
         <p className="mx-auto max-w-2xl text-muted-foreground">
-          Focura adapts to your workflow — whether you&apos;re a founder,
+          Gablura adapts to your workflow — whether you&apos;re a founder,
           agency, or a remote team.
         </p>
       </div>

@@ -71,10 +71,10 @@ export default function SolutionsMetrics() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-5xl font-bold text-foreground">
-            Real results teams achieve with Focura
+            Real results teams achieve with Gablura
           </h2>
           <p className="mt-4 text-lg text-foreground/70 max-w-2xl mx-auto">
-            Data-backed improvements showing how Focura helps teams move faster,
+            Data-backed improvements showing how Gablura helps teams move faster,
             stay aligned, and deliver consistently.
           </p>
         </motion.div>

@@ -108,7 +108,7 @@ describe('useAdminWorkspaces', () => {
     expect(ws).toHaveProperty('maxMembers')
     expect(ws).toHaveProperty('usedStorageMb')
     expect(ws).toHaveProperty('_count')
-    expect(ws?.owner.email).toBe('test@focura.com')
+    expect(ws?.owner.email).toBe('test@gablura.com')
   })
 
   it('accepts a search param', async () => {
@@ -228,7 +228,7 @@ describe('useAdminUserDetail', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
     expect(result.current.data?.id).toBe('user-1')
-    expect(result.current.data?.email).toBe('test@focura.com')
+    expect(result.current.data?.email).toBe('test@gablura.com')
     expect(result.current.data?.bannedAt).toBeNull()
   })
 

@@ -1,8 +1,8 @@
-# Focura — Logo Design Brief
+# Gablura — Logo Design Brief
 
 ## Brand Overview
 
-**Name:** Focura (Focus + Cura/Care)
+**Name:** Gablura (Focus + Cura/Care)
 **Industry:** Productivity & Wellness SaaS
 **Tagline:** "Focus without burnout"
 **Audience:** Remote workers, teams, project managers, wellness-conscious professionals
@@ -55,7 +55,7 @@ Three concentric circles radiating outward from a central point, with a stylized
 
 ### 2. Flowing "F" Letterform
 An abstract "F" formed by two or three flowing, organic lines. No straight edges — everything curves gently. Represents:
-- **Flow state** — the smooth, effortless focus Focura enables
+- **Flow state** — the smooth, effortless focus Gablura enables
 - **Human touch** — organic curves feel warm and approachable
 - **Simplicity** — one letter, instantly recognizable
 
@@ -110,13 +110,13 @@ Dark mode mark on:   #0a0a0a, #111827, #1e293b
 
 | File | Size | Use Case |
 |---|---|---|
-| `focura-logo.svg` | Full mark | Marketing, login page, email |
-| `focura-logo-dark.svg` | Full mark (light colors) | Dark mode contexts |
-| `focura-favicon.svg` | Simplified mark | Browser favicon |
-| `focura-logo.png` | 512x512 | Social media, OG images |
-| `focura-logo-mark.svg` | Icon only (no text) | App icon, small contexts |
-| `focura-logo-horizontal.svg` | Icon + "Focura" text | Navbar, header |
-| `focura-logo-vertical.svg` | Icon above "Focura" text | Sidebar, mobile |
+| `gablura-logo.svg` | Full mark | Marketing, login page, email |
+| `gablura-logo-dark.svg` | Full mark (light colors) | Dark mode contexts |
+| `gablura-favicon.svg` | Simplified mark | Browser favicon |
+| `gablura-logo.png` | 512x512 | Social media, OG images |
+| `gablura-logo-mark.svg` | Icon only (no text) | App icon, small contexts |
+| `gablura-logo-horizontal.svg` | Icon + "Gablura" text | Navbar, header |
+| `gablura-logo-vertical.svg` | Icon above "Gablura" text | Sidebar, mobile |
 
 ---
 
@@ -125,19 +125,19 @@ Dark mode mark on:   #0a0a0a, #111827, #1e293b
 ### Current Logo Location
 ```tsx
 // components/Navbar/NavbarMain.tsx
-<Image src="/focura.png" width={32} height={32} alt="logo" className="rounded-md" />
+<Image src="/gablura-logo-rounded.png" width={32} height={32} alt="logo" className="rounded-md" />
 ```
 
 ### Recommended Update Pattern
 ```tsx
 // Light mode
-<Image src="/focura-logo.svg" width={32} height={32} alt="Focura" />
+<Image src="/gablura-logo.svg" width={32} height={32} alt="Gablura" />
 
 // Dark mode (using next-themes or CSS)
-<Image src="/focura-logo-dark.svg" width={32} height={32} alt="Focura" />
+<Image src="/gablura-logo-dark.svg" width={32} height={32} alt="Gablura" />
 
 // Or use a single SVG with currentColor
-<img src="/focura-logo.svg" className="text-foreground" alt="Focura" />
+<img src="/gablura-logo.svg" className="text-foreground" alt="Gablura" />
 ```
 
 ---
@@ -146,7 +146,7 @@ Dark mode mark on:   #0a0a0a, #111827, #1e293b
 
 ### Midjourney
 ```
-Minimal abstract logo mark for "Focura", a focus and productivity app. 
+Minimal abstract logo mark for "Gablura", a focus and productivity app. 
 Concentric circles with embedded letter F. Purple gradient (#667eea to #764ba2). 
 Clean, modern, human-made feel. No robot, no eye, no literal imagery. 
 Vector style, flat design, works on white and dark backgrounds. 
@@ -155,7 +155,7 @@ Vector style, flat design, works on white and dark backgrounds.
 
 ### DALL-E 3
 ```
-Create a minimal, modern logo mark for a productivity app called "Focura". 
+Create a minimal, modern logo mark for a productivity app called "Gablura". 
 The mark should be an abstract geometric design suggesting focus and clarity — 
 think concentric circles or flowing lines forming a subtle "F" shape. 
 Use a purple gradient from #667eea to #764ba2. 
@@ -169,11 +169,11 @@ Works on both white and dark backgrounds.
 ## SVG Preview
 
 The SVG files are in `/public/`:
-- `focura-logo.svg` — full mark (light mode)
-- `focura-logo-dark.svg` — full mark (dark mode)
-- `focura-favicon.svg` — simplified for small sizes
+- `gablura-logo.svg` — full mark (light mode)
+- `gablura-logo-dark.svg` — full mark (dark mode)
+- `gablura-favicon.svg` — simplified for small sizes
 
 Open them in a browser to preview, or embed directly:
 ```html
-<img src="/focura-logo.svg" alt="Focura" width="120" height="120" />
+<img src="/gablura-logo.svg" alt="Gablura" width="120" height="120" />
 ```

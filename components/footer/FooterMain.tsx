@@ -14,7 +14,7 @@ export default function FooterMain() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div>
-            <h2 className="text-2xl font-bold text-white">Focura</h2>
+            <h2 className="text-2xl font-bold text-white">Gablura</h2>
             <p className="text-sm text-gray-400 mt-3 leading-relaxed">
               The simplest way to manage workflows, teams, and operations — all in one platform.
             </p>
@@ -56,7 +56,7 @@ export default function FooterMain() {
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-gray-400 text-sm">
-            © {new Date().getFullYear()} Focura — All Rights Reserved.
+            © {new Date().getFullYear()} Gablura — All Rights Reserved.
           </p>
 
           <div className="flex items-center gap-3 text-gray-400">

@@ -1,5 +1,5 @@
-// Shared rendering helpers for Focura-admin workspace-limit changes
-// (metadata: { source: 'focura-admin', changes: { field: { from, to } } }).
+// Shared rendering helpers for Gablura-admin workspace-limit changes
+// (metadata: { source: 'gablura-admin', changes: { field: { from, to } } }).
 // Used by both the admin activity feed and the user-facing workspace feed.
 
 export const WORKSPACE_LIMIT_LABELS: Record<string, string> = {
@@ -23,9 +23,9 @@ export function formatWorkspaceLimitValue(field: string, value: unknown): string
   return n.toLocaleString();
 }
 
-/** True when the activity metadata marks a Focura-admin audit row. */
-export function isFocuraAdminChange(source: unknown): boolean {
-  return source === 'focura-admin';
+/** True when the activity metadata marks a Gablura-admin audit row. */
+export function isGabluraAdminChange(source: unknown): boolean {
+  return source === 'gablura-admin';
 }
 
 export type WorkspaceLimitChange = { from: unknown; to: unknown };

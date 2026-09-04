@@ -7,7 +7,7 @@ const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000' || proce
 export const mockUserProfile:UserProfile = {  
   id: 'user-1',
   name: 'Test User',
-  email: 'test@focura.com',
+  email: 'test@gablura.com',
   image: "Image" ,
   createdAt: '2024-01-01T00:00:00.000Z',
   updatedAt: "2024-01-01T00:00:00.000Z"

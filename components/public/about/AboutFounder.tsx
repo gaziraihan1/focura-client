@@ -26,7 +26,7 @@ export const AboutFounder = () => {
               </span>
             </h2>
             <p className="text-sm text-muted-foreground leading-relaxed mb-5">
-              Focura was designed and built entirely by{" "}
+              Gablura was designed and built entirely by{" "}
               <strong className="font-semibold text-foreground">
                 Mohammad Raihan Gazi
               </strong>{" "}
@@ -37,7 +37,7 @@ export const AboutFounder = () => {
             <p className="text-sm text-muted-foreground leading-relaxed mb-8">
               The goal was never to ship a side project — it was to build a
               production-grade SaaS platform from scratch and learn every layer
-              of the stack deeply. Focura v1.1.0 Stable shipped on August 11,
+              of the stack deeply. Gablura v1.1.0 Stable shipped on August 11,
               2026.
             </p>
 
@@ -52,13 +52,13 @@ export const AboutFounder = () => {
                 @gaziraihan1
               </Link>
               <Link
-                href="https://focura-client.vercel.app"
+                href="https://gablura-client.vercel.app"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-xl border bg-card px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors"
               >
                 <Globe className="w-4 h-4 shrink-0" strokeWidth={1.8} />
-                focura-client.vercel.app
+                gablura-client.vercel.app
               </Link>
             </div>
           </div>
@@ -85,7 +85,7 @@ export const AboutFounder = () => {
                 <div className="-mt-7 mb-4">
                   <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-background shadow-md">
   <Image
-    src="/focura-founder.jpg"
+    src="/gablura-founder.jpg"
     alt="Mohammad Raihan Gazi"
     width={56}
     height={56}
@@ -97,7 +97,7 @@ export const AboutFounder = () => {
                   Mohammad Raihan Gazi
                 </p>
                 <p className="text-sm text-muted-foreground mt-0.5 mb-4">
-                  Creator &amp; Maintainer · Focura
+                  Creator &amp; Maintainer · Gablura
                 </p>
                 <div className="flex flex-wrap gap-1.5">
                   {["Next.js", "React 19", "TypeScript", "Express", "PostgreSQL", "Prisma ORM", "Redis", "Paddle"].map(

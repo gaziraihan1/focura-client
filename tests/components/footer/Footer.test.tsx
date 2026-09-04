@@ -9,9 +9,9 @@ vi.mock('next/link', () => ({
 }))
 
 describe('FooterMain', () => {
-  it('renders Focura brand name', () => {
+  it('renders Gablura brand name', () => {
     render(<FooterMain />)
-    expect(screen.getByText('Focura')).toBeInTheDocument()
+    expect(screen.getByText('Gablura')).toBeInTheDocument()
   })
 
   it('renders brand description', () => {
@@ -50,7 +50,7 @@ describe('FooterMain', () => {
   it('renders copyright with current year', () => {
     render(<FooterMain />)
     const year = new Date().getFullYear().toString()
-    expect(screen.getByText(new RegExp(`© ${year} Focura`))).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(`© ${year} Gablura`))).toBeInTheDocument()
   })
 
   it('renders footer links with correct hrefs', () => {

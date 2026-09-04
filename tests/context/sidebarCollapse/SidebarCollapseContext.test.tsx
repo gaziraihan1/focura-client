@@ -5,8 +5,8 @@ import {
   useSidebarCollapse,
 } from '@/context/sidebarCollapse/SidebarCollapseContext';
 
-const MAIN_KEY = 'focura.main-sidebar-collapsed';
-const PROJECT_KEY = 'focura.project-sidebar-collapsed';
+const MAIN_KEY = 'gablura.main-sidebar-collapsed';
+const PROJECT_KEY = 'gablura.project-sidebar-collapsed';
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
   <SidebarCollapseProvider>{children}</SidebarCollapseProvider>

@@ -25,7 +25,7 @@ export const featureKeys = {
 
 // hooks/useFeatures.ts  — only the admin hook changes
 
-export function useIsFocuraAdmin() {
+export function useIsGabluraAdmin() {
   return useQuery({
     queryKey:  featureKeys.admin,
     staleTime: Infinity,

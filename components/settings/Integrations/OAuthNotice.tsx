@@ -11,7 +11,7 @@ export function OAuthNotice() {
           </h4>
           <p className="text-xs text-muted-foreground leading-relaxed">
             When you connect a service, you&apos;ll be redirected to the
-            provider&apos;s authorization page. Focura requests only the
+            provider&apos;s authorization page. Gablura requests only the
             permissions needed for the integration features. You can revoke
             access at any time by disconnecting the integration.
           </p>

@@ -1,6 +1,6 @@
-# 🏗 Focura Client – Complete System Architecture
+# 🏗 Gablura Client – Complete System Architecture
 
-This document describes the comprehensive architecture, design decisions, data flow, and implementation patterns of **Focura Client**, a modern, full-stack productivity and collaboration SaaS platform.
+This document describes the comprehensive architecture, design decisions, data flow, and implementation patterns of **Gablura Client**, a modern, full-stack productivity and collaboration SaaS platform.
 
 ---
 
@@ -26,7 +26,7 @@ This document describes the comprehensive architecture, design decisions, data f
 
 ## 🎯 Architecture Goals
 
-Focura Client is designed to be:
+Gablura Client is designed to be:
 
 - **🚀 Scalable** – Supports personal workflows up to enterprise teams
 - **🔒 Secure** – Workspace-level data isolation with role-based access
@@ -112,7 +112,7 @@ Focura Client is designed to be:
 ### Frontend Directory Structure
 
 ```
-focura-client/
+gablura-client/
 ├── app/                                  # Next.js App Router
 │   ├── (dashboard-pages)/               # Protected dashboard routes
 │   │   ├── admin-dashboard/             # Admin panel (role-gated in proxy.ts)
@@ -189,7 +189,7 @@ focura-client/
 │   │   ├── wellness/                    #   Focus & burnout widgets
 │   │   │   │                            #     (WellnessRecommendations,
 │   │   │   │                            #      FocusStreakBadge,
-│   │   │   │                            #      FocusDailySummary, FocuraTips)
+│   │   │   │                            #      FocusDailySummary, GabluraTips)
 │   │   ├── tasks/                       #   Task management
 │   │   ├── calendar/                    #   Calendar view
 │   │   ├── projects/                    #   Project management
@@ -524,7 +524,7 @@ User fills form
 
 Admin routes are enforced at **two independent layers**: `proxy.ts` checks the
 NextAuth JWT role before rendering, and the backend mounts `/api/v1/admin/*`
-behind `authenticate → requireFocuraAdmin` so non-admin API calls are rejected
+behind `authenticate → requireGabluraAdmin` so non-admin API calls are rejected
 regardless of what the client renders.
 
 ---
@@ -1157,14 +1157,14 @@ Flexible data sharing:
 - [AUTHENTICATION.md](./AUTHENTICATION.md) - Complete auth system
 - [README.md](./README.md) - Getting started
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - How to contribute
-- [Backend Repo](https://github.com/gaziraihan1/focura-backend) - API documentation
+- [Backend Repo](https://github.com/gaziraihan1/gablura-backend) - API documentation
 
 ---
 
 ## 👤 Maintainer
 
 **Mohammad Raihan Gazi**  
-Creator & Maintainer of Focura
+Creator & Maintainer of Gablura
 
 ---
 

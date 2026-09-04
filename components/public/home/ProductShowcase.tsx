@@ -30,7 +30,7 @@ export default function ProductShowcase() {
         </h2>
 
         <p className="mt-4 text-foreground/70 max-w-2xl mx-auto text-lg">
-          Focura brings clarity to your workflow with a beautifully designed
+          Gablura brings clarity to your workflow with a beautifully designed
           dashboard that gives you instant visibility across projects, tasks,
           and team communication.
         </p>

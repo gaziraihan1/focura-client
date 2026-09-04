@@ -100,7 +100,7 @@ export const ApiDocsSSE = () => {
             Real-time Events (SSE)
           </h2>
           <p className='text-sm text-neutral-500 dark:text-neutral-400 mt-0.5'>
-            Focura uses Server-Sent Events for real-time push notifications. Each
+            Gablura uses Server-Sent Events for real-time push notifications. Each
             authenticated user maintains a persistent GET connection to the stream
             endpoint. No WebSocket infrastructure required.
           </p>
@@ -178,7 +178,7 @@ export const ApiDocsSSE = () => {
         <AlertTriangle className='w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5' strokeWidth={2} />
         <div className='space-y-1 text-xs text-amber-800 dark:text-amber-300 leading-relaxed'>
           <p><strong className='font-semibold'>Corporate firewalls and VPNs</strong> may block persistent HTTP connections. If SSE fails, the browser will attempt automatic reconnection with exponential backoff.</p>
-          <p><strong className='font-semibold'>Connection limits:</strong> Browsers cap SSE connections per domain at 6 (HTTP/1.1) or unlimited (HTTP/2). Focura runs on HTTP/2 in production on Render.com.</p>
+          <p><strong className='font-semibold'>Connection limits:</strong> Browsers cap SSE connections per domain at 6 (HTTP/1.1) or unlimited (HTTP/2). Gablura runs on HTTP/2 in production on Render.com.</p>
         </div>
       </div>
     </section>

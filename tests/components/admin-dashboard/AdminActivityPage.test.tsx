@@ -43,7 +43,7 @@ const activityFixtures = {
     entityId: "ws-1",
     createdAt: new Date().toISOString(),
     metadata: {
-      source: "focura-admin",
+      source: "gablura-admin",
       changes: {
         aiDailyCalls:      { from: null, to: 9000 },
         aiMonthlyTokens:   { from: 500000, to: 100_000_000 },
@@ -51,7 +51,7 @@ const activityFixtures = {
         plan:              { from: "PRO", to: "ENTERPRISE" },
       },
     },
-    user: { id: "u1", name: "Focura Admin", email: "admin@focura.app", image: null },
+    user: { id: "u1", name: "Gablura Admin", email: "admin@gablura.app", image: null },
     workspace: { id: "ws-1", name: "Acme Inc", slug: "acme" },
   },
   plain: {
@@ -87,8 +87,8 @@ describe("AdminActivityPage", () => {
     render(<AdminActivityContent />);
 
     // Who — the acting admin
-    expect(screen.getByText("Focura Admin")).toBeInTheDocument();
-    expect(screen.getByText("admin@focura.app")).toBeInTheDocument();
+    expect(screen.getByText("Gablura Admin")).toBeInTheDocument();
+    expect(screen.getByText("admin@gablura.app")).toBeInTheDocument();
     // The workspace link
     expect(screen.getByText("Acme Inc")).toBeInTheDocument();
 

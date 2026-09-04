@@ -2,7 +2,7 @@ import { StorageOverviewPage } from '@/components/dashboard/storage/overview/Sto
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Storage Overview | Focura',
+  title: 'Storage Overview | Gablura',
   description: 'Monitor and manage your file storage across workspaces',
 };
 

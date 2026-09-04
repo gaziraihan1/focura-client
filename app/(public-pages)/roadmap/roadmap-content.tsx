@@ -68,7 +68,7 @@ export default function RoadmapContent() {
             transition={{ duration: 0.5, delay: 0.05 }}
             className='text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 mb-4 leading-[1.08]'
           >
-            Where Focura is going.
+            Where Gablura is going.
           </motion.h1>
 
           <motion.p
@@ -202,7 +202,7 @@ export default function RoadmapContent() {
             >
               Cast your vote
             </Link>{' '}
-            on the Feature Voting board inside Focura.
+            on the Feature Voting board inside Gablura.
           </p>
         </motion.div>
       </div>

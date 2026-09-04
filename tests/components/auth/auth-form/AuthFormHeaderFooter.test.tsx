@@ -15,7 +15,7 @@ describe('AuthForm Components', () => {
       render(<AuthFormHeader mode="login" />)
       expect(screen.getByText('Welcome back')).toBeInTheDocument()
       expect(screen.getByText('Sign in to')).toBeInTheDocument()
-      expect(screen.getByText('Focura')).toBeInTheDocument()
+      expect(screen.getByText('Gablura')).toBeInTheDocument()
       expect(screen.getByText('Enter your credentials to continue.')).toBeInTheDocument()
     })
 
@@ -24,7 +24,7 @@ describe('AuthForm Components', () => {
       expect(screen.getByText('Get started')).toBeInTheDocument()
       expect(screen.getByText('Create your')).toBeInTheDocument()
       expect(screen.getByText('account')).toBeInTheDocument()
-      expect(screen.getByText('Join Focura for free — no credit card required.')).toBeInTheDocument()
+      expect(screen.getByText('Join Gablura for free — no credit card required.')).toBeInTheDocument()
     })
   })
 

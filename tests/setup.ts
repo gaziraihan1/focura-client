@@ -111,7 +111,7 @@ vi.mock('next-auth/react', () => {
   return {
     useSession: () => ({
       data: {
-        user: { id: 'user-1', name: 'Test User', email: 'test@focura.com' },
+        user: { id: 'user-1', name: 'Test User', email: 'test@gablura.com' },
         backendToken: 'test-token',
       } satisfies Session,
       status: 'authenticated',
@@ -119,7 +119,7 @@ vi.mock('next-auth/react', () => {
 
     getSession: (): Promise<Session> =>
       Promise.resolve({
-        user: { id: 'user-1', name: 'Test User', email: 'test@focura.com' },
+        user: { id: 'user-1', name: 'Test User', email: 'test@gablura.com' },
         backendToken: 'test-token',
       }),
 

@@ -30,7 +30,7 @@ export const mockMyContribution: MyContribution = {
 export const mockUserContribution: UserContribution = {
   userId: 'user-1',
   userName: 'Test User',
-  userEmail: 'test@focura.com',
+  userEmail: 'test@gablura.com',
   usageMB: 50,
   fileCount: 10,
   percentage: 20,
@@ -43,9 +43,9 @@ export const mockLargestFile: LargestFile = {
   size: 10485760,
   sizeMB: 10,
   mimeType: 'application/pdf',
-  url: 'https://cdn.focura.com/file-1.pdf',
+  url: 'https://cdn.gablura.com/file-1.pdf',
   uploadedAt: new Date('2024-01-01'),
-  uploadedBy: { id: 'user-1', name: 'Test User', email: 'test@focura.com' },
+  uploadedBy: { id: 'user-1', name: 'Test User', email: 'test@gablura.com' },
   task: { id: 'task-1', title: 'Test Task' },
   project: { id: 'project-1', name: 'Test Project' },
 }

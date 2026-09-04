@@ -19,8 +19,8 @@ const channels = [
   {
     icon: ShieldAlert,
     label: "Security Issues",
-    value: "security@focura.app",
-    href: "mailto:security@focura.app",
+    value: "security@gablura.app",
+    href: "mailto:security@gablura.app",
     description:
       "Responsible disclosure only — please do not open public GitHub issues for vulnerabilities.",
   },

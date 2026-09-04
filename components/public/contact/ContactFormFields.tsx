@@ -198,7 +198,7 @@ export function ContactFields({ register, control, errors }: ContactFieldsProps)
             aria-invalid={!!errors.consent}
           />
           <span className="text-xs text-muted-foreground leading-relaxed">
-            I agree to Focura&apos;s{" "}
+            I agree to Gablura&apos;s{" "}
             <a
               href="/privacy"
               target="_blank"

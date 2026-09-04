@@ -123,7 +123,7 @@ describe('InteractiveDemo', () => {
 
   it('renders the demo preview mockup', () => {
     render(<InteractiveDemo />)
-    expect(screen.getByRole('img', { name: 'Focura Demo' })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'Gablura Demo' })).toBeInTheDocument()
   })
 
   it('renders "Launch Full Demo" button', () => {

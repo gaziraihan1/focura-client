@@ -4,10 +4,10 @@
  * All AI module hooks in one place — mirrors `hooks/useTask.ts`'s convention
  * of grouping related hooks in a single file.
  *
- * Every hook calls the Focura backend's `/api/v1/ai/*` endpoints through the
+ * Every hook calls the Gablura backend's `/api/v1/ai/*` endpoints through the
  * existing `lib/axios.ts` instance; the backend is the only process that talks
  * to Google Gemini. See `types/ai.types.ts` for the payload contracts and
- * `../Focura-backend/GEMINI.md` for the server-side architecture.
+ * `../Gablura-backend/GEMINI.md` for the server-side architecture.
  */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

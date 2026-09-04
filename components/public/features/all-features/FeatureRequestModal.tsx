@@ -116,7 +116,7 @@ export function FeatureRequestModal({ isOpen, onClose }: Props) {
                 </div>
 
                 <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Your request will be reviewed by the Focura team. Once approved it will be open for community voting.
+                  Your request will be reviewed by the Gablura team. Once approved it will be open for community voting.
                 </p>
               </div>
 

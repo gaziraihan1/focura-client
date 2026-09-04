@@ -14,7 +14,7 @@ export const mockActivity: Activity = {
   taskId: 'task-1',
   metadata: { type: 'PROJECT', projectName: 'Test Project' },
   createdAt: '2024-01-01T00:00:00.000Z',
-  user: { id: 'user-1', name: 'Test User', email: 'test@focura.com' },
+  user: { id: 'user-1', name: 'Test User', email: 'test@gablura.com' },
   workspace: { id: 'ws-1', name: 'Test Workspace' },
   task: {
     id: 'task-1',
@@ -35,7 +35,7 @@ export const mockActivity2: Activity = {
   taskId: 'task-1',
   metadata: { from: 'TODO', to: 'IN_PROGRESS' },
   createdAt: '2024-01-02T00:00:00.000Z',
-  user: { id: 'user-1', name: 'Test User', email: 'test@focura.com' },
+  user: { id: 'user-1', name: 'Test User', email: 'test@gablura.com' },
   workspace: { id: 'ws-1', name: 'Test Workspace' },
   task: {
     id: 'task-1',

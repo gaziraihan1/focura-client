@@ -9,7 +9,7 @@ export const contentType = 'image/png';
 
 export default async function Image() {
   return generateOGImage({
-    title: 'Focura Features',
+    title: 'Gablura Features',
     description: 'Powerful features for smart task & workspace management.',
     gradient: 'blue',
   });

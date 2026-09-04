@@ -17,9 +17,9 @@ vi.mock('@/components/themes/ThemeSwitcher', () => ({
 }))
 
 describe('NavbarAuth', () => {
-  it('renders Focura brand', () => {
+  it('renders Gablura brand', () => {
     render(<NavbarAuth />)
-    const brandLinks = screen.getAllByText('Focura')
+    const brandLinks = screen.getAllByText('Gablura')
     expect(brandLinks.length).toBeGreaterThan(0)
   })
 

@@ -20,7 +20,7 @@ class RedisRateLimiter {
     const now = Date.now(),
       window = 60_000,
       windowStart = now - window,
-      limitKey = `focura:rl:${key}`;
+      limitKey = `gablura:rl:${key}`;
     const pipeline = this.redis.pipeline();
     pipeline.zremrangebyscore(limitKey, 0, windowStart);
     pipeline.zcard(limitKey);

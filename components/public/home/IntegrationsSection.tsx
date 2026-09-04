@@ -14,7 +14,7 @@ export default function IntegrationsSection() {
           Works seamlessly with your tools
         </h2>
         <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-          Connect Focura with your favorite apps and keep your workflow unified
+          Connect Gablura with your favorite apps and keep your workflow unified
           across platforms.
         </p>
 

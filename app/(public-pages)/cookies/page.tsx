@@ -5,32 +5,32 @@ import { CookiesNav, CookiesNavItem } from "@/components/public/cookies/CookiesN
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Cookie Policy | Focura",
+  title: "Cookie Policy | Gablura",
   description:
-    "Learn exactly which cookies Focura sets, why, and how to manage or opt out of non-essential tracking. GDPR and ePrivacy compliant.",
+    "Learn exactly which cookies Gablura sets, why, and how to manage or opt out of non-essential tracking. GDPR and ePrivacy compliant.",
   keywords: [
-    "focura cookies",
-    "focura cookie policy",
+    "gablura cookies",
+    "gablura cookie policy",
     "cookie settings",
     "gdpr cookies",
     "privacy cookies",
   ],
   openGraph: {
-    title: "Cookie Policy – Focura",
+    title: "Cookie Policy – Gablura",
     description:
-      "Learn exactly which cookies Focura sets, why, and how to manage or opt out of non-essential tracking.",
-    url: "https://focura-client.vercel.app/cookies",
-    siteName: "Focura",
+      "Learn exactly which cookies Gablura sets, why, and how to manage or opt out of non-essential tracking.",
+    url: "https://gablura-client.vercel.app/cookies",
+    siteName: "Gablura",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cookie Policy – Focura",
+    title: "Cookie Policy – Gablura",
     description:
-      "Learn exactly which cookies Focura sets, why, and how to manage or opt out.",
+      "Learn exactly which cookies Gablura sets, why, and how to manage or opt out.",
   },
   alternates: {
-    canonical: "https://focura-client.vercel.app/cookies",
+    canonical: "https://gablura-client.vercel.app/cookies",
   },
 };
 

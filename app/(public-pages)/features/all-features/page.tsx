@@ -2,32 +2,32 @@ import type { Metadata } from "next";
 import AllFeaturesContent from "./all-features-content";
 
 export const metadata: Metadata = {
-  title: "Feature Requests | Focura",
+  title: "Feature Requests | Gablura",
   description:
-    "Vote on features you'd love to see in Focura, or submit your own idea. Help shape the future of our productivity platform.",
+    "Vote on features you'd love to see in Gablura, or submit your own idea. Help shape the future of our productivity platform.",
   keywords: [
-    "focura feature requests",
-    "focura voting",
-    "focura feedback",
+    "gablura feature requests",
+    "gablura voting",
+    "gablura feedback",
     "product suggestions",
     "feature board",
   ],
   openGraph: {
-    title: "Focura Feature Requests – Vote & Submit Ideas",
+    title: "Gablura Feature Requests – Vote & Submit Ideas",
     description:
-      "Vote on features you'd love to see in Focura, or submit your own idea.",
-    url: "https://focura-client.vercel.app/features/all-features",
-    siteName: "Focura",
+      "Vote on features you'd love to see in Gablura, or submit your own idea.",
+    url: "https://gablura-client.vercel.app/features/all-features",
+    siteName: "Gablura",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Focura Feature Requests – Vote & Submit Ideas",
+    title: "Gablura Feature Requests – Vote & Submit Ideas",
     description:
-      "Vote on features you'd love to see in Focura, or submit your own idea.",
+      "Vote on features you'd love to see in Gablura, or submit your own idea.",
   },
   alternates: {
-    canonical: "https://focura-client.vercel.app/features/all-features",
+    canonical: "https://gablura-client.vercel.app/features/all-features",
   },
 };
 

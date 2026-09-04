@@ -18,8 +18,8 @@ const steps = [
     step: "01",
     icon: GitFork,
     title: "Fork the repo",
-    detail: "Fork gaziraihan1/focura-client on GitHub and clone your fork locally.",
-    code: "git clone https://github.com/gaziraihan1/focura-client.git",
+    detail: "Fork gaziraihan1/gablura-client on GitHub and clone your fork locally.",
+    code: "git clone https://github.com/gaziraihan1/gablura-client.git",
   },
   {
     step: "02",
@@ -60,33 +60,33 @@ const resources = [
     icon: BookOpen,
     label: "ARCHITECTURE.md",
     description: "System design decisions, data flow, and design patterns.",
-    href: "https://github.com/gaziraihan1/focura-client/blob/main/ARCHITECTURE.md",
+    href: "https://github.com/gaziraihan1/gablura-client/blob/main/ARCHITECTURE.md",
   },
   {
     icon: GitPullRequest,
     label: "CONTRIBUTING.md",
     description:
       "Full guidelines for the client: setup, test conventions, and review process.",
-    href: "https://github.com/gaziraihan1/focura-client/blob/main/CONTRIBUTING.md",
+    href: "https://github.com/gaziraihan1/gablura-client/blob/main/CONTRIBUTING.md",
   },
   {
     icon: Server,
     label: "Backend Repository",
-    description: "The Express + Node.js + Prisma API powering Focura.",
-    href: "https://github.com/gaziraihan1/focura-backend",
+    description: "The Express + Node.js + Prisma API powering Gablura.",
+    href: "https://github.com/gaziraihan1/gablura-backend",
   },
   {
     icon: ScrollText,
     label: "Backend CONTRIBUTING.md",
     description:
       "Backend contribution guide — module architecture, cron jobs, and testing.",
-    href: "https://github.com/gaziraihan1/focura-backend/blob/main/CONTRIBUTING.md",
+    href: "https://github.com/gaziraihan1/gablura-backend/blob/main/CONTRIBUTING.md",
   },
   {
     icon: Heart,
     label: "CODE_OF_CONDUCT.md",
     description: "Our community standards for respectful collaboration.",
-    href: "https://github.com/gaziraihan1/focura-client/blob/main/CODE_OF_CONDUCT.md",
+    href: "https://github.com/gaziraihan1/gablura-client/blob/main/CODE_OF_CONDUCT.md",
   },
 ];
 
@@ -107,7 +107,7 @@ export const AboutOpenSource = () => {
             </span>
           </h2>
           <p className="text-sm text-muted-foreground max-w-xs leading-relaxed md:text-right">
-            Focura is source-available under a custom license. We welcome
+            Gablura is source-available under a custom license. We welcome
             contributions, bug reports, and feature discussions across both the
             client and the backend API.
           </p>

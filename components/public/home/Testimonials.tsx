@@ -38,7 +38,7 @@ export default function TestimonialSection() {
           Loved by teams everywhere
         </h2>
         <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
-          Thousands of teams rely on Focura to stay aligned and work smarter.
+          Thousands of teams rely on Gablura to stay aligned and work smarter.
         </p>
 
         <div className="relative mx-auto mt-14 w-full max-w-2xl min-h-70">

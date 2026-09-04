@@ -1,10 +1,10 @@
-# 🎯 **Focura Client**
+# 🎯 **Gablura Client**
 
 > **Focus Smarter. Manage Workspaces, Projects & Teams.**
 
-A modern, full-stack productivity and collaboration SaaS platform built with **Next.js 16, React 19, TypeScript, and TanStack Query**. Focura helps teams turn scattered tasks into clear priorities, protect deep work time, and maintain steady progress without unnecessary complexity.
+A modern, full-stack productivity and collaboration SaaS platform built with **Next.js 16, React 19, TypeScript, and TanStack Query**. Gablura helps teams turn scattered tasks into clear priorities, protect deep work time, and maintain steady progress without unnecessary complexity.
 
-**Live Demo:** https://focura-client.vercel.app
+**Live Demo:** https://gablura-client.vercel.app
 
 ---
 
@@ -85,7 +85,7 @@ A modern, full-stack productivity and collaboration SaaS platform built with **N
 - ✅ Capacity scheduling and work schedule preferences
 
 #### **AI Assistant (Google Gemini)**
-Server-side AI via the Focura backend — the client never talks to Google directly:
+Server-side AI via the Gablura backend — the client never talks to Google directly:
 
 - ✅ **AI task suggestions** — autocomplete description, priority, energy, est. hours, due date & subtasks while typing a task title (debounced, deduped)
 - ✅ **AI goal breakdown** — big goals → Low/Medium/High energy task list on the wellness page
@@ -443,7 +443,7 @@ Read-heavy endpoints hit the replica so write traffic on the primary stays low. 
 ### **Multi-Tab Session Coordination**
 
 ```
-BroadcastChannel("focura-auth")
+BroadcastChannel("gablura-auth")
     ↓
 Events: refresh-start, refresh-complete, logout-all
     ↓
@@ -488,7 +488,7 @@ EMAIL_SERVER_HOST="smtp.gmail.com"
 EMAIL_SERVER_PORT=587
 EMAIL_SERVER_USER=<your-email>
 EMAIL_SERVER_PASSWORD=<your-app-password>
-EMAIL_FROM="Focura <your-email>"
+EMAIL_FROM="Gablura <your-email>"
 
 # Optional
 NODE_OPTIONS=--dns-result-order=ipv4first
@@ -503,8 +503,8 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID=from-google-analytics-admin
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/gaziraihan1/focura-client.git
-cd focura-client
+git clone https://github.com/gaziraihan1/gablura-client.git
+cd gablura-client
 ```
 
 2. **Install dependencies**
@@ -532,7 +532,7 @@ http://localhost:3000
 ## 📂 Project Structure
 
 ```
-focura-client/
+gablura-client/
 ├── app/                               # Next.js App Router
 │   ├── (auth)/                        # Auth route group
 │   ├── (dashboard-pages)/             # Protected dashboard routes
@@ -883,7 +883,7 @@ All dashboard routes require authentication:
 - Server components check `getServerSession()` for SSR redirect
 - Client layouts check membership and roles via hooks
 - API routes validate JWT token
-- Admin routes check `useIsFocuraAdmin()` hook
+- Admin routes check `useIsGabluraAdmin()` hook
 - Plan-gated features check `useWorkspacePlan()` context
 
 ### **Role-Based Access Control**
@@ -1210,7 +1210,7 @@ await api.upload('/api/v1/resources/upload', formData);
 | `GET` | `/api/v1/jobs/:jobId` | Poll background job status |
 | `GET` | `/api/v1/csrf-token` | Get CSRF token |
 
-For complete API documentation, see the [API Documentation](https://focura-client.vercel.app/api-docs) page or backend [README](https://github.com/gaziraihan1/focura-backend).
+For complete API documentation, see the [API Documentation](https://gablura-client.vercel.app/api-docs) page or backend [README](https://github.com/gaziraihan1/gablura-backend).
 
 ---
 
@@ -1458,7 +1458,7 @@ EMAIL_SERVER_HOST="smtp.gmail.com"
 EMAIL_SERVER_PORT=587
 EMAIL_SERVER_USER=<email>
 EMAIL_SERVER_PASSWORD=<your-app-password>
-EMAIL_FROM="Focura <email>"
+EMAIL_FROM="Gablura <email>"
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=<cloud-name>
 CLOUDINARY_API_KEY=<api-key>
 CLOUDINARY_API_SECRET=<api-secret>
@@ -1514,16 +1514,16 @@ For more details, see [AUTHENTICATION.md](./AUTHENTICATION.md)
 - [**AI_IMPLEMENTATION_GUIDE.md**](./AI_IMPLEMENTATION_GUIDE.md) - AI implementation guide
 - [**FRONTEND_ANALYSIS.md**](./FRONTEND_ANALYSIS.md) - Frontend analysis
 - [**INTEGRATIONS_CONNECTOR.md**](./INTEGRATIONS_CONNECTOR.md) - Integration connector docs
-- [**Backend README**](https://github.com/gaziraihan1/focura-backend) - Backend API documentation
-- [**API Documentation**](https://focura-client.vercel.app/api-docs) - Interactive API docs (in-app)
+- [**Backend README**](https://github.com/gaziraihan1/gablura-backend) - Backend API documentation
+- [**API Documentation**](https://gablura-client.vercel.app/api-docs) - Interactive API docs (in-app)
 
 ---
 
 ## 🔗 Quick Links
 
-- **Live Demo**: https://focura-client.vercel.app
-- **Backend Repository**: https://github.com/gaziraihan1/focura-backend
-- **Issues**: https://github.com/gaziraihan1/focura-client/issues
+- **Live Demo**: https://gablura-client.vercel.app
+- **Backend Repository**: https://github.com/gaziraihan1/gablura-backend
+- **Issues**: https://github.com/gaziraihan1/gablura-client/issues
 
 ---
 
@@ -1535,7 +1535,7 @@ This project is licensed under the **Source-Available License**. See [LICENSE](.
 
 ## 👤 Maintainer
 
-**Mohammad Raihan Gazi** — Creator & Maintainer of Focura
+**Mohammad Raihan Gazi** — Creator & Maintainer of Gablura
 
 - GitHub: [@gaziraihan1](https://github.com/gaziraihan1)
 
@@ -1543,4 +1543,4 @@ This project is licensed under the **Source-Available License**. See [LICENSE](.
 
 **Happy coding! 🚀**
 
-If you find Focura Client helpful, please consider giving it a ⭐ star on GitHub!
+If you find Gablura Client helpful, please consider giving it a ⭐ star on GitHub!

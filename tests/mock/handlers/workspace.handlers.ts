@@ -9,7 +9,7 @@ export const mockMember: WorkspaceMember = {
   role: 'OWNER',
   joinedAt: '2024-01-01T00:00:00.000Z',
   userId: 'user-1',
-  user: { id: 'user-1', name: 'Test User', email: 'test@focura.com' },
+  user: { id: 'user-1', name: 'Test User', email: 'test@gablura.com' },
 }
 
 export const mockWorkspace: Workspace = {
@@ -23,7 +23,7 @@ export const mockWorkspace: Workspace = {
   maxMembers: 5,
   maxStorage: 1000,
   ownerId: 'user-1',
-  owner: { id: 'user-1', name: 'Test User', email: 'test@focura.com' },
+  owner: { id: 'user-1', name: 'Test User', email: 'test@gablura.com' },
   members: [mockMember],
   _count: { projects: 2, members: 1 },
   createdAt: '2024-01-01T00:00:00.000Z',

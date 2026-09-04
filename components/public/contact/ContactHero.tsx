@@ -23,7 +23,7 @@ export const ContactHero = () => {
         </div>
 
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 mb-4">
-          Contact Focura
+          Contact Gablura
         </h1>
 
         <p className="text-base md:text-lg text-neutral-500 dark:text-neutral-400 max-w-2xl mx-auto leading-relaxed">

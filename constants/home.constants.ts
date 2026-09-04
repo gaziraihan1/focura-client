@@ -1,22 +1,22 @@
 export const faqs = [
   {
-    q: "What is Focura?",
-    a: "Focura is a modern workflow and productivity platform designed to help teams plan, collaborate, and execute with total clarity.",
+    q: "What is Gablura?",
+    a: "Gablura is a modern workflow and productivity platform designed to help teams plan, collaborate, and execute with total clarity.",
   },
   {
     q: "Is my data secure?",
-    a: "Yes. Focura uses enterprise-grade encryption, secure cloud hosting, and strict access controls to protect your data.",
+    a: "Yes. Gablura uses enterprise-grade encryption, secure cloud hosting, and strict access controls to protect your data.",
   },
   {
     q: "Do I need a credit card to start?",
-    a: "No. You can get started with Focura for free — no credit card required.",
+    a: "No. You can get started with Gablura for free — no credit card required.",
   },
   {
     q: "Can I invite my team members?",
     a: "Absolutely. You can add team members, assign roles, and collaborate in real time.",
   },
   {
-    q: "Does Focura offer customer support?",
+    q: "Does Gablura offer customer support?",
     a: "Yes. We provide 24/7 support via email and chat, along with detailed documentation.",
   },
 ];
@@ -26,7 +26,7 @@ export type ShowcaseVariant = "workspace" | "collaborate" | "automation";
 export const features = [
   {
     title: "Organize your workspace effortlessly",
-    desc: "Create structured roadmaps, assign tasks, and visualize your team's workload with clarity. Focura makes planning intuitive and powerful.",
+    desc: "Create structured roadmaps, assign tasks, and visualize your team's workload with clarity. Gablura makes planning intuitive and powerful.",
     variant: "workspace" as ShowcaseVariant,
     reverse: false,
     image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&q=80",
@@ -40,7 +40,7 @@ export const features = [
   },
   {
     title: "Automate the busywork",
-    desc: "Save time by automating repetitive tasks. Set triggers, create workflows, and let Focura handle the busywork for your team.",
+    desc: "Save time by automating repetitive tasks. Set triggers, create workflows, and let Gablura handle the busywork for your team.",
     variant: "automation" as ShowcaseVariant,
     reverse: false,
     image: "https://images.unsplash.com/photo-1535223289827-42f1e9919769?auto=format&fit=crop&w=1200&q=80",
@@ -102,7 +102,7 @@ export const testimonials = [
     name: "Sarah Chen",
     role: "Product Lead, Northwind",
     quote:
-      "Focura gave our team back hours every week. Planning finally feels effortless instead of exhausting.",
+      "Gablura gave our team back hours every week. Planning finally feels effortless instead of exhausting.",
     rating: 5,
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
   },

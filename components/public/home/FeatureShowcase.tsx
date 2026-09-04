@@ -136,14 +136,14 @@ function WorkspaceMock() {
 
   return (
     <div className="w-full overflow-hidden rounded-xl border border-border bg-background shadow-sm">
-      <WindowChrome url="app.focura.com/projects/northwind-q3/board" />
+      <WindowChrome url="app.gablura.com/projects/northwind-q3/board" />
 
       <div className="grid grid-cols-1 sm:grid-cols-[150px_1fr]">
         {/* Sidebar */}
         <div className="hidden sm:flex flex-col border-r border-border bg-muted/20 p-2">
           <div className="flex items-center gap-1.5 px-1.5 pb-2.5">
             <div className="flex h-5 w-5 items-center justify-center rounded-md bg-foreground text-[8px] font-bold text-background">F</div>
-            <span className="text-[10px] font-semibold text-foreground">Focura</span>
+            <span className="text-[10px] font-semibold text-foreground">Gablura</span>
           </div>
           {NAV.map(({ icon: Icon, label, active }) => (
             <div
@@ -286,7 +286,7 @@ function CollaborateMock() {
 
   return (
     <div className="w-full overflow-hidden rounded-xl border border-border bg-background shadow-sm">
-      <WindowChrome url="app.focura.com/tasks/124/discussion" />
+      <WindowChrome url="app.gablura.com/tasks/124/discussion" />
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_190px]">
         {/* Thread */}
@@ -385,7 +385,7 @@ function CollaborateMock() {
     {
       title: "When a task is marked done",
       action: "Notify the assignee",
-      app: "Focura",
+      app: "Gablura",
       active: true,
       runs: "128 runs",
     },
@@ -408,7 +408,7 @@ function AutomationMock() {
 
   return (
     <div className="w-full overflow-hidden rounded-xl border border-border bg-background shadow-sm">
-      <WindowChrome url="app.focura.com/settings/automations" />
+      <WindowChrome url="app.gablura.com/settings/automations" />
 
       <div className="p-2.5 sm:p-3">
         {/* Header */}

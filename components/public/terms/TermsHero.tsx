@@ -25,7 +25,7 @@ export const TermsHero = () => {
         </h1>
 
         <p className="text-base md:text-lg text-neutral-500 dark:text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-          Please read these terms carefully before using Focura. By accessing or
+          Please read these terms carefully before using Gablura. By accessing or
           using our platform, you agree to be bound by these terms.
         </p>
 

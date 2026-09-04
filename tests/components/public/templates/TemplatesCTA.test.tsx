@@ -123,7 +123,7 @@ describe('TemplatesCTA', () => {
 
   it('renders the three link options', () => {
     render(<TemplatesCTA />)
-    expect(screen.getByText('Try Focura free')).toBeInTheDocument()
+    expect(screen.getByText('Try Gablura free')).toBeInTheDocument()
     expect(screen.getByText('Request a template')).toBeInTheDocument()
     expect(screen.getByText('Read the guides')).toBeInTheDocument()
   })

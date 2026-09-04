@@ -36,7 +36,7 @@ function MiniDashboardMock() {
   return (
     <div
       role="img"
-      aria-label="Focura dashboard preview"
+      aria-label="Gablura dashboard preview"
       className="overflow-hidden rounded-2xl border border-border bg-background shadow-2xl shadow-foreground/10"
     >
       {/* Window chrome */}
@@ -45,7 +45,7 @@ function MiniDashboardMock() {
         <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/70" />
         <span className="h-2.5 w-2.5 rounded-full bg-green-400/70" />
         <span className="ml-2 hidden sm:inline-block truncate rounded-md border border-border bg-background px-2.5 py-0.5 text-[9px] font-medium text-muted-foreground">
-          app.focura.com/dashboard
+          app.gablura.com/dashboard
         </span>
       </div>
 
@@ -54,7 +54,7 @@ function MiniDashboardMock() {
         <div className="hidden sm:flex flex-col border-r border-border bg-muted/20 p-2">
           <div className="flex items-center gap-1.5 px-1.5 pb-2.5">
             <div className="flex h-5 w-5 items-center justify-center rounded-md bg-foreground text-[8px] font-bold text-background">F</div>
-            <span className="text-[10px] font-semibold text-foreground">Focura</span>
+            <span className="text-[10px] font-semibold text-foreground">Gablura</span>
           </div>
           {MOCK_NAV.map((label, i) => (
             <div

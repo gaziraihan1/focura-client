@@ -10,7 +10,7 @@ const items = [
     problem:
       "Teams juggle multiple apps for tasks, communication, and planning — causing confusion and slow decision-making.",
     solution:
-      "Focura centralizes tasks, communication, and planning so your entire team stays aligned inside one unified workspace.",
+      "Gablura centralizes tasks, communication, and planning so your entire team stays aligned inside one unified workspace.",
     Mock: KanbanMock,
     mockProps: { project: "Northwind — Q3 Roadmap", sub: "Product · 4 members" },
   },
@@ -28,7 +28,7 @@ const items = [
     problem:
       "Teams don't know who is doing what, what's blocked, or what's next — reducing productivity.",
     solution:
-      "Focura gives you powerful progress tracking, clear ownership, and automated status indicators.",
+      "Gablura gives you powerful progress tracking, clear ownership, and automated status indicators.",
     Mock: ProgressMock,
     mockProps: {},
   },
@@ -49,7 +49,7 @@ export default function SolutionProblems() {
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base text-foreground/70 sm:text-lg">
             From planning to execution — these are the problems slowing teams
-            down, and how Focura solves each one with clarity.
+            down, and how Gablura solves each one with clarity.
           </p>
         </motion.div>
 
@@ -90,7 +90,7 @@ export default function SolutionProblems() {
                     <div className="mb-2 flex items-center gap-2">
                       <CheckCircle2 className="text-primary" size={20} />
                       <span className="font-medium text-primary">
-                        How Focura Fixes It
+                        How Gablura Fixes It
                       </span>
                     </div>
                     <p className="text-sm leading-relaxed text-foreground/80 sm:text-base">

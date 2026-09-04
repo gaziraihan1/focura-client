@@ -5,7 +5,7 @@ const { API_SECTIONS, ALL_ENDPOINTS, findEndpoint, findSection, API_BASE_URL } =
 
 describe('apiData exports', () => {
   it('exports API_BASE_URL', () => {
-    expect(API_BASE_URL).toBe('https://focura-backend-vr75.onrender.com')
+    expect(API_BASE_URL).toBe('https://gablura-backend-vr75.onrender.com')
   })
 
   it('API_SECTIONS is a non-empty array', () => {

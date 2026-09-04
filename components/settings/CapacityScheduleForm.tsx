@@ -281,13 +281,13 @@ export function CapacityScheduleForm() {
         icon={<Brain className="h-5 w-5 text-green-600 dark:text-green-400" />}
         iconBg="bg-green-500/10"
         title="About These Settings"
-        description="How your capacity and schedule affect Focura"
+        description="How your capacity and schedule affect Gablura"
       >
         <p className="text-sm leading-relaxed text-muted-foreground">
           Your daily capacity sets the baseline for workload scoring. When
           planned hours exceed capacity, the calendar flags you as{" "}
           <strong className="text-foreground">over-capacity</strong>. The weekly
-          target and deep work goal refine burnout risk calculations so Focura
+          target and deep work goal refine burnout risk calculations so Gablura
           can suggest breaks and lighter days when you need them most.
         </p>
       </SectionCard>

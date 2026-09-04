@@ -1,4 +1,4 @@
-# 🎨 Focura Focus & Burnout Detection System - Frontend Guide
+# 🎨 Gablura Focus & Burnout Detection System - Frontend Guide
 
 ## Table of Contents
 - [Overview](#overview)
@@ -15,7 +15,7 @@
 
 ## Overview
 
-Focura's frontend brings the backend's powerful focus and burnout system to life through:
+Gablura's frontend brings the backend's powerful focus and burnout system to life through:
 
 1. **Focus Session Timer** - Intuitive pomodoro/deep work interface
 2. **Calendar Visualization** - Visual workload heatmap
@@ -663,4 +663,4 @@ Week 3:
 ---
 
 _Last Updated: August 2026_
-_Focura Frontend Team_
+_Gablura Frontend Team_

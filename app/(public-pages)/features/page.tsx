@@ -10,11 +10,11 @@ import WhyChooseFocura from '@/components/public/features/WhyChooseFocura'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Focura Features – Smart Task & Workspace Management",
+  title: "Gablura Features – Smart Task & Workspace Management",
   description:
-    "Discover Focura's powerful features: manage tasks, collaborate with teams, track projects, and boost productivity with ease.",
+    "Discover Gablura's powerful features: manage tasks, collaborate with teams, track projects, and boost productivity with ease.",
   keywords: [
-    "focura features",
+    "gablura features",
     "task management",
     "workspace management",
     "team collaboration",
@@ -22,21 +22,21 @@ export const metadata: Metadata = {
     "productivity insights",
   ],
   openGraph: {
-    title: "Focura Features – Work Smarter, Not Harder",
+    title: "Gablura Features – Work Smarter, Not Harder",
     description:
-      "Explore all features of Focura: workspace management, task tracking, team collaboration, and productivity insights.",
-    url: "https://focura-client.vercel.app/features",
-    siteName: "Focura",
+      "Explore all features of Gablura: workspace management, task tracking, team collaboration, and productivity insights.",
+    url: "https://gablura-client.vercel.app/features",
+    siteName: "Gablura",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Focura Features – Work Smarter, Not Harder",
+    title: "Gablura Features – Work Smarter, Not Harder",
     description:
-      "Explore all features of Focura: workspace management, task tracking, team collaboration, and productivity insights.",
+      "Explore all features of Gablura: workspace management, task tracking, team collaboration, and productivity insights.",
   },
   alternates: {
-    canonical: "https://focura-client.vercel.app/features",
+    canonical: "https://gablura-client.vercel.app/features",
   },
 };
 

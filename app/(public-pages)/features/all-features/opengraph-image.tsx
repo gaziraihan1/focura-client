@@ -10,7 +10,7 @@ export const contentType = 'image/png';
 export default async function Image() {
   return generateOGImage({
     title: 'Feature Requests',
-    description: 'Vote on features and help shape the future of Focura.',
+    description: 'Vote on features and help shape the future of Gablura.',
     gradient: 'violet',
   });
 }

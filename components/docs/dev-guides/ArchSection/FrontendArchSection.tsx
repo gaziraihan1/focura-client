@@ -35,7 +35,7 @@ export const frontendArchArticles: GuideArticle[] = [
     summary:
       "The client is organised into app (routes), components, hooks with per-feature key factories, lib, types, constants, context and utils folders.",
     content: (
-      <FileTree>{`focura-client/
+      <FileTree>{`gablura-client/
 ├── app/
 │   ├── (auth)/           # Sign-in, sign-up pages
 │   ├── (workspace)/      # Protected workspace routes

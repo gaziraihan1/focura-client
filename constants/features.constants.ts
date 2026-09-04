@@ -11,7 +11,7 @@ export  const features = [
     },
     {
       title: "Lightning-fast collaboration",
-      desc: "Whether you're working remote or in-office, your team stays aligned with real-time collaboration tools built into every part of Focura.",
+      desc: "Whether you're working remote or in-office, your team stays aligned with real-time collaboration tools built into every part of Gablura.",
       points: [
         "Live sync updates",
         "Instant comments and mentions",
@@ -21,7 +21,7 @@ export  const features = [
     },
     {
       title: "Smart automation for busy teams",
-      desc: "Let Focura reduce repetitive work by automating routine actions and keeping progress moving automatically.",
+      desc: "Let Gablura reduce repetitive work by automating routine actions and keeping progress moving automatically.",
       points: [
         "Auto task assignment",
         "Deadline reminders",

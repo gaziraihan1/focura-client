@@ -20,7 +20,7 @@ const fields = [
   {
     icon: Mail,
     label: "Registered Email Address",
-    example: "The email linked to your Focura account.",
+    example: "The email linked to your Gablura account.",
   },
   {
     icon: CreditCard,
@@ -35,7 +35,7 @@ const fields = [
   {
     icon: Layers,
     label: "Plan Purchased",
-    example: "e.g. Focura Pro Monthly / Focura Pro Annual.",
+    example: "e.g. Gablura Pro Monthly / Gablura Pro Annual.",
   },
   {
     icon: FileText,

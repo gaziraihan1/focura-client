@@ -33,7 +33,7 @@ export const TEMPLATES: Template[] = [
     slug   : 'engineering-sprint',
     title  : 'Agile Sprint Board',
     description: '2-week sprint with backlog, in-progress, review, and done columns. Includes story points via labels.',
-    longDescription: 'A battle-tested sprint board template for software engineering teams. Pre-configured with backlog grooming tasks, sprint planning, daily standups, and a retrospective. Uses Focura\'s Kanban view with WIP limits and the List view for backlog management. Labels cover story sizes (XS, S, M, L, XL) and types (Feature, Bug, Chore, Tech Debt).',
+    longDescription: 'A battle-tested sprint board template for software engineering teams. Pre-configured with backlog grooming tasks, sprint planning, daily standups, and a retrospective. Uses Gablura\'s Kanban view with WIP limits and the List view for backlog management. Labels cover story sizes (XS, S, M, L, XL) and types (Feature, Bug, Chore, Tech Debt).',
     category: 'engineering',
     complexity: 'starter',
     status  : 'available',
@@ -73,7 +73,7 @@ export const TEMPLATES: Template[] = [
     tags: ['agile', 'scrum', 'sprint', 'kanban', 'engineering'],
     rating: { average: 4.8, count: 160 },
     featured: true,
-    author: { name: 'Focura Team', role: 'Official' },
+    author: { name: 'Gablura Team', role: 'Official' },
   },
   {
     id     : 'eng-bugtracker',
@@ -109,7 +109,7 @@ export const TEMPLATES: Template[] = [
     tags: ['bugs', 'qa', 'triage', 'engineering'],
     rating: { average: 4.7, count: 90 },
     featured: false,
-    author: { name: 'Focura Team', role: 'Official' },
+    author: { name: 'Gablura Team', role: 'Official' },
   },
 
   // ── Product ──────────────────────────────────────────────────────────────────
@@ -152,7 +152,7 @@ export const TEMPLATES: Template[] = [
     tags: ['product', 'roadmap', 'okr', 'strategy', 'planning'],
     rating: { average: 4.7, count: 110 },
     featured: true,
-    author: { name: 'Focura Team', role: 'Official' },
+    author: { name: 'Gablura Team', role: 'Official' },
   },
   {
     id     : 'product-launch',
@@ -196,7 +196,7 @@ export const TEMPLATES: Template[] = [
     tags: ['launch', 'product', 'checklist', 'marketing', 'engineering'],
     rating: { average: 4.9, count: 70 },
     featured: true,
-    author: { name: 'Focura Team', role: 'Official' },
+    author: { name: 'Gablura Team', role: 'Official' },
   },
 
   // ── Marketing ────────────────────────────────────────────────────────────────
@@ -238,7 +238,7 @@ export const TEMPLATES: Template[] = [
     tags: ['content', 'marketing', 'editorial', 'calendar', 'social'],
     rating: { average: 4.6, count: 130 },
     featured: true,
-    author: { name: 'Focura Team', role: 'Official' },
+    author: { name: 'Gablura Team', role: 'Official' },
   },
 
   // ── HR ───────────────────────────────────────────────────────────────────────
@@ -278,7 +278,7 @@ export const TEMPLATES: Template[] = [
     tags: ['hiring', 'recruiting', 'hr', 'people', 'interviews'],
     rating: { average: 4.6, count: 75 },
     featured: false,
-    author: { name: 'Focura Team', role: 'Official' },
+    author: { name: 'Gablura Team', role: 'Official' },
   },
   {
     id     : 'hr-onboarding',
@@ -318,7 +318,7 @@ export const TEMPLATES: Template[] = [
     tags: ['onboarding', 'hr', 'new-hire', 'people'],
     rating: { average: 4.8, count: 60 },
     featured: false,
-    author: { name: 'Focura Team', role: 'Official' },
+    author: { name: 'Gablura Team', role: 'Official' },
   },
 
   // ── Startup ──────────────────────────────────────────────────────────────────
@@ -363,7 +363,7 @@ export const TEMPLATES: Template[] = [
     tags: ['startup', 'launch', 'mvp', 'fundraising', 'product'],
     rating: { average: 4.7, count: 40 },
     featured: false,
-    author: { name: 'Focura Team', role: 'Official' },
+    author: { name: 'Gablura Team', role: 'Official' },
   },
 
   // ── Personal ─────────────────────────────────────────────────────────────────
@@ -406,7 +406,7 @@ export const TEMPLATES: Template[] = [
     tags: ['goals', 'okr', 'personal', 'habits', 'productivity'],
     rating: { average: 4.9, count: 210 },
     featured: false,
-    author: { name: 'Focura Team', role: 'Official' },
+    author: { name: 'Gablura Team', role: 'Official' },
   },
 ];
 
@@ -476,6 +476,6 @@ export function catalogItemToTemplate(item: TemplateCatalogItem): Template {
     featured    : item.featured ?? false,
     estimatedSetupMinutes: item.estimatedSetupMinutes ?? 5,
     tags        : Array.isArray(item.tags) ? (item.tags as string[]) : [],
-    author      : item.author ?? { name: 'Focura Team', role: 'Official' },
+    author      : item.author ?? { name: 'Gablura Team', role: 'Official' },
   };
 }

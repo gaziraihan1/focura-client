@@ -1,4 +1,4 @@
-# Focura — Project Features Guide (Sections · Sprints · Milestones · Views)
+# Gablura — Project Features Guide (Sections · Sprints · Milestones · Views)
 
 A practical, user-facing guide to the four project-organisation features and the
 workspace-level section filter. Everything here is implemented and reachable in

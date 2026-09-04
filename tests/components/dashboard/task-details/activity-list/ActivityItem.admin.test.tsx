@@ -34,7 +34,7 @@ vi.mock('@/components/shared/Avatar', () => ({
 
 import { ActivityItem } from '@/components/dashboard/task-details/ActivityList/ActivityItem'
 
-describe('ActivityItem – Focura-admin workspace-limit changes', () => {
+describe('ActivityItem – Gablura-admin workspace-limit changes', () => {
   const adminActivity = {
     id: 'act-admin',
     action: 'UPDATED',
@@ -42,7 +42,7 @@ describe('ActivityItem – Focura-admin workspace-limit changes', () => {
     createdAt: new Date().toISOString(),
     user: { id: 'admin-1', name: 'Grace Hopper', image: null },
     metadata: {
-      source: 'focura-admin',
+      source: 'gablura-admin',
       changes: {
         aiDailyCalls: { from: null, to: 9000 },
         plan: { from: 'PRO', to: 'ENTERPRISE' },
@@ -55,8 +55,8 @@ describe('ActivityItem – Focura-admin workspace-limit changes', () => {
 
     // Friendly label instead of raw field names
     expect(screen.getByText(/updated workspace limits/)).toBeInTheDocument()
-    // Focura admin attribution badge
-    expect(screen.getByText('Focura admin')).toBeInTheDocument()
+    // Gablura admin attribution badge
+    expect(screen.getByText('Gablura admin')).toBeInTheDocument()
     // Shield icon differentiates system changes from regular edits
     expect(screen.getByTestId('icon-ShieldCheck')).toBeInTheDocument()
     // Friendly before → after chips
@@ -75,7 +75,7 @@ describe('ActivityItem – Focura-admin workspace-limit changes', () => {
     }
     render(<ActivityItem activity={regular as never} />)
 
-    expect(screen.queryByText('Focura admin')).not.toBeInTheDocument()
+    expect(screen.queryByText('Gablura admin')).not.toBeInTheDocument()
     expect(screen.queryByText(/default → 9,000/)).not.toBeInTheDocument()
     expect(screen.getByTestId('icon-Clock')).toBeInTheDocument()
   })

@@ -8,7 +8,7 @@ import { daysUntil, formatDate, getGainKey } from '@/utils/billing.success.utils
 import type { PlanName, SubscriptionDetail } from '@/types/billing.success.types';
 import type { WorkspaceSubscription } from '@/hooks/useBilling';
 
-const UPGRADE_PLAN_KEY = 'focura:upgrade-plan';
+const UPGRADE_PLAN_KEY = 'gablura:upgrade-plan';
 
 export function useBillingSuccess(
   workspaceId: string,

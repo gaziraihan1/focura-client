@@ -1,6 +1,6 @@
 "use client";
 
-import { useIsFocuraAdmin } from "@/hooks/useFeatures";
+import { useIsGabluraAdmin } from "@/hooks/useFeatures";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Loader2, Menu, X, Shield } from "lucide-react";
@@ -22,7 +22,7 @@ const NAV_LINKS = [
 ];
 
 export function AdminLayoutShell({ children }: { children: React.ReactNode }) {
-  const { data: isAdmin, isLoading } = useIsFocuraAdmin();
+  const { data: isAdmin, isLoading } = useIsGabluraAdmin();
   const router   = useRouter();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -48,7 +48,7 @@ export function AdminLayoutShell({ children }: { children: React.ReactNode }) {
   // boundary. Real enforcement lives in:
   //   1. proxy.ts (Next.js middleware) — JWT role check for /admin-dashboard/*
   //   2. Backend: /api/v1/admin/* is mounted behind `authenticate +
-  //      requireFocuraAdmin` — API calls from non-admins are rejected there.
+  //      requireGabluraAdmin` — API calls from non-admins are rejected there.
   useEffect(() => {
     // react-doctor-disable-next-line react-doctor/nextjs-no-client-side-redirect
     if (!isLoading && !isAdmin) router.replace("/dashboard");
@@ -77,7 +77,7 @@ export function AdminLayoutShell({ children }: { children: React.ReactNode }) {
                 <Shield className="w-3.5 h-3.5 text-primary-foreground" />
               </div>
               <span className="text-xs font-bold text-primary uppercase tracking-widest">
-                Focura Admin
+                Gablura Admin
               </span>
             </div>
 

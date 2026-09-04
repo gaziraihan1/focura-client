@@ -28,10 +28,10 @@ export const setupArticles: GuideArticle[] = [
     id: "clone-repos",
     title: "1 — Clone both repos",
     summary:
-      "Clone focura-backend and focura-client from GitHub with two git clone commands.",
+      "Clone gablura-backend and gablura-client from GitHub with two git clone commands.",
     content: (
-      <CodeBlock label="terminal">{`git clone https://github.com/gaziraihan1/focura-backend.git
-git clone https://github.com/gaziraihan1/focura-client.git`}</CodeBlock>
+      <CodeBlock label="terminal">{`git clone https://github.com/gaziraihan1/gablura-backend.git
+git clone https://github.com/gaziraihan1/gablura-client.git`}</CodeBlock>
     ),
   },
   {
@@ -46,7 +46,7 @@ git clone https://github.com/gaziraihan1/focura-client.git`}</CodeBlock>
           steps={[
             {
               title: "Install dependencies",
-              desc: <CodeBlock label="focura-backend/">{`cd focura-backend
+              desc: <CodeBlock label="gablura-backend/">{`cd gablura-backend
 npm install`}</CodeBlock>,
             },
             {
@@ -57,7 +57,7 @@ npm install`}</CodeBlock>,
                     Run the one-time key generator. This writes <IC>keys/private.pem</IC> and{" "}
                     <IC>keys/public.pem</IC>.
                   </Prose>
-                  <CodeBlock label="focura-backend/">{`node scripts/generate-keys.js`}</CodeBlock>
+                  <CodeBlock label="gablura-backend/">{`node scripts/generate-keys.js`}</CodeBlock>
                 </>
               ),
             },
@@ -78,7 +78,7 @@ ACCESS_TOKEN_SECRET="your secret here"   # use a secure random string
 NEXTAUTH_SECRET="your secret here"   # use a secure random string
 NEXTAUTH_URL="http://localhost:3000"
 NEXT_PUBLIC_API_URL=http://localhost:5000
-# NEXT_PUBLIC_API_URL="https://focura-backend-vr75.onrender.com"  # use this to connect to deployed backend
+# NEXT_PUBLIC_API_URL="https://gablura-backend-vr75.onrender.com"  # use this to connect to deployed backend
 
 # Development - load from files
 JWT_PRIVATE_KEY_PATH=./keys/private.pem
@@ -90,8 +90,8 @@ EMAIL_SERVER_HOST="smtp.gmail.com"
 EMAIL_SERVER_PORT=587
 EMAIL_SERVER_USER="your email here"   
 EMAIL_SERVER_PASSWORD="your email password or app password"
-EMAIL_FROM="Focura <your email here>"
-UPSTASH_REDIS_REST_URL="https://us1-focura-redis.upstash.io"
+EMAIL_FROM="Gablura <your email here>"
+UPSTASH_REDIS_REST_URL="https://us1-gablura-redis.upstash.io"
 UPSTASH_REDIS_REST_TOKEN="your upstash rest token here"
 JWT_EXPIRES_IN="7d"
 
@@ -131,12 +131,12 @@ FOCURA_ADMIN_IDS="comma-separated list of user IDs that can access the admin das
             },
             {
               title: "Run Prisma migrations and seed",
-              desc: <CodeBlock label="focura-backend/">{`npx prisma migrate dev
+              desc: <CodeBlock label="gablura-backend/">{`npx prisma migrate dev
 npx prisma db seed`}</CodeBlock>,
             },
             {
               title: "Start the backend",
-              desc: <CodeBlock label="focura-backend/">{`npm run dev
+              desc: <CodeBlock label="gablura-backend/">{`npm run dev
 # Server running on http://localhost:5000`}</CodeBlock>,
             },
           ]}
@@ -156,7 +156,7 @@ npx prisma db seed`}</CodeBlock>,
           steps={[
             {
               title: "Install dependencies",
-              desc: <CodeBlock label="focura-client/">{`cd focura-client
+              desc: <CodeBlock label="gablura-client/">{`cd gablura-client
 npm install`}</CodeBlock>,
             },
             {
@@ -168,7 +168,7 @@ NODE_ENV="development"
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="your secreyt here"   # use a secure random string
 NEXT_PUBLIC_API_URL=http://localhost:5000
-# NEXT_PUBLIC_API_URL="https://focura-backend-vr75.onrender.com"  # use this to connect to deployed backend
+# NEXT_PUBLIC_API_URL="https://gablura-backend-vr75.onrender.com"  # use this to connect to deployed backend
 GOOGLE_CLIENT_ID="your-google-client-id"
 GOOGLE_CLIENT_SECRET="your-google-client-secret"
 EMAIL_SERVER_HOST="smtp.gmail.com"
@@ -184,7 +184,7 @@ NODE_OPTIONS=--dns-result-order=ipv4first`}</CodeBlock>
             },
             {
               title: "Start the frontend",
-              desc: <CodeBlock label="focura-client/">{`npm run dev
+              desc: <CodeBlock label="gablura-client/">{`npm run dev
 # App running on http://localhost:3000`}</CodeBlock>,
             },
           ]}

@@ -3,31 +3,31 @@ import { ReviewsHero } from '@/components/public/reviews/ReviewsHero';
 import { ReviewsContent } from '@/components/public/reviews/ReviewsContent';
 
 export const metadata: Metadata = {
-  title: 'Reviews | Focura',
+  title: 'Reviews | Gablura',
   description:
-    'See what users think about Focura — the productivity platform that helps teams stay focused, organized, and on track.',
+    'See what users think about Gablura — the productivity platform that helps teams stay focused, organized, and on track.',
   keywords: [
-    'focura reviews',
-    'focura ratings',
+    'gablura reviews',
+    'gablura ratings',
     'productivity app reviews',
     'team collaboration reviews',
   ],
   openGraph: {
-    title: 'Focura Reviews – What Our Users Say',
+    title: 'Gablura Reviews – What Our Users Say',
     description:
-      'Real reviews from real users. See how Focura helps teams stay focused and productive.',
-    url: 'https://focura-client.vercel.app/reviews',
-    siteName: 'Focura',
+      'Real reviews from real users. See how Gablura helps teams stay focused and productive.',
+    url: 'https://gablura-client.vercel.app/reviews',
+    siteName: 'Gablura',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Focura Reviews – What Our Users Say',
+    title: 'Gablura Reviews – What Our Users Say',
     description:
-      'Real reviews from real users. See how Focura helps teams stay focused and productive.',
+      'Real reviews from real users. See how Gablura helps teams stay focused and productive.',
   },
   alternates: {
-    canonical: 'https://focura-client.vercel.app/reviews',
+    canonical: 'https://gablura-client.vercel.app/reviews',
   },
 };
 

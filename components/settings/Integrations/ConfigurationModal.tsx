@@ -92,7 +92,7 @@ export function ConfigurationModal({
                       : 'border-border hover:bg-accent',
                   )}
                 >
-                  {dir === 'one-way' ? 'Focura → Provider' : 'Two-way'}
+                  {dir === 'one-way' ? 'Gablura → Provider' : 'Two-way'}
                 </Button>
               ))}
             </div>

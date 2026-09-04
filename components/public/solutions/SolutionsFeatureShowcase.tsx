@@ -46,7 +46,7 @@ export default function SolutionsFeatureShowcase() {
             Powerful Features That Fit Your Workflow
           </h2>
           <p className="mt-4 text-foreground/70">
-            Focura adapts to your business — not the other way around.
+            Gablura adapts to your business — not the other way around.
           </p>
         </motion.div>
 

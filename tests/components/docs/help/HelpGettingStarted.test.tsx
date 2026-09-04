@@ -11,7 +11,7 @@ vi.mock('next/link', () => ({
 describe('HelpGettingStarted', () => {
   it('renders the heading', () => {
     render(<HelpGettingStarted />);
-    expect(screen.getByText('Set up Focura in 6 steps')).toBeInTheDocument();
+    expect(screen.getByText('Set up Gablura in 6 steps')).toBeInTheDocument();
   });
 
   it('renders all 6 steps', () => {

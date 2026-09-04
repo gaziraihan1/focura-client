@@ -9,7 +9,7 @@ export const contentType = 'image/png';
 
 export default async function Image() {
   return generateOGImage({
-    title: 'Focura Resources',
+    title: 'Gablura Resources',
     description: 'Guides, tutorials & insights to boost productivity.',
     gradient: 'blue',
   });

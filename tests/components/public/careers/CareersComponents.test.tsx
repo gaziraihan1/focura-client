@@ -41,7 +41,7 @@ describe('CareersHero', () => {
 
   it('renders the description', () => {
     render(<CareersHero openCount={3} />)
-    expect(screen.getByText(/Focura is a small, ambitious team/)).toBeInTheDocument()
+    expect(screen.getByText(/Gablura is a small, ambitious team/)).toBeInTheDocument()
   })
 
   it('renders culture pills', () => {
@@ -98,7 +98,7 @@ import { CareersValues } from '@/components/public/careers/CareersValues'
 describe('CareersValues', () => {
   it('renders the label', () => {
     render(<CareersValues />)
-    expect(screen.getByText('Why Focura')).toBeInTheDocument()
+    expect(screen.getByText('Why Gablura')).toBeInTheDocument()
   })
 
   it('renders the heading', () => {
@@ -226,7 +226,7 @@ const mockJob: JobListItem = {
   closingDate: '2026-12-31',
   publishedAt: new Date().toISOString(),
   applicationUrl: null,
-  applicationEmail: 'jobs@focura.app',
+  applicationEmail: 'jobs@gablura.app',
   status: 'OPEN',
 }
 
@@ -454,7 +454,7 @@ describe('CareersJobDetailModal', () => {
 
   it('renders application email', () => {
     render(<CareersJobDetailModal job={mockJobPosting} onClose={vi.fn()} />)
-    expect(screen.getByText('jobs@focura.app')).toBeInTheDocument()
+    expect(screen.getByText('jobs@gablura.app')).toBeInTheDocument()
   })
 
   it('renders close button', () => {

@@ -20,8 +20,8 @@ const FAQ_GROUPS: FAQGroup[] = [
     group: 'Account & Access',
     items: [
       {
-        q: 'Can I use Focura without creating an account?',
-        a: 'No — all Focura features require an account. You can sign up free at focura-client.vercel.app with your email or Google account. No credit card is required for the free plan.',
+        q: 'Can I use Gablura without creating an account?',
+        a: 'No — all Gablura features require an account. You can sign up free at gablura-client.vercel.app with your email or Google account. No credit card is required for the free plan.',
       },
       {
         q: 'Can I have multiple accounts?',
@@ -29,7 +29,7 @@ const FAQ_GROUPS: FAQGroup[] = [
       },
       {
         q: 'What happens when my session expires?',
-        a: 'Focura automatically refreshes your session silently 1 minute before the access token expires. You should not notice any interruption. If the refresh fails (e.g. network issue or revoked token), you will be redirected to the login page.',
+        a: 'Gablura automatically refreshes your session silently 1 minute before the access token expires. You should not notice any interruption. If the refresh fails (e.g. network issue or revoked token), you will be redirected to the login page.',
       },
       {
         q: 'Can I change my email address?',
@@ -84,7 +84,7 @@ const FAQ_GROUPS: FAQGroup[] = [
     items: [
       {
         q: 'Does the focus timer run if I close the tab?',
-        a: 'The timer is browser-based and pauses when you close the tab or navigate away. For the best experience, keep the Focura tab active during your session. We recommend using it alongside your device\'s Do Not Disturb mode.',
+        a: 'The timer is browser-based and pauses when you close the tab or navigate away. For the best experience, keep the Gablura tab active during your session. We recommend using it alongside your device\'s Do Not Disturb mode.',
       },
       {
         q: 'Is my focus time data private?',
@@ -108,8 +108,8 @@ const FAQ_GROUPS: FAQGroup[] = [
         a: 'No data is deleted on downgrade. However, if your workspace exceeds free plan limits after downgrade (e.g. more than 5 members or 3 projects), new actions on those items are blocked. Existing data remains readable.',
       },
       {
-        q: 'Is my payment information stored by Focura?',
-        a: 'No. All payment data is handled by Stripe, our Merchant of Record. Focura only stores a Stripe customer ID and the last 4 digits of your card for display purposes. No full card numbers are ever stored on Focura\'s servers.',
+        q: 'Is my payment information stored by Gablura?',
+        a: 'No. All payment data is handled by Stripe, our Merchant of Record. Gablura only stores a Stripe customer ID and the last 4 digits of your card for display purposes. No full card numbers are ever stored on Gablura\'s servers.',
       },
       {
         q: 'Can I get a VAT invoice?',
@@ -130,11 +130,11 @@ const FAQ_GROUPS: FAQGroup[] = [
       },
       {
         q: 'How do I request deletion of my data?',
-        a: 'You can delete your account from Settings → Account → Danger Zone. Personal data is purged within 30 days per our Privacy Policy. For a specific data deletion request without deleting your account, email privacy@focura.app.',
+        a: 'You can delete your account from Settings → Account → Danger Zone. Personal data is purged within 30 days per our Privacy Policy. For a specific data deletion request without deleting your account, email privacy@gablura.app.',
       },
       {
-        q: 'Does Focura sell my data?',
-        a: 'Never. Focura does not sell, rent, or trade your personal data. Analytics cookies are opt-in only. See our Privacy Policy at /privacy for the full breakdown of what we collect and why.',
+        q: 'Does Gablura sell my data?',
+        a: 'Never. Gablura does not sell, rent, or trade your personal data. Analytics cookies are opt-in only. See our Privacy Policy at /privacy for the full breakdown of what we collect and why.',
       },
     ],
   },

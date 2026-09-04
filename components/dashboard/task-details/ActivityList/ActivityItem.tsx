@@ -8,7 +8,7 @@ import {
   getActionColor,
   getActivityDescription,
 } from '@/utils/task-activity.utils';
-import { isFocuraAdminChange, getWorkspaceLimitParts } from '@/utils/workspace-limits';
+import { isGabluraAdminChange, getWorkspaceLimitParts } from '@/utils/workspace-limits';
 import type { Activity } from '@/types/task-activity.types';
 
 interface ActivityItemProps {
@@ -20,9 +20,9 @@ export function ActivityItem({ activity }: ActivityItemProps) {
     addSuffix: true,
   });
 
-  // Focura-admin workspace-limit changes get a dedicated look: shield icon,
-  // "Focura admin" badge, and friendly before → after chips.
-  const isAdminChange = isFocuraAdminChange(activity.metadata?.source);
+  // Gablura-admin workspace-limit changes get a dedicated look: shield icon,
+  // "Gablura admin" badge, and friendly before → after chips.
+  const isAdminChange = isGabluraAdminChange(activity.metadata?.source);
   const limitParts = getWorkspaceLimitParts(activity.metadata?.changes);
 
   const iconName = isAdminChange ? 'ShieldCheck' : getActivityIcon(activity.action);
@@ -63,7 +63,7 @@ export function ActivityItem({ activity }: ActivityItemProps) {
 
             {isAdminChange && (
               <span className="inline-flex items-center rounded-md bg-primary/10 text-primary text-[10px] font-semibold px-1.5 py-0.5 mt-1">
-                Focura admin
+                Gablura admin
               </span>
             )}
 

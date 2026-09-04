@@ -119,7 +119,7 @@ export const GAINED_FEATURES: Record<string, GainedFeature[]> = {
     {
       icon: Shield,
       label: 'API access',
-      detail: 'Integrate Focura into your own tools',
+      detail: 'Integrate Gablura into your own tools',
     },
     {
       icon: Headphones,
@@ -141,7 +141,7 @@ export const GAINED_FEATURES: Record<string, GainedFeature[]> = {
     {
       icon: Shield,
       label: 'API access',
-      detail: 'Integrate Focura into your own tools',
+      detail: 'Integrate Gablura into your own tools',
     },
     {
       icon: Headphones,

@@ -1,6 +1,6 @@
 /**
  * GENERATED FILE — do not edit directly.
- * Synced from focura-backend/src/lib/contracts/task.contract.ts via `npm run sync:contracts`.
+ * Synced from gablura-backend/src/lib/contracts/task.contract.ts via `npm run sync:contracts`.
  * This is the single source of truth for the API wire format.
  */
 

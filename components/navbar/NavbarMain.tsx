@@ -9,7 +9,7 @@ import { Button, buttonVariants } from "@/components/ui/Button";
 import ThemeSwitcher from "../themes/ThemeSwitcher";
 import { useSession } from "next-auth/react";
 import { logout } from "@/lib/auth/logout";
-import { useIsFocuraAdmin } from "@/hooks/useFeatures";
+import { useIsGabluraAdmin } from "@/hooks/useFeatures";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -36,7 +36,7 @@ const mobileLinkClass = (active: boolean) =>
   }`;
 
 export default function NavbarMain() {
-  const { data: isAdmin = false } = useIsFocuraAdmin();
+  const { data: isAdmin = false } = useIsGabluraAdmin();
   const [open, setOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { status } = useSession();
@@ -80,8 +80,8 @@ export default function NavbarMain() {
             onClick={() => setOpen(false)}
             className="flex items-center gap-2 text-lg sm:text-xl font-semibold shrink-0"
           >
-            <Image src="/focura.png" width={36} height={36} alt="Focura" className="rounded-md" priority />
-            Focura
+            <Image src="/gablura-logo-rounded.png" width={36} height={36} alt="Gablura" className="rounded-md" priority />
+            Gablura
           </Link>
 
           <div className="hidden lg:flex items-center gap-1">

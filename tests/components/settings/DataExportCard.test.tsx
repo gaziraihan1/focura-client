@@ -13,7 +13,7 @@ vi.mock('@/lib/axios', () => ({
 
 vi.mock('@/hooks/useUserProfile', () => ({
   useUserProfile: vi.fn(() => ({
-    data: { email: 'test@focura.com' },
+    data: { email: 'test@gablura.com' },
     isLoading: false,
   })),
 }));
@@ -55,7 +55,7 @@ describe('DataExportCard', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/Export requested — it will arrive at test@focura\.com/)
+        screen.getByText(/Export requested — it will arrive at test@gablura\.com/)
       ).toBeInTheDocument();
     });
     expect(toast.success).toHaveBeenCalledWith('Export requested — check your email');

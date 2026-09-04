@@ -44,14 +44,14 @@ export const HelpHero = ({ onSearch }: HelpHeroProps) => {
         {/* Badge */}
         <div className='inline-flex items-center gap-2 rounded-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-4 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-6 shadow-sm'>
           <Zap className='w-3.5 h-3.5 text-blue-500' />
-          Focura Help Center
+          Gablura Help Center
         </div>
 
         <h1 className='text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 mb-3'>
           How can we help?
         </h1>
         <p className='text-base text-neutral-500 dark:text-neutral-400 mb-8'>
-          Search guides, answers, and documentation for every feature in Focura.
+          Search guides, answers, and documentation for every feature in Gablura.
         </p>
 
         {/* Search */}

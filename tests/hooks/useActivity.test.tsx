@@ -83,7 +83,7 @@ describe('useActivities', () => {
     expect(activity).toHaveProperty('entityType')
     expect(activity).toHaveProperty('user')
     expect(activity).toHaveProperty('workspace')
-    expect(activity?.user.email).toBe('test@focura.com')
+    expect(activity?.user.email).toBe('test@gablura.com')
   })
 })
 

@@ -57,7 +57,7 @@ export const PLANS: readonly Plan[] = [
   },
 ] as const;
 
-// ENTERPRISE is Focura-admin granted (not self-serve purchasable), so it is
+// ENTERPRISE is Gablura-admin granted (not self-serve purchasable), so it is
 // ranked above BUSINESS for gating comparisons but has no PLANS card.
 export const PLAN_RANK = { FREE: 0, PRO: 1, BUSINESS: 2, ENTERPRISE: 3 } as const;
 

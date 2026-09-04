@@ -70,7 +70,7 @@ export const AboutValues = () => {
           </h2>
           <p className="text-sm text-muted-foreground max-w-xs leading-relaxed md:text-right">
             These are not aspirations — they are verifiable properties of the
-            Focura codebase.
+            Gablura codebase.
           </p>
         </div>
 

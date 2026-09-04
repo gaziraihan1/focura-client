@@ -207,7 +207,7 @@ export function AutomationRuleForm({
             {initial ? "Edit rule" : "New rule"}
           </h3>
           <p className="text-xs text-muted-foreground mt-0.5">
-            When the trigger fires, Focura runs the actions below.
+            When the trigger fires, Gablura runs the actions below.
           </p>
         </div>
       </div>

@@ -3,7 +3,7 @@ import { FULL_BASE, type ApiSection } from '../types';
 export const tasksSection: ApiSection = {
   id         : 'tasks',
   title      : 'Tasks',
-  description: 'Full CRUD for tasks, subtasks, dependencies, assignments, and time entries. Tasks are the core entity in Focura.',
+  description: 'Full CRUD for tasks, subtasks, dependencies, assignments, and time entries. Tasks are the core entity in Gablura.',
   endpoints  : [
     {
       id         : 'tasks-list',

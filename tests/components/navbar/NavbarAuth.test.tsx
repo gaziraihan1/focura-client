@@ -16,10 +16,10 @@ vi.mock('@/components/themes/ThemeSwitcher', () => ({
 }))
 
 describe('NavbarAuth', () => {
-  it('renders the Focura logo text', () => {
+  it('renders the Gablura logo text', () => {
     render(<NavbarAuth />)
 
-    expect(screen.getByText('Focura')).toBeInTheDocument()
+    expect(screen.getByText('Gablura')).toBeInTheDocument()
   })
 
   it('renders "Back to Home" link', () => {
@@ -33,8 +33,8 @@ describe('NavbarAuth', () => {
     render(<NavbarAuth />)
 
     const img = screen.getByRole('img')
-    expect(img).toHaveAttribute('src', '/focura.png')
-    expect(img).toHaveAttribute('alt', 'Focura')
+    expect(img).toHaveAttribute('src', '/gablura-logo-rounded.png')
+    expect(img).toHaveAttribute('alt', 'Gablura')
   })
 
   it('renders ThemeSwitcher', () => {

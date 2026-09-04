@@ -22,7 +22,7 @@
 
 ## Overview
 
-Focura uses a **dual-token architecture** where:
+Gablura uses a **dual-token architecture** where:
 
 1. **NextAuth.js** (Frontend) handles the initial authentication (login, OAuth, session state)
 2. **Express Backend** handles all API authorization via RS256 JWTs
@@ -125,12 +125,12 @@ Instead of moving auth, we use an **exchange pattern**:
 │                                                                             │
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
 │  │  Redis (Session/Token Storage)                                        │  │
-│  │  ├─ Access token revocation (focura:revoked:access:{jti})            │  │
-│  │  ├─ Refresh token storage (focura:refresh:{userId}:{jti})            │  │
+│  │  ├─ Access token revocation (gablura:revoked:access:{jti})            │  │
+│  │  ├─ Refresh token storage (gablura:refresh:{userId}:{jti})            │  │
 │  │  ├─ Session metadata (session:metadata:{sessionId})                  │  │
 │  │  ├─ CSRF tokens (csrf:{userId}:{sessionId})                          │  │
-│  │  ├─ Account lockout (focura:lockout:locked:{email})                  │  │
-│  │  └─ SSE tokens (focura:sse:{jti})                                    │  │
+│  │  ├─ Account lockout (gablura:lockout:locked:{email})                  │  │
+│  │  └─ SSE tokens (gablura:sse:{jti})                                    │  │
 │  └───────────────────────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -186,8 +186,8 @@ Instead of moving auth, we use an **exchange pattern**:
   sessionId: string; // Session ID (for binding)
   iat: number;      // Issued at
   exp: number;      // Expiration
-  iss: "focura-app"; // Issuer
-  aud: "focura-backend"; // Audience
+  iss: "gablura-app"; // Issuer
+  aud: "gablura-backend"; // Audience
 }
 ```
 
@@ -448,18 +448,18 @@ Logout (all devices):
 ### 1. Token Revocation
 
 **Access Tokens:**
-- Stored in Redis: `focura:revoked:access:{jti}`
+- Stored in Redis: `gablura:revoked:access:{jti}`
 - TTL = token expiry (15min)
 - Checked on every request (auth middleware)
 
 **Refresh Tokens:**
-- Stored in Redis: `focura:refresh:{userId}:{jti}`
+- Stored in Redis: `gablura:refresh:{userId}:{jti}`
 - TTL = token expiry (7d)
 - Atomic rotation via Lua script
 - Replay detection (if old token not found → revoke all)
 
 **Sessions:**
-- Stored in Redis: `focura:session:revoked:{sessionId}`
+- Stored in Redis: `gablura:session:revoked:{sessionId}`
 - TTL = 7d
 - Checked on every request
 
@@ -587,10 +587,10 @@ const secret = process.env.NEXTAUTH_SECRET; // ✅ Server-side only
 redis-cli GET "session:metadata:{sessionId}"
 
 # Check if session is revoked
-redis-cli GET "focura:session:revoked:{sessionId}"
+redis-cli GET "gablura:session:revoked:{sessionId}"
 
 # Check refresh token exists
-redis-cli GET "focura:refresh:{userId}:{jti}"
+redis-cli GET "gablura:refresh:{userId}:{jti}"
 
 # Check audit logs
 grep "SESSION_HIJACK\|SESSION_TIMEOUT\|MAX_SESSIONS" /var/log/app.log
@@ -621,7 +621,7 @@ redis-cli PING
 **Debug steps:**
 ```bash
 # Check refresh token exists
-redis-cli GET "focura:refresh:{userId}:{oldJti}"
+redis-cli GET "gablura:refresh:{userId}:{oldJti}"
 
 # Check audit logs
 grep "TOKEN_REPLAY_DETECTED" /var/log/app.log

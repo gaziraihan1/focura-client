@@ -3,32 +3,32 @@ import { ContactHero } from "@/components/public/contact/ContactHero";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact | Focura",
+  title: "Contact | Gablura",
   description:
-    "Get in touch with the Focura team — for general enquiries, billing support, technical issues, feature requests, partnerships, or security disclosures.",
+    "Get in touch with the Gablura team — for general enquiries, billing support, technical issues, feature requests, partnerships, or security disclosures.",
   keywords: [
-    "focura contact",
-    "focura support",
-    "contact focura",
-    "focura help",
+    "gablura contact",
+    "gablura support",
+    "contact gablura",
+    "gablura help",
     "billing support",
   ],
   openGraph: {
-    title: "Contact Focura – Get in Touch",
+    title: "Contact Gablura – Get in Touch",
     description:
-      "Reach out to the Focura team. We respond to all messages within 2 business days.",
-    url: "https://focura-client.vercel.app/contact",
-    siteName: "Focura",
+      "Reach out to the Gablura team. We respond to all messages within 2 business days.",
+    url: "https://gablura-client.vercel.app/contact",
+    siteName: "Gablura",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Contact Focura – Get in Touch",
+    title: "Contact Gablura – Get in Touch",
     description:
-      "Reach out to the Focura team. We respond to all messages within 2 business days.",
+      "Reach out to the Gablura team. We respond to all messages within 2 business days.",
   },
   alternates: {
-    canonical: "https://focura-client.vercel.app/contact",
+    canonical: "https://gablura-client.vercel.app/contact",
   },
 };
 

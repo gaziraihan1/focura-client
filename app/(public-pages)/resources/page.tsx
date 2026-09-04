@@ -14,32 +14,32 @@ export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Focura Resources – Guides, Tutorials & Insights",
+  title: "Gablura Resources – Guides, Tutorials & Insights",
   description:
-    "Access Focura resources: tutorials, guides, blogs, and tips to maximize productivity and master workspace management.",
+    "Access Gablura resources: tutorials, guides, blogs, and tips to maximize productivity and master workspace management.",
   keywords: [
-    "focura resources",
-    "focura guides",
-    "focura tutorials",
+    "gablura resources",
+    "gablura guides",
+    "gablura tutorials",
     "productivity tips",
     "workspace management guide",
   ],
   openGraph: {
-    title: "Focura Resources – Learn & Master Productivity",
+    title: "Gablura Resources – Learn & Master Productivity",
     description:
-      "Explore articles, tutorials, and guides to get the most out of Focura and boost your team's productivity.",
-    url: "https://focura-client.vercel.app/resources",
-    siteName: "Focura",
+      "Explore articles, tutorials, and guides to get the most out of Gablura and boost your team's productivity.",
+    url: "https://gablura-client.vercel.app/resources",
+    siteName: "Gablura",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Focura Resources – Learn & Master Productivity",
+    title: "Gablura Resources – Learn & Master Productivity",
     description:
-      "Explore articles, tutorials, and guides to get the most out of Focura and boost your team's productivity.",
+      "Explore articles, tutorials, and guides to get the most out of Gablura and boost your team's productivity.",
   },
   alternates: {
-    canonical: "https://focura-client.vercel.app/resources",
+    canonical: "https://gablura-client.vercel.app/resources",
   },
 };
 

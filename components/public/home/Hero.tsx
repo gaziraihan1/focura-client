@@ -79,7 +79,7 @@ function HeroCopy() {
       </h1>
 
       <p className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground md:text-lg leading-relaxed">
-        Focura brings your tasks, projects, and people together in one focused
+        Gablura brings your tasks, projects, and people together in one focused
         workspace — so you can plan less and do more.
       </p>
 
@@ -125,7 +125,7 @@ function HeroDashboardMockup() {
           <span className="h-2.5 w-2.5 rounded-full bg-foreground/20" />
           <span className="h-2.5 w-2.5 rounded-full bg-foreground/20" />
           <div className="ml-4 hidden sm:block rounded-md bg-background px-3 py-1 text-[11px] font-medium text-muted-foreground border border-border">
-            app.focura.com/dashboard
+            app.gablura.com/dashboard
           </div>
         </div>
 
@@ -134,7 +134,7 @@ function HeroDashboardMockup() {
           <div className="hidden md:flex flex-col border-r border-border bg-muted/20 p-3">
             <div className="flex items-center gap-2 px-2 pb-3 border-b border-border/70 mb-2">
               <div className="flex h-5 w-5 items-center justify-center rounded-md bg-foreground text-[9px] font-bold text-background">F</div>
-              <span className="text-[11px] font-semibold text-foreground">Focura</span>
+              <span className="text-[11px] font-semibold text-foreground">Gablura</span>
             </div>
 
             <nav className="flex-1 space-y-0.5">
@@ -204,7 +204,7 @@ function HeroDashboardMockup() {
                     <span className="text-[10px]">☀️</span>
                   </div>
                   <p className="mt-0.5 truncate text-[9px] text-muted-foreground">
-                    Here&apos;s your Focura hub — pick a workspace to dive in.
+                    Here&apos;s your Gablura hub — pick a workspace to dive in.
                   </p>
                   <div className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-muted/60 px-2 py-0.5 text-[8px] text-muted-foreground">
                     <TrendingUp size={9} />
@@ -394,7 +394,7 @@ export default function Hero() {
 
       <HeroCopy />
 
-      {/* ── CSS-built dashboard mockup (mirrors the real Focura dashboard) ── */}
+      {/* ── CSS-built dashboard mockup (mirrors the real Gablura dashboard) ── */}
       <HeroDashboardMockup />
     </section>
   );

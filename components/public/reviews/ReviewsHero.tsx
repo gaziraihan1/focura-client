@@ -24,7 +24,7 @@ export function ReviewsHero() {
           </h1>
 
           <p className="mt-4 max-w-2xl text-base sm:text-lg text-muted-foreground">
-            Real reviews from real users. See how Focura helps teams stay focused
+            Real reviews from real users. See how Gablura helps teams stay focused
             and productive every day.
           </p>
 

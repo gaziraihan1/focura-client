@@ -24,13 +24,13 @@ export default function FeatureSection() {
       <div className="absolute inset-0 bg-linear-to-b from-primary/5 via-transparent to-transparent pointer-events-none" />
       <div className="relative max-w-6xl mx-auto px-6 text-center">
         <span className="text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground">
-          Why Focura
+          Why Gablura
         </span>
         <h2 className="mt-3 text-3xl md:text-5xl font-bold tracking-tight text-foreground">
           A platform built for modern teams
         </h2>
         <p className="mt-4 text-muted-foreground max-w-2xl mx-auto text-lg">
-          Focura gives you all the tools you need to plan, collaborate, and ship
+          Gablura gives you all the tools you need to plan, collaborate, and ship
           work efficiently — without the usual complexity.
         </p>
 

@@ -22,7 +22,7 @@ describe('Hero', () => {
 
   it('renders description', () => {
     render(<Hero />)
-    expect(screen.getByText(/Focura brings your tasks, projects/)).toBeInTheDocument()
+    expect(screen.getByText(/Gablura brings your tasks, projects/)).toBeInTheDocument()
   })
 
   it('renders CTA buttons', () => {

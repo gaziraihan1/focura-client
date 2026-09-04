@@ -135,7 +135,7 @@ http.put(`${BASE}/api/v1/tasks/:taskId/comments/:commentId`, async ({ request, p
     id: params.commentId as string,
     content: body.content,
     createdAt: '2024-01-01T00:00:00.000Z',
-    user: { id: 'user-1', name: 'Test User', email: 'test@focura.com' },
+    user: { id: 'user-1', name: 'Test User', email: 'test@gablura.com' },
     parentId: null,
     edited: true,
   })

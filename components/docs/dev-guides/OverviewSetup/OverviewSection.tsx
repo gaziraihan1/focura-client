@@ -12,7 +12,7 @@ export const overviewArticles: GuideArticle[] = [
     content: (
       <>
         <Prose>
-          Focura is a full-stack TypeScript SaaS split across two repositories: a Next.js 16 client
+          Gablura is a full-stack TypeScript SaaS split across two repositories: a Next.js 16 client
           and an Express.js backend. Both share a PostgreSQL database via Prisma and communicate over
           HTTPS with RS256 JWT tokens.
         </Prose>
@@ -43,17 +43,17 @@ export const overviewArticles: GuideArticle[] = [
     id: "repository-structure",
     title: "Repository structure",
     summary:
-      "Two repositories: focura-client (Next.js frontend with app, components, hooks, lib, types) and focura-backend (Express API with src/modules, middleware, sockets, crons).",
+      "Two repositories: gablura-client (Next.js frontend with app, components, hooks, lib, types) and gablura-backend (Express API with src/modules, middleware, sockets, crons).",
     content: (
       <>
         <SectionH>Repository structure</SectionH>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-          <InfoCard icon="🖥" title="focura-client">
+          <InfoCard icon="🖥" title="gablura-client">
             Next.js 16 frontend. Folders: <IC>app/</IC> <IC>components/</IC> <IC>hooks/</IC>{" "}
             <IC>lib/</IC> <IC>types/</IC> <IC>constants/</IC> <IC>context/</IC> <IC>utils/</IC>{" "}
             <IC>tests/</IC>
           </InfoCard>
-          <InfoCard icon="⚙️" title="focura-backend">
+          <InfoCard icon="⚙️" title="gablura-backend">
             Express.js API. Folders: <IC>src/modules/</IC> <IC>src/middleware/</IC> <IC>src/lib/</IC>{" "}
             <IC>src/sockets/</IC> <IC>src/crons/</IC> <IC>prisma/</IC> <IC>keys/</IC>
           </InfoCard>

@@ -1,6 +1,6 @@
-# 🤝 Contributing to Focura Client
+# 🤝 Contributing to Gablura Client
 
-Thank you for your interest in contributing to **Focura Client** — the Next.js frontend of Focura, a focused, workspace-based productivity SaaS.
+Thank you for your interest in contributing to **Gablura Client** — the Next.js frontend of Gablura, a focused, workspace-based productivity SaaS.
 
 This guide reflects how the repository actually works today (stack, scripts, structure, test conventions, and review process). Please read it fully before opening a pull request.
 
@@ -26,7 +26,7 @@ Please make sure you have read:
 - UI/UX refinements
 - Accessibility improvements
 - Refactoring (without changing behavior)
-- New features aligned with Focura's vision
+- New features aligned with Gablura's vision
 
 ### 📝 Documentation
 - Improve existing documentation
@@ -69,8 +69,8 @@ Please make sure you have read:
 
 1. **Fork** the repository and clone your fork:
 ```bash
-git clone https://github.com/gaziraihan1/focura-client.git
-cd focura-client
+git clone https://github.com/gaziraihan1/gablura-client.git
+cd gablura-client
 ```
 
 2. **Install dependencies** (this also runs `prisma generate` via `postinstall`):
@@ -261,7 +261,7 @@ npx vitest run tests/hooks/useEnergyLevel.test.ts tests/components/Dashboard/Cal
 
 ## 🧠 Project Philosophy
 
-Focura values:
+Gablura values:
 
 - Focus over feature bloat
 - Simplicity over complexity
@@ -276,6 +276,6 @@ All contributions should align with this mindset.
 
 All contributions are reviewed by:
 
-**Mohammad Raihan Gazi** — Creator & Maintainer of Focura
+**Mohammad Raihan Gazi** — Creator & Maintainer of Gablura
 
 Thank you for contributing 🚀

@@ -20,15 +20,15 @@ const TermsContent = () => {
       {/* 1. Introduction */}
       <TermsSection id="introduction" title="Introduction" icon={FileText} index={1}>
         <p>
-          Welcome to Focura (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;). These Terms &amp; Conditions govern your
-          access to and use of the Focura platform, including our website, web
+          Welcome to Gablura (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;). These Terms &amp; Conditions govern your
+          access to and use of the Gablura platform, including our website, web
           application, APIs, and all related services (collectively, the
           &quot;Service&quot;).
         </p>
         <TermsHighlight variant="info">
           By creating an account or using any part of the Service, you acknowledge
           that you have read, understood, and agree to be bound by these Terms. If
-          you do not agree, please do not use Focura.
+          you do not agree, please do not use Gablura.
         </TermsHighlight>
         <p>
           These Terms apply to all users of the Service, including visitors,
@@ -41,7 +41,7 @@ const TermsContent = () => {
       {/* 2. Eligibility */}
       <TermsSection id="eligibility" title="Eligibility & Account Registration" icon={UserCheck} index={2}>
         <p>
-          To use Focura you must meet the following requirements:
+          To use Gablura you must meet the following requirements:
         </p>
         <TermsList
           items={[
@@ -56,10 +56,10 @@ const TermsContent = () => {
           You are responsible for all actions taken through your account. Notify us
           immediately at{" "}
           <a
-            href="mailto:security@focura.app"
+            href="mailto:security@gablura.app"
             className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
           >
-            security@focura.app
+            security@gablura.app
           </a>{" "}
           if you suspect any unauthorized access.
         </p>
@@ -78,7 +78,7 @@ const TermsContent = () => {
             "Attempt to gain unauthorized access to any portion of the Service or related systems.",
             "Use the Service to send unsolicited communications (spam) or to harvest data without consent.",
             "Introduce malware, viruses, or any destructive code into the platform.",
-            "Reverse-engineer, decompile, or attempt to extract source code from Focura.",
+            "Reverse-engineer, decompile, or attempt to extract source code from Gablura.",
             "Resell, sublicense, or commercially exploit the Service without our written consent.",
             "Interfere with or disrupt the integrity or performance of the Service or other users' use of it.",
           ]}
@@ -95,17 +95,17 @@ const TermsContent = () => {
           <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
             Our IP:
           </strong>{" "}
-          The Focura platform, including its design, code, trademarks, logos, and
+          The Gablura platform, including its design, code, trademarks, logos, and
           all related materials, are owned by or licensed to us and are protected
           by applicable intellectual property laws. Nothing in these Terms
-          transfers ownership of Focura&apos;s IP to you.
+          transfers ownership of Gablura&apos;s IP to you.
         </p>
         <p>
           <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
             Your Content:
           </strong>{" "}
           You retain full ownership of all content, data, and materials you upload
-          or create within the Service (&quot;User Content&quot;). By using Focura, you
+          or create within the Service (&quot;User Content&quot;). By using Gablura, you
           grant us a limited, non-exclusive, royalty-free license to store, process,
           and display your User Content solely to operate and improve the Service.
         </p>
@@ -113,7 +113,7 @@ const TermsContent = () => {
           items={[
             "You are solely responsible for the legality and accuracy of your User Content.",
             "We do not claim ownership of any data, files, or work products you create.",
-            "You may request a copy of your data at any time by contacting privacy@focura.app.",
+            "You may request a copy of your data at any time by contacting privacy@gablura.app.",
           ]}
         />
       </TermsSection>
@@ -121,7 +121,7 @@ const TermsContent = () => {
       {/* 5. Billing */}
       <TermsSection id="billing" title="Billing & Subscriptions" icon={CreditCard} index={5}>
         <p>
-          Focura offers both free and paid subscription plans. By subscribing to a
+          Gablura offers both free and paid subscription plans. By subscribing to a
           paid plan, you agree to the following:
         </p>
         <TermsList
@@ -152,10 +152,10 @@ const TermsContent = () => {
           </strong>{" "}
           You may request account deletion at any time by contacting{" "}
           <a
-            href="mailto:privacy@focura.app"
+            href="mailto:privacy@gablura.app"
             className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
           >
-            privacy@focura.app
+            privacy@gablura.app
           </a>
           . Upon deletion, your data will be permanently removed within 30 days,
           subject to our data retention obligations under applicable law.
@@ -191,7 +191,7 @@ const TermsContent = () => {
           fitness for a particular purpose or non-infringement.
         </TermsHighlight>
         <p>
-          To the fullest extent permitted by applicable law, Focura and its
+          To the fullest extent permitted by applicable law, Gablura and its
           officers, directors, employees, and agents shall not be liable for:
         </p>
         <TermsList
@@ -232,7 +232,7 @@ const TermsContent = () => {
       <TermsSection id="governing-law" title="Governing Law & Disputes" icon={Globe} index={9}>
         <p>
           These Terms are governed by and construed in accordance with the laws of
-          the jurisdiction in which Focura is incorporated, without regard to its
+          the jurisdiction in which Gablura is incorporated, without regard to its
           conflict of law provisions.
         </p>
         <p>
@@ -250,7 +250,7 @@ const TermsContent = () => {
           please reach out:
         </p>
         <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 p-5 space-y-2 text-sm">
-          <p className="font-semibold text-neutral-900 dark:text-neutral-100">Focura Legal Team</p>
+          <p className="font-semibold text-neutral-900 dark:text-neutral-100">Gablura Legal Team</p>
           <p>
             Email:{" "}
             <a
@@ -263,12 +263,12 @@ const TermsContent = () => {
           <p>
             Website:{" "}
             <a
-              href="https://focura-client.vercel.app"
+              href="https://gablura-client.vercel.app"
               target="_blank"
               rel="noopener noreferrer"
               className="text-neutral-900 dark:text-neutral-100 underline underline-offset-2 decoration-neutral-400 hover:decoration-neutral-700 transition-colors"
             >
-              focura-client.vercel.app
+              gablura-client.vercel.app
             </a>
           </p>
           <p className="text-neutral-500 dark:text-neutral-500 text-xs pt-1">

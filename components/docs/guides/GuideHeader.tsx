@@ -31,7 +31,7 @@ export function GuideHeader({
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 min-w-0">
-          <span className="text-foreground font-bold text-lg tracking-tight min-w-0 truncate">Focura</span>
+          <span className="text-foreground font-bold text-lg tracking-tight min-w-0 truncate">Gablura</span>
           <span aria-hidden="true" className="hidden sm:inline text-muted-foreground text-sm">
             /
           </span>

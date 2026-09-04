@@ -9,32 +9,32 @@ import { AboutValues } from "@/components/public/about/AboutValues";
 import { AboutOpenSource } from "@/components/public/about/AboutOpenSource";
 import { AboutCTA } from "@/components/public/about/AboutCTA";
 export const metadata: Metadata = {
-  title: "About | Focura",
+  title: "About | Gablura",
   description:
-    "Learn about Focura — a modern productivity and collaboration SaaS built with Next.js 16, React 19, TypeScript, and Tailwind v4. Built by Mohammad Raihan Gazi.",
+    "Learn about Gablura — a modern productivity and collaboration SaaS built with Next.js 16, React 19, TypeScript, and Tailwind v4. Built by Mohammad Raihan Gazi.",
   keywords: [
-    "focura about",
-    "focura team",
+    "gablura about",
+    "gablura team",
     "productivity platform",
     "workspace management",
     "nextjs saas",
   ],
   openGraph: {
-    title: "About Focura – Focus Smarter. Manage Workspaces, Projects & Teams",
+    title: "About Gablura – Focus Smarter. Manage Workspaces, Projects & Teams",
     description:
-      "Meet the stack, architecture, and founder behind Focura. A modern productivity platform built with Next.js 16, React 19, TypeScript, and Tailwind v4.",
-    url: "https://focura-client.vercel.app/about",
-    siteName: "Focura",
+      "Meet the stack, architecture, and founder behind Gablura. A modern productivity platform built with Next.js 16, React 19, TypeScript, and Tailwind v4.",
+    url: "https://gablura-client.vercel.app/about",
+    siteName: "Gablura",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "About Focura – Focus Smarter. Manage Workspaces, Projects & Teams",
+    title: "About Gablura – Focus Smarter. Manage Workspaces, Projects & Teams",
     description:
-      "Meet the stack, architecture, and founder behind Focura. Next.js 16 · React 19 · TypeScript · Tailwind v4.",
+      "Meet the stack, architecture, and founder behind Gablura. Next.js 16 · React 19 · TypeScript · Tailwind v4.",
   },
   alternates: {
-    canonical: "https://focura-client.vercel.app/about",
+    canonical: "https://gablura-client.vercel.app/about",
   },
 };
 

@@ -34,7 +34,7 @@ describe('DeleteWorkspaceModal', () => {
   it('displays delete warning text', () => {
     render(<DeleteWorkspaceModal {...defaultProps} />)
     expect(screen.getByText(/remove .* from your dashboard/)).toBeInTheDocument()
-    expect(screen.getByText(/restored by Focura support/)).toBeInTheDocument()
+    expect(screen.getByText(/restored by Gablura support/)).toBeInTheDocument()
   })
 
   it('calls onDelete when delete button is clicked', () => {

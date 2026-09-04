@@ -173,7 +173,7 @@ const ApiDocsContent = () => {
                   Contact support
                 </Link>
                 <a
-                  href='https://github.com/gaziraihan1/focura-backend/issues'
+                  href='https://github.com/gaziraihan1/gablura-backend/issues'
                   target='_blank'
                   rel='noopener noreferrer'
                   className='inline-flex items-center gap-2 border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded-xl px-5 py-2.5 text-sm font-semibold hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors'

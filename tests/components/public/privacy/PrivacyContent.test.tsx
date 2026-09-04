@@ -133,15 +133,15 @@ describe('PrivacyContent', () => {
 
   it('renders key content text', () => {
     render(<PrivacyContent />)
-    expect(screen.getByText(/Focura.*productivity.*SaaS platform/)).toBeInTheDocument()
+    expect(screen.getByText(/Gablura.*productivity.*SaaS platform/)).toBeInTheDocument()
     expect(screen.getByText(/do not sell.*personal data/i)).toBeInTheDocument()
   })
 
   it('renders email links', () => {
     render(<PrivacyContent />)
-    const privacy = screen.getAllByText('privacy@focura.app')
+    const privacy = screen.getAllByText('privacy@gablura.app')
     expect(privacy.length).toBeGreaterThan(0)
-    const security = screen.getAllByText('security@focura.app')
+    const security = screen.getAllByText('security@gablura.app')
     expect(security.length).toBeGreaterThan(0)
   })
 

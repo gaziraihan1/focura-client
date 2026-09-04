@@ -20,7 +20,7 @@ export const billingKeys = {
 // ---------------------------------------------------------------------------
 
 export type PlanName    = 'FREE' | 'PRO' | 'BUSINESS' | 'ENTERPRISE';
-/** Plans a workspace owner can self-serve purchase/change to — ENTERPRISE is Focura-admin granted only. */
+/** Plans a workspace owner can self-serve purchase/change to — ENTERPRISE is Gablura-admin granted only. */
 export type SelfServePlan = Exclude<PlanName, 'ENTERPRISE'>;
 export type BillingCycle = 'MONTHLY' | 'YEARLY';
 

@@ -9,7 +9,7 @@ export const contentType = 'image/png';
 
 export default async function Image() {
   return generateOGImage({
-    title: 'Careers at Focura',
+    title: 'Careers at Gablura',
     description: 'Join us in building the future of focused work.',
     gradient: 'emerald',
   });

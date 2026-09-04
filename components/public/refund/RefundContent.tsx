@@ -24,13 +24,13 @@ function RefundSectionsPart1() {
       {/* 1. Overview */}
       <RefundSection id="overview" title="Overview" icon={FileText} index={1}>
         <p>
-          At Focura, we stand behind the quality of our product. If you are not
+          At Gablura, we stand behind the quality of our product. If you are not
           satisfied with your subscription for a qualifying reason, we offer a
           fair and transparent refund process. This policy explains exactly when
           a refund is available, how to request one, and what to expect.
         </p>
         <RefundHighlight variant="info">
-          All payments on Focura are processed by{" "}
+          All payments on Gablura are processed by{" "}
           <strong className="font-semibold">Lemon Squeezy</strong>, our Merchant of
           Record. This means Lemon Squeezy handles the actual charge, tax, and refund
           on our behalf. See{" "}
@@ -55,7 +55,7 @@ function RefundSectionsPart1() {
         index={2}
       >
         <p>
-          Focura offers a{" "}
+          Gablura offers a{" "}
           <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
             14-calendar-day refund window
           </strong>{" "}
@@ -112,7 +112,7 @@ function RefundSectionsPart1() {
               </strong>{" "}
               If your reason is a technical problem, you must provide clear
               evidence — such as error screenshots, screen recordings, or
-              browser console logs — demonstrating that a core feature of Focura
+              browser console logs — demonstrating that a core feature of Gablura
               was broken and prevented you from using the product as intended.
               General dissatisfaction without a technical cause is assessed under
               the light-usage condition above.
@@ -219,7 +219,7 @@ function RefundSectionsPart2() {
         <RefundList
           ordered
           items={[
-            "Log in to your Focura account and navigate to Settings → Billing.",
+            "Log in to your Gablura account and navigate to Settings → Billing.",
             'Click "Cancel Subscription" and confirm the cancellation.',
             "You will receive a Lemon Squeezy cancellation confirmation email — include this in your refund request as proof.",
             "Your account will remain on the paid plan until the end of the current billing period.",
@@ -310,10 +310,10 @@ function RefundSectionsPart3() {
               and a subscription was purchased fraudulently, contact us
               immediately at{" "}
               <a
-                href="mailto:security@focura.app"
+                href="mailto:security@gablura.app"
                 className="underline underline-offset-2 text-neutral-900 dark:text-neutral-100"
               >
-                security@focura.app
+                security@gablura.app
               </a>
               . We will investigate and work with Lemon Squeezy to resolve the issue.
             </span>,
@@ -321,7 +321,7 @@ function RefundSectionsPart3() {
               <strong className="font-semibold text-neutral-800 dark:text-neutral-200">
                 Extended service outages:
               </strong>{" "}
-              If Focura experiences a verified outage lasting more than 48
+              If Gablura experiences a verified outage lasting more than 48
               continuous hours during your subscription period, you may be
               eligible for a pro-rated credit or partial refund at our
               discretion.
@@ -329,7 +329,7 @@ function RefundSectionsPart3() {
           ]}
         />
         <RefundHighlight variant="info">
-          Exceptions are handled on a case-by-case basis at Focura&apos;s sole
+          Exceptions are handled on a case-by-case basis at Gablura&apos;s sole
           discretion. Raising an exception does not guarantee a refund but we
           commit to reviewing every claim honestly and responding in writing.
         </RefundHighlight>

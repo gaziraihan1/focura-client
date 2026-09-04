@@ -42,7 +42,7 @@ describe('Sidebar', () => {
   it('renders when isOpen is true', () => {
     render(<Sidebar isOpen={true} onClose={vi.fn()} />)
 
-    expect(screen.getByText('Focura')).toBeInTheDocument()
+    expect(screen.getByText('Gablura')).toBeInTheDocument()
   })
 
   it('renders navigation items', () => {

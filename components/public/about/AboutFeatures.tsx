@@ -113,7 +113,7 @@ export const AboutFeatures = () => {
       <div className="max-w-5xl mx-auto px-6 py-20 md:py-24">
         {/* Header */}
         <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
-          What Focura Ships
+          What Gablura Ships
         </p>
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground leading-tight">

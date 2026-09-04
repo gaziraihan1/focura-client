@@ -37,7 +37,7 @@ describe('AboutOpenSource', () => {
     const link = screen.getByText('Backend CONTRIBUTING.md').closest('a');
     expect(link).toHaveAttribute(
       'href',
-      'https://github.com/gaziraihan1/focura-backend/blob/main/CONTRIBUTING.md'
+      'https://github.com/gaziraihan1/gablura-backend/blob/main/CONTRIBUTING.md'
     );
   });
 });

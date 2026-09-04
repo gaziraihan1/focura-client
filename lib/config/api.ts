@@ -1,6 +1,6 @@
 // Canonical backend API configuration.
 //
-// Every module that needs the Focura backend base URL must import from here
+// Every module that needs the Gablura backend base URL must import from here
 // instead of re-reading env vars, so dev/prod overrides can never drift apart
 // between client, server and CSRF code paths.
 

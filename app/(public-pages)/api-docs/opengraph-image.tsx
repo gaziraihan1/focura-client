@@ -10,7 +10,7 @@ export const contentType = 'image/png';
 export default async function Image() {
   return generateOGImage({
     title: 'API Documentation',
-    description: 'Complete API reference for Focura developers.',
+    description: 'Complete API reference for Gablura developers.',
     gradient: 'neutral',
   });
 }

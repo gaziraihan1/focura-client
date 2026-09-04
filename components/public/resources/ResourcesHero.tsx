@@ -16,7 +16,7 @@ export default function ResourcesHero() {
           transition={{ duration: 0.5 }}
           className="text-4xl md:text-5xl font-bold text-foreground"
         >
-          Explore the Focura Resource Hub
+          Explore the Gablura Resource Hub
         </motion.h1>
 
         <motion.p

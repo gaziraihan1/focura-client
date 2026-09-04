@@ -40,7 +40,7 @@ export const CareersHero = ({ openCount }: CareersHeroProps) => {
         </h1>
 
         <p className='text-base md:text-lg text-neutral-500 dark:text-neutral-400 max-w-2xl mx-auto leading-relaxed mb-10'>
-          Focura is a small, ambitious team building the productivity platform we
+          Gablura is a small, ambitious team building the productivity platform we
           always wished existed. If you care deeply about craftsmanship, user
           experience, and making real teams more effective — we&apos;d love to meet you.
         </p>
