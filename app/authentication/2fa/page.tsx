@@ -32,6 +32,7 @@ function TwoFactorContent() {
   const isGooglePending =
     status === "authenticated" && session?.twoFactorPending === true;
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
 
   const {
     register,
@@ -47,13 +48,13 @@ function TwoFactorContent() {
   // - Unauthenticated without email param → invalid state, back to login
   // - Everything else → render the appropriate 2FA form
   useEffect(() => {
-    if (status === "loading") return;
+    if (status === "loading" || isVerified) return;
     if (status === "authenticated" && !session?.twoFactorPending) {
       router.replace("/dashboard");
     } else if (status === "unauthenticated" && !email) {
       router.replace("/authentication/login");
     }
-  }, [status, session?.twoFactorPending, email, router]);
+  }, [status, session?.twoFactorPending, email, router, isVerified]);
 
   const onSubmit = async (values: TwoFactorFormData) => {
     // Google pending flow: the session is authenticated — only the code is
@@ -85,6 +86,7 @@ function TwoFactorContent() {
           return;
         }
         toast.success("Verified successfully! Welcome back.");
+        setIsVerified(true);
         router.replace("/dashboard");
       } catch (err) {
         console.error("2FA verification error:", err);
@@ -123,6 +125,7 @@ function TwoFactorContent() {
 
       if (result?.ok) {
         toast.success("Verified successfully! Welcome back.");
+        setIsVerified(true);
         router.push("/authentication/success");
       }
     } catch (err) {
@@ -137,6 +140,31 @@ function TwoFactorContent() {
   // Google flow (isGooglePending) doesn't need an email query param.
   // Skip during loading/submitting to avoid a flash while the session updates.
   if (status === "loading" || isSubmitting) return null;
+  if (isVerified) {
+    return (
+      <section className="min-h-screen flex items-center justify-center bg-background px-6 py-20">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="relative w-full max-w-md"
+        >
+          <span className="pointer-events-none absolute -top-px -left-px h-8 w-8 border-t-2 border-l-2 border-primary rounded-tl-2xl" />
+          <span className="pointer-events-none absolute -top-px -right-px h-8 w-8 border-t-2 border-r-2 border-primary rounded-tr-2xl" />
+          <span className="pointer-events-none absolute -bottom-px -left-px h-8 w-8 border-b-2 border-l-2 border-primary rounded-bl-2xl" />
+          <span className="pointer-events-none absolute -bottom-px -right-px h-8 w-8 border-b-2 border-r-2 border-primary rounded-br-2xl" />
+          <div className="pointer-events-none absolute inset-0 -z-10 rounded-2xl bg-primary/5 blur-3xl scale-110" />
+          <div className="w-full p-10 rounded-2xl bg-card/80 backdrop-blur-2xl border border-border/60 shadow-2xl shadow-black/40 text-center">
+            <Loader2 className="mx-auto h-12 w-12 text-primary animate-spin mb-4" />
+            <h2 className="text-xl font-bold text-foreground mb-2">Verified!</h2>
+            <p className="text-sm text-muted-foreground">
+              Email verified. Redirecting now&hellip;
+            </p>
+          </div>
+        </motion.div>
+      </section>
+    );
+  }
   if (!email && !isGooglePending) {
     return (
       <section className="min-h-screen flex items-center justify-center bg-background px-6 py-20">

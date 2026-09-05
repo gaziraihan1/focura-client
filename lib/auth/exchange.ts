@@ -14,7 +14,7 @@ export function createExchangeProof(
   sessionId: string,
 ) {
   const timestamp = Date.now();
-  const payload = `${userId}${email}${role}${sessionId}${timestamp}`;
+  const payload = `${userId}${email.toLowerCase().trim()}${role}${sessionId}${timestamp}`;
   const signature = crypto
     .createHmac("sha256", process.env.NEXTAUTH_SECRET!)
     .update(payload)
@@ -33,12 +33,13 @@ export async function exchangeForTokens(
       user.role,
       sessionId,
     );
+    const normalizedEmail = user.email.toLowerCase().trim();
     const res = await fetch(`${BACKEND_URL}/api/v1/auth/exchange`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         userId: user.id,
-        email: user.email,
+        email: normalizedEmail,
         role: user.role,
         sessionId,
         timestamp,
@@ -46,7 +47,8 @@ export async function exchangeForTokens(
       }),
     });
     if (!res.ok) {
-      console.error("❌ Exchange failed:", res.status);
+      const errorBody = await res.text().catch(() => "");
+      console.error("❌ Exchange failed:", res.status, errorBody);
       return null;
     }
     return res.json();

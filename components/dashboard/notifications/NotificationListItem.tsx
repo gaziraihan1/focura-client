@@ -20,8 +20,8 @@ export function NotificationListItem({
   onClick,
 }: NotificationListItemProps) {
   return (
-    <Button
-      variant="ghost"
+    <button
+    type="button"
       onClick={onClick}
       className={`w-full text-left p-4 border-b border-border ${
         !notification.read
@@ -47,6 +47,6 @@ export function NotificationListItem({
           </p>
         </div>
       </div>
-    </Button>
+    </button>
   );
 }

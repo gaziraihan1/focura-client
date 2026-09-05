@@ -6,6 +6,7 @@ import { AuthFormButtons } from "./AuthForm/AuthFormButtons";
 import { AuthFormFooter } from "./AuthForm/AuthFormFooter";
 import { useAuthForm } from "@/hooks/useAuthForm";
 import { AlertCircle } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface AuthFormProps {
   mode: "login" | "register";
@@ -26,11 +27,21 @@ export default function AuthForm({ mode, onModeChange }: AuthFormProps) {
     clearFormError,
   } = useAuthForm({ mode });
 
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+    const mq = window.matchMedia("(max-width: 639px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={isMobile ? false : { opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      transition={isMobile ? { duration: 0 } : { duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
       className="relative w-full max-w-md"
     >
       {/* Decorative corner brackets */}
